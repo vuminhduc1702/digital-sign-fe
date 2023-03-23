@@ -1,0 +1,49 @@
+{
+  "sidebar": {
+    "overview": "Tổng quan",
+    "device": {
+      "title": "Thiết bị",
+      "devkit": "Devkit",
+      "module": "Module"
+    },
+    "cloud": {
+      "title": "Đám mây",
+      "org_map": "Sơ đồ tổ chức",
+      "org_management": "Quản lý tổ chức",
+      "device_template": "Mẫu thiết bị",
+      "flow_engine": "Flow Engine",
+      "dashboard": "Dashboard"
+    },
+    "application": {
+      "title": "Ứng dụng",
+      "appsdk": "App SDK",
+      "vsmart_debug": "VSmart Debug"
+    },
+    "payment": {
+      "title": "Thanh toán",
+      "plgc": "Quản lý gói cước",
+      "plkh": "Quản lý khách hàng",
+      "pldk": "Quản lý đăng ký",
+      "plhd": "Quản lý hoá đơn",
+      "client": {
+        "title": "Khách hàng",
+        "dshd": "Danh sách hoá đơn",
+        "cuoc": "Cước tạm tính"
+      }
+    },
+    "qltb": {
+      "title": "Quản lý thuê bao"
+    },
+    "intergration": {
+      "title": "Tích hợp",
+      "tracking": "Tracking",
+      "smarthome": "Smarthome"
+    }
+  },
+  "nav": {
+    "hello": "Chào",
+    "qlda": "Quản lý dự án",
+    "setup": "Cài đặt",
+    "support": "Hỗ trợ"
+  }
+}

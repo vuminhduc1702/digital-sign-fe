@@ -1,0 +1,12 @@
+{
+  "sidebar": {
+    "cloud": {
+      "title": "Cloud",
+      "org_map": "Organization Map",
+      "org_management": "Organization Management",
+      "device_template": "Device Template",
+      "flow_engine": "Flow Engine",
+      "dashboard": "Dashboard"
+    }
+  }
+}
