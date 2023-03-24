@@ -13,7 +13,7 @@ const variants = {
 }
 
 export type SpinnerProps = {
-  showSpinner: boolean
+  showSpinner?: boolean
   size?: keyof typeof sizes
   variant?: keyof typeof variants
   className?: string
