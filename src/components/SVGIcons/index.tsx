@@ -1,4 +1,17 @@
-export function SidebarDropDownIcon({ width, height, viewBox, ...props }) {
+import { type SVGProps } from 'react'
+
+type SVGIconProps = SVGProps<SVGSVGElement> & {
+  width: number | string
+  height: number | string
+  viewBox: string
+}
+
+export function SidebarDropDownIcon({
+  width,
+  height,
+  viewBox,
+  ...props
+}: SVGIconProps) {
   return (
     <svg
       {...props}

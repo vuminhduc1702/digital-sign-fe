@@ -1,7 +1,7 @@
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
-import { useState, forwardRef, useEffect } from 'react'
+import { useState, forwardRef, useEffect, type ReactNode } from 'react'
 import clsx from 'clsx'
 import { mediaQueryPoint, useMediaQuery } from '~/utils/hooks'
 import logo from '~/assets/images/logo.svg'
@@ -14,16 +14,72 @@ import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
 import sidebarOpenIcon from '~/assets/icons/sb-open.svg'
 import sidebarCloseIcon from '~/assets/icons/sb-close.svg'
 
+type AccordionItemProps = {
+  children: ReactNode
+  className?: string
+  value: string
+}
+
+type AccordionOtherProps = {
+  children: ReactNode
+  className?: string
+}
+
+const AccordionItem = forwardRef<HTMLDivElement, AccordionItemProps>(
+  ({ children, className, ...props }, forwardedRef) => (
+    <Accordion.Item
+      className={clsx('overflow-hidden', className)}
+      {...props}
+      ref={forwardedRef}
+    >
+      {children}
+    </Accordion.Item>
+  ),
+)
+
+const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionOtherProps>(
+  ({ children, className, ...props }, forwardedRef) => (
+    <Accordion.Header className="flex">
+      <Accordion.Trigger
+        className={clsx(
+          'group my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none hover:text-primary-400',
+          className,
+        )}
+        {...props}
+        ref={forwardedRef}
+      >
+        <div className="flex items-center gap-x-3">{children}</div>
+        <SidebarDropDownIcon width={12} height={7} viewBox="0 0 12 7" />
+      </Accordion.Trigger>
+    </Accordion.Header>
+  ),
+)
+
+const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
+  ({ children, className, ...props }, forwardedRef) => (
+    <Accordion.Content
+      className={clsx(
+        'overflow-hidden hover:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
+        className,
+      )}
+      {...props}
+      ref={forwardedRef}
+    >
+      <div className="cursor-pointer py-[5px] pl-8">{children}</div>
+    </Accordion.Content>
+  ),
+)
+
 function Sidebar() {
   const { t } = useTranslation()
   const isMobile = useMediaQuery(`(max-width: ${mediaQueryPoint['md']}px)`)
   const [openSidebar, setOpenSidebar] = useState(false)
 
   useEffect(() => {
-    if (!isMobile) {
-      setOpenSidebar(true)
-    } else {
+    if (isMobile) {
       setOpenSidebar(false)
+    } else {
+      setOpenSidebar(true)
     }
   }, [isMobile])
 
@@ -39,10 +95,10 @@ function Sidebar() {
       ) : null}
       <aside
         className={clsx(
-          'fixed top-0 left-0 h-screen w-[254px] bg-secondary-400',
+          'fixed top-0 left-0 h-screen w-[254px] bg-secondary-400 transition-opacity',
           {
-            block: openSidebar,
-            hidden: !openSidebar,
+            'pointer-events-auto opacity-100': openSidebar,
+            'pointer-events-none opacity-0': !openSidebar,
           },
         )}
         aria-label="Sidebar"
@@ -64,7 +120,6 @@ function Sidebar() {
               src={tongquanIcon}
               alt="Cloud"
               className="aspect-square w-[20px]"
-              onClick={() => setOpenSidebar(false)}
             />
             <div>{t('sidebar.overview')}</div>
           </div>
@@ -179,50 +234,5 @@ function Sidebar() {
     </>
   )
 }
-
-const AccordionItem = forwardRef(
-  ({ children, className, ...props }, forwardedRef) => (
-    <Accordion.Item
-      className={clsx('overflow-hidden', className)}
-      {...props}
-      ref={forwardedRef}
-    >
-      {children}
-    </Accordion.Item>
-  ),
-)
-
-const AccordionTrigger = forwardRef(
-  ({ children, className, ...props }, forwardedRef) => (
-    <Accordion.Header className="flex">
-      <Accordion.Trigger
-        className={clsx(
-          'group my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none hover:text-primary-400',
-          className,
-        )}
-        {...props}
-        ref={forwardedRef}
-      >
-        <div className="flex items-center gap-x-3">{children}</div>
-        <SidebarDropDownIcon width={12} height={7} viewBox="0 0 12 7" />
-      </Accordion.Trigger>
-    </Accordion.Header>
-  ),
-)
-
-const AccordionContent = forwardRef(
-  ({ children, className, ...props }, forwardedRef) => (
-    <Accordion.Content
-      className={clsx(
-        'overflow-hidden hover:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
-        className,
-      )}
-      {...props}
-      ref={forwardedRef}
-    >
-      <div className="cursor-pointer py-[5px] pl-8">{children}</div>
-    </Accordion.Content>
-  ),
-)
 
 export default Sidebar
