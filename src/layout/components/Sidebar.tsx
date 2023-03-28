@@ -1,9 +1,12 @@
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
 import { useState, forwardRef, useEffect, type ReactNode } from 'react'
 import clsx from 'clsx'
+import { NavLink } from 'react-router-dom'
+
 import { mediaQueryPoint, useMediaQuery } from '~/utils/hooks'
+import { PATHS } from '~/routes/PATHS'
+
 import logo from '~/assets/images/logo.svg'
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
 import dammayIcon from '~/assets/icons/sb-dammay.svg'
@@ -13,6 +16,7 @@ import ungdungIcon from '~/assets/icons/sb-ungdung.svg'
 import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
 import sidebarOpenIcon from '~/assets/icons/sb-open.svg'
 import sidebarCloseIcon from '~/assets/icons/sb-close.svg'
+import { SidebarDropDownIcon } from '~/components/SVGIcons'
 
 type AccordionItemProps = {
   children: ReactNode
@@ -59,7 +63,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <Accordion.Content
       className={clsx(
-        'overflow-hidden hover:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
+        'group overflow-hidden hover:bg-primary-300 active:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
         className,
       )}
       {...props}
@@ -147,19 +151,31 @@ function Sidebar() {
                 />
                 <div>{t('sidebar.cloud.title')}</div>
               </AccordionTrigger>
-              <AccordionContent>{t('sidebar.cloud.org_map')}</AccordionContent>
-              <AccordionContent>
-                {t('sidebar.cloud.org_management')}
-              </AccordionContent>
-              <AccordionContent>
-                {t('sidebar.cloud.device_template')}
-              </AccordionContent>
-              <AccordionContent>
-                {t('sidebar.cloud.flow_engine')}
-              </AccordionContent>
-              <AccordionContent>
-                {t('sidebar.cloud.dashboard')}
-              </AccordionContent>
+              <NavLink to={PATHS.ORGMAP_PAGE}>
+                <AccordionContent>
+                  {t('sidebar.cloud.org_map')}
+                </AccordionContent>
+              </NavLink>
+              <NavLink to={PATHS.ORGMANAGEMENT_PAGE}>
+                <AccordionContent>
+                  {t('sidebar.cloud.org_management')}
+                </AccordionContent>
+              </NavLink>
+              <NavLink to={PATHS.DEVICETEMPLATE_PAGE}>
+                <AccordionContent>
+                  {t('sidebar.cloud.device_template')}
+                </AccordionContent>
+              </NavLink>
+              <NavLink to={PATHS.FLOWENGINE_PAGE}>
+                <AccordionContent>
+                  {t('sidebar.cloud.flow_engine')}
+                </AccordionContent>
+              </NavLink>
+              <NavLink to={PATHS.DASHBOARD_PAGE}>
+                <AccordionContent>
+                  {t('sidebar.cloud.dashboard')}
+                </AccordionContent>
+              </NavLink>
             </AccordionItem>
 
             <AccordionItem value="application">

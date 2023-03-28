@@ -1,13 +1,22 @@
 import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+
+import { useProjects } from '../api/getProject'
+import { useUser } from '~/lib/auth'
+
+import { type Project } from '../types'
+
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
-import defaultUserIcon from '~/assets/icons/default_user.svg'
+import defaultUserIcon from '~/assets/icons/default-user.svg'
+import defaultProjectIcon from '~/assets/icons/default-project.png'
 
 function Navbar() {
   const { t } = useTranslation()
+  const { data: projectsData } = useProjects()
+  const { data: userData } = useUser()
 
   return (
     <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 md:pl-[254px] lg:gap-x-10">
@@ -17,7 +26,9 @@ function Navbar() {
           alt="User's avatar"
           className="aspect-square w-[20px]"
         />
-        <p className="text-white">{t('nav.hello')} Hằng</p>
+        <p className="text-white">
+          {t('nav.hello')} {userData?.name || userData?.email?.split('@')[0]}
+        </p>
       </div>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
@@ -38,12 +49,32 @@ function Navbar() {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="min-w-[220px] rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+            className="flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
             sideOffset={5}
           >
-            <DropdownMenu.Item className="group relative flex h-[25px] cursor-pointer select-none items-center px-[5px] pl-[25px] leading-none outline-none">
-              List all projects
-            </DropdownMenu.Item>
+            {projectsData?.projects.map((project: Project) => {
+              return (
+                <DropdownMenu.Item
+                  key={project.id}
+                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-[5px] pl-[25px] leading-none outline-none"
+                >
+                  <img
+                    src={project?.image || defaultProjectIcon}
+                    alt="Project"
+                    className="aspect-square w-[45px] rounded-full"
+                    onError={e => {
+                      const target = e.target as HTMLImageElement
+                      target.onerror = null
+                      target.src = defaultProjectIcon
+                    }}
+                  />
+                  <div className="flex flex-col gap-1">
+                    <p>{project.name}</p>
+                    <p>{project.description}</p>
+                  </div>
+                </DropdownMenu.Item>
+              )
+            })}
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>

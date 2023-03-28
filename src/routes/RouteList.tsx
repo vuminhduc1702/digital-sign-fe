@@ -1,7 +1,7 @@
 import { useMediaQuery, mediaQueryPoint } from '~/utils/hooks'
 import { PATHS } from './PATHS'
+
 import MainLayout from '~/layout/MainLayout'
-import CloudPage from '~/pages/CloudPage'
 import OrgMapPage from '~/pages/OrgMapPage'
 import OrgManagementPage from '~/pages/OrgManagementPage'
 import DeviceTemplatePage from '~/pages/DeviceTemplatePage'
@@ -21,10 +21,6 @@ export function RouteList() {
       children: [
         {
           index: true,
-          path: PATHS.CLOUD_PAGE,
-          element: <CloudPage />,
-        },
-        {
           path: PATHS.ORGMAP_PAGE,
           element: <OrgMapPage />,
         },
