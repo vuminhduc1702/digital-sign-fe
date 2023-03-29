@@ -4,7 +4,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useProjects } from '../api/getProject'
 import { useUser } from '~/lib/auth'
 
-import { type Project } from '../types'
+import { type Project } from '../MainLayout/types'
 
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
@@ -19,7 +19,7 @@ function Navbar() {
   const { data: userData } = useUser()
 
   return (
-    <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 md:pl-[254px] lg:gap-x-10">
+    <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 lg:gap-x-10 lg:pl-[254px]">
       <div className="flex cursor-pointer items-center gap-x-2">
         <img
           src={defaultUserIcon}

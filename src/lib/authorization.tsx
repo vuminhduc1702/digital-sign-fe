@@ -1,30 +1,30 @@
 import * as React from 'react'
 
-import { type Comment } from '~/auth/features/types/comments'
-import { type User } from '~/auth/features/types/users'
+// import { type Comment } from '~/auth/features/types/comments'
+// import { type User } from '~/auth/features/types/users'
 
 import { useUser } from './auth'
 
 export enum ROLES {
-  ADMIN = 'ADMIN',
-  USER = 'USER',
+  ADMIN = 'DefaultAdminRole',
+  USER = 'DefaultUserRole',
 }
 
 type RoleTypes = keyof typeof ROLES
 
-export const POLICIES = {
-  'comment:delete': (user: User, comment: Comment) => {
-    if (user.role === 'ADMIN') {
-      return true
-    }
+// export const POLICIES = {
+//   'comment:delete': (user: User, comment: Comment) => {
+//     if (user.role === 'ADMIN') {
+//       return true
+//     }
 
-    if (user.role === 'USER' && comment.authorId === user.id) {
-      return true
-    }
+//     if (user.role === 'USER' && comment.authorId === user.id) {
+//       return true
+//     }
 
-    return false
-  },
-}
+//     return false
+//   },
+// }
 
 export const useAuthorization = () => {
   const user = useUser()
@@ -38,7 +38,7 @@ export const useAuthorization = () => {
       if (!user.data) return false
 
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.includes(user.data.role)
+        return allowedRoles?.includes(user.data.role_name)
       }
 
       return true
@@ -46,7 +46,7 @@ export const useAuthorization = () => {
     [user.data],
   )
 
-  return { checkAccess, role: user.data.role }
+  return { checkAccess, role: user.data.role_name }
 }
 
 type AuthorizationProps = {

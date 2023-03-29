@@ -8,12 +8,12 @@ module.exports = {
       colors: {
         primary: {
           300: 'hsla(1, 100%, 77%, 1)', // sidebar hover bg
-          400: 'hsla(355, 85%, 52%, 1)',
+          400: 'hsla(355, 85%, 52%, 1)', // confirm btn
         },
         secondary: {
           400: 'hsla(210, 10%, 96%, 1)', // sidebar bg, tab bg
           500: 'hsla(180, 2%, 92%, 1)', // maporg bg, input bg
-          600: 'hsla(210, 1%, 71%, 1)', // maporg node
+          600: 'hsla(210, 1%, 71%, 1)', // maporg node, cancel btn
           700: 'hsla(210, 1%, 53%, 1)', // card header
           900: 'hsla(0, 1%, 34%, 1)', // nav
         },

@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
 import { useState, forwardRef, useEffect, type ReactNode } from 'react'
 import clsx from 'clsx'
-import { NavLink } from 'react-router-dom'
 
 import { mediaQueryPoint, useMediaQuery } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
+import { NavLink } from '~/components/Link'
 
 import logo from '~/assets/images/logo.svg'
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
@@ -63,7 +63,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <Accordion.Content
       className={clsx(
-        'group overflow-hidden hover:bg-primary-300 active:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
+        'mb-1 overflow-hidden rounded-md hover:bg-primary-300 group-last-of-type:mb-0 group-[.active]:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
         className,
       )}
       {...props}
@@ -76,20 +76,20 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
 
 function Sidebar() {
   const { t } = useTranslation()
-  const isMobile = useMediaQuery(`(max-width: ${mediaQueryPoint['md']}px)`)
+  const isMobileLG = useMediaQuery(`(max-width: ${mediaQueryPoint['lg']}px)`)
   const [openSidebar, setOpenSidebar] = useState(false)
 
   useEffect(() => {
-    if (isMobile) {
+    if (isMobileLG) {
       setOpenSidebar(false)
     } else {
       setOpenSidebar(true)
     }
-  }, [isMobile])
+  }, [isMobileLG])
 
   return (
     <>
-      {isMobile ? (
+      {isMobileLG ? (
         <img
           src={sidebarOpenIcon}
           alt="Open sidebar"
@@ -109,7 +109,7 @@ function Sidebar() {
       >
         <div className="grid h-[9vh] place-content-center border-b-[2px] border-solid bg-white">
           <img src={logo} alt="logo" className="h-[52px] w-[140px]" />
-          {isMobile ? (
+          {isMobileLG ? (
             <img
               src={sidebarCloseIcon}
               alt="Close sidebar"
@@ -151,27 +151,27 @@ function Sidebar() {
                 />
                 <div>{t('sidebar.cloud.title')}</div>
               </AccordionTrigger>
-              <NavLink to={PATHS.ORGMAP_PAGE}>
+              {/* <NavLink to={PATHS.ORG_MAP}>
                 <AccordionContent>
                   {t('sidebar.cloud.org_map')}
                 </AccordionContent>
-              </NavLink>
-              <NavLink to={PATHS.ORGMANAGEMENT_PAGE}>
+              </NavLink> */}
+              <NavLink to={PATHS.ORG_INFO}>
                 <AccordionContent>
                   {t('sidebar.cloud.org_management')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.DEVICETEMPLATE_PAGE}>
+              <NavLink to={PATHS.DEVICE_TEMPLATE}>
                 <AccordionContent>
                   {t('sidebar.cloud.device_template')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.FLOWENGINE_PAGE}>
+              <NavLink to={PATHS.FLOW_ENGINE}>
                 <AccordionContent>
                   {t('sidebar.cloud.flow_engine')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.DASHBOARD_PAGE}>
+              <NavLink to={PATHS.DASHBOARD}>
                 <AccordionContent>
                   {t('sidebar.cloud.dashboard')}
                 </AccordionContent>
