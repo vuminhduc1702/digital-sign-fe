@@ -13,9 +13,21 @@ export type Project = {
   }
 }
 
-export type ProjectsList = {
-  total: number
-  offset: number
-  limit: number
-  projects: Project[]
+export type Org = {
+  id: string
+  name: string
+  image?: string
+  description: string
+  org_id?: string
+  group_id?: string
+  project_id: string
+  attributes: {
+    attribute_type: string
+    attribute_key: string
+    logged: boolean
+    value: string | number | boolean
+    value_as_string: string
+    last_update_ts: number
+    value_type: string
+  }
 }

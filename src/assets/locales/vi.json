@@ -8,7 +8,6 @@
     },
     "cloud": {
       "title": "Đám mây",
-      "org_map": "Sơ đồ tổ chức",
       "org_management": "Quản lý tổ chức",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
@@ -45,5 +44,30 @@
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
     "support": "Hỗ trợ"
-  }
+  },
+  "cloud": {
+    "org_manage": {
+      "org_list": "Danh sách tổ chức",
+      "org_info": {
+        "title": "Tổ chức",
+        "overview": "Tổng quan",
+        "attr_list": "Danh sách thuộc tính"
+      },
+      "group_manage": "Nhóm",
+      "user_manage": "Người dùng",
+      "device_manage": "Thiết bị",
+      "event_manage": "Sự kiện",
+      "role_manage": "Vai trò"
+    }
+  },
+  "table": {
+    "next_page": "Trang sau",
+    "prev_page": "Trang trước",
+    "no": "STT"
+  },
+  "btn": {
+    "create": "Tạo mới"
+  },
+  "no_data": "Không có dữ liệu",
+  "search": "Tìm kiếm"
 }

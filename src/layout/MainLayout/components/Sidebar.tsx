@@ -6,6 +6,7 @@ import clsx from 'clsx'
 import { mediaQueryPoint, useMediaQuery } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { NavLink } from '~/components/Link'
+import { useProjectIdStore } from '~/stores/project'
 
 import logo from '~/assets/images/logo.svg'
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
@@ -69,7 +70,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
       {...props}
       ref={forwardedRef}
     >
-      <div className="cursor-pointer py-[5px] pl-8">{children}</div>
+      <div className="cursor-pointer py-1 pl-8">{children}</div>
     </Accordion.Content>
   ),
 )
@@ -77,7 +78,9 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
 function Sidebar() {
   const { t } = useTranslation()
   const isMobileLG = useMediaQuery(`(max-width: ${mediaQueryPoint['lg']}px)`)
+
   const [openSidebar, setOpenSidebar] = useState(false)
+  const projectId = useProjectIdStore(state => state.projectId)
 
   useEffect(() => {
     if (isMobileLG) {
@@ -93,7 +96,7 @@ function Sidebar() {
         <img
           src={sidebarOpenIcon}
           alt="Open sidebar"
-          className="absolute top-0 left-0 z-10 ml-[10px] mt-[25px] aspect-square w-[30px] cursor-pointer"
+          className="absolute top-0 left-0 z-10 ml-2 mt-[25px] aspect-square w-[30px] cursor-pointer"
           onClick={() => setOpenSidebar(true)}
         />
       ) : null}
@@ -113,7 +116,7 @@ function Sidebar() {
             <img
               src={sidebarCloseIcon}
               alt="Close sidebar"
-              className="absolute top-0 right-0 mr-[10px] mt-[25px] aspect-square w-[30px] cursor-pointer"
+              className="absolute top-0 right-0 mr-2 mt-[25px] aspect-square w-[30px] cursor-pointer"
               onClick={() => setOpenSidebar(false)}
             />
           ) : null}
@@ -151,12 +154,7 @@ function Sidebar() {
                 />
                 <div>{t('sidebar.cloud.title')}</div>
               </AccordionTrigger>
-              {/* <NavLink to={PATHS.ORG_MAP}>
-                <AccordionContent>
-                  {t('sidebar.cloud.org_map')}
-                </AccordionContent>
-              </NavLink> */}
-              <NavLink to={PATHS.ORG_INFO}>
+              <NavLink to={PATHS.ORG_INFO.replace(':projectId', projectId)}>
                 <AccordionContent>
                   {t('sidebar.cloud.org_management')}
                 </AccordionContent>

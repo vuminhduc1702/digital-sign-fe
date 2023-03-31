@@ -3,9 +3,9 @@ import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-import { type ProjectsList } from '../types'
+import { type Projects } from '../types'
 
-export const getProjects = (): Promise<ProjectsList> => {
+export const getProjects = (): Promise<Projects[]> => {
   return axios.get('/api/projects')
 }
 

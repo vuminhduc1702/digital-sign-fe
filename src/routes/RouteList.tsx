@@ -3,13 +3,15 @@ import { PATHS } from './PATHS'
 
 import MainLayout from '~/layout/MainLayout'
 
+import { OrgManagementRoutes } from '~/cloud/orgManagement'
+
 import DeviceTemplate from '~/cloud/deviceTemplate'
 import FlowEngine from '~/cloud/flowEngine'
 import Dashboard from '~/cloud/dashboard'
 
 import MaintainPage from '~/pages/MaintainPage'
 import NotFoundPage from '~/pages/NotFoundPage'
-import { OrgManagementRoutes } from '~/cloud/orgManagement'
+import LandingPage from '~/pages/LandingPage'
 
 export function RouteList() {
   const isMobileMD = useMediaQuery(`(max-width: ${mediaQueryPoint.md}px)`)
@@ -21,6 +23,10 @@ export function RouteList() {
       element: <MainLayout />,
       children: [
         ...OrgManagementRoutes,
+        {
+          path: PATHS.HOME,
+          element: <LandingPage />,
+        },
         {
           path: PATHS.DEVICE_TEMPLATE,
           element: <DeviceTemplate />,

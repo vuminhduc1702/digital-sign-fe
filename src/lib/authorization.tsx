@@ -5,10 +5,10 @@ import * as React from 'react'
 
 import { useUser } from './auth'
 
-export enum ROLES {
-  ADMIN = 'DefaultAdminRole',
-  USER = 'DefaultUserRole',
-}
+export const ROLES = {
+  DefaultAdminRole: 'DefaultAdminRole',
+  DefaultUserRole: 'DefaultUserRole',
+} as const
 
 type RoleTypes = keyof typeof ROLES
 

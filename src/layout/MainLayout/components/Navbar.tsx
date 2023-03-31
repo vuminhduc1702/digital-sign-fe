@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
-import { useProjects } from '../api/getProject'
+import { useProjects } from '../api/getProjects'
 import { useUser } from '~/lib/auth'
+import { Link } from '~/components/Link'
+import { PATHS } from '~/routes/PATHS'
+import { useProjectIdStore } from '~/stores/project'
 
-import { type Project } from '../MainLayout/types'
+import { type Project } from '../types'
 
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
@@ -17,6 +20,8 @@ function Navbar() {
   const { t } = useTranslation()
   const { data: projectsData } = useProjects()
   const { data: userData } = useUser()
+
+  const projectId = useProjectIdStore(state => state.projectId)
 
   return (
     <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 lg:gap-x-10 lg:pl-[254px]">
@@ -49,30 +54,32 @@ function Navbar() {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+            className="flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
             sideOffset={5}
           >
             {projectsData?.projects.map((project: Project) => {
               return (
-                <DropdownMenu.Item
-                  key={project.id}
-                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-[5px] pl-[25px] leading-none outline-none"
-                >
-                  <img
-                    src={project?.image || defaultProjectIcon}
-                    alt="Project"
-                    className="aspect-square w-[45px] rounded-full"
-                    onError={e => {
-                      const target = e.target as HTMLImageElement
-                      target.onerror = null
-                      target.src = defaultProjectIcon
-                    }}
-                  />
-                  <div className="flex flex-col gap-1">
-                    <p>{project.name}</p>
-                    <p>{project.description}</p>
-                  </div>
-                </DropdownMenu.Item>
+                <Link to={PATHS.ORG_INFO.replace(':projectId', projectId)}>
+                  <DropdownMenu.Item
+                    key={project.id}
+                    className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
+                  >
+                    <img
+                      src={project?.image || defaultProjectIcon}
+                      alt="Project"
+                      className="aspect-square w-[45px] rounded-full"
+                      onError={e => {
+                        const target = e.target as HTMLImageElement
+                        target.onerror = null
+                        target.src = defaultProjectIcon
+                      }}
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p>{project.name}</p>
+                      <p>{project.description}</p>
+                    </div>
+                  </DropdownMenu.Item>
+                </Link>
               )
             })}
           </DropdownMenu.Content>

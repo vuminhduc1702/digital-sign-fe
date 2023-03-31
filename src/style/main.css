@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  div, p, a {
+    @apply text-body-sm;
+  }
+}
