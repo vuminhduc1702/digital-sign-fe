@@ -63,6 +63,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@tailwindcss/line-clamp": "^0.4.2",
+    "@tanstack/eslint-plugin-query": "^4.27.0",
     "@testing-library/dom": "^9.0.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",

@@ -21,5 +21,6 @@ export const useOrgAttrs = ({ orgId, config }: UseOrgAttrsOptions) => {
     ...config,
     queryKey: ['orgAttrs', orgId],
     queryFn: () => getOrgAttrs({ orgId }),
+    enabled: !!orgId,
   })
 }

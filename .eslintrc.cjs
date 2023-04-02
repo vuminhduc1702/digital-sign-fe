@@ -1,7 +1,12 @@
 /** @type {import('@types/eslint').Linter.BaseConfig} */
 
 module.exports = {
-  extends: ['react-app', 'prettier'],
+  extends: [
+    'react-app',
+    'prettier',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
+  ],
+  plugins: ['@tanstack/query'],
   rules: {
     '@typescript-eslint/consistent-type-imports': [
       'warn',

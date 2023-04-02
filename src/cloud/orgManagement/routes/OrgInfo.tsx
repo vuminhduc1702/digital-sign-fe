@@ -8,16 +8,18 @@ import {
 
 import { useOrgAttrs } from '../api/getOrgAttrs'
 import { useOrgIdStore } from '~/stores/org'
+import { useProjectIdStore } from '~/stores/project'
+import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
 
 function OrgInfo() {
   const { t } = useTranslation()
 
-  //TODO: remove this when we have a real orgId
+  const projectId = useProjectIdStore(state => state.projectId)
+  const { data: orgData } = useOrganizations({ projectId })
   const orgId =
-    useOrgIdStore(state => state.orgId) ||
-    'b7c71b14-7b10-4042-8a09-4697778dcff7'
+    useOrgIdStore(state => state.orgId) || orgData?.organizations[0].id
   const { data: orgAttrsData } = useOrgAttrs({ orgId })
-  console.log('orgAttrsData', orgAttrsData?.attributes)
+  console.log('orgAttrsData', orgAttrsData)
 
   return (
     <div className="p-3">
