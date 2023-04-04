@@ -50,8 +50,23 @@
       "org_list": "Danh sách tổ chức",
       "org_info": {
         "title": "Tổ chức",
-        "overview": "Tổng quan",
-        "attr_list": "Danh sách thuộc tính"
+        "overview": {
+          "title": "Tổng quan",
+          "name": "Tên",
+          "desc": "Mô tả"
+        },
+        "attr_list": "Danh sách thuộc tính",
+        "table": {
+          "stt": "STT",
+          "id": "ID",
+          "attr_key": "Thuộc tính",
+          "attr_type": "Loại thuộc tính",
+          "value_type": "Loại giá trị",
+          "value": "Giá trị hiện tại",
+          "last_update_ts": "Lần cập nhật cuối",
+          "logged": "Lưu lịch sử",
+          "no_attr": "Không có thuộc tính"
+        }
       },
       "group_manage": "Nhóm",
       "user_manage": "Người dùng",

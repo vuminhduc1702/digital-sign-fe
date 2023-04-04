@@ -27,8 +27,9 @@ module.exports = {
         // 1rem = 16px
         /** 16px size / 20.8px high / bold */
         h1: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
+        h2: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
         /** 16px size / 20.8px high / normal */
-        h2: ['1rem', { lineHeight: '1.3rem', fontWeight: '400' }],
+        h3: ['1rem', { lineHeight: '1.3rem', fontWeight: '400' }],
 
         /** 14px size / 18px high / normal */
         'body-sm': ['0.875rem', { lineHeight: '1.125rem', fontWeight: '400' }],

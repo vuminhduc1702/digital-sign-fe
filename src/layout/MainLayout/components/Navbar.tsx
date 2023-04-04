@@ -14,7 +14,7 @@ import caidatIcon from '~/assets/icons/nav-caidat.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import defaultProjectIcon from '~/assets/icons/default-project.png'
+import defaultProjectImage from '~/assets/icons/default-project.png'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -65,16 +65,16 @@ function Navbar() {
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
                   >
                     <img
-                      src={project?.image || defaultProjectIcon}
+                      src={project?.image || defaultProjectImage}
                       alt="Project"
                       className="aspect-square w-[45px] rounded-full"
                       onError={e => {
                         const target = e.target as HTMLImageElement
                         target.onerror = null
-                        target.src = defaultProjectIcon
+                        target.src = defaultProjectImage
                       }}
                     />
-                    <div className="flex flex-col gap-1">
+                    <div className="space-y-1">
                       <p>{project.name}</p>
                       <p>{project.description}</p>
                     </div>

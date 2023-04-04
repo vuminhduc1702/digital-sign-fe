@@ -159,17 +159,19 @@ function Sidebar() {
                   {t('sidebar.cloud.org_management')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.DEVICE_TEMPLATE}>
+              <NavLink
+                to={PATHS.DEVICE_TEMPLATE.replace(':projectId', projectId)}
+              >
                 <AccordionContent>
                   {t('sidebar.cloud.device_template')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.FLOW_ENGINE}>
+              <NavLink to={PATHS.FLOW_ENGINE.replace(':projectId', projectId)}>
                 <AccordionContent>
                   {t('sidebar.cloud.flow_engine')}
                 </AccordionContent>
               </NavLink>
-              <NavLink to={PATHS.DASHBOARD}>
+              <NavLink to={PATHS.DASHBOARD.replace(':projectId', projectId)}>
                 <AccordionContent>
                   {t('sidebar.cloud.dashboard')}
                 </AccordionContent>

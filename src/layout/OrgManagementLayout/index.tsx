@@ -28,7 +28,7 @@ function OrgManagementLayout() {
 
   const projectId = useProjectIdStore(state => state.projectId)
   const projectName = useProjectIdStore(state => state.projectName)
-  const { data: orgData, isLoading: orgLoading } = useOrganizations({
+  const { data: orgData } = useOrganizations({
     projectId,
   })
   const setOrgId = useOrgIdStore(state => state.setOrgId)
@@ -65,11 +65,11 @@ function OrgManagementLayout() {
             />
           </div>
           <div className="grow bg-secondary-500 p-3">
-            <ul>
+            <ul className="space-y-3">
               {projectName}
               {orgData?.organizations.map((org: Org) => (
                 <li
-                  className="flex items-center gap-2"
+                  className="flex cursor-pointer items-center"
                   key={org.id}
                   onClick={() => setOrgId(org.id)}
                 >
@@ -82,7 +82,7 @@ function OrgManagementLayout() {
         <div className="flex flex-1 flex-col gap-2 md:col-span-2">
           <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
             <NavLink
-              to={PATHS.ORG_INFO}
+              to={PATHS.ORG_INFO.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgInfoIcon
@@ -94,7 +94,7 @@ function OrgManagementLayout() {
               <p>{t('cloud.org_manage.org_list')}</p>
             </NavLink>
             <NavLink
-              to={PATHS.GROUP_MANAGE}
+              to={PATHS.GROUP_MANAGE.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgGroupIcon
@@ -106,7 +106,7 @@ function OrgManagementLayout() {
               <p>{t('cloud.org_manage.group_manage')}</p>
             </NavLink>
             <NavLink
-              to={PATHS.USER_MANAGE}
+              to={PATHS.USER_MANAGE.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgUserIcon
@@ -118,7 +118,7 @@ function OrgManagementLayout() {
               <p>{t('cloud.org_manage.user_manage')}</p>
             </NavLink>
             <NavLink
-              to={PATHS.DEVICE_MANAGE}
+              to={PATHS.DEVICE_MANAGE.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgDeviceIcon
@@ -130,7 +130,7 @@ function OrgManagementLayout() {
               <p>{t('cloud.org_manage.device_manage')}</p>
             </NavLink>
             <NavLink
-              to={PATHS.EVENT_MANAGE}
+              to={PATHS.EVENT_MANAGE.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgEventIcon
@@ -142,7 +142,7 @@ function OrgManagementLayout() {
               <p>{t('cloud.org_manage.event_manage')}</p>
             </NavLink>
             <NavLink
-              to={PATHS.ROLE_MANAGE}
+              to={PATHS.ROLE_MANAGE.replace(':projectId', projectId)}
               className="group flex cursor-pointer gap-2 hover:text-primary-400"
             >
               <OrgRoleIcon

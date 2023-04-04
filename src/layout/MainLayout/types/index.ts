@@ -31,3 +31,16 @@ export type Org = {
     value_type: string
   }
 }
+
+export type OrgAttr = {
+  id: string
+  attribute_type: string
+  attribute_key: string
+  entity_id: string
+  entity_type: string
+  logged: boolean
+  value: string | number | boolean
+  value_as_string: string
+  last_update_ts: number
+  value_type: string
+}
