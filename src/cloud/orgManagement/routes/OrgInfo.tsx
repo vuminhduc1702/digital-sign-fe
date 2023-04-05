@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { createColumnHelper } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { useOrgAttrs } from '../api/getOrgAttrs'
 import { useOrgIdStore } from '~/stores/org'
@@ -20,7 +20,13 @@ function OrgInfo() {
   const { data: orgData } = useOrganizations({ projectId })
   const orgId =
     useOrgIdStore(state => state.orgId) || orgData?.organizations[0]?.id
-  const { data: orgAttrsData } = useOrgAttrs({ orgId })
+  const { data: orgAttrsData, refetch } = useOrgAttrs({ orgId })
+
+  useEffect(() => {
+    if (orgId) {
+      refetch()
+    }
+  }, [orgId])
 
   const columnHelper = createColumnHelper<OrgAttr>()
 
@@ -109,17 +115,19 @@ function OrgInfo() {
         <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
           {t('cloud.org_manage.org_info.overview.title')}
         </h2>
-        <div className="my-3 flex items-center gap-6 pl-11">
-          <img
-            src={orgAttrsData?.image || defaultOrgImage}
-            onError={e => {
-              const target = e.target as HTMLImageElement
-              target.onerror = null
-              target.src = defaultOrgImage
-            }}
-            alt="Organization"
-            className="h-36 w-32"
-          />
+        <div className="my-3 flex gap-6 pl-11">
+          <div className="flex flex-none items-center">
+            <img
+              src={orgAttrsData?.image || defaultOrgImage}
+              onError={e => {
+                const target = e.target as HTMLImageElement
+                target.onerror = null
+                target.src = defaultOrgImage
+              }}
+              alt="Organization"
+              className="h-36 w-32"
+            />
+          </div>
           <div className="flex flex-col gap-4">
             <p>{t('cloud.org_manage.org_info.overview.name')}</p>
             <p>{t('cloud.org_manage.org_info.overview.desc')}</p>

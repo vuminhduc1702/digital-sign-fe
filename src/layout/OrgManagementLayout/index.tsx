@@ -22,16 +22,47 @@ import {
   SearchIcon,
 } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
+import { ComboBox, extractedComboboxData } from '~/components/ComboBox'
 
 function OrgManagementLayout() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
   const projectName = useProjectIdStore(state => state.projectName)
-  const { data: orgData } = useOrganizations({
+  const { data: orgData, isLoading: isLoadingOrg } = useOrganizations({
     projectId,
   })
   const setOrgId = useOrgIdStore(state => state.setOrgId)
+
+  function renderSubOrgs(org: Org) {
+    if (!org.sub_orgs || org.sub_orgs.length === 0) {
+      return null
+    }
+
+    return (
+      <ul className="ml-4">
+        {org.sub_orgs.map((subOrg: Org) => (
+          <li
+            key={subOrg.id}
+            className="cursor-pointer space-y-3"
+            onClick={e => {
+              e.stopPropagation()
+              setOrgId(subOrg.id)
+            }}
+          >
+            <p>{subOrg.name}</p>
+            {renderSubOrgs(subOrg)}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  const comboboxData = extractedComboboxData(
+    orgData?.organizations as Array<Org>,
+    ['id', 'name'],
+    'sub_orgs',
+  )
 
   return (
     <>
@@ -63,17 +94,20 @@ function OrgManagementLayout() {
                 />
               }
             />
+            {/* TODO: Handle loading state more beautiful */}
+            {!isLoadingOrg ? <ComboBox data={comboboxData} /> : <p>...</p>}
           </div>
           <div className="grow bg-secondary-500 p-3">
             <ul className="space-y-3">
               {projectName}
               {orgData?.organizations.map((org: Org) => (
                 <li
-                  className="flex cursor-pointer items-center"
+                  className="flex cursor-pointer flex-col gap-y-3"
                   key={org.id}
                   onClick={() => setOrgId(org.id)}
                 >
-                  {org.name}
+                  <p>{org.name}</p>
+                  {renderSubOrgs(org)}
                 </li>
               ))}
             </ul>

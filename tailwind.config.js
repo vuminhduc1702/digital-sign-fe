@@ -28,6 +28,7 @@ module.exports = {
         /** 16px size / 20.8px high / bold */
         h1: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
         h2: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
+        'table-header': ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
         /** 16px size / 20.8px high / normal */
         h3: ['1rem', { lineHeight: '1.3rem', fontWeight: '400' }],
 
@@ -35,6 +36,11 @@ module.exports = {
         'body-sm': ['0.875rem', { lineHeight: '1.125rem', fontWeight: '400' }],
         /** 12px size / 15.6px high / normal */
         'body-xs': ['0.75rem', { lineHeight: '0.975rem', fontWeight: '400' }],
+        /** 12px size / 15.6px high / light */
+        'body-light': [
+          '0.75rem',
+          { lineHeight: '0.975rem', fontWeight: '300' },
+        ],
       },
       screens: {
         // => @media (min-width: 399.98px) { ... }

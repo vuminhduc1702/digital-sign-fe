@@ -3,7 +3,14 @@
 @tailwind utilities;
 
 @layer base {
-  div, p, a {
+  div,
+  p,
+  a {
     @apply text-body-sm;
   }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

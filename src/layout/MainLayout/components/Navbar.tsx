@@ -14,7 +14,7 @@ import caidatIcon from '~/assets/icons/nav-caidat.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import defaultProjectImage from '~/assets/icons/default-project.png'
+import defaultProjectImage from '~/assets/images/default-project.png'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -54,7 +54,7 @@ function Navbar() {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+            className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
             sideOffset={5}
           >
             {projectsData?.projects.map((project: Project) => {

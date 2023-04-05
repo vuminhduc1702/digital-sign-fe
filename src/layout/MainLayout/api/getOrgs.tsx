@@ -2,16 +2,19 @@ import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type Org } from '../types'
+import { OrgList } from '../types'
 
 export const getOrganizations = ({
   projectId,
+  offset,
+  limit,
 }: {
   projectId: string
-}): Promise<Org[]> => {
-  // return axios.get(`/api/organizations/${projectId}`)
-  return axios.get('/api/organizations', {
-    params: { get_attributes: true, project_id: projectId },
+  offset?: number
+  limit?: number
+}): Promise<OrgList> => {
+  return axios.get('/api/organizations/expand', {
+    params: { project_id: projectId, offset, limit },
   })
 }
 

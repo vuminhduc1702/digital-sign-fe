@@ -65,7 +65,8 @@
           "value": "Giá trị hiện tại",
           "last_update_ts": "Lần cập nhật cuối",
           "logged": "Lưu lịch sử",
-          "no_attr": "Không có thuộc tính"
+          "no_attr": "Không có thuộc tính",
+          "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả"
         }
       },
       "group_manage": "Nhóm",

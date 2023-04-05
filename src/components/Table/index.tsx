@@ -8,6 +8,10 @@ import {
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import Pagination from './components/Pagination'
+
+import { BtnContextMenuIcon } from '../SVGIcons'
+
 function Table({
   columns,
   data,
@@ -18,6 +22,8 @@ function Table({
   dataQueryKey: string
 }) {
   const { t } = useTranslation()
+
+  const totalAttr = data?.attributes?.length
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -65,7 +71,6 @@ function Table({
   useEffect(() => {
     dataQuery.refetch()
   }, [data])
-  console.log('dataQuery.data', dataQuery.data)
 
   const table = useReactTable({
     data: dataQuery.data?.rows ?? defaultData,
@@ -81,16 +86,20 @@ function Table({
   return (
     <>
       {dataQuery.data?.rows.length !== 0 ? (
-        <div className="mt-3 flex grow flex-col justify-between pl-11">
-          <table>
-            <thead>
+        <div className="mt-2 flex grow flex-col justify-between">
+          <table className="w-full border-collapse">
+            <thead className="border-b-2 border-secondary-700">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
                     return (
-                      <th key={header.id} colSpan={header.colSpan}>
+                      <th
+                        className="h-11 text-left"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
                         {header.isPlaceholder ? null : (
-                          <div>
+                          <div className="text-table-header">
                             {flexRender(
                               header.column.columnDef.header,
                               header.getContext(),
@@ -106,10 +115,13 @@ function Table({
             <tbody>
               {table.getRowModel().rows.map(row => {
                 return (
-                  <tr key={row.id}>
+                  <tr
+                    className="border-secondary-70 group border-t-2"
+                    key={row.id}
+                  >
                     {row.getVisibleCells().map(cell => {
                       return (
-                        <td key={cell.id}>
+                        <td className="h-11" key={cell.id}>
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),
@@ -117,48 +129,63 @@ function Table({
                         </td>
                       )
                     })}
+                    <BtnContextMenuIcon
+                      className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                      height={40}
+                      width={3}
+                      viewBox="0 -10 3 40"
+                    />
                   </tr>
                 )
               })}
             </tbody>
           </table>
-          <div className="flex items-center gap-2">
-            <select
-              value={table.getState().pagination.pageSize}
-              onChange={e => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map(pageSize => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
+          <div className="flex items-center justify-between gap-2">
             <div className="flex gap-3">
+              <select
+                value={table.getState().pagination.pageSize}
+                onChange={e => {
+                  table.setPageSize(Number(e.target.value))
+                }}
+              >
+                {[10, 20, 30, 40, 50].map(pageSize => (
+                  <option key={pageSize} value={pageSize}>
+                    {pageSize}
+                  </option>
+                ))}
+              </select>
+              <span className="flex items-center gap-1 text-body-light">
+                {t('cloud.org_manage.org_info.table.show_in')
+                  .replace(
+                    '{{PAGE}}',
+                    pageSize < totalAttr ? pageSize?.toString() : totalAttr,
+                  )
+                  .replace('{{TOTAL}}', totalAttr?.toString())}
+              </span>
+            </div>
+            <div className="flex">
               <button
-                className="rounded border p-1"
+                className="cursor-pointer rounded border p-1"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
               >
-                {'<'}
+                {'Prev'}
               </button>
-              <span className="flex items-center gap-1">
-                <div>Page</div>
-                <strong>
-                  {table.getState().pagination.pageIndex + 1} of{' '}
-                  {table.getPageCount()}
-                </strong>
-              </span>
+              <Pagination
+                currentPage={pageIndex}
+                totalCount={totalAttr}
+                pageSize={pageSize}
+                table={table}
+              />
               <button
-                className="rounded border p-1"
+                className="cursor-pointer rounded border p-1"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
               >
-                {'>'}
+                {'Next'}
               </button>
             </div>
-            {dataQuery.isFetching ? 'Loading...' : null}
+            {dataQuery.isFetching ? 'Đang tải...' : null}
           </div>
         </div>
       ) : (

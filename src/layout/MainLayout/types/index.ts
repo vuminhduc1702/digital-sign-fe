@@ -21,6 +21,8 @@ export type Org = {
   org_id?: string
   group_id?: string
   project_id: string
+  level: string
+  index: number
   attributes: {
     attribute_type: string
     attribute_key: string
@@ -30,6 +32,14 @@ export type Org = {
     last_update_ts: number
     value_type: string
   }
+  sub_orgs?: Org[]
+}
+
+export type OrgList = {
+  total: number
+  offset: number
+  limit: number
+  organizations: Org[]
 }
 
 export type OrgAttr = {
