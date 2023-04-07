@@ -1,21 +1,31 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */
+
+function withOpacity(variableName) {
+  return ({ opacityValue }) => {
+    if (opacityValue != null) {
+      return `hsla(${variableName}, ${opacityValue})`
+    }
+    return `hsl(${variableName})`
+  }
+}
+
 module.exports = {
   content: ['./src/**/*.{ts,tsx,js,jsx}'],
   theme: {
     extend: {
       colors: {
         primary: {
-          300: 'hsla(1, 100%, 77%, 1)', // sidebar hover bg
-          400: 'hsla(355, 85%, 52%, 1)', // confirm btn
+          300: withOpacity('1, 100%, 77%'), // sidebar hover bg
+          400: withOpacity('355, 85%, 52%'), // confirm btn
         },
         secondary: {
-          400: 'hsla(210, 10%, 96%, 1)', // sidebar bg, tab bg
-          500: 'hsla(180, 2%, 92%, 1)', // maporg bg, input bg
-          600: 'hsla(210, 1%, 71%, 1)', // maporg node, cancel btn
-          700: 'hsla(210, 1%, 53%, 1)', // card header
-          900: 'hsla(0, 1%, 34%, 1)', // nav
+          400: withOpacity('210, 10%, 96%'), // sidebar bg, tab bg
+          500: withOpacity('180, 2%, 92%'), // maporg bg, input bg
+          600: withOpacity('210, 1%, 71%'), // maporg node, cancel btn
+          700: withOpacity('210, 1%, 53%'), // card header
+          900: withOpacity('0, 1%, 34%'), // nav
         },
         transparent: 'transparent',
         current: 'currentColor',

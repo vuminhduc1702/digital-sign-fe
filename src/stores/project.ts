@@ -10,6 +10,6 @@ export const useProjectIdStore = create<ProjectIdStore>(set => ({
   // TODO: Remove default projectId later
   projectId: '7d7025f0-e0be-4336-9843-8b3a21a34a77',
   // projectId: '33b8dbd7-681c-4736-a232-583946962e40',
-  projectName: '',
+  projectName: "smarthome's Finn",
   setProjectId: (projectId, projectName) => set({ projectId, projectName }),
 }))

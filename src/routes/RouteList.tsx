@@ -1,4 +1,3 @@
-import { useMediaQuery, mediaQueryPoint } from '~/utils/hooks'
 import { PATHS } from './PATHS'
 
 import MainLayout from '~/layout/MainLayout'
@@ -14,8 +13,6 @@ import NotFoundPage from '~/pages/NotFoundPage'
 import LandingPage from '~/pages/LandingPage'
 
 export function RouteList() {
-  const isMobileMD = useMediaQuery(`(max-width: ${mediaQueryPoint.md}px)`)
-
   // TODO: Router transition animation
 
   return [

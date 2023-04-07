@@ -57,7 +57,6 @@
         },
         "attr_list": "Danh sách thuộc tính",
         "table": {
-          "stt": "STT",
           "id": "ID",
           "attr_key": "Thuộc tính",
           "attr_type": "Loại thuộc tính",
@@ -79,11 +78,19 @@
   "table": {
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
-    "no": "STT"
+    "no": "STT",
+    "excel": "Excel",
+    "pdf": "PDF",
+    "print": "In"
   },
   "btn": {
     "create": "Tạo mới"
   },
-  "no_data": "Không có dữ liệu",
+  "error": {
+    "no_data": "Không có dữ liệu",
+    "not_found": "Không tìm thấy",
+    "no_user": "Không tồn tại người dùng"
+  },
+  "loading": "Đang tải dữ liệu...",
   "search": "Tìm kiếm"
 }

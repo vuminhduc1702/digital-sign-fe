@@ -47,7 +47,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionOtherProps>(
     <Accordion.Header className="flex">
       <Accordion.Trigger
         className={clsx(
-          'group my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none hover:text-primary-400',
+          'my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none hover:text-primary-400 data-[state=open]:text-primary-400',
           className,
         )}
         {...props}
@@ -64,7 +64,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <Accordion.Content
       className={clsx(
-        'mb-1 overflow-hidden rounded-md hover:bg-primary-300 group-last-of-type:mb-0 group-[.active]:bg-primary-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
+        'mb-1 overflow-hidden rounded-md hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp',
         className,
       )}
       {...props}
@@ -74,6 +74,8 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
     </Accordion.Content>
   ),
 )
+
+// TODO: Fix active link in cloud when switch tab in OrgInfo
 
 function Sidebar() {
   const { t } = useTranslation()

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
@@ -23,4 +23,14 @@ export const mediaQueryPoint = {
   lg: 1023.98,
   xl: 1279.98,
   '2xl': 1535.98,
+}
+
+export const useDisclosure = (initial = false) => {
+  const [isOpen, setIsOpen] = useState(initial)
+
+  const open = useCallback(() => setIsOpen(true), [])
+  const close = useCallback(() => setIsOpen(false), [])
+  const toggle = useCallback(() => setIsOpen(state => !state), [])
+
+  return { isOpen, open, close, toggle }
 }

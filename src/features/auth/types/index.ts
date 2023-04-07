@@ -1,18 +1,13 @@
 export type AuthUser = {
-  phone: string
-  name: string
-  email: string
-  role_name: 'DefaultAdminRole' | 'DefaultUserRole'
-  role_id: string
-  user_id: string
-  admin_id: string
-  activate: boolean
-  device_quantity: number
+  expired_at: number
+  device_token: string
   is_admin: boolean
-  msg_quantity: number
+  user_id: string
+  email: string
+  system_role: 'TENANT' | 'TENANT_DEV'
 }
 
 export type UserResponse = {
-  jwt: string
+  token: string
   user: AuthUser
 }

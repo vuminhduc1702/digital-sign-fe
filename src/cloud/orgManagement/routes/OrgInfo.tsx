@@ -1,17 +1,20 @@
 import { useTranslation } from 'react-i18next'
-import { createColumnHelper } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useEffect, useMemo } from 'react'
 
-import { useOrgAttrs } from '../api/getOrgAttrs'
 import { useOrgIdStore } from '~/stores/org'
 import { useProjectIdStore } from '~/stores/project'
 import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
 import Table from '~/components/Table'
-import { getVNDateFormat } from '~/utils/misc'
+import { flattenData, getVNDateFormat } from '~/utils/misc'
+import { useOrgById } from '../api/getOrgById'
+import { ComboBox } from '~/components/ComboBox'
 
 import { OrgAttr } from '~/layout/MainLayout/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
+import { BtnContextMenuIcon, SearchIcon } from '~/components/SVGIcons'
+import { Button } from '~/components/Button'
 
 function OrgInfo() {
   const { t } = useTranslation()
@@ -20,7 +23,11 @@ function OrgInfo() {
   const { data: orgData } = useOrganizations({ projectId })
   const orgId =
     useOrgIdStore(state => state.orgId) || orgData?.organizations[0]?.id
-  const { data: orgAttrsData, refetch } = useOrgAttrs({ orgId })
+  const {
+    data: orgByIdData,
+    isLoading: isLoadingOrgById,
+    refetch,
+  } = useOrgById({ orgId })
 
   useEffect(() => {
     if (orgId) {
@@ -30,14 +37,14 @@ function OrgInfo() {
 
   const columnHelper = createColumnHelper<OrgAttr>()
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<OrgAttr, string>[]>(
     () => [
       columnHelper.accessor('id', {
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('cloud.org_manage.org_info.table.stt')}</span>,
+        header: () => <span>{t('table.no')}</span>,
         footer: info => info.column.id,
       }),
       ,
@@ -109,6 +116,18 @@ function OrgInfo() {
     [],
   )
 
+  const { acc: orgAttrFlattenData, extractedPropertyKeys } = flattenData(
+    orgByIdData?.attributes as Array<OrgAttr>,
+    [
+      'last_update_ts',
+      'attribute_key',
+      'attribute_type',
+      'logged',
+      'value_type',
+    ],
+  )
+  console.log('orgAttrFlattenData', orgAttrFlattenData)
+
   return (
     <div className="flex grow flex-col">
       <div>
@@ -118,7 +137,7 @@ function OrgInfo() {
         <div className="my-3 flex gap-6 pl-11">
           <div className="flex flex-none items-center">
             <img
-              src={orgAttrsData?.image || defaultOrgImage}
+              src={orgByIdData?.image || defaultOrgImage}
               onError={e => {
                 const target = e.target as HTMLImageElement
                 target.onerror = null
@@ -133,8 +152,8 @@ function OrgInfo() {
             <p>{t('cloud.org_manage.org_info.overview.desc')}</p>
           </div>
           <div className="flex flex-col gap-4">
-            <p>{orgAttrsData?.name}</p>
-            <p>{orgAttrsData?.description}</p>
+            <p>{orgByIdData?.name}</p>
+            <p>{orgByIdData?.description}</p>
           </div>
         </div>
       </div>
@@ -142,10 +161,42 @@ function OrgInfo() {
         <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
           {t('cloud.org_manage.org_info.attr_list')}
         </h2>
+        <div className="flex justify-between">
+          <div className="flex items-center gap-x-1">
+            <Button className="rounded border-none" size="sm" variant="inverse">
+              {t('table.excel')}
+            </Button>
+            <Button className="rounded border-none" size="sm" variant="inverse">
+              {t('table.pdf')}
+            </Button>
+            <Button className="rounded border-none" size="sm" variant="inverse">
+              {t('table.print')}
+            </Button>
+          </div>
+          {!isLoadingOrgById ? (
+            <ComboBox
+              data={orgAttrFlattenData}
+              extractedPropertyKeys={extractedPropertyKeys}
+              startIcon={
+                <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+              }
+            />
+          ) : (
+            <p>Loading...</p>
+          )}
+        </div>
         <Table
           columns={columns}
-          data={orgAttrsData}
+          data={orgByIdData?.attributes}
           dataQueryKey="orgInfoData"
+          contextBtn={
+            <BtnContextMenuIcon
+              className="cursor-pointer text-secondary-700 hover:text-primary-400"
+              height={40}
+              width={3}
+              viewBox="0 -10 3 40"
+            />
+          }
         />
       </div>
     </div>

@@ -5,19 +5,21 @@ import { Spinner } from '~/components/Spinner'
 
 const variants = {
   primary: 'bg-primary-400 text-white',
-  inverse: 'bg-secondary-600 text-white',
+  inverse: 'bg-secondary-500',
   danger: 'bg-red-600 text-white',
   trans: 'bg-transparent',
+  muted: 'bg-white',
 }
 
 const sizes = {
-  sm: 'py-2 px-4 text-sm',
+  sm: 'py-2 px-4 text-body-light',
   md: 'py-2 px-6 text-md',
   lg: 'py-3 px-8 text-lg',
   square: 'py-2 px-2',
+  'no-p': 'py-0',
 }
 
-type IconProps =
+export type IconProps =
   | { startIcon: React.ReactElement; endIcon?: never }
   | { endIcon: React.ReactElement; startIcon?: never }
   | { endIcon?: undefined; startIcon?: undefined }
@@ -47,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         className={clsx(
-          'grid place-content-center rounded-md border-2 border-gray-400 font-medium shadow-sm hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
+          'grid cursor-pointer place-content-center border border-gray-400 font-medium shadow-sm hover:text-primary-400  hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
           variants[variant],
           sizes[size],
           className,
@@ -55,8 +57,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && <Spinner size="sm" className="text-current" />}
-        {!isLoading && startIcon}
-        <span className="mx-2">{props.children}</span> {!isLoading && endIcon}
+        <span className="flex justify-between gap-x-3">
+          {!isLoading && startIcon}
+          {props.children}
+          {!isLoading && endIcon}
+        </span>
       </button>
     )
   },

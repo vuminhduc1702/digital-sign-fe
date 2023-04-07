@@ -22,6 +22,7 @@ function Navbar() {
   const { data: userData } = useUser()
 
   const projectId = useProjectIdStore(state => state.projectId)
+  const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   return (
     <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 lg:gap-x-10 lg:pl-[254px]">
@@ -59,10 +60,13 @@ function Navbar() {
           >
             {projectsData?.projects.map((project: Project) => {
               return (
-                <Link to={PATHS.ORG_INFO.replace(':projectId', projectId)}>
+                <Link
+                  to={PATHS.ORG_INFO.replace(':projectId', projectId)}
+                  key={project.id}
+                >
                   <DropdownMenu.Item
-                    key={project.id}
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
+                    onClick={() => setProjectId(project.id, project.name)}
                   >
                     <img
                       src={project?.image || defaultProjectImage}

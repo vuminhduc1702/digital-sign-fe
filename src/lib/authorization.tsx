@@ -1,13 +1,11 @@
-import * as React from 'react'
-
-// import { type Comment } from '~/auth/features/types/comments'
-// import { type User } from '~/auth/features/types/users'
+import { useTranslation } from 'react-i18next'
+import { useCallback } from 'react'
 
 import { useUser } from './auth'
 
 export const ROLES = {
-  DefaultAdminRole: 'DefaultAdminRole',
-  DefaultUserRole: 'DefaultUserRole',
+  TENANT: 'TENANT',
+  TENANT_DEV: 'TENANT_DEV',
 } as const
 
 type RoleTypes = keyof typeof ROLES
@@ -28,17 +26,18 @@ type RoleTypes = keyof typeof ROLES
 
 export const useAuthorization = () => {
   const user = useUser()
+  const { t } = useTranslation()
 
   if (!user.data) {
-    throw Error('User does not exist!')
+    throw Error(t('error.no_user') ?? 'No user found')
   }
 
-  const checkAccess = React.useCallback(
+  const checkAccess = useCallback(
     ({ allowedRoles }: { allowedRoles: RoleTypes[] }) => {
       if (!user.data) return false
 
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.includes(user.data.role_name)
+        return allowedRoles?.includes(user.data.system_role)
       }
 
       return true
@@ -46,7 +45,7 @@ export const useAuthorization = () => {
     [user.data],
   )
 
-  return { checkAccess, role: user.data.role_name }
+  return { checkAccess, role: user.data.system_role }
 }
 
 type AuthorizationProps = {

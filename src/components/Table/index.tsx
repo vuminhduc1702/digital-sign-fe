@@ -4,26 +4,30 @@ import {
   useReactTable,
   getCoreRowModel,
   flexRender,
+  ColumnDef,
 } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
+import { Button } from '../Button'
 
-import { BtnContextMenuIcon } from '../SVGIcons'
+import { OrgAttr } from '~/layout/MainLayout/types'
 
 function Table({
   columns,
   data,
   dataQueryKey,
+  contextBtn,
 }: {
-  columns: any
-  data: any
+  columns: ColumnDef<OrgAttr, string>[]
+  data: OrgAttr[]
   dataQueryKey: string
+  contextBtn: React.ReactElement
 }) {
   const { t } = useTranslation()
 
-  const totalAttr = data?.attributes?.length
+  const totalAttr = data?.length
 
   const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -36,7 +40,7 @@ function Table({
   }
 
   function fetchTableData(
-    data: any,
+    data: OrgAttr[],
     options: {
       pageIndex: number
       pageSize: number
@@ -44,11 +48,11 @@ function Table({
   ) {
     return {
       rows:
-        data?.attributes?.slice(
+        data?.slice(
           options.pageIndex * options.pageSize,
           (options.pageIndex + 1) * options.pageSize,
         ) ?? [],
-      pageCount: Math.ceil(data?.attributes?.length / options.pageSize) ?? 0,
+      pageCount: Math.ceil(data?.length / options.pageSize) ?? 0,
     }
   }
 
@@ -119,22 +123,30 @@ function Table({
                     className="border-secondary-70 group border-t-2"
                     key={row.id}
                   >
-                    {row.getVisibleCells().map(cell => {
-                      return (
-                        <td className="h-11" key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      )
+                    {row.getVisibleCells().map((cell, index) => {
+                      if (index === row.getVisibleCells().length - 1) {
+                        return (
+                          <Fragment key={cell.id}>
+                            <td className="h-11" key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                            <td>{contextBtn}</td>
+                          </Fragment>
+                        )
+                      } else {
+                        return (
+                          <td className="h-11" key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </td>
+                        )
+                      }
                     })}
-                    <BtnContextMenuIcon
-                      className="cursor-pointer text-secondary-700 hover:text-primary-400"
-                      height={40}
-                      width={3}
-                      viewBox="0 -10 3 40"
-                    />
                   </tr>
                 )
               })}
@@ -158,34 +170,38 @@ function Table({
                 {t('cloud.org_manage.org_info.table.show_in')
                   .replace(
                     '{{PAGE}}',
-                    pageSize < totalAttr ? pageSize?.toString() : totalAttr,
+                    pageSize < totalAttr
+                      ? pageSize?.toString()
+                      : totalAttr?.toString(),
                   )
                   .replace('{{TOTAL}}', totalAttr?.toString())}
               </span>
             </div>
-            <div className="flex">
-              <button
-                className="cursor-pointer rounded border p-1"
+            <div className="flex gap-x-2">
+              <Button
+                className="rounded-l-md border-none"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
+                variant="inverse"
               >
                 {'Prev'}
-              </button>
+              </Button>
               <Pagination
                 currentPage={pageIndex}
                 totalCount={totalAttr}
                 pageSize={pageSize}
                 table={table}
               />
-              <button
-                className="cursor-pointer rounded border p-1"
+              <Button
+                className="rounded-r-md border-none"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
+                variant="inverse"
               >
                 {'Next'}
-              </button>
+              </Button>
             </div>
-            {dataQuery.isFetching ? 'Đang tải...' : null}
+            {dataQuery.isFetching ? t('loading') : null}
           </div>
         </div>
       ) : (

@@ -5,22 +5,23 @@ import { axios } from '~/lib/axios'
 import { type Org } from '~/layout/MainLayout/types'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-export const getOrgAttrs = ({ orgId }: { orgId: string }): Promise<Org> => {
+export const getOrgById = ({ orgId }: { orgId: string }): Promise<Org> => {
   return axios.get(`/api/organizations/${orgId}`)
 }
 
-type QueryFnType = typeof getOrgAttrs
+type QueryFnType = typeof getOrgById
 
-type UseOrgAttrsOptions = {
+type UseOrgByIdOptions = {
   orgId: string
   config?: QueryConfig<QueryFnType>
 }
 
-export const useOrgAttrs = ({ orgId, config }: UseOrgAttrsOptions) => {
+// TODO: add select to massage data.attributes for combobox table
+export const useOrgById = ({ orgId, config }: UseOrgByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     ...config,
-    queryKey: ['orgAttrs', orgId],
-    queryFn: () => getOrgAttrs({ orgId }),
+    queryKey: ['orgById', orgId],
+    queryFn: () => getOrgById({ orgId }),
     enabled: !!orgId,
   })
 }
