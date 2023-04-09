@@ -1,4 +1,4 @@
-export type AuthUser = {
+export type User = {
   expired_at: number
   device_token: string
   is_admin: boolean
@@ -9,5 +9,5 @@ export type AuthUser = {
 
 export type UserResponse = {
   token: string
-  user: AuthUser
+  user: User
 }

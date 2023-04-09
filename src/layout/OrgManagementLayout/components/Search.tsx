@@ -9,7 +9,7 @@ import { flattenData } from '~/utils/misc'
 import { PlusIcon, SearchIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
 
-import { Org } from '~/layout/MainLayout/types'
+import { type Org } from '~/layout/MainLayout/types'
 
 function Search() {
   const { t } = useTranslation()

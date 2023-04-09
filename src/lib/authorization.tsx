@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 
 import { useUser } from './auth'
+import { type User } from '~/features/auth'
 
 export const ROLES = {
   TENANT: 'TENANT',
@@ -10,19 +11,27 @@ export const ROLES = {
 
 type RoleTypes = keyof typeof ROLES
 
-// export const POLICIES = {
-//   'comment:delete': (user: User, comment: Comment) => {
-//     if (user.role === 'ADMIN') {
-//       return true
-//     }
+function isTenant(user: User): boolean {
+  return user.system_role === ROLES.TENANT
+}
 
-//     if (user.role === 'USER' && comment.authorId === user.id) {
-//       return true
-//     }
+function isTenantDev(user: User): boolean {
+  return user.system_role === ROLES.TENANT_DEV
+}
 
-//     return false
-//   },
-// }
+export const POLICIES = {
+  'org:create': (user: User) => {
+    if (isTenant(user)) {
+      return true
+    }
+
+    if (isTenantDev(user)) {
+      return true
+    }
+
+    return false
+  },
+}
 
 export const useAuthorization = () => {
   const user = useUser()

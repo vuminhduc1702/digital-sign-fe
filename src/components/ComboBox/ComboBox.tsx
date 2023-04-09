@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { type IconProps } from '../Button'
 
-import { PropertyValuePair } from '~/utils/misc'
+import { type PropertyValuePair } from '~/utils/misc'
 
 export function ComboBox({
   data,

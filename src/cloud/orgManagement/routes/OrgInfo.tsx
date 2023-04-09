@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useEffect, useMemo } from 'react'
 
 import { useOrgIdStore } from '~/stores/org'
@@ -10,7 +10,7 @@ import { flattenData, getVNDateFormat } from '~/utils/misc'
 import { useOrgById } from '../api/getOrgById'
 import { ComboBox } from '~/components/ComboBox'
 
-import { OrgAttr } from '~/layout/MainLayout/types'
+import { type OrgAttr } from '~/layout/MainLayout/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
 import { BtnContextMenuIcon, SearchIcon } from '~/components/SVGIcons'
@@ -126,7 +126,6 @@ function OrgInfo() {
       'value_type',
     ],
   )
-  console.log('orgAttrFlattenData', orgAttrFlattenData)
 
   return (
     <div className="flex grow flex-col">
@@ -157,19 +156,31 @@ function OrgInfo() {
           </div>
         </div>
       </div>
-      <div className="flex grow flex-col">
+      <div className="flex grow flex-col gap-y-3">
         <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
           {t('cloud.org_manage.org_info.attr_list')}
         </h2>
         <div className="flex justify-between">
           <div className="flex items-center gap-x-1">
-            <Button className="rounded border-none" size="sm" variant="inverse">
+            <Button
+              className="rounded border-none"
+              size="sm"
+              variant="secondary"
+            >
               {t('table.excel')}
             </Button>
-            <Button className="rounded border-none" size="sm" variant="inverse">
+            <Button
+              className="rounded border-none"
+              size="sm"
+              variant="secondary"
+            >
               {t('table.pdf')}
             </Button>
-            <Button className="rounded border-none" size="sm" variant="inverse">
+            <Button
+              className="rounded border-none"
+              size="sm"
+              variant="secondary"
+            >
               {t('table.print')}
             </Button>
           </div>

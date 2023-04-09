@@ -8,8 +8,8 @@ type HeadProps = {
 export const Head = ({ title = '', description = '' }: HeadProps = {}) => {
   return (
     <Helmet
-      title={title ? `${title} | InnoWay IoT Platform` : undefined}
-      defaultTitle="InnoWay IoT Platform"
+      title={title ? `${title} | IoT Platform` : undefined}
+      defaultTitle="IoT Platform"
     >
       <meta name="description" content={description} />
     </Helmet>

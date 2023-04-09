@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { useDisclosure } from '~/utils/hooks'
-import { Drawer, DrawerProps } from '../Drawer'
+import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
 
 type FormDrawerProps = {
@@ -39,7 +39,7 @@ export const FormDrawer = ({
         size={size}
         renderFooter={() => (
           <>
-            <Button variant="inverse" size="sm" onClick={close}>
+            <Button variant="secondary" size="sm" onClick={close}>
               Cancel
             </Button>
             {submitButton}

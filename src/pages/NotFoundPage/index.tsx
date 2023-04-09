@@ -13,9 +13,10 @@ function NotFoundPage() {
   }, [navigate])
 
   return (
-    <div className="grid h-[91vh] place-content-center">
-      <h1>404 - Trang web không tồn tại</h1>
-      <p>Chuyển sang trang chủ trong vòng 3s...</p>
+    <div className="flex grow items-center justify-center">
+      <h1>
+        404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 3s...
+      </h1>
     </div>
   )
 }

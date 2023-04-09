@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import {
-  PaginationState,
+  type PaginationState,
   useReactTable,
   getCoreRowModel,
   flexRender,
-  ColumnDef,
+  type ColumnDef,
 } from '@tanstack/react-table'
 import { Fragment, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
 
-import { OrgAttr } from '~/layout/MainLayout/types'
+import { type OrgAttr } from '~/layout/MainLayout/types'
 
 function Table({
   columns,
@@ -56,11 +56,12 @@ function Table({
     }
   }
 
-  const dataQuery = useQuery(
-    [dataQueryKey, fetchDataOptions],
-    () => fetchTableData(data, fetchDataOptions),
-    { keepPreviousData: true, enabled: !!data },
-  )
+  const dataQuery = useQuery({
+    queryKey: [dataQueryKey, fetchDataOptions],
+    queryFn: () => fetchTableData(data, fetchDataOptions),
+    keepPreviousData: true,
+    enabled: !!data,
+  })
 
   const defaultData = useMemo(() => [], [])
 
@@ -182,7 +183,7 @@ function Table({
                 className="rounded-l-md border-none"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                variant="inverse"
+                variant="secondary"
               >
                 {'Prev'}
               </Button>
@@ -196,7 +197,7 @@ function Table({
                 className="rounded-r-md border-none"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                variant="inverse"
+                variant="secondary"
               >
                 {'Next'}
               </Button>

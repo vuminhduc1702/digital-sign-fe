@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { useOrgIdStore } from '~/stores/org'
 import { useProjectIdStore } from '~/stores/project'
 
-import { Org } from '~/layout/MainLayout/types'
+import { type Org } from '~/layout/MainLayout/types'
 import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
 import { Button } from '~/components/Button'
 import { flattenData } from '~/utils/misc'
@@ -21,7 +21,6 @@ function OrgMap() {
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: orgData } = useOrganizations({ projectId })
   const setOrgId = useOrgIdStore(state => state.setOrgId)
-  console.log('orgData', orgData)
 
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations as Array<Org>,
@@ -52,7 +51,7 @@ function OrgMap() {
             size="no-p"
             onClick={() => setOrgId(org.id)}
             endIcon={
-              <div className="group grid h-10 w-6 place-content-center rounded-r-md bg-secondary-600">
+              <div className="group flex h-10 w-6 items-center justify-center rounded-r-md bg-secondary-600">
                 <BtnContextMenuIcon
                   className="cursor-pointer text-white group-hover:text-primary-400"
                   height={20}

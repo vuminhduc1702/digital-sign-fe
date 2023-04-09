@@ -25,7 +25,7 @@ function Navbar() {
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   return (
-    <nav className="fixed top-0 flex h-[9vh] w-full justify-end gap-x-5 bg-secondary-900 pr-5 pl-[50px] sm:pl-0 lg:gap-x-10 lg:pl-[254px]">
+    <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
       <div className="flex cursor-pointer items-center gap-x-2">
         <img
           src={defaultUserIcon}
