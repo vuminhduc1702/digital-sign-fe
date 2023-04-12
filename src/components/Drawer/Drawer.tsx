@@ -55,12 +55,12 @@ export const Drawer = ({
                   <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-lg font-medium text-gray-900">
+                        <Dialog.Title className="text-body-md font-medium text-gray-900">
                           {title}
                         </Dialog.Title>
                         <div className="ml-3 flex h-7 items-center">
                           <button
-                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                             onClick={onClose}
                           >
                             <span className="sr-only">Close panel</span>

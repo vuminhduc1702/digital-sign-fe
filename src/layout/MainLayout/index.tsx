@@ -9,16 +9,15 @@ import MobileSidebar from './components/MobileSidebar'
 
 function MainLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  console.log('sidebarOpen', sidebarOpen)
 
   return (
-    <div className="flex min-h-screen overflow-hidden">
+    <div className="flex min-h-screen overflow-hidden md:h-screen">
       <MobileSidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
       />
       <Sidebar />
-      <div className="flex grow flex-col">
+      <div className="flex w-full flex-col">
         <div className="flex">
           <button
             className="bg-secondary-900 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary-700 lg:hidden"

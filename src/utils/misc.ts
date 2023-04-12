@@ -12,7 +12,7 @@ export function getVNDateFormat(date: number | Date) {
 
 // TODO: Fix return string only
 export type PropertyValuePair<K extends string> = {
-  [key in K]: string
+  [key in K]: unknown
 }
 
 export function flattenData<T extends PropertyValuePair<K>, K extends string>(

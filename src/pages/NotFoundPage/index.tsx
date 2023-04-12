@@ -8,7 +8,7 @@ function NotFoundPage() {
 
   // Redirect to homepage after 3 seconds
   useEffect(() => {
-    const timer = setTimeout(() => navigate(PATHS.ORG_INFO), 3000)
+    const timer = setTimeout(() => navigate(PATHS.HOME), 3000)
     return () => clearTimeout(timer)
   }, [navigate])
 

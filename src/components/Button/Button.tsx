@@ -13,8 +13,8 @@ const variants = {
 
 const sizes = {
   sm: 'py-2 px-4 text-body-light',
-  md: 'py-2 px-6 text-md',
-  lg: 'py-3 px-8 text-lg',
+  md: 'py-2 px-6 text-body-md',
+  lg: 'py-3 px-8 text-body-md',
   square: 'py-2 px-2',
   'no-p': 'py-0',
 }
@@ -49,7 +49,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         type={type}
         className={clsx(
-          'flex cursor-pointer items-center justify-center border border-gray-400 font-medium shadow-sm hover:text-primary-400  hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
+          'flex cursor-pointer items-center justify-center border border-gray-400 font-medium shadow-sm hover:text-primary-400 hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
           variants[variant],
           sizes[size],
           className,

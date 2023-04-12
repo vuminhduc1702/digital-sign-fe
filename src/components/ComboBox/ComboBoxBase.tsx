@@ -7,26 +7,15 @@ import { type IconProps } from '../Button'
 
 import { type PropertyValuePair } from '~/utils/misc'
 
-export function ComboBox({
-  data,
-  extractedPropertyKeys,
-  startIcon,
-  endIcon,
-}: {
-  data: PropertyValuePair<string>[]
-  extractedPropertyKeys: string[]
-  startIcon?: IconProps['startIcon']
-  endIcon?: IconProps['endIcon']
-}) {
-  const { t } = useTranslation()
-
-  const [selected, setSelected] = useState(data?.[0])
-  const [query, setQuery] = useState('')
-
+export function filteredComboboxData(
+  query: string,
+  flattenData: PropertyValuePair<string>[],
+  extractedPropertyKeys: string[],
+) {
   const filteredData =
     query === ''
-      ? data
-      : data.filter(data => {
+      ? flattenData
+      : flattenData?.filter(data => {
           const searchValue = query.toLowerCase().replace(/\s+/g, '')
           return extractedPropertyKeys.some(key =>
             data[key]
@@ -37,12 +26,38 @@ export function ComboBox({
           )
         })
 
+  return filteredData
+}
+
+export function ComboBoxBase({
+  data,
+  extractedPropertyKeys,
+  query,
+  setQuery,
+  setFilteredComboboxData,
+  startIcon,
+  endIcon,
+}: {
+  data: PropertyValuePair<string>[]
+  extractedPropertyKeys: string[]
+  query: string
+  setQuery: React.Dispatch<React.SetStateAction<string>>
+  setFilteredComboboxData: React.Dispatch<
+    React.SetStateAction<PropertyValuePair<string>[]>
+  >
+  startIcon?: IconProps['startIcon']
+  endIcon?: IconProps['endIcon']
+}) {
+  const { t } = useTranslation()
+
+  const [selected, setSelected] = useState({})
+
   return (
     <Combobox value={selected} onChange={setSelected}>
       <div className="relative mt-1">
-        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+        <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-body-sm">
           <Combobox.Input
-            className={`block w-full appearance-none rounded-lg border border-gray-400 px-3 py-2 placeholder-gray-700 shadow-sm focus:border-gray-700 focus:outline-none focus:ring-gray-700 sm:text-sm ${
+            className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm ${
               startIcon ? 'pl-8' : ''
             }`}
             displayValue={(data: PropertyValuePair<string>) =>
@@ -66,23 +81,23 @@ export function ComboBox({
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={() => setQuery('')}
         >
-          <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-            {filteredData?.length === 0 && query !== '' ? (
-              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+          <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-body-sm">
+            {data?.length === 0 && query !== '' ? (
+              <div className="relative cursor-default select-none py-2 px-4 text-secondary-700">
                 {t('error.not_found')}
               </div>
             ) : (
-              filteredData?.map(data => (
+              data?.map(data => (
                 <Combobox.Option
                   key={data[extractedPropertyKeys[0]]}
                   className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? 'bg-teal-600 text-white' : 'text-gray-900'
+                    `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                      active ? 'bg-primary-300 text-white' : 'text-black'
                     }`
                   }
                   value={data}
+                  onClick={() => setFilteredComboboxData?.([data])}
                 >
                   {({ selected, active }) => (
                     <>
@@ -96,7 +111,7 @@ export function ComboBox({
                       {selected ? (
                         <span
                           className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                            active ? 'text-white' : 'text-teal-600'
+                            active ? 'text-white' : 'text-primary-400'
                           }`}
                         >
                           <CheckIcon

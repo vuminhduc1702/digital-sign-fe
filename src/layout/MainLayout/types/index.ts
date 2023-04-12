@@ -21,10 +21,8 @@ export type Org = {
   org_id?: string
   group_id?: string
   project_id: string
-  level: string
-  index: number
+  level: number
   attributes: {
-    attribute_type: string
     attribute_key: string
     logged: boolean
     value: string | number | boolean
@@ -43,14 +41,15 @@ export type OrgList = {
 }
 
 export type OrgAttr = {
-  id: string
-  attribute_type: string
-  attribute_key: string
   entity_id: string
   entity_type: string
-  logged: boolean
-  value: string | number | boolean
-  value_as_string: string
-  last_update_ts: number
-  value_type: string
+  attributes: {
+    id: string
+    attribute_key: string
+    attribute_type: string
+    logged: boolean
+    value: string | number | boolean
+    value_type: string
+    last_update_ts: number
+  }
 }

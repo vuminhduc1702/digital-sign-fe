@@ -63,9 +63,16 @@
           "value_type": "Loại giá trị",
           "value": "Giá trị hiện tại",
           "last_update_ts": "Lần cập nhật cuối",
-          "logged": "Lưu lịch sử",
-          "no_attr": "Không có thuộc tính",
-          "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả"
+          "logged": "Lưu lịch sử"
+        },
+        "add_org": {
+          "title": "Tạo tổ chức",
+          "name": "Tên tổ chức",
+          "parent": "Trực thuộc",
+          "desc": "Mô tả",
+          "avatar": "Ảnh đại diện",
+          "upload_ava": "Tải ảnh",
+          "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb"
         }
       },
       "group_manage": "Nhóm",
@@ -81,7 +88,9 @@
     "no": "STT",
     "excel": "Excel",
     "pdf": "PDF",
-    "print": "In"
+    "print": "In",
+    "no_attr": "Không có thuộc tính",
+    "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả"
   },
   "btn": {
     "create": "Tạo mới"

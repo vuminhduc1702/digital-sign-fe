@@ -3,8 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import Navbar from './components/Navbar'
-import Search from './components/Search'
-import OrgMap from './components/OrgMap'
+import OrgManageSidebar from './components/OrgManageSidebar'
 import { ContentLayout } from '../ContentLayout'
 import { Spinner } from '~/components/Spinner'
 
@@ -14,9 +13,8 @@ function OrgManagementLayout() {
   return (
     <ContentLayout title={t('sidebar.cloud.org_management')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
-        <div className="flex flex-col gap-2 md:col-span-1">
-          <Search />
-          <OrgMap />
+        <div className="flex h-[89vh] flex-col gap-2 md:col-span-1">
+          <OrgManageSidebar />
         </div>
 
         <div className="flex flex-col gap-2 md:col-span-2">

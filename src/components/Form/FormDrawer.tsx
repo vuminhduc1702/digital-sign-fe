@@ -39,7 +39,12 @@ export const FormDrawer = ({
         size={size}
         renderFooter={() => (
           <>
-            <Button variant="secondary" size="sm" onClick={close}>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="sm"
+              onClick={close}
+            >
               Cancel
             </Button>
             {submitButton}

@@ -1,96 +1,46 @@
-import { useQuery } from '@tanstack/react-query'
 import {
-  type PaginationState,
   useReactTable,
   getCoreRowModel,
   flexRender,
   type ColumnDef,
+  getPaginationRowModel,
 } from '@tanstack/react-table'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
 
-import { type OrgAttr } from '~/layout/MainLayout/types'
+import { BtnContextMenuIcon } from '../SVGIcons'
 
-function Table({
-  columns,
+export function BaseTable({
   data,
-  dataQueryKey,
-  contextBtn,
+  columns,
 }: {
-  columns: ColumnDef<OrgAttr, string>[]
-  data: OrgAttr[]
-  dataQueryKey: string
-  contextBtn: React.ReactElement
+  data: Record<string, string>[]
+  columns: ColumnDef<Record<string, string>[], string>[]
 }) {
   const { t } = useTranslation()
 
   const totalAttr = data?.length
 
-  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  })
-
-  const fetchDataOptions = {
-    pageIndex,
-    pageSize,
-  }
-
-  function fetchTableData(
-    data: OrgAttr[],
-    options: {
-      pageIndex: number
-      pageSize: number
-    },
-  ) {
-    return {
-      rows:
-        data?.slice(
-          options.pageIndex * options.pageSize,
-          (options.pageIndex + 1) * options.pageSize,
-        ) ?? [],
-      pageCount: Math.ceil(data?.length / options.pageSize) ?? 0,
-    }
-  }
-
-  const dataQuery = useQuery({
-    queryKey: [dataQueryKey, fetchDataOptions],
-    queryFn: () => fetchTableData(data, fetchDataOptions),
-    keepPreviousData: true,
-    enabled: !!data,
-  })
-
   const defaultData = useMemo(() => [], [])
 
-  const pagination = useMemo(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize],
-  )
-
-  useEffect(() => {
-    dataQuery.refetch()
-  }, [data])
-
   const table = useReactTable({
-    data: dataQuery.data?.rows ?? defaultData,
+    data: data ?? defaultData,
     columns,
-    pageCount: dataQuery.data?.pageCount ?? -1,
-    state: { pagination },
-    onPaginationChange: setPagination,
+    // Pipeline
     getCoreRowModel: getCoreRowModel(),
-    manualPagination: true,
+    getPaginationRowModel: getPaginationRowModel(),
+    //
     debugTable: true,
   })
 
+  const { pageIndex, pageSize } = table.getState().pagination
+
   return (
     <>
-      {dataQuery.data?.rows.length !== 0 ? (
+      {(data != null) & (data?.length !== 0) ? (
         <div className="mt-2 flex grow flex-col justify-between">
           <table className="w-full border-collapse">
             <thead className="border-b-2 border-secondary-700">
@@ -134,7 +84,14 @@ function Table({
                                 cell.getContext(),
                               )}
                             </td>
-                            <td>{contextBtn}</td>
+                            <td>
+                              <BtnContextMenuIcon
+                                className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                                height={40}
+                                width={3}
+                                viewBox="0 -10 3 40"
+                              />
+                            </td>
                           </Fragment>
                         )
                       } else {
@@ -155,20 +112,8 @@ function Table({
           </table>
           <div className="flex items-center justify-between gap-2">
             <div className="flex gap-3">
-              <select
-                value={table.getState().pagination.pageSize}
-                onChange={e => {
-                  table.setPageSize(Number(e.target.value))
-                }}
-              >
-                {[10, 20, 30, 40, 50].map(pageSize => (
-                  <option key={pageSize} value={pageSize}>
-                    {pageSize}
-                  </option>
-                ))}
-              </select>
               <span className="flex items-center gap-1 text-body-light">
-                {t('cloud.org_manage.org_info.table.show_in')
+                {t('table.show_in')
                   .replace(
                     '{{PAGE}}',
                     pageSize < totalAttr
@@ -202,16 +147,13 @@ function Table({
                 {'Next'}
               </Button>
             </div>
-            {dataQuery.isFetching ? t('loading') : null}
           </div>
         </div>
       ) : (
         <div className="flex grow items-center justify-center">
-          {t('cloud.org_manage.org_info.table.no_attr')}
+          {t('table.no_attr')}
         </div>
       )}
     </>
   )
 }
-
-export default Table

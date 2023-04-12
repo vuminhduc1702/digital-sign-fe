@@ -1,19 +1,17 @@
 import { useTranslation } from 'react-i18next'
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useOrgIdStore } from '~/stores/org'
 import { useProjectIdStore } from '~/stores/project'
 import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
-import Table from '~/components/Table'
-import { flattenData, getVNDateFormat } from '~/utils/misc'
 import { useOrgById } from '../api/getOrgById'
-import { ComboBox } from '~/components/ComboBox'
+import { ComboBoxAttrTable } from '~/components/ComboBox'
+import AttrTable from '~/components/Table/AttrTable'
 
 import { type OrgAttr } from '~/layout/MainLayout/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { BtnContextMenuIcon, SearchIcon } from '~/components/SVGIcons'
+import { SearchIcon } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 
 function OrgInfo() {
@@ -23,11 +21,7 @@ function OrgInfo() {
   const { data: orgData } = useOrganizations({ projectId })
   const orgId =
     useOrgIdStore(state => state.orgId) || orgData?.organizations[0]?.id
-  const {
-    data: orgByIdData,
-    isLoading: isLoadingOrgById,
-    refetch,
-  } = useOrgById({ orgId })
+  const { data: orgByIdData, refetch } = useOrgById({ orgId })
 
   useEffect(() => {
     if (orgId) {
@@ -35,97 +29,9 @@ function OrgInfo() {
     }
   }, [orgId])
 
-  const columnHelper = createColumnHelper<OrgAttr>()
-
-  const columns = useMemo<ColumnDef<OrgAttr, string>[]>(
-    () => [
-      columnHelper.accessor('id', {
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
-        header: () => <span>{t('table.no')}</span>,
-        footer: info => info.column.id,
-      }),
-      ,
-      columnHelper.accessor('attribute_key', {
-        header: () => (
-          <span>{t('cloud.org_manage.org_info.table.attr_key')}</span>
-        ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      // columnHelper.accessor('entity_id', {
-      //   header: () => t('cloud.org_manage.org_info.table.id'),
-      //   cell: info => info.getValue(),
-      //   footer: info => info.column.id,
-      // }),
-      columnHelper.accessor('attribute_type', {
-        header: () => (
-          <span>{t('cloud.org_manage.org_info.table.attr_type')}</span>
-        ),
-        cell: info => {
-          const attrType = info.getValue()
-          switch (attrType) {
-            case 'SCOPE_SHARE':
-              return 'Share'
-            case 'SCOPE_CLIENT':
-              return 'Client'
-            default:
-              return 'Server'
-          }
-        },
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('value_type', {
-        header: () => (
-          <span>{t('cloud.org_manage.org_info.table.value_type')}</span>
-        ),
-        cell: info => {
-          const valueType = info.getValue()
-          switch (valueType) {
-            case 'STR':
-              return 'String'
-            case 'BOOL':
-              return 'Boolean'
-            case 'LONG':
-              return 'Long'
-            case 'DBL':
-              return 'Double'
-            case 'JSON':
-              return 'Json'
-            default:
-              return ''
-          }
-        },
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('value', {
-        header: () => <span>{t('cloud.org_manage.org_info.table.value')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('last_update_ts', {
-        header: () => (
-          <span>{t('cloud.org_manage.org_info.table.last_update_ts')}</span>
-        ),
-        cell: info => getVNDateFormat(info.getValue()),
-        footer: info => info.column.id,
-      }),
-    ],
-    [],
-  )
-
-  const { acc: orgAttrFlattenData, extractedPropertyKeys } = flattenData(
-    orgByIdData?.attributes as Array<OrgAttr>,
-    [
-      'last_update_ts',
-      'attribute_key',
-      'attribute_type',
-      'logged',
-      'value_type',
-    ],
-  )
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    OrgAttr['attributes'][]
+  >([])
 
   return (
     <div className="flex grow flex-col">
@@ -156,8 +62,8 @@ function OrgInfo() {
           </div>
         </div>
       </div>
-      <div className="flex grow flex-col gap-y-3">
-        <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
+      <div className="flex grow flex-col">
+        <h2 className="mb-3 flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
           {t('cloud.org_manage.org_info.attr_list')}
         </h2>
         <div className="flex justify-between">
@@ -184,31 +90,16 @@ function OrgInfo() {
               {t('table.print')}
             </Button>
           </div>
-          {!isLoadingOrgById ? (
-            <ComboBox
-              data={orgAttrFlattenData}
-              extractedPropertyKeys={extractedPropertyKeys}
+          <div className="flex gap-x-3">
+            <ComboBoxAttrTable
+              setFilteredComboboxData={setFilteredComboboxData}
               startIcon={
                 <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
               }
             />
-          ) : (
-            <p>Loading...</p>
-          )}
+          </div>
         </div>
-        <Table
-          columns={columns}
-          data={orgByIdData?.attributes}
-          dataQueryKey="orgInfoData"
-          contextBtn={
-            <BtnContextMenuIcon
-              className="cursor-pointer text-secondary-700 hover:text-primary-400"
-              height={40}
-              width={3}
-              viewBox="0 -10 3 40"
-            />
-          }
-        />
+        <AttrTable data={filteredComboboxData} />
       </div>
     </div>
   )

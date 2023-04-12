@@ -3,7 +3,7 @@ const storagePrefix = 'iot_platform_'
 const storage = {
   getToken: () => {
     // return JSON.parse(window.localStorage.getItem(`${storagePrefix}token`) as string);
-    return 'aClBXubsDGqlFHwuehdNNhIfcAuE9yOs'
+    return '45Fv5B26BwKfOTbT9FbOpIHz5VEFzMYX'
   },
   setToken: (token: string) => {
     window.localStorage.setItem(`${storagePrefix}token`, JSON.stringify(token))

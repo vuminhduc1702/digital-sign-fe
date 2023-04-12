@@ -39,9 +39,9 @@ module.exports = {
         h1: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
         h2: ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
         'table-header': ['1rem', { lineHeight: '1.3rem', fontWeight: '600' }],
-        /** 16px size / 20.8px high / normal */
-        h3: ['1rem', { lineHeight: '1.3rem', fontWeight: '400' }],
 
+        /** 16px size / 20.8px high / normal */
+        'body-md': ['1rem', { lineHeight: '1.3rem', fontWeight: '400' }],
         /** 14px size / 18px high / normal */
         'body-sm': ['0.875rem', { lineHeight: '1.125rem', fontWeight: '400' }],
         /** 12px size / 15.6px high / normal */

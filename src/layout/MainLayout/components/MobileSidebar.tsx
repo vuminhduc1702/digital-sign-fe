@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/20/solid'
-import React from 'react'
+import { Fragment } from 'react'
 
 import SideNavigation from './SideNavigation'
 
@@ -13,7 +13,7 @@ type MobileSidebarProps = {
 
 function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
   return (
-    <Transition.Root show={sidebarOpen} as={React.Fragment}>
+    <Transition.Root show={sidebarOpen} as={Fragment}>
       <Dialog
         as="div"
         static
@@ -22,7 +22,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
         onClose={setSidebarOpen}
       >
         <Transition.Child
-          as={React.Fragment}
+          as={Fragment}
           enter="transition-opacity ease-linear duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"
@@ -33,7 +33,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
           <Dialog.Overlay className="fixed inset-0 bg-secondary-900 bg-opacity-75" />
         </Transition.Child>
         <Transition.Child
-          as={React.Fragment}
+          as={Fragment}
           enter="transition ease-in-out duration-300 transform"
           enterFrom="-translate-x-full"
           enterTo="translate-x-0"
@@ -43,7 +43,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
         >
           <div className="relative flex w-full max-w-xs flex-1 flex-col bg-secondary-400">
             <Transition.Child
-              as={React.Fragment}
+              as={Fragment}
               enter="ease-in-out duration-300"
               enterFrom="opacity-0"
               enterTo="opacity-100"

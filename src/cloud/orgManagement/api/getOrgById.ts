@@ -16,7 +16,6 @@ type UseOrgByIdOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-// TODO: add select to massage data.attributes for combobox table
 export const useOrgById = ({ orgId, config }: UseOrgByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     ...config,
