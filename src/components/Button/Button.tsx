@@ -5,7 +5,8 @@ import { Spinner } from '~/components/Spinner'
 
 const variants = {
   primary: 'bg-primary-400 text-white',
-  secondary: 'bg-secondary-500',
+  secondary: 'bg-secondary-600',
+  secondaryLight: 'bg-secondary-500',
   danger: 'bg-red-600 text-white',
   trans: 'bg-transparent',
   muted: 'bg-white',

@@ -12,7 +12,7 @@ function withOpacity(variableName) {
 }
 
 module.exports = {
-  content: ['./src/**/*.{ts,tsx,js,jsx}'],
+  content: ['./src/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -105,5 +105,4 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/line-clamp')],
 }

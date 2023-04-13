@@ -73,6 +73,14 @@
           "avatar": "Ảnh đại diện",
           "upload_ava": "Tải ảnh",
           "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb"
+        },
+        "add_attr": {
+          "title": "Tạo thuộc tính",
+          "name": "Tên thuộc tính",
+          "value_type": "Loại giá trị",
+          "value": "Giá trị mặc định",
+          "logged": "Lưu lịch sử",
+          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
         }
       },
       "group_manage": "Nhóm",

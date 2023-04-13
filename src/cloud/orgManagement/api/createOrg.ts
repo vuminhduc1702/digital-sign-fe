@@ -7,12 +7,21 @@ import { useNotificationStore } from '~/stores/notifications'
 import { type Org } from '~/layout/MainLayout/types'
 
 type OrgCreate = Pick<Org, 'name' | 'description' | 'org_id' | 'project_id'>
+type OrgCreateRes = {
+  id: string
+  name: string
+  image?: string
+  description: string
+  group_id?: string
+  org_id?: string
+  project_id: string
+}
 
 export type CreateOrgDTO = {
   data: OrgCreate
 }
 
-export const createOrg = ({ data }: CreateOrgDTO): Promise<OrgCreate> => {
+export const createOrg = ({ data }: CreateOrgDTO): Promise<OrgCreateRes> => {
   return axios.post(`/api/organizations`, data)
 }
 
@@ -31,7 +40,9 @@ export const useCreateOrg = ({
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['orgs'] })
+      await queryClient.invalidateQueries({
+        queryKey: ['orgs'],
+      })
       addNotification({
         type: 'success',
         title: 'Tạo tổ chức thành công',

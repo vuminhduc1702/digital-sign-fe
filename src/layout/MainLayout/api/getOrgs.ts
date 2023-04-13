@@ -30,8 +30,8 @@ export const useOrganizations = ({
   config,
 }: UseOrganizationsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    ...config,
     queryKey: ['orgs', projectId],
     queryFn: () => getOrganizations({ projectId }),
+    ...config,
   })
 }

@@ -18,19 +18,23 @@ export type Org = {
   name: string
   image?: string
   description: string
-  org_id?: string
   group_id?: string
+  org_id?: string
   project_id: string
   level: number
-  attributes: {
-    attribute_key: string
-    logged: boolean
-    value: string | number | boolean
-    value_as_string: string
-    last_update_ts: number
-    value_type: string
-  }
   sub_orgs?: Org[]
+  attributes: Attribute[]
+}
+
+export type Attribute = {
+  // id: string
+  attribute_key: string
+  attribute_type: string
+  logged: boolean
+  value: string | number | boolean
+  value_as_string?: string
+  last_update_ts: number
+  value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
 }
 
 export type OrgList = {
@@ -38,18 +42,4 @@ export type OrgList = {
   offset: number
   limit: number
   organizations: Org[]
-}
-
-export type OrgAttr = {
-  entity_id: string
-  entity_type: string
-  attributes: {
-    id: string
-    attribute_key: string
-    attribute_type: string
-    logged: boolean
-    value: string | number | boolean
-    value_type: string
-    last_update_ts: number
-  }
 }

@@ -12,8 +12,10 @@ import {
 } from '~/cloud/orgManagement/api/createOrg'
 import { useProjectIdStore } from '~/stores/project'
 
-import { PlusIcon, SidebarDropDownIcon } from '~/components/SVGIcons'
 import { type OrgMapType } from './OrgManageSidebar'
+
+import { PlusIcon, SidebarDropDownIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const orgSchema = z.object({
   name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
@@ -54,16 +56,17 @@ export function CreateOrg() {
           className="rounded border-none"
           form="create-org"
           type="submit"
-          size="sm"
+          size="lg"
           isLoading={isLoading}
-        >
-          Submit
-        </Button>
+          startIcon={
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+          }
+        />
       }
     >
       <Form<CreateOrgDTO['data'], typeof orgSchema>
         id="create-org"
-        onSubmit={async values => {
+        onSubmit={values => {
           mutate({ data: values })
         }}
         schema={orgSchema}

@@ -4,12 +4,10 @@ import { useCallback } from 'react'
 import { useUser } from './auth'
 import { type User } from '~/features/auth'
 
-export const ROLES = {
-  TENANT: 'TENANT',
-  TENANT_DEV: 'TENANT_DEV',
-} as const
-
-type RoleTypes = keyof typeof ROLES
+export enum ROLES {
+  TENANT = 'TENANT',
+  TENANT_DEV = 'TENANT_DEV',
+}
 
 function isTenant(user: User): boolean {
   return user.system_role === ROLES.TENANT

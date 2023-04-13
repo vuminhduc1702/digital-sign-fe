@@ -4,6 +4,8 @@ import { useDisclosure } from '~/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
 
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+
 type FormDrawerProps = {
   isDone: boolean
   triggerButton: React.ReactElement
@@ -42,11 +44,12 @@ export const FormDrawer = ({
             <Button
               className="rounded border-none"
               variant="secondary"
-              size="sm"
+              size="lg"
               onClick={close}
-            >
-              Cancel
-            </Button>
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
             {submitButton}
           </>
         )}

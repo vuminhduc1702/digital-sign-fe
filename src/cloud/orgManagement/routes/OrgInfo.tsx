@@ -2,25 +2,21 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { useOrgIdStore } from '~/stores/org'
-import { useProjectIdStore } from '~/stores/project'
-import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
 import { useOrgById } from '../api/getOrgById'
 import { ComboBoxAttrTable } from '~/components/ComboBox'
 import AttrTable from '~/components/Table/AttrTable'
+import { Button } from '~/components/Button'
+import { CreateAttr } from '~/layout/OrgManagementLayout/components/CreateAttr'
 
-import { type OrgAttr } from '~/layout/MainLayout/types'
+import { type PropertyValuePair } from '~/utils/misc'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
 import { SearchIcon } from '~/components/SVGIcons'
-import { Button } from '~/components/Button'
 
 function OrgInfo() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
-  const { data: orgData } = useOrganizations({ projectId })
-  const orgId =
-    useOrgIdStore(state => state.orgId) || orgData?.organizations[0]?.id
+  const orgId = useOrgIdStore(state => state.orgId)
   const { data: orgByIdData, refetch } = useOrgById({ orgId })
 
   useEffect(() => {
@@ -30,7 +26,7 @@ function OrgInfo() {
   }, [orgId])
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
-    OrgAttr['attributes'][]
+    PropertyValuePair<string>[]
   >([])
 
   return (
@@ -71,26 +67,27 @@ function OrgInfo() {
             <Button
               className="rounded border-none"
               size="sm"
-              variant="secondary"
+              variant="secondaryLight"
             >
               {t('table.excel')}
             </Button>
             <Button
               className="rounded border-none"
               size="sm"
-              variant="secondary"
+              variant="secondaryLight"
             >
               {t('table.pdf')}
             </Button>
             <Button
               className="rounded border-none"
               size="sm"
-              variant="secondary"
+              variant="secondaryLight"
             >
               {t('table.print')}
             </Button>
           </div>
           <div className="flex gap-x-3">
+            <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
             <ComboBoxAttrTable
               setFilteredComboboxData={setFilteredComboboxData}
               startIcon={

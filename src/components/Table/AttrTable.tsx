@@ -1,18 +1,17 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { BaseTable } from './BaseTable'
 
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { type OrgAttr } from '~/layout/MainLayout/types'
-import { getVNDateFormat } from '~/utils/misc'
+import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
 
-function AttrTable({ data, ...props }: { data: OrgAttr['attributes'][] }) {
+function AttrTable({ data, ...props }: { data: PropertyValuePair<string>[] }) {
   const { t } = useTranslation()
 
-  const columnHelper = createColumnHelper<OrgAttr['attributes']>()
+  const columnHelper = createColumnHelper<PropertyValuePair<string>>()
 
-  const columns = useMemo<ColumnDef<OrgAttr['attributes'], string>[]>(
+  const columns = useMemo<ColumnDef<PropertyValuePair<string>, string>[]>(
     () => [
       columnHelper.accessor('id', {
         cell: info => {

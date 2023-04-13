@@ -52,7 +52,7 @@ function OrgManageSidebar() {
           {filteredComboboxData?.map((org: OrgMapType) => (
             <Button
               className={clsx(
-                'flex h-10 cursor-pointer flex-col gap-y-3 rounded-md border-none pl-4',
+                'h-10 gap-y-3 rounded-md border-none pl-4',
                 (() => {
                   const classes: { [key: string]: boolean } = {}
                   for (let i = 1; i <= 99; i++) {

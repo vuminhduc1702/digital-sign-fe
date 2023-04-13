@@ -17,8 +17,8 @@ type UseProjectsOptions = {
 
 export const useProjects = ({ config }: UseProjectsOptions = {}) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    ...config,
     queryKey: ['projects'],
     queryFn: () => getProjects(),
+    ...config,
   })
 }

@@ -4,47 +4,85 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type Org } from '~/layout/MainLayout/types'
+import { type Attribute } from '~/layout/MainLayout/types'
 
-type AttrCreate = Pick<Org, 'name' | 'description' | 'org_id' | 'project_id'>
+type EntityType =
+  | 'ORGANIZATION'
+  | 'GROUP'
+  | 'DEVICE'
+  | 'USER'
+  | 'TEMPLATE'
+  | 'EVENT'
 
 export type CreateAttrDTO = {
-  data: AttrCreate
+  data: {
+    entity_id: string
+    entity_type: EntityType
+    attributes: {
+      attribute_key: string
+      logged: boolean
+      value?: string | number | boolean
+      value_t: string
+    }
+  }
 }
 
-export const createOrg = ({ data }: CreateAttrDTO): Promise<AttrCreate> => {
-  return axios.post(`/api/organizations`, data)
+type CreateAttrRes = {
+  entity_id: string
+  entity_type: EntityType
+  attributes: {
+    attribute_type: string
+    attribute_key: string
+    logged: boolean
+    value: string | number | boolean
+    last_update_ts: number
+    value_type: Attribute['value_type']
+  }
 }
 
-type UseCreateOrgOptions = {
-  projectId: string
-  orgId?: string
-  config?: MutationConfig<typeof createOrg>
+export const createAttr = ({ data }: CreateAttrDTO): Promise<CreateAttrRes> => {
+  console.log('data', data)
+  return axios.post(`/api/attributes`, data)
 }
 
-export const useCreateOrg = ({
-  projectId,
-  orgId,
+export type UseCreateAttrOptions = {
+  entityId: string
+  entityType: EntityType
+  logged: boolean
+  valueType: Attribute['value_type']
+  config?: MutationConfig<typeof createAttr>
+}
+
+export const useCreateAttr = ({
+  entityId,
+  entityType,
+  logged,
+  valueType,
   config,
-}: UseCreateOrgOptions) => {
+}: UseCreateAttrOptions) => {
   const { addNotification } = useNotificationStore()
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['orgs'] })
+      await queryClient.invalidateQueries({ queryKey: ['orgById'] })
       addNotification({
         type: 'success',
-        title: 'Tạo tổ chức thành công',
+        title: 'Tạo thuộc tính thành công',
       })
     },
     ...config,
     mutationFn: ({ data }: CreateAttrDTO) =>
-      createOrg({
+      createAttr({
         data: {
           ...data,
-          project_id: projectId,
-          org_id: orgId,
+          entity_id: entityId,
+          entity_type: entityType,
+          attributes: {
+            logged,
+            value_t: valueType,
+          },
         },
       }),
+    // mutationFn: createAttr,
   })
 }
