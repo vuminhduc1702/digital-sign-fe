@@ -6,7 +6,7 @@ import { useNotificationStore } from '~/stores/notifications'
 
 import { type Attribute } from '~/layout/MainLayout/types'
 
-type EntityType =
+export type EntityType =
   | 'ORGANIZATION'
   | 'GROUP'
   | 'DEVICE'

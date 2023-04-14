@@ -48,6 +48,13 @@
   "cloud": {
     "org_manage": {
       "org_list": "Danh sách tổ chức",
+      "org_map": {
+        "edit": "Chỉnh sửa",
+        "copy_id": "Sao chép ID",
+        "delete": "Xóa tổ chức",
+        "copy_success": "Sao chép ID thành công",
+        "delete_org_confirm": "Bạn có chắc chắn muốn xóa tổ chức {{ORGNAME}}?"
+      },
       "org_info": {
         "title": "Tổ chức",
         "overview": {

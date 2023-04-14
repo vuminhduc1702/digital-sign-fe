@@ -7,9 +7,17 @@ import { Button } from '~/components/Button'
 import { CreateOrg } from './CreateOrg'
 import { useOrgIdStore } from '~/stores/org'
 import { ComboBoxOrgManageSidebar } from '~/components/ComboBox'
+import { Dropdown, MenuItem } from '~/components/Dropdown'
+import { useNotificationStore } from '~/stores/notifications'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { useDeleteOrg } from '../api/deleteAttr'
 
 import { SearchIcon, BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
+import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export type OrgMapType = {
   id: string
@@ -20,12 +28,28 @@ export type OrgMapType = {
 function OrgManageSidebar() {
   const { t } = useTranslation()
 
+  const { mutate, isLoading, isSuccess } = useDeleteOrg({})
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
 
+  const { addNotification } = useNotificationStore()
+
   const projectName = useProjectIdStore(state => state.projectName)
   const setOrgId = useOrgIdStore(state => state.setOrgId)
+
+  const handleCopy = async (orgId: string) => {
+    try {
+      await navigator.clipboard.writeText(orgId)
+      addNotification({
+        type: 'success',
+        title: t('cloud.org_manage.org_map.copy_success'),
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -50,34 +74,107 @@ function OrgManageSidebar() {
             {projectName}
           </Button>
           {filteredComboboxData?.map((org: OrgMapType) => (
-            <Button
-              className={clsx(
-                'h-10 gap-y-3 rounded-md border-none pl-4',
-                (() => {
-                  const classes: { [key: string]: boolean } = {}
-                  for (let i = 1; i <= 99; i++) {
-                    classes[`ml-${i * 8}`] = org.level === i.toString()
+            <div className="flex" key={org.id}>
+              <Button
+                className={clsx(
+                  'h-10 gap-y-3 rounded-l-md border-none px-4',
+                  (() => {
+                    const classes: { [key: string]: boolean } = {}
+                    for (let i = 1; i <= 99; i++) {
+                      classes[`ml-${i * 8}`] = org.level === i.toString()
+                    }
+                    return classes
+                  })(),
+                )}
+                key={org.id}
+                variant="muted"
+                size="no-p"
+                onClick={() => setOrgId(org.id)}
+              >
+                <p className="my-auto">{org.name}</p>
+              </Button>
+              <div className="flex cursor-pointer items-center justify-center rounded-r-md bg-secondary-600">
+                <Dropdown
+                  menuClass="h-10 w-6"
+                  icon={
+                    <BtnContextMenuIcon
+                      height={20}
+                      width={3}
+                      viewBox="0 0 3 20"
+                    />
                   }
-                  return classes
-                })(),
-              )}
-              key={org.id}
-              variant="muted"
-              size="no-p"
-              onClick={() => setOrgId(org.id)}
-              endIcon={
-                <div className="group flex h-10 w-6 items-center justify-center rounded-r-md bg-secondary-600">
-                  <BtnContextMenuIcon
-                    className="cursor-pointer text-white group-hover:text-primary-400"
-                    height={20}
-                    width={3}
-                    viewBox="0 0 3 20"
+                >
+                  <MenuItem
+                    icon={
+                      <img
+                        src={btnEditIcon}
+                        alt="Edit organization"
+                        className="h-5 w-5"
+                      />
+                    }
+                    onClick={() => console.log('Edit organization')}
+                  >
+                    {t('cloud.org_manage.org_map.edit')}
+                  </MenuItem>
+                  <MenuItem
+                    icon={
+                      <img
+                        src={btnCopyIdIcon}
+                        alt="Copy organization's ID"
+                        className="h-5 w-5"
+                      />
+                    }
+                    onClick={() => handleCopy(org.id)}
+                  >
+                    {t('cloud.org_manage.org_map.copy_id')}
+                  </MenuItem>
+                  <ConfirmationDialog
+                    isDone={isSuccess}
+                    icon="danger"
+                    title={t('cloud.org_manage.org_map.delete')}
+                    body={
+                      t('cloud.org_manage.org_map.delete_org_confirm').replace(
+                        '{{ORGNAME}}',
+                        org.name,
+                      ) ?? 'Confirm delete?'
+                    }
+                    triggerButton={
+                      <Button
+                        className="w-full border-none hover:opacity-100"
+                        style={{ justifyContent: 'flex-start' }}
+                        variant="trans"
+                        size="square"
+                        startIcon={
+                          <img
+                            src={btnDeleteIcon}
+                            alt="Delete organization"
+                            className="h-5 w-5"
+                          />
+                        }
+                      >
+                        {t('cloud.org_manage.org_map.delete')}
+                      </Button>
+                    }
+                    confirmButton={
+                      <Button
+                        isLoading={isLoading}
+                        type="button"
+                        size="md"
+                        className="bg-primary-400"
+                        onClick={() => mutate({ orgId: org.id })}
+                        startIcon={
+                          <img
+                            src={btnSubmitIcon}
+                            alt="Submit"
+                            className="h-5 w-5"
+                          />
+                        }
+                      />
+                    }
                   />
-                </div>
-              }
-            >
-              <p className="my-auto">{org.name}</p>
-            </Button>
+                </Dropdown>
+              </div>
+            </div>
           ))}
         </div>
       </div>

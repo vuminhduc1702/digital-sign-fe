@@ -6,8 +6,8 @@ import { useNotificationStore } from '~/stores/notifications'
 
 import { type Org } from '~/layout/MainLayout/types'
 
-type OrgCreate = Pick<Org, 'name' | 'description' | 'org_id' | 'project_id'>
-type OrgCreateRes = {
+type CreateOrg = Pick<Org, 'name' | 'description' | 'org_id' | 'project_id'>
+type CreateOrgRes = {
   id: string
   name: string
   image?: string
@@ -18,10 +18,10 @@ type OrgCreateRes = {
 }
 
 export type CreateOrgDTO = {
-  data: OrgCreate
+  data: CreateOrg
 }
 
-export const createOrg = ({ data }: CreateOrgDTO): Promise<OrgCreateRes> => {
+export const createOrg = ({ data }: CreateOrgDTO): Promise<CreateOrgRes> => {
   return axios.post(`/api/organizations`, data)
 }
 

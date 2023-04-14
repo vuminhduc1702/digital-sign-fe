@@ -86,7 +86,7 @@ function OrgInfo() {
               {t('table.print')}
             </Button>
           </div>
-          <div className="flex gap-x-3">
+          <div className="flex items-center gap-x-3">
             <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
             <ComboBoxAttrTable
               setFilteredComboboxData={setFilteredComboboxData}

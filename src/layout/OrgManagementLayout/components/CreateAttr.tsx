@@ -9,14 +9,15 @@ import { Form, FormDrawer, InputField } from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
-  type UseCreateAttrOptions,
+  type EntityType,
 } from '~/cloud/orgManagement/api/createAttr'
+import { type Attribute } from '~/layout/MainLayout/types'
 
 import { PlusIcon, SidebarDropDownIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 type ValueType = {
-  type: CreateAttrProps['valueType']
+  type: Attribute['value_type']
   name: string
 }
 
@@ -38,8 +39,10 @@ export const attrSchema = z.object({
   value: z.string().optional(),
 })
 
-type CreateAttrProps = Omit<UseCreateAttrOptions, 'config'>
-
+type CreateAttrProps = {
+  entityId: string
+  entityType: EntityType
+}
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
 
@@ -60,7 +63,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       isDone={isSuccess}
       triggerButton={
         <Button
-          className="rounded-md"
+          className="h-9 w-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -83,7 +86,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data'], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
-          console.log('clicked')
           // mutate({
           //   data: {
           //     attribute_key: values.attribute_key,
@@ -105,7 +107,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             />
             <Listbox value={selectedValueType} onChange={setSelectedValueType}>
               <div className="relative mt-1">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-600 sm:text-sm">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-secondary-600 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-600 sm:text-body-sm">
                   <span className="block truncate">
                     {selectedValueType.name}
                   </span>
@@ -123,7 +125,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-body-sm">
                     {valueTypeList.map((valueType, valueTypeIdx) => (
                       <Listbox.Option
                         key={valueTypeIdx}
@@ -166,7 +168,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             />
             <Listbox value={selectedLogged} onChange={setSelectedLogged}>
               <div className="relative mt-1">
-                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-600 sm:text-sm">
+                <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-secondary-600 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-secondary-600 sm:text-body-sm">
                   <span className="block truncate">{selectedLogged.name}</span>
                   <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                     <SidebarDropDownIcon
@@ -182,7 +184,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-body-sm">
                     {loggedList.map((logged, loggedIdx) => (
                       <Listbox.Option
                         key={loggedIdx}
