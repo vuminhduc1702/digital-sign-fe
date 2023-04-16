@@ -36,7 +36,7 @@ export const Form = <
   })
   return (
     <form
-      className={clsx('space-y-6', className)}
+      className={clsx('w-full space-y-6', className)}
       onSubmit={methods.handleSubmit(onSubmit)}
       id={id}
     >

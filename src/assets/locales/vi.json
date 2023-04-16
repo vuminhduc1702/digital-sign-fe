@@ -74,6 +74,7 @@
         },
         "add_org": {
           "title": "Tạo tổ chức",
+          "edit": "Sửa tổ chức",
           "name": "Tên tổ chức",
           "parent": "Trực thuộc",
           "desc": "Mô tả",

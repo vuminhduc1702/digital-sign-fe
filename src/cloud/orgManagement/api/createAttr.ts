@@ -14,52 +14,45 @@ export type EntityType =
   | 'TEMPLATE'
   | 'EVENT'
 
+type Attributes = {
+  attribute_key: string
+  logged: boolean
+  value?: string | number | boolean
+  value_t: string
+}
+
 export type CreateAttrDTO = {
   data: {
     entity_id: string
     entity_type: EntityType
-    attributes: {
-      attribute_key: string
-      logged: boolean
-      value?: string | number | boolean
-      value_t: string
-    }
+    attributes: Attributes[]
   }
+}
+
+type AttributesRes = {
+  attribute_type: string
+  attribute_key: string
+  logged: boolean
+  value: string | number | boolean
+  last_update_ts: number
+  value_type: Attribute['value_type']
 }
 
 type CreateAttrRes = {
   entity_id: string
   entity_type: EntityType
-  attributes: {
-    attribute_type: string
-    attribute_key: string
-    logged: boolean
-    value: string | number | boolean
-    last_update_ts: number
-    value_type: Attribute['value_type']
-  }
+  attributes: AttributesRes[]
 }
 
 export const createAttr = ({ data }: CreateAttrDTO): Promise<CreateAttrRes> => {
-  console.log('data', data)
   return axios.post(`/api/attributes`, data)
 }
 
 export type UseCreateAttrOptions = {
-  entityId: string
-  entityType: EntityType
-  logged: boolean
-  valueType: Attribute['value_type']
   config?: MutationConfig<typeof createAttr>
 }
 
-export const useCreateAttr = ({
-  entityId,
-  entityType,
-  logged,
-  valueType,
-  config,
-}: UseCreateAttrOptions) => {
+export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -71,18 +64,6 @@ export const useCreateAttr = ({
       })
     },
     ...config,
-    mutationFn: ({ data }: CreateAttrDTO) =>
-      createAttr({
-        data: {
-          ...data,
-          entity_id: entityId,
-          entity_type: entityType,
-          attributes: {
-            logged,
-            value_t: valueType,
-          },
-        },
-      }),
-    // mutationFn: createAttr,
+    mutationFn: createAttr,
   })
 }

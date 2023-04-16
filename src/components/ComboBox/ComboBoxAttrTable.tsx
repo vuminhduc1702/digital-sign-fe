@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from './ComboBoxBase'
 import { useOrgIdStore } from '~/stores/org'
-import { useOrgById } from '~/cloud/orgManagement/api/getOrgById'
+import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 
 import { type Org } from '~/layout/MainLayout/types'
 

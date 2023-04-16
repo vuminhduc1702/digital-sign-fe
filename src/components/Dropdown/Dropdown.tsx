@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, type ReactNode, forwardRef } from 'react'
+import { Fragment, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 type IconProps =

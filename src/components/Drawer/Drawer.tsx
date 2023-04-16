@@ -69,7 +69,7 @@ export const Drawer = ({
                         </div>
                       </div>
                     </div>
-                    <div className="relative mt-6 flex-1 px-4 sm:px-6">
+                    <div className="relative mt-6 flex grow px-4 sm:px-6">
                       {children}
                     </div>
                   </div>

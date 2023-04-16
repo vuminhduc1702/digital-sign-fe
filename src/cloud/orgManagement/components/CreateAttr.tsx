@@ -1,11 +1,11 @@
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Fragment, useState } from 'react'
+import { Listbox, Transition } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField } from '~/components/Form'
+import { Form, FormDrawer, InputField, SelectField } from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
@@ -51,12 +51,11 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const logged = selectedLogged.type
   const valueType = selectedValueType.type
 
-  const { mutate, isLoading, isSuccess } = useCreateAttr({
-    entityId,
-    entityType,
-    logged,
-    valueType,
-  })
+  const { mutate, isLoading, isSuccess } = useCreateAttr()
+
+  // TODO: Figure out to put logged and valueType into react-hook-form
+
+  // TODO: Choose bool valueType then InputField switch to Listbox
 
   return (
     <FormDrawer
@@ -83,18 +82,24 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         />
       }
     >
-      <Form<CreateAttrDTO['data'], typeof attrSchema>
+      <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
-          // mutate({
-          //   data: {
-          //     attribute_key: values.attribute_key,
-          //     logged: values.logged,
-          //     value: values.value,
-          //     value_t: values.value_t,
-          //   },
-          // })
-          mutate({ data: values })
+          // console.log('values', values)
+          mutate({
+            data: {
+              entity_id: entityId,
+              entity_type: entityType,
+              attributes: [
+                {
+                  attribute_key: values.attribute_key,
+                  value: values.value,
+                  logged: logged,
+                  value_t: valueType,
+                },
+              ],
+            },
+          })
         }}
         schema={attrSchema}
       >
@@ -102,8 +107,8 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
           <>
             <InputField
               label={t('cloud.org_manage.org_info.add_attr.name') ?? 'Name'}
-              error={formState.errors['attributes']?.['attribute_key']}
-              registration={register('attributes.attribute_key')}
+              error={formState.errors['attribute_key']}
+              registration={register('attribute_key')}
             />
             <Listbox value={selectedValueType} onChange={setSelectedValueType}>
               <div className="relative mt-1">
@@ -125,7 +130,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-body-sm">
+                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {valueTypeList.map((valueType, valueTypeIdx) => (
                       <Listbox.Option
                         key={valueTypeIdx}
@@ -161,10 +166,22 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 </Transition>
               </div>
             </Listbox>
+            {/* <SelectField
+              label={
+                t('cloud.org_manage.org_info.add_attr.value_type') ??
+                'Value type'
+              }
+              error={formState.errors['value_t']}
+              registration={register('value_t')}
+              options={valueTypeList.map(valueType => ({
+                label: valueType.name,
+                value: valueType.type,
+              }))}
+            /> */}
             <InputField
               label={t('cloud.org_manage.org_info.add_attr.value') ?? 'Value'}
-              error={formState.errors['attributes']?.['value']}
-              registration={register('attributes.value')}
+              error={formState.errors['value']}
+              registration={register('value')}
             />
             <Listbox value={selectedLogged} onChange={setSelectedLogged}>
               <div className="relative mt-1">
@@ -184,7 +201,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-body-sm">
+                  <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     {loggedList.map((logged, loggedIdx) => (
                       <Listbox.Option
                         key={loggedIdx}
@@ -220,6 +237,15 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 </Transition>
               </div>
             </Listbox>
+            {/* <SelectField
+              label={t('cloud.org_manage.org_info.add_attr.logged') ?? 'Logged'}
+              error={formState.errors['logged']}
+              registration={register('logged')}
+              options={loggedList.map(logged => ({
+                label: logged.name,
+                value: logged.type,
+              }))}
+            /> */}
           </>
         )}
       </Form>

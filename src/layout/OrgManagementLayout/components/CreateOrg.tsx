@@ -9,7 +9,7 @@ import { ComboBoxOrgManageSidebar } from '~/components/ComboBox'
 import {
   type CreateOrgDTO,
   useCreateOrg,
-} from '~/cloud/orgManagement/api/createOrg'
+} from '~/layout/OrgManagementLayout/api/createOrg'
 import { useProjectIdStore } from '~/stores/project'
 
 import { type OrgMapType } from './OrgManageSidebar'
@@ -32,10 +32,7 @@ export function CreateOrg() {
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { mutate, isLoading, isSuccess } = useCreateOrg({
-    projectId,
-    orgId: selectedOrgId,
-  })
+  const { mutate, isLoading, isSuccess } = useCreateOrg()
 
   // TODO: Add remove org select to default undefined
 
@@ -67,7 +64,14 @@ export function CreateOrg() {
       <Form<CreateOrgDTO['data'], typeof orgSchema>
         id="create-org"
         onSubmit={values => {
-          mutate({ data: values })
+          mutate({
+            data: {
+              project_id: projectId,
+              org_id: selectedOrgId,
+              name: values.name,
+              description: values.description,
+            },
+          })
         }}
         schema={orgSchema}
       >

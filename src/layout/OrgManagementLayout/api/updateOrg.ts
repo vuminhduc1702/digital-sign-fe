@@ -10,17 +10,18 @@ type UpdateOrg = Pick<Org, 'name'> & Partial<Omit<Org, 'name'>>
 
 export type UpdateOrgDTO = {
   data: UpdateOrg
+  orgId: string
 }
 
-export const updateOrg = ({ data }: UpdateOrgDTO): Promise<void> => {
-  return axios.put(`/api/organizations`, data)
+export const updateOrg = ({ data, orgId }: UpdateOrgDTO): Promise<unknown> => {
+  return axios.put(`/api/organizations/${orgId}`, data)
 }
 
 type UseUpdateOrgOptions = {
   config?: MutationConfig<typeof updateOrg>
 }
 
-export const useUpdateOrg = ({ config }: UseUpdateOrgOptions) => {
+export const useUpdateOrg = ({ config }: UseUpdateOrgOptions = {}) => {
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -34,11 +35,6 @@ export const useUpdateOrg = ({ config }: UseUpdateOrgOptions) => {
       })
     },
     ...config,
-    mutationFn: ({ data }: UpdateOrgDTO) =>
-      updateOrg({
-        data: {
-          ...data,
-        },
-      }),
+    mutationFn: updateOrg,
   })
 }

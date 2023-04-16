@@ -12,7 +12,7 @@ type UseDeleteOrgOptions = {
   config?: MutationConfig<typeof deleteOrg>
 }
 
-export const useDeleteOrg = ({ config }: UseDeleteOrgOptions) => {
+export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
   const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: () => {

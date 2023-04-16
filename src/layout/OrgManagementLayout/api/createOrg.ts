@@ -26,16 +26,10 @@ export const createOrg = ({ data }: CreateOrgDTO): Promise<CreateOrgRes> => {
 }
 
 type UseCreateOrgOptions = {
-  projectId: string
-  orgId?: string
   config?: MutationConfig<typeof createOrg>
 }
 
-export const useCreateOrg = ({
-  projectId,
-  orgId,
-  config,
-}: UseCreateOrgOptions) => {
+export const useCreateOrg = ({ config }: UseCreateOrgOptions = {}) => {
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -49,13 +43,6 @@ export const useCreateOrg = ({
       })
     },
     ...config,
-    mutationFn: ({ data }: CreateOrgDTO) =>
-      createOrg({
-        data: {
-          ...data,
-          project_id: projectId,
-          org_id: orgId,
-        },
-      }),
+    mutationFn: createOrg,
   })
 }

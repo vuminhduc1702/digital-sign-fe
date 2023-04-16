@@ -10,7 +10,9 @@ import { ComboBoxOrgManageSidebar } from '~/components/ComboBox'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { useNotificationStore } from '~/stores/notifications'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { useDeleteOrg } from '../api/deleteAttr'
+import { useDeleteOrg } from '../api/deleteOrg'
+import { UpdateOrg } from './UpdateOrg'
+import { useDisclosure } from '~/utils/hooks'
 
 import { SearchIcon, BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
@@ -28,11 +30,15 @@ export type OrgMapType = {
 function OrgManageSidebar() {
   const { t } = useTranslation()
 
-  const { mutate, isLoading, isSuccess } = useDeleteOrg({})
+  const { close, open, isOpen } = useDisclosure()
 
+  const { mutate, isLoading, isSuccess } = useDeleteOrg()
+
+  const [selectedUpdateOrg, setSelectedUpdateOrg] = useState('')
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
+  // console.log('filteredComboboxData', filteredComboboxData)
 
   const { addNotification } = useNotificationStore()
 
@@ -112,7 +118,10 @@ function OrgManageSidebar() {
                         className="h-5 w-5"
                       />
                     }
-                    onClick={() => console.log('Edit organization')}
+                    onClick={() => {
+                      open()
+                      setSelectedUpdateOrg(org.id)
+                    }}
                   >
                     {t('cloud.org_manage.org_map.edit')}
                   </MenuItem>
@@ -177,6 +186,11 @@ function OrgManageSidebar() {
             </div>
           ))}
         </div>
+        <UpdateOrg
+          close={close}
+          isOpen={isOpen}
+          selectedUpdateOrg={selectedUpdateOrg}
+        />
       </div>
     </>
   )
