@@ -38,7 +38,6 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
-  // console.log('filteredComboboxData', filteredComboboxData)
 
   const { addNotification } = useNotificationStore()
 
@@ -99,7 +98,7 @@ function OrgManageSidebar() {
               >
                 <p className="my-auto">{org.name}</p>
               </Button>
-              <div className="flex cursor-pointer items-center justify-center rounded-r-md bg-secondary-600">
+              <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
                 <Dropdown
                   menuClass="h-10 w-6"
                   icon={

@@ -5,7 +5,7 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 export const deleteOrg = ({ orgId }: { orgId: string }) => {
-  return axios.delete(`/organizations/${orgId}`)
+  return axios.delete(`/api/organizations/${orgId}`)
 }
 
 type UseDeleteOrgOptions = {
@@ -19,7 +19,7 @@ export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
       queryClient.invalidateQueries(['orgs'])
       addNotification({
         type: 'success',
-        title: 'Organization Deleted',
+        title: 'Xóa tổ chức thành công',
       })
     },
     ...config,

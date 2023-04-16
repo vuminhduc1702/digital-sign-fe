@@ -5,20 +5,20 @@ import {
   type ColumnDef,
   getPaginationRowModel,
 } from '@tanstack/react-table'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useMemo, type ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
 
-import { BtnContextMenuIcon } from '../SVGIcons'
-
 export function BaseTable({
   data,
   columns,
+  contextMenu,
 }: {
   data: Record<string, string>[]
   columns: ColumnDef<Record<string, string>[], string>[]
+  contextMenu: ReactElement
 }) {
   const { t } = useTranslation()
 
@@ -40,7 +40,7 @@ export function BaseTable({
 
   return (
     <>
-      {(data != null) & (data?.length !== 0) ? (
+      {data != null && data?.length !== 0 ? (
         <div className="mt-2 flex grow flex-col justify-between">
           <table className="w-full border-collapse">
             <thead className="border-b-2 border-secondary-700">
@@ -70,10 +70,7 @@ export function BaseTable({
             <tbody>
               {table.getRowModel().rows.map(row => {
                 return (
-                  <tr
-                    className="border-secondary-70 group border-t-2"
-                    key={row.id}
-                  >
+                  <tr className="border-secondary-70 border-t-2" key={row.id}>
                     {row.getVisibleCells().map((cell, index) => {
                       if (index === row.getVisibleCells().length - 1) {
                         return (
@@ -85,12 +82,9 @@ export function BaseTable({
                               )}
                             </td>
                             <td>
-                              <BtnContextMenuIcon
-                                className="cursor-pointer text-secondary-700 hover:text-primary-400"
-                                height={40}
-                                width={3}
-                                viewBox="0 -10 3 40"
-                              />
+                              <div className="flex items-center justify-center rounded-r-md">
+                                {contextMenu}
+                              </div>
                             </td>
                           </Fragment>
                         )
