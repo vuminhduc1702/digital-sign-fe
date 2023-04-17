@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useEffect, useRef } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { useProjects } from '../api/getProjects'
@@ -23,6 +24,8 @@ function Navbar() {
 
   const projectId = useProjectIdStore(state => state.projectId)
   const setProjectId = useProjectIdStore(state => state.setProjectId)
+
+  // TODO: Update projectId to params link immediately
 
   return (
     <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
@@ -55,7 +58,7 @@ function Navbar() {
         </DropdownMenu.Trigger>
         <DropdownMenu.Portal>
           <DropdownMenu.Content
-            className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+            className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
             sideOffset={5}
           >
             {projectsData?.projects.map((project: Project) => {
@@ -66,7 +69,9 @@ function Navbar() {
                 >
                   <DropdownMenu.Item
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
-                    onClick={() => setProjectId(project.id, project.name)}
+                    onClick={() => {
+                      setProjectId(project.id, project.name)
+                    }}
                   >
                     <img
                       src={project?.image || defaultProjectImage}

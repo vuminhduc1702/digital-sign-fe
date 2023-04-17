@@ -57,7 +57,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...props}
       >
-        {isLoading && <Spinner size="sm" className="text-current" />}
+        {isLoading && (
+          <Spinner size="sm" variant="light" className="text-current" />
+        )}
         <span className="flex justify-between gap-x-2">
           {!isLoading && startIcon}
           {props.children}

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import clsx from 'clsx'
+import { Menu } from '@headlessui/react'
 
 import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
@@ -83,13 +84,25 @@ function OrgManageSidebar() {
               <Button
                 className={clsx(
                   'h-10 gap-y-3 rounded-l-md border-none px-4',
-                  (() => {
-                    const classes: { [key: string]: boolean } = {}
-                    for (let i = 1; i <= 99; i++) {
-                      classes[`ml-${i * 8}`] = org.level === i.toString()
-                    }
-                    return classes
-                  })(),
+                  // (() => {
+                  //   const classes: { [key: string]: boolean } = {}
+                  //   for (let i = 1; i <= 99; i++) {
+                  //     classes[`ml-${i * 8}`] = org.level === i.toString()
+                  //   }
+                  //   return classes
+                  // })(),
+                  {
+                    'ml-8': org.level === '1',
+                    'ml-16': org.level === '2',
+                    'ml-24': org.level === '3',
+                    'ml-32': org.level === '4',
+                    'ml-40': org.level === '5',
+                    'ml-48': org.level === '6',
+                    'ml-56': org.level === '7',
+                    'ml-64': org.level === '8',
+                    'ml-72': org.level === '9',
+                    'ml-80': org.level === '10',
+                  },
                 )}
                 key={org.id}
                 variant="muted"
@@ -109,77 +122,81 @@ function OrgManageSidebar() {
                     />
                   }
                 >
-                  <MenuItem
-                    icon={
-                      <img
-                        src={btnEditIcon}
-                        alt="Edit organization"
-                        className="h-5 w-5"
-                      />
-                    }
-                    onClick={() => {
-                      open()
-                      setSelectedUpdateOrg(org.id)
-                    }}
-                  >
-                    {t('cloud.org_manage.org_map.edit')}
-                  </MenuItem>
-                  <MenuItem
-                    icon={
-                      <img
-                        src={btnCopyIdIcon}
-                        alt="Copy organization's ID"
-                        className="h-5 w-5"
-                      />
-                    }
-                    onClick={() => handleCopy(org.id)}
-                  >
-                    {t('cloud.org_manage.org_map.copy_id')}
-                  </MenuItem>
-                  <ConfirmationDialog
-                    isDone={isSuccess}
-                    icon="danger"
-                    title={t('cloud.org_manage.org_map.delete')}
-                    body={
-                      t('cloud.org_manage.org_map.delete_org_confirm').replace(
-                        '{{ORGNAME}}',
-                        org.name,
-                      ) ?? 'Confirm delete?'
-                    }
-                    triggerButton={
-                      <Button
-                        className="w-full border-none hover:opacity-100"
-                        style={{ justifyContent: 'flex-start' }}
-                        variant="trans"
-                        size="square"
-                        startIcon={
+                  <Menu.Items className="absolute left-0 z-10 mt-11 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <div className="px-1 py-1">
+                      <MenuItem
+                        icon={
                           <img
-                            src={btnDeleteIcon}
-                            alt="Delete organization"
+                            src={btnEditIcon}
+                            alt="Edit organization"
                             className="h-5 w-5"
                           />
                         }
+                        onClick={() => {
+                          open()
+                          setSelectedUpdateOrg(org.id)
+                        }}
                       >
-                        {t('cloud.org_manage.org_map.delete')}
-                      </Button>
-                    }
-                    confirmButton={
-                      <Button
-                        isLoading={isLoading}
-                        type="button"
-                        size="md"
-                        className="bg-primary-400"
-                        onClick={() => mutate({ orgId: org.id })}
-                        startIcon={
+                        {t('cloud.org_manage.org_map.edit')}
+                      </MenuItem>
+                      <MenuItem
+                        icon={
                           <img
-                            src={btnSubmitIcon}
-                            alt="Submit"
+                            src={btnCopyIdIcon}
+                            alt="Copy organization's ID"
                             className="h-5 w-5"
                           />
                         }
+                        onClick={() => handleCopy(org.id)}
+                      >
+                        {t('cloud.org_manage.org_map.copy_id')}
+                      </MenuItem>
+                      <ConfirmationDialog
+                        isDone={isSuccess}
+                        icon="danger"
+                        title={t('cloud.org_manage.org_map.delete')}
+                        body={
+                          t(
+                            'cloud.org_manage.org_map.delete_org_confirm',
+                          ).replace('{{ORGNAME}}', org.name) ??
+                          'Confirm delete?'
+                        }
+                        triggerButton={
+                          <Button
+                            className="w-full border-none hover:opacity-100"
+                            style={{ justifyContent: 'flex-start' }}
+                            variant="trans"
+                            size="square"
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete organization"
+                                className="h-5 w-5"
+                              />
+                            }
+                          >
+                            {t('cloud.org_manage.org_map.delete')}
+                          </Button>
+                        }
+                        confirmButton={
+                          <Button
+                            isLoading={isLoading}
+                            type="button"
+                            size="md"
+                            className="bg-primary-400"
+                            onClick={() => mutate({ orgId: org.id })}
+                            startIcon={
+                              <img
+                                src={btnSubmitIcon}
+                                alt="Submit"
+                                className="h-5 w-5"
+                              />
+                            }
+                          />
+                        }
                       />
-                    }
-                  />
+                    </div>
+                  </Menu.Items>
                 </Dropdown>
               </div>
             </div>

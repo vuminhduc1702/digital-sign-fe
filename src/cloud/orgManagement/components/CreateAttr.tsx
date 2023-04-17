@@ -21,7 +21,7 @@ type ValueType = {
   name: string
 }
 
-const valueTypeList: ValueType[] = [
+export const valueTypeList: ValueType[] = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
   { type: 'LONG', name: 'Long' },
@@ -29,7 +29,7 @@ const valueTypeList: ValueType[] = [
   { type: 'JSON', name: 'JSON' },
 ]
 
-const loggedList = [
+export const loggedList = [
   { type: true, name: 'Có' },
   { type: false, name: 'Không' },
 ]
@@ -85,7 +85,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
-          // console.log('values', values)
           mutate({
             data: {
               entity_id: entityId,

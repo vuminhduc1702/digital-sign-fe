@@ -13,7 +13,7 @@ export type UpdateOrgDTO = {
   orgId: string
 }
 
-export const updateOrg = ({ data, orgId }: UpdateOrgDTO): Promise<unknown> => {
+export const updateOrg = ({ data, orgId }: UpdateOrgDTO) => {
   return axios.put(`/api/organizations/${orgId}`, data)
 }
 

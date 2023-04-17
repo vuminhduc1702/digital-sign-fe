@@ -30,7 +30,6 @@ export type CreateAttrDTO = {
 }
 
 type AttributesRes = {
-  attribute_type: string
   attribute_key: string
   logged: boolean
   value: string | number | boolean

@@ -97,7 +97,7 @@ function OrgInfo() {
               />
             </div>
           </div>
-          <AttrTable data={filteredComboboxData} />
+          <AttrTable data={filteredComboboxData} entityId={orgId} />
         </div>
       ) : null}
     </div>

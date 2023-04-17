@@ -70,7 +70,10 @@
           "value_type": "Loại giá trị",
           "value": "Giá trị hiện tại",
           "last_update_ts": "Lần cập nhật cuối",
-          "logged": "Lưu lịch sử"
+          "logged": "Lưu lịch sử",
+          "delete_attr": "Xoá TT",
+          "delete_attr_full": "Xoá thuộc tính",
+          "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?"
         },
         "add_org": {
           "title": "Tạo tổ chức",
@@ -84,6 +87,7 @@
         },
         "add_attr": {
           "title": "Tạo thuộc tính",
+          "edit": "Sửa thuộc tính",
           "name": "Tên thuộc tính",
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",

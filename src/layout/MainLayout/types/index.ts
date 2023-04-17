@@ -13,6 +13,13 @@ export type Project = {
   }
 }
 
+export type ProjectList = {
+  total: number
+  offset: number
+  limit: number
+  projects: Project[]
+}
+
 export type Org = {
   id: string
   name: string
@@ -27,12 +34,9 @@ export type Org = {
 }
 
 export type Attribute = {
-  // id: string
   attribute_key: string
-  attribute_type: string
   logged: boolean
   value: string | number | boolean
-  value_as_string?: string
   last_update_ts: number
   value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
 }

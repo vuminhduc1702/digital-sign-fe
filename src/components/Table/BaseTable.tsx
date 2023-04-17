@@ -5,7 +5,7 @@ import {
   type ColumnDef,
   getPaginationRowModel,
 } from '@tanstack/react-table'
-import { Fragment, useMemo, type ReactElement } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -14,11 +14,9 @@ import { Button } from '../Button'
 export function BaseTable({
   data,
   columns,
-  contextMenu,
 }: {
   data: Record<string, string>[]
   columns: ColumnDef<Record<string, string>[], string>[]
-  contextMenu: ReactElement
 }) {
   const { t } = useTranslation()
 
@@ -80,11 +78,6 @@ export function BaseTable({
                                 cell.column.columnDef.cell,
                                 cell.getContext(),
                               )}
-                            </td>
-                            <td>
-                              <div className="flex items-center justify-center rounded-r-md">
-                                {contextMenu}
-                              </div>
                             </td>
                           </Fragment>
                         )

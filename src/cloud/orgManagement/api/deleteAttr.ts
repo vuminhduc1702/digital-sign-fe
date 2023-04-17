@@ -4,21 +4,17 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type EntityType } from './createAttr'
+
 type DeleteAttr = {
   entityId: string
-  entityType: string
-  attrType: 'SCOPE_CLIENT' | 'SCOPE_SERVER'
+  entityType: EntityType
   attrKey: string
 }
 
-export const deleteAttr = ({
-  entityId,
-  entityType,
-  attrType,
-  attrKey,
-}: DeleteAttr) => {
+export const deleteAttr = ({ entityId, entityType, attrKey }: DeleteAttr) => {
   return axios.delete(
-    `/api/attributes/${entityType}/${entityId}/${attrType}/${attrKey}/values`,
+    `/api/attributes/${entityType}/${entityId}/SCOPE_CLIENT/${attrKey}/values`,
   )
 }
 
@@ -33,7 +29,7 @@ export const useDeleteAttr = ({ config }: UseDeleteAttrOptions = {}) => {
       queryClient.invalidateQueries(['orgById'])
       addNotification({
         type: 'success',
-        title: 'Attribute Deleted',
+        title: 'Xoá thuộc tính thành công',
       })
     },
     ...config,

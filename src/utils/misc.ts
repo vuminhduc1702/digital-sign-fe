@@ -5,12 +5,11 @@ export function getVNDateFormat(date: number | Date) {
     day: '2-digit',
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'UTC',
+    timeZone: 'Asia/Ho_Chi_Minh',
     hourCycle: 'h23',
   }).format(new Date(date))
 }
 
-// TODO: Fix return string only
 export type PropertyValuePair<K extends string> = {
   [key in K]: unknown
 }
@@ -28,7 +27,12 @@ export function flattenData<T extends PropertyValuePair<K>, K extends string>(
       {},
     )
     const stringObj = Object.entries(extractedObj).reduce(
-      (newObj, [key, value]) => ({ ...newObj, [key]: String(value) }),
+      (newObj, [key, value]) => {
+        if (typeof value === 'object' && value != null) {
+          return { ...newObj, [key]: JSON.stringify(value) }
+        }
+        return { ...newObj, [key]: String(value) }
+      },
       {},
     )
     acc.push(stringObj)
