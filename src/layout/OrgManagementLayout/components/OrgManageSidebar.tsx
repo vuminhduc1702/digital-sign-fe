@@ -43,6 +43,7 @@ function OrgManageSidebar() {
   const { addNotification } = useNotificationStore()
 
   const projectName = useProjectIdStore(state => state.projectName)
+  const orgId = useOrgIdStore(state => state.orgId)
   const setOrgId = useOrgIdStore(state => state.setOrgId)
 
   const handleCopy = async (orgId: string) => {
@@ -109,7 +110,13 @@ function OrgManageSidebar() {
                 size="no-p"
                 onClick={() => setOrgId(org.id)}
               >
-                <p className="my-auto">{org.name}</p>
+                <p
+                  className={clsx('my-auto', {
+                    'text-primary-400': orgId === org.id,
+                  })}
+                >
+                  {org.name}
+                </p>
               </Button>
               <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
                 <Dropdown

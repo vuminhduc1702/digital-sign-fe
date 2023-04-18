@@ -73,7 +73,7 @@ function Navbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.device_manage')}
+          {t('cloud.org_manage.device_manage.title')}
         </p>
       </NavLink>
       <NavLink

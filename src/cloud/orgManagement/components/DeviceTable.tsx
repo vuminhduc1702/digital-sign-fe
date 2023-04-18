@@ -2,10 +2,10 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 
-import { BaseTable } from './BaseTable'
-import { Dropdown, MenuItem } from '../Dropdown'
-import { ConfirmationDialog } from '../ConfirmationDialog'
-import { Button } from '../Button'
+import { BaseTable } from '../../../components/Table/BaseTable'
+import { Dropdown, MenuItem } from '../../../components/Dropdown'
+import { ConfirmationDialog } from '../../../components/ConfirmationDialog'
+import { Button } from '../../../components/Button'
 import { useDeleteAttr } from '~/cloud/orgManagement/api/deleteAttr'
 import { UpdateAttr } from '~/cloud/orgManagement/components/UpdateAttr'
 import { useDisclosure } from '~/utils/hooks'
@@ -14,12 +14,12 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
 import { type EntityType } from '~/cloud/orgManagement/api/createAttr'
 
-import { BtnContextMenuIcon } from '../SVGIcons'
+import { BtnContextMenuIcon } from '../../../components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-function AttrTableContextMenu({
+function DeviceTableContextMenu({
   entityId,
   entityType,
   attribute_key,
@@ -122,7 +122,7 @@ function AttrTableContextMenu({
   )
 }
 
-function AttrTable({
+function DeviceTable({
   data,
   entityId,
   entityType,
@@ -206,7 +206,7 @@ function AttrTable({
       columnHelper.accessor('contextMenu', {
         cell: info => {
           const { attribute_key } = info.row.original
-          return AttrTableContextMenu({ entityId, attribute_key, entityType })
+          return DeviceTableContextMenu({ entityId, attribute_key, entityType })
         },
         header: () => null,
         footer: info => info.column.id,
@@ -218,4 +218,4 @@ function AttrTable({
   return <BaseTable data={dataSorted} columns={columns} {...props} />
 }
 
-export default AttrTable
+export default DeviceTable

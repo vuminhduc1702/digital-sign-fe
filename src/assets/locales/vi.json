@@ -97,7 +97,17 @@
       },
       "group_manage": "Nhóm",
       "user_manage": "Người dùng",
-      "device_manage": "Thiết bị",
+      "device_manage": {
+        "title": "Thiết bị",
+        "header": "Quản lý thiết bị",
+        "table": {
+          "name": "Tên",
+          "group": "Nhóm",
+          "device_type": "Loại thiết bị",
+          "created_at": "Ngày tạo",
+          "create_by": "Người tạo"
+        }
+      },
       "event_manage": "Sự kiện",
       "role_manage": "Vai trò"
     }

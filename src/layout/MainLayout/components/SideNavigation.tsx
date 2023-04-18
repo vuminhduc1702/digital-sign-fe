@@ -76,7 +76,7 @@ function SideNavigation() {
 
   const projectId = useProjectIdStore(state => state.projectId)
 
-  // TODO: Fix active link in cloud when switch tab in OrgManage
+  // TODO: Fix active link in cloud when switch tab in cloud/org-management
 
   return (
     <div className="px-8 py-7">

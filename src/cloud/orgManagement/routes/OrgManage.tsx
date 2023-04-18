@@ -4,9 +4,10 @@ import { useState } from 'react'
 import { useOrgIdStore } from '~/stores/org'
 import { useOrgById } from '../../../layout/OrgManagementLayout/api/getOrgById'
 import { ComboBoxAttrTable } from '~/components/ComboBox'
-import AttrTable from '~/components/Table/AttrTable'
-import { Button } from '~/components/Button'
+import AttrTable from '~/cloud/orgManagement/components/AttrTable'
 import { CreateAttr } from '~/cloud/orgManagement/components/CreateAttr'
+import TitleBar from '~/components/Head/TitleBar'
+import { ExportTable } from '~/components/Table/components/ExportTable'
 
 import { type PropertyValuePair } from '~/utils/misc'
 
@@ -24,12 +25,10 @@ function OrgManage() {
   >([])
 
   return (
-    <div className="flex grow flex-col">
-      <div>
-        <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
-          {t('cloud.org_manage.org_manage.overview.title')}
-        </h2>
-        <div className="my-3 flex gap-6 pl-11">
+    <div className="flex grow flex-col gap-y-3">
+      <div className="space-y-3">
+        <TitleBar title={t('cloud.org_manage.org_manage.overview.title')} />
+        <div className="flex gap-6 px-11 py-3 shadow-lg">
           <div className="flex flex-none items-center">
             <img
               src={orgByIdData?.image || defaultOrgImage}
@@ -53,49 +52,27 @@ function OrgManage() {
         </div>
       </div>
       {orgId ? (
-        <div className="flex grow flex-col">
-          <h2 className="mb-3 flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
-            {t('cloud.org_manage.org_manage.attr_list')}
-          </h2>
-          <div className="flex justify-between">
-            <div className="flex items-center gap-x-1">
-              <Button
-                className="rounded border-none"
-                size="sm"
-                variant="secondaryLight"
-              >
-                {t('table.excel')}
-              </Button>
-              <Button
-                className="rounded border-none"
-                size="sm"
-                variant="secondaryLight"
-              >
-                {t('table.pdf')}
-              </Button>
-              <Button
-                className="rounded border-none"
-                size="sm"
-                variant="secondaryLight"
-              >
-                {t('table.print')}
-              </Button>
+        <div className="flex grow flex-col gap-y-3">
+          <TitleBar title={t('cloud.org_manage.org_manage.attr_list')} />
+          <div className="flex grow flex-col px-9 py-4 shadow-lg">
+            <div className="flex justify-between">
+              <ExportTable />
+              <div className="flex items-center gap-x-3">
+                <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
+                <ComboBoxAttrTable
+                  setFilteredComboboxData={setFilteredComboboxData}
+                  startIcon={
+                    <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                />
+              </div>
             </div>
-            <div className="flex items-center gap-x-3">
-              <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-              <ComboBoxAttrTable
-                setFilteredComboboxData={setFilteredComboboxData}
-                startIcon={
-                  <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-              />
-            </div>
+            <AttrTable
+              data={filteredComboboxData}
+              entityId={orgId}
+              entityType="ORGANIZATION"
+            />
           </div>
-          <AttrTable
-            data={filteredComboboxData}
-            entityId={orgId}
-            entityType="ORGANIZATION"
-          />
         </div>
       ) : null}
     </div>
