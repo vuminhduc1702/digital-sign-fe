@@ -67,7 +67,7 @@ export function UpdateOrg({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.org_info.add_org.edit')}
+      title={t('cloud.org_manage.org_manage.add_org.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -119,7 +119,7 @@ export function UpdateOrg({
           {({ register, formState }) => (
             <>
               <InputField
-                label={t('cloud.org_manage.org_info.add_org.name') ?? 'Name'}
+                label={t('cloud.org_manage.org_manage.add_org.name') ?? 'Name'}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
@@ -136,7 +136,7 @@ export function UpdateOrg({
               />
               <TextAreaField
                 label={
-                  t('cloud.org_manage.org_info.add_org.desc') ?? 'Description'
+                  t('cloud.org_manage.org_manage.add_org.desc') ?? 'Description'
                 }
                 error={formState.errors['description']}
                 registration={register('description')}

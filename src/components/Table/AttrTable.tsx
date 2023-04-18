@@ -8,10 +8,11 @@ import { ConfirmationDialog } from '../ConfirmationDialog'
 import { Button } from '../Button'
 import { useDeleteAttr } from '~/cloud/orgManagement/api/deleteAttr'
 import { UpdateAttr } from '~/cloud/orgManagement/components/UpdateAttr'
+import { useDisclosure } from '~/utils/hooks'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
-import { useDisclosure } from '~/utils/hooks'
+import { type EntityType } from '~/cloud/orgManagement/api/createAttr'
 
 import { BtnContextMenuIcon } from '../SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -20,9 +21,11 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 function AttrTableContextMenu({
   entityId,
+  entityType,
   attribute_key,
 }: {
   entityId: string
+  entityType: EntityType
   attribute_key: string
 }) {
   const { t } = useTranslation()
@@ -62,10 +65,10 @@ function AttrTableContextMenu({
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud.org_manage.org_info.table.delete_attr_full')}
+              title={t('cloud.org_manage.org_manage.table.delete_attr_full')}
               body={
                 t(
-                  'cloud.org_manage.org_info.table.delete_attr_confirm',
+                  'cloud.org_manage.org_manage.table.delete_attr_confirm',
                 ).replace('{{ATTRNAME}}', attribute_key) ?? 'Confirm delete?'
               }
               triggerButton={
@@ -82,7 +85,7 @@ function AttrTableContextMenu({
                     />
                   }
                 >
-                  {t('cloud.org_manage.org_info.table.delete_attr')}
+                  {t('cloud.org_manage.org_manage.table.delete_attr')}
                 </Button>
               }
               confirmButton={
@@ -94,7 +97,7 @@ function AttrTableContextMenu({
                   onClick={() =>
                     mutate({
                       entityId,
-                      entityType: 'ORGANIZATION',
+                      entityType,
                       attrKey: attribute_key,
                     })
                   }
@@ -109,7 +112,7 @@ function AttrTableContextMenu({
       </Dropdown>
       {isOpen ? (
         <UpdateAttr
-          entityType="ORGANIZATION"
+          entityType={entityType}
           attributeKey={attribute_key}
           close={close}
           isOpen={isOpen}
@@ -122,10 +125,12 @@ function AttrTableContextMenu({
 function AttrTable({
   data,
   entityId,
+  entityType,
   ...props
 }: {
   data: PropertyValuePair<string>[]
   entityId: string
+  entityType: EntityType
 }) {
   const { t } = useTranslation()
 
@@ -149,14 +154,14 @@ function AttrTable({
       }),
       columnHelper.accessor('attribute_key', {
         header: () => (
-          <span>{t('cloud.org_manage.org_info.table.attr_key')}</span>
+          <span>{t('cloud.org_manage.org_manage.table.attr_key')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('value_type', {
         header: () => (
-          <span>{t('cloud.org_manage.org_info.table.value_type')}</span>
+          <span>{t('cloud.org_manage.org_manage.table.value_type')}</span>
         ),
         cell: info => {
           const valueType = info.getValue()
@@ -178,20 +183,22 @@ function AttrTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('value', {
-        header: () => <span>{t('cloud.org_manage.org_info.table.value')}</span>,
+        header: () => (
+          <span>{t('cloud.org_manage.org_manage.table.value')}</span>
+        ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('logged', {
         header: () => (
-          <span>{t('cloud.org_manage.org_info.table.logged')}</span>
+          <span>{t('cloud.org_manage.org_manage.table.logged')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {
         header: () => (
-          <span>{t('cloud.org_manage.org_info.table.last_update_ts')}</span>
+          <span>{t('cloud.org_manage.org_manage.table.last_update_ts')}</span>
         ),
         cell: info => getVNDateFormat(parseInt(info.getValue())),
         footer: info => info.column.id,
@@ -199,7 +206,7 @@ function AttrTable({
       columnHelper.accessor('contextMenu', {
         cell: info => {
           const { attribute_key } = info.row.original
-          return AttrTableContextMenu({ entityId, attribute_key })
+          return AttrTableContextMenu({ entityId, attribute_key, entityType })
         },
         header: () => null,
         footer: info => info.column.id,

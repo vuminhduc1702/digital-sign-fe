@@ -1,6 +1,6 @@
 import { PATHS } from '~/routes/PATHS'
 import OrgManagementLayout from '~/layout/OrgManagementLayout'
-import OrgInfo from './OrgInfo'
+import OrgManage from './OrgManage'
 import GroupManage from './GroupManage'
 import UserManage from './UserManage'
 import DeviceManage from './DeviceManage'
@@ -13,8 +13,8 @@ export const OrgManagementRoutes = [
     children: [
       {
         index: true,
-        path: PATHS.ORG_INFO,
-        element: <OrgInfo />,
+        path: PATHS.ORG_MANAGE,
+        element: <OrgManage />,
       },
       {
         path: PATHS.GROUP_MANAGE,

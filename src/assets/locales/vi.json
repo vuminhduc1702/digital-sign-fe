@@ -55,7 +55,7 @@
         "copy_success": "Sao chép ID thành công",
         "delete_org_confirm": "Bạn có chắc chắn muốn xóa tổ chức {{ORGNAME}}?"
       },
-      "org_info": {
+      "org_manage": {
         "title": "Tổ chức",
         "overview": {
           "title": "Tổng quan",

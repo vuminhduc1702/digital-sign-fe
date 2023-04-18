@@ -3,7 +3,7 @@ export const BASE_PATH_CLOUD = '/cloud/'
 
 export const PATHS: { [key: string]: string } = {
   HOME: `${BASE_PATH}`,
-  ORG_INFO: `${BASE_PATH_CLOUD}org-management/org-info/:projectId`,
+  ORG_MANAGE: `${BASE_PATH_CLOUD}org-management/org-manage/:projectId`,
   GROUP_MANAGE: `${BASE_PATH_CLOUD}org-management/group-manage/:projectId`,
   USER_MANAGE: `${BASE_PATH_CLOUD}org-management/user-manage/:projectId`,
   DEVICE_MANAGE: `${BASE_PATH_CLOUD}org-management/device-manage/:projectId`,

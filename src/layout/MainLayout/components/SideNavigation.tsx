@@ -112,7 +112,7 @@ function SideNavigation() {
             />
             <div>{t('sidebar.cloud.title')}</div>
           </AccordionTrigger>
-          <NavLink to={PATHS.ORG_INFO.replace(':projectId', projectId)}>
+          <NavLink to={PATHS.ORG_MANAGE.replace(':projectId', projectId)}>
             <AccordionContent>
               {t('sidebar.cloud.org_management')}
             </AccordionContent>

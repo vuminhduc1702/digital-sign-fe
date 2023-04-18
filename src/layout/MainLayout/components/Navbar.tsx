@@ -64,7 +64,7 @@ function Navbar() {
             {projectsData?.projects.map((project: Project) => {
               return (
                 <Link
-                  to={PATHS.ORG_INFO.replace(':projectId', projectId)}
+                  to={PATHS.ORG_MANAGE.replace(':projectId', projectId)}
                   key={project.id}
                 >
                   <DropdownMenu.Item

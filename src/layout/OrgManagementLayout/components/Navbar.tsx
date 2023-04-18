@@ -21,7 +21,7 @@ function Navbar() {
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
       <NavLink
-        to={PATHS.ORG_INFO.replace(':projectId', projectId)}
+        to={PATHS.ORG_MANAGE.replace(':projectId', projectId)}
         className="flex cursor-pointer gap-2"
       >
         <OrgInfoIcon
@@ -31,7 +31,7 @@ function Navbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.org_list')}
+          {t('cloud.org_manage.org_manage.title')}
         </p>
       </NavLink>
       <NavLink

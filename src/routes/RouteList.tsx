@@ -13,8 +13,6 @@ import NotFoundPage from '~/pages/NotFoundPage'
 import LandingPage from '~/pages/LandingPage'
 
 export function RouteList() {
-  // TODO: Router transition animation
-
   return [
     {
       element: <MainLayout />,

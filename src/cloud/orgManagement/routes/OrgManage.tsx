@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useOrgIdStore } from '~/stores/org'
 import { useOrgById } from '../../../layout/OrgManagementLayout/api/getOrgById'
@@ -13,17 +13,11 @@ import { type PropertyValuePair } from '~/utils/misc'
 import defaultOrgImage from '~/assets/images/default-org.png'
 import { SearchIcon } from '~/components/SVGIcons'
 
-function OrgInfo() {
+function OrgManage() {
   const { t } = useTranslation()
 
   const orgId = useOrgIdStore(state => state.orgId)
-  const { data: orgByIdData, refetch } = useOrgById({ orgId })
-
-  useEffect(() => {
-    if (orgId) {
-      refetch()
-    }
-  }, [orgId])
+  const { data: orgByIdData } = useOrgById({ orgId })
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     PropertyValuePair<string>[]
@@ -33,7 +27,7 @@ function OrgInfo() {
     <div className="flex grow flex-col">
       <div>
         <h2 className="flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
-          {t('cloud.org_manage.org_info.overview.title')}
+          {t('cloud.org_manage.org_manage.overview.title')}
         </h2>
         <div className="my-3 flex gap-6 pl-11">
           <div className="flex flex-none items-center">
@@ -49,8 +43,8 @@ function OrgInfo() {
             />
           </div>
           <div className="flex flex-col gap-4">
-            <p>{t('cloud.org_manage.org_info.overview.name')}</p>
-            <p>{t('cloud.org_manage.org_info.overview.desc')}</p>
+            <p>{t('cloud.org_manage.org_manage.overview.name')}</p>
+            <p>{t('cloud.org_manage.org_manage.overview.desc')}</p>
           </div>
           <div className="flex flex-col gap-4">
             <p>{orgByIdData?.name}</p>
@@ -61,7 +55,7 @@ function OrgInfo() {
       {orgId ? (
         <div className="flex grow flex-col">
           <h2 className="mb-3 flex h-9 items-center bg-primary-400 pl-11 text-h2 uppercase text-white">
-            {t('cloud.org_manage.org_info.attr_list')}
+            {t('cloud.org_manage.org_manage.attr_list')}
           </h2>
           <div className="flex justify-between">
             <div className="flex items-center gap-x-1">
@@ -97,11 +91,15 @@ function OrgInfo() {
               />
             </div>
           </div>
-          <AttrTable data={filteredComboboxData} entityId={orgId} />
+          <AttrTable
+            data={filteredComboboxData}
+            entityId={orgId}
+            entityType="ORGANIZATION"
+          />
         </div>
       ) : null}
     </div>
   )
 }
 
-export default OrgInfo
+export default OrgManage
