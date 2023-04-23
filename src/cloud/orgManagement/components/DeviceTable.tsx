@@ -34,8 +34,6 @@ function DeviceTableContextMenu({
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
 
-  // TODO: Loading state for delete attr
-
   return (
     <>
       <Dropdown

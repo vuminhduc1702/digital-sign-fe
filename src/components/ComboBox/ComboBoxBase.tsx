@@ -54,7 +54,7 @@ export function ComboBoxBase({
 
   return (
     <Combobox value={selected} onChange={setSelected}>
-      <div className="relative mt-1">
+      <div className="relative">
         <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-body-sm">
           <Combobox.Input
             className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm ${
