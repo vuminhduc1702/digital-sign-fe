@@ -1,8 +1,6 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { Fragment, useEffect, useState } from 'react'
-import { Listbox, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
+import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
@@ -17,13 +15,11 @@ import SelectMenu from '~/components/SelectMenu/SelectMenu'
 
 import { type EntityType } from '~/cloud/orgManagement/api/createAttr'
 
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
 export const attrSchema = z.object({
-  attribute_key: z.string().min(1, 'Vui lòng nhập để tiếp tục').max(30),
-  value: z.string().optional(),
+  value: z.string(),
 })
 
 type CreateAttrProps = {
@@ -43,9 +39,9 @@ export function UpdateAttr({
   const orgId = useOrgIdStore(state => state.orgId)
 
   const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
-  const [selectedLogged, setSelectedLogged] = useState(loggedList[0])
-  const logged = selectedLogged.type
   const valueType = selectedValueType.type
+  // const [selectedLogged, setSelectedLogged] = useState(loggedList[0])
+  // const logged = selectedLogged.type
 
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
@@ -85,7 +81,7 @@ export function UpdateAttr({
           />
           <Button
             className="rounded border-none"
-            form="update-org"
+            form="update-attr"
             type="submit"
             size="lg"
             isLoading={isLoading}
@@ -101,41 +97,31 @@ export function UpdateAttr({
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
+        <Form<UpdateAttrDTO['data'], typeof attrSchema>
           id="update-attr"
-          onSubmit={values => {
+          onSubmit={values =>
             mutate({
               data: {
-                attributes: [
-                  {
-                    attribute_key: values.attribute_key,
-                    value: values.value,
-                    logged: logged,
-                    value_t: valueType,
-                  },
-                ],
+                value: values.value,
+                value_t: valueType,
+                // logged: logged,
               },
+              attributeKey,
               entityType,
               orgId,
             })
-          }}
+          }
           schema={attrSchema}
           options={{
             defaultValues: {
-              attribute_key: attrData?.attribute_key,
               value: attrData?.value,
-              logged: attrData?.logged,
               value_t: attrData?.value_type,
+              // logged: attrData?.logged,
             },
           }}
         >
-          {({ register, formState }) => (
+          {({ register, formState, watch }) => (
             <>
-              <InputField
-                label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
-                error={formState.errors['attribute_key']}
-                registration={register('attribute_key')}
-              />
               <SelectMenu
                 data={valueTypeList}
                 selected={selectedValueType}
@@ -148,11 +134,17 @@ export function UpdateAttr({
                 error={formState.errors['value']}
                 registration={register('value')}
               />
-              <SelectMenu
+              {/* <SelectMenu
                 data={loggedList}
                 selected={selectedLogged}
                 setSelected={setSelectedLogged}
-              />
+              /> */}
+              {/* <InputField
+                  label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
+                  error={formState.errors['attribute_key']}
+                  registration={register('attribute_key')}
+                /> */}
+              <pre>{JSON.stringify(watch(), null, 2)}</pre>
             </>
           )}
         </Form>

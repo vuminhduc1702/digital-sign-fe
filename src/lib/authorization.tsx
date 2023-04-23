@@ -9,6 +9,8 @@ export enum ROLES {
   TENANT_DEV = 'TENANT_DEV',
 }
 
+type RoleTypes = keyof typeof ROLES
+
 function isTenant(user: User): boolean {
   return user.system_role === ROLES.TENANT
 }

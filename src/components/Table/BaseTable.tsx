@@ -11,12 +11,14 @@ import { useTranslation } from 'react-i18next'
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
 
+import { type PropertyValuePair } from '~/utils/misc'
+
 export function BaseTable({
   data,
   columns,
 }: {
-  data: Record<string, string>[]
-  columns: ColumnDef<Record<string, string>[], string>[]
+  data: PropertyValuePair<string>[]
+  columns: ColumnDef<PropertyValuePair<string>, string>[]
 }) {
   const { t } = useTranslation()
 
