@@ -103,9 +103,20 @@
         "table": {
           "name": "Tên",
           "group": "Nhóm",
-          "device_type": "Loại thiết bị",
+          "device_type": "Mẫu thiết bị",
           "created_at": "Ngày tạo",
-          "create_by": "Người tạo"
+          "create_by": "Người tạo",
+          "delete_device": "Xoá TB",
+          "delete_device_full": "Xoá thiết bị",
+          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
+        },
+        "add_device": {
+          "title": "Tạo thiết bị",
+          "edit": "Sửa thiết bị",
+          "name": "Tên thiết bị",
+          "parent": "Trực thuộc",
+          "device_type": "Mẫu thiết bị",
+          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
         }
       },
       "event_manage": "Sự kiện",

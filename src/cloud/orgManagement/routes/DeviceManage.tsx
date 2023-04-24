@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ComboBoxAttrTable, CreateAttr } from '../components/Attributes'
 import { useOrgIdStore } from '~/stores/org'
-import { DeviceTable } from '../components/Device'
+import { CreateDevice, DeviceTable } from '../components/Device'
+import { ComboBoxSelectDevice } from '../components/Device/ComboBoxSelectDevice'
 
 import { type PropertyValuePair } from '~/utils/misc'
-
-import { SearchIcon } from '~/components/SVGIcons'
 
 function DeviceManage() {
   const { t } = useTranslation()
@@ -29,12 +27,9 @@ function DeviceManage() {
             <div className="flex justify-between">
               <ExportTable />
               <div className="flex items-center gap-x-3">
-                <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                <ComboBoxAttrTable
+                <CreateDevice entityId={orgId} />
+                <ComboBoxSelectDevice
                   setFilteredComboboxData={setFilteredComboboxData}
-                  startIcon={
-                    <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-                  }
                 />
               </div>
             </div>

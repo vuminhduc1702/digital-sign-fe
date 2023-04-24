@@ -6,7 +6,6 @@ import { useSpinDelay } from 'spin-delay'
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { useOrgIdStore } from '~/stores/org'
-import { loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import SelectMenu from '~/components/SelectMenu/SelectMenu'
@@ -31,7 +30,7 @@ type UpdateAttrProps = {
   close: () => void
   isOpen: boolean
 }
-export function UpdateAttr({
+export function UpdateDevice({
   entityType,
   attributeKey,
   close,
@@ -40,11 +39,6 @@ export function UpdateAttr({
   const { t } = useTranslation()
 
   const orgId = useOrgIdStore(state => state.orgId)
-
-  const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
-  const valueType = selectedValueType.type
-  // const [selectedLogged, setSelectedLogged] = useState(loggedList[0])
-  // const logged = selectedLogged.type
 
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
@@ -107,7 +101,6 @@ export function UpdateAttr({
               data: {
                 value: values.value,
                 value_t: valueType,
-                // logged: logged,
               },
               attributeKey,
               entityType,
@@ -119,21 +112,11 @@ export function UpdateAttr({
             defaultValues: {
               value: attrData?.value,
               value_t: attrData?.value_type,
-              // logged: attrData?.logged,
             },
           }}
         >
           {({ register, formState }) => (
             <>
-              <SelectMenu
-                label={
-                  t('cloud.org_manage.org_manage.add_attr.value_type') ??
-                  "Attribute's value type"
-                }
-                data={valueTypeList}
-                selected={selectedValueType}
-                setSelected={setSelectedValueType}
-              />
               <InputField
                 label={
                   t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
@@ -141,16 +124,6 @@ export function UpdateAttr({
                 error={formState.errors['value']}
                 registration={register('value')}
               />
-              {/* <SelectMenu
-                data={loggedList}
-                selected={selectedLogged}
-                setSelected={setSelectedLogged}
-              /> */}
-              {/* <InputField
-                  label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
-                  error={formState.errors['attribute_key']}
-                  registration={register('attribute_key')}
-                /> */}
             </>
           )}
         </Form>

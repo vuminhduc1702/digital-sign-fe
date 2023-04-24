@@ -30,7 +30,7 @@ export const InputField = (props: InputFieldProps) => {
       <input
         type={type}
         className={clsx(
-          'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm',
+          'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm',
           className,
           { 'pl-7': startIcon, 'pr-7': endIcon },
         )}

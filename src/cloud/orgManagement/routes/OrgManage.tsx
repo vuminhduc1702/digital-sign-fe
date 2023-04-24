@@ -5,7 +5,7 @@ import { useOrgIdStore } from '~/stores/org'
 import {
   CreateAttr,
   AttrTable,
-  ComboBoxAttrTable,
+  ComboBoxSelectAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -14,7 +14,6 @@ import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 import { type PropertyValuePair } from '~/utils/misc'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { SearchIcon } from '~/components/SVGIcons'
 
 function OrgManage() {
   const { t } = useTranslation()
@@ -61,11 +60,8 @@ function OrgManage() {
               <ExportTable />
               <div className="flex items-center gap-x-3">
                 <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                <ComboBoxAttrTable
+                <ComboBoxSelectAttr
                   setFilteredComboboxData={setFilteredComboboxData}
-                  startIcon={
-                    <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-                  }
                 />
               </div>
             </div>

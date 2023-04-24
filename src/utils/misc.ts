@@ -1,3 +1,8 @@
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import { useNotificationStore } from '~/stores/notifications'
+
 export function getVNDateFormat(date: number | Date) {
   return new Intl.DateTimeFormat('vi-VN', {
     year: 'numeric',
@@ -11,7 +16,7 @@ export function getVNDateFormat(date: number | Date) {
 }
 
 export type PropertyValuePair<K extends string> = {
-  [key in K]: unknown
+  [key in K]: string
 }
 
 export function flattenData<T extends PropertyValuePair<K>, K extends string>(
@@ -45,4 +50,23 @@ export function flattenData<T extends PropertyValuePair<K>, K extends string>(
   }, [])
 
   return { acc: result, extractedPropertyKeys }
+}
+
+export function useCopyId() {
+  const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
+
+  async function handleCopyId(id: string) {
+    try {
+      await navigator.clipboard.writeText(id)
+      addNotification({
+        type: 'success',
+        title: t('cloud.org_manage.org_map.copy_success'),
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  return handleCopyId
 }

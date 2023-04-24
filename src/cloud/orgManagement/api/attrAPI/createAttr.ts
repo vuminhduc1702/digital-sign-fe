@@ -4,7 +4,7 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type Attribute } from '~/layout/MainLayout/types'
+import { type Attribute } from '~/types'
 
 export type EntityType =
   | 'ORGANIZATION'

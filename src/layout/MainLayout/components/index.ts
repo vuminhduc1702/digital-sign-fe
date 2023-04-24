@@ -1,4 +1,4 @@
-export * from './ComboBoxOrgManageSidebar'
+export * from './ComboBoxSelectOrg'
 export * from './MobileSidebar'
 export * from './Navbar'
 export * from './SideNavigation'

@@ -4,10 +4,10 @@ import { axios } from '~/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type OrgList } from '../types'
 
-export const getOrganizations = ({
+export const getOrgs = ({
   projectId,
-  offset,
-  limit,
+  offset = 0,
+  limit = 100,
 }: {
   projectId: string
   offset?: number
@@ -18,20 +18,17 @@ export const getOrganizations = ({
   })
 }
 
-type QueryFnType = typeof getOrganizations
+type QueryFnType = typeof getOrgs
 
-type UseOrganizationsOptions = {
+type UseGetOrgsOptions = {
   projectId: string
   config?: QueryConfig<QueryFnType>
 }
 
-export const useOrganizations = ({
-  projectId,
-  config,
-}: UseOrganizationsOptions) => {
+export const useGetOrgs = ({ projectId, config }: UseGetOrgsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['orgs', projectId],
-    queryFn: () => getOrganizations({ projectId }),
+    queryFn: () => getOrgs({ projectId }),
     ...config,
   })
 }

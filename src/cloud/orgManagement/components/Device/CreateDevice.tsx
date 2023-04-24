@@ -5,24 +5,23 @@ import { useState } from 'react'
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
 
-import {
-  type CreateOrgDTO,
-  useCreateOrg,
-} from '~/layout/OrgManagementLayout/api/createOrg'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 
-import { type OrgMapType } from './OrgManageSidebar'
+import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
+import {
+  useCreateDevice,
+  type CreateDeviceDTO,
+} from '../../api/deviceAPI/createDevice'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-export const orgSchema = z.object({
+export const deviceSchema = z.object({
   name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
-  description: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
 })
 
-export function CreateOrg() {
+export function CreateDevice() {
   const { t } = useTranslation()
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
@@ -32,9 +31,7 @@ export function CreateOrg() {
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { mutate, isLoading, isSuccess } = useCreateOrg()
-
-  // TODO: Add remove org select to default undefined
+  const { mutate, isLoading, isSuccess } = useCreateDevice()
 
   return (
     <FormDrawer
@@ -47,11 +44,11 @@ export function CreateOrg() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.org_manage.add_org.title')}
+      title={t('cloud.org_manage.device_manage.add_device.title')}
       submitButton={
         <Button
           className="rounded border-none"
-          form="create-org"
+          form="create-device"
           type="submit"
           size="lg"
           isLoading={isLoading}
@@ -61,40 +58,34 @@ export function CreateOrg() {
         />
       }
     >
-      <Form<CreateOrgDTO['data'], typeof orgSchema>
-        id="create-org"
+      <Form<CreateDeviceDTO['data'], typeof deviceSchema>
+        id="create-device"
         onSubmit={values => {
           mutate({
             data: {
               project_id: projectId,
               org_id: selectedOrgId,
               name: values.name,
-              description: values.description,
             },
           })
         }}
-        schema={orgSchema}
+        schema={deviceSchema}
       >
         {({ register, formState }) => (
           <>
             <InputField
-              label={t('cloud.org_manage.org_manage.add_org.name') ?? 'Name'}
+              label={
+                t('cloud.org_manage.device_manage.add_device.name') ?? 'Name'
+              }
               error={formState.errors['name']}
               registration={register('name')}
             />
             <ComboBoxSelectOrg
               label={
-                t('cloud.org_manage.org_manage.add_org.parent') ??
+                t('cloud.org_manage.device_manage.add_device.parent') ??
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-            />
-            <TextAreaField
-              label={
-                t('cloud.org_manage.org_manage.add_org.desc') ?? 'Description'
-              }
-              error={formState.errors['description']}
-              registration={register('description')}
             />
           </>
         )}

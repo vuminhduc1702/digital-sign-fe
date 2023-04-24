@@ -20,10 +20,14 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
   return (
     <div className="relative">
       <label
-        className={clsx('block text-body-sm text-secondary-700', className)}
+        className={clsx(
+          'block text-body-sm',
+          { 'space-y-1': label },
+          className,
+        )}
       >
-        {label}
-        <div className="mt-1">{children}</div>
+        <p>{label}</p>
+        <div>{children}</div>
       </label>
       {error?.message && (
         <div

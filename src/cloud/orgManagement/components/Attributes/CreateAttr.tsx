@@ -11,7 +11,7 @@ import {
 } from '~/cloud/orgManagement/api/attrAPI'
 import SelectMenu from '~/components/SelectMenu/SelectMenu'
 
-import { type Attribute } from '~/layout/MainLayout/types'
+import { type Attribute } from '~/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -30,8 +30,8 @@ export const valueTypeList: ValueType[] = [
 ]
 
 export const loggedList = [
-  { type: 'true', name: 'Có' },
-  { type: 'false', name: 'Không' },
+  { type: true, name: 'Có' },
+  { type: false, name: 'Không' },
 ]
 
 export const attrSchema = z.object({
@@ -110,6 +110,10 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               registration={register('attribute_key')}
             />
             <SelectMenu
+              label={
+                t('cloud.org_manage.org_manage.add_attr.value_type') ??
+                "Attribute's value type"
+              }
               data={valueTypeList}
               selected={selectedValueType}
               setSelected={setSelectedValueType}
@@ -132,6 +136,10 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               registration={register('value')}
             />
             <SelectMenu
+              label={
+                t('cloud.org_manage.org_manage.add_attr.logged') ??
+                "Attribute's logged"
+              }
               data={loggedList}
               selected={selectedLogged}
               setSelected={setSelectedLogged}

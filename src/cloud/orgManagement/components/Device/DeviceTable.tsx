@@ -6,35 +6,34 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
-import {
-  type EntityType,
-  useDeleteAttr,
-} from '~/cloud/orgManagement/api/attrAPI'
-import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
+import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { useDisclosure } from '~/utils/hooks'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
+import {
+  type PropertyValuePair,
+  getVNDateFormat,
+  useCopyId,
+} from '~/utils/misc'
+import { useDeleteDevice, useGetDevice } from '../../api/deviceAPI'
+import { useOrgIdStore } from '~/stores/org'
+import { useProjectIdStore } from '~/stores/project'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { UpdateDevice } from './UpdateDevice'
 
-function DeviceTableContextMenu({
-  entityId,
-  entityType,
-  attribute_key,
-}: {
-  entityId: string
-  entityType: EntityType
-  attribute_key: string
-}) {
+function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { mutate, isLoading, isSuccess } = useDeleteAttr()
+  const { mutate, isLoading, isSuccess } = useDeleteDevice()
+
+  const handleCopyId = useCopyId()
 
   return (
     <>
@@ -52,24 +51,34 @@ function DeviceTableContextMenu({
           <div className="px-1 py-1">
             <MenuItem
               icon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit attribute"
-                  className="h-5 w-5"
-                />
+                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
               }
               onClick={open}
             >
               {t('cloud.org_manage.org_map.edit')}
             </MenuItem>
+            <MenuItem
+              icon={
+                <img
+                  src={btnCopyIdIcon}
+                  alt="Copy device's ID"
+                  className="h-5 w-5"
+                />
+              }
+              onClick={() => handleCopyId(id)}
+            >
+              {t('cloud.org_manage.org_map.copy_id')}
+            </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud.org_manage.org_manage.table.delete_attr_full')}
+              title={t(
+                'cloud.org_manage.device_manage.table.delete_device_full',
+              )}
               body={
                 t(
-                  'cloud.org_manage.org_manage.table.delete_attr_confirm',
-                ).replace('{{ATTRNAME}}', attribute_key) ?? 'Confirm delete?'
+                  'cloud.org_manage.device_manage.table.delete_device_confirm',
+                ).replace('{{DEVICENAME}}', name) ?? 'Confirm delete?'
               }
               triggerButton={
                 <Button
@@ -80,12 +89,12 @@ function DeviceTableContextMenu({
                   startIcon={
                     <img
                       src={btnDeleteIcon}
-                      alt="Delete attribute"
+                      alt="Delete device"
                       className="h-5 w-5"
                     />
                   }
                 >
-                  {t('cloud.org_manage.org_manage.table.delete_attr')}
+                  {t('cloud.org_manage.device_manage.table.delete_device')}
                 </Button>
               }
               confirmButton={
@@ -94,13 +103,7 @@ function DeviceTableContextMenu({
                   type="button"
                   size="md"
                   className="bg-primary-400"
-                  onClick={() =>
-                    mutate({
-                      entityId,
-                      entityType,
-                      attrKey: attribute_key,
-                    })
-                  }
+                  onClick={() => mutate({ id })}
                   startIcon={
                     <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                   }
@@ -110,12 +113,9 @@ function DeviceTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      <UpdateAttr
-        entityType={entityType}
-        attributeKey={attribute_key}
-        close={close}
-        isOpen={isOpen}
-      />
+      {isOpen ? (
+        <UpdateDevice attributeKey={name} close={close} isOpen={isOpen} />
+      ) : null}
     </>
   )
 }
@@ -132,14 +132,15 @@ export function DeviceTable({
 }) {
   const { t } = useTranslation()
 
-  const columnHelper = createColumnHelper<PropertyValuePair<string>>()
+  const orgId = useOrgIdStore(state => state.orgId)
+  const projectId = useProjectIdStore(state => state.projectId)
+  const { data: deviceData } = useGetDevice({ orgId, projectId })
 
-  const dataSorted = data?.sort(
-    (a, b) =>
-      parseInt(a.last_update_ts as string) -
-      parseInt(b.last_update_ts as string),
+  const dataSorted = deviceData?.devices.sort(
+    (a, b) => a.created_time - b.created_time,
   )
 
+  const columnHelper = createColumnHelper<PropertyValuePair<string>>()
   const columns = useMemo<ColumnDef<PropertyValuePair<string>, string>[]>(
     () => [
       columnHelper.accessor('stt', {
@@ -150,61 +151,38 @@ export function DeviceTable({
         header: () => <span>{t('table.no')}</span>,
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('attribute_key', {
+      columnHelper.accessor('name', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud.org_manage.device_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('value_type', {
+      columnHelper.accessor('group_name', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.value_type')}</span>
-        ),
-        cell: info => {
-          const valueType = info.getValue()
-          switch (valueType) {
-            case 'STR':
-              return 'String'
-            case 'BOOL':
-              return 'Boolean'
-            case 'LONG':
-              return 'Long'
-            case 'DBL':
-              return 'Double'
-            case 'JSON':
-              return 'JSON'
-            default:
-              return ''
-          }
-        },
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('value', {
-        header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.value')}</span>
+          <span>{t('cloud.org_manage.device_manage.table.group')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('logged', {
+      columnHelper.accessor('template_name', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.logged')}</span>
+          <span>{t('cloud.org_manage.device_manage.table.device_type')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('last_update_ts', {
+      columnHelper.accessor('created_time', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.last_update_ts')}</span>
+          <span>{t('cloud.org_manage.device_manage.table.created_at')}</span>
         ),
-        cell: info => getVNDateFormat(parseInt(info.getValue())),
+        cell: info => getVNDateFormat(parseInt(info.getValue()) * 1000), // convert seconds to milliseconds
         footer: info => info.column.id,
       }),
       columnHelper.accessor('contextMenu', {
         cell: info => {
-          const { attribute_key } = info.row.original
-          return DeviceTableContextMenu({ entityId, attribute_key, entityType })
+          const { name, id } = info.row.original
+          return DeviceTableContextMenu({ name, id })
         },
         header: () => null,
         footer: info => info.column.id,

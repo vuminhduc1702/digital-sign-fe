@@ -8,14 +8,14 @@ import { Button } from '~/components/Button'
 import { CreateOrg } from './CreateOrg'
 import { useOrgIdStore } from '~/stores/org'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { useNotificationStore } from '~/stores/notifications'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useDeleteOrg } from '../api/deleteOrg'
 import { UpdateOrg } from './UpdateOrg'
 import { useDisclosure } from '~/utils/hooks'
-import { ComboBoxOrgManageSidebar } from '~/layout/MainLayout/components'
+import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import { useCopyId } from '~/utils/misc'
 
-import { SearchIcon, BtnContextMenuIcon } from '~/components/SVGIcons'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
@@ -40,23 +40,11 @@ function OrgManageSidebar() {
     OrgMapType[]
   >([])
 
-  const { addNotification } = useNotificationStore()
-
   const projectName = useProjectIdStore(state => state.projectName)
   const orgId = useOrgIdStore(state => state.orgId)
   const setOrgId = useOrgIdStore(state => state.setOrgId)
 
-  const handleCopy = async (orgId: string) => {
-    try {
-      await navigator.clipboard.writeText(orgId)
-      addNotification({
-        type: 'success',
-        title: t('cloud.org_manage.org_map.copy_success'),
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
+  const handleCopyId = useCopyId()
 
   return (
     <>
@@ -70,10 +58,7 @@ function OrgManageSidebar() {
           <p>{t('cloud.org_manage.org_list')}</p>
         </div>
         <CreateOrg />
-        <ComboBoxOrgManageSidebar
-          setFilteredComboboxData={setFilteredComboboxData}
-          startIcon={<SearchIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} />
       </div>
       <div className="overflow-y-scroll bg-secondary-500 p-3">
         <div className="space-y-3">
@@ -154,7 +139,7 @@ function OrgManageSidebar() {
                             className="h-5 w-5"
                           />
                         }
-                        onClick={() => handleCopy(org.id)}
+                        onClick={() => handleCopyId(org.id)}
                       >
                         {t('cloud.org_manage.org_map.copy_id')}
                       </MenuItem>

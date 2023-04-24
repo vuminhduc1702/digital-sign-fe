@@ -110,12 +110,14 @@ function AttrTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      <UpdateAttr
-        entityType={entityType}
-        attributeKey={attribute_key}
-        close={close}
-        isOpen={isOpen}
-      />
+      {isOpen ? (
+        <UpdateAttr
+          entityType={entityType}
+          attributeKey={attribute_key}
+          close={close}
+          isOpen={isOpen}
+        />
+      ) : null}
     </>
   )
 }
@@ -210,7 +212,7 @@ export function AttrTable({
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [entityId, entityType],
   )
 
   return <BaseTable data={dataSorted} columns={columns} {...props} />

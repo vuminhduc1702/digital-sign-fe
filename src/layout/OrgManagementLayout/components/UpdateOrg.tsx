@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, InputField, TextAreaField } from '~/components/Form'
-import { ComboBoxOrgManageSidebar } from '~/layout/MainLayout/components'
+import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import {
   type UpdateOrgDTO,
   useUpdateOrg,
@@ -16,7 +16,6 @@ import { useSpinDelay } from 'spin-delay'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
@@ -122,16 +121,12 @@ export function UpdateOrg({
                 error={formState.errors['name']}
                 registration={register('name')}
               />
-              <ComboBoxOrgManageSidebar
-                setFilteredComboboxData={setFilteredComboboxData}
-                endIcon={
-                  <SidebarDropDownIcon
-                    className="text-primary-400"
-                    width={16}
-                    height={16}
-                    viewBox="0 -5 16 16"
-                  />
+              <ComboBoxSelectOrg
+                label={
+                  t('cloud.org_manage.org_manage.add_org.parent') ??
+                  'Parent organization'
                 }
+                setFilteredComboboxData={setFilteredComboboxData}
               />
               <TextAreaField
                 label={

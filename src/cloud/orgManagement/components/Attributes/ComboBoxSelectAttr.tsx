@@ -6,8 +6,9 @@ import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
 import { type Org } from '~/layout/MainLayout/types'
+import { SearchIcon } from '~/components/SVGIcons'
 
-export function ComboBoxAttrTable({
+export function ComboBoxSelectAttr({
   setFilteredComboboxData,
   ...props
 }: {
@@ -42,6 +43,7 @@ export function ComboBoxAttrTable({
       query={query}
       setQuery={setQuery}
       setFilteredComboboxData={setFilteredComboboxData}
+      startIcon={<SearchIcon width={16} height={16} viewBox="0 0 16 16" />}
       {...props}
     />
   )

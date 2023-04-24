@@ -1,3 +1,5 @@
+import { type Attribute, type BasePagination } from '~/types'
+
 export type Project = {
   id: string
   name: string
@@ -33,17 +35,6 @@ export type Org = {
   attributes: Attribute[]
 }
 
-export type Attribute = {
-  attribute_key: string
-  logged: boolean
-  value: string | number | boolean
-  last_update_ts: number
-  value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
-}
-
 export type OrgList = {
-  total: number
-  offset: number
-  limit: number
   organizations: Org[]
-}
+} & BasePagination
