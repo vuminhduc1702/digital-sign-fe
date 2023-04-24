@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { useProjectIdStore } from '~/stores/project'
-import { useOrganizations } from '~/layout/MainLayout/api/getOrgs'
-import { ComboBoxBase, filteredComboboxData } from './ComboBoxBase'
+import { useOrganizations } from '~/layout/MainLayout/api'
+import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
 import { type Org } from '~/layout/MainLayout/types'
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'

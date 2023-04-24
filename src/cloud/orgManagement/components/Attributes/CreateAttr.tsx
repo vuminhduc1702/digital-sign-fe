@@ -8,7 +8,7 @@ import {
   type CreateAttrDTO,
   useCreateAttr,
   type EntityType,
-} from '~/cloud/orgManagement/api/createAttr'
+} from '~/cloud/orgManagement/api/attrAPI'
 import SelectMenu from '~/components/SelectMenu/SelectMenu'
 
 import { type Attribute } from '~/layout/MainLayout/types'

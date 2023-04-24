@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, InputField, TextAreaField } from '~/components/Form'
-import { ComboBoxOrgManageSidebar } from '~/components/ComboBox'
-
+import { ComboBoxOrgManageSidebar } from '~/layout/MainLayout/components'
 import {
   type UpdateOrgDTO,
   useUpdateOrg,

@@ -3,10 +3,9 @@ import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { CreateAttr } from '../components/CreateAttr'
-import { ComboBoxAttrTable } from '~/components/ComboBox'
+import { ComboBoxAttrTable, CreateAttr } from '../components/Attributes'
 import { useOrgIdStore } from '~/stores/org'
-import DeviceTable from '../components/DeviceTable'
+import { DeviceTable } from '../components/Device'
 
 import { type PropertyValuePair } from '~/utils/misc'
 

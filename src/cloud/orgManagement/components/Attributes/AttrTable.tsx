@@ -2,24 +2,24 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 
-import { BaseTable } from '../../../components/Table/BaseTable'
-import { Dropdown, MenuItem } from '../../../components/Dropdown'
-import { ConfirmationDialog } from '../../../components/ConfirmationDialog'
-import { Button } from '../../../components/Button'
-import { useDeleteAttr } from '~/cloud/orgManagement/api/deleteAttr'
-import { UpdateAttr } from '~/cloud/orgManagement/components/UpdateAttr'
+import { useDeleteAttr } from '~/cloud/orgManagement/api/attrAPI/deleteAttr'
+import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { useDisclosure } from '~/utils/hooks'
+import { Dropdown, MenuItem } from '~/components/Dropdown'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { Button } from '~/components/Button'
+import { BaseTable } from '~/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
-import { type EntityType } from '~/cloud/orgManagement/api/createAttr'
+import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 
-import { BtnContextMenuIcon } from '../../../components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
 
-function DeviceTableContextMenu({
+function AttrTableContextMenu({
   entityId,
   entityType,
   attribute_key,
@@ -33,6 +33,8 @@ function DeviceTableContextMenu({
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
+
+  // TODO: Loading state for delete attr
 
   return (
     <>
@@ -108,19 +110,17 @@ function DeviceTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      {isOpen ? (
-        <UpdateAttr
-          entityType={entityType}
-          attributeKey={attribute_key}
-          close={close}
-          isOpen={isOpen}
-        />
-      ) : null}
+      <UpdateAttr
+        entityType={entityType}
+        attributeKey={attribute_key}
+        close={close}
+        isOpen={isOpen}
+      />
     </>
   )
 }
 
-function DeviceTable({
+export function AttrTable({
   data,
   entityId,
   entityType,
@@ -204,7 +204,7 @@ function DeviceTable({
       columnHelper.accessor('contextMenu', {
         cell: info => {
           const { attribute_key } = info.row.original
-          return DeviceTableContextMenu({ entityId, attribute_key, entityType })
+          return AttrTableContextMenu({ entityId, attribute_key, entityType })
         },
         header: () => null,
         footer: info => info.column.id,
@@ -215,5 +215,3 @@ function DeviceTable({
 
   return <BaseTable data={dataSorted} columns={columns} {...props} />
 }
-
-export default DeviceTable

@@ -4,13 +4,13 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
-import { ComboBoxOrgManageSidebar } from '~/components/ComboBox'
 
 import {
   type CreateOrgDTO,
   useCreateOrg,
 } from '~/layout/OrgManagementLayout/api/createOrg'
 import { useProjectIdStore } from '~/stores/project'
+import { ComboBoxOrgManageSidebar } from '~/layout/MainLayout/components'
 
 import { type OrgMapType } from './OrgManageSidebar'
 

@@ -2,12 +2,14 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 
 import { useOrgIdStore } from '~/stores/org'
-import { useOrgById } from '../../../layout/OrgManagementLayout/api/getOrgById'
-import { ComboBoxAttrTable } from '~/components/ComboBox'
-import AttrTable from '~/cloud/orgManagement/components/AttrTable'
-import { CreateAttr } from '~/cloud/orgManagement/components/CreateAttr'
+import {
+  CreateAttr,
+  AttrTable,
+  ComboBoxAttrTable,
+} from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 
 import { type PropertyValuePair } from '~/utils/misc'
 

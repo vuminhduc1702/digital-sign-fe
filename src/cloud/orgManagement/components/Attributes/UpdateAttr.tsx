@@ -5,20 +5,23 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
-import { type UpdateAttrDTO, useUpdateAttr } from '../api/updateAttr'
 import { useOrgIdStore } from '~/stores/org'
 import { loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
-import { useGetAttr } from '../api/getAttr'
 import { Spinner } from '~/components/Spinner'
 import SelectMenu from '~/components/SelectMenu/SelectMenu'
+import {
+  type UpdateAttrDTO,
+  useGetAttr,
+  useUpdateAttr,
+} from '../../api/attrAPI'
 
-import { type EntityType } from '~/cloud/orgManagement/api/createAttr'
+import { type EntityType } from '~/cloud/orgManagement/api/attrAPI/createAttr'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-export const attrSchema = z.object({
+const attrSchema = z.object({
   value: z.string(),
 })
 
@@ -120,7 +123,7 @@ export function UpdateAttr({
             },
           }}
         >
-          {({ register, formState, watch }) => (
+          {({ register, formState }) => (
             <>
               <SelectMenu
                 data={valueTypeList}
@@ -144,7 +147,6 @@ export function UpdateAttr({
                   error={formState.errors['attribute_key']}
                   registration={register('attribute_key')}
                 /> */}
-              <pre>{JSON.stringify(watch(), null, 2)}</pre>
             </>
           )}
         </Form>

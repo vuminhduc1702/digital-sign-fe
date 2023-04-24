@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
-import { useProjects } from '../api/getProjects'
+import { useProjects } from '../api'
 import { useUser } from '~/lib/auth'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
