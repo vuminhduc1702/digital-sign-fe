@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { Menu } from '@headlessui/react'
 
 import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { CreateOrg } from './CreateOrg'
-import { useOrgIdStore } from '~/stores/org'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useDeleteOrg } from '../api/deleteOrg'
@@ -14,6 +14,7 @@ import { UpdateOrg } from './UpdateOrg'
 import { useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { useCopyId } from '~/utils/misc'
+import { PATHS } from '~/routes/PATHS'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
@@ -30,6 +31,9 @@ export type OrgMapType = {
 
 function OrgManageSidebar() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
+
+  const projectId = useProjectIdStore(state => state.projectId)
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -41,8 +45,8 @@ function OrgManageSidebar() {
   >([])
 
   const projectName = useProjectIdStore(state => state.projectName)
-  const orgId = useOrgIdStore(state => state.orgId)
-  const setOrgId = useOrgIdStore(state => state.setOrgId)
+
+  const { orgId } = useParams()
 
   const handleCopyId = useCopyId()
 
@@ -70,6 +74,7 @@ function OrgManageSidebar() {
               <Button
                 className={clsx(
                   'h-10 gap-y-3 rounded-l-md border-none px-4',
+                  // FIXME: Somehow this IIFE function doesn't run right away
                   // (() => {
                   //   const classes: { [key: string]: boolean } = {}
                   //   for (let i = 1; i <= 99; i++) {
@@ -93,7 +98,9 @@ function OrgManageSidebar() {
                 key={org.id}
                 variant="muted"
                 size="no-p"
-                onClick={() => setOrgId(org.id)}
+                onClick={() =>
+                  navigate(`${PATHS.ORG_MANAGE}/${projectId}/${org.id}`)
+                }
               >
                 <p
                   className={clsx('my-auto', {

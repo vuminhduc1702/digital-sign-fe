@@ -76,8 +76,6 @@ function SideNavigation() {
 
   const projectId = useProjectIdStore(state => state.projectId)
 
-  // TODO: Fix active link in cloud when switch tab in cloud/org-management
-
   return (
     <div className="px-8 py-7">
       <div className="mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
@@ -112,22 +110,22 @@ function SideNavigation() {
             />
             <div>{t('sidebar.cloud.title')}</div>
           </AccordionTrigger>
-          <NavLink to={PATHS.ORG_MANAGE.replace(':projectId', projectId)}>
+          <NavLink to={`${PATHS.ORG_MANAGEMENT}`}>
             <AccordionContent>
               {t('sidebar.cloud.org_management')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={PATHS.DEVICE_TEMPLATE.replace(':projectId', projectId)}>
+          <NavLink to={`${PATHS.DEVICE_TEMPLATE}/${projectId}`}>
             <AccordionContent>
               {t('sidebar.cloud.device_template')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={PATHS.FLOW_ENGINE.replace(':projectId', projectId)}>
+          <NavLink to={`${PATHS.FLOW_ENGINE}/${projectId}`}>
             <AccordionContent>
               {t('sidebar.cloud.flow_engine')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={PATHS.DASHBOARD.replace(':projectId', projectId)}>
+          <NavLink to={`${PATHS.DASHBOARD}/${projectId}`}>
             <AccordionContent>{t('sidebar.cloud.dashboard')}</AccordionContent>
           </NavLink>
         </AccordionItem>

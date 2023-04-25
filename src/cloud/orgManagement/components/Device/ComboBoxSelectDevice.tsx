@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { flattenData } from '~/utils/misc'
-import { useOrgIdStore } from '~/stores/org'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 import { useGetDevice } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
@@ -18,7 +18,7 @@ export function ComboBoxSelectDevice({
 }) {
   const [query, setQuery] = useState('')
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const { orgId } = useParams()
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: deviceData } = useGetDevice({ orgId, projectId })
 

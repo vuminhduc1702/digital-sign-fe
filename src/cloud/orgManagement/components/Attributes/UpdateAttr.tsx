@@ -2,10 +2,10 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
-import { useOrgIdStore } from '~/stores/org'
 import { loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
@@ -39,7 +39,7 @@ export function UpdateAttr({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const { orgId } = useParams()
 
   const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
   const valueType = selectedValueType.type

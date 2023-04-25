@@ -21,10 +21,7 @@ function Navbar() {
   const { data: projectsData } = useProjects()
   const { data: userData } = useUser()
 
-  const projectId = useProjectIdStore(state => state.projectId)
   const setProjectId = useProjectIdStore(state => state.setProjectId)
-
-  // TODO: Update projectId to params link immediately
 
   return (
     <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
@@ -62,10 +59,7 @@ function Navbar() {
           >
             {projectsData?.projects.map((project: Project) => {
               return (
-                <Link
-                  to={PATHS.ORG_MANAGE.replace(':projectId', projectId)}
-                  key={project.id}
-                >
+                <Link to={`${PATHS.ORG_MANAGE}/${project.id}`} key={project.id}>
                   <DropdownMenu.Item
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
                     onClick={() => {

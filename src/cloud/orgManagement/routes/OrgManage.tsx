@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { useOrgIdStore } from '~/stores/org'
 import {
   CreateAttr,
   AttrTable,
@@ -18,7 +18,8 @@ import defaultOrgImage from '~/assets/images/default-org.png'
 function OrgManage() {
   const { t } = useTranslation()
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const params = useParams()
+  const orgId = params.orgId as string
   const { data: orgByIdData } = useOrgById({ orgId })
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { useOrgIdStore } from '~/stores/org'
 import { CreateDevice, DeviceTable } from '../components/Device'
 import { ComboBoxSelectDevice } from '../components/Device/ComboBoxSelectDevice'
 
@@ -12,7 +12,7 @@ import { type PropertyValuePair } from '~/utils/misc'
 function DeviceManage() {
   const { t } = useTranslation()
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const { orgId } = useParams()
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     PropertyValuePair<string>[]

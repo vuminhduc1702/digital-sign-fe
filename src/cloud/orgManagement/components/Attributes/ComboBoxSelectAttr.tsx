@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { flattenData } from '~/utils/misc'
-import { useOrgIdStore } from '~/stores/org'
 import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
@@ -18,7 +18,8 @@ export function ComboBoxSelectAttr({
 }) {
   const [query, setQuery] = useState('')
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const params = useParams()
+  const orgId = params.orgId as string
   const { data: orgByIdData } = useOrgById({ orgId })
 
   const { acc: orgAttrFlattenData, extractedPropertyKeys } = flattenData(

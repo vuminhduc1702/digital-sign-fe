@@ -1,14 +1,13 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
-import { useOrgIdStore } from '~/stores/org'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import SelectMenu from '~/components/SelectMenu/SelectMenu'
 import {
   type UpdateAttrDTO,
   useGetAttr,
@@ -38,7 +37,7 @@ export function UpdateDevice({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 

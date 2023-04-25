@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
+import { useParams } from 'react-router-dom'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -16,7 +17,6 @@ import {
   useCopyId,
 } from '~/utils/misc'
 import { useDeleteDevice, useGetDevice } from '../../api/deviceAPI'
-import { useOrgIdStore } from '~/stores/org'
 import { useProjectIdStore } from '~/stores/project'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
@@ -132,7 +132,7 @@ export function DeviceTable({
 }) {
   const { t } = useTranslation()
 
-  const orgId = useOrgIdStore(state => state.orgId)
+  const { orgId } = useParams()
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: deviceData } = useGetDevice({ orgId, projectId })
 
