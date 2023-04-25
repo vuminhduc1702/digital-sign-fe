@@ -1,2 +1,2 @@
-export * from './getDevice'
+export * from './getDevices'
 export * from './deleteDevice'

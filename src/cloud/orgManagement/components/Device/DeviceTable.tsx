@@ -1,35 +1,40 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { useDisclosure } from '~/utils/hooks'
+import { PATHS } from '~/routes/PATHS'
+import { UpdateDevice } from './UpdateDevice'
 
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import {
   type PropertyValuePair,
   getVNDateFormat,
   useCopyId,
 } from '~/utils/misc'
-import { useDeleteDevice, useGetDevice } from '../../api/deviceAPI'
+import { useDeleteDevice, useGetDevices } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { UpdateDevice } from './UpdateDevice'
 
 function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const { close, open, isOpen } = useDisclosure()
+
+  const projectId = useProjectIdStore(state => state.projectId)
+  const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
 
@@ -41,14 +46,28 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
         icon={
           <BtnContextMenuIcon
             height={20}
-            width={3}
-            viewBox="0 0 3 20"
+            width={10}
+            viewBox="0 0 1 20"
             className="text-secondary-700 hover:text-primary-400"
           />
         }
       >
         <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-1 py-1">
+            <MenuItem
+              icon={
+                <img
+                  src={btnDetailIcon}
+                  alt="View device"
+                  className="h-5 w-5"
+                />
+              }
+              onClick={() =>
+                navigate(`${PATHS.DEVICE_MANAGE}/${projectId}/${orgId}/${id}`)
+              }
+            >
+              {t('table.view_detail')}
+            </MenuItem>
             <MenuItem
               icon={
                 <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
@@ -114,7 +133,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDevice attributeKey={name} close={close} isOpen={isOpen} />
+        <UpdateDevice deviceId={id} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )
@@ -122,20 +141,16 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
 
 export function DeviceTable({
   data,
-  entityId,
-  entityType,
   ...props
 }: {
   data: PropertyValuePair<string>[]
-  entityId: string
-  entityType: EntityType
 }) {
   const { t } = useTranslation()
 
   const params = useParams()
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: deviceData } = useGetDevice({ orgId, projectId })
+  const { data: deviceData } = useGetDevices({ orgId, projectId })
 
   const dataSorted = deviceData?.devices.sort(
     (a, b) => a.created_time - b.created_time,

@@ -4,7 +4,7 @@ import { axios } from '~/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type DeviceList } from '../../types'
 
-export const getDevice = ({
+export const getDevices = ({
   orgId,
   projectId,
   expand = true,
@@ -18,7 +18,7 @@ export const getDevice = ({
   })
 }
 
-type QueryFnType = typeof getDevice
+type QueryFnType = typeof getDevices
 
 type UseDeviceOptions = {
   orgId: string
@@ -26,14 +26,14 @@ type UseDeviceOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-export const useGetDevice = ({
+export const useGetDevices = ({
   orgId,
   projectId,
   config,
 }: UseDeviceOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['devices', orgId, projectId],
-    queryFn: () => getDevice({ orgId, projectId }),
+    queryFn: () => getDevices({ orgId, projectId }),
     ...config,
   })
 }

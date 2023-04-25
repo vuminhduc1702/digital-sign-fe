@@ -33,11 +33,7 @@ function DeviceManage() {
                 />
               </div>
             </div>
-            <DeviceTable
-              data={filteredComboboxData}
-              entityId={orgId}
-              entityType="ORGANIZATION"
-            />
+            <DeviceTable data={filteredComboboxData} />
           </div>
         </div>
       ) : null}

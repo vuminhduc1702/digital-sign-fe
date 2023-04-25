@@ -131,7 +131,8 @@
     "pdf": "PDF",
     "print": "In",
     "no_attr": "Không có thuộc tính",
-    "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả"
+    "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
+    "view_detail": "Xem chi tiết"
   },
   "btn": {
     "create": "Tạo mới"

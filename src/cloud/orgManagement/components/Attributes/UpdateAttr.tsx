@@ -2,7 +2,6 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
-import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
@@ -26,20 +25,20 @@ const attrSchema = z.object({
 })
 
 type UpdateAttrProps = {
+  entityId: string
   entityType: EntityType
   attributeKey: string
   close: () => void
   isOpen: boolean
 }
 export function UpdateAttr({
+  entityId,
   entityType,
   attributeKey,
   close,
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
-
-  const { orgId } = useParams()
 
   const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
   const valueType = selectedValueType.type
@@ -50,7 +49,7 @@ export function UpdateAttr({
 
   const { data: attrData, isLoading: attrLoading } = useGetAttr({
     entityType,
-    entityId: orgId,
+    entityId,
     attrKey: attributeKey,
     config: { suspense: false },
   })

@@ -2,49 +2,36 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
-import { useParams } from 'react-router-dom'
 
+import { useGetDeviceById } from '../../api/deviceAPI/getDeviceById'
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import {
-  type UpdateAttrDTO,
-  useGetAttr,
-  useUpdateAttr,
-} from '../../api/attrAPI'
-
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI/createAttr'
+  type UpdateDeviceDTO,
+  useUpdateDevice,
+} from '../../api/deviceAPI/updateDevice'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-const attrSchema = z.object({
-  value: z.string(),
+const deviceSchema = z.object({
+  name: z.string(),
 })
 
-type UpdateAttrProps = {
-  entityType: EntityType
-  attributeKey: string
+type UpdateDeviceProps = {
+  deviceId: string
   close: () => void
   isOpen: boolean
 }
-export function UpdateDevice({
-  entityType,
-  attributeKey,
-  close,
-  isOpen,
-}: UpdateAttrProps) {
+export function UpdateDevice({ deviceId, close, isOpen }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
-  const { orgId } = useParams()
+  const { mutate, isLoading, isSuccess } = useUpdateDevice()
 
-  const { mutate, isLoading, isSuccess } = useUpdateAttr()
-
-  const { data: attrData, isLoading: attrLoading } = useGetAttr({
-    entityType,
-    entityId: orgId,
-    attrKey: attributeKey,
+  const { data: deviceData, isLoading: deviceLoading } = useGetDeviceById({
+    deviceId,
     config: { suspense: false },
   })
 
@@ -54,7 +41,7 @@ export function UpdateDevice({
     }
   }, [isSuccess, close])
 
-  const showSpinner = useSpinDelay(attrLoading, {
+  const showSpinner = useSpinDelay(deviceLoading, {
     delay: 150,
     minDuration: 300,
   })
@@ -63,7 +50,7 @@ export function UpdateDevice({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.org_manage.add_org.edit')}
+      title={t('cloud.org_manage.device_manage.add_device.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -77,7 +64,7 @@ export function UpdateDevice({
           />
           <Button
             className="rounded border-none"
-            form="update-attr"
+            form="update-device"
             type="submit"
             size="lg"
             isLoading={isLoading}
@@ -88,29 +75,25 @@ export function UpdateDevice({
         </>
       )}
     >
-      {attrLoading ? (
+      {deviceLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateAttrDTO['data'], typeof attrSchema>
-          id="update-attr"
+        <Form<UpdateDeviceDTO['data'], typeof deviceSchema>
+          id="update-device"
           onSubmit={values =>
             mutate({
               data: {
-                value: values.value,
-                value_t: valueType,
+                name: values.name,
               },
-              attributeKey,
-              entityType,
-              orgId,
+              deviceId,
             })
           }
-          schema={attrSchema}
+          schema={deviceSchema}
           options={{
             defaultValues: {
-              value: attrData?.value,
-              value_t: attrData?.value_type,
+              name: deviceData?.name,
             },
           }}
         >
@@ -118,10 +101,11 @@ export function UpdateDevice({
             <>
               <InputField
                 label={
-                  t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
+                  t('cloud.org_manage.device_manage.add_device.name') ??
+                  "Device's name"
                 }
-                error={formState.errors['value']}
-                registration={register('value')}
+                error={formState.errors['name']}
+                registration={register('name')}
               />
             </>
           )}

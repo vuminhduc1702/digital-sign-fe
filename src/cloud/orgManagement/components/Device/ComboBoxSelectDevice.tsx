@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-import { useGetDevice } from '../../api/deviceAPI'
+import { useGetDevices } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
 
 import { type Device } from '../../types'
@@ -21,7 +21,7 @@ export function ComboBoxSelectDevice({
   const params = useParams()
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: deviceData } = useGetDevice({ orgId, projectId })
+  const { data: deviceData } = useGetDevices({ orgId, projectId })
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
     deviceData?.devices as Array<Device>,

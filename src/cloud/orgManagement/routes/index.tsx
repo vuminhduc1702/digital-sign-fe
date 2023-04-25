@@ -6,6 +6,7 @@ import UserManage from './UserManage'
 import DeviceManage from './DeviceManage'
 import EventManage from './EventManage'
 import RoleManage from './RoleManage'
+import { DeviceDetail } from '../components/Device'
 
 export const OrgManagementRoutes = [
   {
@@ -34,6 +35,7 @@ export const OrgManagementRoutes = [
             element: <DeviceManage />,
             children: [{ path: ':orgId' }],
           },
+          { path: ':orgId/:deviceId', element: <DeviceDetail /> },
           {
             path: PATHS.EVENT_MANAGE_CHILD,
             element: <EventManage />,

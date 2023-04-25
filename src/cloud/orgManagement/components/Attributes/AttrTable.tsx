@@ -43,8 +43,8 @@ function AttrTableContextMenu({
         icon={
           <BtnContextMenuIcon
             height={20}
-            width={3}
-            viewBox="0 0 3 20"
+            width={10}
+            viewBox="0 0 1 20"
             className="text-secondary-700 hover:text-primary-400"
           />
         }
@@ -113,6 +113,7 @@ function AttrTableContextMenu({
       </Dropdown>
       {isOpen ? (
         <UpdateAttr
+          entityId={entityId}
           entityType={entityType}
           attributeKey={attribute_key}
           close={close}
