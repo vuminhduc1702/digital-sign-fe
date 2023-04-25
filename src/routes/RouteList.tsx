@@ -23,15 +23,15 @@ export function RouteList() {
           element: <LandingPage />,
         },
         {
-          path: PATHS.DEVICE_TEMPLATE,
+          path: PATHS.DEVICE_TEMPLATE_CHILD,
           element: <DeviceTemplate />,
         },
         {
-          path: PATHS.FLOW_ENGINE,
+          path: PATHS.FLOW_ENGINE_CHILD,
           element: <FlowEngine />,
         },
         {
-          path: PATHS.DASHBOARD,
+          path: PATHS.DASHBOARD_CHILD,
           element: <Dashboard />,
         },
         {

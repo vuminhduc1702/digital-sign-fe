@@ -13,6 +13,7 @@ import { BaseTable } from '~/components/Table'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
 import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
+import { type Attribute } from '~/types'
 
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -164,7 +165,7 @@ export function AttrTable({
           <span>{t('cloud.org_manage.org_manage.table.value_type')}</span>
         ),
         cell: info => {
-          const valueType = info.getValue()
+          const valueType = info.getValue() as Attribute['value_type']
           switch (valueType) {
             case 'STR':
               return 'String'

@@ -132,7 +132,8 @@ export function DeviceTable({
 }) {
   const { t } = useTranslation()
 
-  const { orgId } = useParams()
+  const params = useParams()
+  const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: deviceData } = useGetDevice({ orgId, projectId })
 

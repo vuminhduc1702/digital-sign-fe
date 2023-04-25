@@ -29,6 +29,8 @@ export type OrgMapType = {
   level: string
 }
 
+type OrgSection = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
+
 function OrgManageSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -98,9 +100,41 @@ function OrgManageSidebar() {
                 key={org.id}
                 variant="muted"
                 size="no-p"
-                onClick={() =>
-                  navigate(`${PATHS.ORG_MANAGE}/${projectId}/${org.id}`)
-                }
+                onClick={() => {
+                  const orgSection = window.location.pathname.split(
+                    '/',
+                  )[3] as OrgSection
+                  switch (orgSection) {
+                    case 'org':
+                      return navigate(
+                        `${PATHS.ORG_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    case 'event':
+                      return navigate(
+                        `${PATHS.EVENT_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    case 'group':
+                      return navigate(
+                        `${PATHS.GROUP_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    case 'role':
+                      return navigate(
+                        `${PATHS.ROLE_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    case 'user':
+                      return navigate(
+                        `${PATHS.USER_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    case 'device':
+                      return navigate(
+                        `${PATHS.DEVICE_MANAGE}/${projectId}/${org.id}`,
+                      )
+                    default:
+                      return navigate(
+                        `${PATHS.ORG_MANAGE}/${projectId}/${org.id}`,
+                      )
+                  }
+                }}
               >
                 <p
                   className={clsx('my-auto', {

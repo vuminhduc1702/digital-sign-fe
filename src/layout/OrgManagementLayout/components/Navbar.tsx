@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import { useProjectIdStore } from '~/stores/project'
 import { NavLink } from '~/components/Link'
@@ -13,15 +14,16 @@ import {
   OrgUserIcon,
 } from '~/components/SVGIcons'
 
-function Navbar() {
+function OrgManageNavbar() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
+  const { orgId } = useParams()
 
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
       <NavLink
-        to={`${PATHS.ORG_MANAGE}/${projectId}`}
+        to={`${PATHS.ORG_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgInfoIcon
@@ -35,7 +37,7 @@ function Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.GROUP_MANAGE}/${projectId}`}
+        to={`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgGroupIcon
@@ -49,7 +51,7 @@ function Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.USER_MANAGE}/${projectId}`}
+        to={`${PATHS.USER_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgUserIcon
@@ -63,7 +65,7 @@ function Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.DEVICE_MANAGE}/${projectId}`}
+        to={`${PATHS.DEVICE_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgDeviceIcon
@@ -77,7 +79,7 @@ function Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.EVENT_MANAGE}/${projectId}`}
+        to={`${PATHS.EVENT_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgEventIcon
@@ -91,7 +93,7 @@ function Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.ROLE_MANAGE}/${projectId}`}
+        to={`${PATHS.ROLE_MANAGE}/${projectId}/${orgId}`}
         className="flex cursor-pointer gap-2"
       >
         <OrgRoleIcon
@@ -108,4 +110,4 @@ function Navbar() {
   )
 }
 
-export default Navbar
+export default OrgManageNavbar

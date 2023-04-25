@@ -18,7 +18,8 @@ export function ComboBoxSelectDevice({
 }) {
   const [query, setQuery] = useState('')
 
-  const { orgId } = useParams()
+  const params = useParams()
+  const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: deviceData } = useGetDevice({ orgId, projectId })
 
