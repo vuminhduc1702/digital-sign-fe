@@ -23,16 +23,19 @@ export function RouteList() {
           element: <LandingPage />,
         },
         {
-          path: PATHS.DEVICE_TEMPLATE_CHILD,
+          path: PATHS.DEVICE_TEMPLATE,
           element: <DeviceTemplate />,
+          children: [{ path: ':projectId' }],
         },
         {
-          path: PATHS.FLOW_ENGINE_CHILD,
+          path: PATHS.FLOW_ENGINE,
           element: <FlowEngine />,
+          children: [{ path: ':projectId' }],
         },
         {
-          path: PATHS.DASHBOARD_CHILD,
+          path: PATHS.DASHBOARD,
           element: <Dashboard />,
+          children: [{ path: ':projectId' }],
         },
         {
           path: PATHS.MAINTAIN,

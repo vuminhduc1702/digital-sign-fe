@@ -1,12 +1,13 @@
 import { PATHS } from '~/routes/PATHS'
 import OrgManagementLayout from '~/layout/OrgManagementLayout'
+import { DeviceManageLayout } from '../layout'
 import OrgManage from './OrgManage'
 import GroupManage from './GroupManage'
 import UserManage from './UserManage'
-import DeviceManage from './DeviceManage'
+import { DeviceManage } from './DeviceManage'
+import { DeviceDetail } from './DeviceDetail'
 import EventManage from './EventManage'
 import RoleManage from './RoleManage'
-import { DeviceDetail } from '../components/Device'
 
 export const OrgManagementRoutes = [
   {
@@ -16,35 +17,43 @@ export const OrgManagementRoutes = [
         path: PATHS.ORG_MANAGEMENT,
         children: [
           {
-            path: PATHS.ORG_MANAGE_CHILD,
+            path: PATHS.ORG_MANAGE,
             element: <OrgManage />,
-            children: [{ path: ':orgId' }],
+            children: [{ path: ':projectId/:orgId' }],
           },
           {
-            path: PATHS.GROUP_MANAGE_CHILD,
+            path: PATHS.GROUP_MANAGE,
             element: <GroupManage />,
-            children: [{ path: ':orgId' }],
+            children: [{ path: ':projectId/:orgId' }],
           },
           {
-            path: PATHS.USER_MANAGE_CHILD,
+            path: PATHS.USER_MANAGE,
             element: <UserManage />,
-            children: [{ path: ':orgId' }],
+            children: [{ path: ':projectId/:orgId' }],
           },
           {
-            path: PATHS.DEVICE_MANAGE_CHILD,
-            element: <DeviceManage />,
-            children: [{ path: ':orgId' }],
+            path: PATHS.DEVICE_MANAGE,
+            element: <DeviceManageLayout />,
+            children: [
+              {
+                path: ':projectId/:orgId',
+                element: <DeviceManage />,
+              },
+              {
+                path: ':projectId/:orgId/:deviceId',
+                element: <DeviceDetail />,
+              },
+            ],
           },
-          { path: ':orgId/:deviceId', element: <DeviceDetail /> },
           {
-            path: PATHS.EVENT_MANAGE_CHILD,
+            path: PATHS.EVENT_MANAGE,
             element: <EventManage />,
-            children: [{ path: ':orgId' }],
+            children: [{ path: ':projectId/:orgId' }],
           },
           {
-            path: PATHS.ROLE_MANAGE_CHILD,
+            path: PATHS.ROLE_MANAGE,
             element: <RoleManage />,
-            children: [{ path: ':orgId' }],
+            children: [{ path: ':projectId/:orgId' }],
           },
         ],
       },
