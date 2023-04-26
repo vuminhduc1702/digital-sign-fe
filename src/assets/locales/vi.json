@@ -117,6 +117,10 @@
           "parent": "Trực thuộc",
           "device_type": "Mẫu thiết bị",
           "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+        },
+        "device_detail": {
+          "list_attr": "Danh sách thuộc tính",
+          "attr_log": "Lịch sử thuộc tính"
         }
       },
       "event_manage": "Sự kiện",

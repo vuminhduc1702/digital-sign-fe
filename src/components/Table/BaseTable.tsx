@@ -49,7 +49,7 @@ export function BaseTable({
                   {headerGroup.headers.map(header => {
                     return (
                       <th
-                        className="h-11 text-left"
+                        className="h-9 text-left"
                         key={header.id}
                         colSpan={header.colSpan}
                       >
@@ -75,7 +75,7 @@ export function BaseTable({
                       if (index === row.getVisibleCells().length - 1) {
                         return (
                           <Fragment key={cell.id}>
-                            <td className="h-11" key={cell.id}>
+                            <td className="h-9" key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext(),
@@ -85,7 +85,7 @@ export function BaseTable({
                         )
                       } else {
                         return (
-                          <td className="h-11" key={cell.id}>
+                          <td className="h-9" key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
@@ -117,7 +117,7 @@ export function BaseTable({
                 className="rounded-l-md border-none"
                 onClick={() => table.previousPage()}
                 disabled={!table.getCanPreviousPage()}
-                variant="secondary"
+                variant="secondaryLight"
               >
                 {'Prev'}
               </Button>
@@ -131,7 +131,7 @@ export function BaseTable({
                 className="rounded-r-md border-none"
                 onClick={() => table.nextPage()}
                 disabled={!table.getCanNextPage()}
-                variant="secondary"
+                variant="secondaryLight"
               >
                 {'Next'}
               </Button>

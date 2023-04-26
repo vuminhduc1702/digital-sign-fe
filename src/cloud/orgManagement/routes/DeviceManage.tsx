@@ -17,8 +17,12 @@ export function DeviceManage() {
 
   return (
     <>
-      <TitleBar title={t('cloud.org_manage.device_manage.header')} />
-      <div className="flex grow flex-col px-9 py-4 shadow-lg">
+      <TitleBar
+        title={
+          t('cloud.org_manage.device_manage.header') ?? 'Device management'
+        }
+      />
+      <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable />
           <div className="flex items-center gap-x-3">

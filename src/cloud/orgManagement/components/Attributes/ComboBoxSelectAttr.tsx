@@ -9,21 +9,19 @@ import { type Org } from '~/layout/MainLayout/types'
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function ComboBoxSelectAttr({
+  attrData,
   setFilteredComboboxData,
   ...props
 }: {
+  attrData: Org
   setFilteredComboboxData?: React.Dispatch<
     React.SetStateAction<Org['attributes']>
   >
 }) {
   const [query, setQuery] = useState('')
 
-  const params = useParams()
-  const orgId = params.orgId as string
-  const { data: orgByIdData } = useOrgById({ orgId })
-
   const { acc: orgAttrFlattenData, extractedPropertyKeys } = flattenData(
-    orgByIdData?.attributes as Org['attributes'],
+    attrData?.attributes as Org['attributes'],
     ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
   )
 
@@ -35,7 +33,7 @@ export function ComboBoxSelectAttr({
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
-  }, [query, orgByIdData])
+  }, [query, attrData])
 
   return (
     <ComboBoxBase
