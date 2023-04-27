@@ -12,13 +12,10 @@ import { useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { UpdateDevice } from './UpdateDevice'
 
-import {
-  type PropertyValuePair,
-  getVNDateFormat,
-  useCopyId,
-} from '~/utils/misc'
-import { useDeleteDevice, useGetDevices } from '../../api/deviceAPI'
+import { getVNDateFormat, useCopyId } from '~/utils/misc'
+import { useDeleteDevice } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
+import { type Device } from '../../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -139,25 +136,13 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   )
 }
 
-export function DeviceTable({
-  data,
-  ...props
-}: {
-  data: PropertyValuePair<string>[]
-}) {
+export function DeviceTable({ data, ...props }: { data: Device[] }) {
   const { t } = useTranslation()
 
-  const params = useParams()
-  const orgId = params.orgId as string
-  const projectId = useProjectIdStore(state => state.projectId)
-  const { data: deviceData } = useGetDevices({ orgId, projectId })
+  const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
-  const dataSorted = deviceData?.devices.sort(
-    (a, b) => a.created_time - b.created_time,
-  )
-
-  const columnHelper = createColumnHelper<PropertyValuePair<string>>()
-  const columns = useMemo<ColumnDef<PropertyValuePair<string>, string>[]>(
+  const columnHelper = createColumnHelper<Device>()
+  const columns = useMemo<ColumnDef<Device, string>[]>(
     () => [
       columnHelper.accessor('stt', {
         cell: info => {

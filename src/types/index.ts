@@ -13,7 +13,7 @@ export type BasePagination = {
 export type Attribute = {
   attribute_key: string
   logged: boolean
-  value?: string | number | boolean
+  value: string | number | boolean
   value_as_string?: string
   last_update_ts: number
   value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'

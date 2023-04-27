@@ -1,2 +1,5 @@
-export * from './getDevices'
+export * from './createDevice'
 export * from './deleteDevice'
+export * from './getDeviceById'
+export * from './getDevices'
+export * from './updateDevice'

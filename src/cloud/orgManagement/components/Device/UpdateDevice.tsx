@@ -3,15 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
-import { useGetDeviceById } from '../../api/deviceAPI/getDeviceById'
+import { useDeviceById } from '../../api/deviceAPI'
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import {
-  type UpdateDeviceDTO,
-  useUpdateDevice,
-} from '../../api/deviceAPI/updateDevice'
+import { type UpdateDeviceDTO, useUpdateDevice } from '../../api/deviceAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -30,7 +27,7 @@ export function UpdateDevice({ deviceId, close, isOpen }: UpdateDeviceProps) {
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
 
-  const { data: deviceData, isLoading: deviceLoading } = useGetDeviceById({
+  const { data: deviceData, isLoading: deviceLoading } = useDeviceById({
     deviceId,
     config: { suspense: false },
   })

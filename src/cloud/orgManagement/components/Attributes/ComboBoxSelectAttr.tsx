@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
 
 import { flattenData } from '~/utils/misc'
-import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
 import { type Org } from '~/layout/MainLayout/types'
+import { type Device } from '../../types'
+import { type Attribute } from '~/types'
+
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function ComboBoxSelectAttr({
@@ -13,23 +14,21 @@ export function ComboBoxSelectAttr({
   setFilteredComboboxData,
   ...props
 }: {
-  attrData: Org
-  setFilteredComboboxData?: React.Dispatch<
-    React.SetStateAction<Org['attributes']>
-  >
+  attrData: Org | Device
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Attribute[]>>
 }) {
   const [query, setQuery] = useState('')
 
-  const { acc: orgAttrFlattenData, extractedPropertyKeys } = flattenData(
-    attrData?.attributes as Org['attributes'],
+  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
+    attrData?.attributes,
     ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
   )
 
   const filteredData = filteredComboboxData(
     query,
-    orgAttrFlattenData,
+    attrFlattenData,
     extractedPropertyKeys,
-  )
+  ) as Attribute[]
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

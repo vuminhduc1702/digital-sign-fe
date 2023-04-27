@@ -12,17 +12,17 @@ export type UpdateAttrDTO = {
   }
   attributeKey: string
   entityType: string
-  orgId: string
+  entityId: string
 }
 
 export const updateAttr = ({
   data,
   attributeKey,
   entityType,
-  orgId,
+  entityId,
 }: UpdateAttrDTO) => {
   return axios.put(
-    `/api/attributes/${entityType}/${orgId}/SCOPE_CLIENT/${attributeKey}/values`,
+    `/api/attributes/${entityType}/${entityId}/SCOPE_CLIENT/${attributeKey}/values`,
     data,
   )
 }

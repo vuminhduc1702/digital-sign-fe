@@ -69,7 +69,7 @@ export function UpdateAttr({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.org_manage.add_org.edit')}
+      title={t('cloud.org_manage.org_manage.add_attr.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -110,7 +110,7 @@ export function UpdateAttr({
               },
               attributeKey,
               entityType,
-              orgId,
+              entityId,
             })
           }
           schema={attrSchema}

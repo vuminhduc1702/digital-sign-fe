@@ -11,7 +11,8 @@ import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 
-import { type PropertyValuePair } from '~/utils/misc'
+import { type Org } from '~/layout/MainLayout/types'
+import { type Attribute } from '~/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
 
@@ -22,9 +23,9 @@ function OrgManage() {
   const orgId = params.orgId as string
   const { data: orgByIdData } = useOrgById({ orgId })
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    PropertyValuePair<string>[]
-  >([])
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
+    [],
+  )
 
   return (
     <div className="flex grow flex-col gap-y-3">

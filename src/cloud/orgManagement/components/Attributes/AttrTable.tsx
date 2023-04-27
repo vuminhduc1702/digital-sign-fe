@@ -11,7 +11,7 @@ import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { type PropertyValuePair, getVNDateFormat } from '~/utils/misc'
+import { getVNDateFormat } from '~/utils/misc'
 import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { type Attribute } from '~/types'
 
@@ -130,21 +130,21 @@ export function AttrTable({
   entityType,
   ...props
 }: {
-  data: PropertyValuePair<string>[]
+  data: Attribute[]
   entityId: string
   entityType: EntityType
 }) {
   const { t } = useTranslation()
 
-  const columnHelper = createColumnHelper<PropertyValuePair<string>>()
+  const columnHelper = createColumnHelper<Attribute>()
 
   const dataSorted = data?.sort(
     (a, b) =>
-      parseInt(a.last_update_ts as string) -
-      parseInt(b.last_update_ts as string),
+      parseInt(b.last_update_ts as string) -
+      parseInt(a.last_update_ts as string),
   )
 
-  const columns = useMemo<ColumnDef<PropertyValuePair<string>, string>[]>(
+  const columns = useMemo<ColumnDef<Attribute, string>[]>(
     () => [
       columnHelper.accessor('stt', {
         cell: info => {

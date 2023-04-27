@@ -14,7 +14,7 @@ export function ComboBoxSelectDevice({
   setFilteredComboboxData,
   ...props
 }: {
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device>>
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
 }) {
   const [query, setQuery] = useState('')
 
@@ -32,7 +32,7 @@ export function ComboBoxSelectDevice({
     query,
     deviceFlattenData,
     extractedPropertyKeys,
-  )
+  ) as Device[]
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

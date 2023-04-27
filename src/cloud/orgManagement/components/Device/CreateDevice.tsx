@@ -3,16 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
+import { Form, FormDrawer, InputField } from '~/components/Form'
 
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
-import {
-  useCreateDevice,
-  type CreateDeviceDTO,
-} from '../../api/deviceAPI/createDevice'
+import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'

@@ -19,10 +19,7 @@ type UseDeviceByIdOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-export const useGetDeviceById = ({
-  deviceId,
-  config,
-}: UseDeviceByIdOptions) => {
+export const useDeviceById = ({ deviceId, config }: UseDeviceByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['device', deviceId],
     queryFn: () => getDeviceById({ deviceId }),

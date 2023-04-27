@@ -6,10 +6,10 @@ export type Device = {
   template_id?: string
   name: string
   group_id?: string
-  group_name?: string
+  group_name: string
   org_id: string
   org_name?: string
-  template_name?: string
+  template_name: string
   status: 'offline' | 'online' | 'block'
   additional_info: {
     device_id?: string
@@ -22,8 +22,8 @@ export type Device = {
     device_model?: string
     // mqtt_config?:
   }
-} & Attribute[] &
-  BaseEntity
+  attributes: Attribute[]
+} & BaseEntity
 
 export type DeviceList = {
   devices: Device[]

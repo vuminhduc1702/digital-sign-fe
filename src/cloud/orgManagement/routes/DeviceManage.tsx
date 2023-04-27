@@ -6,14 +6,12 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import { CreateDevice, DeviceTable } from '../components/Device'
 import { ComboBoxSelectDevice } from '../components/Device/ComboBoxSelectDevice'
 
-import { type PropertyValuePair } from '~/utils/misc'
+import { type Device } from '../types'
 
 export function DeviceManage() {
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    PropertyValuePair<string>[]
-  >([])
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
 
   return (
     <>
