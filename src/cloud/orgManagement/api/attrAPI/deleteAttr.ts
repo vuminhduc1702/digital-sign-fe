@@ -25,8 +25,9 @@ type UseDeleteAttrOptions = {
 export const useDeleteAttr = ({ config }: UseDeleteAttrOptions = {}) => {
   const { addNotification } = useNotificationStore()
   return useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(['orgById'])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['orgById'])
+      await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: 'Xoá thuộc tính thành công',

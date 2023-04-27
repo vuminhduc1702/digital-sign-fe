@@ -2,17 +2,19 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 
-import { useDeleteAttr } from '~/cloud/orgManagement/api/attrAPI/deleteAttr'
+import {
+  useDeleteAttr,
+  type EntityType,
+} from '~/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { useDisclosure } from '~/utils/hooks'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
+import { getVNDateFormat } from '~/utils/misc'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { getVNDateFormat } from '~/utils/misc'
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { type Attribute } from '~/types'
 
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -34,8 +36,6 @@ function AttrTableContextMenu({
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
-
-  // TODO: Loading state for delete attr
 
   return (
     <>
@@ -138,11 +138,7 @@ export function AttrTable({
 
   const columnHelper = createColumnHelper<Attribute>()
 
-  const dataSorted = data?.sort(
-    (a, b) =>
-      parseInt(b.last_update_ts as string) -
-      parseInt(a.last_update_ts as string),
-  )
+  const dataSorted = data?.sort((a, b) => b.last_update_ts - a.last_update_ts)
 
   const columns = useMemo<ColumnDef<Attribute, string>[]>(
     () => [

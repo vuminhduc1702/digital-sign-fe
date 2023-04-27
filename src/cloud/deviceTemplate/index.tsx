@@ -1,5 +1,3 @@
-function DeviceTemplate() {
+export function DeviceTemplate() {
   return <div>DeviceTemplate</div>
 }
-
-export default DeviceTemplate

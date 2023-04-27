@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 
 import { PATHS } from '~/routes/PATHS'
 
-function NotFoundPage() {
+export function NotFoundPage() {
   const navigate = useNavigate()
 
   // Redirect to homepage after 3 seconds
@@ -20,5 +20,3 @@ function NotFoundPage() {
     </div>
   )
 }
-
-export default NotFoundPage

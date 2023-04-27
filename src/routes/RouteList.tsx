@@ -1,16 +1,32 @@
 import { PATHS } from './PATHS'
+import { lazyImport } from '~/utils/lazyImport'
 
 import MainLayout from '~/layout/MainLayout'
 
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
 
-import DeviceTemplate from '~/cloud/deviceTemplate'
-import FlowEngine from '~/cloud/flowEngine'
-import Dashboard from '~/cloud/dashboard'
+const { DeviceTemplate } = lazyImport(
+  () => import('~/cloud/deviceTemplate'),
+  'DeviceTemplate',
+)
+const { FlowEngine } = lazyImport(
+  () => import('~/cloud/flowEngine'),
+  'FlowEngine',
+)
+const { Dashboard } = lazyImport(() => import('~/cloud/dashboard'), 'Dashboard')
 
-import MaintainPage from '~/pages/MaintainPage'
-import NotFoundPage from '~/pages/NotFoundPage'
-import LandingPage from '~/pages/LandingPage'
+const { MaintainPage } = lazyImport(
+  () => import('~/pages/MaintainPage'),
+  'MaintainPage',
+)
+const { NotFoundPage } = lazyImport(
+  () => import('~/pages/NotFoundPage'),
+  'NotFoundPage',
+)
+const { LandingPage } = lazyImport(
+  () => import('~/pages/LandingPage'),
+  'LandingPage',
+)
 
 export function RouteList() {
   return [

@@ -15,8 +15,8 @@ type UseDeleteDeviceOptions = {
 export const useDeleteDevice = ({ config }: UseDeleteDeviceOptions = {}) => {
   const { addNotification } = useNotificationStore()
   return useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(['devices'])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['devices'])
       addNotification({
         type: 'success',
         title: 'Xóa thiết bị thành công',

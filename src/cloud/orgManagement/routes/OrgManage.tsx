@@ -16,7 +16,7 @@ import { type Attribute } from '~/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
 
-function OrgManage() {
+export function OrgManage() {
   const { t } = useTranslation()
 
   const params = useParams()
@@ -85,5 +85,3 @@ function OrgManage() {
     </div>
   )
 }
-
-export default OrgManage

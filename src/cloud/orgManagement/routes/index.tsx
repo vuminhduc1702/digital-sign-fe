@@ -1,13 +1,28 @@
+import { lazyImport } from '~/utils/lazyImport'
 import { PATHS } from '~/routes/PATHS'
-import OrgManagementLayout from '~/layout/OrgManagementLayout'
-import { DeviceManageLayout } from '../layout'
-import OrgManage from './OrgManage'
-import GroupManage from './GroupManage'
-import UserManage from './UserManage'
-import { DeviceManage } from './DeviceManage'
-import { DeviceDetail } from './DeviceDetail'
-import EventManage from './EventManage'
-import RoleManage from './RoleManage'
+
+const { OrgManagementLayout } = lazyImport(
+  () => import('~/layout/OrgManagementLayout'),
+  'OrgManagementLayout',
+)
+const { DeviceManageLayout } = lazyImport(
+  () => import('../layout'),
+  'DeviceManageLayout',
+)
+
+const { DeviceManage } = lazyImport(
+  () => import('./DeviceManage'),
+  'DeviceManage',
+)
+const { DeviceDetail } = lazyImport(
+  () => import('./DeviceDetail'),
+  'DeviceDetail',
+)
+const { OrgManage } = lazyImport(() => import('./OrgManage'), 'OrgManage')
+const { GroupManage } = lazyImport(() => import('./GroupManage'), 'GroupManage')
+const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
+const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
+const { RoleManage } = lazyImport(() => import('./RoleManage'), 'RoleManage')
 
 export const OrgManagementRoutes = [
   {

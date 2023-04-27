@@ -56,7 +56,8 @@ export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['orgById'] })
+      await queryClient.invalidateQueries(['orgById'])
+      await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: 'Tạo thuộc tính thành công',

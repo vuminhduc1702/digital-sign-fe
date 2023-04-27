@@ -3,12 +3,15 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
-import { useDeviceById } from '../../api/deviceAPI'
+import {
+  useDeviceById,
+  type UpdateDeviceDTO,
+  useUpdateDevice,
+} from '../../api/deviceAPI'
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import { type UpdateDeviceDTO, useUpdateDevice } from '../../api/deviceAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'

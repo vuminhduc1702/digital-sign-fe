@@ -7,7 +7,7 @@ import OrgManageSidebar from './components/OrgManageSidebar'
 import { ContentLayout } from '../ContentLayout'
 import { Spinner } from '~/components/Spinner'
 
-function OrgManagementLayout() {
+export function OrgManagementLayout() {
   const { t } = useTranslation()
   const { orgId } = useParams()
 
@@ -34,5 +34,3 @@ function OrgManagementLayout() {
     </ContentLayout>
   )
 }
-
-export default OrgManagementLayout

@@ -15,8 +15,8 @@ type UseDeleteOrgOptions = {
 export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
   const { addNotification } = useNotificationStore()
   return useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries(['orgs'])
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['orgs'])
       addNotification({
         type: 'success',
         title: 'Xóa tổ chức thành công',

@@ -16,11 +16,8 @@ export type Project = {
 }
 
 export type ProjectList = {
-  total: number
-  offset: number
-  limit: number
   projects: Project[]
-}
+} & BasePagination
 
 export type Org = {
   id: string

@@ -10,9 +10,12 @@ import {
   AttrTable,
   ComboBoxSelectAttr,
   CreateAttr,
+  ComboBoxAttrLog,
 } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeviceById } from '../api/deviceAPI'
+import { type DeviceAttrLog, useAttrLog } from '../api/attrAPI'
+import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 
 import { type Attribute } from '~/types'
 
@@ -25,9 +28,16 @@ export function DeviceDetail() {
   const deviceId = params.deviceId as string
   const { data: deviceByIdData } = useDeviceById({ deviceId })
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
-    [],
-  )
+  const [filteredAttrComboboxData, setFilteredAttrComboboxData] = useState<
+    Attribute[]
+  >([])
+  const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
+    useState<DeviceAttrLog[]>([])
+
+  const { data: deviceAttrData } = useAttrLog({
+    entityId: deviceId,
+    entityType: 'DEVICE',
+  })
 
   return (
     <div className="flex grow flex-col">
@@ -77,20 +87,39 @@ export function DeviceDetail() {
                   {deviceByIdData ? (
                     <ComboBoxSelectAttr
                       attrData={deviceByIdData}
-                      setFilteredComboboxData={setFilteredComboboxData}
+                      setFilteredComboboxData={setFilteredAttrComboboxData}
                     />
                   ) : null}
                 </div>
               </div>
               <AttrTable
-                data={filteredComboboxData}
+                data={filteredAttrComboboxData}
                 entityId={deviceId}
                 entityType="DEVICE"
               />
             </div>
           </Tab.Panel>
-          <Tab.Panel className={clsx('bg-white px-10 focus:outline-none')}>
-            Panel 2
+          <Tab.Panel
+            className={clsx('flex grow flex-col bg-white focus:outline-none')}
+          >
+            <div className="flex grow flex-col px-9 py-3 shadow-lg">
+              <div className="flex justify-between">
+                <ExportTable />
+                <div className="flex items-center gap-x-3">
+                  {deviceAttrData ? (
+                    <ComboBoxAttrLog
+                      attrLogData={deviceAttrData}
+                      setFilteredComboboxData={setFilteredAttrLogComboboxData}
+                    />
+                  ) : null}
+                </div>
+              </div>
+              <AttrLogTable
+                data={filteredAttrLogComboboxData}
+                entityId={deviceId}
+                entityType="DEVICE"
+              />
+            </div>
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

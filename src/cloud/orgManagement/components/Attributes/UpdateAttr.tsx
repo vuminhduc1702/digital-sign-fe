@@ -11,11 +11,10 @@ import { Spinner } from '~/components/Spinner'
 import SelectMenu from '~/components/SelectMenu/SelectMenu'
 import {
   type UpdateAttrDTO,
+  type EntityType,
   useGetAttr,
   useUpdateAttr,
 } from '../../api/attrAPI'
-
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI/createAttr'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'

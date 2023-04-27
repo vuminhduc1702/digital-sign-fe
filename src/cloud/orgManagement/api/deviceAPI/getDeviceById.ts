@@ -21,7 +21,7 @@ type UseDeviceByIdOptions = {
 
 export const useDeviceById = ({ deviceId, config }: UseDeviceByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['device', deviceId],
+    queryKey: ['deviceById', deviceId],
     queryFn: () => getDeviceById({ deviceId }),
     ...config,
   })
