@@ -14,6 +14,7 @@ const { FlowEngine } = lazyImport(
   'FlowEngine',
 )
 const { Dashboard } = lazyImport(() => import('~/cloud/dashboard'), 'Dashboard')
+const { RoleManage } = lazyImport(() => import('~/cloud/role'), 'RoleManage')
 
 const { MaintainPage } = lazyImport(
   () => import('~/pages/MaintainPage'),
@@ -51,6 +52,11 @@ export function RouteList() {
         {
           path: PATHS.DASHBOARD,
           element: <Dashboard />,
+          children: [{ path: ':projectId' }],
+        },
+        {
+          path: PATHS.ROLE_MANAGE,
+          element: <RoleManage />,
           children: [{ path: ':projectId' }],
         },
         {

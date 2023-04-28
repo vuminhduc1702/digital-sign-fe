@@ -19,20 +19,6 @@ function isTenantDev(user: User): boolean {
   return user.system_role === ROLES.TENANT_DEV
 }
 
-export const POLICIES = {
-  'org:create': (user: User) => {
-    if (isTenant(user)) {
-      return true
-    }
-
-    if (isTenantDev(user)) {
-      return true
-    }
-
-    return false
-  },
-}
-
 export const useAuthorization = () => {
   const user = useUser()
   const { t } = useTranslation()
@@ -90,4 +76,18 @@ export const Authorization = ({
   }
 
   return <>{canAccess ? children : forbiddenFallback}</>
+}
+
+export const POLICIES = {
+  'device:create': (user: User) => {
+    if (isTenant(user)) {
+      return true
+    }
+
+    if (isTenantDev(user)) {
+      return true
+    }
+
+    return false
+  },
 }

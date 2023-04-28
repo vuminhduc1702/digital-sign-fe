@@ -9,11 +9,11 @@ export const PATHS: { [key: string]: string } = {
   USER_MANAGE: `${BASE_PATH_CLOUD}org-management/user`,
   DEVICE_MANAGE: `${BASE_PATH_CLOUD}org-management/device`,
   EVENT_MANAGE: `${BASE_PATH_CLOUD}org-management/event`,
-  ROLE_MANAGE: `${BASE_PATH_CLOUD}org-management/role`,
 
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
+  ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
 
   NOTFOUND: `${BASE_PATH_CLOUD}*`,
   MAINTAIN: `${BASE_PATH_CLOUD}maintain`,

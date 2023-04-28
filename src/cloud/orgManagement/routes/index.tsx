@@ -22,7 +22,6 @@ const { OrgManage } = lazyImport(() => import('./OrgManage'), 'OrgManage')
 const { GroupManage } = lazyImport(() => import('./GroupManage'), 'GroupManage')
 const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
 const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
-const { RoleManage } = lazyImport(() => import('./RoleManage'), 'RoleManage')
 
 export const OrgManagementRoutes = [
   {
@@ -63,11 +62,6 @@ export const OrgManagementRoutes = [
           {
             path: PATHS.EVENT_MANAGE,
             element: <EventManage />,
-            children: [{ path: ':projectId/:orgId' }],
-          },
-          {
-            path: PATHS.ROLE_MANAGE,
-            element: <RoleManage />,
             children: [{ path: ':projectId/:orgId' }],
           },
         ],

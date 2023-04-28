@@ -11,7 +11,8 @@
       "org_management": "Quản lý tổ chức",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
-      "dashboard": "Dashboard"
+      "dashboard": "Dashboard",
+      "role_manage": "Vai trò"
     },
     "application": {
       "title": "Ứng dụng",
@@ -123,8 +124,7 @@
           "attr_log": "Lịch sử thuộc tính"
         }
       },
-      "event_manage": "Sự kiện",
-      "role_manage": "Vai trò"
+      "event_manage": "Sự kiện"
     }
   },
   "table": {

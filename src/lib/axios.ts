@@ -29,7 +29,17 @@ axios.interceptors.response.use(
     return response.data
   },
   error => {
-    const message = error.response?.data?.message || error.message
+    console.log('error', error)
+    let message = ''
+    if (error.response?.status === 403) {
+      message = 'Bạn không có quyền truy cập vào trang này'
+    }
+    // else if (error.response?.status === 401) {
+    //   window.location.href = '/login'
+    // }
+    else {
+      message = error.response?.data?.message || error.message
+    }
     useNotificationStore.getState().addNotification({
       type: 'error',
       title: 'Lỗi',

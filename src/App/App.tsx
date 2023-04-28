@@ -61,7 +61,7 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <Notifications />
             <RouterProvider router={router} />
-            {process.env.NODE_ENV !== 'test' && (
+            {import.meta.env.NODE_ENV !== 'test' && (
               <ReactQueryDevtools initialIsOpen={false} />
             )}
             {showDevtools && (

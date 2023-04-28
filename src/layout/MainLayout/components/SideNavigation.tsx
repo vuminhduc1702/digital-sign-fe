@@ -128,6 +128,11 @@ function SideNavigation() {
           <NavLink to={`${PATHS.DASHBOARD}/${projectId}`}>
             <AccordionContent>{t('sidebar.cloud.dashboard')}</AccordionContent>
           </NavLink>
+          <NavLink to={`${PATHS.ROLE_MANAGE}/${projectId}`}>
+            <AccordionContent>
+              {t('sidebar.cloud.role_manage')}
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="application">

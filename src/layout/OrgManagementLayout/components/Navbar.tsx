@@ -92,20 +92,6 @@ function OrgManageNavbar() {
           {t('cloud.org_manage.event_manage')}
         </p>
       </NavLink>
-      <NavLink
-        to={`${PATHS.ROLE_MANAGE}/${projectId}/${orgId}`}
-        className="flex cursor-pointer gap-2"
-      >
-        <OrgRoleIcon
-          className="text-secondary-700 group-hover:text-primary-400 group-[.active]:text-primary-400"
-          width={20}
-          height={20}
-          viewBox="0 0 20 20"
-        />
-        <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.role_manage')}
-        </p>
-      </NavLink>
     </div>
   )
 }
