@@ -10,7 +10,6 @@ import {
   OrgEventIcon,
   OrgGroupIcon,
   OrgInfoIcon,
-  OrgRoleIcon,
   OrgUserIcon,
 } from '~/components/SVGIcons'
 
