@@ -30,8 +30,7 @@ export function ComboBoxSelectOrg({
     query,
     orgFlattenData,
     extractedPropertyKeys,
-  )
-
+  ) as OrgMapType[]
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
   }, [query, orgData])

@@ -47,7 +47,7 @@ export function flattenData<T extends PropertyValuePair<K>, K extends string>(
       acc.push(stringObj)
 
       if (subArr && obj[subArr]) {
-        acc.push(...flattenData(obj[subArr], propertyKeys, subArr).acc)
+        acc.push(...flattenData(obj[subArr] as T[], propertyKeys, subArr).acc)
       }
 
       return acc

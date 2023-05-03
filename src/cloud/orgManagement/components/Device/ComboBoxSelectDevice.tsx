@@ -24,7 +24,7 @@ export function ComboBoxSelectDevice({
   const { data: deviceData } = useGetDevices({ orgId, projectId })
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
-    deviceData?.devices as Array<Device>,
+    deviceData?.devices,
     ['id', 'name', 'group_name', 'template_name', 'created_time'],
   )
 
