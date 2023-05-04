@@ -9,9 +9,8 @@ import {
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
+import { useOrgById } from '~/layout/OrgManagementLayout/api'
 
-import { type Org } from '~/layout/MainLayout/types'
 import { type Attribute } from '~/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
@@ -30,7 +29,9 @@ export function OrgManage() {
   return (
     <div className="flex grow flex-col gap-y-3">
       <div>
-        <TitleBar title={t('cloud.org_manage.org_manage.overview.title')} />
+        <TitleBar
+          title={t('cloud.org_manage.org_manage.overview.title') ?? 'Overview'}
+        />
         <div className="flex gap-6 px-11 py-3 shadow-lg">
           <div className="flex flex-none items-center">
             <img
@@ -54,34 +55,29 @@ export function OrgManage() {
           </div>
         </div>
       </div>
-      {orgId ? (
-        <div className="flex grow flex-col">
-          <TitleBar
-            title={
-              t('cloud.org_manage.org_manage.attr_list') ?? "Attribute's list"
-            }
-          />
-          <div className="flex grow flex-col px-9 py-3 shadow-lg">
-            <div className="flex justify-between">
-              <ExportTable />
-              <div className="flex items-center gap-x-3">
-                <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                {orgByIdData ? (
-                  <ComboBoxSelectAttr
-                    attrData={orgByIdData}
-                    setFilteredComboboxData={setFilteredComboboxData}
-                  />
-                ) : null}
-              </div>
+      <div className="flex grow flex-col">
+        <TitleBar
+          title={
+            t('cloud.org_manage.org_manage.attr_list') ?? "Attribute's list"
+          }
+        />
+        <div className="flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="flex justify-between">
+            <ExportTable />
+            <div className="flex items-center gap-x-3">
+              <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
+              <ComboBoxSelectAttr
+                setFilteredComboboxData={setFilteredComboboxData}
+              />
             </div>
-            <AttrTable
-              data={filteredComboboxData}
-              entityId={orgId}
-              entityType="ORGANIZATION"
-            />
           </div>
+          <AttrTable
+            data={filteredComboboxData}
+            entityId={orgId}
+            entityType="ORGANIZATION"
+          />
         </div>
-      ) : null}
+      </div>
     </div>
   )
 }

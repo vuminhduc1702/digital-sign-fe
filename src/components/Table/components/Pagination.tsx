@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 import clsx from 'clsx'
 
+import { type Table } from '@tanstack/react-table'
+import { type PropertyValuePair } from '~/utils/misc'
+
 const DOTS = '...'
 
 const Pagination = ({
@@ -11,12 +14,12 @@ const Pagination = ({
   pageSize,
   className,
 }: {
-  table: any
+  table: Table<PropertyValuePair<string>>
   totalCount: number
   siblingCount?: number
   currentPage: number
   pageSize: number
-  className?: string | any
+  className?: string
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -41,7 +44,7 @@ const Pagination = ({
   return (
     <ul
       className={clsx('flex cursor-pointer items-center gap-x-3', {
-        [className]: className,
+        className,
       })}
     >
       {/* Left navigation arrow */}

@@ -33,7 +33,7 @@ export const OrgManagementRoutes = [
           {
             path: PATHS.ORG_MANAGE,
             element: <OrgManage />,
-            children: [{ path: ':projectId/:orgId' }],
+            children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
           },
           {
             path: PATHS.GROUP_MANAGE,

@@ -10,19 +10,24 @@ import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
+import { limitPagination } from '~/utils/const'
 
 import { type PropertyValuePair } from '~/utils/misc'
 
 export function BaseTable({
   data,
   columns,
+  offset = 0,
+  setOffset,
+  total,
 }: {
   data: PropertyValuePair<string>[]
   columns: ColumnDef<PropertyValuePair<string>, string>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+  total?: number
 }) {
   const { t } = useTranslation()
-
-  const totalAttr = data?.length
 
   const defaultData = useMemo(() => [], [])
 
@@ -36,7 +41,9 @@ export function BaseTable({
     debugTable: true,
   })
 
-  const { pageIndex, pageSize } = table.getState().pagination
+  const { pageIndex } = table.getState().pagination
+  const totalAttrs = total || data?.length
+  console.log('totalAttrs', totalAttrs)
 
   return (
     <>
@@ -105,32 +112,38 @@ export function BaseTable({
                 {t('table.show_in')
                   .replace(
                     '{{PAGE}}',
-                    pageSize < totalAttr
-                      ? pageSize?.toString()
-                      : totalAttr?.toString(),
+                    limitPagination < totalAttrs
+                      ? limitPagination?.toString()
+                      : totalAttrs?.toString(),
                   )
-                  .replace('{{TOTAL}}', totalAttr?.toString())}
+                  .replace('{{TOTAL}}', totalAttrs?.toString())}
               </span>
             </div>
             <div className="flex gap-x-2">
               <Button
                 className="rounded-l-md border-none"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                onClick={() => {
+                  setOffset?.(offset => offset - limitPagination)
+                  table.previousPage()
+                }}
+                disabled={offset === 0}
                 variant="secondaryLight"
               >
                 {'Prev'}
               </Button>
               <Pagination
                 currentPage={pageIndex}
-                totalCount={totalAttr}
-                pageSize={pageSize}
+                totalCount={totalAttrs}
+                pageSize={limitPagination}
                 table={table}
               />
               <Button
                 className="rounded-r-md border-none"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                onClick={() => {
+                  setOffset?.(offset => offset + limitPagination)
+                  table.nextPage()
+                }}
+                disabled={offset + limitPagination >= totalAttrs}
                 variant="secondaryLight"
               >
                 {'Next'}

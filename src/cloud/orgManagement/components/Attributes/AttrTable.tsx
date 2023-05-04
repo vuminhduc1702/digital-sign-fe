@@ -142,7 +142,8 @@ export function AttrTable({
 
   const columns = useMemo<ColumnDef<Attribute, string>[]>(
     () => [
-      columnHelper.accessor('stt', {
+      columnHelper.display({
+        id: 'stt',
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
           return orderId
@@ -201,7 +202,8 @@ export function AttrTable({
         cell: info => getVNDateFormat(parseInt(info.getValue())),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('contextMenu', {
+      columnHelper.display({
+        id: 'contextMenu',
         cell: info => {
           const { attribute_key } = info.row.original
           return AttrTableContextMenu({ entityId, attribute_key, entityType })

@@ -10,38 +10,42 @@ type AttrRes = {
   entity_id: string
 } & Attribute
 
-export const getAttr = ({
-  entityType,
-  entityId,
-  attrKey,
-}: {
-  entityType: EntityType
-  entityId?: string
-  attrKey?: string
-}): Promise<AttrRes> => {
-  return axios.get(
-    `/api/attributes/${entityType}/${entityId}/SCOPE_CLIENT/${attrKey}/values`,
-  )
+type AttrsRes = {
+  attributes: AttrRes[]
 }
 
-type QueryFnType = typeof getAttr
-
-type UseAttrOptions = {
+export const getAttrs = ({
+  entityType,
+  entityId,
+  key,
+}: {
   entityType: EntityType
-  entityId?: string
-  attrKey?: string
+  entityId: string
+  key?: string
+}): Promise<AttrsRes> => {
+  return axios.get(`/api/attributes/${entityType}/${entityId}/values`, {
+    params: { key },
+  })
+}
+
+type QueryFnType = typeof getAttrs
+
+type UseAttrsOptions = {
+  entityType: EntityType
+  entityId: string
+  key?: string
   config?: QueryConfig<QueryFnType>
 }
 
-export const useGetAttr = ({
+export const useGetAttrs = ({
   entityType,
   entityId,
-  attrKey,
+  key,
   config,
-}: UseAttrOptions) => {
+}: UseAttrsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['attr', entityType, entityId, attrKey],
-    queryFn: () => getAttr({ entityType, entityId, attrKey }),
+    queryKey: ['attr', entityType, entityId, key],
+    queryFn: () => getAttrs({ entityType, entityId, key }),
     ...config,
   })
 }

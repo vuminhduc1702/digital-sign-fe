@@ -37,7 +37,7 @@ export const useCreateDevice = ({ config }: UseCreateDeviceOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo thuộc tính thành công',
+        title: 'Tạo thiết bị thành công',
       })
     },
     ...config,

@@ -1,26 +1,32 @@
 import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type DeviceAttrLog, type DeviceAttrLogList } from '../../api/attrAPI'
+import { useAttrLog, type DeviceAttrLog } from '../../api/attrAPI'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function ComboBoxAttrLog({
-  attrLogData,
   setFilteredComboboxData,
   ...props
 }: {
-  attrLogData: DeviceAttrLogList
   setFilteredComboboxData?: React.Dispatch<
     React.SetStateAction<DeviceAttrLog[]>
   >
 }) {
   const [query, setQuery] = useState('')
 
+  const params = useParams()
+  const deviceId = params.deviceId as string
+  const { data: deviceAttrData } = useAttrLog({
+    entityId: deviceId,
+    entityType: 'DEVICE',
+  })
+
   const { acc: attrLogFlattenData, extractedPropertyKeys } = flattenData(
-    attrLogData?.logs,
+    deviceAttrData?.logs || [],
     ['ts', 'attribute_key', 'value'],
   )
 
@@ -32,7 +38,7 @@ export function ComboBoxAttrLog({
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
-  }, [query, attrLogData])
+  }, [query, deviceAttrData])
 
   return (
     <ComboBoxBase

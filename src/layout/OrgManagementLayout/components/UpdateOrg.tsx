@@ -5,14 +5,10 @@ import { useEffect, useState } from 'react'
 import { Button } from '~/components/Button'
 import { Form, InputField, TextAreaField } from '~/components/Form'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
-import {
-  type UpdateOrgDTO,
-  useUpdateOrg,
-} from '~/layout/OrgManagementLayout/api/updateOrg'
-import { useOrgById } from '~/layout/OrgManagementLayout/api/getOrgById'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { useSpinDelay } from 'spin-delay'
+import { type UpdateOrgDTO, useOrgById, useUpdateOrg } from '../api'
 
 import { type OrgMapType } from './OrgManageSidebar'
 

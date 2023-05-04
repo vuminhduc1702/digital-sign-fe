@@ -25,7 +25,8 @@ export function AttrLogTable({
 
   const columns = useMemo<ColumnDef<DeviceAttrLog, string>[]>(
     () => [
-      columnHelper.accessor('stt', {
+      columnHelper.display({
+        id: 'stt',
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
           return orderId

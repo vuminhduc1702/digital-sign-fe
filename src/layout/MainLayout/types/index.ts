@@ -9,7 +9,7 @@ export type Project = {
   app_secret: string
   sms_config: {
     type?: string
-    config?: any | null
+    // config?: any | null
     content?: string
     reset_password_content?: string
   }

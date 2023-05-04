@@ -2,38 +2,44 @@ import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { useParams } from 'react-router-dom'
+import { useGetAttrs } from '../../api/attrAPI'
 
-import { type DeviceList, type Device } from '../../types'
+import { type Attribute } from '~/types'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
-export function ComboBoxSelectDevice({
-  data,
+export function ComboBoxSelectDeviceAttr({
   setFilteredComboboxData,
-  offset,
   ...props
 }: {
-  data: DeviceList[]
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
-  offset?: number
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Attribute[]>>
 }) {
   const [query, setQuery] = useState('')
+  const [offset, setOffset] = useState(0)
 
-  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
-    data?.devices || [],
-    ['id', 'name', 'group_name', 'template_name', 'created_time'],
+  const params = useParams()
+  const deviceId = params.deviceId as string
+  const { data: attrsData } = useGetAttrs({
+    entityType: 'DEVICE',
+    entityId: deviceId,
+    offset,
+  })
+
+  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
+    attrsData,
+    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
   )
-  console.log('data', data)
 
   const filteredData = filteredComboboxData(
     query,
-    deviceFlattenData,
+    attrFlattenData,
     extractedPropertyKeys,
-  ) as Device[]
+  ) as Attribute[]
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
-  }, [query, data])
+  }, [query, attrsData])
 
   return (
     <ComboBoxBase

@@ -12,8 +12,8 @@ import SelectMenu from '~/components/SelectMenu/SelectMenu'
 import {
   type UpdateAttrDTO,
   type EntityType,
-  useGetAttr,
   useUpdateAttr,
+  useGetAttrs,
 } from '../../api/attrAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -46,10 +46,10 @@ export function UpdateAttr({
 
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
-  const { data: attrData, isLoading: attrLoading } = useGetAttr({
+  const { data: attrData, isLoading: attrLoading } = useGetAttrs({
     entityType,
     entityId,
-    attrKey: attributeKey,
+    key: attributeKey,
     config: { suspense: false },
   })
 
@@ -115,8 +115,8 @@ export function UpdateAttr({
           schema={attrSchema}
           options={{
             defaultValues: {
-              value: attrData?.value,
-              value_t: attrData?.value_type,
+              value: attrData?.attributes[0].value,
+              value_t: attrData?.attributes[0].value_type,
               // logged: attrData?.logged,
             },
           }}

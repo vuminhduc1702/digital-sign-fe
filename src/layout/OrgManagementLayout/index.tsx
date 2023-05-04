@@ -18,18 +18,20 @@ export function OrgManagementLayout() {
           <OrgManageSidebar />
         </div>
 
-        <div className="flex flex-col gap-2 md:col-span-2">
-          {orgId ? <OrgManageNavbar /> : null}
-          <Suspense
-            fallback={
-              <div className="flex grow items-center justify-center md:col-span-2">
-                <Spinner size="xl" />
-              </div>
-            }
-          >
-            <Outlet />
-          </Suspense>
-        </div>
+        {orgId ? (
+          <div className="flex flex-col gap-2 md:col-span-2">
+            {orgId ? <OrgManageNavbar /> : null}
+            <Suspense
+              fallback={
+                <div className="flex grow items-center justify-center md:col-span-2">
+                  <Spinner size="xl" />
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
+          </div>
+        ) : null}
       </div>
     </ContentLayout>
   )

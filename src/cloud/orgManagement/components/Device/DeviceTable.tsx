@@ -144,7 +144,8 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, string>[]>(
     () => [
-      columnHelper.accessor('stt', {
+      columnHelper.display({
+        id: 'stt',
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
           return orderId
@@ -180,7 +181,8 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
         cell: info => getVNDateFormat(parseInt(info.getValue()) * 1000), // convert seconds to milliseconds
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('contextMenu', {
+      columnHelper.display({
+        id: 'contextMenu',
         cell: info => {
           const { name, id } = info.row.original
           return DeviceTableContextMenu({ name, id })

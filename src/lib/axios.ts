@@ -31,14 +31,17 @@ axios.interceptors.response.use(
   error => {
     console.log('error', error)
     let message = ''
-    if (error.response?.status === 403) {
-      message = 'Bạn không có quyền truy cập vào trang này'
-    }
-    // else if (error.response?.status === 401) {
-    //   window.location.href = '/login'
-    // }
-    else {
-      message = error.response?.data?.message || error.message
+    switch (error.response?.status) {
+      case 400:
+        message = 'Dữ liệu truyền lên không hợp lệ'
+        break
+      // case 401:
+      //   return window.location.href = '/login'
+      case 403:
+        message = 'Bạn không có quyền truy cập vào trang này'
+        break
+      default:
+        message = error.response?.data?.message || error.message
     }
     useNotificationStore.getState().addNotification({
       type: 'error',

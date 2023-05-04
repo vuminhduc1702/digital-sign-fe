@@ -21,7 +21,7 @@ export function ComboBoxSelectOrg({
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
-    orgData?.organizations as Array<Org>,
+    orgData?.organizations || [],
     ['id', 'name', 'level'],
     'sub_orgs',
   )

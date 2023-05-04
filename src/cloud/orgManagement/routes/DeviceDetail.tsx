@@ -8,13 +8,12 @@ import TitleBar from '~/components/Head/TitleBar'
 import { DeviceBreadcrumbs } from '../components/Device/DeviceBreadcrumbs'
 import {
   AttrTable,
-  ComboBoxSelectAttr,
   CreateAttr,
   ComboBoxAttrLog,
+  ComboBoxSelectDeviceAttr,
 } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { useDeviceById } from '../api/deviceAPI'
-import { type DeviceAttrLog, useAttrLog } from '../api/attrAPI'
+import { type DeviceAttrLog } from '../api/attrAPI'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 
 import { type Attribute } from '~/types'
@@ -26,18 +25,12 @@ export function DeviceDetail() {
 
   const params = useParams()
   const deviceId = params.deviceId as string
-  const { data: deviceByIdData } = useDeviceById({ deviceId })
 
   const [filteredAttrComboboxData, setFilteredAttrComboboxData] = useState<
     Attribute[]
   >([])
   const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
     useState<DeviceAttrLog[]>([])
-
-  const { data: deviceAttrData } = useAttrLog({
-    entityId: deviceId,
-    entityType: 'DEVICE',
-  })
 
   return (
     <div className="flex grow flex-col">
@@ -84,12 +77,9 @@ export function DeviceDetail() {
                 <ExportTable />
                 <div className="flex items-center gap-x-3">
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
-                  {deviceByIdData ? (
-                    <ComboBoxSelectAttr
-                      attrData={deviceByIdData}
-                      setFilteredComboboxData={setFilteredAttrComboboxData}
-                    />
-                  ) : null}
+                  <ComboBoxSelectDeviceAttr
+                    setFilteredComboboxData={setFilteredAttrComboboxData}
+                  />
                 </div>
               </div>
               <AttrTable
@@ -106,12 +96,9 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable />
                 <div className="flex items-center gap-x-3">
-                  {deviceAttrData ? (
-                    <ComboBoxAttrLog
-                      attrLogData={deviceAttrData}
-                      setFilteredComboboxData={setFilteredAttrLogComboboxData}
-                    />
-                  ) : null}
+                  <ComboBoxAttrLog
+                    setFilteredComboboxData={setFilteredAttrLogComboboxData}
+                  />
                 </div>
               </div>
               <AttrLogTable

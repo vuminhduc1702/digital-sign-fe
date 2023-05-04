@@ -5,12 +5,9 @@ import { useState } from 'react'
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
 
-import {
-  type CreateOrgDTO,
-  useCreateOrg,
-} from '~/layout/OrgManagementLayout/api/createOrg'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import { type CreateOrgDTO, useCreateOrg } from '../api'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
