@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
-import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { limitPagination } from '~/utils/const'
 
+import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type EntityType } from './createAttr'
 import { type BasePagination } from '~/types'
 
@@ -22,7 +23,7 @@ export type DeviceAttrLogList = {
 export const getAttrLog = ({
   entityId,
   entityType,
-  limit = 100,
+  limit = limitPagination,
 }: {
   entityId: string
   entityType: EntityType

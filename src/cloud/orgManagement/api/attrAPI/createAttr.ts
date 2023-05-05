@@ -56,7 +56,7 @@ export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['orgById'])
+      await queryClient.invalidateQueries(['attr'])
       await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',

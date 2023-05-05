@@ -67,7 +67,7 @@ const Pagination = ({
         }
 
         // Render our Page Pills
-        return (
+        return typeof pageNumber === 'number' ? (
           <li
             className={clsx('pagination-item', {
               selected: pageNumber === currentPage + 1,
@@ -77,7 +77,7 @@ const Pagination = ({
           >
             {pageNumber}
           </li>
-        )
+        ) : null
       })}
       {/*  Right Navigation arrow */}
       <li

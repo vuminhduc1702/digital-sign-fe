@@ -5,7 +5,7 @@ import {
   type ColumnDef,
   getPaginationRowModel,
 } from '@tanstack/react-table'
-import { Fragment, useMemo } from 'react'
+import { Fragment, useLayoutEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -34,16 +34,20 @@ export function BaseTable({
   const table = useReactTable({
     data: data ?? defaultData,
     columns,
-    // Pipeline
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    //
     debugTable: true,
   })
 
-  const { pageIndex } = table.getState().pagination
   const totalAttrs = total || data?.length
-  console.log('totalAttrs', totalAttrs)
+  const { pageSize } = table.getState().pagination
+
+  useLayoutEffect(() => {
+    table.setPageSize(5)
+  }, [])
+
+  const pageIndexRef = useRef(0)
+  const countLimitPaginationRef = useRef(1)
 
   return (
     <>
@@ -112,8 +116,8 @@ export function BaseTable({
                 {t('table.show_in')
                   .replace(
                     '{{PAGE}}',
-                    limitPagination < totalAttrs
-                      ? limitPagination?.toString()
+                    pageSize < totalAttrs
+                      ? pageSize?.toString()
                       : totalAttrs?.toString(),
                   )
                   .replace('{{TOTAL}}', totalAttrs?.toString())}
@@ -123,27 +127,42 @@ export function BaseTable({
               <Button
                 className="rounded-l-md border-none"
                 onClick={() => {
-                  setOffset?.(offset => offset - limitPagination)
+                  pageIndexRef.current--
+                  if (limitPagination < totalAttrs) {
+                    setOffset?.(offset => offset - limitPagination)
+                  }
                   table.previousPage()
                 }}
-                disabled={offset === 0}
+                disabled={pageIndexRef.current === 0}
                 variant="secondaryLight"
               >
                 {'Prev'}
               </Button>
               <Pagination
-                currentPage={pageIndex}
+                currentPage={pageIndexRef.current}
                 totalCount={totalAttrs}
-                pageSize={limitPagination}
+                pageSize={pageSize}
                 table={table}
               />
               <Button
                 className="rounded-r-md border-none"
                 onClick={() => {
-                  setOffset?.(offset => offset + limitPagination)
+                  pageIndexRef.current++
+                  if (
+                    limitPagination < totalAttrs &&
+                    (pageIndexRef.current + 1) * pageSize >
+                      limitPagination * countLimitPaginationRef.current
+                  ) {
+                    countLimitPaginationRef.current++
+                    setOffset?.(offset => offset + limitPagination)
+                  }
                   table.nextPage()
+                  console.log(
+                    'countLimitPagination',
+                    countLimitPaginationRef.current,
+                  )
                 }}
-                disabled={offset + limitPagination >= totalAttrs}
+                disabled={(pageIndexRef.current + 1) * pageSize >= totalAttrs}
                 variant="secondaryLight"
               >
                 {'Next'}

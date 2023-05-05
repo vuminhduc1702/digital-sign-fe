@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
+import { limitPagination } from '~/utils/const'
+
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type DeviceList } from '../../types'
 
@@ -36,7 +38,7 @@ export const useGetDevices = ({
   orgId,
   projectId,
   offset = 0,
-  limit = 100,
+  limit = limitPagination,
   config,
 }: UseDeviceOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({

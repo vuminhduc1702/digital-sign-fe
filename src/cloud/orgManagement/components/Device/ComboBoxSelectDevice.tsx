@@ -23,7 +23,6 @@ export function ComboBoxSelectDevice({
     data?.devices || [],
     ['id', 'name', 'group_name', 'template_name', 'created_time'],
   )
-  console.log('data', data)
 
   const filteredData = filteredComboboxData(
     query,

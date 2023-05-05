@@ -1,13 +1,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
+import { limitPagination } from '~/utils/const'
+
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type OrgList } from '../types'
 
 export const getOrgs = ({
   projectId,
   offset = 0,
-  limit = 100,
+  limit = limitPagination,
 }: {
   projectId: string
   offset?: number
