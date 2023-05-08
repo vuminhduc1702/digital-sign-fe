@@ -33,7 +33,7 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
         <div
           role="alert"
           aria-label={error.message}
-          className="text-body-sm text-red-500"
+          className="text-body-sm text-primary-400"
         >
           {error.message}
         </div>

@@ -4,6 +4,7 @@ import Axios, {
 } from 'axios'
 
 import { API_URL } from '~/config'
+import { PATHS } from '~/routes/PATHS'
 import { useNotificationStore } from '~/stores/notifications'
 import storage from '~/utils/storage'
 
@@ -29,16 +30,19 @@ axios.interceptors.response.use(
     return response.data
   },
   error => {
-    console.log('error', error)
+    console.error('error', error)
     let message = ''
     switch (error.response?.status) {
       case 400:
         message = 'Dữ liệu truyền lên không hợp lệ'
         break
-      // case 401:
-      //   return window.location.href = '/login'
+      case 401:
+        return (window.location.href = PATHS.LOGIN)
       case 403:
         message = 'Bạn không có quyền truy cập vào trang này'
+        break
+      case 500:
+        message = 'Server đang bị lỗi, vui lòng thử lại'
         break
       default:
         message = error.response?.data?.message || error.message

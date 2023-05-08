@@ -4,6 +4,8 @@ import { lazyImport } from '~/utils/lazyImport'
 import MainLayout from '~/layout/MainLayout'
 
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
+import { Login } from '~/features/auth/routes/Login'
+import { Register } from '~/features/auth/routes/Register'
 
 const { DeviceTemplate } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -24,10 +26,6 @@ const { NotFoundPage } = lazyImport(
   () => import('~/pages/NotFoundPage'),
   'NotFoundPage',
 )
-const { LandingPage } = lazyImport(
-  () => import('~/pages/LandingPage'),
-  'LandingPage',
-)
 
 export function RouteList() {
   return [
@@ -35,10 +33,6 @@ export function RouteList() {
       element: <MainLayout />,
       children: [
         ...OrgManagementRoutes,
-        {
-          path: PATHS.HOME,
-          element: <LandingPage />,
-        },
         {
           path: PATHS.DEVICE_TEMPLATE,
           element: <DeviceTemplate />,
@@ -59,15 +53,15 @@ export function RouteList() {
           element: <RoleManage />,
           children: [{ path: ':projectId' }],
         },
-        {
-          path: PATHS.MAINTAIN,
-          element: <MaintainPage />,
-        },
-        {
-          path: PATHS.NOTFOUND,
-          element: <NotFoundPage />,
-        },
       ],
+    },
+    {
+      path: PATHS.MAINTAIN,
+      element: <MaintainPage />,
+    },
+    {
+      path: PATHS.NOTFOUND,
+      element: <NotFoundPage />,
     },
   ]
 }

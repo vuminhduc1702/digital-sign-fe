@@ -24,7 +24,9 @@ const icons = {
       aria-hidden="true"
     />
   ),
-  error: <XCircleIcon className="h-6 w-6 text-red-500" aria-hidden="true" />,
+  error: (
+    <XCircleIcon className="h-6 w-6 text-primary-400" aria-hidden="true" />
+  ),
 }
 
 export type NotificationProps = {

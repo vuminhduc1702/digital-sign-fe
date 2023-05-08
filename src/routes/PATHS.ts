@@ -2,7 +2,9 @@ export const BASE_PATH = '/'
 export const BASE_PATH_CLOUD = '/cloud/'
 
 export const PATHS: { [key: string]: string } = {
-  HOME: `${BASE_PATH}`,
+  // Protected routes
+
+  // Cloud routes
   ORG_MANAGEMENT: `${BASE_PATH_CLOUD}org-management`,
   ORG_MANAGE: `${BASE_PATH_CLOUD}org-management/org`,
   GROUP_MANAGE: `${BASE_PATH_CLOUD}org-management/group`,
@@ -15,6 +17,12 @@ export const PATHS: { [key: string]: string } = {
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
 
-  NOTFOUND: `${BASE_PATH_CLOUD}*`,
-  MAINTAIN: `${BASE_PATH_CLOUD}maintain`,
+  // Public routes
+  LOGIN: `${BASE_PATH}auth/login`,
+  REGISTER: `${BASE_PATH}auth/register`,
+
+  // Common routes
+  HOME: `${BASE_PATH}`,
+  MAINTAIN: `${BASE_PATH}maintain`,
+  NOTFOUND: `${BASE_PATH}*`,
 }

@@ -147,5 +147,18 @@
     "no_user": "Không tồn tại người dùng"
   },
   "loading": "Đang tải dữ liệu...",
-  "search": "Tìm kiếm"
+  "search": "Tìm kiếm",
+  "user": {
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
+    "register": "Đăng ký",
+    "forgot_password": "Quên mật khẩu",
+    "reset_password": "Đặt lại mật khẩu",
+    "change_password": "Đổi mật khẩu",
+    "change_info": "Đổi thông tin",
+    "change_avatar": "Đổi ảnh đại diện",
+    "change_email": "Đổi email",
+    "change_phone": "Đổi số điện thoại",
+    "change_address": "Đổi địa chỉ"
+  }
 }

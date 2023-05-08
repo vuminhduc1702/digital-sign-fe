@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { useProjects } from '../api'
-import { useUser } from '~/lib/auth'
+import { useLogout, useUser } from '~/lib/auth'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
@@ -23,18 +23,40 @@ function Navbar() {
 
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
+  const logout = useLogout()
+
   return (
     <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
-      <div className="flex cursor-pointer items-center gap-x-2">
-        <img
-          src={defaultUserIcon}
-          alt="User's avatar"
-          className="aspect-square w-[20px]"
-        />
-        <p className="text-white">
-          {t('nav.hello')} {userData?.name || userData?.email?.split('@')[0]}
-        </p>
-      </div>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+          <div className="cursor-pointer">
+            <img
+              src={defaultUserIcon}
+              alt="User's avatar"
+              className="aspect-square w-[20px]"
+            />
+            <p className="text-white">
+              {t('nav.hello')} {userData?.email?.split('@')[0]}
+            </p>
+            <SidebarDropDownIcon
+              width={12}
+              height={7}
+              viewBox="0 0 12 7"
+              className="text-white"
+            />
+          </div>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content
+            className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+            sideOffset={5}
+          >
+            <p className="cursor-pointer" onClick={() => logout.mutate({})}>
+              {t('user.logout')}
+            </p>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
           <div className="cursor-pointer">

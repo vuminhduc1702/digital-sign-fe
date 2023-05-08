@@ -1,5 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { lazy, Suspense, useState, useEffect } from 'react'
@@ -7,10 +7,13 @@ import { HelmetProvider } from 'react-helmet-async'
 
 import '~/style/main.css'
 import '~/i18n'
-import { RouteList } from '~/routes/RouteList'
+
 import { queryClient } from '~/lib/react-query'
 import { Spinner } from '~/components/Spinner'
 import { Notifications } from '~/components/Notifications'
+import { AuthLoader } from '~/lib/auth'
+import { AppRoutes } from '~/routes'
+import { Button } from '~/components/Button'
 
 const ReactQueryDevtoolsProduction = lazy(() =>
   import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(d => ({
@@ -21,26 +24,24 @@ const ReactQueryDevtoolsProduction = lazy(() =>
 const ErrorFallback = () => {
   return (
     <div
-      className="flex h-screen w-screen flex-col items-center justify-center text-red-500"
+      className="flex h-screen w-screen flex-col items-center justify-center"
       role="alert"
     >
-      <h2 className="text-body-md font-semibold">
+      <h1 className="text-h1">
         Ooops, có lỗi rùi, bạn click nút Refresh để tải lại trang nhé :({' '}
-      </h2>
-      <button
+      </h1>
+      <Button
         className="mt-4"
+        size="lg"
         onClick={() => window.location.assign(window.location.origin)}
       >
         Refresh
-      </button>
+      </Button>
     </div>
   )
 }
 
 function App() {
-  const routerList = RouteList()
-  const router = createBrowserRouter([...routerList])
-
   const [showDevtools, setShowDevtools] = useState(false)
 
   useEffect(() => {
@@ -60,7 +61,17 @@ function App() {
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
             <Notifications />
-            <RouterProvider router={router} />
+            <AuthLoader
+              renderLoading={() => (
+                <div className="flex h-screen w-screen items-center justify-center">
+                  <Spinner size="xl" />
+                </div>
+              )}
+            >
+              <Router>
+                <AppRoutes />
+              </Router>
+            </AuthLoader>
             {import.meta.env.NODE_ENV !== 'test' && (
               <ReactQueryDevtools initialIsOpen={false} />
             )}

@@ -20,7 +20,12 @@ export function DeviceManage() {
   const params = useParams()
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: deviceData } = useGetDevices({ orgId, projectId, offset })
+  const { data: deviceData, isPreviousData } = useGetDevices({
+    orgId,
+    projectId,
+    offset,
+    config: { keepPreviousData: true },
+  })
 
   return (
     <>
@@ -46,6 +51,7 @@ export function DeviceManage() {
           offset={offset}
           setOffset={setOffset}
           total={deviceData?.total ?? 0}
+          isPreviousData={isPreviousData}
         />
       </div>
     </>

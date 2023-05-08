@@ -137,7 +137,6 @@ export function AttrTable({
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<Attribute>()
-  console.log('data', data)
 
   const dataSorted = data?.sort((a, b) => b.last_update_ts - a.last_update_ts)
 
