@@ -13,8 +13,8 @@ import {
 import storage from '~/utils/storage'
 
 async function handleUserResponse(data: UserResponse) {
-  const { token, user } = data
-  storage.setToken(token)
+  const user = data
+  storage.setToken({ token: user.token, system_role: user.system_role })
   return user
 }
 

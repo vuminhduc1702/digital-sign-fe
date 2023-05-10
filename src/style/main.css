@@ -14,3 +14,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+#root > div[role='alert'] {
+  height: 100vh;
+}

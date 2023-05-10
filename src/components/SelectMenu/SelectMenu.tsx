@@ -6,7 +6,10 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
 
 import { SidebarDropDownIcon } from '../SVGIcons'
 
-type ListObj = Record<string, string | boolean>
+type ListObj = {
+  type: boolean | string
+  name: string
+}
 
 type SelectMenuProps = {
   data: ListObj[]

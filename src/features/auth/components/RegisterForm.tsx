@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import * as z from 'zod'
+import { useTranslation } from 'react-i18next'
 
 import { useRegister } from '~/lib/auth'
 import { Form, InputField } from '~/components/Form'
@@ -23,6 +24,8 @@ type RegisterFormProps = {
 }
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const { t } = useTranslation()
+
   const registerMutation = useRegister()
 
   return (
@@ -41,13 +44,13 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           <>
             <InputField
               type="email"
-              label="Email Address"
+              label="Email"
               error={formState.errors['email']}
               registration={register('email')}
             />
             <InputField
               type="password"
-              label="Password"
+              label={t('user.password') ?? 'Password'}
               error={formState.errors['password']}
               registration={register('password')}
             />
@@ -64,7 +67,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 type="submit"
                 className="w-full"
               >
-                Register
+                {t('user.register')}
               </Button>
             </div>
           </>
@@ -76,7 +79,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             to={PATHS.LOGIN}
             className="font-medium text-blue-600 hover:text-blue-500"
           >
-            Log In
+            {t('user.login')}
           </Link>
         </div>
       </div>

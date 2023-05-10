@@ -1,6 +1,12 @@
+import { ErrorBoundary } from 'react-error-boundary'
+
 import { lazyImport } from '~/utils/lazyImport'
 import { PATHS } from '~/routes/PATHS'
 
+const { ErrorFallback } = lazyImport(
+  () => import('~/pages/ErrorPage'),
+  'ErrorFallback',
+)
 const { OrgManagementLayout } = lazyImport(
   () => import('~/layout/OrgManagementLayout'),
   'OrgManagementLayout',
@@ -32,17 +38,29 @@ export const OrgManagementRoutes = [
         children: [
           {
             path: PATHS.ORG_MANAGE,
-            element: <OrgManage />,
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <OrgManage />
+              </ErrorBoundary>
+            ),
             children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
           },
           {
             path: PATHS.GROUP_MANAGE,
-            element: <GroupManage />,
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <GroupManage />
+              </ErrorBoundary>
+            ),
             children: [{ path: ':projectId/:orgId' }],
           },
           {
             path: PATHS.USER_MANAGE,
-            element: <UserManage />,
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <UserManage />
+              </ErrorBoundary>
+            ),
             children: [{ path: ':projectId/:orgId' }],
           },
           {
@@ -51,17 +69,29 @@ export const OrgManagementRoutes = [
             children: [
               {
                 path: ':projectId/:orgId',
-                element: <DeviceManage />,
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <DeviceManage />,
+                  </ErrorBoundary>
+                ),
               },
               {
                 path: ':projectId/:orgId/:deviceId',
-                element: <DeviceDetail />,
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <DeviceDetail />,
+                  </ErrorBoundary>
+                ),
               },
             ],
           },
           {
             path: PATHS.EVENT_MANAGE,
-            element: <EventManage />,
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <EventManage />
+              </ErrorBoundary>
+            ),
             children: [{ path: ':projectId/:orgId' }],
           },
         ],

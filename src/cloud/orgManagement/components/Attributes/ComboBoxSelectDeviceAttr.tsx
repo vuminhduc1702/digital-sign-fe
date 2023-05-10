@@ -16,18 +16,16 @@ export function ComboBoxSelectDeviceAttr({
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Attribute[]>>
 }) {
   const [query, setQuery] = useState('')
-  const [offset, setOffset] = useState(0)
 
   const params = useParams()
   const deviceId = params.deviceId as string
   const { data: attrsData } = useGetAttrs({
     entityType: 'DEVICE',
     entityId: deviceId,
-    offset,
   })
 
   const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
-    attrsData,
+    attrsData?.attributes || [],
     ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
   )
 

@@ -1,7 +1,9 @@
 import { Head } from '~/components/Head'
 
+import { type ReactNode } from 'react'
+
 type ContentLayoutProps = {
-  children: React.ReactNode
+  children: ReactNode
   title: string
 }
 

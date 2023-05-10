@@ -13,7 +13,7 @@ export function ComboBoxSelectDevice({
   offset,
   ...props
 }: {
-  data: DeviceList[]
+  data: DeviceList
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
   offset?: number
 }) {

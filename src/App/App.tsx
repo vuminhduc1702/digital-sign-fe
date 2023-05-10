@@ -8,38 +8,22 @@ import { HelmetProvider } from 'react-helmet-async'
 import '~/style/main.css'
 import '~/i18n'
 
+import { lazyImport } from '~/utils/lazyImport'
 import { queryClient } from '~/lib/react-query'
 import { Spinner } from '~/components/Spinner'
 import { Notifications } from '~/components/Notifications'
 import { AuthLoader } from '~/lib/auth'
 import { AppRoutes } from '~/routes'
-import { Button } from '~/components/Button'
+const { ErrorFallback } = lazyImport(
+  () => import('~/pages/ErrorPage'),
+  'ErrorFallback',
+)
 
 const ReactQueryDevtoolsProduction = lazy(() =>
   import('@tanstack/react-query-devtools/build/lib/index.prod.js').then(d => ({
     default: d.ReactQueryDevtools,
   })),
 )
-
-const ErrorFallback = () => {
-  return (
-    <div
-      className="flex h-screen w-screen flex-col items-center justify-center"
-      role="alert"
-    >
-      <h1 className="text-h1">
-        Ooops, có lỗi rùi, bạn click nút Refresh để tải lại trang nhé :({' '}
-      </h1>
-      <Button
-        className="mt-4"
-        size="lg"
-        onClick={() => window.location.assign(window.location.origin)}
-      >
-        Refresh
-      </Button>
-    </div>
-  )
-}
 
 function App() {
   const [showDevtools, setShowDevtools] = useState(false)

@@ -1,9 +1,12 @@
+import { ErrorBoundary } from 'react-error-boundary'
 import { PATHS } from './PATHS'
 import { lazyImport } from '~/utils/lazyImport'
 
 import MainLayout from '~/layout/MainLayout'
 
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
+
+import { ErrorFallback } from '~/pages/ErrorPage'
 
 const { DeviceTemplate } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -23,22 +26,38 @@ export const protectedRoutes = [
       ...OrgManagementRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
-        element: <DeviceTemplate />,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DeviceTemplate />
+          </ErrorBoundary>
+        ),
         children: [{ path: ':projectId' }],
       },
       {
         path: PATHS.FLOW_ENGINE,
-        element: <FlowEngine />,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <FlowEngine />
+          </ErrorBoundary>
+        ),
         children: [{ path: ':projectId' }],
       },
       {
         path: PATHS.DASHBOARD,
-        element: <Dashboard />,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <Dashboard />
+          </ErrorBoundary>
+        ),
         children: [{ path: ':projectId' }],
       },
       {
         path: PATHS.ROLE_MANAGE,
-        element: <RoleManage />,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <RoleManage />
+          </ErrorBoundary>
+        ),
         children: [{ path: ':projectId' }],
       },
     ],

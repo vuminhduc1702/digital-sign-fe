@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Button } from '~/components/Button'
 
@@ -21,6 +22,8 @@ type LoginFormProps = {
 }
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
+  const { t } = useTranslation()
+
   const login = useLogin()
 
   return (
@@ -36,13 +39,13 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           <>
             <InputField
               type="email"
-              label="Email Address"
+              label="Email"
               error={formState.errors['identifier']}
               registration={register('identifier')}
             />
             <InputField
               type="password"
-              label="Password"
+              label={t('user.password') ?? 'Password'}
               error={formState.errors['password']}
               registration={register('password')}
             />
@@ -52,7 +55,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 type="submit"
                 className="w-full"
               >
-                Log in
+                {t('user.login')}
               </Button>
             </div>
           </>
@@ -64,7 +67,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             to={PATHS.REGISTER}
             className="font-medium text-blue-600 hover:text-blue-500"
           >
-            Register
+            {t('user.register')}
           </Link>
         </div>
       </div>

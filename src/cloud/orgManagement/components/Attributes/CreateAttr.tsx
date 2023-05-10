@@ -1,15 +1,13 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField } from '~/components/Form'
+import { Form, FormDrawer, InputField, SelectField } from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
-import SelectMenu from '~/components/SelectMenu/SelectMenu'
 
 import { type Attribute } from '~/types'
 
@@ -37,6 +35,8 @@ export const loggedList = [
 export const attrSchema = z.object({
   attribute_key: z.string().min(1, 'Vui lòng nhập để tiếp tục').max(30),
   value: z.string().optional(),
+  logged: z.string(),
+  value_t: z.string(),
 })
 
 type CreateAttrProps = {
@@ -46,14 +46,7 @@ type CreateAttrProps = {
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
 
-  const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
-  const [selectedLogged, setSelectedLogged] = useState(loggedList[0])
-  const logged = selectedLogged.type
-  const valueType = selectedValueType.type
-
   const { mutate, isLoading, isSuccess } = useCreateAttr()
-
-  // TODO: Figure out to put logged and valueType into react-hook-form
 
   // TODO: Choose bool valueType then InputField switch to Listbox
 
@@ -85,6 +78,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
+          const logged = String(values.logged).toLowerCase() === 'true'
           mutate({
             data: {
               entity_id: entityId,
@@ -94,7 +88,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   attribute_key: values.attribute_key,
                   value: values.value,
                   logged: logged,
-                  value_t: valueType,
+                  value_t: values.value_t,
                 },
               ],
             },
@@ -109,16 +103,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               error={formState.errors['attribute_key']}
               registration={register('attribute_key')}
             />
-            <SelectMenu
-              label={
-                t('cloud.org_manage.org_manage.add_attr.value_type') ??
-                "Attribute's value type"
-              }
-              data={valueTypeList}
-              selected={selectedValueType}
-              setSelected={setSelectedValueType}
-            />
-            {/* <SelectField
+            <SelectField
               label={
                 t('cloud.org_manage.org_manage.add_attr.value_type') ??
                 'Value type'
@@ -129,30 +114,23 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 label: valueType.name,
                 value: valueType.type,
               }))}
-            /> */}
+            />
             <InputField
               label={t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'}
               error={formState.errors['value']}
               registration={register('value')}
             />
-            <SelectMenu
+            <SelectField
               label={
-                t('cloud.org_manage.org_manage.add_attr.logged') ??
-                "Attribute's logged"
+                t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
               }
-              data={loggedList}
-              selected={selectedLogged}
-              setSelected={setSelectedLogged}
-            />
-            {/* <SelectField
-              label={t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'}
               error={formState.errors['logged']}
               registration={register('logged')}
               options={loggedList.map(logged => ({
                 label: logged.name,
                 value: logged.type,
               }))}
-            /> */}
+            />
           </>
         )}
       </Form>

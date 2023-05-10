@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useCallback } from 'react'
 
 import { useUser } from './auth'
+import storage from '~/utils/storage'
+
 import { type User } from '~/features/auth'
 
 export enum ROLES {
@@ -20,8 +22,12 @@ function isTenantDev(user: User): boolean {
 }
 
 export const useAuthorization = () => {
-  const user = useUser()
   const { t } = useTranslation()
+
+  const user = useUser()
+
+  const userStorage = storage.getToken()
+  const system_role = userStorage?.system_role
 
   if (!user.data) {
     throw Error(t('error.no_user') ?? 'No user found')
@@ -32,7 +38,7 @@ export const useAuthorization = () => {
       if (!user.data) return false
 
       if (allowedRoles && allowedRoles.length > 0) {
-        return allowedRoles?.includes(user.data.system_role)
+        return allowedRoles?.includes(system_role)
       }
 
       return true
@@ -40,7 +46,7 @@ export const useAuthorization = () => {
     [user.data],
   )
 
-  return { checkAccess, role: user.data.system_role }
+  return { checkAccess, role: system_role }
 }
 
 type AuthorizationProps = {

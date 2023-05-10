@@ -1,11 +1,11 @@
 import clsx from 'clsx'
-import * as React from 'react'
+import { type ReactNode } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
 type Option = {
-  label: React.ReactNode
+  label: ReactNode
   value: string | number | string[] | boolean
 }
 
@@ -33,7 +33,7 @@ export const SelectField = (props: SelectFieldProps) => {
         placeholder={placeholder}
         name="location"
         className={clsx(
-          'mt-1 block w-full rounded-md border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
+          'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
           className,
         )}
         defaultValue={defaultValue}

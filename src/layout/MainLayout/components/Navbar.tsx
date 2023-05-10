@@ -36,7 +36,8 @@ function Navbar() {
               className="aspect-square w-[20px]"
             />
             <p className="text-white">
-              {t('nav.hello')} {userData?.email?.split('@')[0]}
+              {t('nav.hello')}{' '}
+              {userData?.name || userData?.email?.split('@')[0]}
             </p>
             <SidebarDropDownIcon
               width={12}

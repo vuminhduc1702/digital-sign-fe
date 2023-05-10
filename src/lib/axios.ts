@@ -9,7 +9,8 @@ import { useNotificationStore } from '~/stores/notifications'
 import storage from '~/utils/storage'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
-  const token = storage.getToken()
+  const userStorage = storage.getToken()
+  const token = userStorage?.token
   if (token) {
     ;(config.headers as AxiosHeaders).set('Authorization', `Bearer ${token}`)
   }
