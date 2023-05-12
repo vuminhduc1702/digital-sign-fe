@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { CreateDevice, DeviceTable } from '../components/Device'
-import { ComboBoxSelectDevice } from '../components/Device/ComboBoxSelectDevice'
+import {
+  CreateDevice,
+  DeviceTable,
+  ComboBoxSelectDevice,
+} from '../components/Device'
 
 import { type Device } from '../types'
 import { useParams } from 'react-router-dom'

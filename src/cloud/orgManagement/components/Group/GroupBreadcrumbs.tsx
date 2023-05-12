@@ -1,21 +1,21 @@
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-import { useDeviceById } from '../../api/deviceAPI'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
+import { useGroupById } from '../../api/groupAPI'
 
 import { BreadcrumbIcon } from '~/components/SVGIcons'
 
-export function DeviceBreadcrumbs() {
+export function GroupBreadcrumbs() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
 
   const params = useParams()
-  const deviceId = params.deviceId as string
-  const { data: deviceData } = useDeviceById({ deviceId })
+  const groupId = params.groupId as string
+  const { data: groupData } = useGroupById({ groupId })
 
   return (
     <nav className="flex" aria-label="Breadcrumb">
@@ -23,9 +23,9 @@ export function DeviceBreadcrumbs() {
         <li className="inline-flex items-center">
           <Link
             className="inline-flex items-center text-sm font-medium text-secondary-500 hover:text-white"
-            to={`${PATHS.DEVICE_MANAGE}/${projectId}/${params.orgId}`}
+            to={`${PATHS.GROUP_MANAGE}/${projectId}/${params.orgId}`}
           >
-            {t('cloud.org_manage.org_manage.breadcrumb.device_list')}
+            {t('cloud.org_manage.org_manage.breadcrumb.group_list')}
           </Link>
         </li>
         <BreadcrumbIcon
@@ -37,7 +37,7 @@ export function DeviceBreadcrumbs() {
         />
         <li className="inline-flex items-center">
           <p className="inline-flex items-center text-sm font-medium text-secondary-500 hover:text-white ">
-            {deviceData?.name}
+            {groupData?.name}
           </p>
         </li>
       </ol>

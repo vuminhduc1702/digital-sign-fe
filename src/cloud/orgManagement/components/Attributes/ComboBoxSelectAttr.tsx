@@ -2,27 +2,25 @@ import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-import { useParams } from 'react-router-dom'
-import { useGetAttrs } from '../../api/attrAPI'
+import { type EntityType, useGetAttrs } from '../../api/attrAPI'
 
 import { type Attribute } from '~/types'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function ComboBoxSelectAttr({
+  entityId,
+  entityType,
   setFilteredComboboxData,
   ...props
 }: {
+  entityId: string
+  entityType: EntityType
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Attribute[]>>
 }) {
   const [query, setQuery] = useState('')
 
-  const params = useParams()
-  const orgId = params.orgId as string
-  const { data: attrsData } = useGetAttrs({
-    entityType: 'ORGANIZATION',
-    entityId: orgId,
-  })
+  const { data: attrsData } = useGetAttrs({ entityType, entityId })
 
   const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
     attrsData?.attributes || [],

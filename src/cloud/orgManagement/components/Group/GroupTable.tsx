@@ -10,12 +10,12 @@ import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
-import { UpdateDevice } from './UpdateDevice'
-
-import { getVNDateFormat, useCopyId } from '~/utils/misc'
-import { useDeleteDevice } from '../../api/deviceAPI'
+import { useDeleteGroup } from '../../api/groupAPI'
+import { useCopyId } from '~/utils/misc'
 import { useProjectIdStore } from '~/stores/project'
-import { type Device } from '../../types'
+import { UpdateGroup } from './UpdateGroup'
+
+import { type Group } from '../../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -24,7 +24,7 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
+function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -33,7 +33,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   const projectId = useProjectIdStore(state => state.projectId)
   const { orgId } = useParams()
 
-  const { mutate, isLoading, isSuccess } = useDeleteDevice()
+  const { mutateAsync, isLoading, isSuccess } = useDeleteGroup()
 
   const handleCopyId = useCopyId()
 
@@ -53,35 +53,27 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
           <div className="px-1 py-1">
             <MenuItem
               icon={
-                <img
-                  src={btnDetailIcon}
-                  alt="View device"
-                  className="h-5 w-5"
-                />
+                <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
               }
               onClick={() =>
-                navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}${
-                    orgId != null ? `/${orgId}` : '/no-orgId'
-                  }/${id}`,
-                )
+                navigate(`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}/${id}`)
               }
             >
               {t('table.view_detail')}
             </MenuItem>
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
               }
               onClick={open}
             >
-              {t('cloud.org_manage.device_manage.add_device.edit')}
+              {t('cloud.org_manage.group_manage.add_group.edit')}
             </MenuItem>
             <MenuItem
               icon={
                 <img
                   src={btnCopyIdIcon}
-                  alt="Copy device's ID"
+                  alt="Copy group's ID"
                   className="h-5 w-5"
                 />
               }
@@ -92,13 +84,11 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t(
-                'cloud.org_manage.device_manage.table.delete_device_full',
-              )}
+              title={t('cloud.org_manage.group_manage.table.delete_group')}
               body={
                 t(
-                  'cloud.org_manage.device_manage.table.delete_device_confirm',
-                ).replace('{{DEVICENAME}}', name) ?? 'Confirm delete?'
+                  'cloud.org_manage.group_manage.table.delete_group_confirm',
+                ).replace('{{GROUPNAME}}', name) ?? 'Confirm delete?'
               }
               triggerButton={
                 <Button
@@ -109,12 +99,12 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
                   startIcon={
                     <img
                       src={btnDeleteIcon}
-                      alt="Delete device"
+                      alt="Delete group"
                       className="h-5 w-5"
                     />
                   }
                 >
-                  {t('cloud.org_manage.device_manage.table.delete_device')}
+                  {t('cloud.org_manage.group_manage.table.delete_group')}
                 </Button>
               }
               confirmButton={
@@ -123,7 +113,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
                   type="button"
                   size="md"
                   className="bg-primary-400"
-                  onClick={() => mutate({ id })}
+                  onClick={async () => await mutateAsync({ id })}
                   startIcon={
                     <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                   }
@@ -134,19 +124,17 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDevice deviceId={id} name={name} close={close} isOpen={isOpen} />
+        <UpdateGroup groupId={id} name={name} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )
 }
 
-export function DeviceTable({ data, ...props }: { data: Device[] }) {
+export function GroupTable({ data, ...props }: { data: Group[] }) {
   const { t } = useTranslation()
 
-  const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
-
-  const columnHelper = createColumnHelper<Device>()
-  const columns = useMemo<ColumnDef<Device, string>[]>(
+  const columnHelper = createColumnHelper<Group>()
+  const columns = useMemo<ColumnDef<Group, string>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -159,37 +147,27 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
       }),
       columnHelper.accessor('name', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.name')}</span>
+          <span>{t('cloud.org_manage.group_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('group_name', {
+      columnHelper.accessor('entity_type', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.group')}</span>
+          <span>{t('cloud.org_manage.group_manage.table.entity_type')}</span>
         ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('template_name', {
-        header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.device_type')}</span>
-        ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('created_time', {
-        header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.created_at')}</span>
-        ),
-        cell: info => getVNDateFormat(parseInt(info.getValue()) * 1000), // convert seconds to milliseconds
+        cell: info =>
+          `${info.getValue().charAt(0).toUpperCase()}${info
+            .getValue()
+            .toLowerCase()
+            .slice(1)}`,
         footer: info => info.column.id,
       }),
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
           const { name, id } = info.row.original
-          return DeviceTableContextMenu({ name, id })
+          return GroupTableContextMenu({ name, id })
         },
         header: () => null,
         footer: info => info.column.id,
@@ -198,5 +176,5 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
     [],
   )
 
-  return <BaseTable data={dataSorted} columns={columns} {...props} />
+  return <BaseTable data={data} columns={columns} {...props} />
 }

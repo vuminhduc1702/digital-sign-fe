@@ -4,27 +4,18 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type AttributesDTO } from './createAttr'
+
 export type UpdateAttrDTO = {
   data: {
-    value: string | number | boolean
-    value_t: string
-    // logged: string
+    attributes: AttributesDTO[]
   }
-  attributeKey: string
   entityType: string
   entityId: string
 }
 
-export const updateAttr = ({
-  data,
-  attributeKey,
-  entityType,
-  entityId,
-}: UpdateAttrDTO) => {
-  return axios.put(
-    `/api/attributes/${entityType}/${entityId}/SCOPE_CLIENT/${attributeKey}/values`,
-    data,
-  )
+export const updateAttr = ({ data, entityType, entityId }: UpdateAttrDTO) => {
+  return axios.put(`/api/attributes/${entityType}/${entityId}/values`, data)
 }
 
 export type UseUpdateAttrOptions = {

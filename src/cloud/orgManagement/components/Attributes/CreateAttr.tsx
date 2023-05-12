@@ -78,7 +78,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
-          const logged = String(values.logged).toLowerCase() === 'true'
           mutate({
             data: {
               entity_id: entityId,
@@ -86,8 +85,8 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               attributes: [
                 {
                   attribute_key: values.attribute_key,
-                  value: values.value,
-                  logged: logged,
+                  value: values.value?.toString(),
+                  logged: String(values.logged).toLowerCase() === 'true',
                   value_t: values.value_t,
                 },
               ],

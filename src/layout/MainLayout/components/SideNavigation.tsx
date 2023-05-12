@@ -110,7 +110,7 @@ function SideNavigation() {
             />
             <div>{t('sidebar.cloud.title')}</div>
           </AccordionTrigger>
-          <NavLink to={`${PATHS.ORG_MANAGEMENT}`}>
+          <NavLink to={`${PATHS.ORG_MANAGE}`}>
             <AccordionContent>
               {t('sidebar.cloud.org_management')}
             </AccordionContent>

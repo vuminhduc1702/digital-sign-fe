@@ -2,33 +2,34 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
-import { type UpdateDeviceDTO, useUpdateDevice } from '../../api/deviceAPI'
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
+import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-const deviceSchema = z.object({
+const groupSchema = z.object({
   name: z.string(),
 })
 
-type UpdateDeviceProps = {
-  deviceId: string
+type UpdateGroupProps = {
+  groupId: string
   name: string
   close: () => void
   isOpen: boolean
 }
-export function UpdateDevice({
-  deviceId,
+
+export function UpdateGroup({
+  groupId,
   name,
   close,
   isOpen,
-}: UpdateDeviceProps) {
+}: UpdateGroupProps) {
   const { t } = useTranslation()
 
-  const { mutate, isLoading, isSuccess } = useUpdateDevice()
+  const { mutate, isLoading, isSuccess } = useUpdateGroup()
 
   useEffect(() => {
     if (isSuccess) {
@@ -40,7 +41,7 @@ export function UpdateDevice({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.device_manage.add_device.edit')}
+      title={t('cloud.org_manage.group_manage.add_group.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -54,7 +55,7 @@ export function UpdateDevice({
           />
           <Button
             className="rounded border-none"
-            form="update-device"
+            form="update-group"
             type="submit"
             size="lg"
             isLoading={isLoading}
@@ -65,17 +66,17 @@ export function UpdateDevice({
         </>
       )}
     >
-      <Form<UpdateDeviceDTO['data'], typeof deviceSchema>
-        id="update-device"
+      <Form<UpdateGroupDTO['data'], typeof groupSchema>
+        id="update-group"
         onSubmit={values =>
           mutate({
             data: {
               name: values.name,
             },
-            deviceId,
+            groupId,
           })
         }
-        schema={deviceSchema}
+        schema={groupSchema}
         options={{
           defaultValues: { name },
         }}
@@ -84,8 +85,8 @@ export function UpdateDevice({
           <>
             <InputField
               label={
-                t('cloud.org_manage.device_manage.add_device.name') ??
-                "Device's name"
+                t('cloud.org_manage.group_manage.add_group.name') ??
+                "Group's name"
               }
               error={formState.errors['name']}
               registration={register('name')}

@@ -1,14 +1,12 @@
-import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
-import { loggedList, valueTypeList } from './CreateAttr'
+import { Form, InputField, SelectField } from '~/components/Form'
+import { attrSchema, loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import SelectMenu from '~/components/SelectMenu/SelectMenu'
 import {
   type UpdateAttrDTO,
   type EntityType,
@@ -19,10 +17,6 @@ import {
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-const attrSchema = z.object({
-  value: z.string(),
-})
-
 type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
@@ -30,6 +24,7 @@ type UpdateAttrProps = {
   close: () => void
   isOpen: boolean
 }
+
 export function UpdateAttr({
   entityId,
   entityType,
@@ -38,11 +33,6 @@ export function UpdateAttr({
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
-
-  const [selectedValueType, setSelectedValueType] = useState(valueTypeList[0])
-  const valueType = selectedValueType.type
-  // const [selectedLogged, setSelectedLogged] = useState(loggedList[0])
-  // const logged = selectedLogged.type
 
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
@@ -98,39 +88,52 @@ export function UpdateAttr({
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateAttrDTO['data'], typeof attrSchema>
+        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
           id="update-attr"
-          onSubmit={values =>
+          onSubmit={values => {
             mutate({
               data: {
-                value: values.value,
-                value_t: valueType,
-                // logged: logged,
+                attributes: [
+                  {
+                    attribute_key: values.attribute_key,
+                    logged: String(values.logged).toLowerCase() === 'true',
+                    value: values.value,
+                    value_t: values.value_t,
+                  },
+                ],
               },
-              attributeKey,
               entityType,
               entityId,
             })
-          }
+          }}
           schema={attrSchema}
           options={{
             defaultValues: {
-              value: attrData?.attributes[0].value,
+              attribute_key: attrData?.attributes[0].attribute_key,
+              logged: attrData?.attributes[0].logged,
+              value: attrData?.attributes[0].value.toString(),
               value_t: attrData?.attributes[0].value_type,
-              // logged: attrData?.logged,
             },
           }}
         >
           {({ register, formState }) => (
             <>
-              <SelectMenu
+              {/* <InputField
+                label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
+                error={formState.errors['attribute_key']}
+                registration={register('attribute_key')}
+              /> */}
+              <SelectField
                 label={
                   t('cloud.org_manage.org_manage.add_attr.value_type') ??
                   "Attribute's value type"
                 }
-                data={valueTypeList}
-                selected={selectedValueType}
-                setSelected={setSelectedValueType}
+                error={formState.errors['value_t']}
+                registration={register('value_t')}
+                options={valueTypeList.map(valueType => ({
+                  label: valueType.name,
+                  value: valueType.type,
+                }))}
               />
               <InputField
                 label={
@@ -139,16 +142,17 @@ export function UpdateAttr({
                 error={formState.errors['value']}
                 registration={register('value')}
               />
-              {/* <SelectMenu
-                data={loggedList}
-                selected={selectedLogged}
-                setSelected={setSelectedLogged}
-              /> */}
-              {/* <InputField
-                  label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
-                  error={formState.errors['attribute_key']}
-                  registration={register('attribute_key')}
-                /> */}
+              <SelectField
+                label={
+                  t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
+                }
+                error={formState.errors['logged']}
+                registration={register('logged')}
+                options={loggedList.map(logged => ({
+                  label: logged.name,
+                  value: logged.type,
+                }))}
+              />
             </>
           )}
         </Form>

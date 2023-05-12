@@ -5,12 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
-import { DeviceBreadcrumbs } from '../components/Device/DeviceBreadcrumbs'
+import { DeviceBreadcrumbs } from '../components/Device'
 import {
   AttrTable,
   CreateAttr,
   ComboBoxAttrLog,
-  ComboBoxSelectDeviceAttr,
+  ComboBoxSelectAttr,
 } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { type DeviceAttrLog } from '../api/attrAPI'
@@ -40,7 +40,7 @@ export function DeviceDetail() {
           <Tab
             className={({ selected }) =>
               clsx(
-                'py-2.5 text-body-sm font-medium leading-5 hover:text-primary-400 focus:outline-none',
+                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -48,14 +48,14 @@ export function DeviceDetail() {
             <div className="flex items-center gap-x-2">
               <DeviceListIcon width={16} height={16} viewBox="0 0 20 16" />
               <p>
-                {t('cloud.org_manage.device_manage.device_detail.list_attr')}
+                {t('cloud.org_manage.device_manage.device_detail.attr_list')}
               </p>
             </div>
           </Tab>
           <Tab
             className={({ selected }) =>
               clsx(
-                'py-2.5 text-body-sm font-medium leading-5 hover:text-primary-400 focus:outline-none',
+                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -77,7 +77,9 @@ export function DeviceDetail() {
                 <ExportTable />
                 <div className="flex items-center gap-x-3">
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
-                  <ComboBoxSelectDeviceAttr
+                  <ComboBoxSelectAttr
+                    entityId={deviceId}
+                    entityType="DEVICE"
                     setFilteredComboboxData={setFilteredAttrComboboxData}
                   />
                 </div>

@@ -14,10 +14,10 @@ export type EntityType =
   | 'TEMPLATE'
   | 'EVENT'
 
-type Attributes = {
+export type AttributesDTO = {
   attribute_key: string
   logged: boolean
-  value?: string | number | boolean
+  value?: string
   value_t: string
 }
 
@@ -25,7 +25,7 @@ export type CreateAttrDTO = {
   data: {
     entity_id: string
     entity_type: EntityType
-    attributes: Attributes[]
+    attributes: AttributesDTO[]
   }
 }
 

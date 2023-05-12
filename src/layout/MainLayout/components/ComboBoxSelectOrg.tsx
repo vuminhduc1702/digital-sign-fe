@@ -5,7 +5,6 @@ import { useProjectIdStore } from '~/stores/project'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type Org } from '~/layout/MainLayout/types'
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
 import { SearchIcon } from '~/components/SVGIcons'

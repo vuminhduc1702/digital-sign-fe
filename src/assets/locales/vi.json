@@ -50,8 +50,7 @@
     "org_manage": {
       "org_list": "Danh sách tổ chức",
       "org_map": {
-        "edit": "Chỉnh sửa",
-        "copy_id": "Sao chép ID",
+        "edit": "Sửa tổ chức",
         "delete": "Xóa tổ chức",
         "copy_success": "Sao chép ID thành công",
         "delete_org_confirm": "Bạn có chắc chắn muốn xóa tổ chức {{ORGNAME}}?"
@@ -62,6 +61,10 @@
           "title": "Tổng quan",
           "name": "Tên",
           "desc": "Mô tả"
+        },
+        "breadcrumb": {
+          "device_list": "Danh sách thiết bị",
+          "group_list": "Danh sách nhóm"
         },
         "attr_list": "Danh sách thuộc tính",
         "table": {
@@ -77,7 +80,7 @@
           "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?"
         },
         "add_org": {
-          "title": "Tạo tổ chức",
+          "title": "Tạo mới tổ chức",
           "edit": "Sửa tổ chức",
           "name": "Tên tổ chức",
           "parent": "Trực thuộc",
@@ -87,8 +90,8 @@
           "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb"
         },
         "add_attr": {
-          "title": "Tạo thuộc tính",
-          "edit": "Sửa thuộc tính",
+          "title": "Tạo mới thuộc tính",
+          "edit": "Sửa TT",
           "name": "Tên thuộc tính",
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",
@@ -96,7 +99,25 @@
           "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
         }
       },
-      "group_manage": "Nhóm",
+      "group_manage": {
+        "title": "Nhóm",
+        "header": "Quản lý nhóm",
+        "table": {
+          "name": "Tên",
+          "entity_type": "Phân loại",
+          "delete_group": "Xoá nhóm",
+          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?"
+        },
+        "add_group": {
+          "title": "Tạo mới nhóm",
+          "edit": "Sửa nhóm",
+          "name": "Tên nhóm",
+          "entity_type": "Phân loại",
+          "desc": "Mô tả",
+          "parent": "Trực thuộc",
+          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+        }
+      },
       "user_manage": "Người dùng",
       "device_manage": {
         "title": "Thiết bị",
@@ -112,7 +133,7 @@
           "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
         },
         "add_device": {
-          "title": "Tạo thiết bị",
+          "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
           "name": "Tên thiết bị",
           "parent": "Trực thuộc",
@@ -120,7 +141,7 @@
           "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
         },
         "device_detail": {
-          "list_attr": "Danh sách thuộc tính",
+          "attr_list": "Danh sách thuộc tính",
           "attr_log": "Lịch sử thuộc tính"
         }
       },
@@ -136,7 +157,8 @@
     "print": "In",
     "no_attr": "Không có thuộc tính",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
-    "view_detail": "Xem chi tiết"
+    "view_detail": "Xem chi tiết",
+    "copy_id": "Sao chép ID"
   },
   "btn": {
     "create": "Tạo mới"

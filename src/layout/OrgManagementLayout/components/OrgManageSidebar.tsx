@@ -29,7 +29,7 @@ export type OrgMapType = {
   level: string
 }
 
-type OrgSection = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
+type EntityTypeURL = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
 
 function OrgManageSidebar() {
   const { t } = useTranslation()
@@ -52,6 +52,9 @@ function OrgManageSidebar() {
 
   const handleCopyId = useCopyId()
 
+  const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
+  const orgIdURL = window.location.pathname.split('/')[5]
+
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
@@ -68,7 +71,28 @@ function OrgManageSidebar() {
       </div>
       <div className="grow overflow-y-scroll bg-secondary-500 p-3">
         <div className="space-y-3">
-          <Button className="rounded-md border-none" variant="muted">
+          <Button
+            className={clsx('rounded-md border-none', {
+              'text-primary-400': orgIdURL === '',
+            })}
+            variant="muted"
+            onClick={() => {
+              switch (entityTypeURL) {
+                case 'org':
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/`)
+                case 'event':
+                  return navigate(`${PATHS.EVENT_MANAGE}/${projectId}/`)
+                case 'group':
+                  return navigate(`${PATHS.GROUP_MANAGE}/${projectId}/`)
+                case 'user':
+                  return navigate(`${PATHS.USER_MANAGE}/${projectId}/`)
+                case 'device':
+                  return navigate(`${PATHS.DEVICE_MANAGE}/${projectId}/`)
+                default:
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/`)
+              }
+            }}
+          >
             {projectName}
           </Button>
           {filteredComboboxData?.map((org: OrgMapType) => (
@@ -101,10 +125,7 @@ function OrgManageSidebar() {
                 variant="muted"
                 size="no-p"
                 onClick={() => {
-                  const orgSection = window.location.pathname.split(
-                    '/',
-                  )[3] as OrgSection
-                  switch (orgSection) {
+                  switch (entityTypeURL) {
                     case 'org':
                       return navigate(
                         `${PATHS.ORG_MANAGE}/${projectId}/${org.id}`,
@@ -116,10 +137,6 @@ function OrgManageSidebar() {
                     case 'group':
                       return navigate(
                         `${PATHS.GROUP_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    case 'role':
-                      return navigate(
-                        `${PATHS.ROLE_MANAGE}/${projectId}/${org.id}`,
                       )
                     case 'user':
                       return navigate(
@@ -182,7 +199,7 @@ function OrgManageSidebar() {
                         }
                         onClick={() => handleCopyId(org.id)}
                       >
-                        {t('cloud.org_manage.org_map.copy_id')}
+                        {t('table.copy_id')}
                       </MenuItem>
                       <ConfirmationDialog
                         isDone={isSuccess}
@@ -196,7 +213,7 @@ function OrgManageSidebar() {
                         }
                         triggerButton={
                           <Button
-                            className="w-full border-none hover:opacity-100"
+                            className="w-full border-none hover:text-primary-400"
                             style={{ justifyContent: 'flex-start' }}
                             variant="trans"
                             size="square"

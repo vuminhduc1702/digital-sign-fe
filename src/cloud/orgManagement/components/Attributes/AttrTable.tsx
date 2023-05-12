@@ -61,7 +61,7 @@ function AttrTableContextMenu({
               }
               onClick={open}
             >
-              {t('cloud.org_manage.org_map.edit')}
+              {t('cloud.org_manage.org_manage.add_attr.edit')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
@@ -74,7 +74,7 @@ function AttrTableContextMenu({
               }
               triggerButton={
                 <Button
-                  className="w-full border-none hover:opacity-100"
+                  className="w-full border-none hover:text-primary-400"
                   style={{ justifyContent: 'flex-start' }}
                   variant="trans"
                   size="square"

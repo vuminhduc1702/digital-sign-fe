@@ -9,7 +9,7 @@ import { Spinner } from '~/components/Spinner'
 
 export function OrgManagementLayout() {
   const { t } = useTranslation()
-  const { orgId } = useParams()
+  const { projectId } = useParams()
 
   return (
     <ContentLayout title={t('sidebar.cloud.org_management')}>
@@ -18,9 +18,9 @@ export function OrgManagementLayout() {
           <OrgManageSidebar />
         </div>
 
-        {orgId ? (
+        {projectId ? (
           <div className="flex flex-col gap-2 md:col-span-2">
-            {orgId ? <OrgManageNavbar /> : null}
+            <OrgManageNavbar />
             <Suspense
               fallback={
                 <div className="flex grow items-center justify-center md:col-span-2">

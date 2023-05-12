@@ -5,7 +5,6 @@ export const PATHS: { [key: string]: string } = {
   // Protected routes
 
   // Cloud routes
-  ORG_MANAGEMENT: `${BASE_PATH_CLOUD}org-management`,
   ORG_MANAGE: `${BASE_PATH_CLOUD}org-management/org`,
   GROUP_MANAGE: `${BASE_PATH_CLOUD}org-management/group`,
   USER_MANAGE: `${BASE_PATH_CLOUD}org-management/user`,

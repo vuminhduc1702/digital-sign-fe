@@ -9,25 +9,23 @@ import { type DeviceList } from '../../types'
 export const getDevices = ({
   orgId,
   projectId,
-  expand = true,
   offset,
   limit,
 }: {
-  orgId: string
+  orgId?: string
   projectId: string
-  expand?: boolean
   offset?: number
   limit?: number
 }): Promise<DeviceList> => {
-  return axios.get(`/api/devices/organization/${orgId}`, {
-    params: { project_id: projectId, expand, offset, limit },
+  return axios.get(`/api/devices`, {
+    params: { org_id: orgId, project_id: projectId, offset, limit },
   })
 }
 
 type QueryFnType = typeof getDevices
 
 type UseDeviceOptions = {
-  orgId: string
+  orgId?: string
   projectId: string
   offset?: number
   limit?: number

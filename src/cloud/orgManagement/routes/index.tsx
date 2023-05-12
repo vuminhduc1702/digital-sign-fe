@@ -11,10 +11,7 @@ const { OrgManagementLayout } = lazyImport(
   () => import('~/layout/OrgManagementLayout'),
   'OrgManagementLayout',
 )
-const { DeviceManageLayout } = lazyImport(
-  () => import('../layout'),
-  'DeviceManageLayout',
-)
+const { ManageLayout } = lazyImport(() => import('../layout'), 'ManageLayout')
 
 const { DeviceManage } = lazyImport(
   () => import('./DeviceManage'),
@@ -24,77 +21,115 @@ const { DeviceDetail } = lazyImport(
   () => import('./DeviceDetail'),
   'DeviceDetail',
 )
+const { GroupDetail } = lazyImport(() => import('./GroupDetail'), 'GroupDetail')
 const { OrgManage } = lazyImport(() => import('./OrgManage'), 'OrgManage')
 const { GroupManage } = lazyImport(() => import('./GroupManage'), 'GroupManage')
 const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
 const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
+
+const orgIdURL = window.location.pathname.split('/')[5]
 
 export const OrgManagementRoutes = [
   {
     element: <OrgManagementLayout />,
     children: [
       {
-        path: PATHS.ORG_MANAGEMENT,
+        path: PATHS.ORG_MANAGE,
         children: [
           {
-            path: PATHS.ORG_MANAGE,
+            path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <OrgManage />
               </ErrorBoundary>
             ),
-            children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
+            children: [{ path: ':orgId' }],
           },
+        ],
+      },
+      {
+        path: PATHS.GROUP_MANAGE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <ManageLayout />
+          </ErrorBoundary>
+        ),
+        children: [
           {
-            path: PATHS.GROUP_MANAGE,
+            path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <GroupManage />
               </ErrorBoundary>
             ),
-            children: [{ path: ':projectId/:orgId' }],
+            children: [{ path: ':orgId' }],
           },
           {
-            path: PATHS.USER_MANAGE,
-            element: (
-              <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <UserManage />
-              </ErrorBoundary>
-            ),
-            children: [{ path: ':projectId/:orgId' }],
-          },
-          {
-            path: PATHS.DEVICE_MANAGE,
-            element: <DeviceManageLayout />,
+            path:
+              orgIdURL === 'no-orgId'
+                ? ':projectId/no-orgId'
+                : ':projectId/:orgId',
             children: [
               {
-                path: ':projectId/:orgId',
+                path: ':groupId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <DeviceManage />,
-                  </ErrorBoundary>
-                ),
-              },
-              {
-                path: ':projectId/:orgId/:deviceId',
-                element: (
-                  <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <DeviceDetail />,
+                    <GroupDetail />
                   </ErrorBoundary>
                 ),
               },
             ],
           },
+        ],
+      },
+      {
+        path: PATHS.USER_MANAGE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <UserManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
+      },
+      {
+        path: PATHS.DEVICE_MANAGE,
+        element: <ManageLayout />,
+        children: [
           {
-            path: PATHS.EVENT_MANAGE,
+            path: ':projectId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <EventManage />
+                <DeviceManage />
               </ErrorBoundary>
             ),
-            children: [{ path: ':projectId/:orgId' }],
+            children: [{ path: ':orgId' }],
+          },
+          {
+            path:
+              orgIdURL === 'no-orgId'
+                ? ':projectId/no-orgId'
+                : ':projectId/:orgId',
+            children: [
+              {
+                path: ':deviceId',
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <DeviceDetail />
+                  </ErrorBoundary>
+                ),
+              },
+            ],
           },
         ],
+      },
+      {
+        path: PATHS.EVENT_MANAGE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <EventManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':orgId' }] }],
       },
     ],
   },

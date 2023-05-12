@@ -17,7 +17,8 @@ function OrgManageNavbar() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { orgId } = useParams()
+  const params = useParams()
+  const orgId = params.orgId || ''
 
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
@@ -46,7 +47,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.group_manage')}
+          {t('cloud.org_manage.group_manage.title')}
         </p>
       </NavLink>
       <NavLink

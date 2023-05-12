@@ -1,4 +1,5 @@
 import type { Attribute, BaseEntity, BasePagination } from '~/types'
+import { type EntityType } from '../api/attrAPI'
 
 export type Device = {
   key: string
@@ -20,11 +21,24 @@ export type Device = {
     last_heartbeat: number
     timeout_lifecycle: number
     device_model?: string
-    // mqtt_config?:
   }
   attributes: Attribute[]
 } & BaseEntity
 
 export type DeviceList = {
   devices: Device[]
+} & BasePagination
+
+export type Group = {
+  id: string
+  name: string
+  organization?: string
+  org_name?: string
+  project_id: string
+  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
+  attributes: Attribute[]
+}
+
+export type GroupList = {
+  groups: Group[]
 } & BasePagination
