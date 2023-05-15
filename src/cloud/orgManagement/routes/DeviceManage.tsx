@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -10,7 +11,6 @@ import {
 } from '../components/Device'
 
 import { type Device } from '../types'
-import { useParams } from 'react-router-dom'
 import { useProjectIdStore } from '~/stores/project'
 import { useGetDevices } from '../api/deviceAPI'
 
@@ -21,6 +21,7 @@ export function DeviceManage() {
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
+
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
   const { data: deviceData, isPreviousData } = useGetDevices({
