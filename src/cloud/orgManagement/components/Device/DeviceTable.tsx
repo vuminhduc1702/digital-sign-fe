@@ -178,6 +178,14 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.display({
+        id: 'orgName',
+        header: () => (
+          <span>{t('cloud.org_manage.device_manage.table.org_name')}</span>
+        ),
+        cell: info => info.row.original.org_name || t('table.no_in_org'),
+        footer: info => info.column.id,
+      }),
       columnHelper.accessor('created_time', {
         header: () => (
           <span>{t('cloud.org_manage.device_manage.table.created_at')}</span>
@@ -198,5 +206,11 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
     [],
   )
 
-  return <BaseTable data={dataSorted} columns={columns} {...props} />
+  return data != null && data?.length !== 0 ? (
+    <BaseTable data={dataSorted} columns={columns} {...props} />
+  ) : (
+    <div className="flex grow items-center justify-center">
+      {t('table.no_device')}
+    </div>
+  )
 }

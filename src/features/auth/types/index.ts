@@ -1,3 +1,5 @@
+import { type BasePagination } from '~/types'
+
 export type User = {
   expired_at: number
   device_token: string
@@ -40,6 +42,7 @@ type Profile = {
 }
 
 export type UserInfo = {
+  name: string
   email: string
   admin_id: string
   user_id: string
@@ -47,5 +50,11 @@ export type UserInfo = {
   activate: boolean
   role_id?: string
   role_name?: string
+  group_id?: string
+  group_name?: string
   profile: Profile
 }
+
+export type UserList = {
+  users: UserInfo[]
+} & BasePagination

@@ -59,5 +59,11 @@ export function AttrLogTable({
     [entityId, entityType],
   )
 
-  return <BaseTable data={dataSorted} columns={columns} {...props} />
+  return data != null && data?.length !== 0 ? (
+    <BaseTable data={dataSorted} columns={columns} {...props} />
+  ) : (
+    <div className="flex grow items-center justify-center">
+      {t('table.no_log_attr')}
+    </div>
+  )
 }

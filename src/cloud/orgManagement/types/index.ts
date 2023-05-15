@@ -9,7 +9,7 @@ export type Device = {
   group_id?: string
   group_name: string
   org_id: string
-  org_name?: string
+  org_name: string
   template_name: string
   status: 'offline' | 'online' | 'block'
   additional_info: {
@@ -33,7 +33,7 @@ export type Group = {
   id: string
   name: string
   organization?: string
-  org_name?: string
+  org_name: string
   project_id: string
   entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
   attributes: Attribute[]

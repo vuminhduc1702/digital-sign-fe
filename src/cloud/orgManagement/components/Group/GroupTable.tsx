@@ -14,6 +14,7 @@ import { useDeleteGroup } from '../../api/groupAPI'
 import { useCopyId } from '~/utils/misc'
 import { useProjectIdStore } from '~/stores/project'
 import { UpdateGroup } from './UpdateGroup'
+import { useOrgById } from '~/layout/OrgManagementLayout/api'
 
 import { type Group } from '../../types'
 
@@ -168,6 +169,14 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
         footer: info => info.column.id,
       }),
       columnHelper.display({
+        id: 'orgName',
+        header: () => (
+          <span>{t('cloud.org_manage.group_manage.table.org_name')}</span>
+        ),
+        cell: info => info.row.original.org_name || t('table.no_in_org'),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'contextMenu',
         cell: info => {
           const { name, id } = info.row.original
@@ -180,5 +189,11 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
     [],
   )
 
-  return <BaseTable data={data} columns={columns} {...props} />
+  return data != null && data?.length !== 0 ? (
+    <BaseTable data={data} columns={columns} {...props} />
+  ) : (
+    <div className="flex grow items-center justify-center">
+      {t('table.no_group')}
+    </div>
+  )
 }

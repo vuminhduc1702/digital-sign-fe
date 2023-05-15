@@ -21,7 +21,7 @@ export function ComboBoxSelectDevice({
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
     data?.devices || [],
-    ['id', 'name', 'group_name', 'template_name', 'created_time'],
+    ['id', 'name', 'group_name', 'template_name', 'created_time', 'org_name'],
   )
 
   const filteredData = filteredComboboxData(

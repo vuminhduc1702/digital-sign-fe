@@ -105,6 +105,7 @@
         "table": {
           "name": "Tên",
           "entity_type": "Phân loại",
+          "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
           "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?"
         },
@@ -126,6 +127,7 @@
           "name": "Tên",
           "group": "Nhóm",
           "device_type": "Mẫu thiết bị",
+          "org_name": "Tổ chức",
           "created_at": "Ngày tạo",
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
@@ -142,7 +144,7 @@
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
-          "attr_log": "Lịch sử thuộc tính"
+          "attr_log": "Bản tin thuộc tính"
         }
       },
       "event_manage": "Sự kiện"
@@ -156,9 +158,13 @@
     "pdf": "PDF",
     "print": "In",
     "no_attr": "Không có thuộc tính",
+    "no_device": "Không có thiết bị",
+    "no_group": "Không có nhóm",
+    "no_log_attr": "Không có bản tin thuộc tính",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
-    "copy_id": "Sao chép ID"
+    "copy_id": "Sao chép ID",
+    "no_in_org": "Không thuộc TC"
   },
   "btn": {
     "create": "Tạo mới"

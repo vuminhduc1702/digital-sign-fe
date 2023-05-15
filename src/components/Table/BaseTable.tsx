@@ -55,141 +55,133 @@ export function BaseTable({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <>
-      {data != null && data?.length !== 0 ? (
-        <div className="mt-2 flex grow flex-col justify-between">
-          {isPreviousData ? (
-            <div className="flex grow items-center justify-center">
-              <Spinner showSpinner size="xl" />
-            </div>
-          ) : (
-            <table className="w-full border-collapse">
-              <thead className="border-b-2 border-secondary-700">
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => {
-                      return (
-                        <th
-                          className="h-9 text-left"
-                          key={header.id}
-                          colSpan={header.colSpan}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <div className="text-table-header">
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                            </div>
-                          )}
-                        </th>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => {
-                  return (
-                    <tr className="border-secondary-70 border-t-2" key={row.id}>
-                      {row.getVisibleCells().map((cell, index) => {
-                        if (index === row.getVisibleCells().length - 1) {
-                          return (
-                            <Fragment key={cell.id}>
-                              <td className="h-9" key={cell.id}>
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}
-                              </td>
-                            </Fragment>
-                          )
-                        } else {
-                          return (
-                            <td className="h-9" key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
-                            </td>
-                          )
-                        }
-                      })}
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          )}
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <div className="flex gap-3">
-              <span className="flex items-center gap-1 text-body-light">
-                {t('table.show_in')
-                  .replace(
-                    '{{PAGE}}',
-                    pageSize < totalAttrs
-                      ? pageSize?.toString()
-                      : totalAttrs?.toString(),
-                  )
-                  .replace('{{TOTAL}}', totalAttrs?.toString())}
-              </span>
-            </div>
-            <div className="flex gap-x-2">
-              <Button
-                className="rounded-l-md border-none"
-                onClick={() => {
-                  pageIndexRef.current--
-                  if (
-                    limitPagination < totalAttrs &&
-                    offset - limitPagination >= 0 &&
-                    (pageIndexRef.current + 1) * pageSize <=
-                      limitPagination * countLimitPaginationRef.current
-                  ) {
-                    setOffset?.(offset => offset - limitPagination)
-                  }
-                  table.previousPage()
-                }}
-                disabled={pageIndexRef.current === 0 || isPreviousData}
-                variant="secondaryLight"
-              >
-                {'Prev'}
-              </Button>
-              <Pagination
-                currentPage={pageIndexRef.current}
-                totalCount={totalAttrs}
-                pageSize={pageSize}
-                table={table}
-              />
-              <Button
-                className="rounded-r-md border-none"
-                onClick={() => {
-                  pageIndexRef.current++
-                  if (
-                    limitPagination < totalAttrs &&
-                    (pageIndexRef.current + 1) * pageSize >
-                      limitPagination * countLimitPaginationRef.current
-                  ) {
-                    countLimitPaginationRef.current++
-                    setOffset?.(offset => offset + limitPagination)
-                  }
-                  table.nextPage()
-                }}
-                disabled={
-                  (pageIndexRef.current + 1) * pageSize >= totalAttrs ||
-                  isPreviousData
-                }
-                variant="secondaryLight"
-              >
-                {'Next'}
-              </Button>
-            </div>
-          </div>
+    <div className="mt-2 flex grow flex-col justify-between">
+      {isPreviousData ? (
+        <div className="flex grow items-center justify-center">
+          <Spinner showSpinner size="xl" />
         </div>
       ) : (
-        <div className="flex grow items-center justify-center">
-          {t('table.no_attr')}
-        </div>
+        <table className="w-full border-collapse">
+          <thead className="border-b-2 border-secondary-700">
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th
+                      className="h-9 text-left"
+                      key={header.id}
+                      colSpan={header.colSpan}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <div className="text-table-header">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                        </div>
+                      )}
+                    </th>
+                  )
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => {
+              return (
+                <tr className="border-secondary-70 border-t-2" key={row.id}>
+                  {row.getVisibleCells().map((cell, index) => {
+                    if (index === row.getVisibleCells().length - 1) {
+                      return (
+                        <Fragment key={cell.id}>
+                          <td className="h-9" key={cell.id}>
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext(),
+                            )}
+                          </td>
+                        </Fragment>
+                      )
+                    } else {
+                      return (
+                        <td className="h-9" key={cell.id}>
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext(),
+                          )}
+                        </td>
+                      )
+                    }
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       )}
-    </>
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <div className="flex gap-3">
+          <span className="flex items-center gap-1 text-body-light">
+            {t('table.show_in')
+              .replace(
+                '{{PAGE}}',
+                pageSize < totalAttrs
+                  ? pageSize?.toString()
+                  : totalAttrs?.toString(),
+              )
+              .replace('{{TOTAL}}', totalAttrs?.toString())}
+          </span>
+        </div>
+        <div className="flex gap-x-2">
+          <Button
+            className="rounded-l-md border-none"
+            onClick={() => {
+              pageIndexRef.current--
+              if (
+                limitPagination < totalAttrs &&
+                offset - limitPagination >= 0 &&
+                (pageIndexRef.current + 1) * pageSize <=
+                  limitPagination * countLimitPaginationRef.current
+              ) {
+                setOffset?.(offset => offset - limitPagination)
+              }
+              table.previousPage()
+            }}
+            disabled={pageIndexRef.current === 0 || isPreviousData}
+            variant="secondaryLight"
+          >
+            {'Prev'}
+          </Button>
+          <Pagination
+            currentPage={pageIndexRef.current}
+            totalCount={totalAttrs}
+            pageSize={pageSize}
+            table={table}
+          />
+          <Button
+            className="rounded-r-md border-none"
+            onClick={() => {
+              pageIndexRef.current++
+              if (
+                limitPagination < totalAttrs &&
+                (pageIndexRef.current + 1) * pageSize >
+                  limitPagination * countLimitPaginationRef.current
+              ) {
+                countLimitPaginationRef.current++
+                setOffset?.(offset => offset + limitPagination)
+              }
+              table.nextPage()
+            }}
+            disabled={
+              (pageIndexRef.current + 1) * pageSize >= totalAttrs ||
+              isPreviousData
+            }
+            variant="secondaryLight"
+          >
+            {'Next'}
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }

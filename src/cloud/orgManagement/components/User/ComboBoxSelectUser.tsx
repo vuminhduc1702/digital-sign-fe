@@ -3,32 +3,32 @@ import { useEffect, useState } from 'react'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type GroupList, type Group } from '../../types'
+import { type UserInfo, type UserList } from '~/features/auth'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
-export function ComboBoxSelectGroup({
+export function ComboBoxSelectUser({
   data,
   setFilteredComboboxData,
   offset,
   ...props
 }: {
-  data: GroupList
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Group[]>>
+  data: UserList
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<UserInfo[]>>
   offset?: number
 }) {
   const [query, setQuery] = useState('')
 
-  const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(
-    data?.groups || [],
-    ['id', 'name', 'entity_type', 'org_name'],
+  const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
+    data?.users || [],
+    ['user_id', 'name', 'email', 'group_name', 'role_name'],
   )
 
   const filteredData = filteredComboboxData(
     query,
-    groupFlattenData,
+    userFlattenData,
     extractedPropertyKeys,
-  ) as Group[]
+  ) as UserInfo[]
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

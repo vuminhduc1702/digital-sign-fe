@@ -12,6 +12,8 @@ import {
 
 import storage from '~/utils/storage'
 
+// TODO: fix userFn to accept type User
+
 async function handleUserResponse(data: UserResponse) {
   const user = data
   storage.setToken({ token: user.token, system_role: user.system_role })
