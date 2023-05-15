@@ -28,7 +28,6 @@ const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
 const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
 
 const orgIdURL = window.location.pathname.split('/')[5]
-const idURL = window.location.pathname.split('/')[6]
 
 export const OrgManagementRoutes = [
   {
