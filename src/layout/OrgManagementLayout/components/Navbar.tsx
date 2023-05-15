@@ -23,7 +23,9 @@ function OrgManageNavbar() {
   return (
     <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
       <NavLink
-        to={`${PATHS.ORG_MANAGE}/${projectId}/${orgId}`}
+        to={`${PATHS.ORG_MANAGE}/${projectId}${
+          orgId === '' ? '' : `/${orgId}`
+        }`}
         className="flex cursor-pointer gap-2"
       >
         <OrgInfoIcon
@@ -37,7 +39,9 @@ function OrgManageNavbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}`}
+        to={`${PATHS.GROUP_MANAGE}/${projectId}${
+          orgId === '' ? '' : `/${orgId}`
+        }`}
         className="flex cursor-pointer gap-2"
       >
         <OrgGroupIcon
@@ -51,7 +55,9 @@ function OrgManageNavbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.USER_MANAGE}/${projectId}/${orgId}`}
+        to={`${PATHS.USER_MANAGE}/${projectId}${
+          orgId === '' ? '' : `/${orgId}`
+        }`}
         className="flex cursor-pointer gap-2"
       >
         <OrgUserIcon
@@ -65,7 +71,9 @@ function OrgManageNavbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.DEVICE_MANAGE}/${projectId}/${orgId}`}
+        to={`${PATHS.DEVICE_MANAGE}/${projectId}${
+          orgId === '' ? '' : `/${orgId}`
+        }`}
         className="flex cursor-pointer gap-2"
       >
         <OrgDeviceIcon
@@ -79,7 +87,9 @@ function OrgManageNavbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.EVENT_MANAGE}/${projectId}/${orgId}`}
+        to={`${PATHS.EVENT_MANAGE}/${projectId}${
+          orgId === '' ? '' : `/${orgId}`
+        }`}
         className="flex cursor-pointer gap-2"
       >
         <OrgEventIcon

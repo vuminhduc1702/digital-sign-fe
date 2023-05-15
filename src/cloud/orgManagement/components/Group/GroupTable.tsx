@@ -56,7 +56,11 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
                 <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
               }
               onClick={() =>
-                navigate(`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}/${id}`)
+                navigate(
+                  `${PATHS.GROUP_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}` : ''
+                  }/${id}`,
+                )
               }
             >
               {t('table.view_detail')}

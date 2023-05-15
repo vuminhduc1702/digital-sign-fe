@@ -61,9 +61,9 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               }
               onClick={() =>
                 navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}${
-                    orgId != null ? `/${orgId}` : '/no-orgId'
-                  }/${id}`,
+                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}/${id}` : id
+                  }`,
                 )
               }
             >
