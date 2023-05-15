@@ -1,36 +1,37 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
-import { limitPagination } from '~/utils/const'
-
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type OrgList } from '../types'
 
+type GetOrgs = {
+  projectId: string
+  get_attributes?: boolean
+}
+
 export const getOrgs = ({
   projectId,
-  offset = 0,
-  limit = limitPagination,
-}: {
-  projectId: string
-  offset?: number
-  limit?: number
-}): Promise<OrgList> => {
+  get_attributes,
+}: GetOrgs): Promise<OrgList> => {
   return axios.get('/api/organizations/expand', {
-    params: { project_id: projectId, offset, limit },
+    params: { project_id: projectId, get_attributes },
   })
 }
 
 type QueryFnType = typeof getOrgs
 
 type UseGetOrgsOptions = {
-  projectId: string
   config?: QueryConfig<QueryFnType>
-}
+} & GetOrgs
 
-export const useGetOrgs = ({ projectId, config }: UseGetOrgsOptions) => {
+export const useGetOrgs = ({
+  projectId,
+  get_attributes = false,
+  config,
+}: UseGetOrgsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['orgs', projectId],
-    queryFn: () => getOrgs({ projectId }),
+    queryKey: ['orgs', projectId, get_attributes],
+    queryFn: () => getOrgs({ projectId, get_attributes }),
     ...config,
   })
 }
