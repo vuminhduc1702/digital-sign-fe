@@ -21,7 +21,7 @@ export function ComboBoxSelectUser({
 
   const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
     data?.users || [],
-    ['user_id', 'name', 'email', 'group_name', 'role_name'],
+    ['user_id', 'name', 'email', 'role_name', 'activate'],
   )
 
   const filteredData = filteredComboboxData(

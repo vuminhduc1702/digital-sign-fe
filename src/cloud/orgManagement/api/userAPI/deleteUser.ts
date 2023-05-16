@@ -4,8 +4,8 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-export const deleteUser = ({ id }: { id: string }) => {
-  return axios.delete(`/api/users/${id}`)
+export const deleteUser = ({ user_id }: { user_id: string }) => {
+  return axios.delete(`/api/users/${user_id}`)
 }
 
 type UseDeleteUserOptions = {

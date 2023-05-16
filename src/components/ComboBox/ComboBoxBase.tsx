@@ -54,6 +54,7 @@ export function ComboBoxBase({
   error,
 }: ComboBoxBaseProps) {
   const { t } = useTranslation()
+  console.log('data[extractedPropertyKeys[1]]', data[extractedPropertyKeys[1]])
 
   const [selected, setSelected] = useState({})
 

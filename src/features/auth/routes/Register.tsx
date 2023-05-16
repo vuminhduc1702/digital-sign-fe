@@ -11,7 +11,7 @@ export const Register = () => {
 
   return (
     <Layout title={t('user.register')}>
-      <RegisterForm onSuccess={() => navigate(PATHS.ORG_MANAGE)} />
+      <RegisterForm onSuccess={() => navigate(PATHS.HOME)} />
     </Layout>
   )
 }

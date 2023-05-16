@@ -10,7 +10,7 @@ export function FlowEngine() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { token } = storage.getUser() as UserStorage
+  const { token } = storage.getToken() as UserStorage
 
   return (
     <>

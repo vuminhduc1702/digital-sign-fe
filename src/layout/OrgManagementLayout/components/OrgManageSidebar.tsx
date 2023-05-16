@@ -15,6 +15,7 @@ import { useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { useCopyId } from '~/utils/misc'
 import { PATHS } from '~/routes/PATHS'
+import { useProjectById } from '~/layout/MainLayout/api/getProjectById'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
@@ -35,9 +36,12 @@ function OrgManageSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const projectId = useProjectIdStore(state => state.projectId)
-
   const { close, open, isOpen } = useDisclosure()
+
+  const { orgId } = useParams()
+
+  const projectId = useProjectIdStore(state => state.projectId)
+  const { data: projectByIdData } = useProjectById({ projectId })
 
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
 
@@ -45,10 +49,6 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
-
-  const projectName = useProjectIdStore(state => state.projectName)
-
-  const { orgId } = useParams()
 
   const handleCopyId = useCopyId()
 
@@ -93,7 +93,7 @@ function OrgManageSidebar() {
               }
             }}
           >
-            {projectName}
+            {projectByIdData?.name}
           </Button>
           {filteredComboboxData?.map((org: OrgMapType) => (
             <div className="flex" key={org.id}>

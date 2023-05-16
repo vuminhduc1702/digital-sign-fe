@@ -119,7 +119,32 @@
           "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
         }
       },
-      "user_manage": "Người dùng",
+      "user_manage": {
+        "title": "Người dùng",
+        "header": "Quản lý người dùng",
+        "table": {
+          "name": "Tên",
+          "email": "Email",
+          "role_name": "Vai trò",
+          "activate": "Kích hoạt",
+          "edit": "Sửa user",
+          "delete_user": "Xoá user",
+          "delete_user_full": "Xoá người dùng",
+          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?"
+        },
+        "add_user": {
+          "title": "Tạo mới người dùng",
+          "edit": "Sửa người dùng",
+          "name": "Tên",
+          "email": "Email",
+          "password": "Mật khẩu",
+          "confirm_password": "Nhập lại mật khẩu",
+          "role": "Vai trò",
+          "activate": "Kích hoạt",
+          "parent": "Trực thuộc",
+          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+        }
+      },
       "device_manage": {
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
@@ -161,6 +186,7 @@
     "no_device": "Không có thiết bị",
     "no_group": "Không có nhóm",
     "no_log_attr": "Không có bản tin thuộc tính",
+    "no_user": "Không có người dùng",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "copy_id": "Sao chép ID",

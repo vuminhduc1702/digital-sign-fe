@@ -22,6 +22,11 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 
+export const status = {
+  true: 'Có',
+  false: 'Không',
+}
+
 function AttrTableContextMenu({
   entityId,
   entityType,
@@ -192,7 +197,7 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud.org_manage.org_manage.table.logged')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => status[info.getValue()],
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {

@@ -26,7 +26,7 @@ export const entityTypeList: EntityTypeGroup[] = [
   { type: 'EVENT', name: 'Sự kiện' },
 ]
 
-export const groupSchema = z.object({
+const groupSchema = z.object({
   name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
   entity_type: z.string(),
 })

@@ -22,7 +22,10 @@ type flattenDataStringReturn<K extends string> = {
   [key in K]: string
 }
 
-export function flattenData<T extends PropertyValuePair<K>, K extends keyof T>(
+export function flattenData<
+  T extends Partial<PropertyValuePair<K>>,
+  K extends Extract<keyof T, string>,
+>(
   arr: T[],
   propertyKeys: K[],
   subArr?: keyof T,

@@ -9,8 +9,7 @@ export type UpdateUserDTO = {
     name?: string
     email: string
     password?: string
-    project_id: string
-    role_id: string
+    org_id: string
   }
   userId: string
 }

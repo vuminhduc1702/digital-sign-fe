@@ -1,4 +1,3 @@
-import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
@@ -9,16 +8,12 @@ import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { useSpinDelay } from 'spin-delay'
 import { type UpdateOrgDTO, useOrgById, useUpdateOrg } from '../api'
+import { orgSchema } from './CreateOrg'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-
-export const orgSchema = z.object({
-  name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
-  description: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
-})
 
 export function UpdateOrg({
   close,

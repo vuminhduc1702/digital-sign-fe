@@ -8,8 +8,8 @@ import { useLogin } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
 
 const schema = z.object({
-  identifier: z.string().min(1, 'Required'),
-  password: z.string().min(1, 'Required'),
+  identifier: z.string().min(1, 'Vui lòng nhập email'),
+  password: z.string().min(1, 'Vui lòng nhập password'),
 })
 
 type LoginValues = {

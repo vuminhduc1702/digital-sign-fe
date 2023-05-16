@@ -8,9 +8,9 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 
 const schema = z.object({
-  email: z.string().min(1, 'Required'),
-  firstName: z.string().min(1, 'Required'),
-  otp: z.string().min(1, 'Required'),
+  email: z.string().min(1, 'Vui lòng nhập email'),
+  firstName: z.string().min(1, 'Vui lòng nhập tên'),
+  otp: z.string().min(1, 'Vui lòng nhập otp'),
 })
 
 type RegisterValues = {
