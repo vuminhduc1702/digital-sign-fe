@@ -6,10 +6,11 @@ import { Form, InputField } from '~/components/Form'
 import { Link } from '~/components/Link'
 import { useLogin } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
+import { emailSchema, passwordSchema } from '~/utils/user-validation'
 
 const schema = z.object({
-  identifier: z.string().min(1, 'Vui lòng nhập email'),
-  password: z.string().min(1, 'Vui lòng nhập password'),
+  identifier: emailSchema,
+  password: passwordSchema,
 })
 
 type LoginValues = {

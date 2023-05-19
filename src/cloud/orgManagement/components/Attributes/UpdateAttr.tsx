@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
 import { Form, InputField, SelectField } from '~/components/Form'
-import { attrSchema, loggedList, valueTypeList } from './CreateAttr'
+import { loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import {
@@ -13,6 +13,7 @@ import {
   useUpdateAttr,
   useGetAttrs,
 } from '../../api/attrAPI'
+import { attrSchema } from '~/utils/user-validation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'

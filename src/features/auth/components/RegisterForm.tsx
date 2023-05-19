@@ -6,11 +6,12 @@ import { useRegister } from '~/lib/auth'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
+import { emailSchema, nameSchema, otpSchema } from '~/utils/user-validation'
 
 const schema = z.object({
-  email: z.string().min(1, 'Vui lòng nhập email'),
-  firstName: z.string().min(1, 'Vui lòng nhập tên'),
-  otp: z.string().min(1, 'Vui lòng nhập otp'),
+  email: emailSchema,
+  firstName: nameSchema,
+  otp: otpSchema,
 })
 
 type RegisterValues = {

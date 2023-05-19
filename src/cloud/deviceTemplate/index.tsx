@@ -1,3 +1,9 @@
+import CreateTemplate from './components/CreateTemplate'
+
 export function DeviceTemplate() {
-  return <div>DeviceTemplate</div>
+  return (
+    <div>
+      <CreateTemplate />
+    </div>
+  )
 }

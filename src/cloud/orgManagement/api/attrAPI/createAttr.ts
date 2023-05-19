@@ -1,8 +1,10 @@
 import { useMutation } from '@tanstack/react-query'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+import { type attrSchema } from '~/utils/user-validation'
 
 import { type Attribute } from '~/types'
 
@@ -14,12 +16,7 @@ export type EntityType =
   | 'TEMPLATE'
   | 'EVENT'
 
-export type AttributesDTO = {
-  attribute_key: string
-  logged: boolean
-  value?: string
-  value_t: string
-}
+export type AttributesDTO = z.infer<typeof attrSchema>
 
 export type CreateAttrDTO = {
   data: {

@@ -4,10 +4,10 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
-
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
+import { descSchema, nameSchema } from '~/utils/user-validation'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
@@ -15,8 +15,8 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const orgSchema = z.object({
-  name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
-  description: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
+  name: nameSchema,
+  description: descSchema,
 })
 
 export function CreateOrg() {

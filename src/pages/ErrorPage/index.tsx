@@ -5,7 +5,7 @@ import { Button } from '~/components/Button'
 export function ErrorFallback({
   resetErrorBoundary,
 }: {
-  resetErrorBoundary: (...args: Array<unknown>) => void
+  resetErrorBoundary: (...args: unknown[]) => void
 }) {
   const { t } = useTranslation()
 

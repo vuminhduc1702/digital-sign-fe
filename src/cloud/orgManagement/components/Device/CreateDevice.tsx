@@ -4,18 +4,18 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField } from '~/components/Form'
-
+import { nameSchema } from '~/utils/user-validation'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
-import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const deviceSchema = z.object({
-  name: z.string().min(1, 'Vui lòng nhập để tiếp tục'),
+  name: nameSchema,
 })
 
 export function CreateDevice() {

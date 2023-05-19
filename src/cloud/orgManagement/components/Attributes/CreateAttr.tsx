@@ -8,6 +8,7 @@ import {
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
+import { attrSchema } from '~/utils/user-validation'
 
 import { type Attribute } from '~/types'
 
@@ -31,13 +32,6 @@ export const loggedList = [
   { type: true, name: 'Có' },
   { type: false, name: 'Không' },
 ]
-
-export const attrSchema = z.object({
-  attribute_key: z.string().min(1, 'Vui lòng nhập để tiếp tục').max(30),
-  value: z.string().optional(),
-  logged: z.string(),
-  value_t: z.string(),
-})
 
 type CreateAttrProps = {
   entityId: string

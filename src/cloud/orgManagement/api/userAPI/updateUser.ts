@@ -6,9 +6,9 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export type UpdateUserDTO = {
   data: {
-    name?: string
+    name: string
     email: string
-    password?: string
+    password: string
     org_id: string
   }
   userId: string

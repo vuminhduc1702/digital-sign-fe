@@ -24,7 +24,11 @@ export function DeviceManage() {
 
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: deviceData, isPreviousData } = useGetDevices({
+  const {
+    data: deviceData,
+    isPreviousData,
+    isSuccess,
+  } = useGetDevices({
     orgId,
     projectId,
     offset,
@@ -43,11 +47,13 @@ export function DeviceManage() {
           <ExportTable />
           <div className="flex items-center gap-x-3">
             <CreateDevice />
-            <ComboBoxSelectDevice
-              data={deviceData}
-              setFilteredComboboxData={setFilteredComboboxData}
-              offset={offset}
-            />
+            {isSuccess ? (
+              <ComboBoxSelectDevice
+                data={deviceData}
+                setFilteredComboboxData={setFilteredComboboxData}
+                offset={offset}
+              />
+            ) : null}
           </div>
         </div>
         <DeviceTable
