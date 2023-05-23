@@ -11,10 +11,10 @@ import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { UpdateDevice } from './UpdateDevice'
-
 import { getVNDateFormat, useCopyId } from '~/utils/misc'
 import { useDeleteDevice } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
+
 import { type Device } from '../../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'

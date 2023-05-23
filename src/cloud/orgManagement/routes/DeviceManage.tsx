@@ -9,10 +9,10 @@ import {
   DeviceTable,
   ComboBoxSelectDevice,
 } from '../components/Device'
-
-import { type Device } from '../types'
 import { useProjectIdStore } from '~/stores/project'
 import { useGetDevices } from '../api/deviceAPI'
+
+import { type Device } from '../types'
 
 export function DeviceManage() {
   const { t } = useTranslation()

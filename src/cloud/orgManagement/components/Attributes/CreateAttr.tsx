@@ -20,6 +20,11 @@ type ValueType = {
   name: string
 }
 
+type CreateAttrProps = {
+  entityId: string
+  entityType: EntityType
+}
+
 export const valueTypeList: ValueType[] = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
@@ -33,10 +38,6 @@ export const loggedList = [
   { type: false, name: 'Không' },
 ]
 
-type CreateAttrProps = {
-  entityId: string
-  entityType: EntityType
-}
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
 

@@ -31,6 +31,6 @@ export const attrSchema = z.object({
     .min(1, { message: 'Tên thuộc tính quá ngắn' })
     .max(30, { message: 'Tên thuộc tính quá dài' }),
   value: z.string().optional(),
-  logged: z.boolean(),
+  logged: z.string(),
   value_t: z.string(),
 })

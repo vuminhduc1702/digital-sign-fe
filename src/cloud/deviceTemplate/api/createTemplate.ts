@@ -1,13 +1,22 @@
 import { useMutation } from '@tanstack/react-query'
-import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
-import { type templateSchema } from '../components'
+
+export type TemplateAttributesDTO = {
+  attribute_key: string
+  logged: boolean
+  value_t: string
+  value?: string | undefined
+}
 
 export type CreateTemplateDTO = {
-  data: z.infer<typeof templateSchema>
+  data: {
+    name: string
+    project_id: string
+    attributes: TemplateAttributesDTO[]
+  }
 }
 
 type CreateTemplateRes = {

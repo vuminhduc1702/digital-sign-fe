@@ -8,9 +8,9 @@ import { OrgManagementRoutes } from '~/cloud/orgManagement'
 
 import { ErrorFallback } from '~/pages/ErrorPage'
 
-const { DeviceTemplate } = lazyImport(
+const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
-  'DeviceTemplate',
+  'DeviceTemplateManage',
 )
 const { FlowEngine } = lazyImport(
   () => import('~/cloud/flowEngine'),
@@ -28,10 +28,10 @@ export const protectedRoutes = [
         path: PATHS.DEVICE_TEMPLATE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DeviceTemplate />
+            <DeviceTemplateManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId' }],
+        children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
       },
       {
         path: PATHS.FLOW_ENGINE,

@@ -173,6 +173,32 @@
         }
       },
       "event_manage": "Sự kiện"
+    },
+    "device_template": {
+      "title": "Mẫu thiết bị",
+      "info": {
+        "title": "Thông tin mẫu thiết bị",
+        "flow": "Flow",
+        "provision_key": "Provision key",
+        "provision_secret": "Provision secret",
+        "created_at": "Ngày tạo",
+        "create_by": "Người tạo"
+      },
+      "add_template": {
+        "title": "Tạo mới mẫu thiết bị",
+        "name": "Tên mẫu thiết bị",
+        "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+      },
+      "sidebar": {
+        "title": "Danh sách mẫu thiết bị",
+        "id": "Mã ID",
+        "desc": "Mô tả",
+        "edit": "Sửa mẫu TB",
+        "delete_template": "Xoá mẫu TB",
+        "delete_template_full": "Xoá mẫu thiết bị",
+        "delete_template_confirm": "Bạn có chắc chắn muốn xóa mẫu thiết bị {{TEMPLATENAME}}?",
+        "no_template": "Không có mẫu thiết bị"
+      }
     }
   },
   "table": {

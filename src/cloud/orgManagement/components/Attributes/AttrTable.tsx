@@ -16,6 +16,7 @@ import { getVNDateFormat } from '~/utils/misc'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
+import { type Template } from '~/cloud/deviceTemplate/types'
 
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -135,7 +136,7 @@ export function AttrTable({
   entityType,
   ...props
 }: {
-  data: Attribute[]
+  data: Attribute[] | Template[]
   entityId: string
   entityType: EntityType
 }) {
@@ -143,7 +144,8 @@ export function AttrTable({
 
   const columnHelper = createColumnHelper<Attribute>()
 
-  const dataSorted = data?.sort((a, b) => b.last_update_ts - a.last_update_ts)
+  const dataSorted =
+    data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
 
   const columns = useMemo<ColumnDef<Attribute, string>[]>(
     () => [

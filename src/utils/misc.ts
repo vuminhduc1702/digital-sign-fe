@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNotificationStore } from '~/stores/notifications'
 
 export function getVNDateFormat(date: number | Date) {
-  return new Intl.DateTimeFormat('vi-VN', {
+  const dateFormat: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -11,7 +11,10 @@ export function getVNDateFormat(date: number | Date) {
     minute: '2-digit',
     timeZone: 'Asia/Ho_Chi_Minh',
     hourCycle: 'h23',
-  }).format(new Date(date))
+  }
+  if (date == null)
+    new Intl.DateTimeFormat('vi-VN', dateFormat).format(new Date())
+  return new Intl.DateTimeFormat('vi-VN', dateFormat).format(new Date(date))
 }
 
 export type PropertyValuePair<K extends string> = {

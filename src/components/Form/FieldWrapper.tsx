@@ -8,6 +8,7 @@ type FieldWrapperProps = {
   children: React.ReactNode
   error?: FieldError | undefined
   description?: string
+  disabled?: boolean
 }
 
 export type FieldWrapperPassThroughProps = Omit<

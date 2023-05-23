@@ -8,7 +8,6 @@ import {
   InputField,
   SelectField,
 } from '~/components/Form'
-import { attrSchema, nameSchema } from '~/utils/user-validation'
 import {
   loggedList,
   valueTypeList,
@@ -19,12 +18,24 @@ import {
   type CreateTemplateDTO,
 } from '../api/createTemplate'
 
+import { nameSchema } from '~/utils/user-validation'
+
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-export const templateSchema = z.object({
+export const templateAttrSchema = z.object({
   name: nameSchema,
-  attributes: z.array(attrSchema),
+  attributes: z.array(
+    z.object({
+      attribute_key: z
+        .string()
+        .min(1, { message: 'Tên thuộc tính quá ngắn' })
+        .max(30, { message: 'Tên thuộc tính quá dài' }),
+      value: z.string().optional(),
+      logged: z.boolean(),
+      value_t: z.string(),
+    }),
+  ),
 })
 
 export default function CreateTemplate() {
@@ -36,7 +47,7 @@ export default function CreateTemplate() {
 
   return (
     <FormDrawer
-      // isDone={isSuccess}
+      isDone={isSuccess}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
@@ -45,42 +56,26 @@ export default function CreateTemplate() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.org_manage.add_attr.title')}
+      title={t('cloud.device_template.add_template.title')}
       submitButton={
         <Button
           className="rounded border-none"
           form="create-template"
           type="submit"
           size="lg"
-          // isLoading={isLoading}
+          isLoading={isLoading}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
     >
-      <FormMultipleFields<CreateTemplateDTO['data'], typeof templateSchema>
+      <FormMultipleFields<CreateTemplateDTO['data'], typeof templateAttrSchema>
         id="create-template"
-        onSubmit={values => {
-          console.log('values', values)
-          mutate({
-            data: {
-              name: values.name,
-              project_id: projectId,
-              attributes: [
-                {
-                  attribute_key: values.attributes[0].attribute_key,
-                  value: values.attributes[0].value?.toString(),
-                  logged:
-                    String(values.attributes[0].logged).toLowerCase() ===
-                    'true',
-                  value_t: values.attributes[0].value_t,
-                },
-              ],
-            },
-          })
-        }}
-        schema={templateSchema}
+        onSubmit={values =>
+          mutate({ data: { ...values, project_id: projectId } })
+        }
+        schema={templateAttrSchema}
         options={{
           defaultValues: {
             name: '',
@@ -107,7 +102,7 @@ export default function CreateTemplate() {
               APPEND
             </button>
             <InputField
-              label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
+              label={t('cloud.device_template.add_template.name') ?? 'Name'}
               error={formState.errors['name']}
               registration={register('name')}
             />
@@ -117,7 +112,7 @@ export default function CreateTemplate() {
                   label={
                     t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'
                   }
-                  // error={formState.errors[`attributes.${index}.attribute_key`]}
+                  error={formState.errors[`attributes.${index}.attribute_key`]}
                   registration={register(
                     `attributes.${index}.attribute_key` as const,
                   )}
@@ -127,7 +122,7 @@ export default function CreateTemplate() {
                     t('cloud.org_manage.org_manage.add_attr.value_type') ??
                     'Value type'
                   }
-                  // error={formState.errors['value_t']}
+                  error={formState.errors[`attributes.${index}.value_t`]}
                   registration={register(
                     `attributes.${index}.value_t` as const,
                   )}
@@ -140,14 +135,14 @@ export default function CreateTemplate() {
                   label={
                     t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
                   }
-                  // error={formState.errors['value']}
+                  error={formState.errors[`attributes.${index}.value`]}
                   registration={register(`attributes.${index}.value` as const)}
                 />
                 <SelectField
                   label={
                     t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
                   }
-                  // error={formState.errors['logged']}
+                  error={formState.errors[`attributes.${index}.logged`]}
                   registration={register(`attributes.${index}.logged` as const)}
                   options={loggedList.map(logged => ({
                     label: logged.name,
