@@ -12,7 +12,7 @@ import {
   emailSchema,
   nameSchema,
   passwordSchema,
-} from '~/components/Validation'
+} from '~/utils/schemaValidation'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
