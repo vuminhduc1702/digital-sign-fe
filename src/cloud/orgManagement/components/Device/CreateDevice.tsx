@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField } from '~/components/Form'
-import { nameSchema } from '~/utils/user-validation'
+import { nameSchema } from '~/utils/schemaValidation'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'

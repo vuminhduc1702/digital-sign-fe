@@ -18,7 +18,7 @@ import {
   type CreateTemplateDTO,
 } from '../api/createTemplate'
 
-import { nameSchema } from '~/utils/user-validation'
+import { nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -33,7 +33,7 @@ export const templateAttrSchema = z.object({
         .max(30, { message: 'Tên thuộc tính quá dài' }),
       value: z.string().optional(),
       logged: z.boolean(),
-      value_t: z.string(),
+      value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
     }),
   ),
 })

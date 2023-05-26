@@ -4,6 +4,8 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type Template } from '../types'
+
 export type TemplateAttributesDTO = {
   attribute_key: string
   logged: boolean
@@ -19,18 +21,9 @@ export type CreateTemplateDTO = {
   }
 }
 
-type CreateTemplateRes = {
-  id: string
-  name: string
-  rule_chain_id?: string
-  provision_key: string
-  provision_secret: string
-  created_time: number
-}
-
 export const createTemplate = ({
   data,
-}: CreateTemplateDTO): Promise<CreateTemplateRes> => {
+}: CreateTemplateDTO): Promise<Template> => {
   return axios.post(`/api/templates`, data)
 }
 

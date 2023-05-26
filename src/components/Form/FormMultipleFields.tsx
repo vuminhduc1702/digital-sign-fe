@@ -13,6 +13,7 @@ import {
   type UseFieldArrayRemove,
   type UseFormRegister,
   type FormState,
+  type Control,
 } from 'react-hook-form'
 import { type ZodType } from 'zod'
 
@@ -24,6 +25,7 @@ type FormProps<TFormValues extends FieldValues, Schema> = {
     fields: FieldArrayWithId<TFormValues, ArrayPath<TFormValues>, 'id'>[],
     append: UseFieldArrayAppend<TFormValues, ArrayPath<TFormValues>>,
     remove: UseFieldArrayRemove,
+    control?: Control<TFormValues, any>,
   ) => React.ReactNode
   options?: UseFormProps<TFormValues>
   schema?: Schema
@@ -61,7 +63,14 @@ export const FormMultipleFields = <
       onSubmit={handleSubmit(onSubmit)}
       id={id}
     >
-      {children(register, formState, fields, append, remove, handleSubmit)}
+      {children(
+        register,
+        formState,
+        fields,
+        append,
+        remove,
+        control,
+      )}
     </form>
   )
 }

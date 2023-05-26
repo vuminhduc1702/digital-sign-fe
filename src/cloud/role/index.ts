@@ -1,1 +1,2 @@
-export * from './RoleManage'
+export * from './routes'
+export * from './types'

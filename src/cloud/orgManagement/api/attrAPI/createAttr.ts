@@ -4,7 +4,7 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
-import { type attrSchema } from '~/utils/user-validation'
+import { type attrSchema } from '~/utils/schemaValidation'
 
 import { type Attribute } from '~/types'
 

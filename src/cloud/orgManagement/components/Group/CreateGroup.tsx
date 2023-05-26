@@ -10,7 +10,7 @@ import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
-import { nameSchema } from '~/utils/user-validation'
+import { nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'

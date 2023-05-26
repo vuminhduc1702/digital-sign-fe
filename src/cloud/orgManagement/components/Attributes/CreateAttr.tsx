@@ -8,7 +8,7 @@ import {
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
-import { attrSchema } from '~/utils/user-validation'
+import { attrSchema } from '~/utils/schemaValidation'
 
 import { type Attribute } from '~/types'
 

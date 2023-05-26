@@ -6,7 +6,7 @@ import { Form, InputField } from '~/components/Form'
 import { Link } from '~/components/Link'
 import { useLogin } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
-import { emailSchema, passwordSchema } from '~/utils/user-validation'
+import { emailSchema, passwordSchema } from '~/utils/schemaValidation'
 
 const schema = z.object({
   identifier: emailSchema,

@@ -13,7 +13,7 @@ import {
   useUpdateAttr,
   useGetAttrs,
 } from '../../api/attrAPI'
-import { attrSchema } from '~/utils/user-validation'
+import { attrSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'

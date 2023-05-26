@@ -7,7 +7,7 @@ import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
-import { descSchema, nameSchema } from '~/utils/user-validation'
+import { descSchema, nameSchema } from '~/utils/schemaValidation'
 
 import { type OrgMapType } from './OrgManageSidebar'
 

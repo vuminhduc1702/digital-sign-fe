@@ -58,7 +58,7 @@ export const protectedRoutes = [
             <RoleManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId' }],
+        children: [{ path: ':projectId', children: [{ path: ':roleId' }] }],
       },
     ],
   },

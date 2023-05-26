@@ -199,6 +199,30 @@
         "delete_template_confirm": "Bạn có chắc chắn muốn xóa mẫu thiết bị {{TEMPLATENAME}}?",
         "no_template": "Không có mẫu thiết bị"
       }
+    },
+    "role_manage": {
+      "title": "Vai trò",
+      "header": "Quản lý vai trò",
+      "sidebar": {
+        "title": "Danh sách vai trò",
+        "id": "Mã ID",
+        "edit": "Sửa vai trò",
+        "delete_role": "Xoá vai trò",
+        "delete_role_confirm": "Bạn có chắc chắn muốn xóa vai trò {{ROLENAME}}?",
+        "no_role": "Không có vai trò"
+      },
+      "add_policy": {
+        "title": "Danh sách chính sách",
+        "name": "Tên chính sách",
+        "resources": "Tài nguyên",
+        "actions": "Hành động"
+      },
+      "add_role": {
+        "title": "Tạo mới vai trò",
+        "edit": "Sửa vai trò",
+        "name": "Tên vai trò",
+        "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+      }
     }
   },
   "table": {
@@ -213,6 +237,7 @@
     "no_group": "Không có nhóm",
     "no_log_attr": "Không có bản tin thuộc tính",
     "no_user": "Không có người dùng",
+    "no_policy": "Không có chính sách",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "copy_id": "Sao chép ID",

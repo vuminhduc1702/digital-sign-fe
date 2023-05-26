@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/20/solid'
+import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import { useTranslation } from 'react-i18next'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
@@ -67,12 +67,12 @@ export function ComboBoxBase({
                 startIcon ? 'pl-8' : ''
               }`}
               displayValue={(data: PropertyValuePair<string>) =>
-                data[extractedPropertyKeys[1]]
+                query !== '' ? data[extractedPropertyKeys[1]] : ''
               }
               onChange={event => setQuery(event.target.value)}
             />
             {startIcon ? (
-              <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-default items-center pl-2">
+              <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-2">
                 {startIcon}
               </Combobox.Button>
             ) : null}
@@ -81,6 +81,10 @@ export function ComboBoxBase({
                 {endIcon}
               </Combobox.Button>
             ) : null}
+            <XMarkIcon
+              className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+              onClick={() => setQuery('')}
+            />
           </div>
           <Transition
             as={Fragment}
@@ -103,7 +107,10 @@ export function ComboBoxBase({
                       }`
                     }
                     value={data}
-                    onClick={() => setFilteredComboboxData?.([data])}
+                    onClick={() => {
+                      setFilteredComboboxData?.([data])
+                      setQuery(data[extractedPropertyKeys[1]])
+                    }}
                   >
                     {({ selected, active }) => (
                       <>

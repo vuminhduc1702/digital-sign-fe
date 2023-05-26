@@ -6,7 +6,7 @@ import { useRegister } from '~/lib/auth'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
-import { emailSchema, nameSchema, otpSchema } from '~/utils/user-validation'
+import { emailSchema, nameSchema, otpSchema } from '~/utils/schemaValidation'
 
 const schema = z.object({
   email: emailSchema,
