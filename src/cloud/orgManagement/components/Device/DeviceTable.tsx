@@ -190,7 +190,8 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
         header: () => (
           <span>{t('cloud.org_manage.device_manage.table.created_at')}</span>
         ),
-        cell: info => getVNDateFormat(parseInt(info.getValue()) * 1000), // convert seconds to milliseconds
+        cell: info =>
+          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }), // convert seconds to milliseconds
         footer: info => info.column.id,
       }),
       columnHelper.display({

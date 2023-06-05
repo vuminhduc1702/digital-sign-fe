@@ -22,7 +22,7 @@ export function GroupBreadcrumbs() {
       <ol className="inline-flex items-center space-x-1 md:space-x-3">
         <li className="inline-flex items-center">
           <Link
-            className="inline-flex items-center text-sm font-medium text-secondary-500 hover:text-white"
+            className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white"
             to={`${PATHS.GROUP_MANAGE}/${projectId}/${params.orgId}`}
           >
             {t('cloud.org_manage.org_manage.breadcrumb.group_list')}
@@ -36,7 +36,7 @@ export function GroupBreadcrumbs() {
           viewBox="0 0 20 20"
         />
         <li className="inline-flex items-center">
-          <p className="inline-flex items-center text-sm font-medium text-secondary-500 hover:text-white ">
+          <p className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white ">
             {groupData?.name}
           </p>
         </li>

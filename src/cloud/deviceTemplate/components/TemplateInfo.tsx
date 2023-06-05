@@ -33,7 +33,7 @@ export function TemplateInfo() {
         </p>
         <p>
           {t('cloud.device_template.info.created_at')}:{' '}
-          {getVNDateFormat(data?.created_time * 1000)}
+          {getVNDateFormat({ date: data?.created_time || Date.now() * 1000 })}
         </p>
       </div>
     </>

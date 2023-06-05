@@ -206,7 +206,7 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud.org_manage.org_manage.table.last_update_ts')}</span>
         ),
-        cell: info => getVNDateFormat(parseInt(info.getValue())),
+        cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
       }),
       columnHelper.display({

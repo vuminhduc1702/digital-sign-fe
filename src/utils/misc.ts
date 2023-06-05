@@ -1,20 +1,31 @@
 import { useTranslation } from 'react-i18next'
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 import { useNotificationStore } from '~/stores/notifications'
 
-export function getVNDateFormat(date: number | Date) {
-  const dateFormat: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Ho_Chi_Minh',
-    hourCycle: 'h23',
+type DateFormat = {
+  date: number | Date
+  config?: Intl.DateTimeFormatOptions
+}
+
+export const defaultDateConfig: Intl.DateTimeFormatOptions = {
+  year: '2-digit',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'Asia/Ho_Chi_Minh',
+  hourCycle: 'h23',
+}
+export function getVNDateFormat({ date, config }: DateFormat) {
+  let dateConfig = defaultDateConfig
+  if (config) {
+    dateConfig = config
   }
   if (date == null)
-    new Intl.DateTimeFormat('vi-VN', dateFormat).format(new Date())
-  return new Intl.DateTimeFormat('vi-VN', dateFormat).format(new Date(date))
+    new Intl.DateTimeFormat('vi-VN', dateConfig).format(new Date())
+  return new Intl.DateTimeFormat('vi-VN', dateConfig).format(new Date(date))
 }
 
 export type PropertyValuePair<K extends string> = {
@@ -81,4 +92,8 @@ export function useCopyId() {
   }
 
   return handleCopyId
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }

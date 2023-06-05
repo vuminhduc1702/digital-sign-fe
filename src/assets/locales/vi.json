@@ -272,5 +272,14 @@
   },
   "flow_engine": {
     "title": "Flow Engine"
+  },
+  "ws": {
+    "connect_success": "Kết nối WS thành công",
+    "connect_error": "Không kết nối WS được, vui lòng refresh lại trang",
+    "filter": {
+      "date": "Ngày",
+      "interval": "Khoảng thời gian",
+      "data_aggregation": "Tổng hợp dữ liệu"
+    }
   }
 }
