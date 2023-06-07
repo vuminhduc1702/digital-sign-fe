@@ -1,16 +1,19 @@
 import { type BasePagination } from '~/types'
 
 export type PolicyResources =
-  | 'users'
   | 'groups'
-  | 'templates'
+  | 'devices'
+  | 'devicetokens'
   | 'events'
-  | 'organizations'
+  | 'eventaction'
+  | 'users'
   | 'roles'
   | 'projects'
-  | 'devices'
+  | 'organizations'
+  | 'templates'
+  | 'pricing'
 
-export type PolicyActions = 'read' | 'write' | 'modify' | 'delete'
+export type PolicyActions = 'read' | 'create' | 'modify' | 'delete'
 
 export type Role = {
   id: string

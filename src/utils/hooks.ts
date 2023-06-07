@@ -57,11 +57,11 @@ export const useWS = () => {
     lastJsonMessage,
     readyState,
   } = useWebSocket(WS_URL, {
-    onOpen: () =>
-      addNotification({
-        type: 'success',
-        title: t('ws.connect_success'),
-      }),
+    // onOpen: () =>
+    //   addNotification({
+    //     type: 'success',
+    //     title: t('ws.connect_success'),
+    //   }),
     onError: () =>
       addNotification({
         type: 'error',

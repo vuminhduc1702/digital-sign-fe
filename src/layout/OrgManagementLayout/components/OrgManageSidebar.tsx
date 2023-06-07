@@ -69,7 +69,7 @@ function OrgManageSidebar() {
         <CreateOrg />
         <ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} />
       </div>
-      <div className="grow overflow-y-scroll bg-secondary-500 p-3">
+      <div className="grow overflow-y-auto bg-secondary-500 p-3">
         <div className="space-y-3">
           <Button
             className={clsx('rounded-md border-none', {

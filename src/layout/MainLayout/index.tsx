@@ -35,7 +35,7 @@ function MainLayout() {
             </div>
           }
         >
-          <main className="flex grow flex-col px-3 py-3">
+          <main className="flex grow flex-col overflow-y-auto px-3 py-3">
             <Outlet />
           </main>
         </Suspense>

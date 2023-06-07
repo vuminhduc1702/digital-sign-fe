@@ -140,7 +140,7 @@ export function UpdateTemplate({
                 registration={register('name')}
               />
               {fields.map((field, index) => (
-                <section key={field.id}>
+                <section className="space-y-2" key={field.id}>
                   <InputField
                     label={
                       t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'

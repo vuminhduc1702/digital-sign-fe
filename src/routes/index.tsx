@@ -20,8 +20,6 @@ const { NotFoundPage } = lazyImport(
   'NotFoundPage',
 )
 
-// TODO: Auto redirect to login if visit protected route
-
 export const AppRoutes = () => {
   const user = useUser()
 

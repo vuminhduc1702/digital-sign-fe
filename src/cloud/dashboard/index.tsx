@@ -1,5 +1,5 @@
-import { ResponsiveLine } from '@nivo/line'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { type Datum } from '@nivo/line'
 import { useTranslation } from 'react-i18next'
 import { ReadyState } from 'react-use-websocket'
 
@@ -9,9 +9,9 @@ import SelectMenu, { type ListObj } from '~/components/SelectMenu/SelectMenu'
 import { Spinner } from '~/components/Spinner'
 import { useWS } from '~/utils/hooks'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
+import { LineChart, GaugeChart, Map } from './components'
 
 type ValueWS = { ts: number; value: string }
-type ValueChart = { x: string; y: number }
 type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
 type WSAgg = { label: string; value: WSAggValue }
 
@@ -124,8 +124,8 @@ export function Dashboard() {
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS()
 
-  const lastestValue =
-    lastJsonMessage?.data?.[0]?.latest?.TIME_SERIES?.test?.value
+  const lastestValue: string =
+    lastJsonMessage?.data?.[0]?.latest?.TIME_SERIES?.test?.value || []
 
   const liveValues: ValueWS[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
@@ -137,7 +137,7 @@ export function Dashboard() {
   if (prevValuesRef.current && agg.value === 'NONE') {
     newValuesRef.current = [...prevValuesRef.current, ...liveValues]
   } else newValuesRef.current = liveValues
-  const liveValuesTransformed: ValueChart[] = newValuesRef.current
+  const liveValuesTransformed: Datum[] = newValuesRef.current
     ?.map(({ ts, value }: ValueWS) => ({
       x: getVNDateFormat({
         date: ts,
@@ -147,22 +147,15 @@ export function Dashboard() {
     }))
     // .reverse()
     .slice(-10)
-  const liveValuesTransformedFeedToChart = [
-    {
-      id: 'test',
-      color: 'hsl(106, 70%, 50%)',
-      data: liveValuesTransformed,
-    },
-  ]
 
-  console.log(
-    'wtf: ',
-    newValuesRef.current,
-    liveValuesTransformed,
-    prevValuesRef.current,
-    liveValues,
-  )
-  console.log('lastJsonMessage', lastJsonMessage)
+  // console.log(
+  //   'wtf: ',
+  //   newValuesRef.current,
+  //   liveValuesTransformed,
+  //   prevValuesRef.current,
+  //   liveValues,
+  // )
+  // console.log('lastJsonMessage', lastJsonMessage)
 
   const handleInit = useCallback(() => sendMessage(initMessage), [])
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
@@ -230,65 +223,9 @@ export function Dashboard() {
               setSelected={setAgg}
             />
           </div>
-          <ResponsiveLine
-            data={liveValuesTransformedFeedToChart}
-            margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
-            xScale={{ type: 'point' }}
-            yScale={{
-              type: 'linear',
-              min: 'auto',
-              max: 'auto',
-              stacked: true,
-              reverse: false,
-            }}
-            yFormat=" >-.2f"
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: 'Thời gian',
-              legendOffset: 36,
-              legendPosition: 'middle',
-            }}
-            axisLeft={{
-              tickSize: 5,
-              tickPadding: 5,
-              tickRotation: 0,
-              legend: 'Giá trị',
-              legendOffset: -40,
-              legendPosition: 'middle',
-            }}
-            pointSize={10}
-            useMesh={true}
-            legends={[
-              {
-                anchor: 'top',
-                direction: 'row',
-                justify: false,
-                translateX: 0,
-                translateY: -30,
-                itemsSpacing: 50,
-                itemDirection: 'left-to-right',
-                itemWidth: 80,
-                itemHeight: 20,
-                itemOpacity: 0.75,
-                symbolSize: 12,
-                symbolShape: 'circle',
-                symbolBorderColor: 'rgba(0, 0, 0, .5)',
-                effects: [
-                  {
-                    on: 'hover',
-                    style: {
-                      itemBackground: 'rgba(0, 0, 0, .03)',
-                      itemOpacity: 1,
-                    },
-                  },
-                ],
-              },
-            ]}
-          />
+          <LineChart data={liveValuesTransformed} />
+          <GaugeChart data={parseFloat(lastestValue)} />
+          <Map position={[21.068174, 105.81182]} />
         </>
       ) : (
         <div className="flex grow items-center justify-center">

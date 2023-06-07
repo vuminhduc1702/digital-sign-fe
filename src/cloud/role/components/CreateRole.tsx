@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
@@ -6,7 +7,6 @@ import {
   FormDrawer,
   FormMultipleFields,
   InputField,
-  SelectField,
   SelectMultiple,
 } from '~/components/Form'
 import { useProjectIdStore } from '~/stores/project'
@@ -41,7 +41,7 @@ export const resourcesList: ResourcesType[] = [
 
 export const actionsList: ActionsType[] = [
   { type: 'read', name: 'Xem' },
-  { type: 'write', name: 'Tạo mới' },
+  { type: 'create', name: 'Tạo mới' },
   { type: 'modify', name: 'Chỉnh sửa' },
   { type: 'delete', name: 'Xoá' },
 ]
@@ -63,6 +63,9 @@ export default function CreateRole() {
   const projectId = useProjectIdStore(state => state.projectId)
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
+
+  const resourceArrRef = useRef<string[]>([])
+  const actionArrRef = useRef<string[]>([])
 
   return (
     <FormDrawer
@@ -91,10 +94,28 @@ export default function CreateRole() {
     >
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
-        onSubmit={values =>
-          mutate({ data: { ...values, project_id: projectId } })
-        }
-        schema={roleSchema}
+        onSubmit={values => {
+          mutate({
+            data: {
+              name: values.name,
+              policies: values.policies.map(policy => {
+                resourceArrRef.current = policy.resources.map(
+                  resource => resource.value,
+                )
+                actionArrRef.current = policy.actions.map(
+                  action => action.value,
+                )
+                return {
+                  policy_name: policy.policy_name,
+                  resources: resourceArrRef.current,
+                  actions: actionArrRef.current,
+                }
+              }),
+              project_id: projectId,
+            },
+          })
+        }}
+        // schema={roleSchema}
         options={{
           defaultValues: {
             name: '',
@@ -119,7 +140,7 @@ export default function CreateRole() {
               registration={register('name')}
             />
             {fields.map((field, index) => (
-              <section key={field.id}>
+              <section className="space-y-2" key={field.id}>
                 <InputField
                   label={t('cloud.role_manage.add_policy.name') ?? 'Policy'}
                   error={formState.errors[`policies.${index}.policy_name`]}
@@ -127,41 +148,29 @@ export default function CreateRole() {
                     `policies.${index}.policy_name` as const,
                   )}
                 />
-                {/* <SelectField
+                <SelectMultiple
                   label={
                     t('cloud.role_manage.add_policy.resources') ??
                     'Authorization resources'
                   }
-                  error={formState.errors[`policies.${index}.resources`]}
-                  registration={register(
-                    `policies.${index}.resources.0` as const,
-                  )}
-                  options={resourcesList.map(resourcesType => ({
-                    label: resourcesType.name,
-                    value: resourcesType.type,
-                  }))}
-                /> */}
-                <SelectMultiple
-                  name={`resources.0`}
+                  name={`policies.${index}.resources`}
                   options={resourcesList.map(resourcesType => ({
                     label: resourcesType.name,
                     value: resourcesType.type,
                   }))}
                   control={control}
                 />
-                <SelectField
+                <SelectMultiple
                   label={
                     t('cloud.role_manage.add_policy.actions') ??
                     'Authorization actions'
                   }
-                  error={formState.errors[`policies.${index}.actions`]}
-                  registration={register(
-                    `policies.${index}.actions.0` as const,
-                  )}
+                  name={`policies.${index}.actions`}
                   options={actionsList.map(actionsType => ({
                     label: actionsType.name,
                     value: actionsType.type,
                   }))}
+                  control={control}
                 />
                 <button type="button" onClick={() => remove(index)}>
                   X

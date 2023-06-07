@@ -19,7 +19,7 @@ export function RoleManage() {
   return (
     <ContentLayout title={t('sidebar.cloud.role_manage')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
-        <div className="flex h-[89vh] flex-col gap-2 md:col-span-1">
+        <div className="flex h-[88.8vh] flex-col gap-2 md:col-span-1">
           <RoleSidebar />
         </div>
 

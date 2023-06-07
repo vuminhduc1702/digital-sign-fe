@@ -6,7 +6,7 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
 export type SelectOption = {
   label: ReactNode
-  value: string | number | string[] | boolean
+  value: string
 }
 
 type SelectFieldProps = FieldWrapperPassThroughProps & {

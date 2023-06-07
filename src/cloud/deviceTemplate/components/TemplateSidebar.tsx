@@ -61,7 +61,7 @@ export function TemplateSidebar() {
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="grow overflow-y-scroll bg-secondary-500 p-3">
+      <div className="grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (
