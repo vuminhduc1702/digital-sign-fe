@@ -25,7 +25,7 @@ type FormProps<TFormValues extends FieldValues, Schema> = {
     fields: FieldArrayWithId<TFormValues, ArrayPath<TFormValues>, 'id'>[],
     append: UseFieldArrayAppend<TFormValues, ArrayPath<TFormValues>>,
     remove: UseFieldArrayRemove,
-    control?: Control<TFormValues, any>,
+    control: Control<TFormValues, any>,
   ) => React.ReactNode
   options?: UseFormProps<TFormValues>
   schema?: Schema
@@ -63,14 +63,7 @@ export const FormMultipleFields = <
       onSubmit={handleSubmit(onSubmit)}
       id={id}
     >
-      {children(
-        register,
-        formState,
-        fields,
-        append,
-        remove,
-        control,
-      )}
+      {children(register, formState, fields, append, remove, control)}
     </form>
   )
 }

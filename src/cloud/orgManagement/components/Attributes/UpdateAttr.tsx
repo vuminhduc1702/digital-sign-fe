@@ -59,7 +59,7 @@ export function UpdateAttr({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:org_manage.org_manage.add_attr.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -120,13 +120,13 @@ export function UpdateAttr({
           {({ register, formState }) => (
             <>
               {/* <InputField
-                label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
+                label={t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'}
                 error={formState.errors['attribute_key']}
                 registration={register('attribute_key')}
               /> */}
               <SelectField
                 label={
-                  t('cloud.org_manage.org_manage.add_attr.value_type') ??
+                  t('cloud:org_manage.org_manage.add_attr.value_type') ??
                   "Attribute's value type"
                 }
                 error={formState.errors['value_t']}
@@ -138,14 +138,14 @@ export function UpdateAttr({
               />
               <InputField
                 label={
-                  t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
+                  t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
                 }
                 error={formState.errors['value']}
                 registration={register('value')}
               />
               <SelectField
                 label={
-                  t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
+                  t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
                 }
                 error={formState.errors['logged']}
                 registration={register('logged')}

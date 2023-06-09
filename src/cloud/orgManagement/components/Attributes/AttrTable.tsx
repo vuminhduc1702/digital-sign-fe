@@ -67,12 +67,12 @@ function AttrTableContextMenu({
               }
               onClick={open}
             >
-              {t('cloud.org_manage.org_manage.add_attr.edit')}
+              {t('cloud:org_manage.org_manage.add_attr.edit')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud.org_manage.org_manage.table.delete_attr_full')}
+              title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
               body={
                 t(
                   'cloud.org_manage.org_manage.table.delete_attr_confirm',
@@ -92,7 +92,7 @@ function AttrTableContextMenu({
                     />
                   }
                 >
-                  {t('cloud.org_manage.org_manage.table.delete_attr')}
+                  {t('cloud:org_manage.org_manage.table.delete_attr')}
                 </Button>
               }
               confirmButton={
@@ -155,19 +155,19 @@ export function AttrTable({
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('attribute_key', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('value_type', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.value_type')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.value_type')}</span>
         ),
         cell: info => {
           const valueType = info.getValue() as Attribute['value_type']
@@ -190,21 +190,21 @@ export function AttrTable({
       }),
       columnHelper.accessor('value', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.value')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.value')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('logged', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.logged')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.logged')}</span>
         ),
         cell: info => status[info.getValue()],
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.last_update_ts')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
         ),
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
@@ -226,7 +226,7 @@ export function AttrTable({
     <BaseTable data={dataSorted} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_attr')}
+      {t('table:no_attr')}
     </div>
   )
 }

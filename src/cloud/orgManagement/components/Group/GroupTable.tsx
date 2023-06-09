@@ -8,13 +8,11 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { useDeleteGroup } from '../../api/groupAPI'
-import { useCopyId } from '~/utils/misc'
 import { useProjectIdStore } from '~/stores/project'
 import { UpdateGroup } from './UpdateGroup'
-import { useOrgById } from '~/layout/OrgManagementLayout/api'
 
 import { type Group } from '../../types'
 
@@ -64,7 +62,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
                 )
               }
             >
-              {t('table.view_detail')}
+              {t('table:view_detail')}
             </MenuItem>
             <MenuItem
               icon={
@@ -72,7 +70,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
               }
               onClick={open}
             >
-              {t('cloud.org_manage.group_manage.add_group.edit')}
+              {t('cloud:org_manage.group_manage.add_group.edit')}
             </MenuItem>
             <MenuItem
               icon={
@@ -84,12 +82,12 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
               }
               onClick={() => handleCopyId(id)}
             >
-              {t('table.copy_id')}
+              {t('table:copy_id')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud.org_manage.group_manage.table.delete_group')}
+              title={t('cloud:org_manage.group_manage.table.delete_group')}
               body={
                 t(
                   'cloud.org_manage.group_manage.table.delete_group_confirm',
@@ -109,7 +107,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
                     />
                   }
                 >
-                  {t('cloud.org_manage.group_manage.table.delete_group')}
+                  {t('cloud:org_manage.group_manage.table.delete_group')}
                 </Button>
               }
               confirmButton={
@@ -147,19 +145,19 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
         header: () => (
-          <span>{t('cloud.org_manage.group_manage.table.name')}</span>
+          <span>{t('cloud:org_manage.group_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('entity_type', {
         header: () => (
-          <span>{t('cloud.org_manage.group_manage.table.entity_type')}</span>
+          <span>{t('cloud:org_manage.group_manage.table.entity_type')}</span>
         ),
         cell: info =>
           `${info.getValue().charAt(0).toUpperCase()}${info
@@ -171,9 +169,9 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
       columnHelper.display({
         id: 'orgName',
         header: () => (
-          <span>{t('cloud.org_manage.group_manage.table.org_name')}</span>
+          <span>{t('cloud:org_manage.group_manage.table.org_name')}</span>
         ),
-        cell: info => info.row.original.org_name || t('table.no_in_org'),
+        cell: info => info.row.original.org_name || t('table:no_in_org'),
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -193,7 +191,7 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_group')}
+      {t('table:no_group')}
     </div>
   )
 }

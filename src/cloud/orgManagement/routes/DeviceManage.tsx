@@ -39,7 +39,7 @@ export function DeviceManage() {
     <>
       <TitleBar
         title={
-          t('cloud.org_manage.device_manage.header') ?? 'Device management'
+          t('cloud:org_manage.device_manage.header') ?? 'Device management'
         }
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">

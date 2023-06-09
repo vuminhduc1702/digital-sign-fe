@@ -22,7 +22,7 @@ export function ComboBoxSelectRole({
 
   const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
     data?.roles || [],
-    ['id', 'name'],
+    ['id', 'name', 'policies'],
   )
 
   const filteredData = filteredComboboxData(

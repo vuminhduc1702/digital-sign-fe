@@ -11,9 +11,8 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useDeleteOrg } from '../api/deleteOrg'
 import { UpdateOrg } from './UpdateOrg'
-import { useDisclosure } from '~/utils/hooks'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
-import { useCopyId } from '~/utils/misc'
 import { PATHS } from '~/routes/PATHS'
 import { useProjectById } from '~/layout/MainLayout/api/getProjectById'
 
@@ -64,7 +63,7 @@ function OrgManageSidebar() {
             alt="Organization list"
             className="aspect-square w-[20px]"
           />
-          <p>{t('cloud.org_manage.org_list')}</p>
+          <p>{t('cloud:org_manage.org_list')}</p>
         </div>
         <CreateOrg />
         <ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} />
@@ -187,7 +186,7 @@ function OrgManageSidebar() {
                           setSelectedUpdateOrg(org.id)
                         }}
                       >
-                        {t('cloud.org_manage.org_map.edit')}
+                        {t('cloud:org_manage.org_map.edit')}
                       </MenuItem>
                       <MenuItem
                         icon={
@@ -199,12 +198,12 @@ function OrgManageSidebar() {
                         }
                         onClick={() => handleCopyId(org.id)}
                       >
-                        {t('table.copy_id')}
+                        {t('table:copy_id')}
                       </MenuItem>
                       <ConfirmationDialog
                         isDone={isSuccess}
                         icon="danger"
-                        title={t('cloud.org_manage.org_map.delete')}
+                        title={t('cloud:org_manage.org_map.delete')}
                         body={
                           t(
                             'cloud.org_manage.org_map.delete_org_confirm',
@@ -225,7 +224,7 @@ function OrgManageSidebar() {
                               />
                             }
                           >
-                            {t('cloud.org_manage.org_map.delete')}
+                            {t('cloud:org_manage.org_map.delete')}
                           </Button>
                         }
                         confirmButton={

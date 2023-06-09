@@ -75,25 +75,6 @@ export function flattenData<
   return { acc: result, extractedPropertyKeys }
 }
 
-export function useCopyId() {
-  const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
-
-  async function handleCopyId(id: string) {
-    try {
-      await navigator.clipboard.writeText(id)
-      addNotification({
-        type: 'success',
-        title: t('cloud.org_manage.org_map.copy_success'),
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  return handleCopyId
-}
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

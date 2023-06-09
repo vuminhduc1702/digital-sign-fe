@@ -13,37 +13,27 @@ import { useProjectIdStore } from '~/stores/project'
 import { type CreateRoleDTO, useCreateRole } from '../api'
 import { nameSchema } from '~/utils/schemaValidation'
 
-import { type PolicyActions, type PolicyResources } from '../types'
+import { type ActionsType, type ResourcesType } from '../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-type ResourcesType = {
-  type: PolicyResources
-  name: string
-}
-
-type ActionsType = {
-  type: PolicyActions
-  name: string
-}
-
 export const resourcesList: ResourcesType[] = [
-  { type: 'users', name: 'Người dùng' },
-  { type: 'groups', name: 'Nhóm' },
-  { type: 'templates', name: 'Mãu thiết bị' },
-  { type: 'events', name: 'Sự kiện' },
-  { type: 'organizations', name: 'Tổ chức' },
-  { type: 'roles', name: 'Vai trò' },
-  { type: 'projects', name: 'Dự án' },
-  { type: 'devices', name: 'Thiết bị' },
+  { value: 'users', label: 'Người dùng' },
+  { value: 'groups', label: 'Nhóm' },
+  { value: 'templates', label: 'Mãu thiết bị' },
+  { value: 'events', label: 'Sự kiện' },
+  { value: 'organizations', label: 'Tổ chức' },
+  { value: 'roles', label: 'Vai trò' },
+  { value: 'projects', label: 'Dự án' },
+  { value: 'devices', label: 'Thiết bị' },
 ]
 
 export const actionsList: ActionsType[] = [
-  { type: 'read', name: 'Xem' },
-  { type: 'create', name: 'Tạo mới' },
-  { type: 'modify', name: 'Chỉnh sửa' },
-  { type: 'delete', name: 'Xoá' },
+  { value: 'read', label: 'Xem' },
+  { value: 'create', label: 'Tạo mới' },
+  { value: 'modify', label: 'Chỉnh sửa' },
+  { value: 'delete', label: 'Xoá' },
 ]
 
 export const roleSchema = z.object({
@@ -57,15 +47,15 @@ export const roleSchema = z.object({
   ),
 })
 
-export default function CreateRole() {
+export function CreateRole() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
 
-  const resourceArrRef = useRef<string[]>([])
-  const actionArrRef = useRef<string[]>([])
+  const resourceArrRef = useRef<ResourcesType['value'][]>([])
+  const actionArrRef = useRef<ActionsType['value'][]>([])
 
   return (
     <FormDrawer
@@ -78,7 +68,7 @@ export default function CreateRole() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.role_manage.add_role.title')}
+      title={t('cloud:role_manage.add_role.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -95,26 +85,26 @@ export default function CreateRole() {
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
         onSubmit={values => {
+          const policies = values.policies.map(policy => {
+            resourceArrRef.current = policy.resources.map(
+              resource => resource.value,
+            )
+            actionArrRef.current = policy.actions.map(action => action.value)
+            return {
+              policy_name: policy.policy_name,
+              resources: resourceArrRef.current,
+              actions: actionArrRef.current,
+            }
+          })
           mutate({
             data: {
               name: values.name,
-              policies: values.policies.map(policy => {
-                resourceArrRef.current = policy.resources.map(
-                  resource => resource.value,
-                )
-                actionArrRef.current = policy.actions.map(
-                  action => action.value,
-                )
-                return {
-                  policy_name: policy.policy_name,
-                  resources: resourceArrRef.current,
-                  actions: actionArrRef.current,
-                }
-              }),
+              policies,
               project_id: projectId,
             },
           })
         }}
+        // TODO: fix role's schema validation
         // schema={roleSchema}
         options={{
           defaultValues: {
@@ -124,61 +114,59 @@ export default function CreateRole() {
         }}
         name="policies"
       >
-        {(register, formState, fields, append, remove, control) => (
-          <>
-            <button
-              type="button"
-              onClick={() =>
-                append({ policy_name: '', resources: [], actions: [] })
-              }
-            >
-              APPEND
-            </button>
-            <InputField
-              label={t('cloud.role_manage.add_role.name') ?? 'Role name'}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            {fields.map((field, index) => (
-              <section className="space-y-2" key={field.id}>
-                <InputField
-                  label={t('cloud.role_manage.add_policy.name') ?? 'Policy'}
-                  error={formState.errors[`policies.${index}.policy_name`]}
-                  registration={register(
-                    `policies.${index}.policy_name` as const,
-                  )}
-                />
-                <SelectMultiple
-                  label={
-                    t('cloud.role_manage.add_policy.resources') ??
-                    'Authorization resources'
-                  }
-                  name={`policies.${index}.resources`}
-                  options={resourcesList.map(resourcesType => ({
-                    label: resourcesType.name,
-                    value: resourcesType.type,
-                  }))}
-                  control={control}
-                />
-                <SelectMultiple
-                  label={
-                    t('cloud.role_manage.add_policy.actions') ??
-                    'Authorization actions'
-                  }
-                  name={`policies.${index}.actions`}
-                  options={actionsList.map(actionsType => ({
-                    label: actionsType.name,
-                    value: actionsType.type,
-                  }))}
-                  control={control}
-                />
-                <button type="button" onClick={() => remove(index)}>
-                  X
-                </button>
-              </section>
-            ))}
-          </>
-        )}
+        {(register, formState, fields, append, remove, control) => {
+          return (
+            <>
+              <button
+                type="button"
+                onClick={() =>
+                  append({ policy_name: '', resources: [], actions: [] })
+                }
+              >
+                APPEND
+              </button>
+              <InputField
+                label={t('cloud:role_manage.add_role.name') ?? 'Role name'}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              {fields.map((field, index) => (
+                <section className="space-y-2" key={field.id}>
+                  <InputField
+                    label={t('cloud:role_manage.add_policy.name') ?? 'Policy'}
+                    registration={register(
+                      `policies.${index}.policy_name` as const,
+                    )}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.policies?.[index]?.policy_name?.message}
+                  </p>
+                  <SelectMultiple
+                    label={
+                      t('cloud:role_manage.add_policy.resources') ??
+                      'Authorization resources'
+                    }
+                    name={`policies.${index}.resources`}
+                    options={resourcesList.map(resourcesType => resourcesType)}
+                    control={control}
+                  />
+                  <SelectMultiple
+                    label={
+                      t('cloud:role_manage.add_policy.actions') ??
+                      'Authorization actions'
+                    }
+                    name={`policies.${index}.actions`}
+                    options={actionsList.map(actionsType => actionsType)}
+                    control={control}
+                  />
+                  <button type="button" onClick={() => remove(index)}>
+                    X
+                  </button>
+                </section>
+              ))}
+            </>
+          )
+        }}
       </FormMultipleFields>
     </FormDrawer>
   )

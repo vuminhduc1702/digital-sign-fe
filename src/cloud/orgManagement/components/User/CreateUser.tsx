@@ -59,7 +59,7 @@ export function CreateUser() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.user_manage.add_user.title')}
+      title={t('cloud:org_manage.user_manage.add_user.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -91,20 +91,20 @@ export function CreateUser() {
         {({ register, formState }) => (
           <>
             <InputField
-              label={t('cloud.org_manage.user_manage.add_user.name') ?? 'Name'}
+              label={t('cloud:org_manage.user_manage.add_user.name') ?? 'Name'}
               error={formState.errors['name']}
               registration={register('name')}
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.email') ?? 'Email'
+                t('cloud:org_manage.user_manage.add_user.email') ?? 'Email'
               }
               error={formState.errors['email']}
               registration={register('email')}
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.password') ??
+                t('cloud:org_manage.user_manage.add_user.password') ??
                 'Password'
               }
               error={formState.errors['password']}
@@ -112,7 +112,7 @@ export function CreateUser() {
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.confirm_password') ??
+                t('cloud:org_manage.user_manage.add_user.confirm_password') ??
                 'Confirm password'
               }
               error={formState.errors['confirmPassword']}
@@ -120,14 +120,14 @@ export function CreateUser() {
             />
             <ComboBoxSelectOrg
               label={
-                t('cloud.org_manage.user_manage.add_user.parent') ??
+                t('cloud:org_manage.user_manage.add_user.parent') ??
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
             />
             {/* <ComboBoxSelectRole
               label={
-                t('cloud.org_manage.user_manage.add_user.role') ??
+                t('cloud:org_manage.user_manage.add_user.role') ??
                 'Role selection'
               }
               setFilteredComboboxData={setFilteredComboboxData}

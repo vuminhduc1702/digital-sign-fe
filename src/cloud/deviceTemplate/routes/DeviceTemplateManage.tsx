@@ -28,7 +28,7 @@ export function DeviceTemplateManage() {
   const projectId = useProjectIdStore(state => state.projectId)
 
   return (
-    <ContentLayout title={t('sidebar.cloud.device_template')}>
+    <ContentLayout title={t('sidebar:cloud.device_template')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
         <div className="flex h-[88.8vh] flex-col gap-2 md:col-span-1">
           <TemplateSidebar />
@@ -46,7 +46,7 @@ export function DeviceTemplateManage() {
               <TemplateInfo />
               <TitleBar
                 title={
-                  t('cloud.org_manage.org_manage.attr_list') ??
+                  t('cloud:org_manage.org_manage.attr_list') ??
                   'Device template management'
                 }
               />

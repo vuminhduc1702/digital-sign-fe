@@ -36,7 +36,7 @@ export function OrgManage() {
           <div>
             <TitleBar
               title={
-                t('cloud.org_manage.org_manage.overview.title') ?? 'Overview'
+                t('cloud:org_manage.org_manage.overview.title') ?? 'Overview'
               }
             />
             <div className="flex gap-6 px-11 py-3 shadow-lg">
@@ -53,8 +53,8 @@ export function OrgManage() {
                 />
               </div>
               <div className="flex flex-col gap-4">
-                <p>{t('cloud.org_manage.org_manage.overview.name')}</p>
-                <p>{t('cloud.org_manage.org_manage.overview.desc')}</p>
+                <p>{t('cloud:org_manage.org_manage.overview.name')}</p>
+                <p>{t('cloud:org_manage.org_manage.overview.desc')}</p>
               </div>
               <div className="flex flex-col gap-4">
                 <p>{orgByIdData?.name}</p>
@@ -65,7 +65,7 @@ export function OrgManage() {
           <div className="flex grow flex-col">
             <TitleBar
               title={
-                t('cloud.org_manage.org_manage.attr_list') ?? "Attribute's list"
+                t('cloud:org_manage.org_manage.attr_list') ?? "Attribute's list"
               }
             />
             <div className="flex grow flex-col px-9 py-3 shadow-lg">

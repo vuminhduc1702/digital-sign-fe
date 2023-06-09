@@ -8,8 +8,7 @@ import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { useDisclosure } from '~/utils/hooks'
-import { useCopyId } from '~/utils/misc'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
@@ -54,7 +53,7 @@ export function TemplateSidebar() {
             alt="Template list"
             className="aspect-square w-[20px]"
           />
-          <p>{t('cloud.device_template.sidebar.title')}</p>
+          <p>{t('cloud:device_template.sidebar.title')}</p>
         </div>
         <CreateTemplate />
         <ComboBoxSelectTemplate
@@ -111,7 +110,7 @@ export function TemplateSidebar() {
                             setSelectedUpdateTemplate(template)
                           }}
                         >
-                          {t('cloud.device_template.sidebar.edit')}
+                          {t('cloud:device_template.sidebar.edit')}
                         </MenuItem>
                         <MenuItem
                           icon={
@@ -123,7 +122,7 @@ export function TemplateSidebar() {
                           }
                           onClick={() => handleCopyId(template.id)}
                         >
-                          {t('table.copy_id')}
+                          {t('table:copy_id')}
                         </MenuItem>
                         <ConfirmationDialog
                           isDone={isSuccess}
@@ -182,7 +181,7 @@ export function TemplateSidebar() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center">
-            {t('cloud.device_template.sidebar.no_template')}
+            {t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
         {selectedUpdateTemplate != null ? (

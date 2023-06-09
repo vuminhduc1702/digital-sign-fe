@@ -32,7 +32,7 @@ export function GroupManage() {
   return (
     <>
       <TitleBar
-        title={t('cloud.org_manage.group_manage.header') ?? 'Group management'}
+        title={t('cloud:org_manage.group_manage.header') ?? 'Group management'}
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">

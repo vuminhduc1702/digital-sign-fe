@@ -41,7 +41,7 @@ export function CreateDevice() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.device_manage.add_device.title')}
+      title={t('cloud:org_manage.device_manage.add_device.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -72,14 +72,14 @@ export function CreateDevice() {
           <>
             <InputField
               label={
-                t('cloud.org_manage.device_manage.add_device.name') ?? 'Name'
+                t('cloud:org_manage.device_manage.add_device.name') ?? 'Name'
               }
               error={formState.errors['name']}
               registration={register('name')}
             />
             <ComboBoxSelectOrg
               label={
-                t('cloud.org_manage.device_manage.add_device.parent') ??
+                t('cloud:org_manage.device_manage.add_device.parent') ??
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}

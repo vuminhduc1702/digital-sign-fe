@@ -14,8 +14,8 @@ export function FlowEngine() {
   const { token } = storage.getToken() as UserStorage
 
   return (
-    <ContentLayout title={t('sidebar.cloud.flow_engine')}>
-      <TitleBar title={t('flow_engine.title') ?? 'Flow Engine'} />
+    <ContentLayout title={t('sidebar:cloud.flow_engine')}>
+      <TitleBar title={t('flow_engine:title') ?? 'Flow Engine'} />
       <Iframe
         className="mt-3 h-full w-full"
         url={`${FLOW_URL}/ruleChains?token=${token}&project_id=${projectId}`}

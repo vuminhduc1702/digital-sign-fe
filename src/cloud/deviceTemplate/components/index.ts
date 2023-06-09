@@ -1,6 +1,5 @@
 export * from './CreateTemplate'
 export * from './UpdateTemplate'
-export * from './DeleteTemplate'
 export * from './ComboBoxSelectTemplate'
 export * from './TemplateSidebar'
 export * from './TemplateInfo'

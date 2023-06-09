@@ -25,7 +25,7 @@ export function DeviceBreadcrumbs() {
             className="inline-flex items-center text-body-sm text-secondary-500 hover:text-white"
             to={`${PATHS.DEVICE_MANAGE}/${projectId}/${params.orgId}`}
           >
-            {t('cloud.org_manage.org_manage.breadcrumb.device_list')}
+            {t('cloud:org_manage.org_manage.breadcrumb.device_list')}
           </Link>
         </li>
         <BreadcrumbIcon

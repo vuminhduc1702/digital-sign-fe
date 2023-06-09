@@ -41,7 +41,7 @@ export function UpdateGroup({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.group_manage.add_group.edit')}
+      title={t('cloud:org_manage.group_manage.add_group.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -85,7 +85,7 @@ export function UpdateGroup({
           <>
             <InputField
               label={
-                t('cloud.org_manage.group_manage.add_group.name') ??
+                t('cloud:org_manage.group_manage.add_group.name') ??
                 "Group's name"
               }
               error={formState.errors['name']}

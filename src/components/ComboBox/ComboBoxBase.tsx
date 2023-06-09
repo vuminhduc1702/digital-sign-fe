@@ -95,7 +95,7 @@ export function ComboBoxBase({
             <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {data?.length === 0 && query !== '' ? (
                 <div className="relative cursor-default select-none px-4 py-2 text-secondary-700">
-                  {t('error.not_found')}
+                  {t('error:not_found')}
                 </div>
               ) : (
                 data?.map(data => (

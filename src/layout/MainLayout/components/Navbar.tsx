@@ -36,7 +36,7 @@ function Navbar() {
               className="aspect-square w-[20px]"
             />
             <p className="text-white">
-              {t('nav.hello')}{' '}
+              {t('nav:hello')}{' '}
               {userData?.name || userData?.email?.split('@')[0]}
             </p>
             <SidebarDropDownIcon
@@ -53,7 +53,7 @@ function Navbar() {
             sideOffset={5}
           >
             <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-              {t('user.logout')}
+              {t('user:logout')}
             </p>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
@@ -66,7 +66,7 @@ function Navbar() {
               alt="Project management"
               className="aspect-square w-[20px]"
             />
-            <p className="text-white">{t('nav.qlda')}</p>
+            <p className="text-white">{t('nav:qlda')}</p>
             <SidebarDropDownIcon
               width={12}
               height={7}
@@ -116,11 +116,11 @@ function Navbar() {
           alt="Setting"
           className="aspect-square w-[20px]"
         />
-        <p className="text-white">{t('nav.setup')}</p>
+        <p className="text-white">{t('nav:setup')}</p>
       </div>
       <div className="flex cursor-pointer items-center gap-x-2">
         <img src={hotroIcon} alt="Support" className="aspect-square w-[20px]" />
-        <p className="text-white">{t('nav.support')}</p>
+        <p className="text-white">{t('nav:support')}</p>
       </div>
     </nav>
   )

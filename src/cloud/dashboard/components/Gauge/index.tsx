@@ -37,6 +37,7 @@ function Gauge({ value }: GaugeProps) {
     baseRadius: 8,
     tipRadius: 2,
   })
+  console.log('needle', needle.tip.cx, needle.tip.cy)
 
   const arcStroke = useMemo(() => {
     let color = ''

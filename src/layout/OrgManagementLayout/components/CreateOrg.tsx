@@ -44,7 +44,7 @@ export function CreateOrg() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.org_manage.add_org.title')}
+      title={t('cloud:org_manage.org_manage.add_org.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -75,20 +75,20 @@ export function CreateOrg() {
         {({ register, formState }) => (
           <>
             <InputField
-              label={t('cloud.org_manage.org_manage.add_org.name') ?? 'Name'}
+              label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
               error={formState.errors['name']}
               registration={register('name')}
             />
             <ComboBoxSelectOrg
               label={
-                t('cloud.org_manage.org_manage.add_org.parent') ??
+                t('cloud:org_manage.org_manage.add_org.parent') ??
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
             />
             <TextAreaField
               label={
-                t('cloud.org_manage.org_manage.add_org.desc') ?? 'Description'
+                t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
               }
               error={formState.errors['description']}
               registration={register('description')}

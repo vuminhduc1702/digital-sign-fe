@@ -30,7 +30,7 @@ export const useAuthorization = () => {
   const system_role = userStorage?.system_role
 
   if (!user.data) {
-    throw Error(t('error.no_user') ?? 'No user found')
+    throw Error(t('error:no_user') ?? 'No user found')
   }
 
   const checkAccess = useCallback(

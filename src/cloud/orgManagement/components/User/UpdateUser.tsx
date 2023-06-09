@@ -41,7 +41,7 @@ export function UpdateUser({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.user_manage.add_user.edit')}
+      title={t('cloud:org_manage.user_manage.add_user.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -87,14 +87,14 @@ export function UpdateUser({
           <>
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.name') ?? "User's name"
+                t('cloud:org_manage.user_manage.add_user.name') ?? "User's name"
               }
               error={formState.errors['name']}
               registration={register('name')}
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.email') ??
+                t('cloud:org_manage.user_manage.add_user.email') ??
                 "User's email"
               }
               error={formState.errors['email']}
@@ -102,7 +102,7 @@ export function UpdateUser({
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.password') ??
+                t('cloud:org_manage.user_manage.add_user.password') ??
                 'Password'
               }
               error={formState.errors['password']}
@@ -110,7 +110,7 @@ export function UpdateUser({
             />
             <InputField
               label={
-                t('cloud.org_manage.user_manage.add_user.confirm_password') ??
+                t('cloud:org_manage.user_manage.add_user.confirm_password') ??
                 'Confirm password'
               }
               error={formState.errors['confirmPassword']}

@@ -33,7 +33,7 @@ export function UserManage() {
   return (
     <>
       <TitleBar
-        title={t('cloud.org_manage.user_manage.header') ?? 'User management'}
+        title={t('cloud:org_manage.user_manage.header') ?? 'User management'}
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">

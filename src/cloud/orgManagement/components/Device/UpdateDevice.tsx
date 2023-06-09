@@ -36,7 +36,7 @@ export function UpdateDevice({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.device_manage.add_device.edit')}
+      title={t('cloud:org_manage.device_manage.add_device.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -80,7 +80,7 @@ export function UpdateDevice({
           <>
             <InputField
               label={
-                t('cloud.org_manage.device_manage.add_device.name') ??
+                t('cloud:org_manage.device_manage.add_device.name') ??
                 "Device's name"
               }
               error={formState.errors['name']}

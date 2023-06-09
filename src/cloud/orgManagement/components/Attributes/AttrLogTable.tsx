@@ -31,26 +31,26 @@ export function AttrLogTable({
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('ts', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.last_update_ts')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
         ),
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('attribute_key', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('value', {
         header: () => (
-          <span>{t('cloud.org_manage.org_manage.table.value')}</span>
+          <span>{t('cloud:org_manage.org_manage.table.value')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
@@ -63,7 +63,7 @@ export function AttrLogTable({
     <BaseTable data={dataSorted} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_log_attr')}
+      {t('table:no_log_attr')}
     </div>
   )
 }

@@ -12,21 +12,21 @@ export function ExportTable() {
         size="sm"
         variant="secondaryLight"
       >
-        {t('table.excel')}
+        {t('table:excel')}
       </Button>
       <Button
         className="rounded border-none"
         size="sm"
         variant="secondaryLight"
       >
-        {t('table.pdf')}
+        {t('table:pdf')}
       </Button>
       <Button
         className="rounded border-none"
         size="sm"
         variant="secondaryLight"
       >
-        {t('table.print')}
+        {t('table:print')}
       </Button>
     </div>
   )

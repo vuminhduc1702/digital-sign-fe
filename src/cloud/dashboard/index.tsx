@@ -9,7 +9,7 @@ import SelectMenu, { type ListObj } from '~/components/SelectMenu/SelectMenu'
 import { Spinner } from '~/components/Spinner'
 import { useWS } from '~/utils/hooks'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
-import { LineChart, GaugeChart, Map } from './components'
+import { LineChart, GaugeChart, Map, MyResponsiveBar } from './components'
 
 type ValueWS = { ts: number; value: string }
 type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
@@ -205,7 +205,7 @@ export function Dashboard() {
               Live
             </Button>
             <SelectMenu
-              label={t('ws.filter.interval') ?? 'Interval'}
+              label={t('ws:filter.interval') ?? 'Interval'}
               data={wsInterval.map(interval => ({
                 label: interval.label,
                 value: interval.value,
@@ -214,7 +214,7 @@ export function Dashboard() {
               setSelected={setInterval}
             />
             <SelectMenu
-              label={t('ws.filter.data_aggregation') ?? 'Data aggregation'}
+              label={t('ws:filter.data_aggregation') ?? 'Data aggregation'}
               data={wsAgg.map(agg => ({
                 label: agg.label,
                 value: agg.value,
@@ -223,9 +223,23 @@ export function Dashboard() {
               setSelected={setAgg}
             />
           </div>
-          <LineChart data={liveValuesTransformed} />
+          {/* <LineChart data={liveValuesTransformed} />
           <GaugeChart data={parseFloat(lastestValue)} />
-          <Map position={[21.068174, 105.81182]} />
+          <Map position={[21.068174, 105.81182]} /> */}
+          <MyResponsiveBar
+            data={[
+              {
+                country: 'AD',
+                'hot dog': 40,
+                'hot dogColor': 'hsl(319, 70%, 50%)',
+              },
+              {
+                country: 'AE',
+                burger: 167,
+                burgerColor: 'hsl(164, 70%, 50%)',
+              },
+            ]}
+          />
         </>
       ) : (
         <div className="flex grow items-center justify-center">

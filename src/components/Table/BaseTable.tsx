@@ -122,7 +122,7 @@ export function BaseTable({
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="flex gap-3">
           <span className="flex items-center gap-1 text-body-light">
-            {t('table.show_in')
+            {t('table:show_in')
               .replace(
                 '{{PAGE}}',
                 pageSize < totalAttrs

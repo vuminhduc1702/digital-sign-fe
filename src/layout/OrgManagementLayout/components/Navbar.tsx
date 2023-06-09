@@ -35,7 +35,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.org_manage.title')}
+          {t('cloud:org_manage.org_manage.title')}
         </p>
       </NavLink>
       <NavLink
@@ -51,7 +51,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.group_manage.title')}
+          {t('cloud:org_manage.group_manage.title')}
         </p>
       </NavLink>
       <NavLink
@@ -67,7 +67,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.user_manage.title')}
+          {t('cloud:org_manage.user_manage.title')}
         </p>
       </NavLink>
       <NavLink
@@ -83,7 +83,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.device_manage.title')}
+          {t('cloud:org_manage.device_manage.title')}
         </p>
       </NavLink>
       <NavLink
@@ -99,7 +99,7 @@ function OrgManageNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('cloud.org_manage.event_manage')}
+          {t('cloud:org_manage.event_manage')}
         </p>
       </NavLink>
     </div>

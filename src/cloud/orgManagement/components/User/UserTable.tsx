@@ -7,8 +7,7 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
-import { useCopyId } from '~/utils/misc'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { UpdateUser } from './UpdateUser'
 import { status } from '../Attributes'
 import { useDeleteUser } from '../../api/userAPI'
@@ -59,7 +58,7 @@ function UserTableContextMenu({
               }
               onClick={open}
             >
-              {t('cloud.org_manage.user_manage.table.edit')}
+              {t('cloud:org_manage.user_manage.table.edit')}
             </MenuItem>
             <MenuItem
               icon={
@@ -71,12 +70,12 @@ function UserTableContextMenu({
               }
               onClick={() => handleCopyId(user_id)}
             >
-              {t('table.copy_id')}
+              {t('table:copy_id')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud.org_manage.user_manage.table.delete_user_full')}
+              title={t('cloud:org_manage.user_manage.table.delete_user_full')}
               body={
                 t(
                   'cloud.org_manage.user_manage.table.delete_user_confirm',
@@ -96,7 +95,7 @@ function UserTableContextMenu({
                     />
                   }
                 >
-                  {t('cloud.org_manage.user_manage.table.delete_user')}
+                  {t('cloud:org_manage.user_manage.table.delete_user')}
                 </Button>
               }
               confirmButton={
@@ -141,33 +140,33 @@ export function UserTable({ data, ...props }: { data: UserInfo[] }) {
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
         header: () => (
-          <span>{t('cloud.org_manage.user_manage.table.name')}</span>
+          <span>{t('cloud:org_manage.user_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('email', {
         header: () => (
-          <span>{t('cloud.org_manage.user_manage.table.email')}</span>
+          <span>{t('cloud:org_manage.user_manage.table.email')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('role_name', {
         header: () => (
-          <span>{t('cloud.org_manage.user_manage.table.role_name')}</span>
+          <span>{t('cloud:org_manage.user_manage.table.role_name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('activate', {
         header: () => (
-          <span>{t('cloud.org_manage.user_manage.table.activate')}</span>
+          <span>{t('cloud:org_manage.user_manage.table.activate')}</span>
         ),
         cell: info => status[info.getValue()],
         footer: info => info.column.id,
@@ -193,7 +192,7 @@ export function UserTable({ data, ...props }: { data: UserInfo[] }) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_user')}
+      {t('table:no_user')}
     </div>
   )
 }

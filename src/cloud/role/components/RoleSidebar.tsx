@@ -8,12 +8,12 @@ import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { useDisclosure } from '~/utils/hooks'
-import { useCopyId } from '~/utils/misc'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { useDeleteRole } from '../api'
 import { ComboBoxSelectRole } from './ComboBoxSelectRole'
-import CreateRole from './CreateRole'
+import { CreateRole } from './CreateRole'
+import { UpdateRole } from './UpdateRole'
 
 import { type Role } from '../types'
 
@@ -50,7 +50,7 @@ export function RoleSidebar() {
             alt="Role list"
             className="aspect-square w-[20px]"
           />
-          <p>{t('cloud.role_manage.sidebar.title')}</p>
+          <p>{t('cloud:role_manage.sidebar.title')}</p>
         </div>
         <CreateRole />
         <ComboBoxSelectRole setFilteredComboboxData={setFilteredComboboxData} />
@@ -103,7 +103,7 @@ export function RoleSidebar() {
                             setSelectedUpdateRole(role)
                           }}
                         >
-                          {t('cloud.role_manage.sidebar.edit')}
+                          {t('cloud:role_manage.sidebar.edit')}
                         </MenuItem>
                         <MenuItem
                           icon={
@@ -115,12 +115,12 @@ export function RoleSidebar() {
                           }
                           onClick={() => handleCopyId(role.id)}
                         >
-                          {t('table.copy_id')}
+                          {t('table:copy_id')}
                         </MenuItem>
                         <ConfirmationDialog
                           isDone={isSuccess}
                           icon="danger"
-                          title={t('cloud.role_manage.sidebar.delete_role')}
+                          title={t('cloud:role_manage.sidebar.delete_role')}
                           body={
                             t(
                               'cloud.role_manage.sidebar.delete_role_confirm',
@@ -141,7 +141,7 @@ export function RoleSidebar() {
                                 />
                               }
                             >
-                              {t('cloud.role_manage.sidebar.delete_role')}
+                              {t('cloud:role_manage.sidebar.delete_role')}
                             </Button>
                           }
                           confirmButton={
@@ -170,16 +170,18 @@ export function RoleSidebar() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center">
-            {t('cloud.role_manage.sidebar.no_role')}
+            {t('cloud:role_manage.sidebar.no_role')}
           </div>
         )}
-        {/* {selectedUpdateRole != null ? (
+        {selectedUpdateRole != null ? (
           <UpdateRole
             close={close}
             isOpen={isOpen}
-            selectedUpdateRole={selectedUpdateRole}
+            roleId={selectedUpdateRole.id}
+            name={selectedUpdateRole.name}
+            policy={selectedUpdateRole.policies}
           />
-        ) : null} */}
+        ) : null}
       </div>
     </>
   )

@@ -56,7 +56,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.org_manage.add_attr.title')}
+      title={t('cloud:org_manage.org_manage.add_attr.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -93,13 +93,13 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         {({ register, formState }) => (
           <>
             <InputField
-              label={t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'}
+              label={t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'}
               error={formState.errors['attribute_key']}
               registration={register('attribute_key')}
             />
             <SelectField
               label={
-                t('cloud.org_manage.org_manage.add_attr.value_type') ??
+                t('cloud:org_manage.org_manage.add_attr.value_type') ??
                 'Value type'
               }
               error={formState.errors['value_t']}
@@ -110,13 +110,13 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               }))}
             />
             <InputField
-              label={t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'}
+              label={t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'}
               error={formState.errors['value']}
               registration={register('value')}
             />
             <SelectField
               label={
-                t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
+                t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
               }
               error={formState.errors['logged']}
               registration={register('logged')}

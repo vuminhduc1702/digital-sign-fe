@@ -56,7 +56,7 @@ export default function CreateTemplate() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.device_template.add_template.title')}
+      title={t('cloud:device_template.add_template.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -102,7 +102,7 @@ export default function CreateTemplate() {
               APPEND
             </button>
             <InputField
-              label={t('cloud.device_template.add_template.name') ?? 'Name'}
+              label={t('cloud:device_template.add_template.name') ?? 'Name'}
               error={formState.errors['name']}
               registration={register('name')}
             />
@@ -110,7 +110,7 @@ export default function CreateTemplate() {
               <section key={field.id}>
                 <InputField
                   label={
-                    t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'
+                    t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
                   }
                   error={formState.errors[`attributes.${index}.attribute_key`]}
                   registration={register(
@@ -119,7 +119,7 @@ export default function CreateTemplate() {
                 />
                 <SelectField
                   label={
-                    t('cloud.org_manage.org_manage.add_attr.value_type') ??
+                    t('cloud:org_manage.org_manage.add_attr.value_type') ??
                     'Value type'
                   }
                   error={formState.errors[`attributes.${index}.value_t`]}
@@ -133,14 +133,14 @@ export default function CreateTemplate() {
                 />
                 <InputField
                   label={
-                    t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
+                    t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
                   }
                   error={formState.errors[`attributes.${index}.value`]}
                   registration={register(`attributes.${index}.value` as const)}
                 />
                 <SelectField
                   label={
-                    t('cloud.org_manage.org_manage.add_attr.logged') ?? 'Logged'
+                    t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
                   }
                   error={formState.errors[`attributes.${index}.logged`]}
                   registration={register(`attributes.${index}.logged` as const)}

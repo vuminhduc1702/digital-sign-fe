@@ -17,7 +17,7 @@ export function RoleManage() {
   const projectId = useProjectIdStore(state => state.projectId)
 
   return (
-    <ContentLayout title={t('sidebar.cloud.role_manage')}>
+    <ContentLayout title={t('sidebar:cloud.role_manage')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
         <div className="flex h-[88.8vh] flex-col gap-2 md:col-span-1">
           <RoleSidebar />
@@ -34,7 +34,7 @@ export function RoleManage() {
             >
               <TitleBar
                 title={
-                  t('cloud.role_manage.add_policy.title') ??
+                  t('cloud:role_manage.add_policy.title') ??
                   'Role policy management'
                 }
               />

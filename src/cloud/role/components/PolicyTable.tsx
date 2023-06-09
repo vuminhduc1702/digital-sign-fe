@@ -24,11 +24,11 @@ export function PolicyTable({ ...props }) {
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('policy_name', {
-        header: () => <span>{t('cloud.role_manage.add_policy.name')}</span>,
+        header: () => <span>{t('cloud:role_manage.add_policy.name')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -40,7 +40,7 @@ export function PolicyTable({ ...props }) {
     <BaseTable data={data.policies} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_policy')}
+      {t('table:no_policy')}
     </div>
   )
 }

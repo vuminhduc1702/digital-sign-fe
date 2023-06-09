@@ -4,20 +4,15 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import enText from '~/assets/locales/en.json'
 import viText from '~/assets/locales/vi.json'
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    lng: 'vi',
-    resources: {
-      vi: {
-        translation: viText,
-      },
-      en: {
-        translation: enText,
-      },
-    },
-    fallbackLng: 'en',
-  })
+export const resources = {
+  enText,
+  viText,
+} as const
+
+i18n.use(initReactI18next).use(LanguageDetector).init({
+  lng: 'viText',
+  resources,
+  fallbackLng: 'enText',
+})
 
 export default i18n

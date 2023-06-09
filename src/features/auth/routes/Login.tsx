@@ -10,7 +10,7 @@ export const Login = () => {
   const navigate = useNavigate()
 
   return (
-    <Layout title={t('user.login')}>
+    <Layout title={t('user:login')}>
       <LoginForm onSuccess={() => navigate(PATHS.HOME)} />
     </Layout>
   )

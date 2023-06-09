@@ -4,12 +4,12 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type Policies } from '../types'
+import { type PoliciesReq } from './createRole'
 
 export type UpdateRoleDTO = {
   data: {
     name: string
-    policies: Policies[]
+    policies: PoliciesReq[]
   }
   roleId: string
 }

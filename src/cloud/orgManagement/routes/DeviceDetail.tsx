@@ -48,7 +48,7 @@ export function DeviceDetail() {
             <div className="flex items-center gap-x-2">
               <DeviceListIcon width={16} height={16} viewBox="0 0 20 16" />
               <p>
-                {t('cloud.org_manage.device_manage.device_detail.attr_list')}
+                {t('cloud:org_manage.device_manage.device_detail.attr_list')}
               </p>
             </div>
           </Tab>
@@ -63,7 +63,7 @@ export function DeviceDetail() {
             <div className="flex items-center gap-x-2">
               <DeviceLogIcon width={16} height={16} viewBox="0 0 16 14" />
               <p>
-                {t('cloud.org_manage.device_manage.device_detail.attr_log')}
+                {t('cloud:org_manage.device_manage.device_detail.attr_log')}
               </p>
             </div>
           </Tab>

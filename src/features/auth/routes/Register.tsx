@@ -10,7 +10,7 @@ export const Register = () => {
   const navigate = useNavigate()
 
   return (
-    <Layout title={t('user.register')}>
+    <Layout title={t('user:register')}>
       <RegisterForm onSuccess={() => navigate(PATHS.HOME)} />
     </Layout>
   )

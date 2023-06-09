@@ -18,7 +18,7 @@ type UseRoleByIdOptions = {
 
 export const useRoleById = ({ roleId, config }: UseRoleByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['roleById', roleId],
+    queryKey: ['roles', roleId],
     queryFn: () => getRoleById({ roleId }),
     enabled: !!roleId,
     ...config,

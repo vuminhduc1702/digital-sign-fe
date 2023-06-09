@@ -51,7 +51,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             />
             <InputField
               type="password"
-              label={t('user.password') ?? 'Password'}
+              label={t('user:password') ?? 'Password'}
               error={formState.errors['password']}
               registration={register('password')}
             />
@@ -68,7 +68,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 type="submit"
                 className="w-full"
               >
-                {t('user.register')}
+                {t('user:register')}
               </Button>
             </div>
           </>
@@ -80,7 +80,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             to={PATHS.LOGIN}
             className="font-medium text-blue-600 hover:text-blue-500"
           >
-            {t('user.login')}
+            {t('user:login')}
           </Link>
         </div>
       </div>

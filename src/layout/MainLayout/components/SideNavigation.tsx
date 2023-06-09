@@ -84,7 +84,7 @@ function SideNavigation() {
           alt="Cloud"
           className="aspect-square w-[20px]"
         />
-        <div>{t('sidebar.overview')}</div>
+        <div>{t('sidebar:overview')}</div>
       </div>
 
       <Accordion.Root type="single" collapsible>
@@ -95,10 +95,10 @@ function SideNavigation() {
               alt="Overview"
               className="aspect-square w-[20px]"
             />
-            <div>{t('sidebar.device.title')}</div>
+            <div>{t('sidebar:device.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar.device.devkit')}</AccordionContent>
-          <AccordionContent>{t('sidebar.device.module')}</AccordionContent>
+          <AccordionContent>{t('sidebar:device.devkit')}</AccordionContent>
+          <AccordionContent>{t('sidebar:device.module')}</AccordionContent>
         </AccordionItem>
 
         <AccordionItem value="cloud">
@@ -108,29 +108,29 @@ function SideNavigation() {
               alt="Overview"
               className="aspect-square w-[20px]"
             />
-            <div>{t('sidebar.cloud.title')}</div>
+            <div>{t('sidebar:cloud.title')}</div>
           </AccordionTrigger>
           <NavLink to={`${PATHS.ORG_MANAGE}/${projectId}`}>
             <AccordionContent>
-              {t('sidebar.cloud.org_management')}
+              {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DEVICE_TEMPLATE}/${projectId}`}>
             <AccordionContent>
-              {t('sidebar.cloud.device_template')}
+              {t('sidebar:cloud.device_template')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.FLOW_ENGINE}/${projectId}`}>
             <AccordionContent>
-              {t('sidebar.cloud.flow_engine')}
+              {t('sidebar:cloud.flow_engine')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DASHBOARD}/${projectId}`}>
-            <AccordionContent>{t('sidebar.cloud.dashboard')}</AccordionContent>
+            <AccordionContent>{t('sidebar:cloud.dashboard')}</AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.ROLE_MANAGE}/${projectId}`}>
             <AccordionContent>
-              {t('sidebar.cloud.role_manage')}
+              {t('sidebar:cloud.role_manage')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>
@@ -142,11 +142,11 @@ function SideNavigation() {
               alt="Application"
               className="aspect-square w-[20px]"
             />
-            <div>{t('sidebar.application.title')}</div>
+            <div>{t('sidebar:application.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar.application.appsdk')}</AccordionContent>
+          <AccordionContent>{t('sidebar:application.appsdk')}</AccordionContent>
           <AccordionContent>
-            {t('sidebar.application.vsmart_debug')}
+            {t('sidebar:application.vsmart_debug')}
           </AccordionContent>
         </AccordionItem>
 
@@ -157,12 +157,12 @@ function SideNavigation() {
               alt="Payment"
               className="aspect-square w-[20px]"
             />
-            <div>{t('sidebar.payment.title')}</div>
+            <div>{t('sidebar:payment.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar.payment.plgc')}</AccordionContent>
-          <AccordionContent>{t('sidebar.payment.plkh')}</AccordionContent>
-          <AccordionContent>{t('sidebar.payment.pldk')}</AccordionContent>
-          <AccordionContent>{t('sidebar.payment.plhd')}</AccordionContent>
+          <AccordionContent>{t('sidebar:payment.plgc')}</AccordionContent>
+          <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
+          <AccordionContent>{t('sidebar:payment.pldk')}</AccordionContent>
+          <AccordionContent>{t('sidebar:payment.plhd')}</AccordionContent>
           <AccordionContent>
             <AccordionItem value="payment">
               <AccordionTrigger>
@@ -171,13 +171,13 @@ function SideNavigation() {
                   alt="Application"
                   className="aspect-square w-[20px]"
                 />
-                <div>{t('sidebar.payment.client.title')}</div>
+                <div>{t('sidebar:payment.client.title')}</div>
               </AccordionTrigger>
               <AccordionContent>
-                {t('sidebar.payment.client.dshd')}
+                {t('sidebar:payment.client.dshd')}
               </AccordionContent>
               <AccordionContent>
-                {t('sidebar.payment.client.cuoc')}
+                {t('sidebar:payment.client.cuoc')}
               </AccordionContent>
             </AccordionItem>
           </AccordionContent>
@@ -190,13 +190,13 @@ function SideNavigation() {
               alt="Intergration"
               className="aspect-square w-[20px]"
             />
-            <div>{t('sidebar.intergration.title')}</div>
+            <div>{t('sidebar:intergration.title')}</div>
           </AccordionTrigger>
           <AccordionContent>
-            {t('sidebar.intergration.tracking')}
+            {t('sidebar:intergration.tracking')}
           </AccordionContent>
           <AccordionContent>
-            {t('sidebar.intergration.smarthome')}
+            {t('sidebar:intergration.smarthome')}
           </AccordionContent>
         </AccordionItem>
       </Accordion.Root>

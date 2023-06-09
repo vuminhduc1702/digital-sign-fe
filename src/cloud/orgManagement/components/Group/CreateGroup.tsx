@@ -55,7 +55,7 @@ export function CreateGroup() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud.org_manage.group_manage.add_group.title')}
+      title={t('cloud:org_manage.group_manage.add_group.title')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -87,14 +87,14 @@ export function CreateGroup() {
           <>
             <InputField
               label={
-                t('cloud.org_manage.group_manage.add_group.name') ?? 'Name'
+                t('cloud:org_manage.group_manage.add_group.name') ?? 'Name'
               }
               error={formState.errors['name']}
               registration={register('name')}
             />
             <SelectField
               label={
-                t('cloud.org_manage.group_manage.add_group.entity_type') ??
+                t('cloud:org_manage.group_manage.add_group.entity_type') ??
                 'Entity type'
               }
               error={formState.errors['entity_type']}
@@ -106,7 +106,7 @@ export function CreateGroup() {
             />
             <ComboBoxSelectOrg
               label={
-                t('cloud.org_manage.group_manage.add_group.parent') ??
+                t('cloud:org_manage.group_manage.add_group.parent') ??
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}

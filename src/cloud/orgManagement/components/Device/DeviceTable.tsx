@@ -8,10 +8,10 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { UpdateDevice } from './UpdateDevice'
-import { getVNDateFormat, useCopyId } from '~/utils/misc'
+import { getVNDateFormat } from '~/utils/misc'
 import { useDeleteDevice } from '../../api/deviceAPI'
 import { useProjectIdStore } from '~/stores/project'
 
@@ -67,7 +67,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
                 )
               }
             >
-              {t('table.view_detail')}
+              {t('table:view_detail')}
             </MenuItem>
             <MenuItem
               icon={
@@ -75,7 +75,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               }
               onClick={open}
             >
-              {t('cloud.org_manage.device_manage.add_device.edit')}
+              {t('cloud:org_manage.device_manage.add_device.edit')}
             </MenuItem>
             <MenuItem
               icon={
@@ -87,7 +87,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               }
               onClick={() => handleCopyId(id)}
             >
-              {t('table.copy_id')}
+              {t('table:copy_id')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
@@ -114,7 +114,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
                     />
                   }
                 >
-                  {t('cloud.org_manage.device_manage.table.delete_device')}
+                  {t('cloud:org_manage.device_manage.table.delete_device')}
                 </Button>
               }
               confirmButton={
@@ -154,26 +154,26 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
           const orderId = parseInt(info.row.id) + 1
           return orderId
         },
-        header: () => <span>{t('table.no')}</span>,
+        header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.name')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('group_name', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.group')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.group')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('template_name', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.device_type')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.device_type')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
@@ -181,14 +181,14 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
       columnHelper.display({
         id: 'orgName',
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.org_name')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
         ),
-        cell: info => info.row.original.org_name || t('table.no_in_org'),
+        cell: info => info.row.original.org_name || t('table:no_in_org'),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {
         header: () => (
-          <span>{t('cloud.org_manage.device_manage.table.created_at')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.created_at')}</span>
         ),
         cell: info =>
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }), // convert seconds to milliseconds
@@ -211,7 +211,7 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
     <BaseTable data={dataSorted} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table.no_device')}
+      {t('table:no_device')}
     </div>
   )
 }

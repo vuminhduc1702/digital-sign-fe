@@ -56,7 +56,7 @@ export function UpdateTemplate({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud.org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:org_manage.org_manage.add_attr.edit')}
       renderFooter={() => (
         <>
           <Button
@@ -135,7 +135,7 @@ export function UpdateTemplate({
                 APPEND
               </button>
               <InputField
-                label={t('cloud.device_template.add_template.name') ?? 'Name'}
+                label={t('cloud:device_template.add_template.name') ?? 'Name'}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
@@ -143,7 +143,7 @@ export function UpdateTemplate({
                 <section className="space-y-2" key={field.id}>
                   <InputField
                     label={
-                      t('cloud.org_manage.org_manage.add_attr.name') ?? 'Name'
+                      t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
                     }
                     error={
                       formState.errors[`attributes.${index}.attribute_key`]
@@ -155,7 +155,7 @@ export function UpdateTemplate({
                   />
                   <SelectField
                     label={
-                      t('cloud.org_manage.org_manage.add_attr.value_type') ??
+                      t('cloud:org_manage.org_manage.add_attr.value_type') ??
                       'Value type'
                     }
                     error={formState.errors[`attributes.${index}.value_t`]}
@@ -169,7 +169,7 @@ export function UpdateTemplate({
                   />
                   <InputField
                     label={
-                      t('cloud.org_manage.org_manage.add_attr.value') ?? 'Value'
+                      t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
                     }
                     error={formState.errors[`attributes.${index}.value`]}
                     registration={register(
@@ -178,7 +178,7 @@ export function UpdateTemplate({
                   />
                   <SelectField
                     label={
-                      t('cloud.org_manage.org_manage.add_attr.logged') ??
+                      t('cloud:org_manage.org_manage.add_attr.logged') ??
                       'Logged'
                     }
                     error={formState.errors[`attributes.${index}.logged`]}
