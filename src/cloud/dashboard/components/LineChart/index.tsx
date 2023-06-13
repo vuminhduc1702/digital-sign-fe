@@ -1,17 +1,31 @@
 import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 
-export function LineChart({ data }: { data: Datum[] }) {
+import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
+
+import { type ValueWS } from '../../types'
+
+export function LineChart({ data }: { data: ValueWS[] }) {
+  const liveValuesTransformed: Datum[] = data
+    ?.map(({ ts, value }: ValueWS) => ({
+      x: getVNDateFormat({
+        date: ts,
+        config: { ...defaultDateConfig, second: '2-digit' },
+      }),
+      y: parseFloat(value),
+    }))
+    // .reverse()
+    .slice(-10)
+
   const liveValuesTransformedFeedToChart: Serie[] = [
     {
       id: 'test',
       color: 'hsl(106, 70%, 50%)',
-      data: data,
+      data: liveValuesTransformed,
     },
   ]
 
   return (
     <ResponsiveLine
-      height={400}
       data={liveValuesTransformedFeedToChart}
       margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}

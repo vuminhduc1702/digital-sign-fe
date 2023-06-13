@@ -128,11 +128,11 @@ export function TemplateSidebar() {
                           isDone={isSuccess}
                           icon="danger"
                           title={t(
-                            'cloud.device_template.sidebar.delete_template_full',
+                            'cloud:device_template.sidebar.delete_template_full',
                           )}
                           body={
                             t(
-                              'cloud.device_template.sidebar.delete_template_confirm',
+                              'cloud:device_template.sidebar.delete_template_confirm',
                             ).replace('{{TEMPLATENAME}}', template.name) ??
                             'Confirm delete?'
                           }
@@ -151,7 +151,7 @@ export function TemplateSidebar() {
                               }
                             >
                               {t(
-                                'cloud.device_template.sidebar.delete_template',
+                                'cloud:device_template.sidebar.delete_template',
                               )}
                             </Button>
                           }

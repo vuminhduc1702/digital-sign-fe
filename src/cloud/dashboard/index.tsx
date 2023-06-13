@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { type Datum } from '@nivo/line'
 import { useTranslation } from 'react-i18next'
 import { ReadyState } from 'react-use-websocket'
 
@@ -8,12 +7,9 @@ import { Calendar } from '~/components/Calendar'
 import SelectMenu, { type ListObj } from '~/components/SelectMenu/SelectMenu'
 import { Spinner } from '~/components/Spinner'
 import { useWS } from '~/utils/hooks'
-import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
-import { LineChart, GaugeChart, Map, MyResponsiveBar } from './components'
+import { LineChart, GaugeChart, Map, BarChart } from './components'
 
-type ValueWS = { ts: number; value: string }
-type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
-type WSAgg = { label: string; value: WSAggValue }
+import { type ValueWS, type WSAgg } from './types'
 
 const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -50,7 +46,10 @@ export function Dashboard() {
           entityFilter: {
             type: 'entityList',
             entityType: 'DEVICE',
-            entityIds: ['7cd86207-9cb7-46f4-b4e4-e3632fae3f1c'],
+            entityIds: [
+              '4264d07a-8543-4e87-a1c8-8285d41511b5',
+              '576f5bd6-8319-4dad-9c10-146b7c7f87a9',
+            ],
           },
           pageLink: {
             pageSize: 1,
@@ -76,7 +75,7 @@ export function Dashboard() {
             },
             {
               type: 'TIME_SERIES',
-              key: 'test2',
+              key: 'test1',
             },
           ],
         },
@@ -96,7 +95,7 @@ export function Dashboard() {
             },
             {
               type: 'TIME_SERIES',
-              key: 'test2',
+              key: 'test1',
             },
           ],
         },
@@ -109,7 +108,7 @@ export function Dashboard() {
     entityDataCmds: [
       {
         tsCmd: {
-          keys: ['test', 'test2'],
+          keys: ['test', 'test1'],
           startTs: parseDate,
           interval: interval.value,
           limit: 10,
@@ -124,9 +123,6 @@ export function Dashboard() {
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS()
 
-  const lastestValue: string =
-    lastJsonMessage?.data?.[0]?.latest?.TIME_SERIES?.test?.value || []
-
   const liveValues: ValueWS[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
   const prevValuesRef = useRef<ValueWS[]>([])
@@ -137,25 +133,6 @@ export function Dashboard() {
   if (prevValuesRef.current && agg.value === 'NONE') {
     newValuesRef.current = [...prevValuesRef.current, ...liveValues]
   } else newValuesRef.current = liveValues
-  const liveValuesTransformed: Datum[] = newValuesRef.current
-    ?.map(({ ts, value }: ValueWS) => ({
-      x: getVNDateFormat({
-        date: ts,
-        config: { ...defaultDateConfig, second: '2-digit' },
-      }),
-      y: parseFloat(value),
-    }))
-    // .reverse()
-    .slice(-10)
-
-  // console.log(
-  //   'wtf: ',
-  //   newValuesRef.current,
-  //   liveValuesTransformed,
-  //   prevValuesRef.current,
-  //   liveValues,
-  // )
-  // console.log('lastJsonMessage', lastJsonMessage)
 
   const handleInit = useCallback(() => sendMessage(initMessage), [])
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
@@ -184,10 +161,9 @@ export function Dashboard() {
         </Button>
         <div className="flex flex-col">
           <span>The WebSocket is currently: {connectionStatus}</span>
-          <span>Lastest data: {lastestValue || 0}</span>
         </div>
       </div>
-      {liveValuesTransformed != null ? (
+      {newValuesRef.current != null ? (
         <>
           <div className="space-y-3">
             <Calendar
@@ -223,23 +199,10 @@ export function Dashboard() {
               setSelected={setAgg}
             />
           </div>
-          {/* <LineChart data={liveValuesTransformed} />
-          <GaugeChart data={parseFloat(lastestValue)} />
-          <Map position={[21.068174, 105.81182]} /> */}
-          <MyResponsiveBar
-            data={[
-              {
-                country: 'AD',
-                'hot dog': 40,
-                'hot dogColor': 'hsl(319, 70%, 50%)',
-              },
-              {
-                country: 'AE',
-                burger: 167,
-                burgerColor: 'hsl(164, 70%, 50%)',
-              },
-            ]}
-          />
+          {/* <LineChart data={newValuesRef.current} /> */}
+          {/* <GaugeChart data={parseFloat(lastestValue)} /> */}
+          {/* <Map position={[21.068174, 105.81182]} /> */}
+          <BarChart data={lastJsonMessage?.data || []} />
         </>
       ) : (
         <div className="flex grow items-center justify-center">

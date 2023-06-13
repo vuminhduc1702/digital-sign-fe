@@ -123,7 +123,7 @@ export function RoleSidebar() {
                           title={t('cloud:role_manage.sidebar.delete_role')}
                           body={
                             t(
-                              'cloud.role_manage.sidebar.delete_role_confirm',
+                              'cloud:role_manage.sidebar.delete_role_confirm',
                             ).replace('{{ROLENAME}}', role.name) ??
                             'Confirm delete?'
                           }

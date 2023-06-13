@@ -93,11 +93,11 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               isDone={isSuccess}
               icon="danger"
               title={t(
-                'cloud.org_manage.device_manage.table.delete_device_full',
+                'cloud:org_manage.device_manage.table.delete_device_full',
               )}
               body={
                 t(
-                  'cloud.org_manage.device_manage.table.delete_device_confirm',
+                  'cloud:org_manage.device_manage.table.delete_device_confirm',
                 ).replace('{{DEVICENAME}}', name) ?? 'Confirm delete?'
               }
               triggerButton={

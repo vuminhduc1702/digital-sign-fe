@@ -31,13 +31,13 @@ export function ComboBoxSelectTemplate({
       'created_time',
     ],
   )
+  console.log('templateFlattenData', templateFlattenData)
 
-  const filteredData = filteredComboboxData(
+  const filteredData: Template[] = filteredComboboxData(
     query,
     templateFlattenData,
     extractedPropertyKeys,
-  ) as Template[]
-
+  )
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
   }, [query, data])

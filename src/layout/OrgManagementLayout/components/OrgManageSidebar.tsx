@@ -206,7 +206,7 @@ function OrgManageSidebar() {
                         title={t('cloud:org_manage.org_map.delete')}
                         body={
                           t(
-                            'cloud.org_manage.org_map.delete_org_confirm',
+                            'cloud:org_manage.org_map.delete_org_confirm',
                           ).replace('{{ORGNAME}}', org.name) ??
                           'Confirm delete?'
                         }

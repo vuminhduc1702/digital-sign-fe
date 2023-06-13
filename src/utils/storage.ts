@@ -3,10 +3,11 @@ const storagePrefix = 'iot_platform_'
 export type UserStorage = {
   token: string
   system_role: string
+  timestamp: Date
 }
 
 const storage = {
-  getToken: () => {
+  getToken: (): UserStorage => {
     return JSON.parse(
       window.localStorage.getItem(`${storagePrefix}token`) as string,
     )

@@ -78,7 +78,7 @@ function UserTableContextMenu({
               title={t('cloud:org_manage.user_manage.table.delete_user_full')}
               body={
                 t(
-                  'cloud.org_manage.user_manage.table.delete_user_confirm',
+                  'cloud:org_manage.user_manage.table.delete_user_confirm',
                 ).replace('{{USERNAME}}', name) ?? 'Confirm delete?'
               }
               triggerButton={

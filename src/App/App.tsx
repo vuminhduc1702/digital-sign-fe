@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import '~/style/main.css'
 import '~/i18n'
 
+import storage from '~/utils/storage'
 import { lazyImport } from '~/utils/lazyImport'
 import { queryClient } from '~/lib/react-query'
 import { Spinner } from '~/components/Spinner'
@@ -31,6 +32,17 @@ function App() {
   useEffect(() => {
     // @ts-ignore
     window.toggleDevtools = () => setShowDevtools(old => !old)
+  }, [])
+
+  useEffect(() => {
+    const user = storage.getToken()
+    if (
+      user &&
+      new Date().getTime() - new Date(user?.timestamp).getTime() >
+        24 * 60 * 60 * 1000
+    ) {
+      storage.clearToken()
+    }
   }, [])
 
   return (

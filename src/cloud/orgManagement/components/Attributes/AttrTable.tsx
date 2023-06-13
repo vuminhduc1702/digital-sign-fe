@@ -75,7 +75,7 @@ function AttrTableContextMenu({
               title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
               body={
                 t(
-                  'cloud.org_manage.org_manage.table.delete_attr_confirm',
+                  'cloud:org_manage.org_manage.table.delete_attr_confirm',
                 ).replace('{{ATTRNAME}}', attribute_key) ?? 'Confirm delete?'
               }
               triggerButton={

@@ -90,7 +90,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
               title={t('cloud:org_manage.group_manage.table.delete_group')}
               body={
                 t(
-                  'cloud.org_manage.group_manage.table.delete_group_confirm',
+                  'cloud:org_manage.group_manage.table.delete_group_confirm',
                 ).replace('{{GROUPNAME}}', name) ?? 'Confirm delete?'
               }
               triggerButton={
