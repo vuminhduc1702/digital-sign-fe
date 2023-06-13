@@ -1,8 +1,5 @@
-import { useTranslation } from 'react-i18next'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-
-import { useNotificationStore } from '~/stores/notifications'
 
 type DateFormat = {
   date: number | Date
@@ -32,45 +29,37 @@ export type PropertyValuePair<K extends string> = {
   [key in K]: unknown
 }
 
-type flattenDataStringReturn<K extends string> = {
-  [key in K]: string
-}
-
-export function flattenData<
-  T extends Partial<PropertyValuePair<K>>,
-  K extends Extract<keyof T, string>,
->(
+export function flattenData<T extends Record<K, any>, K extends string>(
   arr: T[],
   propertyKeys: K[],
   subArr?: keyof T,
-): { acc: flattenDataStringReturn<K>[]; extractedPropertyKeys: K[] } {
+): { acc: Array<Record<K, any>>; extractedPropertyKeys: K[] } {
   const extractedPropertyKeys = propertyKeys
 
-  const result = arr?.reduce(
-    (acc: flattenDataStringReturn<string>[], obj: T) => {
-      const extractedObj = propertyKeys.reduce(
-        (result, key) => ({ ...result, [key]: obj[key as keyof T] }),
-        {},
-      )
-      const stringObj = Object.entries(extractedObj).reduce(
-        (newObj, [key, value]) => {
-          if (typeof value === 'object' && value != null) {
-            return { ...newObj, [key]: JSON.stringify(value) }
-          }
-          return { ...newObj, [key]: String(value) }
-        },
-        {},
-      )
-      acc.push(stringObj)
+  const result = arr?.reduce((acc: Array<Record<K, any>>, obj: T) => {
+    const extractedObj = propertyKeys.reduce(
+      (result, key) => ({ ...result, [key]: obj[key] }),
+      {},
+    )
 
-      if (subArr && obj[subArr]) {
-        acc.push(...flattenData(obj[subArr] as T[], propertyKeys, subArr).acc)
-      }
+    const stringObj = Object.entries(extractedObj).reduce(
+      (newObj, [key, value]) => {
+        if (typeof value === 'object' && value != null) {
+          return { ...newObj, [key]: JSON.stringify(value) }
+        }
+        return { ...newObj, [key]: String(value) }
+      },
+      {},
+    ) as Record<K, any>
 
-      return acc
-    },
-    [],
-  )
+    acc.push(stringObj)
+
+    if (subArr && obj[subArr]) {
+      acc.push(...flattenData(obj[subArr] as T[], propertyKeys, subArr).acc)
+    }
+
+    return acc
+  }, [])
 
   return { acc: result, extractedPropertyKeys }
 }

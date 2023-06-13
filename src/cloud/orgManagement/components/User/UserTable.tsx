@@ -132,7 +132,7 @@ export function UserTable({ data, ...props }: { data: UserInfo[] }) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<UserInfo>()
-  const columns = useMemo<ColumnDef<UserInfo, string>[]>(
+  const columns = useMemo<ColumnDef<UserInfo, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',

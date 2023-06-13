@@ -137,7 +137,7 @@ export function GroupTable({ data, ...props }: { data: Group[] }) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<Group>()
-  const columns = useMemo<ColumnDef<Group, string>[]>(
+  const columns = useMemo<ColumnDef<Group, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',

@@ -16,7 +16,7 @@ export function PolicyTable({ ...props }) {
   const { data } = useRoleById({ roleId })
 
   const columnHelper = createColumnHelper<Policies>()
-  const columns = useMemo<ColumnDef<Policies, string>[]>(
+  const columns = useMemo<ColumnDef<Policies, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',

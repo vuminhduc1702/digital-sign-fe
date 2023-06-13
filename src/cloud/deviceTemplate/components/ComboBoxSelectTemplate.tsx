@@ -31,9 +31,8 @@ export function ComboBoxSelectTemplate({
       'created_time',
     ],
   )
-  console.log('templateFlattenData', templateFlattenData)
 
-  const filteredData: Template[] = filteredComboboxData(
+  const filteredData = filteredComboboxData(
     query,
     templateFlattenData,
     extractedPropertyKeys,

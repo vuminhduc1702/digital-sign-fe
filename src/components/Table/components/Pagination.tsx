@@ -2,11 +2,10 @@ import { useMemo } from 'react'
 import clsx from 'clsx'
 
 import { type Table } from '@tanstack/react-table'
-import { type PropertyValuePair } from '~/utils/misc'
 
 const DOTS = '...'
 
-const Pagination = ({
+const Pagination = <T extends Record<string, any>>({
   table,
   totalCount,
   siblingCount = 1,
@@ -14,7 +13,7 @@ const Pagination = ({
   pageSize,
   className,
 }: {
-  table: Table<PropertyValuePair<string>>
+  table: Table<T>
   totalCount: number
   siblingCount?: number
   currentPage: number

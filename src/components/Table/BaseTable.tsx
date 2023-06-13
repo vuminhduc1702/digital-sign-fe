@@ -12,10 +12,9 @@ import Pagination from './components/Pagination'
 import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 
-import { type PropertyValuePair } from '~/utils/misc'
 import { Spinner } from '../Spinner'
 
-export function BaseTable({
+export function BaseTable<T extends Record<string, any>>({
   data,
   columns,
   offset = 0,
@@ -23,8 +22,8 @@ export function BaseTable({
   total,
   isPreviousData,
 }: {
-  data: PropertyValuePair<string>[]
-  columns: ColumnDef<PropertyValuePair<string>, string>[]
+  data: T[]
+  columns: ColumnDef<T, string>[]
   offset?: number
   setOffset?: React.Dispatch<React.SetStateAction<number>>
   total?: number

@@ -146,7 +146,7 @@ export function DeviceTable({ data, ...props }: { data: Device[] }) {
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
   const columnHelper = createColumnHelper<Device>()
-  const columns = useMemo<ColumnDef<Device, string>[]>(
+  const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',

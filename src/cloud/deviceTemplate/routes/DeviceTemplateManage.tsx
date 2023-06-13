@@ -14,12 +14,12 @@ import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
 import { useProjectIdStore } from '~/stores/project'
 
-import { type Template } from '../types'
+import { type Attribute } from '~/types'
 
 export function DeviceTemplateManage() {
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Template[]>(
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
     [],
   )
 

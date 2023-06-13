@@ -6,12 +6,11 @@ import { useTranslation } from 'react-i18next'
 import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
 
 import { type IconProps } from '../Button'
-import { type PropertyValuePair } from '~/utils/misc'
 
-export function filteredComboboxData(
+export function filteredComboboxData<T, K extends keyof T>(
   query: string,
-  flattenData: PropertyValuePair<string>[],
-  extractedPropertyKeys: string[],
+  flattenData: T[],
+  extractedPropertyKeys: K[],
 ) {
   const filteredData =
     query === ''
@@ -19,7 +18,7 @@ export function filteredComboboxData(
       : flattenData?.filter(data => {
           const searchValue = query.toLowerCase().replace(/\s+/g, '')
           return extractedPropertyKeys.some(key =>
-            data[key]
+            (data[key] as unknown as string)
               .toString()
               .toLowerCase()
               .replace(/\s+/g, '')
@@ -30,19 +29,17 @@ export function filteredComboboxData(
   return filteredData
 }
 
-type ComboBoxBaseProps = {
-  data: PropertyValuePair<string>[]
+type ComboBoxBaseProps<T extends Record<string, any>> = {
+  data: T[]
   extractedPropertyKeys: string[]
   query: string
   setQuery: React.Dispatch<React.SetStateAction<string>>
-  setFilteredComboboxData: React.Dispatch<
-    React.SetStateAction<PropertyValuePair<string>[]>
-  >
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<T[]>>
   startIcon?: IconProps['startIcon']
   endIcon?: IconProps['endIcon']
 } & FieldWrapperPassThroughProps
 
-export function ComboBoxBase({
+export function ComboBoxBase<T extends Record<string, any>>({
   data,
   extractedPropertyKeys,
   query,
@@ -52,7 +49,7 @@ export function ComboBoxBase({
   endIcon,
   label,
   error,
-}: ComboBoxBaseProps) {
+}: ComboBoxBaseProps<T>) {
   const { t } = useTranslation()
 
   const [selected, setSelected] = useState({})
@@ -61,12 +58,12 @@ export function ComboBoxBase({
     <FieldWrapper label={label} error={error}>
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative">
-          <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-body-sm">
+          <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
             <Combobox.Input
               className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm ${
                 startIcon ? 'pl-8' : ''
               }`}
-              displayValue={(data: PropertyValuePair<string>) =>
+              displayValue={(data: T) =>
                 query !== '' ? data[extractedPropertyKeys[1]] : ''
               }
               onChange={event => setQuery(event.target.value)}

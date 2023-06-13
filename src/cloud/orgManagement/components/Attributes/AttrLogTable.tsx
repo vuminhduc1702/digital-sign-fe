@@ -23,7 +23,7 @@ export function AttrLogTable({
 
   const dataSorted = data?.sort((a, b) => b.ts - a.ts)
 
-  const columns = useMemo<ColumnDef<DeviceAttrLog, string>[]>(
+  const columns = useMemo<ColumnDef<DeviceAttrLog, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',

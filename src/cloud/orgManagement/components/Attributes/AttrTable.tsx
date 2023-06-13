@@ -136,7 +136,7 @@ export function AttrTable({
   entityType,
   ...props
 }: {
-  data: Attribute[] | Template[]
+  data: Attribute[]
   entityId: string
   entityType: EntityType
 }) {
@@ -147,7 +147,7 @@ export function AttrTable({
   const dataSorted =
     data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
 
-  const columns = useMemo<ColumnDef<Attribute, string>[]>(
+  const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -170,7 +170,7 @@ export function AttrTable({
           <span>{t('cloud:org_manage.org_manage.table.value_type')}</span>
         ),
         cell: info => {
-          const valueType = info.getValue() as Attribute['value_type']
+          const valueType: Attribute['value_type'] = info.getValue()
           switch (valueType) {
             case 'STR':
               return 'String'
