@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -20,6 +21,8 @@ type UseUpdateDeviceOptions = {
 }
 
 export const useUpdateDevice = ({ config }: UseUpdateDeviceOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -29,7 +32,7 @@ export const useUpdateDevice = ({ config }: UseUpdateDeviceOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Sửa thiết bị thành công',
+        title: t('cloud:org_manage.device_manage.add_device.success_update'),
       })
     },
     ...config,

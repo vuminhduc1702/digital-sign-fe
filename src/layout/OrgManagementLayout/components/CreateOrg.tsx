@@ -22,16 +22,15 @@ export const orgSchema = z.object({
 export function CreateOrg() {
   const { t } = useTranslation()
 
+  const projectId = useProjectIdStore(state => state.projectId)
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
-  const projectId = useProjectIdStore(state => state.projectId)
   const { mutate, isLoading, isSuccess } = useCreateOrg()
-
-  // TODO: Add remove org select to default undefined
 
   return (
     <FormDrawer
@@ -85,6 +84,7 @@ export function CreateOrg() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
+              hasDefaultComboboxData
             />
             <TextAreaField
               label={

@@ -11,17 +11,11 @@ type EntityId = {
 
 type LatestData = {
   TIME_SERIES: {
-    [key: string]: {
-      ts: number
-      value: string
-    }
-  }
+    [key: string]: ValueWS
+  } | null
   ENTITY_FIELD: {
-    name: {
-      ts: number
-      value: string
-    }
-  }
+    name: ValueWS
+  } | null
 }
 
 type AggLatestData = {
@@ -29,10 +23,14 @@ type AggLatestData = {
   ENTITY_FIELD: null
 }
 
+type TimeSeries = {
+  [key: string]: ValueWS[]
+}
+
 type DataItem = {
   entityId: EntityId
   latest: LatestData
-  timeseries: null
+  timeseries: TimeSeries | null
   aggLatest: AggLatestData
 }
 

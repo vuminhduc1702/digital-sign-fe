@@ -5,25 +5,25 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-export type UpdateUserDTO = {
+import { type EventType } from '../../types'
+
+export type CreateEventDTO = {
   data: {
+    project_id: string
     name: string
-    email: string
-    password: string
     org_id: string
   }
-  userId: string
 }
 
-export const updateUser = ({ data, userId }: UpdateUserDTO) => {
-  return axios.put(`/api/users/${userId}`, data)
+export const createEvent = ({ data }: CreateEventDTO): Promise<EventType> => {
+  return axios.post(`/api/events`, data)
 }
 
-type UseUpdateUserOptions = {
-  config?: MutationConfig<typeof updateUser>
+type UseCreateEventOptions = {
+  config?: MutationConfig<typeof createEvent>
 }
 
-export const useUpdateUser = ({ config }: UseUpdateUserOptions = {}) => {
+export const useCreateEvent = ({ config }: UseCreateEventOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -31,14 +31,14 @@ export const useUpdateUser = ({ config }: UseUpdateUserOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['users'],
+        queryKey: ['events'],
       })
       addNotification({
         type: 'success',
-        title: t('cloud:org_manage.user_manage.add_user.success_update'),
+        title: t('cloud:org_manage.event_manage.add_event.success_create'),
       })
     },
     ...config,
-    mutationFn: updateUser,
+    mutationFn: createEvent,
   })
 }

@@ -24,6 +24,7 @@ export function CreateDevice() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
+  // TODO: If 1 org only can not set to no org
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 

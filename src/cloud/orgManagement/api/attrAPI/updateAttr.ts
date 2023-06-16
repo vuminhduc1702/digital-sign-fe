@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -23,6 +24,8 @@ export type UseUpdateAttrOptions = {
 }
 
 export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -31,7 +34,7 @@ export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
       await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
-        title: 'Sửa thuộc tính thành công',
+        title: t('cloud:org_manage.org_manage.add_attr.success_update'),
       })
     },
     ...config,

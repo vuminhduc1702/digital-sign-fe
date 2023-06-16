@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -27,6 +28,8 @@ type UseCreateUserOptions = {
 }
 
 export const useCreateUser = ({ config }: UseCreateUserOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -36,7 +39,7 @@ export const useCreateUser = ({ config }: UseCreateUserOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo user thành công',
+        title: t('cloud:org_manage.user_manage.add_user.success_create'),
       })
     },
     ...config,

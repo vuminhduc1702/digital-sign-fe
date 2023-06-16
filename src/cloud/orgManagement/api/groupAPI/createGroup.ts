@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -29,6 +30,8 @@ type UseCreateGroupOptions = {
 }
 
 export const useCreateGroup = ({ config }: UseCreateGroupOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -38,7 +41,7 @@ export const useCreateGroup = ({ config }: UseCreateGroupOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo nhóm thành công',
+        title: t('cloud:org_manage.group_manage.add_group.success_create'),
       })
     },
     ...config,

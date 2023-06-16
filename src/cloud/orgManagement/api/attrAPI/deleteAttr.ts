@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -23,14 +24,17 @@ type UseDeleteAttrOptions = {
 }
 
 export const useDeleteAttr = ({ config }: UseDeleteAttrOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
+
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attr'])
       await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
-        title: 'Xoá thuộc tính thành công',
+        title: t('cloud:org_manage.org_manage.add_attr.success_delete'),
       })
     },
     ...config,

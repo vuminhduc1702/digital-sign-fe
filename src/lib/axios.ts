@@ -38,6 +38,7 @@ axios.interceptors.response.use(
         message = 'Dữ liệu truyền lên không hợp lệ'
         break
       case 401:
+        storage.clearToken()
         return (window.location.href = PATHS.LOGIN)
       case 403:
         message = 'Bạn không có quyền truy cập vào trang này'

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -13,13 +14,16 @@ type UseDeleteGroupOptions = {
 }
 
 export const useDeleteGroup = ({ config }: UseDeleteGroupOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
+
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['groups'])
       addNotification({
         type: 'success',
-        title: 'Xóa nhóm thành công',
+        title: t('cloud:org_manage.group_manage.add_group.success_delete'),
       })
     },
     ...config,

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -13,13 +14,16 @@ type UseDeleteDeviceOptions = {
 }
 
 export const useDeleteDevice = ({ config }: UseDeleteDeviceOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
+
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['devices'])
       addNotification({
         type: 'success',
-        title: 'Xóa thiết bị thành công',
+        title: t('cloud:org_manage.device_manage.add_device.success_delete'),
       })
     },
     ...config,

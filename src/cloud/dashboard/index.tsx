@@ -9,7 +9,7 @@ import { Spinner } from '~/components/Spinner'
 import { useWS } from '~/utils/hooks'
 import { LineChart, GaugeChart, Map, BarChart } from './components'
 
-import { type ValueWS, type WSAgg } from './types'
+import { type WS, type ValueWS, type WSAgg } from './types'
 
 const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -34,7 +34,10 @@ export function Dashboard() {
   const { t } = useTranslation()
 
   const [date, setDate] = useState<Date | undefined>(new Date())
-  const parseDate = useMemo(() => Date.parse(date), [date])
+  const parseDate = useMemo(
+    () => Date.parse(date?.toISOString() || new Date().toISOString()),
+    [date],
+  )
 
   const [interval, setInterval] = useState<ListObj<number>>(wsInterval[0])
   const [agg, setAgg] = useState<WSAgg>(wsAgg[0])
@@ -47,8 +50,8 @@ export function Dashboard() {
             type: 'entityList',
             entityType: 'DEVICE',
             entityIds: [
-              '4264d07a-8543-4e87-a1c8-8285d41511b5',
-              '576f5bd6-8319-4dad-9c10-146b7c7f87a9',
+              '2841c536-3023-4840-93c6-e3e4d4b2e6f1',
+              '7b78f659-b5fe-4d26-86b0-91b60aebf876',
             ],
           },
           pageLink: {
@@ -121,7 +124,7 @@ export function Dashboard() {
   })
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS()
+    useWS<WS>()
 
   const liveValues: ValueWS[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
@@ -150,28 +153,23 @@ export function Dashboard() {
 
   return (
     <>
-      <div className="flex gap-x-3">
-        <Button
-          className="w-5"
-          size="lg"
-          onClick={handleLastest}
-          disabled={readyState !== ReadyState.OPEN}
-        >
-          Lastest
-        </Button>
-        <div className="flex flex-col">
-          <span>The WebSocket is currently: {connectionStatus}</span>
-        </div>
-      </div>
-      {newValuesRef.current != null ? (
-        <>
-          <div className="space-y-3">
-            <Calendar
-              className="rounded-md border"
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-            />
+      <div className="flex flex-col gap-x-3">
+        <div className="space-y-3">
+          <Calendar
+            className="rounded-md border"
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+          />
+          <div className="flex gap-x-3">
+            <Button
+              className="h-5 w-10"
+              size="lg"
+              onClick={handleLastest}
+              disabled={readyState !== ReadyState.OPEN}
+            >
+              Lastest
+            </Button>
             <Button
               className="h-5 w-10"
               size="lg"
@@ -180,29 +178,33 @@ export function Dashboard() {
             >
               Live
             </Button>
-            <SelectMenu
-              label={t('ws:filter.interval') ?? 'Interval'}
-              data={wsInterval.map(interval => ({
-                label: interval.label,
-                value: interval.value,
-              }))}
-              selected={interval}
-              setSelected={setInterval}
-            />
-            <SelectMenu
-              label={t('ws:filter.data_aggregation') ?? 'Data aggregation'}
-              data={wsAgg.map(agg => ({
-                label: agg.label,
-                value: agg.value,
-              }))}
-              selected={agg}
-              setSelected={setAgg}
-            />
           </div>
-          {/* <LineChart data={newValuesRef.current} /> */}
+          <SelectMenu
+            label={t('ws:filter.interval') ?? 'Interval'}
+            data={wsInterval.map(interval => ({
+              label: interval.label,
+              value: interval.value,
+            }))}
+            selected={interval}
+            setSelected={setInterval}
+          />
+          <SelectMenu
+            label={t('ws:filter.data_aggregation') ?? 'Data aggregation'}
+            data={wsAgg.map(agg => ({
+              label: agg.label,
+              value: agg.value,
+            }))}
+            selected={agg}
+            setSelected={setAgg}
+          />
+        </div>
+      </div>
+      {connectionStatus !== 'Connecting' ? (
+        <>
+          <LineChart data={newValuesRef.current} />
           {/* <GaugeChart data={parseFloat(lastestValue)} /> */}
           {/* <Map position={[21.068174, 105.81182]} /> */}
-          <BarChart data={lastJsonMessage?.data || []} />
+          {/* <BarChart data={lastJsonMessage?.data || []} /> */}
         </>
       ) : (
         <div className="flex grow items-center justify-center">

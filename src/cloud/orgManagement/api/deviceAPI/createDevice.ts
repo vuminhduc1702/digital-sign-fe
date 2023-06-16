@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -28,6 +29,8 @@ type UseCreateDeviceOptions = {
 }
 
 export const useCreateDevice = ({ config }: UseCreateDeviceOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -37,7 +40,7 @@ export const useCreateDevice = ({ config }: UseCreateDeviceOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo thiết bị thành công',
+        title: t('cloud:org_manage.device_manage.add_device.success_create'),
       })
     },
     ...config,

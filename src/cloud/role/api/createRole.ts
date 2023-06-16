@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -29,6 +30,8 @@ type UseCreateRoleOptions = {
 }
 
 export const useCreateRole = ({ config }: UseCreateRoleOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -38,7 +41,7 @@ export const useCreateRole = ({ config }: UseCreateRoleOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo vai trò thành công',
+        title: t('cloud:role_manage.add_role.success_create'),
       })
     },
     ...config,

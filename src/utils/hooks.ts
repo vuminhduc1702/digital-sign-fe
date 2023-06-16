@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
+import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 
 import { useNotificationStore } from '~/stores/notifications'
 import storage, { type UserStorage } from './storage'
@@ -40,7 +41,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = () => {
+export const useWS = <T extends JsonValue | null>() => {
   const { t } = useTranslation()
 
   const { token } = storage.getToken() as UserStorage
@@ -56,7 +57,7 @@ export const useWS = () => {
     lastMessage,
     lastJsonMessage,
     readyState,
-  } = useWebSocket(WS_URL, {
+  } = useWebSocket<T>(WS_URL, {
     onError: () =>
       addNotification({
         type: 'error',

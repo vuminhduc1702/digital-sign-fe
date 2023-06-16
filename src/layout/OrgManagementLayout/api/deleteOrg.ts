@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -13,13 +14,16 @@ type UseDeleteOrgOptions = {
 }
 
 export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
+
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['orgs'])
       addNotification({
         type: 'success',
-        title: 'Xóa tổ chức thành công',
+        title: t('cloud:org_manage.org_manage.add_org.success_delete'),
       })
     },
     ...config,

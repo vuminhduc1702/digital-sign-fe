@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import type * as z from 'zod'
 
@@ -49,6 +50,8 @@ export type UseCreateAttrOptions = {
 }
 
 export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -57,7 +60,7 @@ export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
       await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
-        title: 'Tạo thuộc tính thành công',
+        title: t('cloud:org_manage.org_manage.add_attr.success_create'),
       })
     },
     ...config,

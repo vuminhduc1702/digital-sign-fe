@@ -25,10 +25,6 @@ export function getVNDateFormat({ date, config }: DateFormat) {
   return new Intl.DateTimeFormat('vi-VN', dateConfig).format(new Date(date))
 }
 
-export type PropertyValuePair<K extends string> = {
-  [key in K]: unknown
-}
-
 export function flattenData<T extends Record<K, any>, K extends string>(
   arr: T[],
   propertyKeys: K[],

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -20,6 +21,8 @@ type UseUpdateGroupOptions = {
 }
 
 export const useUpdateGroup = ({ config }: UseUpdateGroupOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -29,7 +32,7 @@ export const useUpdateGroup = ({ config }: UseUpdateGroupOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Sửa nhóm thành công',
+        title: t('cloud:org_manage.group_manage.add_group.success_update'),
       })
     },
     ...config,

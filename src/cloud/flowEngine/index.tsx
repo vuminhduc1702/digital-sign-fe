@@ -5,13 +5,13 @@ import TitleBar from '~/components/Head/TitleBar'
 import { FLOW_URL } from '~/config'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { useProjectIdStore } from '~/stores/project'
-import storage, { type UserStorage } from '~/utils/storage'
+import storage from '~/utils/storage'
 
 export function FlowEngine() {
   const { t } = useTranslation()
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { token } = storage.getToken() as UserStorage
+  const { token } = storage.getToken()
 
   return (
     <ContentLayout title={t('sidebar:cloud.flow_engine')}>

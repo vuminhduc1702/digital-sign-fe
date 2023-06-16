@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -15,13 +16,15 @@ type UseDeleteTemplateOptions = {
 export const useDeleteTemplate = ({
   config,
 }: UseDeleteTemplateOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['templates'])
       addNotification({
         type: 'success',
-        title: 'Xóa mẫu thiết bị thành công',
+        title: t('cloud:device_template.add_template.success_delete'),
       })
     },
     ...config,

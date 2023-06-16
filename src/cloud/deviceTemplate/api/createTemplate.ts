@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -34,6 +35,8 @@ type UseCreateTemplateOptions = {
 export const useCreateTemplate = ({
   config,
 }: UseCreateTemplateOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -43,7 +46,7 @@ export const useCreateTemplate = ({
       })
       addNotification({
         type: 'success',
-        title: 'Tạo mẫu thiết bị thành công',
+        title: t('cloud:device_template.add_template.success_create'),
       })
     },
     ...config,

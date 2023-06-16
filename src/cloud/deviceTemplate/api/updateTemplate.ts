@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -25,6 +26,8 @@ type UseUpdateTemplateOptions = {
 export const useUpdateTemplate = ({
   config,
 }: UseUpdateTemplateOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -33,7 +36,7 @@ export const useUpdateTemplate = ({
       await queryClient.invalidateQueries({ queryKey: ['attr'] })
       addNotification({
         type: 'success',
-        title: 'Sửa mẫu thiết bị thành công',
+        title: t('cloud:device_template.add_template.success_update'),
       })
     },
     ...config,

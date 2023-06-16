@@ -15,6 +15,7 @@ export function ComboBoxSelectOrg({
 }: {
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<OrgMapType[]>>
   label?: string
+  hasDefaultComboboxData?: boolean
 }) {
   const [query, setQuery] = useState('')
 

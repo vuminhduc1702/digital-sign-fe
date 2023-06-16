@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
@@ -13,13 +14,16 @@ type UseDeleteUserOptions = {
 }
 
 export const useDeleteUser = ({ config }: UseDeleteUserOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
+
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['users'])
       addNotification({
         type: 'success',
-        title: 'Xóa user thành công',
+        title: t('cloud:org_manage.user_manage.add_user.success_delete'),
       })
     },
     ...config,

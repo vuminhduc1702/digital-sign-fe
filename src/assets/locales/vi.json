@@ -87,7 +87,10 @@
           "desc": "Mô tả",
           "avatar": "Ảnh đại diện",
           "upload_ava": "Tải ảnh",
-          "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb"
+          "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb",
+          "success_create": "Tạo tổ chức thành công",
+          "success_update": "Sửa tổ chức thành công",
+          "success_delete": "Xoá tổ chức thành công"
         },
         "add_attr": {
           "title": "Tạo mới thuộc tính",
@@ -96,7 +99,10 @@
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",
           "logged": "Lưu lịch sử",
-          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+          "no_org": "Không trực thuộc",
+          "success_create": "Tạo thuộc tính thành công",
+          "success_update": "Sửa thuộc tính thành công",
+          "success_delete": "Xoá thuộc tính thành công"
         }
       },
       "group_manage": {
@@ -116,7 +122,9 @@
           "entity_type": "Phân loại",
           "desc": "Mô tả",
           "parent": "Trực thuộc",
-          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+          "success_create": "Tạo nhóm thành công",
+          "success_update": "Sửa nhóm thành công",
+          "success_delete": "Xoá nhóm thành công"
         }
       },
       "user_manage": {
@@ -142,7 +150,9 @@
           "role": "Vai trò",
           "activate": "Kích hoạt",
           "parent": "Trực thuộc",
-          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+          "success_create": "Tạo người dùng thành công",
+          "success_update": "Sửa người dùng thành công",
+          "success_delete": "Xoá người dùng thành công"
         }
       },
       "device_manage": {
@@ -165,14 +175,39 @@
           "name": "Tên thiết bị",
           "parent": "Trực thuộc",
           "device_type": "Mẫu thiết bị",
-          "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+          "success_create": "Tạo thiết bị thành công",
+          "success_update": "Sửa thiết bị thành công",
+          "success_delete": "Xoá thiết bị thành công"
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
           "attr_log": "Bản tin thuộc tính"
         }
       },
-      "event_manage": "Sự kiện"
+      "event_manage": {
+        "title": "Sự kiện",
+        "header": "Quản lý sự kiện",
+        "table": {
+          "name": "Tên",
+          "group": "Nhóm",
+          "device_type": "Mẫu thiết bị",
+          "org_name": "Tổ chức",
+          "created_at": "Ngày tạo",
+          "create_by": "Người tạo",
+          "delete_event": "Xoá SK",
+          "delete_event_full": "Xoá sự kiện",
+          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
+        },
+        "add_event": {
+          "title": "Tạo mới sự kiện",
+          "edit": "Sửa sự kiện",
+          "name": "Tên sự kiện",
+          "parent": "Trực thuộc",
+          "success_create": "Tạo sự kiện thành công",
+          "success_update": "Sửa sự kiện thành công",
+          "success_delete": "Xoá sự kiện thành công"
+        }
+      }
     },
     "device_template": {
       "title": "Mẫu thiết bị",
@@ -187,7 +222,9 @@
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
-        "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+        "success_create": "Tạo mẫu thiết bị thành công",
+        "success_update": "Sửa mẫu thiết bị thành công",
+        "success_delete": "Xoá mẫu thiết bị thành công"
       },
       "sidebar": {
         "title": "Danh sách mẫu thiết bị",
@@ -221,7 +258,9 @@
         "title": "Tạo mới vai trò",
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
-        "note": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+        "success_create": "Tạo vai trò thành công",
+        "success_update": "Sửa vai trò thành công",
+        "success_delete": "Xoá vai trò thành công"
       }
     }
   },
@@ -240,7 +279,9 @@
     "no_policy": "Không có chính sách",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
+    "edit": "Chỉnh sửa",
     "copy_id": "Sao chép ID",
+    "delete": "Xoá",
     "no_in_org": "Không thuộc TC"
   },
   "btn": {
@@ -281,5 +322,8 @@
       "interval": "Khoảng thời gian",
       "data_aggregation": "Tổng hợp dữ liệu"
     }
+  },
+  "misc": {
+    "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
   }
 }

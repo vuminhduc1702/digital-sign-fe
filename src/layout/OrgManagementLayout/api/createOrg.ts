@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
@@ -30,6 +31,8 @@ type UseCreateOrgOptions = {
 }
 
 export const useCreateOrg = ({ config }: UseCreateOrgOptions = {}) => {
+  const { t } = useTranslation()
+
   const { addNotification } = useNotificationStore()
 
   return useMutation({
@@ -39,7 +42,7 @@ export const useCreateOrg = ({ config }: UseCreateOrgOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: 'Tạo tổ chức thành công',
+        title: t('cloud:org_manage.org_manage.add_org.success_create'),
       })
     },
     ...config,
