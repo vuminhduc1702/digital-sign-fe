@@ -28,6 +28,7 @@ export type Org = {
   org_id?: string
   project_id: string
   level: number
+  parent_name: string
   sub_orgs?: Org[]
   attributes: Attribute[]
 }

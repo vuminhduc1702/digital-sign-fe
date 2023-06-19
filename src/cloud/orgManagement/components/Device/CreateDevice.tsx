@@ -22,7 +22,7 @@ export const deviceSchema = z.object({
 export function CreateDevice() {
   const { t } = useTranslation()
 
-  const defaultOrgComboboxData = useDefaultCombobox('org')
+  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
@@ -86,7 +86,7 @@ export function CreateDevice() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData={defaultOrgComboboxData}
+              hasDefaultComboboxData={defaultComboboxOrgData}
             />
           </>
         )}

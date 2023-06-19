@@ -7,6 +7,22 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
 
 import { type IconProps } from '../Button'
 
+export type ComboBoxBasePassThroughProps<T> = {
+  hasDefaultComboboxData?: T
+  selectedData?: T
+}
+
+type ComboBoxBaseProps<T extends Record<string, any>> = {
+  data: T[]
+  extractedPropertyKeys: string[]
+  query: string
+  setQuery: React.Dispatch<React.SetStateAction<string>>
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<T[]>>
+  startIcon?: IconProps['startIcon']
+  endIcon?: IconProps['endIcon']
+} & FieldWrapperPassThroughProps &
+  ComboBoxBasePassThroughProps<T>
+
 export function filteredComboboxData<T, K extends keyof T>(
   query: string,
   flattenData: T[],
@@ -28,18 +44,6 @@ export function filteredComboboxData<T, K extends keyof T>(
 
   return filteredData
 }
-
-type ComboBoxBaseProps<T extends Record<string, any>> = {
-  data: T[]
-  extractedPropertyKeys: string[]
-  query: string
-  setQuery: React.Dispatch<React.SetStateAction<string>>
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<T[]>>
-  startIcon?: IconProps['startIcon']
-  endIcon?: IconProps['endIcon']
-  hasDefaultComboboxData?: T
-  selectedData?: T
-} & FieldWrapperPassThroughProps
 
 export function ComboBoxBase<T extends Record<string, any>>({
   data,
@@ -74,7 +78,7 @@ export function ComboBoxBase<T extends Record<string, any>>({
               displayValue={(data: T) =>
                 query !== ''
                   ? data[extractedPropertyKeys[1]]
-                  : selectedData?.name
+                  : selectedData?.parent_name
               }
               onChange={event => setQuery(event.target.value)}
             />

@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
-import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import {
+  ComboBoxBase,
+  type ComboBoxBasePassThroughProps,
+  filteredComboboxData,
+} from '~/components/ComboBox'
 
 import { type GroupList, type Group } from '../../types'
+import { type FieldWrapperPassThroughProps } from '~/components/Form'
 
 import { SearchIcon } from '~/components/SVGIcons'
+
+type ComboBoxSelectGroupProps = {
+  data: GroupList
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Group[]>>
+  offset?: number
+} & FieldWrapperPassThroughProps &
+  ComboBoxBasePassThroughProps<Group>
 
 export function ComboBoxSelectGroup({
   data,
   setFilteredComboboxData,
   offset,
   ...props
-}: {
-  data: GroupList
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Group[]>>
-  offset?: number
-}) {
+}: ComboBoxSelectGroupProps) {
   const [query, setQuery] = useState('')
 
   const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(

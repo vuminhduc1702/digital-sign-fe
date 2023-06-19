@@ -190,12 +190,9 @@
         "table": {
           "name": "Tên",
           "group": "Nhóm",
-          "device_type": "Mẫu thiết bị",
-          "org_name": "Tổ chức",
-          "created_at": "Ngày tạo",
-          "create_by": "Người tạo",
-          "delete_event": "Xoá SK",
-          "delete_event_full": "Xoá sự kiện",
+          "onClick": "onClick",
+          "status": "Trạng thái",
+          "delete_event": "Xoá sự kiện",
           "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
         },
         "add_event": {
@@ -203,6 +200,7 @@
           "edit": "Sửa sự kiện",
           "name": "Tên sự kiện",
           "parent": "Trực thuộc",
+          "group": "Nhóm",
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
           "success_delete": "Xoá sự kiện thành công"
@@ -277,6 +275,7 @@
     "no_log_attr": "Không có bản tin thuộc tính",
     "no_user": "Không có người dùng",
     "no_policy": "Không có chính sách",
+    "no_event": "Không có sự kiện",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "edit": "Chỉnh sửa",

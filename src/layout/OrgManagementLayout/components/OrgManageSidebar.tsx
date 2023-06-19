@@ -27,6 +27,8 @@ export type OrgMapType = {
   id: string
   name: string
   level: string
+  description: string
+  parent_name: string
 }
 
 type EntityTypeURL = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
@@ -48,6 +50,8 @@ function OrgManageSidebar() {
     id: '',
     name: '',
     level: '1',
+    description: '',
+    parent_name: '',
   })
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]

@@ -86,9 +86,9 @@ export type EventType = {
   owner: string
   name: string
   project_id: string
-  org_id?: string
-  group_id?: string
-  group_name?: string
+  org_id: string
+  group_id: string
+  group_name: string
   jobs: null
   interval: {
     monday: boolean
@@ -101,11 +101,11 @@ export type EventType = {
     start_time: string
     end_time: string
   }
-  action?: Action[]
+  action: Action[]
   status: boolean
   created_by: string
-  metadata?: null
-  retry?: number
+  metadata: null
+  retry: number
 } & (
   | {
       onClick: false

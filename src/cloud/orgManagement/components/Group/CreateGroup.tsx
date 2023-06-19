@@ -36,7 +36,7 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
-  const defaultOrgComboboxData = useDefaultCombobox('org')
+  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
@@ -114,7 +114,7 @@ export function CreateGroup() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData={defaultOrgComboboxData}
+              hasDefaultComboboxData={defaultComboboxOrgData}
             />
           </>
         )}

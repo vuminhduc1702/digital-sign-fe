@@ -23,7 +23,7 @@ export const orgSchema = z.object({
 export function CreateOrg() {
   const { t } = useTranslation()
 
-  const defaultOrgComboboxData = useDefaultCombobox('org')
+  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const projectId = useProjectIdStore(state => state.projectId)
 
@@ -87,7 +87,7 @@ export function CreateOrg() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData={defaultOrgComboboxData}
+              hasDefaultComboboxData={defaultComboboxOrgData}
             />
             <TextAreaField
               label={

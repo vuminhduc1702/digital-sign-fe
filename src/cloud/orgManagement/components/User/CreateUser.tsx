@@ -40,7 +40,7 @@ export const userSchema = z
 export function CreateUser() {
   const { t } = useTranslation()
 
-  const defaultOrgComboboxData = useDefaultCombobox('org')
+  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
@@ -127,7 +127,7 @@ export function CreateUser() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData={defaultOrgComboboxData}
+              hasDefaultComboboxData={defaultComboboxOrgData}
             />
             {/* <ComboBoxSelectRole
               label={

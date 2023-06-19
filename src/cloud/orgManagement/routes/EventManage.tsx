@@ -20,7 +20,6 @@ export function EventManage() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<EventType[]>(
     [],
   )
-  const [offset, setOffset] = useState(0)
 
   const params = useParams()
 
@@ -35,7 +34,6 @@ export function EventManage() {
     projectId,
     config: { keepPreviousData: true },
   })
-  console.log('eventData', eventData?.events)
 
   return (
     <>
@@ -51,18 +49,11 @@ export function EventManage() {
               <ComboBoxSelectEvent
                 data={eventData}
                 setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
               />
             ) : null}
           </div>
         </div>
-        <EventTable
-          data={filteredComboboxData}
-          offset={offset}
-          setOffset={setOffset}
-          total={eventData?.total ?? 0}
-          isPreviousData={isPreviousData}
-        />
+        <EventTable data={filteredComboboxData} />
       </div>
     </>
   )
