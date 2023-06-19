@@ -13,6 +13,7 @@ import {
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
@@ -38,6 +39,8 @@ export const userSchema = z
 
 export function CreateUser() {
   const { t } = useTranslation()
+
+  const defaultOrgComboboxData = useDefaultCombobox('org')
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
@@ -124,6 +127,7 @@ export function CreateUser() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
+              hasDefaultComboboxData={defaultOrgComboboxData}
             />
             {/* <ComboBoxSelectRole
               label={

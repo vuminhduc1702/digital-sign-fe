@@ -44,7 +44,11 @@ function OrgManageSidebar() {
 
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
 
-  const [selectedUpdateOrg, setSelectedUpdateOrg] = useState('')
+  const [selectedUpdateOrg, setSelectedUpdateOrg] = useState<OrgMapType>({
+    id: '',
+    name: '',
+    level: '1',
+  })
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
@@ -183,7 +187,7 @@ function OrgManageSidebar() {
                         }
                         onClick={() => {
                           open()
-                          setSelectedUpdateOrg(org.id)
+                          setSelectedUpdateOrg(org)
                         }}
                       >
                         {t('cloud:org_manage.org_map.edit')}

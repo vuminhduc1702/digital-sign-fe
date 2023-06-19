@@ -102,3 +102,16 @@ export function useCopyId() {
 
   return handleCopyId
 }
+
+export function useDefaultCombobox(comboboxType: string) {
+  const { t } = useTranslation()
+
+  switch (comboboxType) {
+    case 'org':
+      return {
+        id: '',
+        level: '1',
+        name: t('cloud:org_manage.org_manage.add_attr.no_org'),
+      }
+  }
+}

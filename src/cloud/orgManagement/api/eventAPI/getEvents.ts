@@ -31,8 +31,8 @@ type UseEventOptions = {
 } & GetEvents
 
 export const useGetEvents = ({
-  orgId,
   projectId,
+  orgId,
   groupId,
   config,
 }: UseEventOptions) => {

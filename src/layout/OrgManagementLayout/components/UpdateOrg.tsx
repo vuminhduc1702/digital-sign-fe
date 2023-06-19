@@ -22,7 +22,7 @@ export function UpdateOrg({
 }: {
   close: () => void
   isOpen: boolean
-  selectedUpdateOrg: string
+  selectedUpdateOrg: OrgMapType
 }) {
   const { t } = useTranslation()
 
@@ -31,13 +31,13 @@ export function UpdateOrg({
   >([])
   const selectedOrgId =
     filteredComboboxData?.length !== 1
-      ? selectedUpdateOrg
+      ? selectedUpdateOrg.id
       : filteredComboboxData[0]?.id
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
 
   const { data: orgByIdData, isLoading: orgByIdLoading } = useOrgById({
-    orgId: selectedUpdateOrg,
+    orgId: selectedUpdateOrg.id,
     config: { suspense: false },
   })
 
@@ -118,6 +118,7 @@ export function UpdateOrg({
                   'Parent organization'
                 }
                 setFilteredComboboxData={setFilteredComboboxData}
+                selectedData={selectedUpdateOrg}
               />
               <TextAreaField
                 label={

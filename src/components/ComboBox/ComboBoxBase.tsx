@@ -37,7 +37,8 @@ type ComboBoxBaseProps<T extends Record<string, any>> = {
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<T[]>>
   startIcon?: IconProps['startIcon']
   endIcon?: IconProps['endIcon']
-  hasDefaultComboboxData?: boolean
+  hasDefaultComboboxData?: T
+  selectedData?: T
 } & FieldWrapperPassThroughProps
 
 export function ComboBoxBase<T extends Record<string, any>>({
@@ -51,21 +52,15 @@ export function ComboBoxBase<T extends Record<string, any>>({
   label,
   error,
   hasDefaultComboboxData,
+  selectedData,
 }: ComboBoxBaseProps<T>) {
   const { t } = useTranslation()
 
   const comboboxData = hasDefaultComboboxData
-    ? [
-        {
-          id: '',
-          level: '1',
-          name: t('cloud:org_manage.org_manage.add_attr.no_org'),
-        },
-        ...data,
-      ]
+    ? [hasDefaultComboboxData, ...data]
     : data
 
-  const [selected, setSelected] = useState({})
+  const [selected, setSelected] = useState<T | {}>(selectedData || {})
 
   return (
     <FieldWrapper label={label} error={error}>
@@ -77,7 +72,9 @@ export function ComboBoxBase<T extends Record<string, any>>({
                 startIcon ? 'pl-8' : ''
               }`}
               displayValue={(data: T) =>
-                query !== '' ? data[extractedPropertyKeys[1]] : ''
+                query !== ''
+                  ? data[extractedPropertyKeys[1]]
+                  : selectedData?.name
               }
               onChange={event => setQuery(event.target.value)}
             />

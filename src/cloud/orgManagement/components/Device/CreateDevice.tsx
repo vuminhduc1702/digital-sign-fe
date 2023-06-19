@@ -8,6 +8,7 @@ import { nameSchema } from '~/utils/schemaValidation'
 import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
@@ -21,10 +22,11 @@ export const deviceSchema = z.object({
 export function CreateDevice() {
   const { t } = useTranslation()
 
+  const defaultOrgComboboxData = useDefaultCombobox('org')
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
-  // TODO: If 1 org only can not set to no org
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
@@ -84,6 +86,7 @@ export function CreateDevice() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
+              hasDefaultComboboxData={defaultOrgComboboxData}
             />
           </>
         )}

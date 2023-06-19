@@ -1,12 +1,11 @@
 import clsx from 'clsx'
-import { type ReactNode } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
 export type SelectOption = {
-  label: ReactNode
-  value: string
+  label: string
+  value: string | boolean
 }
 
 type SelectFieldProps = FieldWrapperPassThroughProps & {

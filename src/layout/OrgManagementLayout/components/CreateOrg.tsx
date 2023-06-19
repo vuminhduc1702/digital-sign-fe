@@ -8,6 +8,7 @@ import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
@@ -21,6 +22,8 @@ export const orgSchema = z.object({
 
 export function CreateOrg() {
   const { t } = useTranslation()
+
+  const defaultOrgComboboxData = useDefaultCombobox('org')
 
   const projectId = useProjectIdStore(state => state.projectId)
 
@@ -84,7 +87,7 @@ export function CreateOrg() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData
+              hasDefaultComboboxData={defaultOrgComboboxData}
             />
             <TextAreaField
               label={

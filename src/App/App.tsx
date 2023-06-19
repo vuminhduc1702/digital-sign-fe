@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import '~/style/main.css'
 import '~/i18n'
 
+import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { lazyImport } from '~/utils/lazyImport'
 import { queryClient } from '~/lib/react-query'

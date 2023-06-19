@@ -11,6 +11,7 @@ import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -35,9 +36,12 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
+  const defaultOrgComboboxData = useDefaultCombobox('org')
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
+  // FIXME: If org name is number then selectedOrgId = ''
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
@@ -110,6 +114,7 @@ export function CreateGroup() {
                 'Parent organization'
               }
               setFilteredComboboxData={setFilteredComboboxData}
+              hasDefaultComboboxData={defaultOrgComboboxData}
             />
           </>
         )}
