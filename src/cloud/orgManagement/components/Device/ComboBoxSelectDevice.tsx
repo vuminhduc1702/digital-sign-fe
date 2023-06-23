@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react'
+import { type FieldValues } from 'react-hook-form'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
 import { type DeviceList, type Device } from '../../types'
+import {
+  type FieldWrapperPassThroughProps,
+  type ControllerPassThroughProps,
+} from '~/components/Form'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
-export function ComboBoxSelectDevice({
+type ComboBoxSelectDeviceProps<TFormValues extends FieldValues> = {
+  data: DeviceList
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
+  offset?: number
+} & FieldWrapperPassThroughProps &
+  ControllerPassThroughProps<TFormValues>
+
+export function ComboBoxSelectDevice<TFormValues extends FieldValues>({
   data,
   setFilteredComboboxData,
   offset,
   ...props
-}: {
-  data: DeviceList
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Device[]>>
-  offset?: number
-}) {
+}: ComboBoxSelectDeviceProps<TFormValues>) {
   const [query, setQuery] = useState('')
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(

@@ -7,7 +7,7 @@ import {
   FormDrawer,
   FormMultipleFields,
   InputField,
-  SelectMultiple,
+  SelectDropdown,
 } from '~/components/Form'
 import { useProjectIdStore } from '~/stores/project'
 import { type CreateRoleDTO, useCreateRole } from '../api'
@@ -115,6 +115,7 @@ export function CreateRole() {
         name="policies"
       >
         {(register, formState, fields, append, remove, control) => {
+          // console.log('errors zod: ', formState.errors)
           return (
             <>
               <button
@@ -141,7 +142,7 @@ export function CreateRole() {
                   <p className="text-body-sm text-primary-400">
                     {formState?.errors?.policies?.[index]?.policy_name?.message}
                   </p>
-                  <SelectMultiple
+                  <SelectDropdown
                     label={
                       t('cloud:role_manage.add_policy.resources') ??
                       'Authorization resources'
@@ -149,8 +150,10 @@ export function CreateRole() {
                     name={`policies.${index}.resources`}
                     options={resourcesList.map(resourcesType => resourcesType)}
                     control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
                   />
-                  <SelectMultiple
+                  <SelectDropdown
                     label={
                       t('cloud:role_manage.add_policy.actions') ??
                       'Authorization actions'
@@ -158,6 +161,8 @@ export function CreateRole() {
                     name={`policies.${index}.actions`}
                     options={actionsList.map(actionsType => actionsType)}
                     control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
                   />
                   <button type="button" onClick={() => remove(index)}>
                     X

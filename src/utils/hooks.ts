@@ -6,6 +6,8 @@ import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 import { useNotificationStore } from '~/stores/notifications'
 import storage, { type UserStorage } from './storage'
 
+import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
+
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
 
@@ -103,7 +105,9 @@ export function useCopyId() {
   return handleCopyId
 }
 
-export function useDefaultCombobox(comboboxType: string) {
+export function useDefaultCombobox(
+  comboboxType: string,
+): OrgMapType | undefined {
   const { t } = useTranslation()
 
   switch (comboboxType) {
@@ -112,6 +116,8 @@ export function useDefaultCombobox(comboboxType: string) {
         id: '',
         level: '1',
         name: t('cloud:org_manage.org_manage.add_attr.no_org'),
+        description: '',
+        parent_name: '',
       }
   }
 }

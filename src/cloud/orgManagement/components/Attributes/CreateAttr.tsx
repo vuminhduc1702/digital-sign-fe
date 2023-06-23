@@ -33,8 +33,8 @@ export const valueTypeList: ValueType[] = [
 ]
 
 export const loggedList = [
-  { type: true, name: 'Có' },
   { type: false, name: 'Không' },
+  { type: true, name: 'Có' },
 ]
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {

@@ -25,7 +25,9 @@ export const userSchema = z
     name: nameSchema,
     email: emailSchema,
     password: passwordSchema,
-    confirmPassword: passwordSchema,
+    confirmPassword: passwordSchema.optional(),
+    project_id: z.string().optional(),
+    org_id: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {

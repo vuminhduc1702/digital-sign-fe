@@ -23,7 +23,11 @@ export function UserManage() {
 
   const orgId = params.orgId as string
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: UserData, isPreviousData } = useGetUsers({
+  const {
+    data: UserData,
+    isPreviousData,
+    isSuccess,
+  } = useGetUsers({
     projectId,
     orgId,
     offset,
@@ -40,11 +44,13 @@ export function UserManage() {
           <ExportTable />
           <div className="flex items-center gap-x-3">
             <CreateUser />
-            <ComboBoxSelectUser
-              data={UserData}
-              setFilteredComboboxData={setFilteredComboboxData}
-              offset={offset}
-            />
+            {isSuccess ? (
+              <ComboBoxSelectUser
+                data={UserData}
+                setFilteredComboboxData={setFilteredComboboxData}
+                offset={offset}
+              />
+            ) : null}
           </div>
         </div>
         <UserTable

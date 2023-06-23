@@ -33,22 +33,25 @@ axios.interceptors.response.use(
   error => {
     console.error('error', error)
     let message = ''
+    const errMessage = error.response?.data?.message
+
     switch (error.response?.status) {
       case 400:
-        message = 'Dữ liệu truyền lên không hợp lệ'
+        message = errMessage || 'Dữ liệu truyền lên không hợp lệ'
         break
       case 401:
         storage.clearToken()
         return (window.location.href = PATHS.LOGIN)
       case 403:
-        message = 'Bạn không có quyền truy cập vào trang này'
+        message = errMessage || 'Bạn không có quyền truy cập vào trang này'
         break
       case 500:
-        message = 'Server đang bị lỗi, vui lòng thử lại'
+        message = errMessage || 'Server đang bị lỗi, vui lòng thử lại'
         break
       default:
-        message = error.response?.data?.message || error.message
+        message = errMessage || error.message
     }
+
     useNotificationStore.getState().addNotification({
       type: 'error',
       title: 'Lỗi',

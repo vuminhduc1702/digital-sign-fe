@@ -30,7 +30,7 @@ export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['attr'])
+      await queryClient.invalidateQueries(['attrs'])
       await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',

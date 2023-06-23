@@ -33,7 +33,7 @@ export const useUpdateTemplate = ({
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['templates'] })
-      await queryClient.invalidateQueries({ queryKey: ['attr'] })
+      await queryClient.invalidateQueries({ queryKey: ['attrs'] })
       addNotification({
         type: 'success',
         title: t('cloud:device_template.add_template.success_update'),

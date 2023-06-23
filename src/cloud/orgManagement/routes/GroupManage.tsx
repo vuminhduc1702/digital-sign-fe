@@ -22,7 +22,11 @@ export function GroupManage() {
 
   const { orgId } = useParams()
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: groupData, isPreviousData } = useGetGroups({
+  const {
+    data: groupData,
+    isPreviousData,
+    isSuccess,
+  } = useGetGroups({
     orgId,
     projectId,
     offset,
@@ -39,11 +43,13 @@ export function GroupManage() {
           <ExportTable />
           <div className="flex items-center gap-x-3">
             <CreateGroup />
-            <ComboBoxSelectGroup
-              data={groupData}
-              setFilteredComboboxData={setFilteredComboboxData}
-              offset={offset}
-            />
+            {isSuccess ? (
+              <ComboBoxSelectGroup
+                data={groupData}
+                setFilteredComboboxData={setFilteredComboboxData}
+                offset={offset}
+              />
+            ) : null}
           </div>
         </div>
         <GroupTable

@@ -5,7 +5,7 @@ import { Button } from '~/components/Button'
 import {
   FormMultipleFields,
   InputField,
-  SelectMultiple,
+  SelectDropdown,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateRoleDTO, useUpdateRole } from '../api'
@@ -141,7 +141,7 @@ export function UpdateRole({
                   <p className="text-body-sm text-primary-400">
                     {formState?.errors?.policies?.[index]?.policy_name?.message}
                   </p>
-                  <SelectMultiple
+                  <SelectDropdown
                     label={
                       t('cloud:role_manage.add_policy.resources') ??
                       'Authorization resources'
@@ -149,8 +149,10 @@ export function UpdateRole({
                     name={`policies.${index}.resources`}
                     options={resourcesList.map(resourcesType => resourcesType)}
                     control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
                   />
-                  <SelectMultiple
+                  <SelectDropdown
                     label={
                       t('cloud:role_manage.add_policy.actions') ??
                       'Authorization actions'
@@ -158,6 +160,8 @@ export function UpdateRole({
                     name={`policies.${index}.actions`}
                     options={actionsList.map(actionsType => actionsType)}
                     control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
                   />
                   <button type="button" onClick={() => remove(index)}>
                     X

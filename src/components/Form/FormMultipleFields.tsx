@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import clsx from 'clsx'
 import * as React from 'react'
 import {
   useForm,
@@ -7,31 +6,26 @@ import {
   type UseFormProps,
   type FieldValues,
   useFieldArray,
-  type FieldArrayWithId,
-  type UseFieldArrayAppend,
+  type UseFormReturn,
+  type UseFieldArrayReturn,
   type ArrayPath,
-  type UseFieldArrayRemove,
-  type UseFormRegister,
-  type FormState,
-  type Control,
 } from 'react-hook-form'
 import { type ZodType } from 'zod'
+
+import { cn } from '~/utils/misc'
 
 type FormProps<TFormValues extends FieldValues, Schema> = {
   onSubmit: SubmitHandler<TFormValues>
   children: (
-    register: UseFormRegister<TFormValues>,
-    formState: FormState<TFormValues>,
-    fields: FieldArrayWithId<TFormValues, ArrayPath<TFormValues>, 'id'>[],
-    append: UseFieldArrayAppend<TFormValues, ArrayPath<TFormValues>>,
-    remove: UseFieldArrayRemove,
-    control: Control<TFormValues, any>,
+    methods: UseFormReturn<TFormValues>,
+    fieldArrayOneMethods: UseFieldArrayReturn<TFormValues>,
+    fieldArrayTwoMethods: UseFieldArrayReturn<TFormValues>,
   ) => React.ReactNode
   options?: UseFormProps<TFormValues>
   schema?: Schema
   className?: string
   id?: string
-  name: ArrayPath<TFormValues>
+  name: string[]
 }
 
 export const FormMultipleFields = <
@@ -46,24 +40,28 @@ export const FormMultipleFields = <
   schema,
   name,
 }: FormProps<TFormValues, Schema>) => {
-  const methods = useForm<TFormValues>({
+  const formMethods = useForm<TFormValues>({
     ...options,
     resolver: schema && zodResolver(schema),
   })
-  const { register, formState, handleSubmit, control } = methods
 
-  const { fields, append, remove } = useFieldArray({
-    name,
-    control,
+  const fieldArrayOneMethods = useFieldArray({
+    name: name[0] as ArrayPath<TFormValues>,
+    control: formMethods.control,
+  })
+
+  const fieldArrayTwoMethods = useFieldArray({
+    name: name[1] as ArrayPath<TFormValues>,
+    control: formMethods.control,
   })
 
   return (
     <form
-      className={clsx('w-full space-y-6', className)}
-      onSubmit={handleSubmit(onSubmit)}
+      className={cn('w-full space-y-5', className)}
+      onSubmit={formMethods.handleSubmit(onSubmit)}
       id={id}
     >
-      {children(register, formState, fields, append, remove, control)}
+      {children(formMethods, fieldArrayOneMethods, fieldArrayTwoMethods)}
     </form>
   )
 }

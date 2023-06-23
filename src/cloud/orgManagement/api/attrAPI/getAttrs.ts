@@ -44,7 +44,7 @@ export const useGetAttrs = ({
   config,
 }: UseAttrsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['attr', entityType, entityId, key],
+    queryKey: ['attrs', entityType, entityId, key],
     queryFn: () => getAttrs({ entityType, entityId, key }),
     ...config,
   })

@@ -1,22 +1,18 @@
+import { type z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+import { type userSchema } from '../../components/User'
 
 type CreateUserRes = {
   identity_id: string
 }
 
 export type CreateUserDTO = {
-  data: {
-    project_id: string
-    name: string
-    email: string
-    password: string
-    org_id: string
-  }
+  data: z.infer<typeof userSchema>
 }
 
 export const createUser = ({ data }: CreateUserDTO): Promise<CreateUserRes> => {

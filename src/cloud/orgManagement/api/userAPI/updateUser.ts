@@ -1,17 +1,14 @@
+import { type z } from 'zod'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+import { type updatedUserSchema } from '../../components/User'
 
 export type UpdateUserDTO = {
-  data: {
-    name: string
-    email: string
-    password: string
-    org_id: string
-  }
+  data: z.infer<typeof updatedUserSchema>
   userId: string
 }
 

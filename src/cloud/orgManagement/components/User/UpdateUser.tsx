@@ -1,12 +1,21 @@
+import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { userSchema } from './CreateUser'
 import { type UpdateUserDTO, useUpdateUser } from '../../api/userAPI'
+import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import { useDefaultCombobox } from '~/utils/hooks'
+import {
+  emailSchema,
+  nameSchema,
+  passwordSchema,
+} from '~/utils/schemaValidation'
+
+import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -18,6 +27,27 @@ type UpdateUserProps = {
   close: () => void
   isOpen: boolean
 }
+
+// FIXME: password can not validate passwordSchema if add .or(z.string().optional())
+export const updatedUserSchema = z
+  .object({
+    name: nameSchema,
+    email: emailSchema,
+    password: passwordSchema.or(z.string().optional()),
+    confirmPassword: passwordSchema.or(z.string().optional()),
+    project_id: z.string().optional(),
+    org_id: z.string().optional(),
+  })
+  .superRefine(({ password, confirmPassword }, ctx) => {
+    if (password !== confirmPassword) {
+      ctx.addIssue({
+        path: ['confirmPassword'],
+        code: 'custom',
+        message: 'Mật khẩu nhập lại không đúng',
+      })
+    }
+  })
+
 export function UpdateUser({
   userId,
   name,
@@ -27,7 +57,7 @@ export function UpdateUser({
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
-  const { orgId } = useParams()
+  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
@@ -36,6 +66,12 @@ export function UpdateUser({
       close()
     }
   }, [isSuccess, close])
+
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    OrgMapType[]
+  >([])
+  const selectedOrgId =
+    filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
   return (
     <Drawer
@@ -66,7 +102,7 @@ export function UpdateUser({
         </>
       )}
     >
-      <Form<UpdateUserDTO['data'], typeof userSchema>
+      <Form<UpdateUserDTO['data'], typeof updatedUserSchema>
         id="update-user"
         onSubmit={values =>
           mutate({
@@ -74,13 +110,14 @@ export function UpdateUser({
               name: values.name,
               email: values.email,
               password: values.password,
+              org_id: selectedOrgId,
             },
             userId,
           })
         }
-        schema={userSchema}
+        schema={updatedUserSchema}
         options={{
-          defaultValues: { name, email, org_id: orgId },
+          defaultValues: { name, email },
         }}
       >
         {({ register, formState }) => (
@@ -115,6 +152,14 @@ export function UpdateUser({
               }
               error={formState.errors['confirmPassword']}
               registration={register('confirmPassword')}
+            />
+            <ComboBoxSelectOrg
+              label={
+                t('cloud:org_manage.user_manage.add_user.parent') ??
+                'Parent organization'
+              }
+              setFilteredComboboxData={setFilteredComboboxData}
+              hasDefaultComboboxData={defaultComboboxOrgData}
             />
           </>
         )}

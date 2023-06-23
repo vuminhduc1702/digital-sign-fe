@@ -1,6 +1,5 @@
-import clsx from 'clsx'
-
 import { type ReactElement } from 'react'
+import { cn } from '~/utils/misc'
 
 function TitleBar({
   title,
@@ -11,7 +10,7 @@ function TitleBar({
 }) {
   return (
     <h2
-      className={clsx(
+      className={cn(
         'flex h-9 items-center rounded-tr-md bg-primary-400 px-10 text-h2 uppercase text-white',
         className,
       )}

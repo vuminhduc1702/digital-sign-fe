@@ -201,6 +201,23 @@
           "name": "Tên sự kiện",
           "parent": "Trực thuộc",
           "group": "Nhóm",
+          "condition": {
+            "title": "Điều kiện kích hoạt",
+            "onClick": "onClick",
+            "device": "Thiết bị",
+            "attr": "Thuộc tính",
+            "condition_type": {
+              "title": "Kiểu điều kiện",
+              "normal": "Normal",
+              "delay": "Delay"
+            },
+            "operator": {
+              "title": "Điều kiện",
+              "gte": "Lớn hơn",
+              "lte": "Nhỏ hơn",
+              "not": "Khác"
+            }
+          },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
           "success_delete": "Xoá sự kiện thành công"
@@ -292,9 +309,18 @@
     "no_user": "Không tồn tại người dùng",
     "error_page": {
       "title": "Ooops, có lỗi rùi, bạn click nút Refresh để tải lại trang nhé :("
+    },
+    "server_res": {
+      "title": "Lỗi",
+      "malformed_data": "Dữ liệu truyền lên không hợp lệ",
+      "authorization": "Bạn không có quyền truy cập vào trang này",
+      "server_err": "Server đang bị lỗi, vui lòng thử lại"
     }
   },
-  "loading": "Đang tải dữ liệu...",
+  "loading": {
+    "device": "Đang tải danh sách thiết bị...",
+    "attr": "Đang tải danh sách thuộc tính..."
+  },
   "search": "Tìm kiếm",
   "user": {
     "login": "Đăng nhập",
