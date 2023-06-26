@@ -112,9 +112,9 @@ export function UpdateRole({
         options={{
           defaultValues: { name, policies: policiesCurrent },
         }}
-        name="policies"
+        name={['policies']}
       >
-        {(register, formState, fields, append, remove, control) => {
+        {({ register, formState, control }, { fields, append, remove }) => {
           return (
             <>
               <button

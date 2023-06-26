@@ -2,7 +2,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import 'intersection-observer'
-import { Fragment } from 'react'
+import { type Dispatch, Fragment, type SetStateAction, useEffect } from 'react'
 
 const sizes = {
   sm: 'max-w-md',
@@ -19,6 +19,7 @@ export type DrawerProps = {
   children: React.ReactNode
   renderFooter: () => React.ReactNode
   size?: keyof typeof sizes
+  setOtherState?: Dispatch<SetStateAction<any>>
 }
 
 export const Drawer = ({
@@ -28,7 +29,12 @@ export const Drawer = ({
   onClose,
   renderFooter,
   size = 'md',
+  setOtherState,
 }: DrawerProps) => {
+  useEffect(() => {
+    setOtherState?.(false)
+  }, [isOpen])
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog

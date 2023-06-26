@@ -112,9 +112,9 @@ export function CreateRole() {
             policies: [{ policy_name: '', resources: [], actions: [] }],
           },
         }}
-        name="policies"
+        name={['policies']}
       >
-        {(register, formState, fields, append, remove, control) => {
+        {({ register, formState, control }, { fields, append, remove }) => {
           // console.log('errors zod: ', formState.errors)
           return (
             <>

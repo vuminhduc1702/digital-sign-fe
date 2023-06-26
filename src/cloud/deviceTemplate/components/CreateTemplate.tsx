@@ -84,9 +84,9 @@ export default function CreateTemplate() {
             ],
           },
         }}
-        name="attributes"
+        name={['attributes']}
       >
-        {(register, formState, fields, append, remove) => (
+        {({ register, formState, control }, { fields, append, remove }) => (
           <>
             <button
               type="button"

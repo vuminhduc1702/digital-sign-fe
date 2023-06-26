@@ -34,3 +34,8 @@ export const attrSchema = z.object({
   logged: z.boolean(),
   value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
 })
+
+export const selectOptionSchema = z.object({
+  label: z.string(),
+  value: z.string(),
+})

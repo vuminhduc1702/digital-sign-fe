@@ -1,4 +1,11 @@
-import * as React from 'react'
+import {
+  type Dispatch,
+  type ReactElement,
+  type ReactNode,
+  type SetStateAction,
+  cloneElement,
+  useEffect,
+} from 'react'
 
 import { useDisclosure } from '~/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
@@ -8,11 +15,12 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
 type FormDrawerProps = {
   isDone: boolean
-  triggerButton: React.ReactElement
-  submitButton: React.ReactElement
+  triggerButton: ReactElement
+  submitButton: ReactElement
   title: string
-  children: React.ReactNode
+  children: ReactNode
   size?: DrawerProps['size']
+  setOtherState?: Dispatch<SetStateAction<any>>
 }
 
 export const FormDrawer = ({
@@ -22,10 +30,11 @@ export const FormDrawer = ({
   triggerButton,
   submitButton,
   size = 'md',
+  setOtherState,
 }: FormDrawerProps) => {
   const { close, open, isOpen } = useDisclosure()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDone) {
       close()
     }
@@ -33,7 +42,7 @@ export const FormDrawer = ({
 
   return (
     <>
-      {React.cloneElement(triggerButton, { onClick: open })}
+      {cloneElement(triggerButton, { onClick: open })}
       <Drawer
         isOpen={isOpen}
         onClose={close}
@@ -53,6 +62,7 @@ export const FormDrawer = ({
             {submitButton}
           </>
         )}
+        setOtherState={setOtherState}
       >
         {children}
       </Drawer>

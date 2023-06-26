@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
@@ -12,19 +12,18 @@ import {
   SelectDropdown,
 } from '~/components/Form'
 import { useProjectIdStore } from '~/stores/project'
-import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { useDefaultCombobox } from '~/utils/hooks'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
-import { ComboBoxSelectGroup } from '../Group'
 import { useGetGroups } from '../../api/groupAPI'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetAttrs } from '../../api/attrAPI'
 import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
 
-import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { type DeviceList, type Group } from '../../types'
 import { type Attribute } from '~/types'
+import { type OrgList } from '~/layout/MainLayout/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -35,7 +34,7 @@ const conditionObj = z.object({
   attribute_name: z.string(),
   condition_type: z.enum(['normal', 'delay'] as const),
   operator: z.enum(['<', '>', '!='] as const),
-  // threshold: z.string(),
+  threshold: z.string(),
   // logical_operator: z.enum(['and', 'or'] as const),
 })
 type ConditionObj = z.infer<typeof conditionObj>
@@ -80,8 +79,8 @@ export const eventActionSchema = z
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
-    org_id: z.string().optional(),
-    group_id: z.string().optional(),
+    org_id: selectOptionSchema.optional(),
+    group_id: selectOptionSchema.optional(),
     name: nameSchema,
     // interval: intervalSchema,
     // action: eventActionSchema
@@ -94,7 +93,7 @@ export const createEventSchema = z
     z.discriminatedUnion('onClick', [
       z.object({
         onClick: z.literal('true'),
-        condition: z.void(),
+        condition: z.tuple([]),
       }),
       z.object({
         onClick: z.literal('false'),
@@ -107,26 +106,11 @@ const defaultConditionValue: ConditionObj = {
   attribute_name: '',
   condition_type: 'normal',
   operator: '>',
+  threshold: '',
 }
 
 export function CreateEvent() {
   const { t } = useTranslation()
-
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-
-  const [filteredComboboxOrgData, setFilteredComboboxOrgData] = useState<
-    OrgMapType[]
-  >([])
-  const selectedOrgId =
-    filteredComboboxOrgData.length !== 1 ? '' : filteredComboboxOrgData[0]?.id
-
-  const [filteredComboboxGroupData, setFilteredComboboxGroupData] = useState<
-    Group[]
-  >([])
-  const selectedGroupId =
-    filteredComboboxGroupData.length !== 1
-      ? ''
-      : filteredComboboxGroupData[0]?.id
 
   const [onClickValue, setOnclickValue] = useState(false)
 
@@ -136,17 +120,15 @@ export function CreateEvent() {
   const params = useParams()
   const orgId = params.orgId as string
 
-  const { data: groupData, isSuccess: isSuccessGroupData } = useGetGroups({
+  const { data: groupData, refetch: refetchGroupData } = useGetGroups({
     orgId,
     projectId,
-    // config: { enabled: false }
+    config: { enabled: false },
   })
-  // const groupListCache: Group[] | undefined = queryClient.getQueryData(
-  //   ['groups'],
-  //   {
-  //     exact: false,
-  //   },
-  // )
+  const groupListCache: Group[] | undefined = queryClient.getQueryData(
+    ['groups'],
+    { exact: false },
+  )
 
   const { data: deviceData, refetch: refetchDeviceData } = useGetDevices({
     orgId,
@@ -155,9 +137,7 @@ export function CreateEvent() {
   })
   const deviceListCache: DeviceList | undefined = queryClient.getQueryData(
     ['devices'],
-    {
-      exact: false,
-    },
+    { exact: false },
   )
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
@@ -172,18 +152,28 @@ export function CreateEvent() {
   })
   const attrListCache: Attribute[] | undefined = queryClient.getQueryData(
     ['attrs'],
-    {
-      exact: false,
-    },
+    { exact: false },
   )
   const attrSelectData = attrData?.attributes.map(attribute => ({
     value: attribute.attribute_key,
     label: attribute.attribute_key,
   })) || [{ value: '', label: '' }]
 
+  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
+    exact: false,
+  })
+  const { acc: orgFlattenData } = flattenData(
+    orgListCache?.organizations || [],
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
+
   return (
     <FormDrawer
       isDone={isSuccess}
+      size="lg"
       triggerButton={
         <Button
           className="rounded-md"
@@ -205,12 +195,13 @@ export function CreateEvent() {
           }
         />
       }
+      setOtherState={setOnclickValue}
     >
       <FormMultipleFields<CreateEventDTO['data'], typeof createEventSchema>
         id="create-event"
         onSubmit={values => {
           console.log('values: ', values)
-          const conditionArr =
+          const conditionArr: ConditionObj[] =
             values.condition?.map(item => ({
               device_id: (
                 item.device_id as unknown as { value: string; label: string }
@@ -233,12 +224,23 @@ export function CreateEvent() {
                   label: string
                 }
               ).value,
+              threshold: item.threshold,
             })) || []
           mutate({
             data: {
               project_id: projectId,
-              org_id: selectedOrgId,
-              group_id: selectedGroupId,
+              // @ts-ignore
+              org_id:
+                (values.org_id as unknown as { value: string; label: string })
+                  ?.value || '',
+              // @ts-ignore
+              group_id:
+                (
+                  values.group_id as unknown as {
+                    value: string
+                    label: string
+                  }
+                )?.value || '',
               name: values.name,
               onClick: values.onClick === 'true',
               condition: values.onClick === 'false' ? conditionArr : null,
@@ -246,11 +248,6 @@ export function CreateEvent() {
           })
         }}
         schema={createEventSchema}
-        // options={{
-        //   defaultValues: {
-        //     condition: [defaultConditionValue],
-        //   },
-        // }}
         name={['condition', 'action']}
       >
         {(
@@ -262,32 +259,55 @@ export function CreateEvent() {
           },
           { append: actionAppend, fields: actionFields, remove: actionRemove },
         ) => {
-          console.log('errors zod: ', formState.errors)
+          console.log('zod errors: ', formState.errors)
           return (
             <>
-              <button
-                type="button"
-                onClick={() => conditionAppend(defaultConditionValue)}
-              >
-                APPEND
-              </button>
               <InputField
                 label={t('cloud:org_manage.event_manage.add_event.name')}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
-              <ComboBoxSelectOrg
-                label={t('cloud:org_manage.event_manage.add_event.parent')}
-                setFilteredComboboxData={setFilteredComboboxOrgData}
-                hasDefaultComboboxData={defaultComboboxOrgData}
-              />
-              {isSuccessGroupData ? (
-                <ComboBoxSelectGroup
-                  label={t('cloud:org_manage.event_manage.add_event.group')}
-                  data={groupData}
-                  setFilteredComboboxData={setFilteredComboboxGroupData}
+              <div className="space-y-1">
+                <SelectDropdown
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={
+                    orgSelectOptions?.map(org => ({
+                      label: org?.name,
+                      value: org?.id,
+                    })) || [{ label: t('loading:org'), value: '' }]
+                  }
                 />
-              ) : null}
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.org_id?.message}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <SelectDropdown
+                  label={t('cloud:org_manage.event_manage.add_event.group')}
+                  name="group_id"
+                  control={control}
+                  options={
+                    groupData?.groups.map(group => ({
+                      label: group?.name,
+                      value: group?.id,
+                    })) || [{ label: t('loading:group'), value: '' }]
+                  }
+                  isOptionDisabled={option =>
+                    option.label === t('loading:group')
+                  }
+                  noOptionsMessage={() => t('table:no_group')}
+                  onMenuOpen={() => {
+                    if (groupListCache) {
+                      return
+                    } else refetchGroupData()
+                  }}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.org_id?.message}
+                </p>
+              </div>
               <SelectField
                 label={t(
                   'cloud:org_manage.event_manage.add_event.condition.onClick',
@@ -304,135 +324,152 @@ export function CreateEvent() {
                   )
                 }
               />
+              {!onClickValue ? (
+                <div className="flex justify-between space-x-3">
+                  <TitleBar
+                    title={t(
+                      'cloud:org_manage.event_manage.add_event.condition.title',
+                    )}
+                    className="w-full rounded-md bg-gray-500 pl-3"
+                  />
+                  <Button
+                    className="rounded-md"
+                    variant="trans"
+                    size="square"
+                    startIcon={
+                      <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                    }
+                    onClick={() => conditionAppend(defaultConditionValue)}
+                  />
+                </div>
+              ) : null}
 
               {!onClickValue
                 ? conditionFields.map((field, index) => {
                     return (
-                      <>
-                        <TitleBar
-                          title={t(
-                            'cloud:org_manage.event_manage.add_event.condition.title',
+                      <section
+                        className="flex justify-between gap-x-3"
+                        style={{ marginTop: '10px' }}
+                        key={field.id}
+                      >
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.device',
                           )}
-                          className="bg-gray-500 pl-3"
+                          name={`condition.${index}.device_id`}
+                          control={control}
+                          options={
+                            deviceData
+                              ? deviceSelectData
+                              : [{ label: t('loading:device'), value: '' }]
+                          }
+                          isOptionDisabled={option =>
+                            option.label === t('loading:device')
+                          }
+                          noOptionsMessage={() => t('table:no_device')}
+                          onMenuOpen={() => {
+                            if (deviceListCache?.devices) {
+                              return
+                            } else refetchDeviceData()
+                          }}
+                          onMenuClose={() => {
+                            const deviceId = watch(
+                              // @ts-expect-error
+                              'condition.0.device_id.value',
+                            ) as unknown as string
+                            setSelectedDeviceId(deviceId)
+                            if (
+                              (selectedDeviceId == null ||
+                                selectedDeviceId === '') &&
+                              (attrListCache == null ||
+                                attrListCache?.length === 0)
+                            ) {
+                              return
+                            } else refetchAttrData()
+                          }}
                         />
-                        <section
-                          className="space-y-3"
-                          style={{ marginTop: '10px' }}
-                          key={field.id}
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.attr',
+                          )}
+                          name={`condition.${index}.attribute_name`}
+                          options={
+                            attrData
+                              ? attrSelectData
+                              : [{ label: t('loading:attr'), value: '' }]
+                          }
+                          isOptionDisabled={option =>
+                            option.label === t('loading:attr')
+                          }
+                          noOptionsMessage={() => t('table:no_attr')}
+                          control={control}
+                        />
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
+                          )}
+                          name={`condition.${index}.condition_type`}
+                          options={[
+                            {
+                              label: t(
+                                'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
+                              ),
+                              value: 'normal',
+                            },
+                            {
+                              label: t(
+                                'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
+                              ),
+                              value: 'delay',
+                            },
+                          ]}
+                          control={control}
+                        />
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.operator.title',
+                          )}
+                          name={`condition.${index}.operator`}
+                          options={[
+                            {
+                              label: t(
+                                'cloud:org_manage.event_manage.add_event.condition.operator.gte',
+                              ),
+                              value: '>',
+                            },
+                            {
+                              label: t(
+                                'cloud:org_manage.event_manage.add_event.condition.operator.lte',
+                              ),
+                              value: '<',
+                            },
+                            {
+                              label: t(
+                                'cloud:org_manage.event_manage.add_event.condition.operator.not',
+                              ),
+                              value: '!=',
+                            },
+                          ]}
+                          control={control}
+                        />
+                        <InputField
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.threshold',
+                          )}
+                          error={
+                            formState.errors[`condition.${index}.threshold`]
+                          }
+                          registration={register(
+                            `condition.${index}.threshold`,
+                          )}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => conditionRemove(index)}
                         >
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.device',
-                            )}
-                            name={`condition.${index}.device_id`}
-                            options={
-                              deviceData
-                                ? deviceSelectData
-                                : [{ label: t('loading:device'), value: '' }]
-                            }
-                            isOptionDisabled={option =>
-                              option.label === t('loading:device')
-                            }
-                            noOptionsMessage={() => t('table:no_device')}
-                            control={control}
-                            closeMenuOnSelect
-                            onMenuOpen={() => {
-                              if (deviceListCache?.devices) {
-                                return
-                              } else refetchDeviceData()
-                            }}
-                            onMenuClose={() => {
-                              const deviceId = watch(
-                                // @ts-expect-error
-                                'condition.0.device_id.value',
-                              ) as unknown as string
-                              setSelectedDeviceId(deviceId)
-                              if (
-                                (selectedDeviceId == null ||
-                                  selectedDeviceId === '') &&
-                                (attrListCache == null ||
-                                  attrListCache?.length === 0)
-                              ) {
-                                return
-                              } else refetchAttrData()
-                              console.log('selectedDeviceId', selectedDeviceId)
-                            }}
-                          />
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.attr',
-                            )}
-                            name={`condition.${index}.attribute_name`}
-                            options={
-                              attrData
-                                ? attrSelectData
-                                : [{ label: t('loading:attr'), value: '' }]
-                            }
-                            isOptionDisabled={option =>
-                              option.label === t('loading:attr')
-                            }
-                            noOptionsMessage={() => t('table:no_attr')}
-                            control={control}
-                            closeMenuOnSelect
-                          />
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
-                            )}
-                            name={`condition.${index}.condition_type`}
-                            options={[
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-                                ),
-                                value: 'normal',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-                                ),
-                                value: 'delay',
-                              },
-                            ]}
-                            control={control}
-                            closeMenuOnSelect
-                          />
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.operator.title',
-                            )}
-                            name={`condition.${index}.operator`}
-                            options={[
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-                                ),
-                                value: '>',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-                                ),
-                                value: '<',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.not',
-                                ),
-                                value: '!=',
-                              },
-                            ]}
-                            control={control}
-                            closeMenuOnSelect
-                          />
-                          <button
-                            type="button"
-                            onClick={() => conditionRemove(index)}
-                          >
-                            X
-                          </button>
-                        </section>
-                      </>
+                          X
+                        </button>
+                      </section>
                     )
                   })
                 : null}

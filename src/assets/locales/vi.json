@@ -83,7 +83,7 @@
           "title": "Tạo mới tổ chức",
           "edit": "Sửa tổ chức",
           "name": "Tên tổ chức",
-          "parent": "Trực thuộc",
+          "parent": "Trực thuộc tổ chức",
           "desc": "Mô tả",
           "avatar": "Ảnh đại diện",
           "upload_ava": "Tải ảnh",
@@ -99,7 +99,6 @@
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",
           "logged": "Lưu lịch sử",
-          "no_org": "Không trực thuộc",
           "success_create": "Tạo thuộc tính thành công",
           "success_update": "Sửa thuộc tính thành công",
           "success_delete": "Xoá thuộc tính thành công"
@@ -121,7 +120,7 @@
           "name": "Tên nhóm",
           "entity_type": "Phân loại",
           "desc": "Mô tả",
-          "parent": "Trực thuộc",
+          "parent": "Trực thuộc tổ chức",
           "success_create": "Tạo nhóm thành công",
           "success_update": "Sửa nhóm thành công",
           "success_delete": "Xoá nhóm thành công"
@@ -149,7 +148,7 @@
           "confirm_password": "Nhập lại mật khẩu",
           "role": "Vai trò",
           "activate": "Kích hoạt",
-          "parent": "Trực thuộc",
+          "parent": "Trực thuộc tổ chức",
           "success_create": "Tạo người dùng thành công",
           "success_update": "Sửa người dùng thành công",
           "success_delete": "Xoá người dùng thành công"
@@ -173,7 +172,7 @@
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
           "name": "Tên thiết bị",
-          "parent": "Trực thuộc",
+          "parent": "Trực thuộc tổ chức",
           "device_type": "Mẫu thiết bị",
           "success_create": "Tạo thiết bị thành công",
           "success_update": "Sửa thiết bị thành công",
@@ -199,7 +198,7 @@
           "title": "Tạo mới sự kiện",
           "edit": "Sửa sự kiện",
           "name": "Tên sự kiện",
-          "parent": "Trực thuộc",
+          "parent": "Trực thuộc tổ chức",
           "group": "Nhóm",
           "condition": {
             "title": "Điều kiện kích hoạt",
@@ -216,7 +215,8 @@
               "gte": "Lớn hơn",
               "lte": "Nhỏ hơn",
               "not": "Khác"
-            }
+            },
+            "threshold": "Giá trị kích hoạt"
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
@@ -318,10 +318,15 @@
     }
   },
   "loading": {
+    "org": "Đang tải danh sách tổ chức...",
     "device": "Đang tải danh sách thiết bị...",
-    "attr": "Đang tải danh sách thuộc tính..."
+    "attr": "Đang tải danh sách thuộc tính...",
+    "group": "Đang tải danh sách nhóm..."
   },
-  "search": "Tìm kiếm",
+  "search": {
+    "title": "Tìm kiếm",
+    "no_org": "Không trực thuộc tổ chức"
+  },
   "user": {
     "login": "Đăng nhập",
     "logout": "Đăng xuất",

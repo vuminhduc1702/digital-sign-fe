@@ -106,7 +106,7 @@ export function useCopyId() {
 }
 
 export function useDefaultCombobox(
-  comboboxType: string,
+  comboboxType: 'org' | 'device',
 ): OrgMapType | undefined {
   const { t } = useTranslation()
 
@@ -115,7 +115,7 @@ export function useDefaultCombobox(
       return {
         id: '',
         level: '1',
-        name: t('cloud:org_manage.org_manage.add_attr.no_org'),
+        name: t('search:no_org'),
         description: '',
         parent_name: '',
       }
