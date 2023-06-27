@@ -16,7 +16,7 @@ export function LandingPage() {
         <Button
           className="mt-4"
           size="lg"
-          onClick={() => navigate(`${PATHS.PROJECT_MANAGE}`)}
+          onClick={() => navigate(PATHS.PROJECT_MANAGE)}
         >
           Nhấn vào đây để chọn Project
         </Button>

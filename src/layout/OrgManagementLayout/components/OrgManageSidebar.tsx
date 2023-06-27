@@ -14,7 +14,10 @@ import { UpdateOrg } from './UpdateOrg'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { PATHS } from '~/routes/PATHS'
+import { queryClient } from '~/lib/react-query'
 import { useProjectById } from '~/cloud/project/api'
+
+import { type Project } from '~/cloud/project'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
@@ -42,7 +45,14 @@ function OrgManageSidebar() {
   const { orgId } = useParams()
 
   const projectId = useProjectIdStore(state => state.projectId)
-  const { data: projectByIdData } = useProjectById({ projectId })
+
+  const { data: projectByIdData } = useProjectById({
+    projectId,
+    config: { enabled: !!projectId },
+  })
+  const groupProjectByIdCache: Project | undefined = queryClient.getQueryData([
+    'project',
+  ])
 
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
 
@@ -84,6 +94,9 @@ function OrgManageSidebar() {
             })}
             variant="muted"
             onClick={() => {
+              if (groupProjectByIdCache == null) {
+                return navigate(PATHS.PROJECT_MANAGE)
+              }
               switch (entityTypeURL) {
                 case 'org':
                   return navigate(`${PATHS.ORG_MANAGE}/${projectId}`)
@@ -100,7 +113,8 @@ function OrgManageSidebar() {
               }
             }}
           >
-            {projectByIdData?.name}
+            {projectByIdData?.name ||
+              t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
           {filteredComboboxData?.map((org: OrgMapType) => (
             <div className="flex" key={org.id}>

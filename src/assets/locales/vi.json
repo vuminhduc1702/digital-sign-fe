@@ -60,7 +60,8 @@
         "overview": {
           "title": "Tổng quan",
           "name": "Tên",
-          "desc": "Mô tả"
+          "desc": "Mô tả",
+          "choose_project": "Vui lòng click vào đây để chọn Project"
         },
         "breadcrumb": {
           "device_list": "Danh sách thiết bị",
