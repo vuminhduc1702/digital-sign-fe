@@ -3,14 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { Button } from '~/components/Button'
 import { useUser } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
 
 export function LandingPage() {
   const navigate = useNavigate()
 
   const user = useUser()
-
-  const projectId = useProjectIdStore(state => state.projectId)
 
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
@@ -19,9 +16,9 @@ export function LandingPage() {
         <Button
           className="mt-4"
           size="lg"
-          onClick={() => navigate(`${PATHS.ORG_MANAGE}/${projectId}`)}
+          onClick={() => navigate(`${PATHS.PROJECT_MANAGE}`)}
         >
-          Nhấn vào đây để vào Platform
+          Nhấn vào đây để chọn Project
         </Button>
       ) : (
         <div className="flex gap-x-5">

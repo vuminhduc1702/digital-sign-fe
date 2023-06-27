@@ -3,7 +3,7 @@ import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-import { type ProjectList } from '../types'
+import { type ProjectList } from '~/cloud/project'
 
 export const getProjects = (): Promise<ProjectList> => {
   return axios.get('/api/projects')

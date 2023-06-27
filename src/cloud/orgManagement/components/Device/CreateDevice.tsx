@@ -17,7 +17,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const deviceSchema = z.object({
   name: nameSchema,
-  org_id: selectOptionSchema,
+  org_id: selectOptionSchema(),
 })
 
 export function CreateDevice() {

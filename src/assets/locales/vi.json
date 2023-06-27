@@ -216,7 +216,27 @@
               "lte": "Nhỏ hơn",
               "not": "Khác"
             },
-            "threshold": "Giá trị kích hoạt"
+            "threshold": "Giá trị đối chiếu",
+            "logical_operator": {
+              "title": "Điều kiện kết hợp",
+              "and": "And",
+              "or": "Or"
+            }
+          },
+          "action": {
+            "title": "Thao tác xử lý",
+            "action_type": {
+              "title": "Kiểu thao tác",
+              "sms": "SMS",
+              "email": "Email",
+              "mqtt": "MQTT",
+              "fcm": "FCM",
+              "event": "Event",
+              "eventactive": "Event active",
+              "delay": "Delay"
+            },
+            "receiver": "Bên nhận",
+            "message": "Nội dung gửi"
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",

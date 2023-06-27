@@ -7,8 +7,7 @@ type ProjectIdStore = {
 }
 
 export const useProjectIdStore = create<ProjectIdStore>(set => ({
-  // TODO: Remove default projectId later
-  projectId: '4aa509bb-0638-483b-a290-280b0c21d96f',
+  projectId: '',
   projectName: '',
   setProjectId: (projectId, projectName) => set({ projectId, projectName }),
 }))

@@ -9,7 +9,7 @@ type IconProps =
   | { endIcon?: undefined; startIcon?: undefined }
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password'
+  type?: 'text' | 'email' | 'password' | 'number'
   className?: string
   registration?: Partial<UseFormRegisterReturn>
 } & IconProps

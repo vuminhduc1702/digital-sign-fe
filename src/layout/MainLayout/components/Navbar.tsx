@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
-import { useProjects } from '../api'
 import { useLogout, useUser } from '~/lib/auth'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
+import { useProjects } from '~/cloud/project/api'
 
-import { type Project } from '../types'
+import { type Project } from '~/cloud/project'
 
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
@@ -100,7 +100,7 @@ function Navbar() {
                       }}
                     />
                     <div className="space-y-1">
-                      <p>{project.name}</p>
+                      <p className="text-h2">{project.name}</p>
                       <p>{project.description}</p>
                     </div>
                   </DropdownMenu.Item>

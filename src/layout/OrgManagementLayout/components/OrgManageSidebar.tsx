@@ -14,7 +14,7 @@ import { UpdateOrg } from './UpdateOrg'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectById } from '~/layout/MainLayout/api/getProjectById'
+import { useProjectById } from '~/cloud/project/api'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'

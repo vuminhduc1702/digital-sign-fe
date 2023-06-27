@@ -11,12 +11,14 @@ import {
 } from '~/components/Form'
 import { useProjectIdStore } from '~/stores/project'
 import { type CreateRoleDTO, useCreateRole } from '../api'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import TitleBar from '~/components/Head/TitleBar'
 
 import { type ActionsType, type ResourcesType } from '../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const resourcesList: ResourcesType[] = [
   { value: 'users', label: 'Người dùng' },
@@ -41,8 +43,12 @@ export const roleSchema = z.object({
   policies: z.array(
     z.object({
       policy_name: nameSchema,
-      resources: z.array(z.string()),
-      actions: z.array(z.string()),
+      resources: z
+        .array(selectOptionSchema())
+        .nonempty({ message: 'Vui lòng chọn ít nhất 1 tài nguyên' }),
+      actions: z
+        .array(selectOptionSchema())
+        .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
     }),
   ),
 })
@@ -85,10 +91,13 @@ export function CreateRole() {
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
         onSubmit={values => {
+          console.log('values', values)
           const policies = values.policies.map(policy => {
             resourceArrRef.current = policy.resources.map(
+              // @ts-ignore
               resource => resource.value,
             )
+            // @ts-ignore
             actionArrRef.current = policy.actions.map(action => action.value)
             return {
               policy_name: policy.policy_name,
@@ -104,8 +113,7 @@ export function CreateRole() {
             },
           })
         }}
-        // TODO: fix role's schema validation
-        // schema={roleSchema}
+        schema={roleSchema}
         options={{
           defaultValues: {
             name: '',
@@ -115,58 +123,99 @@ export function CreateRole() {
         name={['policies']}
       >
         {({ register, formState, control }, { fields, append, remove }) => {
-          // console.log('errors zod: ', formState.errors)
+          console.log('errors zod: ', formState.errors)
           return (
             <>
-              <button
-                type="button"
-                onClick={() =>
-                  append({ policy_name: '', resources: [], actions: [] })
-                }
-              >
-                APPEND
-              </button>
               <InputField
                 label={t('cloud:role_manage.add_role.name') ?? 'Role name'}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
+              <div className="flex justify-between space-x-3">
+                <TitleBar
+                  title={t('cloud:role_manage.add_policy.title')}
+                  className="w-full rounded-md bg-gray-500 pl-3"
+                />
+                <Button
+                  className="rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  onClick={() =>
+                    append({ policy_name: '', resources: [], actions: [] })
+                  }
+                />
+              </div>
               {fields.map((field, index) => (
-                <section className="space-y-2" key={field.id}>
-                  <InputField
-                    label={t('cloud:role_manage.add_policy.name') ?? 'Policy'}
-                    registration={register(
-                      `policies.${index}.policy_name` as const,
-                    )}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.policies?.[index]?.policy_name?.message}
-                  </p>
-                  <SelectDropdown
-                    label={
-                      t('cloud:role_manage.add_policy.resources') ??
-                      'Authorization resources'
+                <section
+                  className="flex justify-between gap-x-2"
+                  style={{ marginTop: 10 }}
+                  key={field.id}
+                >
+                  <div className="space-y-1">
+                    <InputField
+                      label={t('cloud:role_manage.add_policy.name') ?? 'Policy'}
+                      registration={register(
+                        `policies.${index}.policy_name` as const,
+                      )}
+                    />
+                    <p className="text-body-sm text-primary-400">
+                      {
+                        formState?.errors?.policies?.[index]?.policy_name
+                          ?.message
+                      }
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <SelectDropdown
+                      label={
+                        t('cloud:role_manage.add_policy.resources') ??
+                        'Authorization resources'
+                      }
+                      name={`policies.${index}.resources`}
+                      options={resourcesList.map(
+                        resourcesType => resourcesType,
+                      )}
+                      control={control}
+                      isMulti
+                      closeMenuOnSelect={false}
+                    />
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.policies?.[index]?.actions?.message}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <SelectDropdown
+                      label={
+                        t('cloud:role_manage.add_policy.actions') ??
+                        'Authorization actions'
+                      }
+                      name={`policies.${index}.actions`}
+                      options={actionsList.map(actionsType => actionsType)}
+                      control={control}
+                      isMulti
+                      closeMenuOnSelect={false}
+                    />
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.policies?.[index]?.actions?.message}
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    size="square"
+                    variant="trans"
+                    className="mt-3 self-start border-none"
+                    onClick={() => remove(index)}
+                    startIcon={
+                      <img
+                        src={btnDeleteIcon}
+                        alt="Delete condition"
+                        className="h-10 w-10"
+                      />
                     }
-                    name={`policies.${index}.resources`}
-                    options={resourcesList.map(resourcesType => resourcesType)}
-                    control={control}
-                    isMulti
-                    closeMenuOnSelect={false}
                   />
-                  <SelectDropdown
-                    label={
-                      t('cloud:role_manage.add_policy.actions') ??
-                      'Authorization actions'
-                    }
-                    name={`policies.${index}.actions`}
-                    options={actionsList.map(actionsType => actionsType)}
-                    control={control}
-                    isMulti
-                    closeMenuOnSelect={false}
-                  />
-                  <button type="button" onClick={() => remove(index)}>
-                    X
-                  </button>
                 </section>
               ))}
             </>

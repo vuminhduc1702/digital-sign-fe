@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { z, type ZodTypeAny } from 'zod'
 
 export const nameSchema = z
   .string()
@@ -35,7 +35,9 @@ export const attrSchema = z.object({
   value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
 })
 
-export const selectOptionSchema = z.object({
-  label: z.string(),
-  value: z.string(),
-})
+export const selectOptionSchema = (valueSchema?: ZodTypeAny) => {
+  return z.object({
+    label: z.string(),
+    value: valueSchema || z.string(),
+  })
+}

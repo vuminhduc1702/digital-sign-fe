@@ -3,7 +3,7 @@ import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-import { type Project } from '../types'
+import { type Project } from '~/cloud/project'
 
 export const getProjectById = ({
   projectId,

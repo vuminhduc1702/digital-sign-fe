@@ -6,7 +6,7 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useRoleById } from '../api/getRoleById'
 import { BaseTable } from '~/components/Table'
 
-import { type Policies } from '../types'
+import { type ResourcesType, type Policies, type ActionsType } from '../types'
 
 export function PolicyTable({ ...props }) {
   const { t } = useTranslation()
@@ -30,6 +30,32 @@ export function PolicyTable({ ...props }) {
       columnHelper.accessor('policy_name', {
         header: () => <span>{t('cloud:role_manage.add_policy.name')}</span>,
         cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('resources', {
+        header: () => (
+          <span>{t('cloud:role_manage.add_policy.resources')}</span>
+        ),
+        cell: info =>
+          info
+            .getValue()
+            .map(
+              (value: ResourcesType['value'][]) =>
+                value[0].toUpperCase() + value.slice(1),
+            )
+            .join(', '),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('actions', {
+        header: () => <span>{t('cloud:role_manage.add_policy.actions')}</span>,
+        cell: info =>
+          info
+            .getValue()
+            .map(
+              (value: ActionsType['value'][]) =>
+                value[0].toUpperCase() + value.slice(1),
+            )
+            .join(', '),
         footer: info => info.column.id,
       }),
     ],

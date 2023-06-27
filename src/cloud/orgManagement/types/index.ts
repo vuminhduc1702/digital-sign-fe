@@ -49,7 +49,14 @@ export type GroupList = {
 
 // Event types
 
-type ActionType = 'sms' | 'email' | 'mqtt' | 'fcm' | 'event' | 'eventactive'
+export type ActionType =
+  | 'sms'
+  | 'email'
+  | 'mqtt'
+  | 'fcm'
+  | 'event'
+  | 'eventactive'
+  | 'delay'
 
 type Action = {
   receiver: string
@@ -71,7 +78,7 @@ type Action = {
     }
 )
 
-type Condition = {
+export type Condition = {
   device_id: string
   device_name: string
   attribute_name: string
