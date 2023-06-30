@@ -1,3 +1,5 @@
+import { type BasePagination } from '~/types'
+
 export type ValueWS = { ts: number; value: string }
 
 export type WSAgg = { label: string; value: WSAggValue }
@@ -37,3 +39,42 @@ type DataItem = {
 export type WS = {
   data: DataItem[]
 }
+
+export type Widget = {
+  type: string
+  title: string
+  datasources: {
+    [key: string]: string
+  }
+  config: {
+    chartsetting: {
+      [key: string]: string
+    }
+    timewindow: {
+      interval: number
+    }
+    aggregation: {
+      limit: number
+    }
+  }
+}
+
+export type Widgets = {
+  [key: string]: Widget
+}
+
+export type Dashboard = {
+  id: string
+  name: string
+  created_time: number
+  title: string
+  tenant_id: string
+  configuration: {
+    description: string
+    widgets: Widgets | null
+  }
+}
+
+export type DashboardList = {
+  dashboard: Dashboard[]
+} & BasePagination

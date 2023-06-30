@@ -86,7 +86,7 @@ function Navbar() {
                   <DropdownMenu.Item
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
                     onClick={() => {
-                      setProjectId(project.id, project.name)
+                      setProjectId(project.id)
                     }}
                   >
                     <img

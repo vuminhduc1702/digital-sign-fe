@@ -15,8 +15,9 @@ export const PATHS: { [key: string]: string } = {
 
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
-  DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
+
+  DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
 
   // Public routes
   LOGIN: `${BASE_PATH}auth/login`,

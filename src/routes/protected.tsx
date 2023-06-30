@@ -8,6 +8,7 @@ import { OrgManagementRoutes } from '~/cloud/orgManagement'
 
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
+import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -26,6 +27,7 @@ export const protectedRoutes = [
     children: [
       ...OrgManagementRoutes,
       ...ProjectManagementRoutes,
+      ...DashboardManagementRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (

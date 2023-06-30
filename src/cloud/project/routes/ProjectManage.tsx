@@ -20,7 +20,7 @@ export function ProjectManage() {
             to={`${PATHS.ORG_MANAGE}/${project.id}`}
             key={project.id}
             onClick={() => {
-              setProjectId(project.id, project.name)
+              setProjectId(project.id)
             }}
           >
             <div className="flex gap-x-3">
