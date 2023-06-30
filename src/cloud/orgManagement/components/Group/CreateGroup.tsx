@@ -4,14 +4,13 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, SelectField } from '~/components/Form'
-
-import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
-
-import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
+import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
 import { useDefaultCombobox } from '~/utils/hooks'
+
+import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -45,7 +44,7 @@ export function CreateGroup() {
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
 
   return (

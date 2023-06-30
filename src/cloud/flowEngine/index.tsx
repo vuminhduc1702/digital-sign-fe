@@ -4,13 +4,12 @@ import Iframe from 'react-iframe'
 import TitleBar from '~/components/Head/TitleBar'
 import { FLOW_URL } from '~/config'
 import { ContentLayout } from '~/layout/ContentLayout'
-import { useProjectIdStore } from '~/stores/project'
 import storage from '~/utils/storage'
 
 export function FlowEngine() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { token } = storage.getToken()
 
   return (

@@ -4,10 +4,9 @@ import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-
-import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectUser, CreateUser, UserTable } from '../components/User'
 import { useGetUsers } from '../api/userAPI'
+import storage from '~/utils/storage'
 
 import { type UserInfo } from '~/features/auth'
 
@@ -22,7 +21,7 @@ export function UserManage() {
   const params = useParams()
 
   const orgId = params.orgId as string
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const {
     data: UserData,
     isPreviousData,

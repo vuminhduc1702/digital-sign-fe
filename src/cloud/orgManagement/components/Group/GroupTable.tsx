@@ -11,8 +11,8 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import { useDeleteGroup } from '../../api/groupAPI'
-import { useProjectIdStore } from '~/stores/project'
 import { UpdateGroup } from './UpdateGroup'
+import storage from '~/utils/storage'
 
 import { type Group } from '../../types'
 
@@ -29,7 +29,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { orgId } = useParams()
 
   const { mutateAsync, isLoading, isSuccess } = useDeleteGroup()

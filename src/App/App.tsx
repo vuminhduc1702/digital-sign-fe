@@ -41,6 +41,7 @@ function App() {
       new Date().getTime() - new Date(user?.timestamp).getTime() >
         24 * 60 * 60 * 1000
     ) {
+      storage.clearProject()
       storage.clearToken()
     }
   }, [])

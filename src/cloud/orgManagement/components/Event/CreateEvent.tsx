@@ -11,7 +11,6 @@ import {
   SelectField,
   SelectDropdown,
 } from '~/components/Form'
-import { useProjectIdStore } from '~/stores/project'
 import { useDefaultCombobox } from '~/utils/hooks'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -21,6 +20,7 @@ import { useGetAttrs } from '../../api/attrAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import TitleBar from '~/components/Head/TitleBar'
+import storage from '~/utils/storage'
 
 import {
   type ActionType,
@@ -109,7 +109,7 @@ export function CreateEvent() {
 
   const [onClickValue, setOnclickValue] = useState(false)
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
   const params = useParams()

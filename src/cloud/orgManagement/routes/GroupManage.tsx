@@ -9,8 +9,8 @@ import {
   CreateGroup,
   GroupTable,
 } from '../components/Group'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetGroups } from '../api/groupAPI'
+import storage from '~/utils/storage'
 
 import { type Group } from '../types'
 
@@ -21,7 +21,7 @@ export function GroupManage() {
   const [offset, setOffset] = useState(0)
 
   const { orgId } = useParams()
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const {
     data: groupData,
     isPreviousData,

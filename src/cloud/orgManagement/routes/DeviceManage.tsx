@@ -9,8 +9,8 @@ import {
   DeviceTable,
   ComboBoxSelectDevice,
 } from '../components/Device'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetDevices } from '../api/deviceAPI'
+import storage from '~/utils/storage'
 
 import { type Device } from '../types'
 
@@ -23,7 +23,7 @@ export function DeviceManage() {
   const params = useParams()
 
   const orgId = params.orgId as string
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const {
     data: deviceData,
     isPreviousData,

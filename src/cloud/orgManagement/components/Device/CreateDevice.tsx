@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, SelectDropdown } from '~/components/Form'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
-import { useProjectIdStore } from '~/stores/project'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import { useDefaultCombobox } from '~/utils/hooks'
+import storage from '~/utils/storage'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 
@@ -23,7 +23,7 @@ export const deviceSchema = z.object({
 export function CreateDevice() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateDevice()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {

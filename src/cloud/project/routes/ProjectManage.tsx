@@ -3,14 +3,15 @@ import { useProjects } from '../api'
 
 import { type Project } from '../types'
 import { PATHS } from '~/routes/PATHS'
+import storage from '~/utils/storage'
 import { useProjectIdStore } from '~/stores/project'
 
 import defaultProjectImage from '~/assets/images/default-project.png'
 
 export function ProjectManage() {
-  const setProjectId = useProjectIdStore(state => state.setProjectId)
-
   const { data: projectsData } = useProjects()
+
+  const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   return (
     <>
@@ -20,6 +21,7 @@ export function ProjectManage() {
             to={`${PATHS.ORG_MANAGE}/${project.id}`}
             key={project.id}
             onClick={() => {
+              storage.setProject(project)
               setProjectId(project.id)
             }}
           >

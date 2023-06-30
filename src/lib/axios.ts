@@ -40,6 +40,7 @@ axios.interceptors.response.use(
         message = errMessage || 'Dữ liệu truyền lên không hợp lệ'
         break
       case 401:
+        storage.clearProject()
         storage.clearToken()
         return (window.location.href = PATHS.LOGIN)
       case 403:

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { Menu } from '@headlessui/react'
 
-import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -14,6 +13,7 @@ import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
 import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplate'
+import storage from '~/utils/storage'
 
 import { type Template } from '../types'
 
@@ -32,7 +32,7 @@ export function TemplateSidebar() {
 
   const { templateId } = useParams()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
 

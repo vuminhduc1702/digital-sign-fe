@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetEvents } from '../api/eventAPI'
 import {
   ComboBoxSelectEvent,
   CreateEvent,
   EventTable,
 } from '../components/Event'
+import storage from '~/utils/storage'
 
 import { type EventType } from '../types'
 
@@ -24,7 +24,7 @@ export function EventManage() {
   const params = useParams()
 
   const orgId = params.orgId as string
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const {
     data: eventData,
     isPreviousData,

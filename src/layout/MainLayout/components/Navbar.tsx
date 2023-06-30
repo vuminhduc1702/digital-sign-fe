@@ -4,8 +4,9 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useLogout, useUser } from '~/lib/auth'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
 import { useProjects } from '~/cloud/project/api'
+import { useProjectIdStore } from '~/stores/project'
+import storage from '~/utils/storage'
 
 import { type Project } from '~/cloud/project'
 
@@ -21,9 +22,9 @@ function Navbar() {
   const { data: projectsData } = useProjects()
   const { data: userData } = useUser()
 
-  const setProjectId = useProjectIdStore(state => state.setProjectId)
-
   const logout = useLogout()
+
+  const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   return (
     <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
@@ -86,6 +87,7 @@ function Navbar() {
                   <DropdownMenu.Item
                     className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
                     onClick={() => {
+                      storage.setProject(project)
                       setProjectId(project.id)
                     }}
                   >

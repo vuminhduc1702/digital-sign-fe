@@ -12,11 +12,11 @@ import {
   loggedList,
   valueTypeList,
 } from '~/cloud/orgManagement/components/Attributes'
-import { useProjectIdStore } from '~/stores/project'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
 } from '../api/createTemplate'
+import storage from '~/utils/storage'
 
 import { nameSchema } from '~/utils/schemaValidation'
 
@@ -41,7 +41,7 @@ export const templateAttrSchema = z.object({
 export default function CreateTemplate() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateTemplate()
 

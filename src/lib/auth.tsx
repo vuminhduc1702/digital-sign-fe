@@ -45,6 +45,7 @@ async function registerFn(data: RegisterCredentialsDTO) {
 }
 
 async function logoutFn() {
+  storage.clearProject()
   storage.clearToken()
   window.location.assign(window.location.origin as unknown as string)
 }

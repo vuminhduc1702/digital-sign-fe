@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { Menu } from '@headlessui/react'
 
-import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -14,6 +13,7 @@ import { useDeleteRole } from '../api'
 import { ComboBoxSelectRole } from './ComboBoxSelectRole'
 import { CreateRole } from './CreateRole'
 import { UpdateRole } from './UpdateRole'
+import storage from '~/utils/storage'
 
 import { type Role } from '../types'
 
@@ -32,7 +32,7 @@ export function RoleSidebar() {
 
   const { roleId } = useParams()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useDeleteRole()
 

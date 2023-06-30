@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
-import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -9,9 +8,8 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
-import { getVNDateFormat } from '~/utils/misc'
-import { useProjectIdStore } from '~/stores/project'
 import { useDeleteEvent } from '../../api/eventAPI'
+import storage from '~/utils/storage'
 
 import { type EventType } from '../../types'
 
@@ -26,7 +24,7 @@ function EventTableContextMenu({ id, name }: { id: string; name: string }) {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useDeleteEvent()
 

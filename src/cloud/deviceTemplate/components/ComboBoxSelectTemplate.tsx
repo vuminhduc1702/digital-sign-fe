@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetTemplates } from '../api'
+import storage from '~/utils/storage'
 
 import { type Template } from '../types'
 
@@ -17,7 +17,7 @@ export function ComboBoxSelectTemplate({
 }) {
   const [query, setQuery] = useState('')
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { data } = useGetTemplates({ projectId })
 
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(

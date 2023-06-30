@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import {
   ComboBoxBase,
   type ComboBoxBasePassThroughProps,
   filteredComboboxData,
 } from '~/components/ComboBox'
+import storage from '~/utils/storage'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
@@ -25,7 +25,7 @@ export function ComboBoxSelectOrg({
 }: ComboBoxSelectOrgProps) {
   const [query, setQuery] = useState('')
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
     orgData?.organizations || [],

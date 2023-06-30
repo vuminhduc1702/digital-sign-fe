@@ -13,7 +13,7 @@ import { PATHS } from '~/routes/PATHS'
 import { UpdateDevice } from './UpdateDevice'
 import { getVNDateFormat } from '~/utils/misc'
 import { useDeleteDevice } from '../../api/deviceAPI'
-import { useProjectIdStore } from '~/stores/project'
+import storage from '~/utils/storage'
 
 import { type Device } from '../../types'
 
@@ -30,7 +30,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()

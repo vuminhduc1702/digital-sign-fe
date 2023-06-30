@@ -12,7 +12,7 @@ import {
 } from '~/cloud/orgManagement/components/Attributes'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
-import { useProjectIdStore } from '~/stores/project'
+import storage from '~/utils/storage'
 
 import { type Attribute } from '~/types'
 
@@ -25,7 +25,7 @@ export function DeviceTemplateManage() {
 
   const { templateId } = useParams()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   return (
     <ContentLayout title={t('sidebar:cloud.device_template')}>

@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { Menu } from '@headlessui/react'
 
-import { useProjectIdStore } from '~/stores/project'
 import { Button } from '~/components/Button'
 import { CreateOrg } from './CreateOrg'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -16,6 +15,7 @@ import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { PATHS } from '~/routes/PATHS'
 import { queryClient } from '~/lib/react-query'
 import { useProjectById } from '~/cloud/project/api'
+import storage from '~/utils/storage'
 
 import { type Project } from '~/cloud/project'
 
@@ -44,7 +44,7 @@ function OrgManageSidebar() {
 
   const { orgId } = useParams()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { data: projectByIdData } = useProjectById({
     projectId,

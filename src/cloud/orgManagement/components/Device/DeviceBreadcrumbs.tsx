@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { useDeviceById } from '../../api/deviceAPI'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
+import storage from '~/utils/storage'
 
 import { BreadcrumbIcon } from '~/components/SVGIcons'
 
 export function DeviceBreadcrumbs() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const params = useParams()
   const deviceId = params.deviceId as string

@@ -9,10 +9,10 @@ import {
   InputField,
   SelectDropdown,
 } from '~/components/Form'
-import { useProjectIdStore } from '~/stores/project'
 import { type CreateRoleDTO, useCreateRole } from '../api'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import TitleBar from '~/components/Head/TitleBar'
+import storage from '~/utils/storage'
 
 import { type ActionsType, type ResourcesType } from '../types'
 
@@ -56,7 +56,7 @@ export const roleSchema = z.object({
 export function CreateRole() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
 

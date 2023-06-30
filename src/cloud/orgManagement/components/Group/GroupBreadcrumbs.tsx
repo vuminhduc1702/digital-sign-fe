@@ -3,15 +3,15 @@ import { useTranslation } from 'react-i18next'
 
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectIdStore } from '~/stores/project'
 import { useGroupById } from '../../api/groupAPI'
+import storage from '~/utils/storage'
 
 import { BreadcrumbIcon } from '~/components/SVGIcons'
 
 export function GroupBreadcrumbs() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const params = useParams()
   const groupId = params.groupId as string

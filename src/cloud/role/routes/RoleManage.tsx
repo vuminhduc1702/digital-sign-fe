@@ -6,15 +6,15 @@ import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
-import { useProjectIdStore } from '~/stores/project'
 import { PolicyTable, RoleSidebar } from '../components'
+import storage from '~/utils/storage'
 
 export function RoleManage() {
   const { t } = useTranslation()
 
   const { roleId } = useParams()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   return (
     <ContentLayout title={t('sidebar:cloud.role_manage')}>

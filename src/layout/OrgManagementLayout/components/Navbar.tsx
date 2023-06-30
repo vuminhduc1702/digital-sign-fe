@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import { useProjectIdStore } from '~/stores/project'
+import storage from '~/utils/storage'
 import { NavLink } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 
@@ -16,7 +16,7 @@ import {
 function OrgManageNavbar() {
   const { t } = useTranslation()
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const params = useParams()
   const orgId = params.orgId || ''
 

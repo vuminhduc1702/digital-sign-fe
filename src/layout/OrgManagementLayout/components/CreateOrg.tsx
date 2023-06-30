@@ -4,11 +4,11 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField, TextAreaField } from '~/components/Form'
-import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import { useDefaultCombobox } from '~/utils/hooks'
+import storage from '~/utils/storage'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
@@ -25,7 +25,7 @@ export function CreateOrg() {
 
   const defaultComboboxOrgData = useDefaultCombobox('org')
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]

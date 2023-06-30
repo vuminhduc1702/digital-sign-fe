@@ -4,8 +4,6 @@ import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import { Form, FormDrawer, InputField } from '~/components/Form'
-
-import { useProjectIdStore } from '~/stores/project'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
@@ -14,6 +12,7 @@ import {
   passwordSchema,
 } from '~/utils/schemaValidation'
 import { useDefaultCombobox } from '~/utils/hooks'
+import storage from '~/utils/storage'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
@@ -50,7 +49,7 @@ export function CreateUser() {
   const selectedOrgId =
     filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateUser()
 
   return (

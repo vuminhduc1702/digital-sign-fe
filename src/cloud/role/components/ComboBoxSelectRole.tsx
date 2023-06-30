@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-import { useProjectIdStore } from '~/stores/project'
 import { useGetRoles } from '../api'
+import storage from '~/utils/storage'
 
 import { type Role } from '../types'
 
@@ -17,7 +17,7 @@ export function ComboBoxSelectRole({
 }) {
   const [query, setQuery] = useState('')
 
-  const projectId = useProjectIdStore(state => state.projectId)
+  const { id: projectId } = storage.getProject()
   const { data } = useGetRoles({ projectId })
 
   const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
