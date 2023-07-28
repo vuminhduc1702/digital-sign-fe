@@ -16,6 +16,7 @@ export const PATHS: { [key: string]: string } = {
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
+  CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
 

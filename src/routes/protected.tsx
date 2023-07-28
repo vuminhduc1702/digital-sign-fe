@@ -18,8 +18,11 @@ const { FlowEngine } = lazyImport(
   () => import('~/cloud/flowEngine'),
   'FlowEngine',
 )
-const { Dashboard } = lazyImport(() => import('~/cloud/dashboard'), 'Dashboard')
 const { RoleManage } = lazyImport(() => import('~/cloud/role'), 'RoleManage')
+const { CustomProtocolManage } = lazyImport(
+  () => import('~/cloud/customProtocol'),
+  'CustomProtocolManage',
+)
 
 export const protectedRoutes = [
   {
@@ -47,15 +50,6 @@ export const protectedRoutes = [
         children: [{ path: ':projectId' }],
       },
       {
-        path: PATHS.DASHBOARD,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <Dashboard />
-          </ErrorBoundary>
-        ),
-        children: [{ path: ':projectId' }],
-      },
-      {
         path: PATHS.ROLE_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
@@ -63,6 +57,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':roleId' }] }],
+      },
+      {
+        path: PATHS.CUSTOM_PROTOCOL,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <CustomProtocolManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId' }],
       },
     ],
   },

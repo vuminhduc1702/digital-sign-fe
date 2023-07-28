@@ -135,6 +135,11 @@ function SideNavigation() {
               {t('sidebar:cloud.role_manage')}
             </AccordionContent>
           </NavLink>
+          <NavLink to={`${PATHS.CUSTOM_PROTOCOL}/${projectId}`}>
+            <AccordionContent>
+              {t('sidebar:cloud.custom_protocol')}
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="application">

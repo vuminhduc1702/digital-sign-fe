@@ -28,7 +28,21 @@ export const axios = Axios.create({
 axios.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
   response => {
-    return response.data
+    // console.log('response', response)
+    let message = ''
+    const errMessage = response?.data?.message
+    if (errMessage === 'malformed entity specification') {
+      message = 'Dữ liệu truyền lên không hợp lệ'
+      useNotificationStore.getState().addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message,
+      })
+
+      return Promise.reject(response.data)
+    } else {
+      return response.data
+    }
   },
   error => {
     console.error('error', error)

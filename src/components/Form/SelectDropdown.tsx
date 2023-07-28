@@ -17,6 +17,7 @@ type SelectProps<TFormValues extends FieldValues> = {
   onMenuOpen?: () => void
   isOptionDisabled?: (option: SelectOption) => boolean
   noOptionsMessage?: () => string
+  defaultValue?: { label: string | undefined; value: string }[] | null
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 

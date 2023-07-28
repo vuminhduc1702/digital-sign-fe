@@ -13,11 +13,8 @@ import { UpdateOrg } from './UpdateOrg'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { PATHS } from '~/routes/PATHS'
-import { queryClient } from '~/lib/react-query'
 import { useProjectById } from '~/cloud/project/api'
 import storage from '~/utils/storage'
-
-import { type Project } from '~/cloud/project'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import listIcon from '~/assets/icons/list.svg'
@@ -50,9 +47,6 @@ function OrgManageSidebar() {
     projectId,
     config: { enabled: !!projectId },
   })
-  const groupProjectByIdCache: Project | undefined = queryClient.getQueryData([
-    'project',
-  ])
 
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
 
@@ -94,7 +88,7 @@ function OrgManageSidebar() {
             })}
             variant="muted"
             onClick={() => {
-              if (groupProjectByIdCache == null) {
+              if (projectByIdData == null) {
                 return navigate(PATHS.PROJECT_MANAGE)
               }
               switch (entityTypeURL) {

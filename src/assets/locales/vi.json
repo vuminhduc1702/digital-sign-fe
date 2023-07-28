@@ -12,7 +12,8 @@
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
       "dashboard": "Dashboard",
-      "role_manage": "Vai trò"
+      "role_manage": "Vai trò",
+      "custom_protocol": "Custom protocol"
     },
     "application": {
       "title": "Ứng dụng",
@@ -298,6 +299,69 @@
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"
       }
+    },
+    "custom_protocol": {
+      "title": "Custom protocol",
+      "protocol": "Protocol",
+      "finish": "Finish",
+      "service": {
+        "title": "Service",
+        "create": "Tạo service",
+        "success_create": "Tạo Service thành công",
+        "success_update": "Sửa Service thành công",
+        "success_delete": "Xoá Service thành công"
+      },
+      "thing": {
+        "title": "Thing",
+        "create": "Tạo thing",
+        "success_create": "Tạo thing thành công",
+        "success_update": "Sửa thing thành công",
+        "success_delete": "Xoá thing thành công",
+        "name": "Tên thing",
+        "id": "Thing ID",
+        "type": "Kiểu thing",
+        "thing": "Thing",
+        "template": "Template",
+        "shape": "Shape",
+        "base_template": "Base template",
+        "base_shapes": "Base shape",
+        "description": "Mô tả"
+      },
+      "adapter": {
+        "title": "adapter",
+        "header": "Quản lý adapter",
+        "create": "Tạo adapter",
+        "success_create": "Tạo adapter thành công",
+        "success_update": "Sửa adapter thành công",
+        "success_delete": "Xoá adapter thành công",
+        "table": {
+          "name": "Tên",
+          "protocol": "Protocol",
+          "thing_id": "Thing ID",
+          "handle_service": "Service",
+          "host": "Host",
+          "port": "Port",
+          "edit": "Sửa adapter",
+          "delete_adapter": "Xoá adapter",
+          "delete_adapter_confirm": "Bạn có chắc chắn muốn xóa adapter {{ADAPTERNAME}}?"
+        },
+        "protocol": {
+          "mqtt": "MQTT",
+          "tcp": "TCP",
+          "udp": "UDP"
+        },
+        "content_type": {
+          "title": "Content type",
+          "json": "JSON",
+          "hex": "Hex",
+          "text": "Text"
+        },
+        "name": "Tên adapter",
+        "host": "Host",
+        "port": "Port",
+        "pass": "Mật khẩu",
+        "topic": "Topic"
+      }
     }
   },
   "table": {
@@ -314,6 +378,9 @@
     "no_user": "Không có người dùng",
     "no_policy": "Không có chính sách",
     "no_event": "Không có sự kiện",
+    "no_adapter": "Không có Adapter",
+    "no_thing": "Không có Thing",
+    "no_service": "Không có Service",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "edit": "Chỉnh sửa",
@@ -322,7 +389,9 @@
     "no_in_org": "Không thuộc TC"
   },
   "btn": {
-    "create": "Tạo mới"
+    "create": "Tạo mới",
+    "back": "Quay lại",
+    "next": "Tiếp theo"
   },
   "error": {
     "no_data": "Không có dữ liệu",
@@ -342,7 +411,9 @@
     "org": "Đang tải danh sách tổ chức...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
-    "group": "Đang tải danh sách nhóm..."
+    "group": "Đang tải danh sách nhóm...",
+    "entity_thing": "Đang tải danh sách Entity thing...",
+    "service_thing": "Đang tải danh sách Service..."
   },
   "search": {
     "title": "Tìm kiếm",

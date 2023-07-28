@@ -24,8 +24,7 @@ function SelectMenu<T extends string | number | boolean>({
   data,
   selected,
   setSelected,
-}: // control,
-SelectMenuProps<T>) {
+}: SelectMenuProps<T>) {
   return (
     <FieldWrapper label={label} error={error}>
       <Listbox value={selected} onChange={setSelected}>

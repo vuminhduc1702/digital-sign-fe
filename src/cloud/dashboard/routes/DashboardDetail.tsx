@@ -180,7 +180,7 @@ export function DashboardDetail() {
             </Button>
           </div>
           <SelectMenu
-            label={t('ws:filter.interval') ?? 'Interval'}
+            label={t('ws:filter.interval')}
             data={wsInterval.map(interval => ({
               label: interval.label,
               value: interval.value,
@@ -189,7 +189,7 @@ export function DashboardDetail() {
             setSelected={setInterval}
           />
           <SelectMenu
-            label={t('ws:filter.data_aggregation') ?? 'Data aggregation'}
+            label={t('ws:filter.data_aggregation')}
             data={wsAgg.map(agg => ({
               label: agg.label,
               value: agg.value,

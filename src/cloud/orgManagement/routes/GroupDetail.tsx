@@ -15,6 +15,7 @@ import { type Attribute } from '~/types'
 export function GroupDetail() {
   const params = useParams()
   const groupId = params.groupId as string
+  console.log('params', params)
 
   const [filteredAttrComboboxData, setFilteredAttrComboboxData] = useState<
     Attribute[]

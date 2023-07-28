@@ -7,9 +7,9 @@ import {
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
-import { attrSchema } from '~/utils/schemaValidation'
 
 import { type Attribute } from '~/types'
+import { attrSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -72,6 +72,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
+          console.log('values', values)
           mutate({
             data: {
               entity_id: entityId,

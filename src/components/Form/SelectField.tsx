@@ -7,6 +7,7 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 export type SelectOption = {
   label: string
   value: string | boolean
+  selected?: boolean
 }
 
 type SelectFieldProps = FieldWrapperPassThroughProps & {
@@ -14,7 +15,7 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   className?: string
   placeholder?: string
   registration: Partial<UseFormRegisterReturn>
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
 export const SelectField = ({
@@ -38,11 +39,13 @@ export const SelectField = ({
         {...registration}
         {...props}
       >
-        {options.map(({ label, value }) => (
-          <option key={label?.toString()} value={value}>
-            {label}
-          </option>
-        ))}
+        {options.map(({ label, value, selected }) => {
+          return (
+            <option key={label?.toString()} value={value} selected={selected}>
+              {label}
+            </option>
+          )
+        })}
       </select>
     </FieldWrapper>
   )

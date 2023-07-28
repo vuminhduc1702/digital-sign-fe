@@ -10,6 +10,11 @@ export type BasePagination = {
   limit: number
 }
 
+export type BaseAPIRes = {
+  code: 0 | number
+  message: 'success' | string
+}
+
 export type Attribute = {
   attribute_key: string
   logged: boolean
