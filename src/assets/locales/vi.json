@@ -309,7 +309,22 @@
         "create": "Tạo service",
         "success_create": "Tạo Service thành công",
         "success_update": "Sửa Service thành công",
-        "success_delete": "Xoá Service thành công"
+        "success_delete": "Xoá Service thành công",
+        "name": "Tên service",
+        "output": "Output",
+        "input": "Input",
+        "json": "JSON",
+        "str": "String",
+        "i32": "Integer 32",
+        "i64": "Integer 64",
+        "f32": "Float 32",
+        "f64": "Float 64",
+        "bool": "Boolean",
+        "time": "Time",
+        "bin": "Binary",
+        "description": "Mô tả",
+        "code": "Code",
+        "choose": "Vui lòng chọn Service"
       },
       "thing": {
         "title": "Thing",
@@ -325,7 +340,8 @@
         "shape": "Shape",
         "base_template": "Base template",
         "base_shapes": "Base shape",
-        "description": "Mô tả"
+        "description": "Mô tả",
+        "choose": "Vui lòng chọn Thing"
       },
       "adapter": {
         "title": "adapter",
@@ -413,7 +429,7 @@
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
     "entity_thing": "Đang tải danh sách Entity thing...",
-    "service_thing": "Đang tải danh sách Service..."
+    "service_thing": "Vui lòng chọn Entity thing trước"
   },
   "search": {
     "title": "Tìm kiếm",

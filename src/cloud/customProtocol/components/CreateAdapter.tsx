@@ -11,6 +11,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import { type CreateAdapterDTO, useCreateAdapter } from '../api/adapter'
 import storage from '~/utils/storage'
@@ -21,14 +22,19 @@ import {
 } from '../api/entityThing'
 import { FormDialog } from '~/components/FormDialog'
 import { queryClient } from '~/lib/react-query'
+import {
+  type CreateServiceThingDTO,
+  useGetServiceThings,
+  useCreateServiceThing,
+} from '../api/serviceThing'
+import { CodeEditor } from './CodeEditor'
 
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
-import { type EntityThingList } from '../types'
+import { inputService, type EntityThingList } from '../types'
 import { type BasePagination } from '~/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetServiceThings } from '../api/serviceThing'
 
 export const adapterSchema = z
   .object({
@@ -48,7 +54,6 @@ export const adapterSchema = z
         host: z.string().min(1, { message: 'Vui lòng nhập host' }),
         port: z.string().min(1, { message: 'Vui lòng nhập port' }),
         password: z.string().min(1, { message: 'Vui lòng nhập password' }),
-        // topic: z.array(z.string()),
         topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
       }),
     ]),
@@ -64,11 +69,11 @@ export const entityThingSchema = z
     z.discriminatedUnion('type', [
       z.object({
         type: z.enum(['thing', 'template'] as const),
-        base_template: z.string().optional(),
+        base_template: z.string().nullable(),
       }),
       z.object({
         type: z.literal('shape'),
-        base_shapes: z.string().optional(),
+        base_shapes: z.string().nullable(),
       }),
     ]),
   )
@@ -76,7 +81,7 @@ export const entityThingSchema = z
 export const serviceThingSchema = z.object({
   name: nameSchema,
   description: z.string(),
-  input: z.array(z.object({ name: z.string(), type: z.string() })),
+  input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
   output: z.enum([
     'json',
     'str',
@@ -88,7 +93,7 @@ export const serviceThingSchema = z.object({
     'time',
     'bin',
   ] as const),
-  code: z.string().min(1, { message: 'Vui lòng nhập code' }),
+  code: z.string().optional(),
 })
 
 export function CreateAdapter() {
@@ -139,20 +144,37 @@ export function CreateAdapter() {
   //     ])
   //   }
   // }, [dataCreateThing])
-  // console.log('defaultThingValues', defaultThingValues)
 
-  // const { data: serviceData, refetch: refetchServiceData } =
-  //   useGetServiceThings({
-  //     thingId: thingSelectData.value
-  //     config: { enabled: false },
-  //   })
-  // const serviceListCache = queryClient.getQueryData(['service-things'], {
-  //   exact: false,
-  // })
-  // const serviceSelectData = serviceData?.data.map(service => ({
-  //   value: service.name,
-  //   label: service.name,
-  // })) || [{ value: '', label: '' }]
+  const {
+    mutate: mutateService,
+    isLoading: isLoadingService,
+    isSuccess: isSuccessService,
+  } = useCreateServiceThing()
+
+  const [selectedThing, setSelectedThing] = useState<SelectOption>()
+  console.log('selectedThing', selectedThing)
+  const { data: serviceData, refetch: refetchServiceData } =
+    useGetServiceThings({
+      thingId: (selectedThing?.value as string) ?? '',
+      config: { enabled: false },
+    })
+  useEffect(() => {
+    if (selectedThing != null) {
+      refetchServiceData()
+    }
+  }, [selectedThing])
+  useEffect(() => {
+    if (selectedThing != null) {
+      setSelectedThing(undefined)
+    }
+  }, [])
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  })) || [{ value: '', label: '' }]
+
+  const [codeInput, setCodeInput] = useState('')
+  console.log('codeInput', codeInput)
 
   return (
     <FormDrawer
@@ -183,29 +205,38 @@ export function CreateAdapter() {
         id="create-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
-          // console.log('adapter values', values)
-          // mutate({
-          //   data: {
-          //     project_id: projectId,
-          //     name: values.name,
-          //     protocol: (
-          //       values.protocol as unknown as {
-          //         value: string
-          //         label: string
-          //       }
-          //     )?.value,
-          //     content_type: (
-          //       values.content_type as unknown as {
-          //         value: string
-          //         label: string
-          //       }
-          //     )?.value,
-          //   },
-          // })
+          console.log('adapter values', values)
+          if (protocolType === 'mqtt') {
+            mutateAdapter({
+              data: {
+                project_id: projectId,
+                name: values.name,
+                protocol: values.protocol,
+                content_type: values.content_type,
+                thing_id: values.thing_id.value,
+                handle_service: values.handle_service.value,
+                host: values.host,
+                port: values.port,
+                password: values.password,
+                topic: values.topic.split(',').map(word => word.trim() + '/#'),
+              },
+            })
+          } else {
+            mutateAdapter({
+              data: {
+                project_id: projectId,
+                name: values.name,
+                protocol: values.protocol,
+                content_type: values.content_type,
+                thing_id: values.thing_id.value,
+                handle_service: values.handle_service.value,
+              },
+            })
+          }
         }}
         schema={adapterSchema}
       >
-        {({ register, formState, control }) => {
+        {({ register, formState, control, watch }) => {
           console.log('zod adapter errors: ', formState.errors)
           return (
             <>
@@ -390,10 +421,19 @@ export function CreateAdapter() {
                                 return
                               } else refetchThingData()
                             }}
+                            onMenuClose={() => {
+                              const selectedThingWatch = watch(
+                                'thing_id',
+                              ) as SelectOption
+                              setSelectedThing(selectedThingWatch)
+                            }}
+                            placeholder={t(
+                              'cloud:custom_protocol.thing.choose',
+                            )}
                             // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
-                            {formState?.errors?.thing_id?.message}
+                            {formState?.errors?.thing?.message}
                           </p>
                         </div>
                         <FormDialog
@@ -555,8 +595,15 @@ export function CreateAdapter() {
                             name="handle_service"
                             control={control}
                             options={
-                              thingData
-                                ? thingSelectData
+                              serviceData?.data != null
+                                ? serviceSelectData
+                                : serviceData?.data === null
+                                ? [
+                                    {
+                                      label: t('table:no_service'),
+                                      value: '',
+                                    },
+                                  ]
                                 : [
                                     {
                                       label: t('loading:service_thing'),
@@ -565,60 +612,42 @@ export function CreateAdapter() {
                                   ]
                             }
                             isOptionDisabled={option =>
-                              option.label === t('loading:service_thing')
+                              option.label === t('loading:service_thing') ||
+                              option.label === t('table:no_service')
                             }
                             noOptionsMessage={() => t('table:no_service')}
-                            onMenuOpen={() => {
-                              if (thingListCache?.data.list) {
-                                return
-                              } else refetchThingData()
-                            }}
-                            // defaultValue={defaultThingValues}
+                            placeholder={t(
+                              'cloud:custom_protocol.service.choose',
+                            )}
                           />
                           <p className="text-body-sm text-primary-400">
-                            {formState?.errors?.thing_id?.message}
+                            {formState?.errors?.handle_service?.message}
                           </p>
                         </div>
                         <FormDialog
-                          isDone={isSuccessThing}
+                          isDone={isSuccessService}
                           title={t('cloud:custom_protocol.service.create')}
                           body={
                             <Form<
-                              CreateEntityThingDTO['data'],
-                              typeof entityThingSchema
+                              CreateServiceThingDTO['data'],
+                              typeof serviceThingSchema
                             >
                               id="create-serviceThing"
                               className="flex flex-col justify-between"
                               onSubmit={values => {
                                 console.log('service values', values)
-                                if (
-                                  values.type === 'thing' ||
-                                  values.type === 'template'
-                                ) {
-                                  mutateThing({
-                                    data: {
-                                      name: values.name,
-                                      project_id: projectId,
-                                      description: values.description,
-                                      type: values.type,
-                                      base_template:
-                                        values.base_template || null,
-                                    },
-                                  })
-                                }
-                                if (values.type === 'shape') {
-                                  mutateThing({
-                                    data: {
-                                      name: values.name,
-                                      project_id: projectId,
-                                      description: values.description,
-                                      type: values.type,
-                                      base_shapes: values.base_shapes || null,
-                                    },
-                                  })
-                                }
+                                mutateService({
+                                  data: {
+                                    name: values.name,
+                                    description: values.description,
+                                    output: values.output,
+                                    input: inputService,
+                                    code: codeInput,
+                                  },
+                                  thingId: selectedThing?.value as string,
+                                })
                               }}
-                              schema={entityThingSchema}
+                              schema={serviceThingSchema}
                             >
                               {({ register, formState }) => {
                                 console.log(
@@ -629,36 +658,71 @@ export function CreateAdapter() {
                                   <>
                                     <InputField
                                       label={t(
-                                        'cloud:custom_protocol.thing.name',
+                                        'cloud:custom_protocol.service.name',
                                       )}
                                       error={formState.errors['name']}
                                       registration={register('name')}
                                     />
                                     <SelectField
                                       label={t(
-                                        'cloud:custom_protocol.thing.type',
+                                        'cloud:custom_protocol.service.output',
                                       )}
-                                      error={formState.errors['type']}
-                                      registration={register('type')}
+                                      error={formState.errors['output']}
+                                      registration={register('output')}
                                       options={[
                                         {
                                           label: t(
-                                            'cloud:custom_protocol.thing.thing',
+                                            'cloud:custom_protocol.service.json',
                                           ),
-                                          value: 'thing',
-                                          selected: true,
+                                          value: 'json',
                                         },
                                         {
                                           label: t(
-                                            'cloud:custom_protocol.thing.template',
+                                            'cloud:custom_protocol.service.str',
                                           ),
-                                          value: 'template',
+                                          value: 'str',
                                         },
                                         {
                                           label: t(
-                                            'cloud:custom_protocol.thing.shape',
+                                            'cloud:custom_protocol.service.i32',
                                           ),
-                                          value: 'shape',
+                                          value: 'i32',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.i64',
+                                          ),
+                                          value: 'i64',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.f32',
+                                          ),
+                                          value: 'f32',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.f64',
+                                          ),
+                                          value: 'f64',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.bool',
+                                          ),
+                                          value: 'bool',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.time',
+                                          ),
+                                          value: 'time',
+                                        },
+                                        {
+                                          label: t(
+                                            'cloud:custom_protocol.service.bin',
+                                          ),
+                                          value: 'bin',
                                         },
                                       ]}
                                       onChange={event =>
@@ -669,32 +733,18 @@ export function CreateAdapter() {
                                         )
                                       }
                                     />
-                                    {thingType === 'thing' ||
-                                    thingType === 'template' ? (
-                                      <InputField
-                                        label={t(
-                                          'cloud:custom_protocol.thing.base_template',
-                                        )}
-                                        error={
-                                          formState.errors['base_template']
-                                        }
-                                        registration={register('base_template')}
-                                      />
-                                    ) : (
-                                      <InputField
-                                        label={t(
-                                          'cloud:custom_protocol.thing.base_shapes',
-                                        )}
-                                        error={formState.errors['base_shapes']}
-                                        registration={register('base_shapes')}
-                                      />
-                                    )}
                                     <InputField
                                       label={t(
-                                        'cloud:custom_protocol.thing.description',
+                                        'cloud:custom_protocol.service.description',
                                       )}
                                       error={formState.errors['description']}
                                       registration={register('description')}
+                                    />
+                                    <CodeEditor
+                                      label={t(
+                                        'cloud:custom_protocol.service.code',
+                                      )}
+                                      setCodeInput={setCodeInput}
                                     />
                                   </>
                                 )
@@ -706,13 +756,14 @@ export function CreateAdapter() {
                               className="mt-3 w-full"
                               variant="primary"
                               size="square"
+                              disabled={!selectedThing?.value}
                             >
-                              {t('cloud:custom_protocol.thing.create')}
+                              {t('cloud:custom_protocol.service.create')}
                             </Button>
                           }
                           confirmButton={
                             <Button
-                              isLoading={isLoadingThing}
+                              isLoading={isLoadingService}
                               form="create-serviceThing"
                               type="submit"
                               size="md"
@@ -742,7 +793,10 @@ export function CreateAdapter() {
                   </Tab.Panels>
                 </div>
               </Tab.Group>
-              <div className="flex justify-between">
+              <div
+                className="flex justify-between"
+                style={{ marginTop: '10px' }}
+              >
                 <Button
                   className="border-none hover:text-primary-400"
                   style={{ justifyContent: 'flex-start' }}

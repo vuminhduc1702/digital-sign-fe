@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
-import { forwardRef, type ReactNode } from 'react'
+import { forwardRef, useState, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { PATHS } from '~/routes/PATHS'
@@ -78,6 +78,8 @@ function SideNavigation() {
   const projectIdFromStore = useProjectIdStore(state => state.projectId)
   const projectId = storage.getProject()?.id || projectIdFromStore
 
+  const [value, setValue] = useState('cloud')
+
   return (
     <div className="px-8 py-7">
       <div className="mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
@@ -89,7 +91,12 @@ function SideNavigation() {
         <div>{t('sidebar:overview')}</div>
       </div>
 
-      <Accordion.Root type="single" collapsible>
+      <Accordion.Root
+        type="single"
+        collapsible
+        value={value}
+        onValueChange={setValue}
+      >
         <AccordionItem value="device">
           <AccordionTrigger>
             <img

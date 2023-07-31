@@ -15,7 +15,7 @@ export type CreateAdapterDTO = {
 }
 
 export const createAdapter = ({ data }: CreateAdapterDTO): Promise<Adapter> => {
-  return axios.post(`/api/adapter/`, data)
+  return axios.post(`/api/adapter`, data)
 }
 
 type UseCreateAdapterOptions = {

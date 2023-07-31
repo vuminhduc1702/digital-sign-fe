@@ -32,20 +32,21 @@ export type OutputType =
   | 'bool'
   | 'time'
   | 'bin'
+export const inputService = [
+  {
+    name: 'payload',
+    type: 'str',
+  },
+  {
+    name: 'entityInfo',
+    type: 'str',
+  },
+]
 export type Service = {
   id: string
   name: string
   description: string | null
-  input: [
-    {
-      name: 'payload'
-      type: 'str'
-    },
-    {
-      name: 'entityInfo'
-      type: 'str'
-    },
-  ]
+  input: typeof inputService
   output: OutputType
   code: string
   create_ts: string

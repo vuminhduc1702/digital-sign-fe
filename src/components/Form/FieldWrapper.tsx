@@ -19,7 +19,7 @@ export type FieldWrapperPassThroughProps = Omit<
 export const FieldWrapper = (props: FieldWrapperProps) => {
   const { label, className, error, children } = props
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <label
         className={clsx(
           'block text-body-sm',

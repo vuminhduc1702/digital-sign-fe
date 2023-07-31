@@ -11,7 +11,7 @@ type GetServiceThings = {
 }
 
 type GetServiceThingsRes = {
-  data: Service
+  data: Service[]
 } & BaseAPIRes
 
 export const getServiceThings = ({
