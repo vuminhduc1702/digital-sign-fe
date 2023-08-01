@@ -15,6 +15,7 @@ import { UpdateGroup } from './UpdateGroup'
 import storage from '~/utils/storage'
 
 import { type Group } from '../../types'
+import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -133,7 +134,11 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
   )
 }
 
-export function GroupTable({ data, ...props }: { data: Group[] }) {
+type GroupTableProps = {
+  data: Group[]
+} & BaseTablePagination
+
+export function GroupTable({ data, ...props }: GroupTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<Group>()

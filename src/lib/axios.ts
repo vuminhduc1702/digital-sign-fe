@@ -30,9 +30,20 @@ axios.interceptors.response.use(
   response => {
     // console.log('response', response)
     let message = ''
+    const errCode = response?.data?.code
     const errMessage = response?.data?.message
     if (errMessage === 'malformed entity specification') {
       message = 'Dữ liệu truyền lên không hợp lệ'
+      useNotificationStore.getState().addNotification({
+        type: 'error',
+        title: 'Lỗi',
+        message,
+      })
+
+      return Promise.reject(response.data)
+    }
+    if (errCode != null && errCode !== 0) {
+      message = 'Lỗi! Vui lòng thử lại'
       useNotificationStore.getState().addNotification({
         type: 'error',
         title: 'Lỗi',
@@ -47,7 +58,8 @@ axios.interceptors.response.use(
   error => {
     console.error('error', error)
     let message = ''
-    const errMessage = error.response?.data?.message
+    const errMessage =
+      error.response?.data?.message || error.response?.data?.error
 
     switch (error.response?.status) {
       case 400:

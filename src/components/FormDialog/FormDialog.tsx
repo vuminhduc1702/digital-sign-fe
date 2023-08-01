@@ -11,6 +11,7 @@ import { Dialog, DialogTitle } from '../Dialog'
 import { Button } from '../Button'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export type ConfirmationDialogProps = {
   triggerButton: ReactElement
@@ -44,12 +45,27 @@ export const FormDialog = ({
   return (
     <>
       {trigger}
-      <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
+      <Dialog
+        isOpen={isOpen}
+        onClose={() => null}
+        initialFocus={cancelButtonRef}
+      >
         <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
-          <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {title}
-            </DialogTitle>
+          <div className="mt-3 text-center sm:mt-0 sm:text-left">
+            <div className="flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {title}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
             {body && (
               <div className="mt-2">
                 <p className="text-body-sm text-secondary-900">{body}</p>

@@ -190,6 +190,7 @@ export function CreateEvent() {
           }
         />
       }
+      otherState={onClickValue}
       setOtherState={setOnclickValue}
     >
       <FormMultipleFields<CreateEventDTO['data'], typeof createEventSchema>

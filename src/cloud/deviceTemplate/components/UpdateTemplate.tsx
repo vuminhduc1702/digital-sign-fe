@@ -119,7 +119,7 @@ export function UpdateTemplate({
           }}
           name={['attributes']}
         >
-          {({ register, formState, control }, { fields, append, remove }) => (
+          {({ register, formState }, { fields, append, remove }) => (
             <>
               <button
                 type="button"

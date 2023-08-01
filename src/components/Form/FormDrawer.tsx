@@ -20,6 +20,7 @@ type FormDrawerProps = {
   title: string
   children: ReactNode
   size?: DrawerProps['size']
+  otherState?: boolean | string
   setOtherState?: Dispatch<SetStateAction<any>>
 }
 
@@ -30,6 +31,7 @@ export const FormDrawer = ({
   triggerButton,
   submitButton,
   size = 'md',
+  otherState,
   setOtherState,
 }: FormDrawerProps) => {
   const { close, open, isOpen } = useDisclosure()
@@ -62,6 +64,7 @@ export const FormDrawer = ({
             {submitButton}
           </>
         )}
+        otherState={otherState}
         setOtherState={setOtherState}
       >
         {children}

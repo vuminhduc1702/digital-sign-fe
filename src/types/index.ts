@@ -10,6 +10,13 @@ export type BasePagination = {
   limit: number
 }
 
+export type BaseTablePagination = {
+  offset: number
+  setOffset: React.Dispatch<React.SetStateAction<number>>
+  total: number
+  isPreviousData: boolean
+}
+
 export type BaseAPIRes = {
   code: 0 | number
   message: 'success' | string

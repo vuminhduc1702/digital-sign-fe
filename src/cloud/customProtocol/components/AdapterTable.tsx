@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
-import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -9,9 +8,12 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
-import storage from '~/utils/storage'
 import { useDeleteAdapter } from '../api/adapter'
+import { UpdateAdapter } from './UpdateAdapter'
+import { useGetEntityThings } from '../api/entityThing'
+import storage from '~/utils/storage'
 
+import { type BaseTablePagination } from '~/types'
 import { type Adapter } from '../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
@@ -20,7 +22,23 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-function AdapterTableContextMenu({ id, name }: { id: string; name: string }) {
+export type AdapterTableContextMenuProps = Omit<
+  Adapter,
+  'owner' | 'project_id' | 'created_time' | 'topic'
+> & { topic: string }
+
+function AdapterTableContextMenu({
+  id,
+  name,
+  content_type,
+  protocol,
+  thing_id,
+  handle_service,
+  host,
+  port,
+  password,
+  topic,
+}: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
@@ -28,6 +46,11 @@ function AdapterTableContextMenu({ id, name }: { id: string; name: string }) {
   const { mutate, isLoading, isSuccess } = useDeleteAdapter()
 
   const handleCopyId = useCopyId()
+
+  const { id: projectId } = storage.getProject()
+  const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
+    projectId,
+  })
 
   return (
     <>
@@ -105,14 +128,40 @@ function AdapterTableContextMenu({ id, name }: { id: string; name: string }) {
           </div>
         </Menu.Items>
       </Dropdown>
-      {/* {isOpen ? (
-        <UpdateDevice deviceId={id} name={name} close={close} isOpen={isOpen} />
-      ) : null} */}
+      {isOpen ? (
+        <UpdateAdapter
+          id={id}
+          name={name}
+          content_type={content_type}
+          protocol={protocol}
+          thing_id={thing_id}
+          handle_service={handle_service}
+          host={host}
+          port={port}
+          password={password}
+          topic={topic}
+          close={close}
+          isOpen={isOpen}
+          thingData={thingData}
+          refetchThingData={refetchThingData}
+        />
+      ) : null}
     </>
   )
 }
 
-export function AdapterTable({ data, ...props }: { data: Adapter[] }) {
+type AdapterTableProps = {
+  data: Adapter[]
+} & BaseTablePagination
+
+export function AdapterTable({
+  data,
+  offset,
+  setOffset,
+  total,
+  isPreviousData,
+  ...props
+}: AdapterTableProps) {
   const { t } = useTranslation()
 
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
@@ -174,8 +223,31 @@ export function AdapterTable({ data, ...props }: { data: Adapter[] }) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id } = info.row.original
-          return AdapterTableContextMenu({ name, id })
+          const {
+            id,
+            name,
+            content_type,
+            protocol,
+            thing_id,
+            handle_service,
+            host,
+            port,
+            password,
+            topic,
+          } = info.row.original
+          return AdapterTableContextMenu({
+            id,
+            name,
+            content_type,
+            protocol,
+            thing_id,
+            handle_service,
+            host,
+            port,
+            password,
+            // @ts-ignore
+            topic,
+          })
         },
         header: () => null,
         footer: info => info.column.id,

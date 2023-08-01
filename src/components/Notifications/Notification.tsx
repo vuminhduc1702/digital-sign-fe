@@ -3,10 +3,10 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   XCircleIcon,
-  XMarkIcon,
+  // XMarkIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline'
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 
 const icons = {
   info: (
@@ -43,6 +43,12 @@ export const Notification = ({
   notification: { id, type, title, message },
   onDismiss,
 }: NotificationProps) => {
+  useEffect(() => {
+    setTimeout(() => {
+      onDismiss(id)
+    }, 2000)
+  })
+
   return (
     <div className="flex w-full flex-col items-center space-y-4 sm:items-end">
       <Transition
@@ -65,7 +71,7 @@ export const Notification = ({
                 </p>
                 <p className="mt-1 text-body-sm text-gray-500">{message}</p>
               </div>
-              <div className="ml-4 flex flex-shrink-0">
+              {/* <div className="ml-4 flex flex-shrink-0">
                 <button
                   className="inline-flex rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600 focus:ring-offset-2"
                   onClick={() => {
@@ -75,7 +81,7 @@ export const Notification = ({
                   <span className="sr-only">Close</span>
                   <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

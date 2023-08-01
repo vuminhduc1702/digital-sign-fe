@@ -13,6 +13,7 @@ import { status } from '../Attributes'
 import { useDeleteUser } from '../../api/userAPI'
 
 import { type UserInfo } from '~/features/auth'
+import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -128,7 +129,11 @@ function UserTableContextMenu({
   )
 }
 
-export function UserTable({ data, ...props }: { data: UserInfo[] }) {
+type UserInfoTableProps = {
+  data: UserInfo[]
+} & BaseTablePagination
+
+export function UserTable({ data, ...props }: UserInfoTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<UserInfo>()

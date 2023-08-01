@@ -7,40 +7,54 @@ import * as z from 'zod'
 import { Button } from '~/components/Button'
 import {
   Form,
-  FormDrawer,
   InputField,
   SelectDropdown,
   SelectField,
   type SelectOption,
 } from '~/components/Form'
+import { Drawer } from '~/components/Drawer'
 import {
-  type CreateAdapterDTO,
-  useCreateAdapter,
+  type UpdateAdapterDTO,
+  useUpdateAdapter,
   usePingMQTT,
 } from '../api/adapter'
+import {
+  contentTypeList,
+  entityThingSchema,
+  protocolList,
+  serviceThingSchema,
+} from './CreateAdapter'
 import storage from '~/utils/storage'
 import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
-  useGetEntityThings,
+  type GetEntityThingsRes,
 } from '../api/entityThing'
 import { FormDialog } from '~/components/FormDialog'
 import { queryClient } from '~/lib/react-query'
 import {
-  type CreateServiceThingDTO,
   useGetServiceThings,
   useCreateServiceThing,
+  type CreateServiceThingDTO,
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
 
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import { type AdapterTableContextMenuProps } from './AdapterTable'
 import { inputService, type EntityThingList } from '../types'
 import { type BasePagination } from '~/types'
+import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 
-import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-export const adapterSchema = z
+type UpdateDeviceProps = {
+  close: () => void
+  isOpen: boolean
+  thingData: GetEntityThingsRes
+  refetchThingData: any
+} & AdapterTableContextMenuProps
+
+export const updateAdapterSchema = z
   .object({
     name: nameSchema,
     project_id: z.string().optional(),
@@ -55,95 +69,45 @@ export const adapterSchema = z
       }),
       z.object({
         protocol: z.literal('mqtt'),
-        host: z.string().min(1, { message: 'Vui lòng nhập host' }),
-        port: z.string().min(1, { message: 'Vui lòng nhập port' }),
-        password: z.string().min(1, { message: 'Vui lòng nhập password' }),
-        topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
+        host: z.string(),
+        port: z.string(),
+        password: z.string(),
+        topic: z.string(),
       }),
     ]),
   )
 
-export const entityThingSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    description: z.string(),
-  })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.enum(['thing', 'template'] as const),
-        base_template: z.string().nullable(),
-      }),
-      z.object({
-        type: z.literal('shape'),
-        base_shapes: z.string().nullable(),
-      }),
-    ]),
-  )
-
-export const serviceThingSchema = z.object({
-  name: nameSchema,
-  description: z.string(),
-  input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
-  output: z.enum([
-    'json',
-    'str',
-    'i32',
-    'i64',
-    'f32',
-    'f64',
-    'bool',
-    'time',
-    'bin',
-  ] as const),
-  code: z.string().optional(),
-})
-
-export const protocolList = [
-  {
-    label: 'MQTT',
-    value: 'mqtt',
-  },
-  {
-    label: 'TCP',
-    value: 'tcp',
-  },
-  {
-    label: 'UDP',
-    value: 'udp',
-  },
-]
-
-export const contentTypeList = [
-  {
-    label: 'JSON',
-    value: 'json',
-  },
-  {
-    label: 'Hex',
-    value: 'hex',
-  },
-  {
-    label: 'Text',
-    value: 'text',
-  },
-]
-
-export function CreateAdapter() {
+export function UpdateAdapter({
+  id,
+  name,
+  protocol,
+  content_type,
+  thing_id,
+  handle_service,
+  host,
+  password,
+  port,
+  topic,
+  close,
+  isOpen,
+  thingData,
+  refetchThingData,
+}: UpdateDeviceProps) {
   const { t } = useTranslation()
+
+  const { mutate, isLoading, isSuccess } = useUpdateAdapter()
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
 
   const { id: projectId } = storage.getProject()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [protocolType, setProtocolType] = useState('mqtt')
+  const [protocolType, setProtocolType] = useState(protocol)
   const [thingType, setThingType] = useState('thing')
-
-  const {
-    mutate: mutateAdapter,
-    isLoading: isLoadingAdapter,
-    isSuccess: isSuccessAdapter,
-  } = useCreateAdapter()
 
   const {
     data: dataCreateThing,
@@ -152,10 +116,6 @@ export function CreateAdapter() {
     isSuccess: isSuccessThing,
   } = useCreateEntityThing()
 
-  const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
-    projectId,
-    config: { enabled: false },
-  })
   const thingListCache:
     | ({ data: EntityThingList } & BasePagination)
     | undefined = queryClient.getQueryData(['entity-things'], { exact: false })
@@ -163,21 +123,6 @@ export function CreateAdapter() {
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
-
-  // TODO: Auto set default when user create new thing successfully
-  // const [defaultThingValues, setDefaultThingValues] = useState(null)
-  // useEffect(() => {
-  //   if (dataCreateThing) {
-  //     setDefaultThingValues([
-  //       {
-  //         label: thingSelectData?.find(
-  //           thingSelect => thingSelect.value === dataCreateThing?.data.id,
-  //         )?.label,
-  //         value: dataCreateThing?.data.id,
-  //       },
-  //     ])
-  //   }
-  // }, [dataCreateThing])
 
   const {
     mutate: mutateService,
@@ -188,8 +133,10 @@ export function CreateAdapter() {
   const [selectedThing, setSelectedThing] = useState<SelectOption>()
   const { data: serviceData, refetch: refetchServiceData } =
     useGetServiceThings({
-      thingId: (selectedThing?.value as string) ?? '',
-      config: { enabled: false },
+      thingId: selectedThing?.value
+        ? (selectedThing?.value as string)
+        : thing_id,
+      config: { suspense: false },
     })
   useEffect(() => {
     if (selectedThing != null) {
@@ -211,42 +158,44 @@ export function CreateAdapter() {
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
   return (
-    <FormDrawer
-      isDone={isSuccessAdapter}
-      triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
-      }
-      title={t('cloud:custom_protocol.adapter.create')}
-      submitButton={
-        <Button
-          className="rounded border-none"
-          form="create-adapter"
-          type="submit"
-          size="lg"
-          isLoading={isLoadingAdapter}
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-      otherState={protocolType}
-      setOtherState={setProtocolType}
+    <Drawer
+      isOpen={isOpen}
+      onClose={close}
+      title={t('cloud:custom_protocol.adapter.table.edit')}
+      renderFooter={() => (
+        <>
+          <Button
+            className="rounded border-none"
+            variant="secondary"
+            size="lg"
+            onClick={close}
+            startIcon={
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+          <Button
+            className="rounded border-none"
+            form="update-adapter"
+            type="submit"
+            size="lg"
+            isLoading={isLoading}
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+        </>
+      )}
     >
-      <Form<CreateAdapterDTO['data'], typeof adapterSchema>
-        id="create-adapter"
+      <Form<UpdateAdapterDTO['data'], typeof updateAdapterSchema>
+        id="update-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
           // console.log('adapter values', values)
           if (protocolType === 'mqtt') {
-            mutateAdapter({
+            mutate({
               data: {
-                project_id: projectId,
                 name: values.name,
+                project_id: projectId,
                 protocol: values.protocol,
                 content_type: values.content_type,
                 thing_id: values.thing_id.value,
@@ -256,21 +205,48 @@ export function CreateAdapter() {
                 password: values.password,
                 topic: values.topic.split(',').map(word => word.trim() + '/#'),
               },
+              id,
             })
           } else {
-            mutateAdapter({
+            mutate({
               data: {
-                project_id: projectId,
                 name: values.name,
+                project_id: projectId,
                 protocol: values.protocol,
                 content_type: values.content_type,
                 thing_id: values.thing_id.value,
                 handle_service: values.handle_service.value,
               },
+              id,
             })
           }
         }}
-        schema={adapterSchema}
+        schema={updateAdapterSchema}
+        options={{
+          defaultValues: {
+            name,
+            content_type,
+            handle_service: {
+              label: handle_service,
+              value: handle_service,
+            },
+            host,
+            password,
+            port,
+            protocol,
+            thing_id: {
+              label: thingSelectData.find(item => item.value === thing_id)
+                ?.label,
+              value: thing_id,
+            },
+            topic:
+              topic !== 'null'
+                ? JSON.parse(topic)
+                    .map((item: string) => item.split('/')[0])
+                    .join(', ')
+                : null,
+          },
+        }}
       >
         {({ register, formState, control, watch }) => {
           // console.log('zod adapter errors: ', formState.errors)
@@ -442,7 +418,7 @@ export function CreateAdapter() {
                             onMenuClose={() => {
                               const selectedThingWatch = watch(
                                 'thing_id',
-                              ) as SelectOption
+                              ) as unknown as SelectOption
                               setSelectedThing(selectedThingWatch)
                             }}
                             placeholder={t(
@@ -774,7 +750,6 @@ export function CreateAdapter() {
                               className="mt-3 w-full"
                               variant="primary"
                               size="square"
-                              disabled={!selectedThing?.value}
                             >
                               {t('cloud:custom_protocol.service.create')}
                             </Button>
@@ -807,9 +782,9 @@ export function CreateAdapter() {
                 style={{ marginTop: '10px' }}
               >
                 <Button
-                  className="rounded-sm border-none"
+                  className="border-none hover:text-primary-400"
                   style={{ justifyContent: 'flex-start' }}
-                  variant="secondary"
+                  variant="trans"
                   size="square"
                   onClick={() =>
                     setSelectedIndex(selectedIndex =>
@@ -821,9 +796,9 @@ export function CreateAdapter() {
                   {t('btn:back')}
                 </Button>
                 <Button
-                  className="rounded-sm border-none"
+                  className="border-none hover:text-primary-400"
                   style={{ justifyContent: 'flex-start' }}
-                  variant="secondary"
+                  variant="trans"
                   size="square"
                   onClick={() =>
                     setSelectedIndex(selectedIndex =>
@@ -839,6 +814,6 @@ export function CreateAdapter() {
           )
         }}
       </Form>
-    </FormDrawer>
+    </Drawer>
   )
 }

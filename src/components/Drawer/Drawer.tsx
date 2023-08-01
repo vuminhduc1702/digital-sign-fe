@@ -19,6 +19,7 @@ export type DrawerProps = {
   children: React.ReactNode
   renderFooter: () => React.ReactNode
   size?: keyof typeof sizes
+  otherState?: boolean | string
   setOtherState?: Dispatch<SetStateAction<any>>
 }
 
@@ -29,10 +30,16 @@ export const Drawer = ({
   onClose,
   renderFooter,
   size = 'md',
+  otherState,
   setOtherState,
 }: DrawerProps) => {
   useEffect(() => {
-    setOtherState?.(false)
+    if (typeof otherState === 'boolean') {
+      setOtherState?.(false)
+    }
+    if (typeof otherState === 'string') {
+      setOtherState?.('mqtt')
+    }
   }, [isOpen])
 
   return (
@@ -42,7 +49,7 @@ export const Drawer = ({
         static
         className="fixed inset-0 z-40 overflow-hidden"
         open={isOpen}
-        onClose={onClose}
+        onClose={() => null}
       >
         <div className="absolute inset-0 overflow-hidden">
           <Dialog.Overlay className="absolute inset-0" />

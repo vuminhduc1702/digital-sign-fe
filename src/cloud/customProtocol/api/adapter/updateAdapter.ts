@@ -1,19 +1,20 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type updateAdapterSchema } from '../../components/UpdateAdapter'
+
 export type UpdateAdapterDTO = {
-  data: {
-    name: string
-  }
-  adapterId: string
+  data: z.infer<typeof updateAdapterSchema>
+  id: string
 }
 
-export const updateAdapter = ({ data, adapterId }: UpdateAdapterDTO) => {
-  return axios.put(`/api/adapter/${adapterId}`, data)
+export const updateAdapter = ({ data, id }: UpdateAdapterDTO) => {
+  return axios.put(`/api/adapter/${id}`, data)
 }
 
 type UseUpdateAdapterOptions = {

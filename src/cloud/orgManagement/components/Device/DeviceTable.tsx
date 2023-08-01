@@ -16,6 +16,7 @@ import { useDeleteDevice } from '../../api/deviceAPI'
 import storage from '~/utils/storage'
 
 import { type Device } from '../../types'
+import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -140,7 +141,11 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   )
 }
 
-export function DeviceTable({ data, ...props }: { data: Device[] }) {
+type DeviceTableProps = {
+  data: Device[]
+} & BaseTablePagination
+
+export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const { t } = useTranslation()
 
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)

@@ -376,7 +376,12 @@
         "host": "Host",
         "port": "Port",
         "pass": "Mật khẩu",
-        "topic": "Topic"
+        "topic": "Topic",
+        "ping_MQTT": {
+          "title": "Test MQTT connection",
+          "success": "MQTT connection khả dụng",
+          "failure": "MQTT connection không tồn tại"
+        }
       }
     }
   },

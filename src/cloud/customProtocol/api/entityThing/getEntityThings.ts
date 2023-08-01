@@ -11,7 +11,7 @@ type GetEntityThings = {
   entityThingType?: EntityThingType
 }
 
-type GetEntityThingsRes = {
+export type GetEntityThingsRes = {
   data: EntityThingList
 } & BaseAPIRes
 
