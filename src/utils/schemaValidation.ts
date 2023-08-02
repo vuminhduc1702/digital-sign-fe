@@ -6,7 +6,7 @@ export const nameSchema = z
   .max(30, { message: 'Tên quá dài' })
 
 export const otpSchema = z
-  .number()
+  .string()
   .min(6, { message: 'Vui lòng nhập đúng OTP' })
 
 export const descSchema = z

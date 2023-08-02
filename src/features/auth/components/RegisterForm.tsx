@@ -8,9 +8,9 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { emailSchema, nameSchema, otpSchema } from '~/utils/schemaValidation'
 
-const schema = z.object({
+const registerSchema = z.object({
   email: emailSchema,
-  firstName: nameSchema,
+  password: nameSchema,
   otp: otpSchema,
 })
 
@@ -31,48 +31,51 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
 
   return (
     <div>
-      <Form<RegisterValues, typeof schema>
+      <Form<RegisterValues, typeof registerSchema>
         onSubmit={async values => {
           await registerMutation.mutate(values)
           onSuccess()
         }}
-        schema={schema}
+        schema={registerSchema}
         options={{
           shouldUnregister: true,
         }}
       >
-        {({ register, formState }) => (
-          <>
-            <InputField
-              type="email"
-              label="Email"
-              error={formState.errors['email']}
-              registration={register('email')}
-            />
-            <InputField
-              type="password"
-              label={t('user:password') ?? 'Password'}
-              error={formState.errors['password']}
-              registration={register('password')}
-            />
-            <InputField
-              type="text"
-              label="OTP"
-              error={formState.errors['otp']}
-              registration={register('otp')}
-            />
+        {({ register, formState }) => {
+          console.log('formState', formState.errors)
+          return (
+            <>
+              <InputField
+                type="email"
+                label="Email"
+                error={formState.errors['email']}
+                registration={register('email')}
+              />
+              <InputField
+                type="password"
+                label={t('user:password') ?? 'Password'}
+                error={formState.errors['password']}
+                registration={register('password')}
+              />
+              <InputField
+                type="text"
+                label="OTP"
+                error={formState.errors['otp']}
+                registration={register('otp')}
+              />
 
-            <div>
-              <Button
-                isLoading={registerMutation.isLoading}
-                type="submit"
-                className="w-full"
-              >
-                {t('user:register')}
-              </Button>
-            </div>
-          </>
-        )}
+              <div>
+                <Button
+                  isLoading={registerMutation.isLoading}
+                  type="submit"
+                  className="w-full"
+                >
+                  {t('user:register')}
+                </Button>
+              </div>
+            </>
+          )
+        }}
       </Form>
       <div className="mt-2 flex items-center justify-end">
         <div className="text-body-sm">
