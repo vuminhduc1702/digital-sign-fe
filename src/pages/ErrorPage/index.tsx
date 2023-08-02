@@ -15,7 +15,12 @@ export function ErrorFallback({
       role="alert"
     >
       <h1 className="text-h1">{t('error:error_page.title')}</h1>
-      <Button className="mt-4" size="lg" onClick={() => resetErrorBoundary()}>
+      <Button
+        className="mt-4"
+        size="lg"
+        onClick={() => resetErrorBoundary()}
+        variant="primary"
+      >
         Refresh
       </Button>
     </div>

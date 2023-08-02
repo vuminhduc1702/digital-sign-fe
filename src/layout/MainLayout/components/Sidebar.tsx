@@ -1,4 +1,3 @@
-import storage from '~/utils/storage'
 import SideNavigation from './SideNavigation'
 
 import logo from '~/assets/images/logo.svg'

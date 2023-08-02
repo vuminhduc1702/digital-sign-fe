@@ -6,7 +6,6 @@ import clsx from 'clsx'
 import { PATHS } from '~/routes/PATHS'
 import { NavLink } from '~/components/Link'
 import storage from '~/utils/storage'
-import { useProjectIdStore } from '~/stores/project'
 
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
 import dammayIcon from '~/assets/icons/sb-dammay.svg'
@@ -75,8 +74,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
 function SideNavigation() {
   const { t } = useTranslation()
 
-  const projectIdFromStore = useProjectIdStore(state => state.projectId)
-  const projectId = storage.getProject()?.id || projectIdFromStore
+  const { id: projectId } = storage.getProject()
 
   const [value, setValue] = useState('cloud')
 

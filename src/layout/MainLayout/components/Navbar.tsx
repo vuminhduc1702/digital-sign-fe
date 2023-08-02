@@ -16,6 +16,7 @@ import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
+import logo from '~/assets/images/logo.svg'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -27,104 +28,118 @@ function Navbar() {
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   return (
-    <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-          <div className="cursor-pointer">
-            <img
-              src={defaultUserIcon}
-              alt="User's avatar"
-              className="aspect-square w-[20px]"
-            />
-            <p className="text-white">
-              {t('nav:hello')}{' '}
-              {userData?.name || userData?.email?.split('@')[0]}
-            </p>
-            <SidebarDropDownIcon
-              width={12}
-              height={7}
-              viewBox="0 0 12 7"
-              className="text-white"
-            />
-          </div>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-            sideOffset={5}
-          >
-            <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-              {t('user:logout')}
-            </p>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-          <div className="cursor-pointer">
-            <img
-              src={qldaIcon}
-              alt="Project management"
-              className="aspect-square w-[20px]"
-            />
-            <p className="text-white">{t('nav:qlda')}</p>
-            <SidebarDropDownIcon
-              width={12}
-              height={7}
-              viewBox="0 0 12 7"
-              className="text-white"
-            />
-          </div>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-            sideOffset={5}
-          >
-            {projectsData?.projects.map((project: Project) => {
-              return (
-                <Link to={`${PATHS.ORG_MANAGE}/${project.id}`} key={project.id}>
-                  <DropdownMenu.Item
-                    className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
-                    onClick={() => {
-                      storage.setProject(project)
-                      setProjectId(project.id)
-                    }}
+    <div className="flex w-full">
+      {window.location.pathname === PATHS.PROJECT_MANAGE ? (
+        <div className="hidden h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white lg:flex">
+          <img src={logo} alt="logo" className="h-14" />
+        </div>
+      ) : null}
+      <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+            <div className="cursor-pointer">
+              <img
+                src={defaultUserIcon}
+                alt="User's avatar"
+                className="aspect-square w-[20px]"
+              />
+              <p className="text-white">
+                {t('nav:hello')}{' '}
+                {userData?.name || userData?.email?.split('@')[0]}
+              </p>
+              <SidebarDropDownIcon
+                width={12}
+                height={7}
+                viewBox="0 0 12 7"
+                className="text-white"
+              />
+            </div>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={5}
+            >
+              <p className="cursor-pointer" onClick={() => logout.mutate({})}>
+                {t('user:logout')}
+              </p>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+            <div className="cursor-pointer">
+              <img
+                src={qldaIcon}
+                alt="Project management"
+                className="aspect-square w-[20px]"
+              />
+              <p className="text-white">{t('nav:qlda')}</p>
+              <SidebarDropDownIcon
+                width={12}
+                height={7}
+                viewBox="0 0 12 7"
+                className="text-white"
+              />
+            </div>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={5}
+            >
+              {projectsData?.projects.map((project: Project) => {
+                return (
+                  <Link
+                    to={`${PATHS.ORG_MANAGE}/${project.id}`}
+                    key={project.id}
                   >
-                    <img
-                      src={project?.image || defaultProjectImage}
-                      alt="Project"
-                      className="aspect-square w-[45px] rounded-full"
-                      onError={e => {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = defaultProjectImage
+                    <DropdownMenu.Item
+                      className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
+                      onClick={() => {
+                        storage.setProject(project)
+                        setProjectId(project.id)
                       }}
-                    />
-                    <div className="space-y-1">
-                      <p className="text-h2">{project.name}</p>
-                      <p>{project.description}</p>
-                    </div>
-                  </DropdownMenu.Item>
-                </Link>
-              )
-            })}
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
-      </DropdownMenu.Root>
-      <div className="flex cursor-pointer items-center gap-x-2">
-        <img
-          src={caidatIcon}
-          alt="Setting"
-          className="aspect-square w-[20px]"
-        />
-        <p className="text-white">{t('nav:setup')}</p>
-      </div>
-      <div className="flex cursor-pointer items-center gap-x-2">
-        <img src={hotroIcon} alt="Support" className="aspect-square w-[20px]" />
-        <p className="text-white">{t('nav:support')}</p>
-      </div>
-    </nav>
+                    >
+                      <img
+                        src={project?.image || defaultProjectImage}
+                        alt="Project"
+                        className="aspect-square w-[45px] rounded-full"
+                        onError={e => {
+                          const target = e.target as HTMLImageElement
+                          target.onerror = null
+                          target.src = defaultProjectImage
+                        }}
+                      />
+                      <div className="space-y-1">
+                        <p className="text-h2">{project.name}</p>
+                        <p>{project.description}</p>
+                      </div>
+                    </DropdownMenu.Item>
+                  </Link>
+                )
+              })}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
+        <div className="flex cursor-pointer items-center gap-x-2">
+          <img
+            src={caidatIcon}
+            alt="Setting"
+            className="aspect-square w-[20px]"
+          />
+          <p className="text-white">{t('nav:setup')}</p>
+        </div>
+        <div className="flex cursor-pointer items-center gap-x-2">
+          <img
+            src={hotroIcon}
+            alt="Support"
+            className="aspect-square w-[20px]"
+          />
+          <p className="text-white">{t('nav:support')}</p>
+        </div>
+      </nav>
+    </div>
   )
 }
 

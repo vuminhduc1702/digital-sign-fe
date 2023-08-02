@@ -9,6 +9,7 @@ import {
   ComboBoxSelectAdapter,
   CreateAdapter,
 } from '../components'
+import { ContentLayout } from '~/layout/ContentLayout'
 
 import { type Adapter } from '../types'
 
@@ -32,7 +33,7 @@ export function CustomProtocolManage() {
   })
 
   return (
-    <>
+    <ContentLayout title={t('cloud:custom_protocol.title')}>
       <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
@@ -55,6 +56,6 @@ export function CustomProtocolManage() {
           isPreviousData={isPreviousData}
         />
       </div>
-    </>
+    </ContentLayout>
   )
 }

@@ -48,6 +48,9 @@
     "support": "Hỗ trợ"
   },
   "cloud": {
+    "project_manager": {
+      "title": "Quản lý Project"
+    },
     "org_manage": {
       "org_list": "Danh sách tổ chức",
       "org_map": {
@@ -301,7 +304,7 @@
       }
     },
     "custom_protocol": {
-      "title": "Custom protocol",
+      "title": "Quản lí Custom protocol",
       "protocol": "Protocol",
       "finish": "Finish",
       "service": {

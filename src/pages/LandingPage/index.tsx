@@ -16,6 +16,7 @@ export function LandingPage() {
         <Button
           className="mt-4"
           size="lg"
+          variant="primary"
           onClick={() => navigate(PATHS.PROJECT_MANAGE)}
         >
           Nhấn vào đây để chọn Project
@@ -25,6 +26,7 @@ export function LandingPage() {
           <Button
             className="mt-4 w-40"
             size="lg"
+            variant="primary"
             onClick={() => navigate(PATHS.LOGIN)}
           >
             Đăng nhập
@@ -32,6 +34,7 @@ export function LandingPage() {
           <Button
             className="mt-4 w-40"
             size="lg"
+            variant="primary"
             onClick={() => navigate(PATHS.REGISTER)}
           >
             Đăng ký

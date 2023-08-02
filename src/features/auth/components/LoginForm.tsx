@@ -55,6 +55,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                 isLoading={login.isLoading}
                 type="submit"
                 className="w-full"
+                variant="primary"
               >
                 {t('user:login')}
               </Button>
