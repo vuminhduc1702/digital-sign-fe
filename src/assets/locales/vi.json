@@ -13,7 +13,7 @@
       "flow_engine": "Flow Engine",
       "dashboard": "Dashboard",
       "role_manage": "Vai trò",
-      "custom_protocol": "Custom protocol"
+      "custom_protocol": "Adapter"
     },
     "application": {
       "title": "Ứng dụng",
@@ -304,7 +304,7 @@
       }
     },
     "custom_protocol": {
-      "title": "Quản lí Custom protocol",
+      "title": "Quản lí Adapter",
       "protocol": "Protocol",
       "finish": "Finish",
       "service": {
@@ -404,7 +404,7 @@
     "no_event": "Không có sự kiện",
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
-    "no_service": "Không có Service",
+    "no_service": "Không có Service. Vui lòng tạo service.",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "edit": "Chỉnh sửa",

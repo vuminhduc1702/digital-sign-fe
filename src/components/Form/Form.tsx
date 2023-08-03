@@ -34,6 +34,7 @@ export const Form = <
     ...options,
     resolver: schema && zodResolver(schema),
   })
+
   return (
     <form
       className={clsx('w-full space-y-6', className)}

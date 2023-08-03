@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
@@ -106,7 +106,8 @@ export function UpdateAdapter({
   const { id: projectId } = storage.getProject()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [protocolType, setProtocolType] = useState(protocol)
+  // const [protocolType, setProtocolType] = useState(protocol)
+  const protocolTypeRef = useRef('mqtt')
   const [thingType, setThingType] = useState('thing')
 
   const {
@@ -131,18 +132,10 @@ export function UpdateAdapter({
   } = useCreateServiceThing()
 
   const [selectedThing, setSelectedThing] = useState<SelectOption>()
-  const { data: serviceData, refetch: refetchServiceData } =
-    useGetServiceThings({
-      thingId: selectedThing?.value
-        ? (selectedThing?.value as string)
-        : thing_id,
-      config: { suspense: false },
-    })
-  useEffect(() => {
-    if (selectedThing != null) {
-      refetchServiceData()
-    }
-  }, [selectedThing])
+  const { data: serviceData } = useGetServiceThings({
+    thingId: selectedThing?.value ? (selectedThing?.value as string) : thing_id,
+    config: { enabled: !!selectedThing, suspense: false },
+  })
   useEffect(() => {
     if (selectedThing != null) {
       setSelectedThing(undefined)
@@ -156,6 +149,12 @@ export function UpdateAdapter({
   const [codeInput, setCodeInput] = useState('')
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
+
+  const [isCreateAdapterFormUpdated, setIsCreateAdapterFormUpdated] =
+    useState(false)
+  useEffect(() => {
+    setIsCreateAdapterFormUpdated(true)
+  }, [protocolTypeRef.current])
 
   return (
     <Drawer
@@ -182,6 +181,7 @@ export function UpdateAdapter({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
+            disabled={!isCreateAdapterFormUpdated}
           />
         </>
       )}
@@ -191,7 +191,7 @@ export function UpdateAdapter({
         className="flex flex-col justify-between"
         onSubmit={values => {
           // console.log('adapter values', values)
-          if (protocolType === 'mqtt') {
+          if (protocolTypeRef.current === 'mqtt') {
             mutate({
               data: {
                 name: values.name,
@@ -250,6 +250,8 @@ export function UpdateAdapter({
       >
         {({ register, formState, control, watch }) => {
           // console.log('zod adapter errors: ', formState.errors)
+          setIsCreateAdapterFormUpdated(formState.isDirty)
+
           return (
             <>
               <Tab.Group
@@ -325,9 +327,9 @@ export function UpdateAdapter({
                           registration={register('protocol')}
                           options={protocolList}
                           onChange={event =>
-                            setProtocolType(
-                              String(event.target.value).toLowerCase(),
-                            )
+                            (protocolTypeRef.current = String(
+                              event.target.value,
+                            ).toLowerCase())
                           }
                         />
                         <SelectField
@@ -338,7 +340,7 @@ export function UpdateAdapter({
                           registration={register('content_type')}
                           options={contentTypeList}
                         />
-                        {protocolType === 'mqtt' ? (
+                        {protocolTypeRef.current === 'mqtt' ? (
                           <div className="space-y-6">
                             <InputField
                               label={t('cloud:custom_protocol.adapter.host')}
@@ -591,7 +593,7 @@ export function UpdateAdapter({
                             options={
                               serviceData?.data != null
                                 ? serviceSelectData
-                                : serviceData?.data === null
+                                : serviceData?.data == null
                                 ? [
                                     {
                                       label: t('table:no_service'),
@@ -768,7 +770,6 @@ export function UpdateAdapter({
                                   className="h-5 w-5"
                                 />
                               }
-                              onClick={() => refetchServiceData()}
                             />
                           }
                         />

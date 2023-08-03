@@ -186,16 +186,10 @@ export function CreateAdapter() {
   } = useCreateServiceThing()
 
   const [selectedThing, setSelectedThing] = useState<SelectOption>()
-  const { data: serviceData, refetch: refetchServiceData } =
-    useGetServiceThings({
-      thingId: (selectedThing?.value as string) ?? '',
-      config: { enabled: false },
-    })
-  useEffect(() => {
-    if (selectedThing != null) {
-      refetchServiceData()
-    }
-  }, [selectedThing])
+  const { data: serviceData } = useGetServiceThings({
+    thingId: (selectedThing?.value as string) ?? '',
+    config: { enabled: !!selectedThing, suspense: false },
+  })
   useEffect(() => {
     if (selectedThing != null) {
       setSelectedThing(undefined)
@@ -610,12 +604,13 @@ export function CreateAdapter() {
                         <div className="space-y-1">
                           <SelectDropdown
                             label={t('cloud:custom_protocol.service.title')}
+                            inputId="handleServiceForm"
                             name="handle_service"
                             control={control}
                             options={
                               serviceData?.data != null
                                 ? serviceSelectData
-                                : serviceData?.data === null
+                                : serviceData?.data == null
                                 ? [
                                     {
                                       label: t('table:no_service'),
@@ -793,7 +788,6 @@ export function CreateAdapter() {
                                   className="h-5 w-5"
                                 />
                               }
-                              onClick={() => refetchServiceData()}
                             />
                           }
                         />

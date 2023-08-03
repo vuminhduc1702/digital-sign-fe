@@ -24,6 +24,7 @@ type SelectProps<TFormValues extends FieldValues> = {
   noOptionsMessage?: () => string
   defaultValue?: PropsValue<SelectOption> | undefined
   placeholder?: string
+  inputId?: string
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 
@@ -33,6 +34,7 @@ export function SelectDropdown<TFormValues extends FieldValues>({
   control,
   label,
   error,
+  inputId,
   ...props
 }: SelectProps<TFormValues>) {
   return (
