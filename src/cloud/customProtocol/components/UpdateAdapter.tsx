@@ -106,8 +106,7 @@ export function UpdateAdapter({
   const { id: projectId } = storage.getProject()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-  // const [protocolType, setProtocolType] = useState(protocol)
-  const protocolTypeRef = useRef('mqtt')
+  const [protocolType, setProtocolType] = useState(protocol)
   const [thingType, setThingType] = useState('thing')
 
   const {
@@ -152,9 +151,7 @@ export function UpdateAdapter({
 
   const [isCreateAdapterFormUpdated, setIsCreateAdapterFormUpdated] =
     useState(false)
-  useEffect(() => {
-    setIsCreateAdapterFormUpdated(true)
-  }, [protocolTypeRef.current])
+  const protocolTypeRef = useRef(protocol)
 
   return (
     <Drawer
@@ -181,7 +178,10 @@ export function UpdateAdapter({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={!isCreateAdapterFormUpdated}
+            disabled={
+              !isCreateAdapterFormUpdated &&
+              protocolTypeRef.current === protocolType
+            }
           />
         </>
       )}
@@ -191,7 +191,7 @@ export function UpdateAdapter({
         className="flex flex-col justify-between"
         onSubmit={values => {
           // console.log('adapter values', values)
-          if (protocolTypeRef.current === 'mqtt') {
+          if (protocolType === 'mqtt') {
             mutate({
               data: {
                 name: values.name,
@@ -326,11 +326,12 @@ export function UpdateAdapter({
                           error={formState.errors['protocol']}
                           registration={register('protocol')}
                           options={protocolList}
-                          onChange={event =>
-                            (protocolTypeRef.current = String(
-                              event.target.value,
-                            ).toLowerCase())
-                          }
+                          onChange={event => {
+                            setProtocolType(
+                              String(event.target.value).toLowerCase(),
+                            )
+                            protocolTypeRef.current = protocolType
+                          }}
                         />
                         <SelectField
                           label={t(
@@ -340,7 +341,7 @@ export function UpdateAdapter({
                           registration={register('content_type')}
                           options={contentTypeList}
                         />
-                        {protocolTypeRef.current === 'mqtt' ? (
+                        {protocolType === 'mqtt' ? (
                           <div className="space-y-6">
                             <InputField
                               label={t('cloud:custom_protocol.adapter.host')}
