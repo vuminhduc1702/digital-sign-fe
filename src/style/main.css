@@ -18,3 +18,10 @@ body {
 #root > div[role='alert'] {
   height: 100vh;
 }
+
+@media (min-width: 575.98px) {
+  .sm\:max-w-lg.thing-service-popup {
+    max-width: 78rem;
+}
+}
+

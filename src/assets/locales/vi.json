@@ -9,6 +9,7 @@
     "cloud": {
       "title": "Đám mây",
       "org_management": "Quản lý tổ chức",
+      "flow_engine_v2": "Quản lý nghiệp vụ",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
       "dashboard": "Dashboard",
@@ -314,8 +315,8 @@
         "success_update": "Sửa Service thành công",
         "success_delete": "Xoá Service thành công",
         "name": "Tên service",
-        "output": "Output",
-        "input": "Input",
+        "output": "Kết quả",
+        "input": "Đầu vào",
         "json": "JSON",
         "str": "String",
         "i32": "Integer 32",
@@ -327,7 +328,11 @@
         "bin": "Binary",
         "description": "Mô tả",
         "code": "Code",
-        "choose": "Vui lòng chọn Service"
+        "title_thing_service": "Danh sách nghiệp vụ",
+        "choose": "Vui lòng chọn Service",
+        "delete": "Xóa Service",
+        "edit": " Sửa Service",
+        "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?"
       },
       "thing": {
         "title": "Thing",
@@ -340,11 +345,16 @@
         "type": "Kiểu thing",
         "thing": "Thing",
         "template": "Template",
+        "template_name": "Tên Template",
+        "number_thing": "Số lượng nghiệp vụ",
         "shape": "Shape",
         "base_template": "Base template",
         "base_shapes": "Base shape",
         "description": "Mô tả",
-        "choose": "Vui lòng chọn Thing"
+        "choose": "Vui lòng chọn Thing",
+        "delete": "Xóa Thing",
+        "edit": " Sửa Thing",
+        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?"
       },
       "adapter": {
         "title": "adapter",

@@ -12,6 +12,7 @@ import { Button } from '../Button'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { cn } from '~/utils/misc'
 
 export type ConfirmationDialogProps = {
   triggerButton: ReactElement
@@ -19,6 +20,7 @@ export type ConfirmationDialogProps = {
   title: string
   body?: string | ReactNode
   isDone?: boolean
+  className?: string
 }
 
 export const FormDialog = ({
@@ -27,6 +29,7 @@ export const FormDialog = ({
   title,
   body = '',
   isDone = false,
+  className
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
 
@@ -50,7 +53,7 @@ export const FormDialog = ({
         onClose={() => null}
         initialFocus={cancelButtonRef}
       >
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+        <div className={cn("inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle", className)}>
           <div className="mt-3 text-center sm:mt-0 sm:text-left">
             <div className="flex items-center justify-between">
               <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -72,7 +75,7 @@ export const FormDialog = ({
               </div>
             )}
           </div>
-          <div className="mt-4 flex justify-end space-x-2">
+          <div className="mt-4 flex justify-center space-x-2">
             <Button
               type="button"
               variant="secondary"

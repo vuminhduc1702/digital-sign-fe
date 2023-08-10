@@ -73,7 +73,11 @@ export default function CreateTemplate() {
       <FormMultipleFields<CreateTemplateDTO['data'], typeof templateAttrSchema>
         id="create-template"
         onSubmit={values =>
-          mutate({ data: { ...values, project_id: projectId } })
+          {
+            mutate({ data: { ...values, project_id: projectId } })
+            console.log(values)
+          }
+         
         }
         schema={templateAttrSchema}
         options={{
