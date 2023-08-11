@@ -160,7 +160,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('type', {
+      columnHelper.accessor('total_service', {
         header: () => (
           <span>{t('cloud:custom_protocol.thing.number_thing')}</span>
         ),

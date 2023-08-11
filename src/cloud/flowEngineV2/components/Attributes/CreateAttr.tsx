@@ -30,19 +30,8 @@ export const entityThingSchema = z
     project_id: z.string().optional(),
     description: z.string(),
     base_template: z.string().nullable(),
+    type: z.string().nullable(),
   })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.enum(['thing', 'template'] as const),
-        base_template: z.string().nullable(),
-      }),
-      z.object({
-        type: z.literal('shape'),
-        base_shapes: z.string().nullable(),
-      }),
-    ]),
-  )
 
 export function CreateThing() {
   const { t } = useTranslation()
@@ -66,18 +55,15 @@ export function CreateThing() {
           id="create-entityThing"
           className="flex flex-col justify-between"
           onSubmit={values => {
-            // console.log('thing values', values)
-            if (values.type === 'thing' || values.type === 'template') {
-              mutateThing({
-                data: {
-                  name: values.name,
-                  project_id: projectId,
-                  description: values.description,
-                  type: values.type,
-                  base_template: values.base_template || null,
-                },
-              })
-            }
+            mutateThing({
+              data: {
+                name: values.name,
+                project_id: projectId,
+                description: values.description,
+                base_template: values.base_template || null,
+                type: 'thing'
+              },
+            })
           }}
           schema={entityThingSchema}
         >
@@ -89,26 +75,13 @@ export function CreateThing() {
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-                <SelectField
-                  label={t('cloud:custom_protocol.thing.type')}
-                  error={formState.errors['type']}
-                  registration={register('type')}
-                  options={[
-                    {
-                      label: t('cloud:custom_protocol.thing.thing'),
-                      value: 'thing',
-                      selected: true,
-                    },
-                    {
-                      label: t('cloud:custom_protocol.thing.template'),
-                      value: 'template',
-                    },
-                    {
-                      label: t('cloud:custom_protocol.thing.shape'),
-                      value: 'shape',
-                    },
-                  ]}
-                />
+                <div className='hidden'>
+                  <InputField
+                    label={t('cloud:custom_protocol.thing.name')}
+                    error={formState.errors['type']}
+                    registration={register('type')}
+                  />
+                </div>
                 <InputField
                   label={t('cloud:custom_protocol.thing.base_template')}
                   error={formState.errors['base_template']}

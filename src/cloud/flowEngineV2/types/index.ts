@@ -65,6 +65,7 @@ export type EntityThing = {
   template_name: string
   base_template?: string
   base_shapes?: string
+  total_service: number
 }
 
 export type EntityThingList = {

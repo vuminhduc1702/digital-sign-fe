@@ -21,7 +21,7 @@ function FlowEngineV2Navbar() {
   const orgId = params.orgId || ''
 
   return (
-    <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-3">
+    <div className="flex h-[60px] items-center justify-between bg-secondary-400 px-10">
       <NavLink
         to={`${PATHS.THING_TEMPLATE}/${projectId}${
           orgId === '' ? '' : `/${orgId}`
