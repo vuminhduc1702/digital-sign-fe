@@ -34,6 +34,7 @@ export function CodeEditor({ label, setCodeInput , readOnly, defaultValue }: Cod
         mode="javascript"
         theme="solarized_light"
         defaultValue={defaultValue}
+        value={defaultValue}
         onChange={onChange}
         name="UNIQUE_ID_OF_DIV"
         readOnly={readOnly}

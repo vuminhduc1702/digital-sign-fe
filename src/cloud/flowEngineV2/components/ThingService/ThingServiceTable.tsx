@@ -18,6 +18,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useParams } from 'react-router-dom'
+import { UpdateThingService } from './UpdateThingService'
 
 function ThingServiceTableContextMenu({
   thingId,
@@ -101,16 +102,14 @@ function ThingServiceTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      {/* {isOpen ? (
+      {isOpen ? (
         <UpdateThingService
-          userId={user_id}
           name={name}
-          email={email}
           close={close}
           isOpen={isOpen}
           {...props}
         />
-      ) : null} */}
+      ) : null}
     </>
   )
 }

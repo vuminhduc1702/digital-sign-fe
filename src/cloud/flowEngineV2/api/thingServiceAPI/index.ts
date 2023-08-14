@@ -1,4 +1,4 @@
 export * from './getThingService'
-export * from './updateUser'
+export * from './updateThingService'
 export * from './createThingService'
-export * from './deleteUser'
+export * from './deleteThingService'

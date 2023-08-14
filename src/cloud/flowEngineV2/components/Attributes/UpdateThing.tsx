@@ -95,7 +95,7 @@ export function UpdateThing({
             }}
           </Form>
         </div>
-        <div className="mt-4 flex justify-end space-x-2">
+        <div className="mt-4 flex justify-center space-x-2">
           <Button
             type="button"
             variant="secondary"

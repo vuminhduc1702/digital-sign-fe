@@ -19,10 +19,13 @@ import {
 } from '../../api/thingServiceAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnAddIcon from '~/assets/icons/btn-add.svg'
 import { CodeEditor } from '~/cloud/customProtocol/components'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
 import { useParams } from 'react-router-dom'
+import { useExecuteService } from '../../api/thingServiceAPI/executeService'
+import storage from '~/utils/storage'
 
 export const serviceThingSchema = z.object({
   name: nameSchema,
@@ -60,8 +63,13 @@ export type CreateServiceForm = {
   code: string
 }
 
+export interface dataRun {
+  [key: string]: string
+}
+
 export function CreateThingService() {
   const { t } = useTranslation()
+  const { id: projectId } = storage.getProject()
   const params = useParams()
   const [typeInput, setTypeInput] = useState('')
 
@@ -74,18 +82,33 @@ export function CreateThingService() {
     isSuccess: isSuccessService,
   } = useCreateServiceThing()
 
+  const {
+    mutate: mutateExcuteService,
+    data: executeService
+  } = useExecuteService()
+
   const handleSubmit = (data: CreateServiceForm) => {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type
     }))
     if (typeInput === 'Run') {
-      console.log(data, '============================Run')
+      const dataRun: dataRun = {}
+      data.input.map(item => {
+        dataRun[item.name] = item.value || ''
+      })
+      mutateExcuteService({
+        data: dataRun,
+        thingId,
+        projectId,
+        name: data.name
+      })
+      console.log('dataaa', executeService)
     }
     if (typeInput === 'Submit') {
       mutateService({
         data: {
-          name: 'test_service23456',
+          name: data.name,
           description: data.description,
           output: data.output,
           input: dataInput,
@@ -209,20 +232,15 @@ export function CreateThingService() {
                       </div>
                     ))}
                   </div>
-                  <div>
-                    <Button
-                      size="md"
-                      className="bg-primary-400 text-white"
-                      onClick={() =>
-                        append({
-                          name: '',
-                          type: 'json',
-                          value: '',
-                        })
-                      }
-                    >
-                      +
-                    </Button>
+                  <div className='flex items-center'>
+                    <img onClick={() =>
+                      append({
+                        name: '',
+                        type: 'json',
+                        value: '',
+                      })
+                    } src={btnAddIcon} className="h-5 w-5 cursor-pointer" />
+                    <span className='ml-2'>{t('cloud:custom_protocol.service.add_other')}</span>
                   </div>
                   <div>
                     <InputField
@@ -231,7 +249,7 @@ export function CreateThingService() {
                       registration={register('name')}
                     />
                     <SelectField
-                      label={t('cloud:custom_protocol.thing.type')}
+                      label={t('cloud:custom_protocol.service.service_input.type')}
                       error={formState.errors['output']}
                       registration={register('output')}
                       options={[

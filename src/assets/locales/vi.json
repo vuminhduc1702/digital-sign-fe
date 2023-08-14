@@ -315,6 +315,8 @@
           "value": "Giá trị"
         },
         "title": "Service",
+        "infor": "Thông tin",
+        "tab_2": "Tab 2",
         "create": "Tạo service",
         "success_create": "Tạo Service thành công",
         "success_update": "Sửa Service thành công",
@@ -322,6 +324,7 @@
         "name": "Tên service",
         "output": "Kết quả",
         "input": "Đầu vào",
+        "add_other": "Thêm biến khác",
         "json": "JSON",
         "str": "String",
         "i32": "Integer 32",

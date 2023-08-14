@@ -20,7 +20,7 @@ export const useDeleteThingService = ({ config }: ThingServiceDeleteUserOptions 
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['users'])
+      await queryClient.invalidateQueries(['entity-thingservices'])
       addNotification({
         type: 'success',
         title: t('cloud:custom_protocol.service.success_delete'),

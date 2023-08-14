@@ -27,6 +27,7 @@ export type CreateServiceThingDTO = {
     code: string
   }
   thingId: string
+  name?: string
 }
 
 export const createServiceThing = ({
@@ -50,7 +51,7 @@ export const useCreateServiceThing = ({
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['service-things'],
+        queryKey: ['entity-thingservices'],
       })
       addNotification({
         type: 'success',

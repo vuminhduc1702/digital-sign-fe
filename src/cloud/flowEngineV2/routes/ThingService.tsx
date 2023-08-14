@@ -31,8 +31,6 @@ export function ThingServices() {
     config: { keepPreviousData: true },
   })
 
-  console.log(thingData, '==================thingData')
-
   return (
     <>
       <TitleBar
