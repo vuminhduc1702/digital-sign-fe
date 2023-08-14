@@ -1,3 +1,5 @@
+import { DashboardDetail } from './DashboardDetail'
+
 export function DashboardManage() {
-  return <div>DashboardManage</div>
+  return <DashboardDetail />
 }

@@ -57,7 +57,7 @@ export const adapterSchema = z
         protocol: z.literal('mqtt'),
         host: z.string().min(1, { message: 'Vui lòng nhập host' }),
         port: z.string().min(1, { message: 'Vui lòng nhập port' }),
-        password: z.string().min(1, { message: 'Vui lòng nhập password' }),
+        password: z.string(),
         topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
       }),
     ]),
