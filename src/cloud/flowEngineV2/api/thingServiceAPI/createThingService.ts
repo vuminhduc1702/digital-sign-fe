@@ -12,18 +12,18 @@ type CreateServiceThingRes = {
   data: 1 | number
 } & BaseAPIRes
 
-export type TemplateAttributesDTO = {
-  attribute_key: string
-  value?: string | undefined
+export type inputlist = {
+  name: string
+  type?: string
+  value?: string
 }
 
 export type CreateServiceThingDTO = {
   data: {
     name: string
-    attributes: TemplateAttributesDTO[]
     description: string
     output: string
-    input: any[]
+    input: inputlist[]
     code: string
   }
   thingId: string

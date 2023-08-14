@@ -309,6 +309,11 @@
       "protocol": "Protocol",
       "finish": "Finish",
       "service": {
+        "service_input": {
+          "name": "Nhập tên biến",
+          "type": "Kiểu dữ liệu",
+          "value": "Giá trị"
+        },
         "title": "Service",
         "create": "Tạo service",
         "success_create": "Tạo Service thành công",
@@ -332,7 +337,8 @@
         "choose": "Vui lòng chọn Service",
         "delete": "Xóa Service",
         "edit": " Sửa Service",
-        "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?"
+        "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?",
+        "note": "Ghi chú"
       },
       "thing": {
         "title": "Thing",

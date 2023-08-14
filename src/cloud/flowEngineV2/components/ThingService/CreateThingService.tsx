@@ -14,6 +14,7 @@ import {
 import { nameSchema } from '~/utils/schemaValidation'
 import {
   CreateServiceThingDTO,
+  inputlist,
   useCreateServiceThing,
 } from '../../api/thingServiceAPI'
 
@@ -21,46 +22,80 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { CodeEditor } from '~/cloud/customProtocol/components'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
+import { useParams } from 'react-router-dom'
 
 export const serviceThingSchema = z.object({
-  // name: nameSchema,
+  name: nameSchema,
   description: z.string(),
-  attributes: z.array(
+  input: z.array(
     z.object({
-      attribute_key: z
+      name: z
         .string()
         .min(1, { message: 'Tên thuộc tính quá ngắn' })
         .max(30, { message: 'Tên thuộc tính quá dài' }),
-      value: z.string().optional(),
+      type: z.string().optional(),
+      value: z.string()
     }),
   ),
   // input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
-  // output: z.enum([
-  //   'json',
-  //   'str',
-  //   'i32',
-  //   'i64',
-  //   'f32',
-  //   'f64',
-  //   'bool',
-  //   'time',
-  //   'bin',
-  // ] as const),
+  output: z.enum([
+    'json',
+    'str',
+    'i32',
+    'i64',
+    'f32',
+    'f64',
+    'bool',
+    'time',
+    'bin',
+  ] as const),
   // code: z.string().optional(),
 })
 
+export type CreateServiceForm = {
+  name: string
+  description: string
+  output: string
+  input: inputlist[]
+  code: string
+}
+
 export function CreateThingService() {
   const { t } = useTranslation()
-
-  const [getValue, setGetValue] = useState()
+  const params = useParams()
+  const [typeInput, setTypeInput] = useState('')
 
   const [codeInput, setCodeInput] = useState('')
   const [thingType, setThingType] = useState('json')
+  const thingId = params.thingId as string
   const {
     mutate: mutateService,
     isLoading: isLoadingService,
     isSuccess: isSuccessService,
   } = useCreateServiceThing()
+
+  const handleSubmit = (data: CreateServiceForm) => {
+    const dataInput = data.input.map(item => ({
+      name: item.name,
+      type: item.type
+    }))
+    if (typeInput === 'Run') {
+      console.log(data, '============================Run')
+    }
+    if (typeInput === 'Submit') {
+      mutateService({
+        data: {
+          name: 'test_service23456',
+          description: data.description,
+          output: data.output,
+          input: dataInput,
+          code: codeInput,
+        },
+        thingId: thingId,
+      })
+    }
+
+  }
 
   return (
     <FormDialog
@@ -75,16 +110,16 @@ export function CreateThingService() {
           id="create-serviceThing"
           className="flex flex-col justify-between"
           onSubmit={values => {
-            console.log(values)
+            handleSubmit(values)
           }}
           schema={serviceThingSchema}
           options={{
             defaultValues: {
               name: '',
-              attributes: [{ attribute_key: '', value: '' }],
+              input: [{ name: '', value: '', type: 'json' }],
             },
           }}
-          name={['attributes']}
+          name={['input']}
         >
           {({ register, formState }, { fields, append, remove }) => {
             return (
@@ -97,81 +132,82 @@ export function CreateThingService() {
                       </p>
                     </div>
                   </div>
-                  <div className='max-h-80 overflow-auto'>
-                  {fields.map((field, index) => (
-                    <div
-                      key={field.id}
-                      className="grid grid-cols-1 gap-x-4 md:grid-cols-3"
-                    >
-                      <InputField
-                        label={
-                          t('cloud:org_manage.org_manage.add_attr.name') ??
-                          'Name'
-                        }
-                        error={
-                          formState.errors[`attributes.${index}.attribute_key`]
-                        }
-                        registration={register(
-                          `attributes.${index}.attribute_key` as const,
-                        )}
-                      />
-                      <SelectField
-                        label={t('cloud:custom_protocol.service.output')}
-                        registration={register('output')}
-                        options={[
-                          {
-                            label: t('cloud:custom_protocol.service.json'),
-                            value: 'json',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.str'),
-                            value: 'str',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.i32'),
-                            value: 'i32',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.i64'),
-                            value: 'i64',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.f32'),
-                            value: 'f32',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.f64'),
-                            value: 'f64',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.bool'),
-                            value: 'bool',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.time'),
-                            value: 'time',
-                          },
-                          {
-                            label: t('cloud:custom_protocol.service.bin'),
-                            value: 'bin',
-                          },
-                        ]}
-                        onChange={event =>
-                          setThingType(String(event.target.value).toLowerCase())
-                        }
-                      />
-                      <InputField
-                        label={
-                          t('cloud:org_manage.org_manage.add_attr.value') ??
-                          'Value'
-                        }
-                        error={formState.errors[`attributes.${index}.value`]}
-                        registration={register(
-                          `attributes.${index}.value` as const,
-                        )}
-                      />
-                    </div>
-                  ))}
+                  <div className='max-h-52 overflow-auto'>
+                    {fields.map((field, index) => (
+                      <div
+                        key={field.id}
+                        className="grid grid-cols-1 gap-x-4 md:grid-cols-3"
+                      >
+                        <InputField
+                          label={
+                            t('cloud:custom_protocol.service.service_input.name')
+                          }
+                          error={
+                            formState.errors[`input.${index}.name`]
+                          }
+                          registration={register(
+                            `input.${index}.name` as const,
+                          )}
+                        />
+                        <SelectField
+                          label={t('cloud:custom_protocol.service.service_input.type')}
+                          error={
+                            formState.errors[`input.${index}.type`]
+                          }
+                          registration={register(`input.${index}.type` as const,)}
+                          options={[
+                            {
+                              label: t('cloud:custom_protocol.service.json'),
+                              value: 'json',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.str'),
+                              value: 'str',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.i32'),
+                              value: 'i32',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.i64'),
+                              value: 'i64',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.f32'),
+                              value: 'f32',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.f64'),
+                              value: 'f64',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.bool'),
+                              value: 'bool',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.time'),
+                              value: 'time',
+                            },
+                            {
+                              label: t('cloud:custom_protocol.service.bin'),
+                              value: 'bin',
+                            },
+                          ]}
+                          onChange={event =>
+                            setThingType(String(event.target.value).toLowerCase())
+                          }
+                        />
+                        <InputField
+                          label={
+                            t('cloud:custom_protocol.service.service_input.value')
+                          }
+                          error={formState.errors[`input.${index}.value`]}
+                          registration={register(
+                            `input.${index}.value` as const,
+                          )}
+                        />
+                      </div>
+                    ))}
                   </div>
                   <div>
                     <Button
@@ -179,34 +215,76 @@ export function CreateThingService() {
                       className="bg-primary-400 text-white"
                       onClick={() =>
                         append({
-                          attribute_key: '',
+                          name: '',
+                          type: 'json',
                           value: '',
-                          logged: true,
-                          value_t: '',
                         })
                       }
                     >
                       +
                     </Button>
                   </div>
-
-                  {/* <InputField
+                  <div>
+                    <InputField
                       label={t('cloud:custom_protocol.service.name')}
                       error={formState.errors['name']}
                       registration={register('name')}
-                    /> */}
-                  <div>
+                    />
+                    <SelectField
+                      label={t('cloud:custom_protocol.thing.type')}
+                      error={formState.errors['output']}
+                      registration={register('output')}
+                      options={[
+                        {
+                          label: t('cloud:custom_protocol.service.json'),
+                          value: 'json',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.str'),
+                          value: 'str',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.i32'),
+                          value: 'i32',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.i64'),
+                          value: 'i64',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.f32'),
+                          value: 'f32',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.f64'),
+                          value: 'f64',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.bool'),
+                          value: 'bool',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.time'),
+                          value: 'time',
+                        },
+                        {
+                          label: t('cloud:custom_protocol.service.bin'),
+                          value: 'bin',
+                        },
+                      ]}
+                    />
                     <TextAreaField
                       className="mb-2"
-                      label={t('cloud:custom_protocol.service.description')}
+                      label={t('cloud:custom_protocol.service.note')}
                       error={formState.errors['description']}
                       registration={register('description')}
                     />
                     <Button
                       isLoading={isLoadingService}
                       form="create-serviceThing"
+                      type="submit"
                       onClick={() =>
-                       console.log(fields)
+                        setTypeInput('Run')
                       }
                       size="md"
                       className="absolute bottom-0 bg-primary-400 text-white"
@@ -255,6 +333,9 @@ export function CreateThingService() {
           type="submit"
           size="md"
           className="bg-primary-400"
+          onClick={() =>
+            setTypeInput('Submit')
+          }
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
