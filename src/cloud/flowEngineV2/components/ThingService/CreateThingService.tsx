@@ -18,7 +18,7 @@ import {
 
 import { useParams } from 'react-router-dom'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { CodeEditor } from '~/cloud/customProtocol/components'
 import { FormDialog } from '~/components/FormDialog'
@@ -158,9 +158,8 @@ export function CreateThingService() {
           {({ register, formState }, { fields, append, remove }) => {
             return (
               <div
-                className={`grid grow grid-cols-1 gap-x-4 ${
-                  fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
-                }`}
+                className={`grid grow grid-cols-1 gap-x-4 ${fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
+                  }`}
               >
                 <div
                   className={
@@ -347,26 +346,14 @@ export function CreateThingService() {
                         {t('cloud:custom_protocol.service.code')}
                       </p>
                     </div>
-                    {!fullScreen && (
-                      <div className="flex gap-3">
-                        <img
-                          onClick={() => setFullScreen(true)}
-                          src={btnAddIcon}
-                          alt="add-icon"
-                          className="h-5 w-5 cursor-pointer"
-                        />
-                      </div>
-                    )}
-                    {fullScreen && (
-                      <div className="flex gap-3">
-                        <img
-                          onClick={() => setFullScreen(false)}
-                          src={btnCancelIcon}
-                          alt="add-icon"
-                          className="h-5 w-5 cursor-pointer"
-                        />
-                      </div>
-                    )}
+                    <div className="flex gap-3">
+                      <img
+                        onClick={() => setFullScreen(!fullScreen)}
+                        src={btnFullScreen}
+                        alt="add-icon"
+                        className="h-5 w-5 cursor-pointer"
+                      />
+                    </div>
                   </div>
                   <CodeEditor setCodeInput={setCodeInput} />
                 </div>
