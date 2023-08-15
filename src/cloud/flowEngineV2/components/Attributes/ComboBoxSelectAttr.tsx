@@ -4,13 +4,13 @@ import { type FieldValues } from 'react-hook-form'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type EntityThingList, type EntityThing } from '../../types'
 import {
   type FieldWrapperPassThroughProps,
   type ControllerPassThroughProps,
 } from '~/components/Form'
 
 import { SearchIcon } from '~/components/SVGIcons'
+import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
 
 type ComboBoxSelectDeviceProps<TFormValues extends FieldValues> = {
   data: EntityThingList

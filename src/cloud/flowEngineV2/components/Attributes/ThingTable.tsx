@@ -13,7 +13,6 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteThing } from '../../api/thingAPI'
 
 import { type BaseTablePagination } from '~/types'
-import { type EntityThing } from '../../types'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -22,6 +21,7 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateThing } from './UpdateThing'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
+import { type EntityThing } from '~/cloud/customProtocol'
 
 function ThingTableContextMenu({
   id,

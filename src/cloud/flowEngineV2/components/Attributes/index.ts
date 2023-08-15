@@ -1,3 +1,3 @@
 export * from './ThingTable'
-export * from './CreateAttr'
+export * from './CreateThing'
 export * from './ComboBoxSelectAttr'

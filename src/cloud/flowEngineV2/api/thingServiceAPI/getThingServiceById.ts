@@ -2,8 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type Device } from '../../types'
-import { inputlist } from './createThingService'
+import { type inputlist } from './createThingService'
 
 export type GetServiceById = {
   data: {

@@ -7,17 +7,17 @@ import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
+import { useDisclosure } from '~/utils/hooks'
 import { useDeleteThingService } from '../../api/thingServiceAPI'
 
 import { type BaseTablePagination } from '~/types'
 import { type ThingService } from '../../types'
 
+import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { useParams } from 'react-router-dom'
 import { UpdateThingService } from './UpdateThingService'
 
 function ThingServiceTableContextMenu({
@@ -35,8 +35,6 @@ function ThingServiceTableContextMenu({
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteThingService()
-
-  const handleCopyId = useCopyId()
 
   return (
     <>
@@ -136,9 +134,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
-        header: () => (
-          <span>{t('cloud:custom_protocol.service.name')}</span>
-        ),
+        header: () => <span>{t('cloud:custom_protocol.service.name')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

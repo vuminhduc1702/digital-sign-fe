@@ -1,12 +1,11 @@
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type BaseAPIRes } from '~/types'
-import { type Service } from '../../types'
 
 type CreateServiceThingRes = {
   data: 1 | number
@@ -51,7 +50,7 @@ export const useCreateServiceThing = ({
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['entity-thingservices'],
+        queryKey: ['service-things'],
       })
       addNotification({
         type: 'success',

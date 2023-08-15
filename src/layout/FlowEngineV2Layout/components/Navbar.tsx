@@ -1,17 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import storage from '~/utils/storage'
 import { NavLink } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
+import storage from '~/utils/storage'
 
-import {
-  OrgDeviceIcon,
-  OrgEventIcon,
-  OrgGroupIcon,
-  OrgInfoIcon,
-  OrgUserIcon,
-} from '~/components/SVGIcons'
+import { OrgGroupIcon, OrgInfoIcon, OrgUserIcon } from '~/components/SVGIcons'
 
 function FlowEngineV2Navbar() {
   const { t } = useTranslation()

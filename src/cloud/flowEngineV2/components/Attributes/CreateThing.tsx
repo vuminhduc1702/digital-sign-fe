@@ -1,37 +1,30 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import {
-  Form,
-  InputField,
-  SelectField,
-} from '~/components/Form'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
-import storage from '~/utils/storage'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
-} from '../../api/thingAPI'
-
-
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+} from '~/cloud/customProtocol/api/entityThing'
+import { Button } from '~/components/Button'
+import { Form, InputField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
+import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import storage from '~/utils/storage'
 
 export const deviceSchema = z.object({
   name: nameSchema,
   org_id: selectOptionSchema(),
 })
 
-export const entityThingSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    description: z.string(),
-    base_template: z.string().nullable(),
-    type: z.string().nullable(),
-  })
+export const entityThingSchema = z.object({
+  name: nameSchema,
+  project_id: z.string().optional(),
+  description: z.string(),
+  base_template: z.string().nullable(),
+  type: z.string().nullable(),
+})
 
 export function CreateThing() {
   const { t } = useTranslation()
@@ -46,7 +39,6 @@ export function CreateThing() {
   } = useCreateEntityThing()
 
   return (
-
     <FormDialog
       isDone={isSuccessThing}
       title={t('cloud:custom_protocol.thing.create')}
@@ -61,7 +53,7 @@ export function CreateThing() {
                 project_id: projectId,
                 description: values.description,
                 base_template: values.base_template || null,
-                type: 'thing'
+                type: 'thing',
               },
             })
           }}
@@ -75,7 +67,7 @@ export function CreateThing() {
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-                <div className='hidden'>
+                <div className="hidden">
                   <InputField
                     label={t('cloud:custom_protocol.thing.name')}
                     error={formState.errors['type']}

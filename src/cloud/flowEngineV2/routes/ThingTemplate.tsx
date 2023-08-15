@@ -1,22 +1,19 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
 
-// import {
-//   CreateDevice,
-//   DeviceTable,
-//   ComboBoxSelectDevice,
-// } from '../components/Device'
-import { useGetEntityThings } from '../api/thingAPI'
 import storage from '~/utils/storage'
 
-import { type EntityThing } from '../types'
-import { ComboBoxSelectThing, CreateThing, ThingTable } from '../components/Attributes'
+import { type EntityThing } from '~/cloud/customProtocol'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import {
+  ComboBoxSelectThing,
+  CreateThing,
+  ThingTable,
+} from '../components/Attributes'
 
 export function ThingTemplate() {
-  const { t } = useTranslation()
-
-  const [filteredComboboxData, setFilteredComboboxData] = useState<EntityThing[]>([])
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    EntityThing[]
+  >([])
   const [offset, setOffset] = useState(0)
   const { id: projectId } = storage.getProject()
   const {

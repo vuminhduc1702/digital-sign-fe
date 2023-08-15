@@ -3,30 +3,32 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
-import { ComboBoxSelectThingService, CreateThingService, ThingServiceTable } from '../components/ThingService'
-import { useGetThingServices } from '../api/thingServiceAPI'
-import storage from '~/utils/storage'
+import {
+  ComboBoxSelectThingService,
+  CreateThingService,
+  ThingServiceTable,
+} from '../components/ThingService'
 
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 import { type ThingService } from '../types'
 
 export function ThingServices() {
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<ThingService[]>(
-    [],
-  )
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    ThingService[]
+  >([])
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
 
   const thingId = params.thingId as string
-  const { id: projectId } = storage.getProject()
 
   const {
     data: thingData,
     isPreviousData,
     isSuccess,
-  } = useGetThingServices({
+  } = useGetServiceThings({
     thingId,
     config: { keepPreviousData: true },
   })

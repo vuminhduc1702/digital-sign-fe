@@ -1,31 +1,31 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
+  FormMultipleFields,
   InputField,
   SelectField,
   TextAreaField,
-  type SelectOption,
-  FormMultipleFields,
 } from '~/components/Form'
 import { nameSchema } from '~/utils/schemaValidation'
 import {
-  CreateServiceThingDTO,
-  inputlist,
   useCreateServiceThing,
+  type CreateServiceThingDTO,
+  type inputlist,
 } from '../../api/thingServiceAPI'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useParams } from 'react-router-dom'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { CodeEditor } from '~/cloud/customProtocol/components'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
-import { useParams } from 'react-router-dom'
-import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import storage from '~/utils/storage'
+import { useExecuteService } from '../../api/thingServiceAPI/executeService'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export const serviceThingSchema = z.object({
   name: nameSchema,
@@ -37,10 +37,9 @@ export const serviceThingSchema = z.object({
         .min(1, { message: 'Tên thuộc tính quá ngắn' })
         .max(30, { message: 'Tên thuộc tính quá dài' }),
       type: z.string().optional(),
-      value: z.string()
+      value: z.string(),
     }),
   ),
-  // input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
   output: z.enum([
     'json',
     'str',
@@ -52,7 +51,6 @@ export const serviceThingSchema = z.object({
     'time',
     'bin',
   ] as const),
-  // code: z.string().optional(),
 })
 
 export type CreateServiceForm = {
@@ -72,25 +70,41 @@ export function CreateThingService() {
   const { id: projectId } = storage.getProject()
   const params = useParams()
   const [typeInput, setTypeInput] = useState('')
+  const [fullScreen, setFullScreen] = useState(false)
 
   const [codeInput, setCodeInput] = useState('')
-  const [thingType, setThingType] = useState('json')
+  const [codeOutput, setCodeOutput] = useState('')
   const thingId = params.thingId as string
-  const {
-    mutate: mutateService,
-    isLoading: isLoadingService,
-    isSuccess: isSuccessService,
-  } = useCreateServiceThing()
+  const { mutate: mutateService, isLoading: isLoadingService } =
+    useCreateServiceThing()
 
   const {
     mutate: mutateExcuteService,
-    data: executeService
+    data: executeService,
+    isSuccess: isSuccessExecute,
+    isLoading: isLoadingExecute,
+    isError,
+    error: errorExecute,
   } = useExecuteService()
+
+  useEffect(() => {
+    if (isSuccessExecute) {
+      if (typeof executeService?.data === 'string') {
+        setCodeOutput(executeService?.data)
+      } else {
+        const dataToString = JSON.stringify(executeService?.data)
+        setCodeOutput(dataToString)
+      }
+    }
+    if (isError) {
+      setCodeOutput(errorExecute?.message)
+    }
+  }, [isSuccessExecute, isError])
 
   const handleSubmit = (data: CreateServiceForm) => {
     const dataInput = data.input.map(item => ({
       name: item.name,
-      type: item.type
+      type: item.type,
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
@@ -101,9 +115,8 @@ export function CreateThingService() {
         data: dataRun,
         thingId,
         projectId,
-        name: data.name
+        name: data.name,
       })
-      console.log('dataaa', executeService)
     }
     if (typeInput === 'Submit') {
       mutateService({
@@ -117,12 +130,10 @@ export function CreateThingService() {
         thingId: thingId,
       })
     }
-
   }
 
   return (
     <FormDialog
-      isDone={isSuccessService}
       className="thing-service-popup"
       title={t('cloud:custom_protocol.service.create')}
       body={
@@ -146,8 +157,18 @@ export function CreateThingService() {
         >
           {({ register, formState }, { fields, append, remove }) => {
             return (
-              <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
-                <div className="relative flex flex-col gap-2 md:col-span-1">
+              <div
+                className={`grid grow grid-cols-1 gap-x-4 ${
+                  fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
+                }`}
+              >
+                <div
+                  className={
+                    !fullScreen
+                      ? 'relative flex flex-col gap-2 md:col-span-1'
+                      : 'hidden'
+                  }
+                >
                   <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
@@ -155,92 +176,100 @@ export function CreateThingService() {
                       </p>
                     </div>
                   </div>
-                  <div className='max-h-52 overflow-auto'>
+                  <div className="max-h-52 overflow-auto">
                     {fields.map((field, index) => (
-                      <div
-                        key={field.id}
-                        className="grid grid-cols-1 gap-x-4 md:grid-cols-3"
-                      >
-                        <InputField
-                          label={
-                            t('cloud:custom_protocol.service.service_input.name')
-                          }
-                          error={
-                            formState.errors[`input.${index}.name`]
-                          }
-                          registration={register(
-                            `input.${index}.name` as const,
-                          )}
-                        />
-                        <SelectField
-                          label={t('cloud:custom_protocol.service.service_input.type')}
-                          error={
-                            formState.errors[`input.${index}.type`]
-                          }
-                          registration={register(`input.${index}.type` as const,)}
-                          options={[
-                            {
-                              label: t('cloud:custom_protocol.service.json'),
-                              value: 'json',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.str'),
-                              value: 'str',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.i32'),
-                              value: 'i32',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.i64'),
-                              value: 'i64',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.f32'),
-                              value: 'f32',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.f64'),
-                              value: 'f64',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.bool'),
-                              value: 'bool',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.time'),
-                              value: 'time',
-                            },
-                            {
-                              label: t('cloud:custom_protocol.service.bin'),
-                              value: 'bin',
-                            },
-                          ]}
-                          onChange={event =>
-                            setThingType(String(event.target.value).toLowerCase())
-                          }
-                        />
-                        <InputField
-                          label={
-                            t('cloud:custom_protocol.service.service_input.value')
-                          }
-                          error={formState.errors[`input.${index}.value`]}
-                          registration={register(
-                            `input.${index}.value` as const,
-                          )}
+                      <div key={field.id} className="flex">
+                        <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
+                          <InputField
+                            label={t(
+                              'cloud:custom_protocol.service.service_input.name',
+                            )}
+                            error={formState.errors[`input.${index}.name`]}
+                            registration={register(
+                              `input.${index}.name` as const,
+                            )}
+                          />
+                          <SelectField
+                            label={t(
+                              'cloud:custom_protocol.service.service_input.type',
+                            )}
+                            error={formState.errors[`input.${index}.type`]}
+                            registration={register(
+                              `input.${index}.type` as const,
+                            )}
+                            options={[
+                              {
+                                label: t('cloud:custom_protocol.service.json'),
+                                value: 'json',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.str'),
+                                value: 'str',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.i32'),
+                                value: 'i32',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.i64'),
+                                value: 'i64',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.f32'),
+                                value: 'f32',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.f64'),
+                                value: 'f64',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.bool'),
+                                value: 'bool',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.time'),
+                                value: 'time',
+                              },
+                              {
+                                label: t('cloud:custom_protocol.service.bin'),
+                                value: 'bin',
+                              },
+                            ]}
+                          />
+                          <InputField
+                            label={t(
+                              'cloud:custom_protocol.service.service_input.value',
+                            )}
+                            error={formState.errors[`input.${index}.value`]}
+                            registration={register(
+                              `input.${index}.value` as const,
+                            )}
+                          />
+                        </div>
+                        <XMarkIcon
+                          onClick={() => remove(index)}
+                          className="h-6 w-6 cursor-pointer"
+                          aria-hidden="true"
                         />
                       </div>
                     ))}
                   </div>
-                  <div className='flex items-center'>
-                    <img onClick={() =>
-                      append({
-                        name: '',
-                        type: 'json',
-                        value: '',
-                      })
-                    } src={btnAddIcon} className="h-5 w-5 cursor-pointer" />
-                    <span className='ml-2'>{t('cloud:custom_protocol.service.add_other')}</span>
+                  <div className="flex items-center">
+                    <img
+                      onClick={() =>
+                        append({
+                          name: '',
+                          type: 'json',
+                          value: '',
+                        })
+                      }
+                      src={btnAddIcon}
+                      alt="add-icon"
+                      className="h-5 w-5 cursor-pointer"
+                    />
+                    <span className="ml-2">
+                      {t('cloud:custom_protocol.service.add_other')}
+                    </span>
                   </div>
                   <div>
                     <InputField
@@ -249,7 +278,9 @@ export function CreateThingService() {
                       registration={register('name')}
                     />
                     <SelectField
-                      label={t('cloud:custom_protocol.service.service_input.type')}
+                      label={t(
+                        'cloud:custom_protocol.service.service_input.type',
+                      )}
                       error={formState.errors['output']}
                       registration={register('output')}
                       options={[
@@ -298,12 +329,10 @@ export function CreateThingService() {
                       registration={register('description')}
                     />
                     <Button
-                      isLoading={isLoadingService}
+                      isLoading={isLoadingExecute}
                       form="create-serviceThing"
                       type="submit"
-                      onClick={() =>
-                        setTypeInput('Run')
-                      }
+                      onClick={() => setTypeInput('Run')}
                       size="md"
                       className="absolute bottom-0 bg-primary-400 text-white"
                     >
@@ -312,16 +341,40 @@ export function CreateThingService() {
                   </div>
                 </div>
                 <div className="flex flex-col gap-2 md:col-span-1">
-                  <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.code')}
                       </p>
                     </div>
+                    {!fullScreen && (
+                      <div className="flex gap-3">
+                        <img
+                          onClick={() => setFullScreen(true)}
+                          src={btnAddIcon}
+                          alt="add-icon"
+                          className="h-5 w-5 cursor-pointer"
+                        />
+                      </div>
+                    )}
+                    {fullScreen && (
+                      <div className="flex gap-3">
+                        <img
+                          onClick={() => setFullScreen(false)}
+                          src={btnCancelIcon}
+                          alt="add-icon"
+                          className="h-5 w-5 cursor-pointer"
+                        />
+                      </div>
+                    )}
                   </div>
                   <CodeEditor setCodeInput={setCodeInput} />
                 </div>
-                <div className="flex flex-col gap-2 md:col-span-1">
+                <div
+                  className={
+                    !fullScreen ? 'flex flex-col gap-2 md:col-span-1' : 'hidden'
+                  }
+                >
                   <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
@@ -329,7 +382,11 @@ export function CreateThingService() {
                       </p>
                     </div>
                   </div>
-                  <CodeEditor setCodeInput={setCodeInput} readOnly={true} />
+                  <CodeEditor
+                    defaultValue={codeOutput}
+                    setCodeInput={setCodeOutput}
+                    readOnly={true}
+                  />
                 </div>
               </div>
             )
@@ -349,11 +406,10 @@ export function CreateThingService() {
           isLoading={isLoadingService}
           form="create-serviceThing"
           type="submit"
+          disabled={fullScreen}
           size="md"
           className="bg-primary-400"
-          onClick={() =>
-            setTypeInput('Submit')
-          }
+          onClick={() => setTypeInput('Submit')}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
