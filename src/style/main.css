@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+
   div,
   p,
   a {
@@ -15,6 +16,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root > div[role='alert'] {
+#root>div[role='alert'] {
   height: 100vh;
+}
+
+@media (min-width: 575.98px) {
+  .sm\:max-w-lg.thing-service-popup {
+    max-width: 78rem;
+  }
+}
+
+::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px transparent;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+  background-color: #F4F5F6;
 }

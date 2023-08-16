@@ -8,6 +8,10 @@ export const PATHS: { [key: string]: string } = {
   PROJECT_MANAGE: `${BASE_PATH_CLOUD}project-management`,
 
   ORG_MANAGE: `${BASE_PATH_CLOUD}org-management/org`,
+  THING_TEMPLATE: `${BASE_PATH_CLOUD}flow-engine-v2/thing`,
+  THING_SERVICE: `${BASE_PATH_CLOUD}flow-engine-v2/thing-service`,
+  TEMPLATE_FLOW: `${BASE_PATH_CLOUD}flow-engine-v2/template`,
+  SHAPE_FLOW: `${BASE_PATH_CLOUD}flow-engine-v2/shape`,
   GROUP_MANAGE: `${BASE_PATH_CLOUD}org-management/group`,
   USER_MANAGE: `${BASE_PATH_CLOUD}org-management/user`,
   DEVICE_MANAGE: `${BASE_PATH_CLOUD}org-management/device`,

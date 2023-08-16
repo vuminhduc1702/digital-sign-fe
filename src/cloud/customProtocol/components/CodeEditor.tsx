@@ -4,6 +4,7 @@ import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-solarized_light'
 
 import { FieldWrapper } from '~/components/Form'
+import { useState } from 'react'
 
 ace.config.set(
   'basePath',
@@ -15,11 +16,13 @@ ace.config.setModuleUrl(
 )
 
 type CodeEditorProps = {
-  label: string
+  label?: string
+  readOnly?: boolean
+  defaultValue?: string
   setCodeInput: React.Dispatch<React.SetStateAction<string>>
 }
 
-export function CodeEditor({ label, setCodeInput }: CodeEditorProps) {
+export function CodeEditor({ label, setCodeInput , readOnly, defaultValue }: CodeEditorProps) {
   function onChange(value: string) {
     setCodeInput(value)
   }
@@ -30,8 +33,11 @@ export function CodeEditor({ label, setCodeInput }: CodeEditorProps) {
         style={{ width: '100%' }}
         mode="javascript"
         theme="solarized_light"
+        defaultValue={defaultValue}
+        value={defaultValue}
         onChange={onChange}
         name="UNIQUE_ID_OF_DIV"
+        readOnly={readOnly}
         editorProps={{ $blockScrolling: true }}
         fontSize={14}
         showPrintMargin={true}

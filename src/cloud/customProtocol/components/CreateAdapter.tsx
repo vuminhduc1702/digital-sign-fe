@@ -68,6 +68,7 @@ export const entityThingSchema = z
     name: nameSchema,
     project_id: z.string().optional(),
     description: z.string(),
+    base_template: z.string().nullable(),
   })
   .and(
     z.discriminatedUnion('type', [

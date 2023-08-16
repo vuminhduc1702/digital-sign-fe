@@ -60,9 +60,11 @@ export type EntityThing = {
   type: 'Thing' | 'Template' | 'Shape'
   project_id: string
   create_ts: string
-  description?: string
+  description: string
   base_template?: string
   base_shapes?: string
+  total_service: number
+  template_name: string
 }
 
 export type EntityThingList = {

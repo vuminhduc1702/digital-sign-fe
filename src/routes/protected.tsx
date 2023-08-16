@@ -5,6 +5,7 @@ import { lazyImport } from '~/utils/lazyImport'
 import MainLayout from '~/layout/MainLayout'
 
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
+import { FlowEngineV2Routes } from '~/cloud/flowEngineV2'
 
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
@@ -29,6 +30,7 @@ export const protectedRoutes = [
     element: <MainLayout />,
     children: [
       ...OrgManagementRoutes,
+      ...FlowEngineV2Routes,
       ...ProjectManagementRoutes,
       ...DashboardManagementRoutes,
       {
