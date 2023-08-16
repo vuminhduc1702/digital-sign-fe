@@ -94,7 +94,7 @@ export function CreateDevice() {
                   name="org_id"
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]
