@@ -114,6 +114,29 @@ export const OrgManagementRoutes = [
               },
             ],
           },
+          // {
+          //   path: ':projectId',
+          //   element: (
+          //     <ErrorBoundary FallbackComponent={ErrorFallback}>
+          //       <DeviceManage />
+          //     </ErrorBoundary>
+          //   ),
+          //   children: [
+          //     {
+          //       path: ':orgId',
+          //       children: [
+          //         {
+          //           path: ':deviceId',
+          //           element: (
+          //             <ErrorBoundary FallbackComponent={ErrorFallback}>
+          //               <DeviceDetail />
+          //             </ErrorBoundary>
+          //           ),
+          //         },
+          //       ],
+          //     },
+          //   ],
+          // },
         ],
       },
       {
