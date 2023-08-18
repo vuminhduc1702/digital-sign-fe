@@ -1,13 +1,12 @@
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type BaseAPIRes } from '~/types'
-import { type Service } from '../../types'
-import { dataRun } from '../../components/ThingService'
+import { type dataRun } from '../../components/ThingService'
 
 type executeServices = {
   data: any

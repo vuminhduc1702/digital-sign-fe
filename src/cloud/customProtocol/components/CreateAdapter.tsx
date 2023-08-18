@@ -205,6 +205,21 @@ export function CreateAdapter() {
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
+  const {
+    data: thingDataTemplate,
+    isPreviousData,
+    isSuccess,
+  } = useGetEntityThings({
+    projectId,
+    type: 'template',
+    config: { keepPreviousData: true },
+  })
+
+  const thingSelectDataTemplate = thingDataTemplate?.data.list.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  })) || [{ value: '', label: '' }]
+
   return (
     <FormDrawer
       isDone={isSuccessAdapter}
@@ -537,7 +552,7 @@ export function CreateAdapter() {
                                     />
                                     {thingType === 'thing' ||
                                     thingType === 'template' ? (
-                                      <InputField
+                                      <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
                                         )}
@@ -545,6 +560,7 @@ export function CreateAdapter() {
                                           formState.errors['base_template']
                                         }
                                         registration={register('base_template')}
+                                        options={thingSelectDataTemplate}
                                       />
                                     ) : (
                                       <InputField

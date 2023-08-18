@@ -49,7 +49,7 @@ export type UserInfo = {
   is_admin: boolean
   activate: boolean
   role_id?: string
-  role_name?: string
+  role_name: string
   group_id?: string
   group_name?: string
   profile: Profile

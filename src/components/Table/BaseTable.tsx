@@ -4,8 +4,10 @@ import {
   flexRender,
   type ColumnDef,
   getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
 } from '@tanstack/react-table'
-import { Fragment, useLayoutEffect, useMemo, useRef } from 'react'
+import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -31,11 +33,18 @@ export function BaseTable<T extends Record<string, any>>({
 }) {
   const { t } = useTranslation()
 
+  const [sorting, setSorting] = useState<SortingState>([])
+
   const defaultData = useMemo(() => [], [])
 
   const table = useReactTable({
     data: data ?? defaultData,
     columns,
+    state: {
+      sorting,
+    },
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
@@ -60,7 +69,7 @@ export function BaseTable<T extends Record<string, any>>({
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
-        <table className="w-full border-collapse">
+        <table className="w-full border-collapse" id='table-ref'>
           <thead className="border-b-2 border-secondary-700">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -72,11 +81,24 @@ export function BaseTable<T extends Record<string, any>>({
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <div className="text-table-header">
+                        <div
+                            className={`text-table-header flex justify-between items-center ${header.column.getCanSort()
+                              ? 'cursor-pointer select-none text-table-header'
+                              : ''}`}
+                            onClick={header.column.getToggleSortingHandler()} 
+                        >
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
+                          <div className='text-slate-500'>
+                            {
+                              {
+                                asc: '▲',
+                                desc: '▼',
+                              }[header.column.getIsSorted() as string] ?? null
+                            }
+                          </div>
                         </div>
                       )}
                     </th>
