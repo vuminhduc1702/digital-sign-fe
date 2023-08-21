@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -16,6 +16,7 @@ import { type EventType } from '../types'
 
 export function EventManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<EventType[]>(
     [],
@@ -36,13 +37,13 @@ export function EventManage() {
   })
 
   return (
-    <>
+    <div ref={ref}>
       <TitleBar
         title={t('cloud:org_manage.event_manage.header') ?? 'Event management'}
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable />
+          <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">
             <CreateEvent />
             {isSuccess ? (
@@ -55,6 +56,6 @@ export function EventManage() {
         </div>
         <EventTable data={filteredComboboxData} />
       </div>
-    </>
+    </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -16,6 +16,7 @@ import { type Device } from '../types'
 
 export function DeviceManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
   const [offset, setOffset] = useState(0)
@@ -36,7 +37,7 @@ export function DeviceManage() {
   })
 
   return (
-    <>
+    <div ref={ref}>
       <TitleBar
         title={
           t('cloud:org_manage.device_manage.header') ?? 'Device management'
@@ -44,7 +45,7 @@ export function DeviceManage() {
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable />
+          <ExportTable refComponent={ref}/>
           <div className="flex items-center gap-x-3">
             <CreateDevice />
             {isSuccess ? (
@@ -64,6 +65,6 @@ export function DeviceManage() {
           isPreviousData={isPreviousData}
         />
       </div>
-    </>
+    </div>
   )
 }

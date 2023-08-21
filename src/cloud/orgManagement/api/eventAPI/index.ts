@@ -1,5 +1,5 @@
 export * from './getEvents'
 export * from './createEvent'
 export * from './deleteEvent'
-export * from './updateEvent'
-export * from './getEventById'
+// export * from './updateEvent'
+// export * from './getEventById'

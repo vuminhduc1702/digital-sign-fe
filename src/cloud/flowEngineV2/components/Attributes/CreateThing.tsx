@@ -5,9 +5,10 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
+  useGetEntityThings,
 } from '~/cloud/customProtocol/api/entityThing'
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
+import { Form, InputField, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
@@ -32,11 +33,26 @@ export function CreateThing() {
   const { id: projectId } = storage.getProject()
 
   const {
+    data: thingData,
+    isPreviousData,
+    isSuccess,
+  } = useGetEntityThings({
+    projectId,
+    type: 'template',
+    config: { keepPreviousData: true },
+  })
+
+  const {
     data: dataCreateThing,
     mutate: mutateThing,
     isLoading: isLoadingThing,
     isSuccess: isSuccessThing,
   } = useCreateEntityThing()
+
+  const thingSelectData = thingData?.data.list.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  })) || [{ value: '', label: '' }]
 
   return (
     <FormDialog
@@ -74,10 +90,16 @@ export function CreateThing() {
                     registration={register('type')}
                   />
                 </div>
-                <InputField
+                {/* <InputField
                   label={t('cloud:custom_protocol.thing.base_template')}
                   error={formState.errors['base_template']}
                   registration={register('base_template')}
+                /> */}
+                <SelectField
+                  label={t('cloud:custom_protocol.thing.base_template')}
+                  error={formState.errors['base_template']}
+                  registration={register('base_template')}
+                  options={thingSelectData}
                 />
                 <InputField
                   label={t('cloud:custom_protocol.thing.description')}

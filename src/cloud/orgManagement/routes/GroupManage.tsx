@@ -1,21 +1,22 @@
-import { useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import storage from '~/utils/storage'
+import { useGetGroups } from '../api/groupAPI'
 import {
   ComboBoxSelectGroup,
   CreateGroup,
   GroupTable,
 } from '../components/Group'
-import { useGetGroups } from '../api/groupAPI'
-import storage from '~/utils/storage'
 
 import { type Group } from '../types'
 
 export function GroupManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Group[]>([])
   const [offset, setOffset] = useState(0)
@@ -34,13 +35,13 @@ export function GroupManage() {
   })
 
   return (
-    <>
+    <div ref={ref}>
       <TitleBar
         title={t('cloud:org_manage.group_manage.header') ?? 'Group management'}
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable />
+          <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">
             <CreateGroup />
             {isSuccess ? (
@@ -60,6 +61,6 @@ export function GroupManage() {
           isPreviousData={isPreviousData}
         />
       </div>
-    </>
+    </div>
   )
 }

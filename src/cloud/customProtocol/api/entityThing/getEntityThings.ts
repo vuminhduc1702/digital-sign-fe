@@ -8,7 +8,7 @@ import { type BaseAPIRes } from '~/types'
 
 type GetEntityThings = {
   projectId: string
-  entityThingType?: EntityThingType
+  type?: EntityThingType
 }
 
 export type GetEntityThingsRes = {
@@ -17,12 +17,12 @@ export type GetEntityThingsRes = {
 
 export const getEntityThings = ({
   projectId,
-  entityThingType,
+  type,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
   return axios.get(`/api/fe/thing`, {
     params: {
       project_id: projectId,
-      entityThingType,
+      type,
     },
   })
 }
@@ -35,12 +35,12 @@ type UseEntityThingsOptions = {
 
 export const useGetEntityThings = ({
   projectId,
-  entityThingType,
+  type,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['entity-things', projectId, entityThingType],
-    queryFn: () => getEntityThings({ projectId, entityThingType }),
+    queryKey: ['entity-things', projectId, type],
+    queryFn: () => getEntityThings({ projectId, type }),
     ...config,
   })
 }

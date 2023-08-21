@@ -22,6 +22,7 @@ export function ThingTemplate() {
     isSuccess,
   } = useGetEntityThings({
     projectId,
+    type: "thing",
     config: { keepPreviousData: true },
   })
 
