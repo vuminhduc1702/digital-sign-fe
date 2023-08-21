@@ -33,7 +33,7 @@ import {
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
 
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import { nameSchema, nameSchemaRegex, selectOptionSchema } from '~/utils/schemaValidation'
 import { inputService, type EntityThingList } from '../types'
 import { type BasePagination } from '~/types'
 
@@ -84,7 +84,7 @@ export const entityThingSchema = z
   )
 
 export const serviceThingSchema = z.object({
-  name: nameSchema,
+  name: nameSchemaRegex,
   description: z.string(),
   input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
   output: z.enum([
@@ -189,17 +189,15 @@ export function CreateAdapter() {
   const [selectedThing, setSelectedThing] = useState<SelectOption>()
   const { data: serviceData } = useGetServiceThings({
     thingId: (selectedThing?.value as string) ?? '',
-    config: { enabled: !!selectedThing, suspense: false },
+    config: { enabled: (!!selectedThing && selectedThing?.value !==''), suspense: false },
   })
+
   useEffect(() => {
     if (selectedThing != null) {
       setSelectedThing(undefined)
     }
   }, [])
-  const serviceSelectData = serviceData?.data?.map(service => ({
-    value: service.name,
-    label: service.name,
-  })) || [{ value: '', label: '' }]
+  const serviceSelectData =  [{ value: '', label: '' }]
 
   const [codeInput, setCodeInput] = useState('')
 

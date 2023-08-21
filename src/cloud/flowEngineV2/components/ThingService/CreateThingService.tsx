@@ -9,7 +9,7 @@ import {
   SelectField,
   TextAreaField,
 } from '~/components/Form'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchemaRegex } from '~/utils/schemaValidation'
 import {
   useCreateServiceThing,
   type CreateServiceThingDTO,
@@ -28,7 +28,7 @@ import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export const serviceThingSchema = z.object({
-  name: nameSchema,
+  name: nameSchemaRegex,
   description: z.string(),
   input: z.array(
     z.object({
