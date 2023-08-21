@@ -197,7 +197,11 @@ export function CreateAdapter() {
       setSelectedThing(undefined)
     }
   }, [])
-  const serviceSelectData =  [{ value: '', label: '' }]
+  
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  })) || [{ value: '', label: '' }]
 
   const [codeInput, setCodeInput] = useState('')
 
