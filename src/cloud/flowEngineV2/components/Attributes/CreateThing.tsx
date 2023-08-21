@@ -49,7 +49,7 @@ export function CreateThing() {
     isSuccess: isSuccessThing,
   } = useCreateEntityThing()
 
-  const thingSelectData = thingData?.data.list.map(thing => ({
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
