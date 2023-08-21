@@ -160,7 +160,7 @@ export function CreateAdapter() {
   const thingListCache:
     | ({ data: EntityThingList } & BasePagination)
     | undefined = queryClient.getQueryData(['entity-things'], { exact: false })
-  const thingSelectData = thingData?.data.list.map(thing => ({
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
@@ -215,7 +215,7 @@ export function CreateAdapter() {
     config: { keepPreviousData: true },
   })
 
-  const thingSelectDataTemplate = thingDataTemplate?.data.list.map(thing => ({
+  const thingSelectDataTemplate = thingDataTemplate?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]

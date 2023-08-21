@@ -119,7 +119,7 @@ export function UpdateAdapter({
   const thingListCache:
     | ({ data: EntityThingList } & BasePagination)
     | undefined = queryClient.getQueryData(['entity-things'], { exact: false })
-  const thingSelectData = thingData?.data.list.map(thing => ({
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
