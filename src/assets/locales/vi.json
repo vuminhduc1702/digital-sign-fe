@@ -386,6 +386,30 @@
           "failure": "MQTT connection không tồn tại"
         }
       }
+    },
+    "dashboard": {
+      "table": {
+        "id": "ID",
+        "name": "Tên Dashboard",
+        "create_time": "Ngày tạo",
+        "title": "Tiêu đề",
+        "tenant_id": "Tenant ID",
+        "configuration": {
+          "description": "Mô tả",
+          "widgets": "Widgets"
+        },
+        "delete_dashboard_full": "Xoá Dashboard",
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa Dashboard {{DBNAME}}?"
+      },
+      "add_dashboard": {
+        "title": "Thêm mới Dashboard",
+        "name": "Tên Dashboard",
+        "description": "Mô tả",
+        "edit": "Sửa Dashboard",
+        "success_create": "Tạo Dashboard thành công",
+        "success_update": "Cập nhật Dashboard thành công",
+        "success_delete": "Xoá Dashboard thành công"
+      }
     }
   },
   "table": {
@@ -405,6 +429,7 @@
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
     "no_service": "Không có Service. Vui lòng tạo service.",
+    "no_dashboard": "Không có dashboard",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",
     "edit": "Chỉnh sửa",
@@ -471,5 +496,8 @@
   },
   "misc": {
     "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+  },
+  "dashboard": {
+    "title": "Dashboard"
   }
 }
