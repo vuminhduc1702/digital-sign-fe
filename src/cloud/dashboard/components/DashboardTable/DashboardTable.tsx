@@ -108,8 +108,6 @@ function DashboardTableContextMenu({
       {isOpen ? (
         <UpdateDashboard
           dashboardId={dashboardId}
-          // TODO: name={} ???
-          name={}
           close={close}
           isOpen={isOpen}
           projectId={projectId}

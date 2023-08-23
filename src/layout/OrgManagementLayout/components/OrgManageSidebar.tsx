@@ -81,7 +81,7 @@ function OrgManageSidebar() {
         <ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} />
       </div>
       <div className="grow overflow-y-auto bg-secondary-500 p-3">
-        <div className="space-y-3">
+        <div className="h-[85vh] space-y-3">
           <Button
             className={clsx('rounded-md border-none', {
               'text-primary-400': orgIdURL == null,

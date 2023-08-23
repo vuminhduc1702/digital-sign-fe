@@ -62,7 +62,7 @@ export function TemplateSidebar() {
       </div>
       <div className="grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData?.length > 0 ? (
-          <div className="space-y-3">
+          <div className="h-[85vh] space-y-3">
             {filteredComboboxData?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
