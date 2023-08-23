@@ -71,13 +71,12 @@ function OrgManageSidebar() {
         if (i === findIndex) {
           arr.push(filteredComboboxData[i]);
         } else {
-          console.log(filteredComboboxData[i].level, currentLevel)
           if (getInt(filteredComboboxData[i].level) < getInt(currentLevel)) {
             arr.splice(0, 0, filteredComboboxData[i]);
             if (filteredComboboxData[i].level === '1') {
               break;
             }
-             currentLevel = filteredComboboxData[i].level;
+            currentLevel = filteredComboboxData[i].level;
           }
         }
       }
