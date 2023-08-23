@@ -4,7 +4,7 @@ const storagePrefix = 'iot_platform_'
 
 export type UserStorage = {
   token: string
-  system_role: string
+  system_role: "TENANT" | "TENANT_DEV"
   timestamp: Date
 }
 

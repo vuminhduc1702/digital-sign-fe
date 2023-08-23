@@ -6,7 +6,7 @@ export type Org = {
   image?: string
   description: string
   group_id?: string
-  org_id?: string
+  org_id: string
   project_id: string
   level: number
   parent_name: string

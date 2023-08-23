@@ -1,27 +1,22 @@
-import { useState } from 'react'
+import clsx from 'clsx'
+import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import clsx from 'clsx'
-import { Menu } from '@headlessui/react'
 
+import { useProjectById } from '~/cloud/project/api'
 import { Button } from '~/components/Button'
-import { CreateOrg } from './CreateOrg'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { useDeleteOrg } from '../api/deleteOrg'
-import { UpdateOrg } from './UpdateOrg'
-import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { PATHS } from '~/routes/PATHS'
-import { useProjectById } from '~/cloud/project/api'
+import { useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'
+import { CreateOrg } from './CreateOrg'
+import { UpdateOrg } from './UpdateOrg'
 
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { Combobox, Transition } from '@headlessui/react'
+import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
 import listIcon from '~/assets/icons/list.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { SearchIcon } from '~/components/SVGIcons'
+import TreeView from './Tree'
 
 export type OrgMapType = {
   id: string
@@ -29,9 +24,11 @@ export type OrgMapType = {
   level: string
   description: string
   parent_name: string
+  org_id: string
+  children: any[]
 }
 
-type EntityTypeURL = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
+export type EntityTypeURL = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
 
 function OrgManageSidebar() {
   const { t } = useTranslation()
@@ -48,23 +45,81 @@ function OrgManageSidebar() {
     config: { enabled: !!projectId },
   })
 
-  const { mutate, isLoading, isSuccess } = useDeleteOrg()
-
   const [selectedUpdateOrg, setSelectedUpdateOrg] = useState<OrgMapType>({
     id: '',
     name: '',
     level: '1',
     description: '',
     parent_name: '',
+    org_id: '',
+    children: []
   })
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
 
-  const handleCopyId = useCopyId()
+  const [selected, setSelected] = useState<any>({})
+  const [query, setQuery] = useState('')
+  const convertData = (data: OrgMapType[]) => {
+    if (selected?.id) {
+      const findIndex = filteredComboboxData.findIndex(item => item.id === selected?.id);
+      let arr = [];
+      for (let i = findIndex; i >= 0; i--) {
+        let currentLevel = selected?.level
+        if (i === findIndex) {
+          arr.push(filteredComboboxData[i]);
+        } else {
+          if (filteredComboboxData[i].level !== currentLevel) {
+            arr.splice(0, 0, filteredComboboxData[i]);
+            if (filteredComboboxData[i].level === '1') {
+              break;
+            }
+          }
+        }
+        currentLevel = filteredComboboxData[i].level;
+      }
+      data = arr
+    }
+
+    data.forEach((node) => {
+      node.children = [];
+    });
+
+    data.forEach((node) => {
+      const level = parseInt(node.level);
+      if (level > 1) {
+        const parentLevel = level - 1;
+        const parentNodes = data.filter(
+          (parent) =>
+            parseInt(parent.level) === parentLevel && parent.id === node.org_id
+        );
+        parentNodes.forEach((parent) => {
+          parent.children.push(node);
+        });
+      }
+    });
+
+    const tree = data.filter((node) => parseInt(node.level) === 1);
+    return tree;
+  };
 
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
+
+  const handleEdit = (data: OrgMapType) => {
+    open()
+    setSelectedUpdateOrg(data)
+  }
+
+  const filteredPeople =
+    query === ''
+      ? filteredComboboxData
+      : filteredComboboxData.filter((person) =>
+        person.name
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, ''))
+      )
 
   return (
     <>
@@ -77,8 +132,72 @@ function OrgManageSidebar() {
           />
           <p>{t('cloud:org_manage.org_list')}</p>
         </div>
+
         <CreateOrg />
-        <ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} />
+        <div className='hidden'><ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} /></div>
+        <Combobox value={selected} onChange={setSelected}>
+          <div className="relative w-full">
+            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
+              <Combobox.Input
+                className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm pl-8`}
+                displayValue={(person: any) => person.name}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+              <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-2">
+                <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+              </Combobox.Button>
+              <XMarkIcon
+                className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+                onClick={() => setSelected('')}
+              />
+            </div>
+            <Transition
+              as={Fragment}
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+              afterLeave={() => setQuery('')}
+            >
+              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                {filteredPeople.length === 0 && query !== '' ? (
+                  <div className="relative cursor-default select-none px-4 py-2 text-secondary-700">
+                    {t('error:not_found')}
+                  </div>
+                ) : (
+                  filteredPeople.map((person) => (
+                    <Combobox.Option
+                      key={person.id}
+                      className={({ active }) =>
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-primary-300 text-white' : 'text-black'
+                        }`
+                      }
+                      value={person}
+                    >
+                      {({ selected, active }) => (
+                        <>
+                          <span
+                            className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              }`}
+                          >
+                            {person.name}
+                          </span>
+                          {selected ? (
+                            <span
+                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-teal-600'
+                                }`}
+                            >
+                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                            </span>
+                          ) : null}
+                        </>
+                      )}
+                    </Combobox.Option>
+                  ))
+                )}
+              </Combobox.Options>
+            </Transition>
+          </div>
+        </Combobox>
       </div>
       <div className="grow overflow-y-auto bg-secondary-500 p-3">
         <div className="space-y-3">
@@ -110,168 +229,13 @@ function OrgManageSidebar() {
             {projectByIdData?.name ||
               t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
-          {filteredComboboxData?.map((org: OrgMapType) => (
-            <div className="flex" key={org.id}>
-              <Button
-                className={clsx(
-                  'h-10 gap-y-3 rounded-l-md border-none px-4',
-                  // FIXME: Somehow this IIFE function doesn't run right away
-                  // (() => {
-                  //   const classes: { [key: string]: boolean } = {}
-                  //   for (let i = 1; i <= 99; i++) {
-                  //     classes[`ml-${i * 8}`] = org.level === i.toString()
-                  //   }
-                  //   return classes
-                  // })(),
-                  {
-                    'ml-8': org.level === '1',
-                    'ml-16': org.level === '2',
-                    'ml-24': org.level === '3',
-                    'ml-32': org.level === '4',
-                    'ml-40': org.level === '5',
-                    'ml-48': org.level === '6',
-                    'ml-56': org.level === '7',
-                    'ml-64': org.level === '8',
-                    'ml-72': org.level === '9',
-                    'ml-80': org.level === '10',
-                  },
-                )}
-                key={org.id}
-                variant="muted"
-                size="no-p"
-                onClick={() => {
-                  switch (entityTypeURL) {
-                    case 'org':
-                      return navigate(
-                        `${PATHS.ORG_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    case 'event':
-                      return navigate(
-                        `${PATHS.EVENT_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    case 'group':
-                      return navigate(
-                        `${PATHS.GROUP_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    case 'user':
-                      return navigate(
-                        `${PATHS.USER_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    case 'device':
-                      return navigate(
-                        `${PATHS.DEVICE_MANAGE}/${projectId}/${org.id}`,
-                      )
-                    default:
-                      return navigate(
-                        `${PATHS.ORG_MANAGE}/${projectId}/${org.id}`,
-                      )
-                  }
-                }}
-              >
-                <p
-                  className={clsx('my-auto', {
-                    'text-primary-400': orgId === org.id,
-                  })}
-                >
-                  {org.name}
-                </p>
-              </Button>
-              <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
-                <Dropdown
-                  menuClass="h-10 w-6"
-                  icon={
-                    <BtnContextMenuIcon
-                      height={20}
-                      width={3}
-                      viewBox="0 0 3 20"
-                    />
-                  }
-                >
-                  <Menu.Items className="absolute left-0 z-10 mt-11 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="px-1 py-1">
-                      <MenuItem
-                        icon={
-                          <img
-                            src={btnEditIcon}
-                            alt="Edit organization"
-                            className="h-5 w-5"
-                          />
-                        }
-                        onClick={() => {
-                          open()
-                          setSelectedUpdateOrg(org)
-                        }}
-                      >
-                        {t('cloud:org_manage.org_map.edit')}
-                      </MenuItem>
-                      <MenuItem
-                        icon={
-                          <img
-                            src={btnCopyIdIcon}
-                            alt="Copy organization's ID"
-                            className="h-5 w-5"
-                          />
-                        }
-                        onClick={() => handleCopyId(org.id)}
-                      >
-                        {t('table:copy_id')}
-                      </MenuItem>
-                      <ConfirmationDialog
-                        isDone={isSuccess}
-                        icon="danger"
-                        title={t('cloud:org_manage.org_map.delete')}
-                        body={
-                          t(
-                            'cloud:org_manage.org_map.delete_org_confirm',
-                          ).replace('{{ORGNAME}}', org.name) ??
-                          'Confirm delete?'
-                        }
-                        triggerButton={
-                          <Button
-                            className="w-full border-none hover:text-primary-400"
-                            style={{ justifyContent: 'flex-start' }}
-                            variant="trans"
-                            size="square"
-                            startIcon={
-                              <img
-                                src={btnDeleteIcon}
-                                alt="Delete organization"
-                                className="h-5 w-5"
-                              />
-                            }
-                          >
-                            {t('cloud:org_manage.org_map.delete')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoading}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() => mutate({ orgId: org.id })}
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="h-5 w-5"
-                              />
-                            }
-                          />
-                        }
-                      />
-                    </div>
-                  </Menu.Items>
-                </Dropdown>
-              </div>
-            </div>
-          ))}
         </div>
         <UpdateOrg
           close={close}
           isOpen={isOpen}
           selectedUpdateOrg={selectedUpdateOrg}
         />
+        <TreeView data={convertData(filteredComboboxData)} handleEditTreeView={(data: OrgMapType) => handleEdit(data)} />
       </div>
     </>
   )

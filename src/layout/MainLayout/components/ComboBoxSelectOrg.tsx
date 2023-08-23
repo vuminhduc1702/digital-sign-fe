@@ -29,7 +29,7 @@ export function ComboBoxSelectOrg({
   const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
     orgData?.organizations || [],
-    ['id', 'name', 'level', 'description', 'parent_name'],
+    ['id', 'name', 'level', 'description', 'parent_name', 'org_id'],
     'sub_orgs',
   )
 
