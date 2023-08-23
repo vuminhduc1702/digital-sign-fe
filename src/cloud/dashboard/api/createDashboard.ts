@@ -15,7 +15,7 @@ export type CreateDashboardDTO = {
   }
 }
 
-// TODO: ???
+// TODO: response type ???
 type CreateDashboardRes = {}
 
 export const createDashboard = ({
@@ -37,7 +37,7 @@ export const useCreateDashboard = ({
 
   return useMutation({
     onSuccess: async () => {
-      // TODO: ???
+      // TODO: invalidateQueries sẽ gọi lại api để refresh mỗi lần thay đổi ???
       // await queryClient.invalidateQueries(['attrs'])
       // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
