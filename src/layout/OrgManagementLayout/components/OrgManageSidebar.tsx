@@ -60,23 +60,26 @@ function OrgManageSidebar() {
 
   const [selected, setSelected] = useState<any>({})
   const [query, setQuery] = useState('')
+
+  const getInt = (x: string) => Number.parseInt(x);
   const convertData = (data: OrgMapType[]) => {
     if (selected?.id) {
       const findIndex = filteredComboboxData.findIndex(item => item.id === selected?.id);
       let arr = [];
+      let currentLevel = selected?.level
       for (let i = findIndex; i >= 0; i--) {
-        let currentLevel = selected?.level
         if (i === findIndex) {
           arr.push(filteredComboboxData[i]);
         } else {
-          if (filteredComboboxData[i].level !== currentLevel) {
+          console.log(filteredComboboxData[i].level, currentLevel)
+          if (getInt(filteredComboboxData[i].level) < getInt(currentLevel)) {
             arr.splice(0, 0, filteredComboboxData[i]);
             if (filteredComboboxData[i].level === '1') {
               break;
             }
+             currentLevel = filteredComboboxData[i].level;
           }
         }
-        currentLevel = filteredComboboxData[i].level;
       }
       data = arr
     }
