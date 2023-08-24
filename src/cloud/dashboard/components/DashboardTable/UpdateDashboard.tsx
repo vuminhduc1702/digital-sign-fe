@@ -11,19 +11,21 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import {
   type UpdateDashboardDTO,
-  useGetDashboards,
   useUpdateDashboard,
+  useGetDashboardsById,
 } from '../../api'
 
 type UpdateDashboardProps = {
-  projectId: string
-  dashboardId: string
+  projectId: string,
+  id: string,
+  title: string,
   close: () => void
   isOpen: boolean
 }
 
 export function UpdateDashboard({
   projectId,
+  id,
   close,
   isOpen,
 }: UpdateDashboardProps) {
@@ -31,9 +33,9 @@ export function UpdateDashboard({
 
   const { mutate, isLoading, isSuccess } = useUpdateDashboard()
 
-  const { data: dashboardData, isLoading: dashboardLoading } = useGetDashboards(
+  const { data: dashboardData, isLoading: dashboardLoading } = useGetDashboardsById(
     {
-      projectId,
+      id,
       config: { suspense: false },
     },
   )
@@ -83,27 +85,45 @@ export function UpdateDashboard({
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateDashboardDTO['data']>
+        <Form<UpdateDashboardDTO['data']['dashboards']>
           id="update-dashboard"
           onSubmit={values => {
             mutate({
               data: {
-                name: values.name,
-                configuration: {
-                  description: values.configuration.description,
-                },
+                dashboards: 
+                  {
+                    id: values.id,
+                    name: values.id,
+                    title: values.title,
+                    tenant_id: values.tenant_id,
+                    created_time: values.created_time,
+                    configuration: {
+                      description: values.configuration.description,
+                      widgets: null
+                    }
+                  }
               },
-              dashboardId: '',
+              projectId: projectId
             })
+          }}
+          options={{
+            defaultValues: {
+              title: dashboardData?.title,
+              configuration: {
+                description: dashboardData?.configuration.description
+              }
+            },
           }}
         >
           {({ register, formState }) => (
             <>
               {}
               <InputField
-                label={t('cloud:dashboard.add_dashboard.name') ?? 'Name'}
-                error={formState.errors['name']}
-                registration={register('name')}
+                label={
+                  t('cloud:dashboard.add_dashboard.name') ?? 'Name'
+                }
+                error={formState.errors['title']}
+                registration={register('title')}
               />
               <InputField
                 label={
