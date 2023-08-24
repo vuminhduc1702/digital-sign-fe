@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { Suspense, useState } from 'react'
+import { Suspense, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
@@ -18,6 +18,7 @@ import { type Attribute } from '~/types'
 
 export function DeviceTemplateManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
     [],
@@ -35,7 +36,7 @@ export function DeviceTemplateManage() {
         </div>
 
         {projectId && templateId ? (
-          <div className="flex flex-col gap-2 md:col-span-2">
+          <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
             <Suspense
               fallback={
                 <div className="flex grow items-center justify-center md:col-span-2">
@@ -52,7 +53,7 @@ export function DeviceTemplateManage() {
               />
               <div className="flex grow flex-col px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
-                  <ExportTable />
+                  <ExportTable refComponent={ref}/>
                   <div className="flex items-center gap-x-3">
                     <CreateAttr entityId={templateId} entityType="TEMPLATE" />
                     <ComboBoxSelectAttr
