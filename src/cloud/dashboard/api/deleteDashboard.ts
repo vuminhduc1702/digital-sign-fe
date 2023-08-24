@@ -5,15 +5,14 @@ import { type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 type DeleteDashboardDTO = {
-  projectId: string
-  dashboardId: string
+  projectId: string,
+  data: {
+    id: string
+  }
 }
 
-export const deleteDashboard = ({
-  projectId,
-  dashboardId,
-}: DeleteDashboardDTO) => {
-  return axios.delete(`/api/vtdashboard/${projectId}`, { data: dashboardId })
+export const deleteDashboard = ({ projectId, data }: DeleteDashboardDTO) => {
+  return axios.delete(`/api/vtdashboard/${projectId}`, { data })
 }
 
 type UseDeleteDashboardOptions = {
