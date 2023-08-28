@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
 import { useTranslation } from 'react-i18next'
@@ -22,6 +22,7 @@ import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const params = useParams()
   const deviceId = params.deviceId as string
@@ -33,7 +34,7 @@ export function DeviceDetail() {
     useState<DeviceAttrLog[]>([])
 
   return (
-    <div className="flex grow flex-col">
+    <div ref={ref} className="flex grow flex-col">
       <TitleBar className="normal-case" title={<DeviceBreadcrumbs />} />
       <Tab.Group>
         <Tab.List className="mt-2 flex gap-x-10 bg-secondary-500 px-10">
@@ -74,7 +75,7 @@ export function DeviceDetail() {
           >
             <div className="flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable />
+                <ExportTable refComponent={ref}/>
                 <div className="flex items-center gap-x-3">
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
                   <ComboBoxSelectAttr
@@ -96,7 +97,7 @@ export function DeviceDetail() {
           >
             <div className="flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable />
+                <ExportTable refComponent={ref}/>
                 <div className="flex items-center gap-x-3">
                   <ComboBoxAttrLog
                     setFilteredComboboxData={setFilteredAttrLogComboboxData}

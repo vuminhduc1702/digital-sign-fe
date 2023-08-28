@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
 import {
@@ -20,6 +20,7 @@ const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
 export function OrgManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const params = useParams()
   const orgId = params.orgId as string
@@ -32,7 +33,7 @@ export function OrgManage() {
   return (
     <>
       {orgId ? (
-        <div className="flex grow flex-col gap-y-3">
+        <div ref={ref} className="flex grow flex-col gap-y-3">
           <div>
             <TitleBar
               title={
@@ -70,7 +71,7 @@ export function OrgManage() {
             />
             <div className="flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable />
+                <ExportTable  refComponent={ref}/>
                 <div className="flex items-center gap-x-3">
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
                   <ComboBoxSelectAttr

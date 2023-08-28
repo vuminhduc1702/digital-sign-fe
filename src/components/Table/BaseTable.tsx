@@ -83,7 +83,7 @@ export function BaseTable<T extends Record<string, any>>({
                       {header.isPlaceholder ? null : (
                         <div
                             className={`text-table-header flex justify-between items-center ${header.column.getCanSort()
-                              ? 'cursor-pointer select-none text-table-header'
+                              ? 'cursor-pointer select-none'
                               : ''}`}
                             onClick={header.column.getToggleSortingHandler()} 
                         >
@@ -91,11 +91,11 @@ export function BaseTable<T extends Record<string, any>>({
                             header.column.columnDef.header,
                             header.getContext(),
                           )}
-                          <div className='text-slate-500'>
+                          <div className='text-black w-2 text-xl pr-5'>
                             {
                               {
-                                asc: '▲',
-                                desc: '▼',
+                                asc: '↑',
+                                desc: '↓',
                               }[header.column.getIsSorted() as string] ?? null
                             }
                           </div>
