@@ -21,8 +21,6 @@ const { ThingServices } = lazyImport(
   'ThingServices',
 )
 
-const idURL = window.location.pathname.split('/')[5]
-
 export const FlowEngineV2Routes = [
   {
     element: <FlowEngineV2Layout />,

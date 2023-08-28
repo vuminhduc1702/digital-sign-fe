@@ -10,12 +10,14 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { type SelectOption } from './SelectField'
 
 export type ControllerPassThroughProps<TFormValues extends FieldValues> = {
-  name?: Path<TFormValues>
+  name: Path<TFormValues>
   control?: Control<TFormValues, any>
 }
 
 type SelectProps<TFormValues extends FieldValues> = {
   options: SelectOption[]
+  onChange: (e: any) => void
+  value: PropsValue<SelectOption>
   closeMenuOnSelect?: boolean
   isMulti?: boolean
   onMenuClose?: () => void

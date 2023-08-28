@@ -2,14 +2,24 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import {Form, FormDrawer, InputField, SelectDropdown, TextAreaField} from '~/components/Form'
+import {
+  Form,
+  FormDrawer,
+  InputField,
+  SelectDropdown,
+  TextAreaField,
+} from '~/components/Form'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
-import {descSchema, nameSchema, selectOptionSchema} from '~/utils/schemaValidation'
+import {
+  descSchema,
+  nameSchema,
+  selectOptionSchema,
+} from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import {OrgList} from "~/layout/MainLayout/types";
-import {queryClient} from "~/lib/react-query.ts";
-import {flattenData} from "~/utils/misc.ts";
-import {useDefaultCombobox} from "~/utils/hooks.ts";
+import { type OrgList } from '~/layout/MainLayout/types'
+import { queryClient } from '~/lib/react-query.ts'
+import { flattenData } from '~/utils/misc.ts'
+import { useDefaultCombobox } from '~/utils/hooks.ts'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'

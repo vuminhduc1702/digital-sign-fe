@@ -141,7 +141,6 @@ export function DashboardDetail() {
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
   const handleLive = useCallback(
     () => sendMessage(liveMessage),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [parseDate, interval, agg],
   )
 

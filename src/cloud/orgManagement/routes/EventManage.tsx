@@ -37,7 +37,7 @@ export function EventManage() {
   })
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="flex grow flex-col">
       <TitleBar
         title={t('cloud:org_manage.event_manage.header') ?? 'Event management'}
       />

@@ -11,7 +11,7 @@ export function FlowEngineV2Layout() {
   const { projectId } = useParams()
 
   return (
-    <ContentLayout title={t('sidebar:cloud.org_management')}>
+    <ContentLayout title={t('sidebar:cloud.flow_engine_v2')}>
       {projectId ? (
         <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
           <div className="flex flex-col gap-2 md:col-span-2">

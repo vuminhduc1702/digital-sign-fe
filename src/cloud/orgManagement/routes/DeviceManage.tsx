@@ -37,7 +37,7 @@ export function DeviceManage() {
   })
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="flex grow flex-col">
       <TitleBar
         title={
           t('cloud:org_manage.device_manage.header') ?? 'Device management'
@@ -45,7 +45,7 @@ export function DeviceManage() {
       />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable refComponent={ref}/>
+          <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">
             <CreateDevice />
             {isSuccess ? (

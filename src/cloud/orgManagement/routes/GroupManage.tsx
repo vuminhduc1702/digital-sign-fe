@@ -35,7 +35,7 @@ export function GroupManage() {
   })
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className="flex grow flex-col">
       <TitleBar
         title={t('cloud:org_manage.group_manage.header') ?? 'Group management'}
       />
