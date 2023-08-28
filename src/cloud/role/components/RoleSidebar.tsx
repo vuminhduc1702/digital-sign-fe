@@ -55,9 +55,9 @@ export function RoleSidebar() {
         <CreateRole />
         <ComboBoxSelectRole setFilteredComboboxData={setFilteredComboboxData} />
       </div>
-      <div className="grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData?.length > 0 ? (
-          <div className="h-[85vh] space-y-3">
+          <div className="space-y-3">
             {filteredComboboxData?.map((role: Role) => (
               <div className="flex" key={role.id}>
                 <Button

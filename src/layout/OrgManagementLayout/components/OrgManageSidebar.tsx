@@ -28,7 +28,13 @@ export type OrgMapType = {
   children: any[]
 }
 
-export type EntityTypeURL = 'org' | 'group' | 'user' | 'device' | 'event' | 'role'
+export type EntityTypeURL =
+  | 'org'
+  | 'group'
+  | 'user'
+  | 'device'
+  | 'event'
+  | 'role'
 
 function OrgManageSidebar() {
   const { t } = useTranslation()
@@ -52,7 +58,7 @@ function OrgManageSidebar() {
     description: '',
     parent_name: '',
     org_id: '',
-    children: []
+    children: [],
   })
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
@@ -61,49 +67,51 @@ function OrgManageSidebar() {
   const [selected, setSelected] = useState<any>({})
   const [query, setQuery] = useState('')
 
-  const getInt = (x: string) => Number.parseInt(x);
+  const getInt = (x: string) => Number.parseInt(x)
   const convertData = (data: OrgMapType[]) => {
     if (selected?.id) {
-      const findIndex = filteredComboboxData.findIndex(item => item.id === selected?.id);
-      let arr = [];
+      const findIndex = filteredComboboxData.findIndex(
+        item => item.id === selected?.id,
+      )
+      let arr = []
       let currentLevel = selected?.level
       for (let i = findIndex; i >= 0; i--) {
         if (i === findIndex) {
-          arr.push(filteredComboboxData[i]);
+          arr.push(filteredComboboxData[i])
         } else {
           if (getInt(filteredComboboxData[i].level) < getInt(currentLevel)) {
-            arr.splice(0, 0, filteredComboboxData[i]);
+            arr.splice(0, 0, filteredComboboxData[i])
             if (filteredComboboxData[i].level === '1') {
-              break;
+              break
             }
-            currentLevel = filteredComboboxData[i].level;
+            currentLevel = filteredComboboxData[i].level
           }
         }
       }
       data = arr
     }
 
-    data.forEach((node) => {
-      node.children = [];
-    });
+    data.forEach(node => {
+      node.children = []
+    })
 
-    data.forEach((node) => {
-      const level = parseInt(node.level);
+    data.forEach(node => {
+      const level = parseInt(node.level)
       if (level > 1) {
-        const parentLevel = level - 1;
+        const parentLevel = level - 1
         const parentNodes = data.filter(
-          (parent) =>
-            parseInt(parent.level) === parentLevel && parent.id === node.org_id
-        );
-        parentNodes.forEach((parent) => {
-          parent.children.push(node);
-        });
+          parent =>
+            parseInt(parent.level) === parentLevel && parent.id === node.org_id,
+        )
+        parentNodes.forEach(parent => {
+          parent.children.push(node)
+        })
       }
-    });
+    })
 
-    const tree = data.filter((node) => parseInt(node.level) === 1);
-    return tree;
-  };
+    const tree = data.filter(node => parseInt(node.level) === 1)
+    return tree
+  }
 
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
@@ -116,12 +124,12 @@ function OrgManageSidebar() {
   const filteredPeople =
     query === ''
       ? filteredComboboxData
-      : filteredComboboxData.filter((person) =>
-        person.name
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(query.toLowerCase().replace(/\s+/g, ''))
-      )
+      : filteredComboboxData.filter(person =>
+          person.name
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .includes(query.toLowerCase().replace(/\s+/g, '')),
+        )
 
   return (
     <>
@@ -136,14 +144,18 @@ function OrgManageSidebar() {
         </div>
 
         <CreateOrg />
-        <div className='hidden'><ComboBoxSelectOrg setFilteredComboboxData={setFilteredComboboxData} /></div>
+        <div className="hidden">
+          <ComboBoxSelectOrg
+            setFilteredComboboxData={setFilteredComboboxData}
+          />
+        </div>
         <Combobox value={selected} onChange={setSelected}>
           <div className="relative w-full">
             <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
               <Combobox.Input
-                className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm pl-8`}
+                className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 pl-8 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm`}
                 displayValue={(person: any) => person.name}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={event => setQuery(event.target.value)}
               />
               <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-2">
                 <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
@@ -166,11 +178,12 @@ function OrgManageSidebar() {
                     {t('error:not_found')}
                   </div>
                 ) : (
-                  filteredPeople.map((person) => (
+                  filteredPeople.map(person => (
                     <Combobox.Option
                       key={person.id}
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-primary-300 text-white' : 'text-black'
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-primary-300 text-white' : 'text-black'
                         }`
                       }
                       value={person}
@@ -178,17 +191,22 @@ function OrgManageSidebar() {
                       {({ selected, active }) => (
                         <>
                           <span
-                            className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                              }`}
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
                           >
                             {person.name}
                           </span>
                           {selected ? (
                             <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-teal-600'
-                                }`}
+                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                active ? 'text-white' : 'text-teal-600'
+                              }`}
                             >
-                              <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                              <CheckIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
                             </span>
                           ) : null}
                         </>
@@ -201,8 +219,8 @@ function OrgManageSidebar() {
           </div>
         </Combobox>
       </div>
-      <div className="grow overflow-y-auto bg-secondary-500 p-3">
-        <div className="h-[85vh] space-y-3">
+      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
+        <div className="space-y-3">
           <Button
             className={clsx('rounded-md border-none', {
               'text-primary-400': orgIdURL == null,
@@ -237,7 +255,10 @@ function OrgManageSidebar() {
           isOpen={isOpen}
           selectedUpdateOrg={selectedUpdateOrg}
         />
-        <TreeView data={convertData(filteredComboboxData)} handleEditTreeView={(data: OrgMapType) => handleEdit(data)} />
+        <TreeView
+          data={convertData(filteredComboboxData)}
+          handleEditTreeView={(data: OrgMapType) => handleEdit(data)}
+        />
       </div>
     </>
   )
