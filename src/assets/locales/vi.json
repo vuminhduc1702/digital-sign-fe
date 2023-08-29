@@ -332,7 +332,7 @@
         "f32": "Float 32",
         "f64": "Float 64",
         "bool": "Boolean",
-        "time": "Time",
+        "time": "Thời gian",
         "bin": "Binary",
         "description": "Mô tả",
         "code": "Code",
@@ -341,7 +341,8 @@
         "delete": "Xóa Service",
         "edit": " Sửa Service",
         "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?",
-        "note": "Ghi chú"
+        "note": "Ghi chú",
+        "status": "Trạng thái"
       },
       "thing": {
         "title": "Thing",
@@ -448,6 +449,7 @@
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
     "no_service": "Không có Service. Vui lòng tạo service.",
+    "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",

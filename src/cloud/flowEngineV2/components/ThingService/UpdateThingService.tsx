@@ -33,7 +33,7 @@ import {
   type CreateServiceForm,
   type dataRun,
 } from './CreateThingService'
-import { ThingServicesTab2 } from './ThingServiceTab2'
+import { ThingEventServices } from './ThingEventService'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -451,7 +451,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                   'flex grow flex-col bg-white focus:outline-none',
                 )}
               >
-                <ThingServicesTab2 serviceName={thingServiceData?.data?.name || ''}/>
+                <ThingEventServices serviceName={thingServiceData?.data?.name || ''}/>
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>

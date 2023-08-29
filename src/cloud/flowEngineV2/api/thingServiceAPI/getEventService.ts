@@ -2,10 +2,11 @@ import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { BaseAPIRes } from '~/types'
+import { type BaseAPIRes } from '~/types'
+import { type EventService } from '../../types'
 
 type GetEventServiceRes = {
-  
+  data: EventService[]
 } & BaseAPIRes
 
 export const getEventService = ({
@@ -16,8 +17,8 @@ export const getEventService = ({
 }: {
   thingId: string
   serviceName: string
-  startTime?: any
-  endTime?: any
+  startTime?: number
+  endTime?: number
 }): Promise<GetEventServiceRes> => {
   return axios.get(`/api/fe/thing/${thingId}/service/${serviceName}/event`, {
     params: {
