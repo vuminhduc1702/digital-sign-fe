@@ -31,6 +31,7 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
     endTime: endTime,
     config: {
       suspense: false,
+      keepPreviousData: true
     },
   })
 
