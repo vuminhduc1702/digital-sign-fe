@@ -2,75 +2,53 @@ import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-
-import { type BaseAPIRes } from '~/types'
-import { type ThingService } from '~/cloud/flowEngineV2'
-
-type GetEventService = {
-  thingId: string
-  offset: number
-  limit: number
-  endTime: number
-  startTime: number
-  service_name: string
-}
+import { BaseAPIRes } from '~/types'
 
 type GetEventServiceRes = {
-  data: ThingService[]
+  
 } & BaseAPIRes
 
 export const getEventService = ({
   thingId,
-  offset,
-  limit,
-  endTime,
+  serviceName,
   startTime,
-  service_name,
-}: GetEventService): Promise<GetEventServiceRes> => {
-  return axios.get(`/api/fe/thing/${thingId}/service/${service_name}/event`, {
+  endTime
+}: {
+  thingId: string
+  serviceName: string
+  startTime?: any
+  endTime?: any
+}): Promise<GetEventServiceRes> => {
+  return axios.get(`/api/fe/thing/${thingId}/service/${serviceName}/event`, {
     params: {
-      offset,
-      limit,
-      endTime,
+      offset: 0,
+      limit: 100,
       startTime,
+      endTime
     },
   })
 }
 
 type QueryFnType = typeof getEventService
 
-type UseServiceThingsOptions = {
+type UseEventServiceOptions = {
+  thingId: string
+  serviceName: string
+  startTime?: any
+  endTime?: any
   config?: QueryConfig<QueryFnType>
-} & GetEventService
+}
 
-export const useGetEventService = ({
+export const useEventService = ({
   thingId,
-  offset,
-  limit,
-  endTime,
+  serviceName,
   startTime,
-  service_name,
+  endTime,
   config,
-}: UseServiceThingsOptions) => {
+}: UseEventServiceOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: [
-      'event-service',
-      thingId,
-      offset,
-      limit,
-      endTime,
-      startTime,
-      service_name,
-    ],
-    queryFn: () =>
-      getEventService({
-        thingId,
-        offset,
-        limit,
-        endTime,
-        startTime,
-        service_name,
-      }),
+    queryKey: ['event-service', thingId, serviceName, startTime, endTime],
+    queryFn: () => getEventService({ thingId, serviceName, startTime, endTime }),
     ...config,
   })
 }
