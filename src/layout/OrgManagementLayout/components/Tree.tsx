@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { EntityTypeURL, OrgMapType } from './OrgManageSidebar';
+import { useState } from 'react'
+import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Menu } from '@headlessui/react'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnOpenToggle from '~/assets/icons/btn-open-toggle.svg'
 import btnCloseToggle from '~/assets/icons/btn-close-toggle.svg'
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATHS } from '~/routes/PATHS';
+import { useNavigate, useParams } from 'react-router-dom'
+import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { useDeleteOrg } from '../api/deleteOrg'
-import { useCopyId } from '~/utils/hooks';
+import { useCopyId } from '~/utils/hooks'
 import clsx from 'clsx'
 
 interface TreeViewProps {
@@ -29,13 +29,19 @@ interface TreeProps {
   handleEdit: (data: OrgMapType) => void
 }
 
-let TreeView = ({ data, handleEditTreeView }: TreeViewProps) => {
-  return data.map((item) => <Tree key={item.id} data={item} handleEdit={(data: OrgMapType) => handleEditTreeView(data)} />);
-};
+const TreeView = ({ data, handleEditTreeView }: TreeViewProps) => {
+  return data.map(item => (
+    <Tree
+      key={item.id}
+      data={item}
+      handleEdit={(data: OrgMapType) => handleEditTreeView(data)}
+    />
+  ))
+}
 
 const Tree = ({ data, handleEdit }: TreeProps) => {
   const { t } = useTranslation()
-  const [showChildren, setShowChildren] = useState(true);
+  const [showChildren, setShowChildren] = useState(true)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const navigate = useNavigate()
   const { id: projectId } = storage.getProject()
@@ -43,31 +49,35 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
 
-  if (!data) return null;
+  if (!data) return null
 
   return (
-    <ul className='pl-6 mt-4'>
+    <ul className="mt-4 pl-6">
       <li>
         <div className="flex items-center" key={data.id}>
-          <div className='h-5 w-5' onClick={() => setShowChildren(!showChildren)}>
-            {data.children.length ?
+          <div
+            className="h-5 w-5"
+            onClick={() => setShowChildren(!showChildren)}
+          >
+            {data.children.length ? (
               <img
                 src={showChildren ? btnCloseToggle : btnOpenToggle}
-                alt="Edit organization"
-                className='cursor-pointer'
-              /> : ''}
+                alt="Show child organization"
+                className="cursor-pointer"
+              />
+            ) : (
+              ''
+            )}
           </div>
           <Button
-            className='h-10 gap-y-3 rounded-l-md border-none px-4 ml-1'
+            className="ml-1 h-10 gap-y-3 rounded-l-md border-none px-4"
             key={data.id}
             variant="muted"
             size="no-p"
             onClick={() => {
               switch (entityTypeURL) {
                 case 'org':
-                  return navigate(
-                    `${PATHS.ORG_MANAGE}/${projectId}/${data.id}`,
-                  )
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
                 case 'event':
                   return navigate(
                     `${PATHS.EVENT_MANAGE}/${projectId}/${data.id}`,
@@ -85,15 +95,15 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
                     `${PATHS.DEVICE_MANAGE}/${projectId}/${data.id}`,
                   )
                 default:
-                  return navigate(
-                    `${PATHS.ORG_MANAGE}/${projectId}/${data.id}`,
-                  )
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
               }
             }}
           >
-            <p className={clsx('my-auto', {
-              'text-primary-400': orgId === data.id,
-            })}>
+            <p
+              className={clsx('my-auto', {
+                'text-primary-400': orgId === data.id,
+              })}
+            >
               {data.name}
             </p>
           </Button>
@@ -101,11 +111,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
             <Dropdown
               menuClass="h-10 w-6"
               icon={
-                <BtnContextMenuIcon
-                  height={20}
-                  width={3}
-                  viewBox="0 0 3 20"
-                />
+                <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
               }
             >
               <Menu.Items className="absolute left-0 z-10 mt-11 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -141,10 +147,10 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
                     icon="danger"
                     title={t('cloud:org_manage.org_map.delete')}
                     body={
-                      t(
-                        'cloud:org_manage.org_map.delete_org_confirm',
-                      ).replace('{{ORGNAME}}', data.name) ??
-                      'Confirm delete?'
+                      t('cloud:org_manage.org_map.delete_org_confirm').replace(
+                        '{{ORGNAME}}',
+                        data.name,
+                      ) ?? 'Confirm delete?'
                     }
                     triggerButton={
                       <Button
@@ -189,10 +195,16 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
       {showChildren &&
         data.children &&
         data.children.map((child: OrgMapType) => {
-          return <Tree key={child.name} data={child} handleEdit={(child: OrgMapType) => handleEdit(child)} />;
+          return (
+            <Tree
+              key={child.name}
+              data={child}
+              handleEdit={(child: OrgMapType) => handleEdit(child)}
+            />
+          )
         })}
     </ul>
-  );
-};
+  )
+}
 
-export default TreeView;
+export default TreeView

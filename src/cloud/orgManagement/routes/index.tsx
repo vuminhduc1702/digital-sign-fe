@@ -34,6 +34,20 @@ export const OrgManagementRoutes = [
     element: <OrgManagementLayout />,
     children: [
       {
+        path: PATHS.ORG,
+        children: [
+          {
+            path: ':projectId',
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <OrgManage />
+              </ErrorBoundary>
+            ),
+            children: [{ path: ':orgId' }],
+          },
+        ],
+      },
+      {
         path: PATHS.ORG_MANAGE,
         children: [
           {
