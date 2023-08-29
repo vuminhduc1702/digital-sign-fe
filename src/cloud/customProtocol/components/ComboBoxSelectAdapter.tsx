@@ -28,7 +28,7 @@ export function ComboBoxSelectAdapter<TFormValues extends FieldValues>({
   const [query, setQuery] = useState('')
 
   const { acc: adapterFlattenData, extractedPropertyKeys } = flattenData(
-    data?.adapters || [],
+    data?.adapters,
     [
       'id',
       'name',

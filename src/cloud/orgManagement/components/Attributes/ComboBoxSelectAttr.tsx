@@ -23,7 +23,7 @@ export function ComboBoxSelectAttr({
   const { data: attrsData } = useGetAttrs({ entityType, entityId })
 
   const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
-    attrsData?.attributes || [],
+    attrsData?.attributes,
     ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
   )
 

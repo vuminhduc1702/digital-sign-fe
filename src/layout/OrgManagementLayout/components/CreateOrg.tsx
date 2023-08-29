@@ -41,7 +41,7 @@ export function CreateOrg() {
     exact: false,
   })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations || [],
+    orgListCache?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )

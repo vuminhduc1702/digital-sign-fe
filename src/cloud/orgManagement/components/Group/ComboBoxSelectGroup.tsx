@@ -28,7 +28,7 @@ export function ComboBoxSelectGroup({
   const [query, setQuery] = useState('')
 
   const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(
-    data?.groups || [],
+    data?.groups,
     ['id', 'name', 'entity_type', 'org_name'],
   )
 

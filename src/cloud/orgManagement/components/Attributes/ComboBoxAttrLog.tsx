@@ -26,7 +26,7 @@ export function ComboBoxAttrLog({
   })
 
   const { acc: attrLogFlattenData, extractedPropertyKeys } = flattenData(
-    deviceAttrData?.logs || [],
+    deviceAttrData?.logs,
     ['ts', 'attribute_key', 'value'],
   )
 

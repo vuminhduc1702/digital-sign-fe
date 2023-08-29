@@ -28,7 +28,7 @@ export function ComboBoxSelectDevice<TFormValues extends FieldValues>({
   const [query, setQuery] = useState('')
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
-    data?.devices || [],
+    data?.devices,
     ['id', 'name', 'group_name', 'template_name', 'created_time', 'org_name'],
   )
 
