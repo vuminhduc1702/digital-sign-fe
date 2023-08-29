@@ -188,8 +188,9 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                   {({ register, formState }, { fields, append, remove }) => {
                     return (
                       <div
-                        className={`grid grow grid-cols-1 gap-x-4 ${fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
-                          }`}
+                        className={`grid grow grid-cols-1 gap-x-4 ${
+                          fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
+                        }`}
                       >
                         <div
                           className={
