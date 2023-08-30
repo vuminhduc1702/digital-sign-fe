@@ -196,7 +196,7 @@ export function CreateAdapter() {
   })
 
   useEffect(() => {
-    if (selectedThingId != null) {
+    if (selectedThingId != "") {
       setSelectedThingId('')
     }
   }, [])
@@ -693,7 +693,7 @@ export function CreateAdapter() {
                                     input: inputService,
                                     code: codeInput,
                                   },
-                                  thingId: selectedThingId?.value as string,
+                                  thingId: selectedThingId,
                                 })
                               }}
                               schema={serviceThingSchema}
@@ -805,7 +805,7 @@ export function CreateAdapter() {
                               className="mt-3 w-full"
                               variant="primary"
                               size="square"
-                              disabled={!selectedThingId?.value}
+                              disabled={!selectedThingId}
                             >
                               {t('cloud:custom_protocol.service.create')}
                             </Button>
