@@ -116,7 +116,7 @@ export const OrgManagementRoutes = [
             children: [{ path: ':orgId' }],
           },
           {
-            path: idURL != null ? ':projectId/:orgId' : ':projectId',
+            path: ':projectId/:orgId',
             children: [
               {
                 path: ':deviceId',
