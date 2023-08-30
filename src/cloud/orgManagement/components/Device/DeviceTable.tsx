@@ -24,6 +24,12 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/cloud/dashboard/components'
 
 function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
   const { t } = useTranslation()
@@ -63,7 +69,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               onClick={() =>
                 navigate(
                   `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : `null/${id}`
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
@@ -183,12 +189,39 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      // columnHelper.display({
+      //   id: 'orgName',
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
+      //   ),
+      //   cell: info => info.row.original.org_name || t('table:no_in_org'),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.display({
-        id: 'orgName',
+        id: 'key',
         header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.key')}</span>
         ),
-        cell: info => info.row.original.org_name || t('table:no_in_org'),
+        cell: info => {
+          const { key } = info.row.original
+          const keyTrigger = key.slice(0, 15) + '...'
+          return (
+            <>
+              {key ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{keyTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{key}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {

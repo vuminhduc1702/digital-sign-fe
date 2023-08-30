@@ -168,6 +168,7 @@
           "group": "Nhóm",
           "device_type": "Mẫu thiết bị",
           "org_name": "Tổ chức",
+          "key": "Key",
           "created_at": "Ngày tạo",
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
