@@ -204,7 +204,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         ),
         cell: info => {
           const { key } = info.row.original
-          const keyTrigger = key.slice(0, 15) + '...'
+          const keyTrigger = key?.slice(0, 15) + '...'
           return (
             <>
               {key ? (
