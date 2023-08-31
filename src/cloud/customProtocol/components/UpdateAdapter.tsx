@@ -242,8 +242,8 @@ export function UpdateAdapter({
             topic:
               topic !== 'null'
                 ? JSON.parse(topic)
-                    .map((item: string) => item.split('/')[0])
-                    .join(', ')
+                  .map((item: string) => item.split('/')[0])
+                  .join(', ')
                 : null,
           },
         }}
@@ -396,6 +396,7 @@ export function UpdateAdapter({
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.thing.id')}
                             name="thing_id"
                             control={control}
@@ -403,11 +404,11 @@ export function UpdateAdapter({
                               thingData
                                 ? thingSelectData
                                 : [
-                                    {
-                                      label: t('loading:entity_thing'),
-                                      value: '',
-                                    },
-                                  ]
+                                  {
+                                    label: t('loading:entity_thing'),
+                                    value: '',
+                                  },
+                                ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -427,7 +428,7 @@ export function UpdateAdapter({
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
-                            // defaultValue={defaultThingValues}
+                          // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -520,7 +521,7 @@ export function UpdateAdapter({
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                    thingType === 'template' ? (
+                                      thingType === 'template' ? (
                                       <InputField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -588,6 +589,7 @@ export function UpdateAdapter({
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.service.title')}
                             name="handle_service"
                             control={control}
@@ -595,13 +597,13 @@ export function UpdateAdapter({
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                ? [
+                                  ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                : [
+                                  : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',

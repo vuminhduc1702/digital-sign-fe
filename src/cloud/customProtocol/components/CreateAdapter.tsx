@@ -441,6 +441,7 @@ export function CreateAdapter() {
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.thing.id')}
                             name="thing_id"
                             control={control}
@@ -448,11 +449,11 @@ export function CreateAdapter() {
                               thingData
                                 ? thingSelectData
                                 : [
-                                    {
-                                      label: t('loading:entity_thing'),
-                                      value: '',
-                                    },
-                                  ]
+                                  {
+                                    label: t('loading:entity_thing'),
+                                    value: '',
+                                  },
+                                ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -472,7 +473,7 @@ export function CreateAdapter() {
                               setValue('thing_id', e.value)
                             }}
                             value={optionThingId}
-                            // defaultValue={defaultThingValues}
+                          // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -565,7 +566,7 @@ export function CreateAdapter() {
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                    thingType === 'template' ? (
+                                      thingType === 'template' ? (
                                       <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -634,6 +635,7 @@ export function CreateAdapter() {
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.service.title')}
                             inputId="handleServiceForm"
                             name="handle_service"
@@ -642,13 +644,13 @@ export function CreateAdapter() {
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                ? [
+                                  ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                : [
+                                  : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
