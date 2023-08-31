@@ -50,6 +50,7 @@ export function DeviceManage() {
             <CreateDevice />
             {isSuccess ? (
               <ComboBoxSelectDevice
+                name={''}
                 data={deviceData}
                 setFilteredComboboxData={setFilteredComboboxData}
                 offset={offset}

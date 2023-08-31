@@ -29,7 +29,7 @@ export function ComboBoxSelectDevice<TFormValues extends FieldValues>({
 
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
     data?.devices || [],
-    ['id', 'name', 'group_name', 'template_name', 'created_time', 'org_name'],
+    ['id', 'name', 'group_name', 'template_name', 'created_time', 'org_name', 'key'],
   )
 
   const filteredData = filteredComboboxData(
