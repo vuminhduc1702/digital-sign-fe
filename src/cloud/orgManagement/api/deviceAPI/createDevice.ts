@@ -15,7 +15,7 @@ export type CreateDeviceDTO = {
     project_id: string
     name: string
     org_id: string | boolean
-    keys: string 
+    key: string
     group_id: string | boolean
   }
 }

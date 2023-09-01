@@ -21,7 +21,7 @@ import { useParams } from 'react-router-dom'
 
 export const deviceSchema = z.object({
   name: nameSchema,
-  keys: z.string()
+  key: z.string()
 })
 
 export function CreateDevice() {
@@ -106,7 +106,7 @@ export function CreateDevice() {
               project_id: projectId,
               org_id: orgValue?.value,
               name: values.name,
-              keys: values.keys,
+              key: values.key,
               group_id: groupValue?.value
             },
           })
@@ -163,8 +163,8 @@ export function CreateDevice() {
                 label={
                   t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'
                 }
-                error={formState.errors['keys']}
-                registration={register('keys')}
+                error={formState.errors['key']}
+                registration={register('key')}
               />
             </>
           )

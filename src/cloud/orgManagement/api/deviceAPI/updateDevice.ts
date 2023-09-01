@@ -8,7 +8,7 @@ import { useNotificationStore } from '~/stores/notifications'
 export type UpdateDeviceDTO = {
   data: {
     name: string
-    keys: string
+    key: string
     org_id: string | boolean
     group_id: string
   }

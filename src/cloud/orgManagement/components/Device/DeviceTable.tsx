@@ -141,7 +141,7 @@ function DeviceTableContextMenu({ id, name, key, org_id, group}: { id: string; n
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDevice deviceId={id} org_id={org_id} name={name} keys={key} group={group} close={close} isOpen={isOpen} />
+        <UpdateDevice deviceId={id} org_id={org_id} name={name} keyDevice={key} group={group} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )

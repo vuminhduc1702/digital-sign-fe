@@ -19,7 +19,7 @@ import { useGetGroups } from '../../api/groupAPI'
 type UpdateDeviceProps = {
   deviceId: string
   name: string
-  keys: string
+  keyDevice: string
   org_id?: string
   group: {
     label: string | ''
@@ -31,7 +31,7 @@ type UpdateDeviceProps = {
 export function UpdateDevice({
   deviceId,
   name,
-  keys,
+  keyDevice,
   org_id,
   group,
   close,
@@ -117,7 +117,7 @@ export function UpdateDevice({
           mutate({
             data: {
               name: values.name,
-              keys: values.keys,
+              key: values.key,
               org_id: orgValue?.value,
               group_id: groupValue?.value
             },
@@ -126,7 +126,7 @@ export function UpdateDevice({
         }
         schema={deviceSchema}
         options={{
-          defaultValues: { name, keys },
+          defaultValues: { name, key: keyDevice },
         }}
       >
         {({ register, formState, control }) => (
@@ -176,8 +176,8 @@ export function UpdateDevice({
                 t('cloud:org_manage.device_manage.add_device.key') ??
                 "Key"
               }
-              error={formState.errors['keys']}
-              registration={register('keys')}
+              error={formState.errors['key']}
+              registration={register('key')}
             />
           </>
         )}
