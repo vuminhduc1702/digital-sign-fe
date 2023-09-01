@@ -179,6 +179,8 @@
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
           "name": "Tên thiết bị",
+          "key": "Key",
+          "group": "Nhóm",
           "parent": "Trực thuộc tổ chức",
           "device_type": "Mẫu thiết bị",
           "success_create": "Tạo thiết bị thành công",

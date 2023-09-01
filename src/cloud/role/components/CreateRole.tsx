@@ -170,6 +170,7 @@ export function CreateRole() {
                   </div>
                   <div className="space-y-1">
                     <SelectDropdown
+                      isClearable={true}
                       label={
                         t('cloud:role_manage.add_policy.resources') ??
                         'Authorization resources'
@@ -188,6 +189,7 @@ export function CreateRole() {
                   </div>
                   <div className="space-y-1">
                     <SelectDropdown
+                      isClearable={true}
                       label={
                         t('cloud:role_manage.add_policy.actions') ??
                         'Authorization actions'

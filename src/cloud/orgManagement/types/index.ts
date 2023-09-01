@@ -8,7 +8,7 @@ export type Device = {
   token: string
   template_id?: string
   name: string
-  group_id?: string
+  group_id: string
   group_name: string
   org_id: string
   org_name: string

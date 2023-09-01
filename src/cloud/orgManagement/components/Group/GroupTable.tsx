@@ -58,7 +58,7 @@ function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
               onClick={() =>
                 navigate(
                   `${PATHS.GROUP_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : id
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
