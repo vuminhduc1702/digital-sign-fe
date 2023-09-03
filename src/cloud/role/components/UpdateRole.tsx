@@ -142,6 +142,7 @@ export function UpdateRole({
                     {formState?.errors?.policies?.[index]?.policy_name?.message}
                   </p>
                   <SelectDropdown
+                    isClearable={true}
                     label={
                       t('cloud:role_manage.add_policy.resources') ??
                       'Authorization resources'
@@ -153,6 +154,7 @@ export function UpdateRole({
                     closeMenuOnSelect={false}
                   />
                   <SelectDropdown
+                    isClearable={true}
                     label={
                       t('cloud:role_manage.add_policy.actions') ??
                       'Authorization actions'

@@ -21,6 +21,7 @@ type FormDrawerProps = {
   children: ReactNode
   size?: DrawerProps['size']
   otherState?: boolean | string
+  resetData?: () => void
   setOtherState?: Dispatch<SetStateAction<any>>
 }
 
@@ -32,6 +33,7 @@ export const FormDrawer = ({
   submitButton,
   size = 'md',
   otherState,
+  resetData,
   setOtherState,
 }: FormDrawerProps) => {
   const { close, open, isOpen } = useDisclosure()
@@ -44,7 +46,10 @@ export const FormDrawer = ({
 
   return (
     <>
-      {cloneElement(triggerButton, { onClick: open })}
+      {cloneElement(triggerButton, { onClick: () => {
+        open(),
+        resetData && resetData()
+      } })}
       <Drawer
         isOpen={isOpen}
         onClose={close}

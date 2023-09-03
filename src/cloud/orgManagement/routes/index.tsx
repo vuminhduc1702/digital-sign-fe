@@ -79,7 +79,7 @@ export const OrgManagementRoutes = [
             children: [{ path: ':orgId' }],
           },
           {
-            path: idURL != null ? ':projectId/:orgId' : ':projectId',
+            path: ':projectId/:orgId',
             children: [
               {
                 path: ':groupId',
@@ -116,7 +116,7 @@ export const OrgManagementRoutes = [
             children: [{ path: ':orgId' }],
           },
           {
-            path: idURL != null ? ':projectId/:orgId' : ':projectId',
+            path: ':projectId/:orgId',
             children: [
               {
                 path: ':deviceId',
@@ -128,29 +128,6 @@ export const OrgManagementRoutes = [
               },
             ],
           },
-          // {
-          //   path: ':projectId',
-          //   element: (
-          //     <ErrorBoundary FallbackComponent={ErrorFallback}>
-          //       <DeviceManage />
-          //     </ErrorBoundary>
-          //   ),
-          //   children: [
-          //     {
-          //       path: ':orgId',
-          //       children: [
-          //         {
-          //           path: ':deviceId',
-          //           element: (
-          //             <ErrorBoundary FallbackComponent={ErrorFallback}>
-          //               <DeviceDetail />
-          //             </ErrorBoundary>
-          //           ),
-          //         },
-          //       ],
-          //     },
-          //   ],
-          // },
         ],
       },
       {

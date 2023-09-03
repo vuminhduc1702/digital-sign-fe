@@ -24,8 +24,14 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/cloud/dashboard/components'
 
-function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
+function DeviceTableContextMenu({ id, name, key, org_id, group}: { id: string; name: string, key: string, org_id: string , group: {label: string, value: string} }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -63,7 +69,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
               onClick={() =>
                 navigate(
                   `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : id
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
@@ -135,7 +141,7 @@ function DeviceTableContextMenu({ id, name }: { id: string; name: string }) {
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDevice deviceId={id} name={name} close={close} isOpen={isOpen} />
+        <UpdateDevice deviceId={id} org_id={org_id} name={name} keyDevice={key} group={group} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )
@@ -183,12 +189,39 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      // columnHelper.display({
+      //   id: 'orgName',
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
+      //   ),
+      //   cell: info => info.row.original.org_name || t('table:no_in_org'),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.display({
-        id: 'orgName',
+        id: 'key',
         header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.key')}</span>
         ),
-        cell: info => info.row.original.org_name || t('table:no_in_org'),
+        cell: info => {
+          const { key } = info.row.original
+          const keyTrigger = key?.slice(0, 15) + '...'
+          return (
+            <>
+              {key ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{keyTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{key}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {
@@ -202,8 +235,12 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id } = info.row.original
-          return DeviceTableContextMenu({ name, id })
+          const { name, id, key, org_id, group_id, group_name } = info.row.original
+          const group = {
+            label: group_name,
+            value: group_id
+          }
+          return DeviceTableContextMenu({ name, id, key, org_id, group })
         },
         header: () => null,
         footer: info => info.column.id,

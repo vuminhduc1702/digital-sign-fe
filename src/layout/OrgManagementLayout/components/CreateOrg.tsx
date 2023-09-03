@@ -98,6 +98,7 @@ export function CreateOrg() {
             />
             <div className="space-y-1">
               <SelectDropdown
+                isClearable={true}
                 label={t('cloud:org_manage.device_manage.add_device.parent')}
                 name="org_id"
                 control={control}
