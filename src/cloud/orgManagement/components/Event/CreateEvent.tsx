@@ -599,6 +599,7 @@ export function CreateEvent() {
                       <div className="flex justify-between gap-x-3">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t(
                               'cloud:org_manage.event_manage.add_event.action.action_type.title',
                             )}

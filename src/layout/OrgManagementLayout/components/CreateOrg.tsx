@@ -7,6 +7,7 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
+  SelectOption,
   TextAreaField,
 } from '~/components/Form'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
@@ -23,10 +24,11 @@ import { useDefaultCombobox } from '~/utils/hooks.ts'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useState } from 'react'
 
 export const orgSchema = z.object({
   name: nameSchema,
-  org_id: selectOptionSchema(),
+  org_id: z.string(),
   description: descSchema,
 })
 
@@ -36,6 +38,11 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
+  const [selectedOrg, setSelectedOrg] = useState('')
+  const [optionOrg, setOptionOrg] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -79,9 +86,7 @@ export function CreateOrg() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: (
-                values.org_id as unknown as { value: string; label: string }
-              ).value,
+              org_id: selectedOrg,
               name: values.name,
               description: values.description,
             },
@@ -89,7 +94,7 @@ export function CreateOrg() {
         }}
         schema={orgSchema}
       >
-        {({ register, formState, control }) => (
+        {({ register, formState, control, setValue }) => (
           <>
             <InputField
               label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
@@ -108,6 +113,12 @@ export function CreateOrg() {
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]
                 }
+                onChange={e => {
+                  setSelectedOrg(e?.value)
+                  setOptionOrg(e)
+                  setValue('org_id', e?.value)
+                }}
+                value={optionOrg}
               />
               <p className="text-body-sm text-primary-400">
                 {formState?.errors?.org_id?.message}

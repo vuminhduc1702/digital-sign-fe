@@ -468,9 +468,9 @@ export function CreateAdapter() {
                               'cloud:custom_protocol.thing.choose',
                             )}
                             onChange={e => {
-                              setSelectedThingId(e.value)
+                              setSelectedThingId(e?.value)
                               setOptionThingId(e)
-                              setValue('thing_id', e.value)
+                              setValue('thing_id', e?.value)
                             }}
                             value={optionThingId}
                           // defaultValue={defaultThingValues}
@@ -667,7 +667,7 @@ export function CreateAdapter() {
                             )}
                             onChange={e => {
                               setOptionService(e)
-                              setValue('handle_service', e.value)
+                              setValue('handle_service', e?.value)
                             }}
                             value={optionThingService}
                           />
