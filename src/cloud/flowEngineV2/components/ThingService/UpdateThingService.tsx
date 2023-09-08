@@ -33,6 +33,7 @@ import {
   type CreateServiceForm,
   type dataRun,
 } from './CreateThingService'
+import { ThingEventServices } from './ThingEventService'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -187,8 +188,9 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                   {({ register, formState }, { fields, append, remove }) => {
                     return (
                       <div
-                        className={`grid grow grid-cols-1 gap-x-4 ${fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
-                          }`}
+                        className={`grid grow grid-cols-1 gap-x-4 ${
+                          fullScreen ? 'md:grid-cols-1' : ' md:grid-cols-3'
+                        }`}
                       >
                         <div
                           className={
@@ -450,7 +452,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                   'flex grow flex-col bg-white focus:outline-none',
                 )}
               >
-                <div className="flex grow flex-col px-9 py-3 shadow-lg"></div>
+                <ThingEventServices serviceName={thingServiceData?.data?.name || ''}/>
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>

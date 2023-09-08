@@ -46,7 +46,7 @@ export function CreateGroup() {
     exact: false,
   })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations || [],
+    orgListCache?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
@@ -120,6 +120,7 @@ export function CreateGroup() {
             />
             <div className="space-y-1">
               <SelectDropdown
+                isClearable={true}
                 label={t('cloud:org_manage.device_manage.add_device.parent')}
                 name="org_id"
                 control={control}

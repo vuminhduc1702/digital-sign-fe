@@ -26,7 +26,7 @@ export function getVNDateFormat({ date, config }: DateFormat) {
 }
 
 export function flattenData<T extends Record<K, any>, K extends string>(
-  arr: T[],
+  arr: T[] = [],
   propertyKeys: K[],
   subArr?: keyof T,
 ): { acc: Array<Record<K, any>>; extractedPropertyKeys: K[] } {

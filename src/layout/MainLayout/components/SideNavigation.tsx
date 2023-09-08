@@ -117,14 +117,14 @@ function SideNavigation() {
             />
             <div>{t('sidebar:cloud.title')}</div>
           </AccordionTrigger>
-          <NavLink to={`${PATHS.ORG_MANAGE}/${projectId}`}>
+          <NavLink to={`${PATHS.ORG}`}>
             <AccordionContent>
               {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.THING_TEMPLATE}/${projectId}`}>
             <AccordionContent>
-            {t('sidebar:cloud.flow_engine_v2')}
+              {t('sidebar:cloud.flow_engine_v2')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DEVICE_TEMPLATE}/${projectId}`}>

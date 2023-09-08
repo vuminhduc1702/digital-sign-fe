@@ -33,7 +33,7 @@ import {
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
 
-import { nameSchema, nameSchemaRegex, selectOptionSchema } from '~/utils/schemaValidation'
+import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
 import { inputService, type EntityThingList } from '../types'
 import { type BasePagination } from '~/types'
 
@@ -45,8 +45,8 @@ export const adapterSchema = z
     name: nameSchema,
     project_id: z.string().optional(),
     content_type: z.enum(['json', 'hex', 'text'] as const),
-    thing_id: selectOptionSchema(),
-    handle_service: selectOptionSchema(),
+    thing_id: z.string(),
+    handle_service: z.string(),
   })
   .and(
     z.discriminatedUnion('protocol', [
@@ -186,18 +186,21 @@ export function CreateAdapter() {
     isSuccess: isSuccessService,
   } = useCreateServiceThing()
 
-  const [selectedThing, setSelectedThing] = useState<SelectOption>()
+  const [selectedThingId, setSelectedThingId] = useState('')
   const { data: serviceData } = useGetServiceThings({
-    thingId: (selectedThing?.value as string) ?? '',
-    config: { enabled: (!!selectedThing && selectedThing?.value !==''), suspense: false },
+    thingId: selectedThingId,
+    config: {
+      enabled: !!selectedThingId,
+      suspense: false,
+    },
   })
 
   useEffect(() => {
-    if (selectedThing != null) {
-      setSelectedThing(undefined)
+    if (selectedThingId != "") {
+      setSelectedThingId('')
     }
   }, [])
-  
+
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -221,6 +224,15 @@ export function CreateAdapter() {
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
+
+  const [optionThingId, setOptionThingId] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
+  const [optionThingService, setOptionService] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
 
   return (
     <FormDrawer
@@ -261,8 +273,8 @@ export function CreateAdapter() {
                 name: values.name,
                 protocol: values.protocol,
                 content_type: values.content_type,
-                thing_id: values.thing_id.value,
-                handle_service: values.handle_service.value,
+                thing_id: values.thing_id,
+                handle_service: values.handle_service,
                 host: values.host,
                 port: values.port,
                 password: values.password,
@@ -276,15 +288,15 @@ export function CreateAdapter() {
                 name: values.name,
                 protocol: values.protocol,
                 content_type: values.content_type,
-                thing_id: values.thing_id.value,
-                handle_service: values.handle_service.value,
+                thing_id: values.thing_id,
+                handle_service: values.handle_service,
               },
             })
           }
         }}
         schema={adapterSchema}
       >
-        {({ register, formState, control, watch }) => {
+        {({ register, formState, control, watch, setValue }) => {
           // console.log('zod adapter errors: ', formState.errors)
           return (
             <>
@@ -429,6 +441,7 @@ export function CreateAdapter() {
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.thing.id')}
                             name="thing_id"
                             control={control}
@@ -436,11 +449,11 @@ export function CreateAdapter() {
                               thingData
                                 ? thingSelectData
                                 : [
-                                    {
-                                      label: t('loading:entity_thing'),
-                                      value: '',
-                                    },
-                                  ]
+                                  {
+                                    label: t('loading:entity_thing'),
+                                    value: '',
+                                  },
+                                ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -451,16 +464,16 @@ export function CreateAdapter() {
                                 return
                               } else refetchThingData()
                             }}
-                            onMenuClose={() => {
-                              const selectedThingWatch = watch(
-                                'thing_id',
-                              ) as SelectOption
-                              setSelectedThing(selectedThingWatch)
-                            }}
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
-                            // defaultValue={defaultThingValues}
+                            onChange={e => {
+                              setSelectedThingId(e.value)
+                              setOptionThingId(e)
+                              setValue('thing_id', e.value)
+                            }}
+                            value={optionThingId}
+                          // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -553,7 +566,7 @@ export function CreateAdapter() {
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                    thingType === 'template' ? (
+                                      thingType === 'template' ? (
                                       <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -622,6 +635,7 @@ export function CreateAdapter() {
                       <div className="flex grow flex-col px-9 py-3 shadow-lg">
                         <div className="space-y-1">
                           <SelectDropdown
+                            isClearable={true}
                             label={t('cloud:custom_protocol.service.title')}
                             inputId="handleServiceForm"
                             name="handle_service"
@@ -630,13 +644,13 @@ export function CreateAdapter() {
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                ? [
+                                  ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                : [
+                                  : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
@@ -651,6 +665,11 @@ export function CreateAdapter() {
                             placeholder={t(
                               'cloud:custom_protocol.service.choose',
                             )}
+                            onChange={e => {
+                              setOptionService(e)
+                              setValue('handle_service', e.value)
+                            }}
+                            value={optionThingService}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.handle_service?.message}
@@ -676,7 +695,7 @@ export function CreateAdapter() {
                                     input: inputService,
                                     code: codeInput,
                                   },
-                                  thingId: selectedThing?.value as string,
+                                  thingId: selectedThingId,
                                 })
                               }}
                               schema={serviceThingSchema}
@@ -788,7 +807,7 @@ export function CreateAdapter() {
                               className="mt-3 w-full"
                               variant="primary"
                               size="square"
-                              disabled={!selectedThing?.value}
+                              disabled={!selectedThingId}
                             >
                               {t('cloud:custom_protocol.service.create')}
                             </Button>

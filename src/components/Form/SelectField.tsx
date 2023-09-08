@@ -14,7 +14,8 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   options: SelectOption[]
   className?: string
   placeholder?: string
-  registration: Partial<UseFormRegisterReturn>
+  registration?: Partial<UseFormRegisterReturn>
+  value?: string
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
@@ -25,6 +26,7 @@ export const SelectField = ({
   className,
   registration,
   placeholder,
+  value,
   ...props
 }: SelectFieldProps) => {
   return (
@@ -32,6 +34,7 @@ export const SelectField = ({
       <select
         placeholder={placeholder}
         name="location"
+        value={value}
         className={clsx(
           'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
           className,

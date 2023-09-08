@@ -20,7 +20,7 @@ export function ComboBoxSelectDashboard({
   const { data: dashboardData } = useGetDashboards({ projectId })
 
   const { acc: dashboardFlattenData, extractedPropertyKeys } = flattenData(
-    dashboardData?.dashboard || [],
+    dashboardData?.dashboard,
     ['id', 'title', 'name', 'tenant_id', 'created_time', 'configuration'],
   )
 

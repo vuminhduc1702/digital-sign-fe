@@ -18,7 +18,7 @@ export function ComboBoxSelectEvent({
   const [query, setQuery] = useState('')
 
   const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
-    data?.events || [],
+    data?.events,
     ['id', 'name', 'group_name', 'onClick', 'status'],
   )
 

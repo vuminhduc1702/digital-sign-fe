@@ -10,12 +10,14 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { type SelectOption } from './SelectField'
 
 export type ControllerPassThroughProps<TFormValues extends FieldValues> = {
-  name?: Path<TFormValues>
+  name: Path<TFormValues>
   control?: Control<TFormValues, any>
 }
 
 type SelectProps<TFormValues extends FieldValues> = {
   options: SelectOption[]
+  onChange?: (e: any) => void
+  value?: PropsValue<SelectOption>
   closeMenuOnSelect?: boolean
   isMulti?: boolean
   onMenuClose?: () => void
@@ -25,6 +27,7 @@ type SelectProps<TFormValues extends FieldValues> = {
   defaultValue?: PropsValue<SelectOption> | undefined
   placeholder?: string
   inputId?: string
+  isClearable: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 
@@ -35,6 +38,7 @@ export function SelectDropdown<TFormValues extends FieldValues>({
   label,
   error,
   inputId,
+  isClearable,
   ...props
 }: SelectProps<TFormValues>) {
   return (
@@ -46,8 +50,8 @@ export function SelectDropdown<TFormValues extends FieldValues>({
           return (
             <Select
               {...field}
-              isClearable
               isSearchable
+              isClearable={isClearable}
               options={options}
               {...props}
             />

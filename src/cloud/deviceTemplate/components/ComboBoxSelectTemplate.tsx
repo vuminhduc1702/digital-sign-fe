@@ -21,7 +21,7 @@ export function ComboBoxSelectTemplate({
   const { data } = useGetTemplates({ projectId })
 
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
-    data?.templates || [],
+    data?.templates,
     [
       'id',
       'name',

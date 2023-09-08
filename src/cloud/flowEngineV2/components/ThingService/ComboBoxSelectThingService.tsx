@@ -21,7 +21,7 @@ export function ComboBoxSelectThingService({
   const [query, setQuery] = useState('')
 
   const { acc: thingServiceFlattenData, extractedPropertyKeys } = flattenData(
-    data || [],
+    data,
     ['id', 'name', 'create_ts', 'description'],
   )
 

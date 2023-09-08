@@ -7,7 +7,7 @@
       "module": "Module"
     },
     "cloud": {
-      "title": "Đám mây",
+      "title": "Cloud",
       "org_management": "Quản lý tổ chức",
       "flow_engine_v2": "Quản lý nghiệp vụ",
       "device_template": "Mẫu thiết bị",
@@ -168,6 +168,7 @@
           "group": "Nhóm",
           "device_type": "Mẫu thiết bị",
           "org_name": "Tổ chức",
+          "key": "Key",
           "created_at": "Ngày tạo",
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
@@ -178,6 +179,8 @@
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
           "name": "Tên thiết bị",
+          "key": "Key",
+          "group": "Nhóm",
           "parent": "Trực thuộc tổ chức",
           "device_type": "Mẫu thiết bị",
           "success_create": "Tạo thiết bị thành công",
@@ -332,7 +335,7 @@
         "f32": "Float 32",
         "f64": "Float 64",
         "bool": "Boolean",
-        "time": "Time",
+        "time": "Thời gian",
         "bin": "Binary",
         "description": "Mô tả",
         "code": "Code",
@@ -341,7 +344,8 @@
         "delete": "Xóa Service",
         "edit": " Sửa Service",
         "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?",
-        "note": "Ghi chú"
+        "note": "Ghi chú",
+        "status": "Trạng thái"
       },
       "thing": {
         "title": "Thing",
@@ -448,6 +452,7 @@
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
     "no_service": "Không có Service. Vui lòng tạo service.",
+    "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",
     "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
     "view_detail": "Xem chi tiết",

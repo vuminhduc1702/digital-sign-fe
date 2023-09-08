@@ -21,7 +21,7 @@ export function ComboBoxSelectRole({
   const { data } = useGetRoles({ projectId })
 
   const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
-    data?.roles || [],
+    data?.roles,
     ['id', 'name', 'policies'],
   )
 

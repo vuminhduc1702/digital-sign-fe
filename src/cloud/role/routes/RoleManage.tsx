@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { Suspense } from 'react'
+import { Suspense, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
@@ -11,6 +11,7 @@ import storage from '~/utils/storage'
 
 export function RoleManage() {
   const { t } = useTranslation()
+  const ref = useRef(null)
 
   const { roleId } = useParams()
 
@@ -24,7 +25,7 @@ export function RoleManage() {
         </div>
 
         {projectId && roleId ? (
-          <div className="flex flex-col gap-2 md:col-span-2">
+          <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
             <Suspense
               fallback={
                 <div className="flex grow items-center justify-center md:col-span-2">
@@ -40,7 +41,7 @@ export function RoleManage() {
               />
               <div className="flex grow flex-col px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
-                  <ExportTable />
+                <ExportTable refComponent={ref} />
                 </div>
                 <PolicyTable />
               </div>
@@ -51,5 +52,3 @@ export function RoleManage() {
     </ContentLayout>
   )
 }
-
-;<a></a>

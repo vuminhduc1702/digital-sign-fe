@@ -28,8 +28,17 @@ export function ComboBoxSelectThing<TFormValues extends FieldValues>({
   const [query, setQuery] = useState('')
 
   const { acc: thingFlattenData, extractedPropertyKeys } = flattenData(
-    data?.list || [],
-    ['id', 'name', 'type', 'project_id', 'template_name', 'create_ts', 'description', 'total_service'],
+    data?.list,
+    [
+      'id',
+      'name',
+      'type',
+      'project_id',
+      'template_name',
+      'create_ts',
+      'description',
+      'total_service',
+    ],
   )
 
   const filteredData = filteredComboboxData(
