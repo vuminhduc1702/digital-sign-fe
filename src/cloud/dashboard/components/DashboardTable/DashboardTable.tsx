@@ -15,7 +15,8 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
-import { DashboardDetail } from '../../routes/DashboardDetail'
+import { Link } from '~/components/Link'
+import { PATHS } from '~/routes/PATHS'
 
 function DashboardTableContextMenu({
   projectId,
@@ -150,8 +151,19 @@ export function DashboardTable({
             header: () => (
               <span>{t('cloud:dashboard.table.name')}</span>
             ),
-            cell: info => info.getValue(),
-            footer: info => info.column.id,
+            cell: (info) => (<Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>{info.getValue()}</Link>),
+            footer: info => info.column.id
+        }),
+        columnHelper.display({
+          id: 'description',
+          cell: info => {
+            const { configuration } = info.row.original
+            return <span>{configuration.description}</span>
+          },
+          header: () => (
+            <span>{t('cloud:dashboard.table.configuration.description')}</span>
+          ),
+          footer: info => info.column.id,
         }),
         columnHelper.accessor('created_time', {
             header: () => (
