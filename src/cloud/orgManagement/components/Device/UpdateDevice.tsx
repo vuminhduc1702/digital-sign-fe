@@ -3,18 +3,25 @@ import { useEffect, useState } from 'react'
 
 import { type UpdateDeviceDTO, useUpdateDevice } from '../../api/deviceAPI'
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectDropdown, SelectOption } from '~/components/Form'
+import {
+  Form,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { deviceSchema } from './CreateDevice'
-
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { type OrgList } from '~/layout/MainLayout/types'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import { useParams } from 'react-router-dom'
 import storage from '~/utils/storage'
 import { useGetGroups } from '../../api/groupAPI'
+import { useDefaultCombobox } from '~/utils/hooks'
+
+import { type OrgList } from '~/layout/MainLayout/types'
+
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -55,12 +62,12 @@ export function UpdateDevice({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const { orgId } = useParams()
   const { id: projectId } = storage.getProject()
-  const {
-    data: groupData,
-  } = useGetGroups({
+  const { data: groupData } = useGetGroups({
     orgId,
     projectId,
     offset,
@@ -76,10 +83,11 @@ export function UpdateDevice({
 
   useEffect(() => {
     const dataFilter = orgFlattenData.filter(item => item.id === org_id)
-    dataFilter.length && setOrgValue({
-      label: dataFilter[0]?.name,
-      value: dataFilter[0]?.id
-    })
+    dataFilter.length &&
+      setOrgValue({
+        label: dataFilter[0]?.name,
+        value: dataFilter[0]?.id,
+      })
   }, [org_id])
 
   return (
@@ -119,7 +127,7 @@ export function UpdateDevice({
               name: values.name,
               key: values.key,
               org_id: orgValue?.value,
-              group_id: groupValue?.value
+              group_id: groupValue?.value,
             },
             deviceId,
           })
@@ -146,9 +154,9 @@ export function UpdateDevice({
                 name="org_id"
                 control={control}
                 value={orgValue}
-                onChange={(e) => setOrgValue(e)}
+                onChange={e => setOrgValue(e)}
                 options={
-                  orgFlattenData?.map(org => ({
+                  defaultComboboxOrgData?.map(org => ({
                     label: org?.name,
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]
@@ -162,7 +170,7 @@ export function UpdateDevice({
                 isClearable={false}
                 control={control}
                 value={groupValue}
-                onChange={(e) => setGroupValue(e)}
+                onChange={e => setGroupValue(e)}
                 options={
                   groupData?.groups?.map(groups => ({
                     label: groups?.name,
@@ -173,8 +181,7 @@ export function UpdateDevice({
             </div>
             <InputField
               label={
-                t('cloud:org_manage.device_manage.add_device.key') ??
-                "Key"
+                t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'
               }
               error={formState.errors['key']}
               registration={register('key')}

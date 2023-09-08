@@ -125,7 +125,7 @@ export function CreateGroup() {
                 name="org_id"
                 control={control}
                 options={
-                  orgFlattenData?.map(org => ({
+                  orgSelectOptions?.map(org => ({
                     label: org?.name,
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]

@@ -2,8 +2,14 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField, SelectDropdown, SelectOption } from '~/components/Form'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import {
+  Form,
+  FormDrawer,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
+import { nameSchema } from '~/utils/schemaValidation'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
@@ -14,14 +20,13 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { type DeviceList } from '../../types'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useGetGroups } from '../../api/groupAPI'
 import { useParams } from 'react-router-dom'
 
 export const deviceSchema = z.object({
   name: nameSchema,
-  key: z.string()
+  key: z.string(),
 })
 
 export function CreateDevice() {
@@ -43,17 +48,15 @@ export function CreateDevice() {
   const clearData = () => {
     setOrgValue({
       label: '',
-      value: ''
+      value: '',
     })
     setGroupValue({
       label: '',
-      value: ''
+      value: '',
     })
   }
 
-  const {
-    data: groupData,
-  } = useGetGroups({
+  const { data: groupData } = useGetGroups({
     orgId,
     projectId,
     offset,
@@ -107,10 +110,9 @@ export function CreateDevice() {
               org_id: orgValue?.value,
               name: values.name,
               key: values.key,
-              group_id: groupValue?.value
+              group_id: groupValue?.value,
             },
           })
-
         }}
         schema={deviceSchema}
       >
@@ -130,10 +132,10 @@ export function CreateDevice() {
                   name="org_id"
                   isClearable={false}
                   value={orgValue}
-                  onChange={(e) => setOrgValue(e)}
+                  onChange={e => setOrgValue(e)}
                   control={control}
                   options={
-                    orgFlattenData?.map(org => ({
+                    orgSelectOptions?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]
@@ -150,7 +152,7 @@ export function CreateDevice() {
                   name="group_id"
                   control={control}
                   value={groupValue}
-                  onChange={(e) => setGroupValue(e)}
+                  onChange={e => setGroupValue(e)}
                   options={
                     groupData?.groups?.map(groups => ({
                       label: groups?.name,

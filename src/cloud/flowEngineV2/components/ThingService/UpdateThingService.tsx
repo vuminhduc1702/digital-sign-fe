@@ -452,7 +452,9 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                   'flex grow flex-col bg-white focus:outline-none',
                 )}
               >
-                <ThingEventServices serviceName={thingServiceData?.data?.name || ''}/>
+                <ThingEventServices
+                  serviceName={thingServiceData?.data?.name || ''}
+                />
               </Tab.Panel>
             </Tab.Panels>
           </Tab.Group>
