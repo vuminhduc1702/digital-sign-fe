@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
@@ -7,14 +8,11 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
+  type SelectOption,
   TextAreaField,
 } from '~/components/Form'
 import { type CreateOrgDTO, useCreateOrg } from '../api'
-import {
-  descSchema,
-  nameSchema,
-  selectOptionSchema,
-} from '~/utils/schemaValidation'
+import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { type OrgList } from '~/layout/MainLayout/types'
 import { queryClient } from '~/lib/react-query.ts'
@@ -26,7 +24,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const orgSchema = z.object({
   name: nameSchema,
-  org_id: selectOptionSchema(),
+  org_id: z.string(),
   description: descSchema,
 })
 
@@ -36,6 +34,10 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
+  const [optionOrg, setOptionOrg] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -48,9 +50,17 @@ export function CreateOrg() {
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
+  const clearData = () => {
+    setOptionOrg({
+      label: '',
+      value: '',
+    })
+  }
+
   return (
     <FormDrawer
       isDone={isSuccess}
+      resetData={clearData}
       triggerButton={
         <Button
           className="rounded-md"
@@ -79,9 +89,7 @@ export function CreateOrg() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: (
-                values.org_id as unknown as { value: string; label: string }
-              ).value,
+              org_id: values.org_id,
               name: values.name,
               description: values.description,
             },
@@ -89,39 +97,49 @@ export function CreateOrg() {
         }}
         schema={orgSchema}
       >
-        {({ register, formState, control }) => (
-          <>
-            <InputField
-              label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgSelectOptions?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
-                }
+        {({ register, formState, control, setValue }) => {
+          console.log('zod errors: ', formState.errors)
+          return (
+            <>
+              <InputField
+                label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
+                error={formState.errors['name']}
+                registration={register('name')}
               />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-            <TextAreaField
-              label={
-                t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
-              }
-              error={formState.errors['description']}
-              registration={register('description')}
-            />
-          </>
-        )}
+              <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={
+                    orgSelectOptions?.map(org => ({
+                      label: org?.name,
+                      value: org?.id,
+                    })) || [{ label: t('loading:org'), value: '' }]
+                  }
+                  onChange={e => {
+                    setOptionOrg(e)
+                    setValue('org_id', e?.value)
+                  }}
+                  value={optionOrg}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.org_id?.message === 'Required'
+                    ? t('cloud:org_manage.org_manage.add_org.choose_org')
+                    : formState?.errors?.org_id?.message}
+                </p>
+              </div>
+              <TextAreaField
+                label={
+                  t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
+                }
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          )
+        }}
       </Form>
     </FormDrawer>
   )

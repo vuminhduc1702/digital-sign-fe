@@ -96,7 +96,8 @@
           "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb",
           "success_create": "Tạo tổ chức thành công",
           "success_update": "Sửa tổ chức thành công",
-          "success_delete": "Xoá tổ chức thành công"
+          "success_delete": "Xoá tổ chức thành công",
+          "choose_org": "Vui lòng chọn tổ chức"
         },
         "add_attr": {
           "title": "Tạo mới thuộc tính",

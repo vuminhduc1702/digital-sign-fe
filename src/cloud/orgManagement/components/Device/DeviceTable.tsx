@@ -31,7 +31,19 @@ import {
   TooltipTrigger,
 } from '~/cloud/dashboard/components'
 
-function DeviceTableContextMenu({ id, name, key, org_id, group}: { id: string; name: string, key: string, org_id: string , group: {label: string, value: string} }) {
+function DeviceTableContextMenu({
+  id,
+  name,
+  key,
+  org_id,
+  group,
+}: {
+  id: string
+  name: string
+  key: string
+  org_id: string
+  group: { label: string; value: string }
+}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
@@ -141,7 +153,15 @@ function DeviceTableContextMenu({ id, name, key, org_id, group}: { id: string; n
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDevice deviceId={id} org_id={org_id} name={name} keyDevice={key} group={group} close={close} isOpen={isOpen} />
+        <UpdateDevice
+          deviceId={id}
+          org_id={org_id}
+          name={name}
+          keyDevice={key}
+          group={group}
+          close={close}
+          isOpen={isOpen}
+        />
       ) : null}
     </>
   )
@@ -235,10 +255,11 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id, key, org_id, group_id, group_name } = info.row.original
+          const { name, id, key, org_id, group_id, group_name } =
+            info.row.original
           const group = {
             label: group_name,
-            value: group_id
+            value: group_id,
           }
           return DeviceTableContextMenu({ name, id, key, org_id, group })
         },

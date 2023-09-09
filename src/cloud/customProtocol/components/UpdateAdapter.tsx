@@ -59,8 +59,8 @@ export const updateAdapterSchema = z
     name: nameSchema,
     project_id: z.string().optional(),
     content_type: z.enum(['json', 'hex', 'text'] as const),
-    thing_id: selectOptionSchema(),
-    handle_service: selectOptionSchema(),
+    thing_id: z.string(),
+    handle_service: z.string(),
   })
   .and(
     z.discriminatedUnion('protocol', [
@@ -108,6 +108,11 @@ export function UpdateAdapter({
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [protocolType, setProtocolType] = useState(protocol)
   const [thingType, setThingType] = useState('thing')
+  const [selectedThingId, setSelectedThingId] = useState(thing_id)
+  const [optionThingService, setOptionService] = useState<SelectOption>({
+    label: handle_service,
+    value: handle_service,
+  })
 
   const {
     data: dataCreateThing,
@@ -131,9 +136,15 @@ export function UpdateAdapter({
   } = useCreateServiceThing()
 
   const [selectedThing, setSelectedThing] = useState<SelectOption>()
+  const [optionThingId, setOptionThingId] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
+
+  console.log(thingSelectData, thing_id, 'thingSelectData')
   const { data: serviceData } = useGetServiceThings({
-    thingId: selectedThing?.value ? (selectedThing?.value as string) : thing_id,
-    config: { enabled: !!selectedThing, suspense: false },
+    thingId: selectedThingId ? selectedThingId : thing_id,
+    config: { enabled: !!selectedThingId, suspense: false },
   })
   useEffect(() => {
     if (selectedThing != null) {
@@ -198,8 +209,8 @@ export function UpdateAdapter({
                 project_id: projectId,
                 protocol: values.protocol,
                 content_type: values.content_type,
-                thing_id: values.thing_id.value,
-                handle_service: values.handle_service.value,
+                thing_id: selectedThingId,
+                handle_service: values.handle_service,
                 host: values.host,
                 port: values.port,
                 password: values.password,
@@ -214,8 +225,8 @@ export function UpdateAdapter({
                 project_id: projectId,
                 protocol: values.protocol,
                 content_type: values.content_type,
-                thing_id: values.thing_id.value,
-                handle_service: values.handle_service.value,
+                thing_id: selectedThingId,
+                handle_service: values.handle_service,
               },
               id,
             })
@@ -226,19 +237,12 @@ export function UpdateAdapter({
           defaultValues: {
             name,
             content_type,
-            handle_service: {
-              label: handle_service,
-              value: handle_service,
-            },
+            handle_service: handle_service,
             host,
             password,
             port,
             protocol,
-            thing_id: {
-              label: thingSelectData.find(item => item.value === thing_id)
-                ?.label,
-              value: thing_id,
-            },
+            thing_id: thing_id,
             topic:
               topic !== 'null'
                 ? JSON.parse(topic)
@@ -248,7 +252,7 @@ export function UpdateAdapter({
           },
         }}
       >
-        {({ register, formState, control, watch }) => {
+        {({ register, formState, control, watch, setValue }) => {
           // console.log('zod adapter errors: ', formState.errors)
           setIsCreateAdapterFormUpdated(formState.isDirty)
 
@@ -419,12 +423,18 @@ export function UpdateAdapter({
                                 return
                               } else refetchThingData()
                             }}
-                            onMenuClose={() => {
-                              const selectedThingWatch = watch(
-                                'thing_id',
-                              ) as unknown as SelectOption
-                              setSelectedThing(selectedThingWatch)
+                            // onMenuClose={() => {
+                            //   const selectedThingWatch = watch(
+                            //     'thing_id',
+                            //   ) as unknown as SelectOption
+                            //   setSelectedThing(selectedThingWatch)
+                            // }}
+                            onChange={e => {
+                              setSelectedThingId(e?.value)
+                              setOptionThingId(e)
+                              setValue('thing_id', e?.value)
                             }}
+                            value={optionThingId}
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
@@ -618,6 +628,12 @@ export function UpdateAdapter({
                             placeholder={t(
                               'cloud:custom_protocol.service.choose',
                             )}
+                            onChange={e => {
+                              console.log(e, 'hahaha')
+                              setOptionService(e)
+                              setValue('handle_service', e?.value)
+                            }}
+                            value={optionThingService}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.handle_service?.message}

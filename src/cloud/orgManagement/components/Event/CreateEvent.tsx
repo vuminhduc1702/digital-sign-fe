@@ -243,11 +243,9 @@ export function CreateEvent() {
           mutate({
             data: {
               project_id: projectId,
-              // @ts-ignore
               org_id:
                 (values.org_id as unknown as { value: string; label: string })
                   ?.value || '',
-              // @ts-ignore
               group_id:
                 (
                   values.group_id as unknown as {
@@ -374,199 +372,199 @@ export function CreateEvent() {
               ) : null}
               {!onClickValue
                 ? conditionFields.map((field, index) => {
-                  return (
-                    <section
-                      className="space-y-2"
-                      style={{ marginTop: '10px' }}
-                      key={field.id}
-                    >
-                      <div className="flex justify-between gap-x-3">
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.device',
-                            )}
-                            name={`condition.${index}.device_id`}
-                            control={control}
-                            options={
-                              deviceData
-                                ? deviceSelectData
-                                : [{ label: t('loading:device'), value: '' }]
-                            }
-                            isOptionDisabled={option =>
-                              option.label === t('loading:device')
-                            }
-                            noOptionsMessage={() => t('table:no_device')}
-                            onMenuOpen={() => {
-                              if (deviceListCache?.devices) {
-                                return
-                              } else refetchDeviceData()
-                            }}
-                            onMenuClose={() => {
-                              const deviceId = watch(
-                                'condition.0.device_id.value',
-                              ) as unknown as string
-                              setSelectedDeviceId(deviceId)
-                              if (
-                                (selectedDeviceId == null ||
-                                  selectedDeviceId === '') &&
-                                (attrListCache == null ||
-                                  attrListCache?.length === 0)
-                              ) {
-                                return
-                              } else refetchAttrData()
-                            }}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]?.device_id
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.attr',
-                            )}
-                            name={`condition.${index}.attribute_name`}
-                            options={
-                              attrData
-                                ? attrSelectData
-                                : [{ label: t('loading:attr'), value: '' }]
-                            }
-                            isOptionDisabled={option =>
-                              option.label === t('loading:attr')
-                            }
-                            noOptionsMessage={() => t('table:no_attr')}
-                            control={control}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]
-                                ?.attribute_name?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
-                            )}
-                            name={`condition.${index}.condition_type`}
-                            options={[
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-                                ),
-                                value: 'normal',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-                                ),
-                                value: 'delay',
-                              },
-                            ]}
-                            control={control}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]
-                                ?.condition_type?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.operator.title',
-                            )}
-                            name={`condition.${index}.operator`}
-                            options={[
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-                                ),
-                                value: '>',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-                                ),
-                                value: '<',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.condition.operator.not',
-                                ),
-                                value: '!=',
-                              },
-                            ]}
-                            control={control}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]?.operator
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <InputField
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.condition.threshold',
-                          )}
-                          registration={register(
-                            `condition.${index}.threshold`,
-                          )}
-                          type="number"
-                        />
-                      </div>
-                      <div className="flex justify-end">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
-                          )}
-                          name={`condition.${index}.logical_operator`}
-                          options={[
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
-                              ),
-                              value: 'and',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
-                              ),
-                              value: 'or',
-                            },
-                          ]}
-                          control={control}
-                        />
-                        <Button
-                          type="button"
-                          size="square"
-                          variant="trans"
-                          className="ml-5 mt-3 border-none"
-                          onClick={() => conditionRemove(index)}
-                          startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete condition"
-                              className="h-10 w-10"
+                    return (
+                      <section
+                        className="space-y-2"
+                        style={{ marginTop: '10px' }}
+                        key={field.id}
+                      >
+                        <div className="flex justify-between gap-x-3">
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.condition.device',
+                              )}
+                              name={`condition.${index}.device_id`}
+                              control={control}
+                              options={
+                                deviceData
+                                  ? deviceSelectData
+                                  : [{ label: t('loading:device'), value: '' }]
+                              }
+                              isOptionDisabled={option =>
+                                option.label === t('loading:device')
+                              }
+                              noOptionsMessage={() => t('table:no_device')}
+                              onMenuOpen={() => {
+                                if (deviceListCache?.devices) {
+                                  return
+                                } else refetchDeviceData()
+                              }}
+                              onMenuClose={() => {
+                                const deviceId = watch(
+                                  'condition.0.device_id.value',
+                                ) as unknown as string
+                                setSelectedDeviceId(deviceId)
+                                if (
+                                  (selectedDeviceId == null ||
+                                    selectedDeviceId === '') &&
+                                  (attrListCache == null ||
+                                    attrListCache?.length === 0)
+                                ) {
+                                  return
+                                } else refetchAttrData()
+                              }}
                             />
-                          }
-                        />
-                      </div>
-                    </section>
-                  )
-                })
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.condition?.[index]?.device_id
+                                  ?.message
+                              }
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.condition.attr',
+                              )}
+                              name={`condition.${index}.attribute_name`}
+                              options={
+                                attrData
+                                  ? attrSelectData
+                                  : [{ label: t('loading:attr'), value: '' }]
+                              }
+                              isOptionDisabled={option =>
+                                option.label === t('loading:attr')
+                              }
+                              noOptionsMessage={() => t('table:no_attr')}
+                              control={control}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.condition?.[index]
+                                  ?.attribute_name?.message
+                              }
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
+                              )}
+                              name={`condition.${index}.condition_type`}
+                              options={[
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
+                                  ),
+                                  value: 'normal',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
+                                  ),
+                                  value: 'delay',
+                                },
+                              ]}
+                              control={control}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.condition?.[index]
+                                  ?.condition_type?.message
+                              }
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.condition.operator.title',
+                              )}
+                              name={`condition.${index}.operator`}
+                              options={[
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.condition.operator.gte',
+                                  ),
+                                  value: '>',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.condition.operator.lte',
+                                  ),
+                                  value: '<',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.condition.operator.not',
+                                  ),
+                                  value: '!=',
+                                },
+                              ]}
+                              control={control}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.condition?.[index]?.operator
+                                  ?.message
+                              }
+                            </p>
+                          </div>
+                          <InputField
+                            label={t(
+                              'cloud:org_manage.event_manage.add_event.condition.threshold',
+                            )}
+                            registration={register(
+                              `condition.${index}.threshold`,
+                            )}
+                            type="number"
+                          />
+                        </div>
+                        <div className="flex justify-end">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={t(
+                              'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
+                            )}
+                            name={`condition.${index}.logical_operator`}
+                            options={[
+                              {
+                                label: t(
+                                  'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
+                                ),
+                                value: 'and',
+                              },
+                              {
+                                label: t(
+                                  'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
+                                ),
+                                value: 'or',
+                              },
+                            ]}
+                            control={control}
+                          />
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="trans"
+                            className="ml-5 mt-3 border-none"
+                            onClick={() => conditionRemove(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete condition"
+                                className="h-10 w-10"
+                              />
+                            }
+                          />
+                        </div>
+                      </section>
+                    )
+                  })
                 : null}
 
               {!onClickValue ? (
@@ -590,120 +588,121 @@ export function CreateEvent() {
               ) : null}
               {!onClickValue
                 ? actionFields.map((field, index) => {
-                  return (
-                    <section
-                      className="space-y-2"
-                      style={{ marginTop: '10px' }}
-                      key={field.id}
-                    >
-                      <div className="flex justify-between gap-x-3">
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.action.action_type.title',
-                            )}
-                            name={`action.${index}.action_type`}
-                            options={[
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.sms',
-                                ),
-                                value: 'sms',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.email',
-                                ),
-                                value: 'email',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
-                                ),
-                                value: 'mqtt',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
-                                ),
-                                value: 'fcm',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.event',
-                                ),
-                                value: 'event',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
-                                ),
-                                value: 'eventactive',
-                              },
-                              {
-                                label: t(
-                                  'cloud:org_manage.event_manage.add_event.action.action_type.delay',
-                                ),
-                                value: 'delay',
-                              },
-                            ]}
-                            control={control}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.action?.[index]?.action_type
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <InputField
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.action.receiver',
-                            )}
-                            registration={register(
-                              `action.${index}.receiver`,
-                            )}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.action?.[index]?.receiver
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <InputField
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.action.message',
-                            )}
-                            registration={register(`action.${index}.message`)}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.action?.[index]?.message
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <Button
-                          type="button"
-                          size="square"
-                          variant="trans"
-                          className="border-none"
-                          onClick={() => actionRemove(index)}
-                          startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete action"
-                              className="h-10 w-10"
+                    return (
+                      <section
+                        className="space-y-2"
+                        style={{ marginTop: '10px' }}
+                        key={field.id}
+                      >
+                        <div className="flex justify-between gap-x-3">
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.action.action_type.title',
+                              )}
+                              name={`action.${index}.action_type`}
+                              options={[
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.sms',
+                                  ),
+                                  value: 'sms',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.email',
+                                  ),
+                                  value: 'email',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
+                                  ),
+                                  value: 'mqtt',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
+                                  ),
+                                  value: 'fcm',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.event',
+                                  ),
+                                  value: 'event',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
+                                  ),
+                                  value: 'eventactive',
+                                },
+                                {
+                                  label: t(
+                                    'cloud:org_manage.event_manage.add_event.action.action_type.delay',
+                                  ),
+                                  value: 'delay',
+                                },
+                              ]}
+                              control={control}
                             />
-                          }
-                        />
-                      </div>
-                    </section>
-                  )
-                })
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.action?.[index]?.action_type
+                                  ?.message
+                              }
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <InputField
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.action.receiver',
+                              )}
+                              registration={register(
+                                `action.${index}.receiver`,
+                              )}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.action?.[index]?.receiver
+                                  ?.message
+                              }
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <InputField
+                              label={t(
+                                'cloud:org_manage.event_manage.add_event.action.message',
+                              )}
+                              registration={register(`action.${index}.message`)}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {
+                                formState?.errors?.action?.[index]?.message
+                                  ?.message
+                              }
+                            </p>
+                          </div>
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="trans"
+                            className="border-none"
+                            onClick={() => actionRemove(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete action"
+                                className="h-10 w-10"
+                              />
+                            }
+                          />
+                        </div>
+                      </section>
+                    )
+                  })
                 : null}
             </>
           )

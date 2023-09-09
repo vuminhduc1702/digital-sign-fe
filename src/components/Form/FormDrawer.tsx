@@ -46,10 +46,12 @@ export const FormDrawer = ({
 
   return (
     <>
-      {cloneElement(triggerButton, { onClick: () => {
-        open(),
-        resetData && resetData()
-      } })}
+      {cloneElement(triggerButton, {
+        onClick: () => {
+          open()
+          resetData?.()
+        },
+      })}
       <Drawer
         isOpen={isOpen}
         onClose={close}
