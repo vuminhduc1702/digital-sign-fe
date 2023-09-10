@@ -447,6 +447,18 @@
         "road": "Kiểu đường",
         "show": "Hiển thị",
         "pick_date": "Pick a date"
+      },
+      "detail_dashboard": {
+        "add_item": {
+          "create": "Tạo mới bảng điều khiển",
+          "line_chart": "Biểu đồ đường",
+          "horizontal_bar_chart": "Biểu đồ cột",
+          "pie_chart": "Biểu đồ máy đo",
+          "map": "Bản đồ",
+          "data_table": "Bảng dữ liệu",
+          "switch": "Công tắc",
+          "data_chart": "Dữ liệu"
+        }
       }
     }
   },
