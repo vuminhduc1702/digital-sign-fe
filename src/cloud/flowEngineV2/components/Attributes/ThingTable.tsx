@@ -191,7 +191,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {'Không có data'}
+      {t('table:no_thing')}
     </div>
   )
 }
