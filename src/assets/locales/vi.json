@@ -433,6 +433,20 @@
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
         "success_delete": "Xoá Dashboard thành công"
+      },
+      "config_chart": {
+        "title": "Dữ liệu",
+        "device": "Thiết bị",
+        "attr": "Thuộc tính",
+        "method": "Phương thức",
+        "date": "Thời gian",
+        "color": "Màu sắc",
+        "name": "Tên",
+        "unit": "Đơn vị",
+        "decimal": "Chữ số thập phân",
+        "road": "Kiểu đường",
+        "show": "Hiển thị",
+        "pick_date": "Pick a date"
       }
     }
   },

@@ -16,6 +16,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
 import { DashboardDetail } from '../../routes/DashboardDetail'
+import { CreateConfigChart } from './CreateConfigChart'
 
 function DashboardTableContextMenu({
   projectId,
@@ -108,12 +109,11 @@ function DashboardTableContextMenu({
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDashboard
-          id={id}
-          title={title}
+        <CreateConfigChart
+          type={'chart'}
           close={close}
           isOpen={isOpen}
-          projectId={projectId}
+          handleSubmitChart={(value) => console.log(value)}
         />
       ) : null}
     </>
