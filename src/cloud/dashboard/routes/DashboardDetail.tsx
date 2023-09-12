@@ -7,6 +7,7 @@ import TitleBar from "~/components/Head/TitleBar";
 import { ContentLayout } from "~/layout/ContentLayout";
 import { useCreateDashboard } from "../api";
 import { CreateWidget } from "../components/DashboardTable/CreateWidget";
+import GridLayout from "react-grid-layout";
 
 // import { Button } from '~/components/Button'
 // import { Calendar } from '~/components/Calendar'
@@ -233,6 +234,12 @@ export function DashboardDetail() {
   const editMode = true;
 
   const { mutate, isLoading, isSuccess } = useCreateDashboard()
+
+  const layout = [
+    { i: "a", x: 0, y: 0, w: 1, h: 2, static: true },
+    { i: "b", x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
+    { i: "c", x: 4, y: 0, w: 1, h: 2 }
+  ];
   
   return (
     <>
@@ -241,6 +248,7 @@ export function DashboardDetail() {
           <TitleBar title={t('dashboard:title') ?? 'Dashboard'} />
           <div className="flex grow flex-col px-9 py-3 shadow-lg">
             <CreateWidget />
+            
           </div>
         </div>
       </ContentLayout>
