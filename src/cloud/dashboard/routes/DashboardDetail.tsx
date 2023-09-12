@@ -2,18 +2,11 @@
 // import { useTranslation } from 'react-i18next'
 // import { ReadyState } from 'react-use-websocket'
 
-import { PlusIcon } from "@heroicons/react/24/outline";
 import { useTranslation } from "react-i18next";
-import { Button } from "~/components/Button";
-import { FormDrawer } from "~/components/Form";
 import TitleBar from "~/components/Head/TitleBar";
 import { ContentLayout } from "~/layout/ContentLayout";
 import { useCreateDashboard } from "../api";
-
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-
-import { CreateDashboardItem } from "../components/DashboardTable/CreateDashboardItem";
+import { CreateWidget } from "../components/DashboardTable/CreateWidget";
 
 // import { Button } from '~/components/Button'
 // import { Calendar } from '~/components/Calendar'
@@ -246,37 +239,9 @@ export function DashboardDetail() {
       <ContentLayout title={t('sidebar:cloud.dashboard')}>
         <div className="flex grow flex-col">
           <TitleBar title={t('dashboard:title') ?? 'Dashboard'} />
-          {/* <div className="flex items-center gap-x-3">
-            
-          </div> */}
-          {editMode ? (
-            <div className="flex">
-              <Button
-                className="rounded border-none"
-                variant="secondary"
-                size="lg"
-                onClick={close}
-                startIcon={
-                  <img src={btnCancelIcon} alt="Submit" className="h-1 w-1" />
-                }
-              />
-              <Button
-                className="rounded border-none"
-                form="update-dashboard"
-                type="submit"
-                size="lg"
-                isLoading={isLoading}
-                startIcon={
-                  <img src={btnSubmitIcon} alt="Submit" className="h-1 w-1" />
-                }
-              />
-              <CreateDashboardItem />
-            </div>
-          ) : (
-            <>
-
-            </>
-          )}
+          <div className="flex grow flex-col px-9 py-3 shadow-lg">
+            <CreateWidget />
+          </div>
         </div>
       </ContentLayout>
     </>
