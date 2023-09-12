@@ -7,7 +7,6 @@ import TitleBar from "~/components/Head/TitleBar";
 import { ContentLayout } from "~/layout/ContentLayout";
 import { useCreateDashboard } from "../api";
 import { CreateWidget } from "../components/DashboardTable/CreateWidget";
-import GridLayout from "react-grid-layout";
 
 // import { Button } from '~/components/Button'
 // import { Calendar } from '~/components/Calendar'
