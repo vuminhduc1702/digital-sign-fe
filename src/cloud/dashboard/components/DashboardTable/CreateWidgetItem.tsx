@@ -7,6 +7,7 @@ import { FormDialog } from '~/components/FormDialog'
 import storage from '~/utils/storage'
 import { useState } from 'react'
 import { CreateWidgetItemDTO, useCreateWidgetItem } from '../../api/createWidgetItem'
+import { CreateConfigChart } from './CreateConfigChart'
 
 const WidgetType = [
   { id: 'bar', value: 'BAR'},
@@ -32,17 +33,21 @@ export function CreateWidgetItem() {
   
   return (
     <>
-      <FormDialog
-      isDone={isSuccessThing}
-      title={t('cloud:dashboard.detail_dashboard.add_item.create')}
-      body={
-        <Form<CreateWidgetItemDTO['data']>
-          id="create-dashboard-item"
-          className="flex flex-col justify-between"
-          onSubmit={() => {
-            setShowingConfigDialog(true)
-          }}
-        >
+      { showingConfigDialog ? (
+        <div>
+          <CreateConfigChart type={'chart'} close={() => setShowingConfigDialog(false)} isOpen={true} handleSubmitChart={(values) => console.log(values)} />
+        </div>
+      ) : (
+        <div>
+        <FormDialog
+          isDone={isSuccessThing}
+          title={t('cloud:dashboard.detail_dashboard.add_item.create')}
+          body={
+            <Form<CreateWidgetItemDTO['data']>
+              id="create-dashboard-item"
+              className="flex flex-col justify-between"
+              onSubmit={() => {}}
+          >
           {({ register, formState }) => {
             return (
               <>
@@ -55,7 +60,7 @@ export function CreateWidgetItem() {
                         className="bg-secondary-400"
                         variant="secondaryLight"
                         style={{width: '100%'}}
-                        onClick={() => setWidgetChecked('line')}
+                        onClick={() => setShowingConfigDialog(true)}
                       >
                         <span>{t('cloud:dashboard.detail_dashboard.add_item.line_chart')}</span>
                       </Button>
@@ -88,28 +93,30 @@ export function CreateWidgetItem() {
             )
           }}
         </Form>
-      }
-      triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+        }
+        triggerButton={
+          <Button
+            className="rounded-md"
+            variant="trans"
+            size="square"
+            startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+          />
+        }
+        confirmButton={
+          <Button
+            isLoading={isLoadingThing}
+            form="create-entityThing"
+            type="submit"
+            size="md"
+            className="bg-primary-400"
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+        }
         />
-      }
-      confirmButton={
-        <Button
-          isLoading={isLoadingThing}
-          form="create-entityThing"
-          type="submit"
-          size="md"
-          className="bg-primary-400"
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-      />
+        </div>
+      )}
     </>
   )
 }
