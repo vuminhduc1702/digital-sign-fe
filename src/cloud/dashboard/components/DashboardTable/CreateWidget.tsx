@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { useCreateDashboard } from "../../api/createDashboard";
 import { Button } from "~/components/Button/Button";
-import { CreateDashboardItem } from "./CreateDashboardItem";
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg';
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg';
 import btnEditIcon from '~/assets/icons/btn-edit.svg';
 import { useState } from "react";
+import { CreateWidgetItem } from "./CreateWidgetItem";
 
 export function CreateWidget() {
   const { t } = useTranslation()
@@ -39,7 +39,7 @@ export function CreateWidget() {
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
-          <CreateDashboardItem />
+          <CreateWidgetItem />
         </div>
       ) : (
         <div className="flex">
