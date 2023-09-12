@@ -5,9 +5,8 @@ import { Button } from '~/components/Button'
 import { PlusIcon } from '~/components/SVGIcons'
 import { FormDialog } from '~/components/FormDialog'
 import storage from '~/utils/storage'
-import { CreateDashboardItemDTO, useCreateDashboardItem } from '../../api/createDashboardItem'
 import { useState } from 'react'
-import { Checkbox } from '@radix-ui/react-checkbox'
+import { CreateWidgetItemDTO, useCreateWidgetItem } from '../../api/createWidgetItem'
 
 const WidgetType = [
   { id: 'bar', value: 'BAR'},
@@ -18,25 +17,18 @@ const WidgetType = [
   { id: 'table', value: 'TABLE'}
 ]
 
-export function CreateDashboardItem() {
+export function CreateWidgetItem() {
   const { t } = useTranslation()
 
- const [checked, setCheckBoxChecked] = useState(null)
+ const [selectedWidget, setWidgetChecked] = useState('')
+ const [showingConfigDialog, setShowingConfigDialog] = useState(false)
 
   const { id: projectId } = storage.getProject()
 
   const {
     isLoading: isLoadingThing,
     isSuccess: isSuccessThing,
-  } = useCreateDashboardItem()
-
-  // const onSelectWidget = (widgetType: string) => {
-    
-  // }
-
-  // function onChange(i) {
-  //   setCheckBoxChecked((prev) => (i === prev ? null : i))
-  // }
+  } = useCreateWidgetItem()
   
   return (
     <>
@@ -44,10 +36,11 @@ export function CreateDashboardItem() {
       isDone={isSuccessThing}
       title={t('cloud:dashboard.detail_dashboard.add_item.create')}
       body={
-        <Form<CreateDashboardItemDTO['data']>
+        <Form<CreateWidgetItemDTO['data']>
           id="create-dashboard-item"
           className="flex flex-col justify-between"
-          onSubmit={values => {
+          onSubmit={() => {
+            setShowingConfigDialog(true)
           }}
         >
           {({ register, formState }) => {
@@ -62,12 +55,12 @@ export function CreateDashboardItem() {
                         className="bg-secondary-400"
                         variant="secondaryLight"
                         style={{width: '100%'}}
+                        onClick={() => setWidgetChecked('line')}
                       >
                         <span>{t('cloud:dashboard.detail_dashboard.add_item.line_chart')}</span>
-                        <Checkbox></Checkbox>
                       </Button>
                     </div>
-                    <div className="col-4">
+                    {/* <div className="col-4">
                       <Button
                         type="button"
                         size="square"
@@ -88,7 +81,7 @@ export function CreateDashboardItem() {
                       >
                         <span>{t('cloud:dashboard.detail_dashboard.add_item.pie_chart')}</span>
                       </Button>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </>
@@ -116,7 +109,7 @@ export function CreateDashboardItem() {
           }
         />
       }
-    />
+      />
     </>
   )
 }

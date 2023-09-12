@@ -5,22 +5,22 @@ import { MutationConfig, queryClient } from "~/lib/react-query"
 import { useNotificationStore } from "~/stores/notifications"
 import storage from "~/utils/storage"
 
-export type CreateDashboardItemDTO = {
+export type CreateWidgetItemDTO = {
   dashboardId: string,
   data: any
 }
 
-export const createDashboardItem = ({ data, dashboardId }: CreateDashboardItemDTO) => {
+export const createWidgetItem = ({ data, dashboardId }: CreateWidgetItemDTO) => {
   return axios.put(`/api/vtdahsboard/${dashboardId}`, data)
 }
 
-export type UseCreateDashboarditemOptions = {
-  config?: MutationConfig<typeof createDashboardItem>
+export type UseCreateWidgetItemOptions = {
+  config?: MutationConfig<typeof createWidgetItem>
 }
 
-export const useCreateDashboardItem = ({
+export const useCreateWidgetItem = ({
   config,
-}: UseCreateDashboarditemOptions = {}) => {
+}: UseCreateWidgetItemOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -36,6 +36,6 @@ export const useCreateDashboardItem = ({
       })
     },
     ...config,
-    mutationFn: createDashboardItem,
+    mutationFn: createWidgetItem,
   })
 }
