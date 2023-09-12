@@ -21,7 +21,7 @@ const WidgetType = [
 export function CreateDashboardItem() {
   const { t } = useTranslation()
 
-  const [checked, setCheckBoxChecked] = useState(null)
+ const [checked, setCheckBoxChecked] = useState(null)
 
   const { id: projectId } = storage.getProject()
 
