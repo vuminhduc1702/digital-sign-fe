@@ -4,7 +4,6 @@ import 'ace-builds/src-noconflict/mode-javascript'
 import 'ace-builds/src-noconflict/theme-solarized_light'
 
 import { FieldWrapper } from '~/components/Form'
-import { useState } from 'react'
 
 ace.config.set(
   'basePath',
@@ -22,7 +21,12 @@ type CodeEditorProps = {
   setCodeInput: React.Dispatch<React.SetStateAction<string>>
 }
 
-export function CodeEditor({ label, setCodeInput , readOnly, defaultValue }: CodeEditorProps) {
+export function CodeEditor({
+  label,
+  setCodeInput,
+  readOnly,
+  defaultValue,
+}: CodeEditorProps) {
   function onChange(value: string) {
     setCodeInput(value)
   }

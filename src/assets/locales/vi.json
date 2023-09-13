@@ -346,7 +346,9 @@
         "edit": " Sửa Service",
         "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?",
         "note": "Ghi chú",
-        "status": "Trạng thái"
+        "status": "Trạng thái",
+        "run": "Run",
+        "debug": "Debug mode"
       },
       "thing": {
         "title": "Thing",
