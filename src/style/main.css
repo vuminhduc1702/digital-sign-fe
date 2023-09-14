@@ -45,3 +45,8 @@ body {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
   background-color: #F4F5F6;
 }
+
+.react-grid-layout {
+  position: relative;
+  background: #f0f0f0;
+}

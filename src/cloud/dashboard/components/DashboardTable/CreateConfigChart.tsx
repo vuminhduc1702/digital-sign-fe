@@ -28,6 +28,7 @@ import { useCreateAttrChart } from '../../api'
 import { Calendar } from '../Calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
 import { ConfigChartTable } from './ConfigChartTable'
+import { DateRange } from 'react-day-picker'
 
 export const configChartSchema = z.object({
   name: nameSchema,
@@ -72,10 +73,10 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
   const thingId = params.thingId as string
   const cancelButtonRef = useRef(null)
   const [offset, setOffset] = useState(0)
-  // const [dateValue, setDate] = React.useState<DateRange | undefined>({
-  //   from: undefined,
-  //   to: undefined,
-  // })
+  const [dateValue, setDate] = React.useState<DateRange | undefined>({
+    from: undefined,
+    to: undefined,
+  })
   const [color, setColor] = useState('#fff');
   const [dataConfigChart, setDataConfigChart] = useState<
     EntityConfigChart[]
@@ -134,10 +135,10 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
       value: '',
     })
     setColor('#fff')
-    // setDate({
-    //   from: undefined,
-    //   to: undefined,
-    // })
+    setDate({
+      from: undefined,
+      to: undefined,
+    })
   }
 
   return (
@@ -305,7 +306,7 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                         <p className='mb-1'>{t('cloud:dashboard.config_chart.date')}</p>
                         <Popover>
                           <PopoverTrigger asChild>
-                            {/* <Button
+                            <Button
                               id="date"
                               variant="trans"
                               size="square"
@@ -327,17 +328,17 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                               ) : (
                                 <span>{t('cloud:dashboard.config_chart.pick_date')}</span>
                               )}
-                            </Button> */}
+                            </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
-                            {/* <Calendar
+                            <Calendar
                               initialFocus
                               mode="range"
                               defaultMonth={dateValue?.from}
                               selected={dateValue}
                               onSelect={setDate}
                               numberOfMonths={2}
-                            /> */}
+                            />
                           </PopoverContent>
                         </Popover>
                       </div>
