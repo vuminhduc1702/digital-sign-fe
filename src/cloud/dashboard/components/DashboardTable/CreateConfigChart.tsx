@@ -178,10 +178,10 @@ export function CreateConfigChart({
       value: '',
     })
     setColor('#fff')
-    // setDate({
-    //   from: undefined,
-    //   to: undefined,
-    // })
+    setDate({
+      from: undefined,
+      to: undefined,
+    })
   }
 
   return (
@@ -391,7 +391,7 @@ export function CreateConfigChart({
                         </p>
                         <Popover>
                           <PopoverTrigger asChild>
-                            {/* <Button
+                            <Button
                               id="date"
                               variant="trans"
                               size="square"
@@ -415,17 +415,17 @@ export function CreateConfigChart({
                                   {t('cloud:dashboard.config_chart.pick_date')}
                                 </span>
                               )}
-                            </Button> */}
+                            </Button>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0" align="start">
-                            {/* <Calendar
+                            <Calendar
                               initialFocus
                               mode="range"
                               defaultMonth={dateValue?.from}
                               selected={dateValue}
                               onSelect={setDate}
                               numberOfMonths={2}
-                            /> */}
+                            />
                           </PopoverContent>
                         </Popover>
                       </div>

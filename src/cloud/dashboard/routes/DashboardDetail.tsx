@@ -246,7 +246,7 @@ export function DashboardDetail() {
         <div className="flex grow flex-col">
           <TitleBar title={t('dashboard:title') ?? 'Dashboard'} />
           <div className="flex grow flex-col px-9 py-3 shadow-lg">
-            <CreateWidget />
+            <CreateWidget />  
           </div>
         </div>
       </ContentLayout>
