@@ -1,68 +1,95 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
-// import { UpdateDevice } from './UpdateDevice'
 
 import { type BaseTablePagination } from '~/types'
 
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
-import { type EntityThing } from '~/cloud/customProtocol'
-import { EntityConfigChart } from './CreateConfigChart'
 import { format } from 'date-fns'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { type EntityConfigChart } from './CreateConfigChart'
 
-function ThingTableContextMenu({
+function ConfigChartContextMenu({
   id,
-  name,
-  description,
+  handleDelete,
 }: {
   id: string
-  name: string
-  description: string
+  handleDelete: (index: string) => void
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const { close, open, isOpen } = useDisclosure()
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  useEffect(() => {
+    setIsSuccess(false)
+  }, [id])
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
+      <ConfirmationDialog
+        isDone={isSuccess}
+        icon="danger"
+        title={''}
+        body={'Confirm delete?'}
+        triggerButton={
+          <Button
+            className="w-full border-none shadow-none hover:text-primary-400"
+            style={{ justifyContent: 'flex-start' }}
+            variant="trans"
+            size="square"
+            startIcon={
+              <img src={btnDeleteIcon} alt="Delete thing" className="h-5 w-5" />
+            }
+          ></Button>
+        }
+        confirmButton={
+          <Button
+            // isLoading={isLoading}
+            type="button"
+            size="md"
+            className="bg-primary-400"
+            onClick={() => {
+              handleDelete(id)
+              setIsSuccess(true)
+            }}
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
           />
         }
-      >
-      </Dropdown>
+      />
     </>
   )
 }
 
 type ConfigChartTableProps = {
   data: EntityConfigChart[]
+  handleDataChart: (data: EntityConfigChart[]) => void
 } & BaseTablePagination
 
-export function ConfigChartTable({ data, ...props }: ConfigChartTableProps) {
+export function ConfigChartTable({
+  data,
+  handleDataChart,
+  ...props
+}: ConfigChartTableProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const [dataConvert, setDataConvert] = useState<EntityConfigChart[]>(data)
+  useEffect(() => {
+    setDataConvert(data)
+  }, [data])
 
   const columnHelper = createColumnHelper<EntityConfigChart>()
+  const handleDelete = (id: string) => {
+    const dataFilter = data.filter(item => item.id !== id)
+    handleDataChart(dataFilter)
+    setDataConvert(dataFilter)
+  }
   const columns = useMemo<ColumnDef<EntityConfigChart, any>[]>(
     () => [
       columnHelper.display({
@@ -75,23 +102,17 @@ export function ConfigChartTable({ data, ...props }: ConfigChartTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('device', {
-        header: () => (
-          <span>{t('cloud:dashboard.config_chart.device')}</span>
-        ),
+        header: () => <span>{t('cloud:dashboard.config_chart.device')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('attr', {
-        header: () => (
-          <span>{t('cloud:dashboard.config_chart.attr')}</span>
-        ),
+        header: () => <span>{t('cloud:dashboard.config_chart.attr')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('method', {
-        header: () => (
-          <span>{t('cloud:dashboard.config_chart.method')}</span>
-        ),
+        header: () => <span>{t('cloud:dashboard.config_chart.method')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -99,37 +120,48 @@ export function ConfigChartTable({ data, ...props }: ConfigChartTableProps) {
         id: 'date',
         cell: info => {
           const dateFormat = info.row.original.date
-          return <>
-            {dateFormat?.from ? (
-              dateFormat.to ? (
-                <>
-                  {format(dateFormat.from, "dd/MM/y")} -{" "}
-                  {format(dateFormat.to, "dd/MM/y")}
-                </>
+          return (
+            <>
+              {dateFormat?.from ? (
+                dateFormat.to ? (
+                  <>
+                    {format(dateFormat.from, 'dd/MM/y')} -{' '}
+                    {format(dateFormat.to, 'dd/MM/y')}
+                  </>
+                ) : (
+                  format(dateFormat.from, 'dd/MM/y')
+                )
               ) : (
-                format(dateFormat.from, "dd/MM/y")
-              )
-            ) : (
-              <span>{" "}</span>
-            )}
-          </>
+                <span> </span>
+              )}
+            </>
+          )
         },
         header: () => <span>{t('cloud:dashboard.config_chart.date')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('color', {
-        header: () => (
-          <span>{t('cloud:dashboard.config_chart.color')}</span>
-        ),
+        header: () => <span>{t('cloud:dashboard.config_chart.color')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          console.log(info.row.original)
+          const id = info.row.original.id
+
+          return ConfigChartContextMenu({ id, handleDelete })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
     ],
-    [],
+    [data],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+  return dataConvert != null && dataConvert?.length !== 0 ? (
+    <BaseTable data={dataConvert} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
       {'Không có data'}

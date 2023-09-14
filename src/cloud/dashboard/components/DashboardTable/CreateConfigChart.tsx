@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
@@ -6,12 +6,12 @@ import {
   Form,
   InputField,
   SelectDropdown,
-  SelectOption
+  SelectOption,
 } from '~/components/Form'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { DateRange } from 'react-day-picker'
 import ColorPicker from 'react-pick-color'
 import { useParams } from 'react-router-dom'
@@ -28,6 +28,8 @@ import { useCreateAttrChart } from '../../api'
 import { Calendar } from '../Calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
 import { ConfigChartTable } from './ConfigChartTable'
+import { type WSAgg } from '../../types'
+import {v4 as uuidv4} from 'uuid'
 
 export const configChartSchema = z.object({
   name: nameSchema,
@@ -36,11 +38,17 @@ export const configChartSchema = z.object({
 })
 
 export type CreateConfigChartDTO = {
-  data: z.infer<typeof configChartSchema>
+  data: {
+    name: string
+    unit: string
+    decimal: string
+    agg: string
+    interval: string
+  }
 }
 
 export const configChartChildSchema = z.object({
-  device: z.string()
+  device: z.string(),
 })
 
 export type CreateConfigChartChildDTO = {
@@ -58,6 +66,7 @@ export type EntityConfigChart = {
   attr: string
   date: any
   color: string
+  id: string
 }
 
 type CreateConfigChartProps = {
@@ -66,7 +75,12 @@ type CreateConfigChartProps = {
   isOpen: boolean
   handleSubmitChart: (value: any) => void
 }
-export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: CreateConfigChartProps) {
+export function CreateConfigChart({
+  type,
+  close,
+  isOpen,
+  handleSubmitChart,
+}: CreateConfigChartProps) {
   const { t } = useTranslation()
   const params = useParams()
   const thingId = params.thingId as string
@@ -76,10 +90,10 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
     from: undefined,
     to: undefined,
   })
-  const [color, setColor] = useState('#fff');
-  const [dataConfigChart, setDataConfigChart] = useState<
-    EntityConfigChart[]
-  >([])
+  const [color, setColor] = useState('#fff')
+  const [dataConfigChart, setDataConfigChart] = useState<EntityConfigChart[]>(
+    [],
+  )
   const [deviceValue, setDeviceValue] = useState<SelectOption>({
     label: '',
     value: '',
@@ -96,26 +110,56 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
     label: '',
     value: '',
   })
+  const [interval, setInterval] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
+  const [agg, setAgg] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
 
   const orgId = params.orgId as string
   const { id: projectId } = storage.getProject()
-  const {
-    data: deviceData,
-  } = useGetDevices({
+  const { data: deviceData } = useGetDevices({
     orgId,
     projectId,
     offset,
     config: { keepPreviousData: true },
   })
 
-  const { data: dataAttrChart, mutate, isLoading, isSuccess } = useCreateAttrChart()
+  const {
+    data: dataAttrChart,
+    mutate,
+    isLoading,
+    isSuccess,
+  } = useCreateAttrChart()
+
+  const wsInterval = [
+    { label: 'Second', value: 1000 },
+    { label: 'Minute', value: 60 * 1000 },
+    { label: 'Hour', value: 60 * 60 * 1000 },
+    { label: 'Day', value: 24 * 60 * 60 * 1000 },
+    { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
+    { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
+    { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
+  ]
+
+  const wsAgg: WSAgg[] = [
+    { label: 'None', value: 'NONE' },
+    { label: 'Avg', value: 'AVG' },
+    { label: 'Min', value: 'MIN' },
+    { label: 'Max', value: 'MAX' },
+    { label: 'Sum', value: 'SUM' },
+    { label: 'Count', value: 'COUNT' },
+  ]
 
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
     label: device.name,
   })) || [{ value: '', label: '' }]
 
-  const attrSelectData = dataAttrChart?.key?.map(item => ({
+  const attrSelectData = dataAttrChart?.keys?.map(item => ({
     value: item,
     label: item,
   })) || [{ value: '', label: '' }]
@@ -146,7 +190,7 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-            {t('cloud:dashboard.config_chart.title')}
+              {t('cloud:dashboard.config_chart.title')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -159,14 +203,13 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="mt-2 flex flex-col gap-2">
           <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
-              {t('cloud:dashboard.config_chart.show')}
+                {t('cloud:dashboard.config_chart.show')}
               </p>
             </div>
-
           </div>
           <Form<CreateConfigChartDTO['data'], typeof configChartSchema>
             id="config-chart-parent"
@@ -176,15 +219,17 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                 name: values.name,
                 unit: values.unit,
                 decimal: values.decimal,
-                dataConfigChart: dataConfigChart
+                agg: agg?.value,
+                interval: interval?.value,
+                dataConfigChart: dataConfigChart,
               }
               handleSubmitChart(dataSubmit)
             }}
             schema={configChartSchema}
           >
-            {({ register, formState }) => {
+            {({ register, formState, control }) => {
               return (
-                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3 px-8 py-6 border border-solid border-inherit">
+                <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
                   <InputField
                     label={t('cloud:dashboard.config_chart.name')}
                     error={formState.errors['name']}
@@ -200,22 +245,52 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                     error={formState.errors['decimal']}
                     registration={register('decimal')}
                   />
+                  <div className="space-y-1">
+                      <SelectDropdown
+                        label={t('ws:filter.interval')}
+                        name="interval"
+                        isClearable={false}
+                        control={control}
+                        options={wsInterval}
+                        value={interval}
+                        onChange={e => {
+                          setInterval(e)
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        label={t('ws:filter.data_aggregation')}
+                        name="interval"
+                        isClearable={false}
+                        control={control}
+                        options={wsAgg}
+                        value={agg}
+                        onChange={e => {
+                          setAgg(e)
+                        }}
+                      />
+                    </div>
+
                 </div>
               )
             }}
           </Form>
         </div>
 
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="mt-2 flex flex-col gap-2">
           <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
-              {t('cloud:dashboard.config_chart.title')}
+                {t('cloud:dashboard.config_chart.title')}
               </p>
             </div>
           </div>
 
-          <Form<CreateConfigChartChildDTO['data'], typeof configChartChildSchema>
+          <Form<
+            CreateConfigChartChildDTO['data'],
+            typeof configChartChildSchema
+          >
             id="config-chart-child"
             className="flex flex-col justify-between"
             onSubmit={values => {
@@ -224,7 +299,8 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                 method: methodValue.label,
                 attr: attrValue.label,
                 date: dateValue,
-                color: color
+                color: color,
+                id: uuidv4()
               }
               setDataConfigChart(pre => [...pre, data])
               resetData()
@@ -233,21 +309,27 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
           >
             {({ register, formState, control, setValue }) => {
               return (
-                <div className='px-8 py-6 border border-solid border-inherit'>
-                  {dataConfigChart.length ?
-                    <div className='mb-6'>
+                <div className="border border-solid border-inherit px-8 py-6">
+                  {dataConfigChart.length ? (
+                    <div className="mb-6">
                       <ConfigChartTable
                         offset={offset}
                         setOffset={setOffset}
                         data={dataConfigChart || []}
+                        handleDataChart={(values) => setDataConfigChart(values)}
                         total={0}
                         isPreviousData={false}
-                      /></div> :
-                    <div>{''}</div>}
-                  <div className={cn(
-                    "grid grid-cols-1 gap-x-4 ",
-                    type === 'road' ? "md:grid-cols-6" : "md:grid-cols-5"
-                  )}>
+                      />
+                    </div>
+                  ) : (
+                    <div>{''}</div>
+                  )}
+                  <div
+                    className={cn(
+                      'grid grid-cols-1 gap-x-4 ',
+                      type === 'road' ? 'md:grid-cols-6' : 'md:grid-cols-5',
+                    )}
+                  >
                     <div className="space-y-1">
                       <SelectDropdown
                         label={t('cloud:dashboard.config_chart.device')}
@@ -263,9 +345,10 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                             data: {
                               entity_ids: [e?.value],
                               entity_type: 'DEVICE',
-                              time_series: false
+                              time_series: false,
                             },
                           })
+                          setAttrValue({label: '', value: ''})
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -281,6 +364,7 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                         options={attrSelectData}
                         value={attrValue}
                         onChange={e => setAttrValue(e)}
+                        maxMenuHeight={150}
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.attr?.message}
@@ -300,9 +384,11 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                         {formState?.errors?.method?.message}
                       </p>
                     </div>
-                    <div className="space-y-1 flex">
-                      <div className='relative w-full'>
-                        <p className='mb-1'>{t('cloud:dashboard.config_chart.date')}</p>
+                    <div className="flex space-y-1">
+                      <div className="relative w-full">
+                        <p className="mb-1">
+                          {t('cloud:dashboard.config_chart.date')}
+                        </p>
                         <Popover>
                           <PopoverTrigger asChild>
                             <Button
@@ -310,22 +396,24 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                               variant="trans"
                               size="square"
                               className={cn(
-                                "relative w-full justify-start text-left font-normal rounded-md",
-                                !dateValue && "text-muted-foreground"
+                                'relative w-full justify-start rounded-md text-left font-normal',
+                                !dateValue && 'text-muted-foreground',
                               )}
                             >
                               <CalendarIcon className="mr-2 h-4 w-4" />
                               {dateValue?.from ? (
                                 dateValue.to ? (
                                   <>
-                                    {format(dateValue.from, "dd/MM/y")} -{" "}
-                                    {format(dateValue.to, "dd/MM/y")}
+                                    {format(dateValue.from, 'dd/MM/y')} -{' '}
+                                    {format(dateValue.to, 'dd/MM/y')}
                                   </>
                                 ) : (
-                                  format(dateValue.from, "dd/MM/y")
+                                  format(dateValue.from, 'dd/MM/y')
                                 )
                               ) : (
-                                <span>{t('cloud:dashboard.config_chart.pick_date')}</span>
+                                <span>
+                                  {t('cloud:dashboard.config_chart.pick_date')}
+                                </span>
                               )}
                             </Button>
                           </PopoverTrigger>
@@ -341,10 +429,11 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                           </PopoverContent>
                         </Popover>
                       </div>
-
                     </div>
-                    <div className='space-y-1 relative w-full'>
-                      <p className='mb-1'>{t('cloud:dashboard.config_chart.color')}</p>
+                    <div className="relative w-full space-y-1">
+                      <p className="mb-1">
+                        {t('cloud:dashboard.config_chart.color')}
+                      </p>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button
@@ -356,36 +445,49 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
-                          <ColorPicker color={color} onChange={color => setColor(color.hex)} />
+                          <ColorPicker
+                            color={color}
+                            onChange={color => {
+                              const rgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+                              setColor(rgba)
+                            }
+                            }
+                          />
                         </PopoverContent>
                       </Popover>
                     </div>
-                    {type === 'road' ? <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:dashboard.config_chart.road')}
-                        name="typeRoad"
-                        isClearable={false}
-                        control={control}
-                        options={[
-                          { label: 'Đường thẳng', value: 'Đường thẳng' },
-                          { label: 'Đường nét đứt', value: 'Đường nét đứt' }
-                        ]}
-                        value={typeRoadValue}
-                        onChange={e => {
-                          setTypeRoadValue(e)
-                        }}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.typeRoad?.message}
-                      </p>
-                    </div> : ''}
+                    {type === 'road' ? (
+                      <div className="space-y-1">
+                        <SelectDropdown
+                          label={t('cloud:dashboard.config_chart.road')}
+                          name="typeRoad"
+                          isClearable={false}
+                          control={control}
+                          options={[
+                            { label: 'Đường thẳng', value: 'Đường thẳng' },
+                            { label: 'Đường nét đứt', value: 'Đường nét đứt' },
+                          ]}
+                          value={typeRoadValue}
+                          onChange={e => {
+                            setTypeRoadValue(e)
+                          }}
+                        />
+                        <p className="text-body-sm text-primary-400">
+                          {formState?.errors?.typeRoad?.message}
+                        </p>
+                      </div>
+                    ) : (
+                      ''
+                    )}
                   </div>
                   <div className="mt-4 flex justify-end space-x-2">
                     <Button
                       className="h-9 w-9 rounded-md"
                       variant="trans"
                       size="square"
-                      startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+                      startIcon={
+                        <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                      }
                     />
                     <Button
                       form="config-chart-child"
@@ -393,11 +495,14 @@ export function CreateConfigChart({ type, close, isOpen, handleSubmitChart }: Cr
                       size="md"
                       className="bg-primary-400"
                       startIcon={
-                        <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                        <img
+                          src={btnSubmitIcon}
+                          alt="Submit"
+                          className="h-5 w-5"
+                        />
                       }
                     ></Button>
                   </div>
-
                 </div>
               )
             }}

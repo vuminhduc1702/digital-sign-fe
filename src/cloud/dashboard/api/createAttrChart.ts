@@ -30,7 +30,7 @@ type CreateAttrRes = {
   entity_ids: string[]
   entity_type: EntityType
   time_series: boolean
-  key: any[]
+  keys: any[]
 }
 
 export const createAttrChart = ({
