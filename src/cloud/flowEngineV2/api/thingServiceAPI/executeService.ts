@@ -17,15 +17,23 @@ export type executeServiceDTO = {
   thingId: string
   projectId: string
   name: string
+  isDebugMode: boolean
 }
 
 export const executeService = ({
   data,
   thingId,
   projectId,
-  name
+  name,
+  isDebugMode,
 }: executeServiceDTO): Promise<executeServices> => {
-  return axios.post(`/api/fe/thing/${thingId}/service/${name}?project_id=${projectId}`, data)
+  console.log('data: ', data)
+  return axios.post(`/api/fe/thing/${thingId}/service/${name}`, data, {
+    params: {
+      project_id: projectId,
+      validate: isDebugMode,
+    },
+  })
 }
 
 type UseExecuteServiceOptions = {

@@ -1,5 +1,7 @@
-import clsx from 'clsx'
 import * as React from 'react'
+
+import { cn } from '~/utils/misc'
+
 import { type FieldError } from 'react-hook-form'
 
 type FieldWrapperProps = {
@@ -21,11 +23,7 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
   return (
     <div className="relative w-full">
       <label
-        className={clsx(
-          'block text-body-sm',
-          { 'space-y-1': label },
-          className,
-        )}
+        className={cn('block text-body-sm', { 'space-y-1': label }, className)}
       >
         <p>{label}</p>
         <div>{children}</div>

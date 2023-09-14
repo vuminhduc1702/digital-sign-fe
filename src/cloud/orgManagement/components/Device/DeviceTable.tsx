@@ -14,6 +14,12 @@ import { UpdateDevice } from './UpdateDevice'
 import { getVNDateFormat } from '~/utils/misc'
 import { useDeleteDevice } from '../../api/deviceAPI'
 import storage from '~/utils/storage'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
 
 import { type Device } from '../../types'
 import { type BaseTablePagination } from '~/types'
@@ -24,12 +30,6 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '~/cloud/dashboard/components'
 
 function DeviceTableContextMenu({
   id,
