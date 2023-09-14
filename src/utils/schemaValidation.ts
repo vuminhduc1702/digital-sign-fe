@@ -9,7 +9,10 @@ export const nameSchemaRegex = z
   .string()
   .min(1, { message: 'Tên quá ngắn' })
   .max(30, { message: 'Tên quá dài' })
-  .regex(new RegExp('^[a-zA-Z0-9_]*$'), { message: 'Tên service chỉ bao gồm chữ, số, hoăc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt'})
+  .regex(new RegExp('^[a-zA-Z0-9_]*$'), {
+    message:
+      'Tên service chỉ bao gồm chữ, số, hoăc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt',
+  })
 
 export const otpSchema = z
   .string()
@@ -47,3 +50,9 @@ export const selectOptionSchema = (valueSchema?: ZodTypeAny) => {
     value: valueSchema || z.string(),
   })
 }
+
+export const BasePaginationSchema = z.object({
+  total: z.number(),
+  offset: z.number(),
+  limit: z.number(),
+})

@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
+import type * as z from 'zod'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { ProjectListSchema } from '../routes/ProjectManage'
 
-import { type ProjectList } from '~/cloud/project'
+type ProjectList = z.infer<typeof ProjectListSchema>
 
 export const getProjects = (): Promise<ProjectList> => {
   return axios.get('/api/projects')
@@ -16,9 +18,13 @@ type UseProjectsOptions = {
 }
 
 export const useProjects = ({ config }: UseProjectsOptions = {}) => {
-  return useQuery<ExtractFnReturnType<QueryFnType>>({
+  const projectQuery = useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['projects'],
     queryFn: () => getProjects(),
     ...config,
   })
+
+  ProjectListSchema.parse(projectQuery.data)
+
+  return projectQuery
 }
