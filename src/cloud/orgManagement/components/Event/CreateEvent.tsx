@@ -18,7 +18,7 @@ import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetAttrs } from '../../api/attrAPI'
 import { queryClient } from '~/lib/react-query'
-import { flattenData } from '~/utils/misc'
+import { cn, flattenData } from '~/utils/misc'
 import TitleBar from '~/components/Head/TitleBar'
 import storage from '~/utils/storage'
 
@@ -88,8 +88,8 @@ export const createEventSchema = z
     name: nameSchema,
     action: eventActionSchema,
     // interval: eventIntervalSchema,
-    // status: z.boolean().optional(),
-    // retry: z.number().optional(),
+    status: z.boolean().optional(),
+    retry: z.number().optional(),
   })
   .and(
     z.discriminatedUnion('onClick', [
@@ -108,6 +108,7 @@ export function CreateEvent() {
   const { t } = useTranslation()
 
   const [onClickValue, setOnclickValue] = useState(false)
+  const [typeEvent, setTypeEvent] = useState('schedule')
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateEvent()
@@ -165,10 +166,30 @@ export function CreateEvent() {
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
+  const [todos, setTodos] = useState([
+    { id: '1', name: 'Thứ Hai', selected: false },
+    { id: '2', name: 'Thứ Ba', selected: false },
+    { id: '3', name: 'Thứ Tư', selected: false },
+    { id: '4', name: 'Thứ Năm', selected: false },
+    { id: '5', name: 'Thứ Sáu', selected: false },
+    { id: '6', name: 'Thứ Bảy', selected: false },
+    { id: '7', name: 'Chủ Nhật', selected: false },
+  ])
+
+  const todoClicked = (e: any) => {
+    setTodos(
+      todos.map(todo =>
+        todo.id === e.target.getAttribute('data-id')
+          ? { ...todo, selected: !todo.selected }
+          : todo,
+      ),
+    )
+  }
+
   return (
     <FormDrawer
       isDone={isSuccess}
-      size="xl"
+      size="lg"
       triggerButton={
         <Button
           className="rounded-md"
@@ -277,12 +298,10 @@ export function CreateEvent() {
             <>
               <div className="space-y-3">
                 <TitleBar
-                  title={t(
-                    'cloud:org_manage.event_manage.add_event.condition.title',
-                  )}
+                  title={t('cloud:org_manage.event_manage.add_event.info')}
                   className="w-full rounded-md bg-gray-500 pl-3"
                 />
-                <div className="flex space-x-5">
+                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   <InputField
                     label={t('cloud:org_manage.event_manage.add_event.name')}
                     error={formState.errors['name']}
@@ -334,11 +353,21 @@ export function CreateEvent() {
                     </p>
                   </div>
                   <SelectField
+                    label={t('cloud:org_manage.event_manage.add_event.status')}
+                    // error={formState.errors['type']}
+                    registration={register('status')}
+                    options={[
+                      { value: true, label: 'Kích hoạt' },
+                      { value: false, label: 'Không kích hoạt' },
+                    ]}
+                  />
+                  <SelectField
                     label={t(
                       'cloud:org_manage.event_manage.add_event.condition.onClick',
                     )}
                     error={formState.errors['onClick']}
                     registration={register('onClick')}
+                    disabled={typeEvent === 'schedule'}
                     options={[
                       { value: 'false', label: 'Không' },
                       { value: 'true', label: 'Có' },
@@ -349,6 +378,41 @@ export function CreateEvent() {
                       )
                     }
                   />
+                  <SelectField
+                    label={t(
+                      'cloud:org_manage.event_manage.add_event.type_event',
+                    )}
+                    // error={formState.errors['type']}
+                    // registration={register('onClick')}
+                    options={[
+                      { value: 'schedule', label: 'Lập lịch schedule' },
+                      { value: 'event', label: 'Lập lịch event' },
+                    ]}
+                    onChange={event => setTypeEvent(event.target.value)}
+                  />
+                  <InputField
+                    label={t('cloud:org_manage.event_manage.add_event.retry')}
+                    registration={register('retry')}
+                    type="number"
+                  />
+                </div>
+              </div>
+              <div>
+                <TitleBar
+                  title={t('cloud:org_manage.event_manage.add_event.test_condition_time')}
+                  className="w-full rounded-md bg-gray-500 pl-3"
+                />
+                <div className='grid grid-cols-1 gap-x-4 md:grid-cols-4'>
+                  {todos.map(todo => (
+                    <div
+                      onClick={todoClicked}
+                      data-id={todo.id}
+                      key={todo.id}
+                      className={cn('cursor-pointer bg-stone-300 text-center text-white py-3 rounded-lg mt-5', { 'bg-primary-400': todo.selected })}
+                    >
+                      {todo.name}
+                    </div>
+                  ))}
                 </div>
               </div>
               {!onClickValue ? (

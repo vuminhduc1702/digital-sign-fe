@@ -209,10 +209,15 @@
           "edit": "Sửa sự kiện",
           "name": "Tên sự kiện",
           "parent": "Trực thuộc tổ chức",
+          "info": " Thông tin cơ bản",
+          "type_event": "Kiểu sự kiện",
+          "status": "Trạng thái",
+          "retry": " Số lần lặp lại",
+          "test_condition_time": "Thời gian kiểm tra điều kiện",
           "group": "Nhóm",
           "condition": {
             "title": "Điều kiện kích hoạt",
-            "onClick": "onClick",
+            "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
             "condition_type": {

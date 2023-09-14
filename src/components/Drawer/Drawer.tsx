@@ -7,7 +7,7 @@ import { type Dispatch, Fragment, type SetStateAction, useEffect } from 'react'
 const sizes = {
   sm: 'max-w-md',
   md: 'max-w-xl',
-  lg: 'max-w-3xl',
+  lg: 'max-w-4xl',
   xl: 'max-w-7xl',
   full: 'max-w-full',
 }
