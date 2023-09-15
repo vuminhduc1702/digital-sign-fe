@@ -21,9 +21,15 @@ const ProjectSchema = z.object({
   app_secret: z.string(),
   sms_config: z.object({
     type: z.string(),
-    config: z.null(),
+    config: z.object({
+      code: z.string(),
+      password: z.string(),
+      service_id: z.string(),
+      url: z.string(),
+      user: z.string(),
+    }).nullable(),
     content: z.string(),
-    reset_password_content: z.string().optional(),
+    reset_password_content: z.string(),
   }),
 })
 
