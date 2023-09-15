@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
@@ -35,6 +36,7 @@ import {
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '~/components/Spinner'
+import {Switch} from "~/components/Switch";
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -90,6 +92,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
     }
   }, [isSuccessExecute, isError])
 
+  const [debugMode, setDebugMode] = useState(true)
   const handleSubmit = (data: CreateServiceForm) => {
     const dataInput = data.input.map(item => ({
       name: item.name,
@@ -105,6 +108,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
         thingId,
         projectId,
         name: data.name,
+        isDebugMode: debugMode,
       })
     }
     if (typeInput === 'Submit') {
@@ -225,9 +229,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                                       label={t(
                                         'cloud:custom_protocol.service.service_input.name',
                                       )}
-                                      error={
-                                        formState.errors[`input.${index}.name`]
-                                      }
+                                      error={formState.errors[`input`]?.[index]?.name}
                                       registration={register(
                                         `input.${index}.name` as const,
                                       )}
@@ -236,9 +238,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                                       label={t(
                                         'cloud:custom_protocol.service.service_input.type',
                                       )}
-                                      error={
-                                        formState.errors[`input.${index}.type`]
-                                      }
+                                      error={formState.errors[`input`]?.[index]?.type}
                                       registration={register(
                                         `input.${index}.type` as const,
                                       )}
@@ -303,9 +303,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                                       label={t(
                                         'cloud:custom_protocol.service.service_input.value',
                                       )}
-                                      error={
-                                        formState.errors[`input.${index}.value`]
-                                      }
+                                      error={formState.errors[`input`]?.[index]?.value}
                                       registration={register(
                                         `input.${index}.value` as const,
                                       )}
@@ -336,7 +334,7 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                                 {t('cloud:custom_protocol.service.add_other')}
                               </span>
                             </div>
-                            <div>
+                            <div className="flex grow flex-col gap-y-3">
                               <InputField
                                 label={t('cloud:custom_protocol.service.name')}
                                 error={formState.errors['name']}
@@ -412,16 +410,27 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
                                 error={formState.errors['description']}
                                 registration={register('description')}
                               />
-                              <Button
-                                isLoading={isLoadingExecute}
-                                form="create-serviceThing"
-                                type="submit"
-                                onClick={() => setTypeInput('Run')}
-                                size="md"
-                                className="absolute bottom-0 bg-primary-400 text-white"
-                              >
-                                Run
-                              </Button>
+                              <div className="mt-auto flex items-center">
+                                <Button
+                                  isLoading={isLoadingExecute}
+                                  form="create-serviceThing"
+                                  type="submit"
+                                  onClick={() => setTypeInput('Run')}
+                                  size="md"
+                                  className="bottom-0 bg-primary-400 text-white"
+                                >
+                                  {t('cloud:custom_protocol.service.run')}
+                                </Button>
+                                <FieldWrapper
+                                  label={t('cloud:custom_protocol.service.debug')}
+                                  className="flex flex-row-reverse items-center gap-x-2"
+                                >
+                                  <Switch
+                                    onCheckedChange={checked => setDebugMode(checked)}
+                                    defaultChecked
+                                  />
+                                </FieldWrapper>
+                              </div>
                             </div>
                           </div>
                           <div className="flex flex-col gap-2 md:col-span-1">
