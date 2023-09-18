@@ -1959,6 +1959,7 @@
     "@radix-ui/react-compose-refs" "1.0.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 "@radix-ui/react-slot@1.0.2":
   version "1.0.2"
 <<<<<<< HEAD
@@ -1991,6 +1992,8 @@
 >>>>>>> 3f349215c10f7317a751b26a84a5776f71011165
 =======
 >>>>>>> eb19c43... Update dashboard
+=======
+>>>>>>> 80bdb927a0ebb96e199ad7174f5a5a6e80d666de
 "@radix-ui/react-tooltip@^1.0.6":
   version "1.0.6"
   resolved "https://registry.npmjs.org/@radix-ui/react-tooltip/-/react-tooltip-1.0.6.tgz"
