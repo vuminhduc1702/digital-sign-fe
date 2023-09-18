@@ -15,8 +15,6 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
-import { DashboardDetail } from '../../routes/DashboardDetail'
-import { CreateConfigChart } from './CreateConfigChart'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 
@@ -111,11 +109,12 @@ function DashboardTableContextMenu({
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <CreateConfigChart
-          type={'chart'}
+        <UpdateDashboard
+          id={id}
+          title={title}
           close={close}
           isOpen={isOpen}
-          handleSubmitChart={(value) => console.log(value)}
+          projectId={projectId}
         />
       ) : null}
     </>
@@ -152,7 +151,7 @@ export function DashboardTable({
             header: () => (
               <span>{t('cloud:dashboard.table.name')}</span>
             ),
-            cell: (info) => (<Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>{info.getValue()}</Link>),
+            cell: (info) => (<Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`} target="_blank" onClick={() => { window.localStorage.setItem('dbname', info.row.original.name )}}>{info.getValue()}</Link>),
             footer: info => info.column.id
         }),
         columnHelper.display({

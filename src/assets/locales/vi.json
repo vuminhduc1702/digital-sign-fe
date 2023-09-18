@@ -451,8 +451,8 @@
         "pick_date": "Pick a date"
       },
       "detail_dashboard": {
-        "add_item": {
-          "create": "Tạo mới bảng điều khiển",
+        "add_widget": {
+          "create": "Tạo widget cho bảng điều khiển",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ máy đo",

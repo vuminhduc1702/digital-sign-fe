@@ -5,8 +5,7 @@
 import { useTranslation } from "react-i18next";
 import TitleBar from "~/components/Head/TitleBar";
 import { ContentLayout } from "~/layout/ContentLayout";
-import { useCreateDashboard } from "../api";
-import { CreateWidget } from "../components/DashboardTable/CreateWidget";
+import { DashboardWidget } from "../components/DashboardTable/DashboardWidget";
 
 // import { Button } from '~/components/Button'
 // import { Calendar } from '~/components/Calendar'
@@ -230,9 +229,7 @@ import { CreateWidget } from "../components/DashboardTable/CreateWidget";
 export function DashboardDetail() {
   const { t } = useTranslation()
 
-  const editMode = true;
-
-  const { mutate, isLoading, isSuccess } = useCreateDashboard()
+  const DBNAME = localStorage.getItem('dbname')
 
   const layout = [
     { i: "a", x: 0, y: 0, w: 1, h: 2, static: true },
@@ -244,9 +241,9 @@ export function DashboardDetail() {
     <>
       <ContentLayout title={t('sidebar:cloud.dashboard')}>
         <div className="flex grow flex-col">
-          <TitleBar title={t('dashboard:title') ?? 'Dashboard'} />
-          <div className="flex grow flex-col px-9 py-3 shadow-lg">
-            <CreateWidget />  
+          <TitleBar title={('Dashboard ' + DBNAME)} />
+          <div className="flex grow flex-col px-9 py-3 shadow-lg justify-between">
+            <DashboardWidget />  
           </div>
         </div>
       </ContentLayout>
