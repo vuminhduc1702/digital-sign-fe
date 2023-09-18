@@ -214,6 +214,8 @@
           "status": "Trạng thái",
           "retry": " Số lần lặp lại",
           "test_condition_time": "Thời gian kiểm tra điều kiện",
+          "start": "Bắt đầu",
+          "end": "Kết thúc",
           "group": "Nhóm",
           "condition": {
             "title": "Điều kiện kích hoạt",
@@ -240,8 +242,9 @@
           },
           "action": {
             "title": "Thao tác xử lý",
+            "subject": "Tiêu đề",
             "action_type": {
-              "title": "Kiểu thao tác",
+              "title": "Hành động",
               "sms": "SMS",
               "email": "Email",
               "mqtt": "MQTT",
@@ -250,7 +253,7 @@
               "eventactive": "Event active",
               "delay": "Delay"
             },
-            "receiver": "Bên nhận",
+            "address": "Địa chỉ",
             "message": "Nội dung gửi"
           },
           "success_create": "Tạo sự kiện thành công",
