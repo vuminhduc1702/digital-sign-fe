@@ -18,9 +18,13 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { UpdateEvent } from './UpdateEvent'
+import { useTriggerEvent } from '../../api/eventAPI/triggerEvent'
 
-function EventTableContextMenu({ id, name }: { id: string; name: string }) {
+function EventTableContextMenu({ id, name, dataRow }: { id: string; name: string, dataRow: EventType}) {
   const { t } = useTranslation()
+
+  console.log(dataRow, 'dataRowwww')
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -106,15 +110,17 @@ function EventTableContextMenu({ id, name }: { id: string; name: string }) {
           </div>
         </Menu.Items>
       </Dropdown>
-      {/* {isOpen ? (
+      {isOpen ? (
         <UpdateEvent eventId={id} name={name} close={close} isOpen={isOpen} />
-      ) : null} */}
+      ) : null}
     </>
   )
 }
 
 export function EventTable({ data, ...props }: { data: EventType[] }) {
   const { t } = useTranslation()
+  const { id: projectId } = storage.getProject()
+  const { mutate, isLoading, isSuccess } = useTriggerEvent()
 
   const columnHelper = createColumnHelper<EventType>()
   const columns = useMemo<ColumnDef<EventType, any>[]>(
@@ -142,11 +148,31 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('onClick', {
+      columnHelper.display({
+        id: 'onClick',
         header: () => (
           <span>{t('cloud:org_manage.event_manage.table.onClick')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const { id } = info.row.original
+          return (
+            <span
+              className={`${
+                info.row.original.onClick === 'true' && 'cursor-pointer'
+              }`}
+              onClick={() =>
+                info.row.original.onClick === 'true'&& mutate({
+                  data: {
+                    event_id: id,
+                    project_id: projectId,
+                  },
+                })
+              }
+            >
+              {info.row.original.onClick}
+            </span>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -160,8 +186,9 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
+          const dataRow = info.row.original
           const { name, id } = info.row.original
-          return EventTableContextMenu({ name, id })
+          return EventTableContextMenu({ name, id, dataRow })
         },
         header: () => null,
         footer: info => info.column.id,

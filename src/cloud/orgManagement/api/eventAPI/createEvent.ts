@@ -15,8 +15,11 @@ export type CreateEventDTO = {
 
 export const createEvent = ({ data }: CreateEventDTO): Promise<EventType> => {
   const typeEvent = data?.type
+  if(typeEvent === 'event') {
+    delete data?.schedule
+  }
   delete data?.type;
-  console.log(data)
+  
   return axios.post(`/api/events${typeEvent === 'schedule' ? '/schedule' : ''}`, data)
 }
 

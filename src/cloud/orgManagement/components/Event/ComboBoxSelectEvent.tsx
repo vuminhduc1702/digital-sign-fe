@@ -19,7 +19,7 @@ export function ComboBoxSelectEvent({
 
   const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
     data?.events,
-    ['id', 'name', 'group_name', 'onClick', 'status'],
+    ['id', 'name', 'group_name', 'onClick', 'status', 'interval', 'retry', 'schedule', 'action', 'condition', 'org_id'],
   )
 
   const filteredData = filteredComboboxData(

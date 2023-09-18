@@ -34,6 +34,15 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { Drawer } from '~/components/Drawer'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+
+type UpdateEventProps = {
+  eventId: string
+  name: string
+  close: () => void
+  isOpen: boolean
+}
 
 export const eventConditionSchema = z.array(
   z.object({
@@ -111,7 +120,12 @@ export interface IntervalData {
   [key: string]: boolean
 }
 
-export function CreateEvent() {
+export function UpdateEvent({
+  eventId,
+  name,
+  close,
+  isOpen,
+}: UpdateEventProps) {
   const { t } = useTranslation()
 
   const [onClickValue, setOnclickValue] = useState('false')
@@ -185,18 +199,6 @@ export function CreateEvent() {
     { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
   ])
 
-  const clearData = () => {
-    setTodos([
-      { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
-      { id: '2', name: 'Thứ Ba', selected: false, value: 'tuesday' },
-      { id: '3', name: 'Thứ Tư', selected: false, value: 'wednesday' },
-      { id: '4', name: 'Thứ Năm', selected: false, value: 'thursday' },
-      { id: '5', name: 'Thứ Sáu', selected: false, value: 'friday' },
-      { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
-      { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
-    ])
-  }
-
   const todoClicked = (e: any) => {
     setTodos(
       todos.map(todo =>
@@ -208,33 +210,34 @@ export function CreateEvent() {
   }
 
   return (
-    <FormDrawer
-      isDone={isSuccess}
+    <Drawer
+      isOpen={isOpen}
+      onClose={close}
+      title={t('cloud:org_manage.event_manage.add_event.edit')}
       size="lg"
-      resetData={clearData}
-      triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
-      }
-      title={t('cloud:org_manage.event_manage.add_event.title')}
-      submitButton={
-        <Button
-          className="rounded border-none"
-          form="create-event"
-          type="submit"
-          size="lg"
-          isLoading={isLoading}
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-      // otherState={onClickValue}
-      // setOtherState={setOnclickValue}
+      renderFooter={() => (
+        <>
+          <Button
+            className="rounded border-none"
+            variant="secondary"
+            size="lg"
+            onClick={close}
+            startIcon={
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+          <Button
+            className="rounded border-none"
+            form="update-user"
+            type="submit"
+            size="lg"
+            isLoading={isLoading}
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+        </>
+      )}
     >
       <FormMultipleFields<CreateEventDTO['data'], typeof createEventSchema>
         id="create-event"
@@ -854,6 +857,6 @@ export function CreateEvent() {
           )
         }}
       </FormMultipleFields>
-    </FormDrawer>
+    </Drawer>
   )
 }
