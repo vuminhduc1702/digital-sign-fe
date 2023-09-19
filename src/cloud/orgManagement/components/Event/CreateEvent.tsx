@@ -153,7 +153,10 @@ export function CreateEvent() {
   const { data: attrData, refetch: refetchAttrData } = useGetAttrs({
     entityType: 'DEVICE',
     entityId: selectedDeviceId,
-    config: { enabled: false },
+    config: {
+      enabled: !!selectedDeviceId,
+      suspense: false,
+    },
   })
   const attrListCache: Attribute[] | undefined = queryClient.getQueryData(
     ['attrs'],
@@ -260,7 +263,6 @@ export function CreateEvent() {
             start_time: startTime,
             end_time: endTime,
           }
-          console.log('hahahaahahahaahah: ', interval)
           const conditionArr =
             values.condition?.map(item => ({
               device_id: (
@@ -544,10 +546,7 @@ export function CreateEvent() {
                               }}
                               onChange={e => {
                                 setSelectedDeviceId(e?.value)
-                                if (selectedDeviceId) {
-                                  refetchAttrData()
-                                  setValue(`condition.${index}.device_id`, e)
-                                }
+                                setValue(`condition.${index}.device_id`, e)
                               }}
                               // onMenuClose={() => {
                               //   const deviceId = watch(

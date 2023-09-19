@@ -1,143 +1,179 @@
-import { useParams } from 'react-router-dom'
-import * as z from 'zod'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
-  FormDrawer,
   FormMultipleFields,
   InputField,
-  SelectField,
   SelectDropdown,
+  SelectField,
 } from '~/components/Form'
-import { useDefaultCombobox } from '~/utils/hooks'
-import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
-import { useGetGroups } from '../../api/groupAPI'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
-import { useGetDevices } from '../../api/deviceAPI'
-import { useGetAttrs } from '../../api/attrAPI'
-import { queryClient } from '~/lib/react-query'
-import { cn, flattenData } from '~/utils/misc'
 import TitleBar from '~/components/Head/TitleBar'
+import { queryClient } from '~/lib/react-query'
+import { useDefaultCombobox } from '~/utils/hooks'
+import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
+import { useGetAttrs } from '../../api/attrAPI'
+import { useGetDevices } from '../../api/deviceAPI'
+import { useGetGroups } from '../../api/groupAPI'
 
+import { type OrgList } from '~/layout/MainLayout/types'
 import {
+  type Action,
   type ActionType,
   type Condition,
   type DeviceList,
+  type EventType,
   type Group,
 } from '../../types'
-import { type Attribute } from '~/types'
-import { type OrgList } from '~/layout/MainLayout/types'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { Drawer } from '~/components/Drawer'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Drawer } from '~/components/Drawer'
+import { PlusIcon } from '~/components/SVGIcons'
+import {
+  useUpdateEvent,
+  type UpdateEventDTO,
+} from '../../api/eventAPI/updateEvent'
+import { createEventSchema, type IntervalData } from './CreateEvent'
 
 type UpdateEventProps = {
   eventId: string
   name: string
   close: () => void
   isOpen: boolean
-}
-
-export const eventConditionSchema = z.array(
-  z.object({
-    device_id: selectOptionSchema(),
-    attribute_name: selectOptionSchema(),
-    condition_type: selectOptionSchema(z.enum(['normal', 'delay'] as const)),
-    operator: selectOptionSchema(z.enum(['<', '>', '!='] as const)),
-    threshold: z.string(),
-    logical_operator: selectOptionSchema(z.enum(['and', 'or'] as const)),
-  }),
-)
-
-export const eventIntervalSchema = z.object({
-  monday: z.boolean().optional(),
-  tuesday: z.boolean().optional(),
-  wednesday: z.boolean().optional(),
-  thursday: z.boolean().optional(),
-  friday: z.boolean().optional(),
-  saturday: z.boolean().optional(),
-  sunday: z.boolean().optional(),
-  start_time: z.string(),
-  end_time: z.string(),
-})
-
-export const eventActionSchema = z
-  .array(
-    z.object({ receiver: z.string() }).and(
-      z
-        .object({
-          action_type: selectOptionSchema(
-            z.enum(['eventactive', 'delay'] as const),
-          ),
-          message: z.string().optional(),
-          subject: z.string(),
-        })
-        .or(
-          z.object({
-            action_type: selectOptionSchema(
-              z.enum(['sms', 'mqtt', 'fcm', 'event', 'email'] as const),
-            ),
-            message: z.string(),
-            subject: z.string(),
-          }),
-        ),
-    ),
-  )
-  .optional()
-
-export const createEventSchema = z
-  .object({
-    project_id: z.string().optional(),
-    org_id: selectOptionSchema().optional(),
-    group_id: selectOptionSchema().optional(),
-    name: nameSchema,
-    action: eventActionSchema,
-    // interval: eventIntervalSchema,
-    status: z.string(),
-    retry: z.string(),
-    onClick: z.string(),
-  })
-  .and(
-    z.discriminatedUnion('onClick', [
-      z.object({
-        onClick: z.literal('true'),
-        condition: z.tuple([]),
-      }),
-      z.object({
-        onClick: z.literal('false'),
-        condition: eventConditionSchema,
-      }),
-    ]),
-  )
-
-export interface IntervalData {
-  [key: string]: boolean
+  data: EventType
+  dataAction: Action[]
+  conditionData: Condition[]
+  dateArr: any[]
+  type: string
+  startTimeProps: string
+  endTimeProps: string
 }
 
 export function UpdateEvent({
   eventId,
   name,
+  data,
+  dataAction,
+  conditionData,
+  dateArr,
+  startTimeProps,
+  endTimeProps,
+  type,
   close,
   isOpen,
 }: UpdateEventProps) {
   const { t } = useTranslation()
 
-  const [onClickValue, setOnclickValue] = useState('false')
-  const [typeEvent, setTypeEvent] = useState('schedule')
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
+  const [onClickValue, setOnclickValue] = useState(data.onClick)
+  const [typeEvent, setTypeEvent] = useState(type)
+  const [startTime, setStartTime] = useState(startTimeProps)
+  const [endTime, setEndTime] = useState(endTimeProps)
 
   const { id: projectId } = storage.getProject()
-  const { mutate, isLoading, isSuccess } = useCreateEvent()
+  const { mutate, isLoading, isSuccess } = useUpdateEvent()
 
   const params = useParams()
   const orgId = params.orgId as string
+
+  const logicalOperatorOption = [
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
+      ),
+      value: 'and',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
+      ),
+      value: 'or',
+    },
+  ]
+
+  const operatorOptions = [
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.operator.gte',
+      ),
+      value: '>',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.operator.lte',
+      ),
+      value: '<',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.operator.not',
+      ),
+      value: '!=',
+    },
+  ]
+
+  const conditionTypeOptions = [
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
+      ),
+      value: 'normal',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
+      ),
+      value: 'delay',
+    },
+  ]
+
+  const actionTypeOptions = [
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.sms',
+      ),
+      value: 'sms',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.email',
+      ),
+      value: 'email',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
+      ),
+      value: 'mqtt',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
+      ),
+      value: 'fcm',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.event',
+      ),
+      value: 'event',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
+      ),
+      value: 'eventactive',
+    },
+    {
+      label: t(
+        'cloud:org_manage.event_manage.add_event.action.action_type.delay',
+      ),
+      value: 'delay',
+    },
+  ]
 
   const { data: groupData, refetch: refetchGroupData } = useGetGroups({
     orgId,
@@ -152,7 +188,7 @@ export function UpdateEvent({
   const { data: deviceData, refetch: refetchDeviceData } = useGetDevices({
     orgId,
     projectId,
-    config: { enabled: false },
+    // config: { enabled: false },
   })
   const deviceListCache: DeviceList | undefined = queryClient.getQueryData(
     ['devices'],
@@ -163,16 +199,20 @@ export function UpdateEvent({
     label: device.name,
   })) || [{ value: '', label: '' }]
 
+  const groupDataSelect = groupData?.groups.map(group => ({
+    label: group?.name,
+    value: group?.id,
+  })) || [{ label: t('loading:group'), value: '' }]
+
   const [selectedDeviceId, setSelectedDeviceId] = useState('')
   const { data: attrData, refetch: refetchAttrData } = useGetAttrs({
     entityType: 'DEVICE',
     entityId: selectedDeviceId,
-    config: { enabled: false },
+    config: {
+      enabled: !!selectedDeviceId,
+      suspense: false,
+    },
   })
-  const attrListCache: Attribute[] | undefined = queryClient.getQueryData(
-    ['attrs'],
-    { exact: false },
-  )
   const attrSelectData = attrData?.attributes.map(attribute => ({
     value: attribute.attribute_key,
     label: attribute.attribute_key,
@@ -189,15 +229,7 @@ export function UpdateEvent({
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
-  const [todos, setTodos] = useState([
-    { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
-    { id: '2', name: 'Thứ Ba', selected: false, value: 'tuesday' },
-    { id: '3', name: 'Thứ Tư', selected: false, value: 'wednesday' },
-    { id: '4', name: 'Thứ Năm', selected: false, value: 'thursday' },
-    { id: '5', name: 'Thứ Sáu', selected: false, value: 'friday' },
-    { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
-    { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
-  ])
+  const [todos, setTodos] = useState(dateArr)
 
   const todoClicked = (e: any) => {
     setTodos(
@@ -207,6 +239,54 @@ export function UpdateEvent({
           : todo,
       ),
     )
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
+
+  const renderDataCondition = () => {
+    const defaultCondition = conditionData.map(item => {
+      const conditionType = conditionTypeOptions.filter(
+        e => e.value === item.condition_type,
+      )
+      const operatorFilter = operatorOptions.filter(
+        e => e.value === item.operator,
+      )
+      const logicalOperator = logicalOperatorOption.filter(
+        e => e.value === item.logical_operator,
+      )
+      const deviceFilter = deviceSelectData.filter(
+        e => e.value === item.device_id,
+      )
+      return {
+        ...item,
+        attribute_name: {
+          label: item.attribute_name,
+          value: item.attribute_name,
+        },
+        device_id: deviceFilter[0],
+        condition_type: conditionType[0],
+        operator: operatorFilter[0],
+        logical_operator: logicalOperator[0],
+      }
+    })
+    return defaultCondition
+  }
+
+  const renderDataAction = () => {
+    const defaultAction = dataAction.map(item => {
+      const actionType = actionTypeOptions.filter(
+        e => e.value === item.action_type,
+      )
+      return {
+        ...item,
+        action_type: actionType[0],
+      }
+    })
+    return defaultAction
   }
 
   return (
@@ -228,7 +308,7 @@ export function UpdateEvent({
           />
           <Button
             className="rounded border-none"
-            form="update-user"
+            form="update-event"
             type="submit"
             size="lg"
             isLoading={isLoading}
@@ -239,10 +319,21 @@ export function UpdateEvent({
         </>
       )}
     >
-      <FormMultipleFields<CreateEventDTO['data'], typeof createEventSchema>
-        id="create-event"
+      <FormMultipleFields<UpdateEventDTO['data'], typeof createEventSchema>
+        id="update-event"
         options={{
-          defaultValues: { onClick: 'false' },
+          defaultValues: {
+            onClick: data.onClick,
+            name,
+            action: renderDataAction(),
+            retry: data.retry.toString(),
+            status: data.status ? 'true' : 'false',
+            condition: renderDataCondition(),
+            group_id: data?.group_id && {
+              label: data?.group_name,
+              value: data?.group_id,
+            },
+          },
         }}
         onSubmit={values => {
           const dataFilter = todos.filter(item => item.selected)
@@ -263,7 +354,6 @@ export function UpdateEvent({
             start_time: startTime,
             end_time: endTime,
           }
-          console.log('hahahaahahahaahah: ', interval)
           const conditionArr =
             values.condition?.map(item => ({
               device_id: (
@@ -335,13 +425,14 @@ export function UpdateEvent({
               interval,
               type: typeEvent,
             },
+            eventId,
           })
         }}
         schema={createEventSchema}
         name={['condition', 'action']}
       >
         {(
-          { register, formState, control, watch, setValue },
+          { register, formState, control, watch, setValue, getValues },
           {
             append: conditionAppend,
             fields: conditionFields,
@@ -387,12 +478,7 @@ export function UpdateEvent({
                       label={t('cloud:org_manage.event_manage.add_event.group')}
                       name="group_id"
                       control={control}
-                      options={
-                        groupData?.groups.map(group => ({
-                          label: group?.name,
-                          value: group?.id,
-                        })) || [{ label: t('loading:group'), value: '' }]
-                      }
+                      options={groupDataSelect}
                       isOptionDisabled={option =>
                         option.label === t('loading:group')
                       }
@@ -439,6 +525,7 @@ export function UpdateEvent({
                       { value: 'schedule', label: 'Lập lịch schedule' },
                       { value: 'event', label: 'Lập lịch event' },
                     ]}
+                    value={typeEvent}
                     onChange={event => setTypeEvent(event.target.value)}
                   />
                   <InputField
@@ -477,6 +564,7 @@ export function UpdateEvent({
                     </p>
                     <input
                       name="startTime"
+                      value={startTime}
                       onChange={e => setStartTime(e.target.value)}
                       className="w-full rounded border border-solid border-slate-300 px-4 py-2"
                       type="time"
@@ -488,6 +576,7 @@ export function UpdateEvent({
                     </p>
                     <input
                       name="endTime"
+                      value={endTime}
                       onChange={e => setEndTime(e.target.value)}
                       className="w-full rounded border border-solid border-slate-300 px-4 py-2"
                       type="time"
@@ -540,32 +629,10 @@ export function UpdateEvent({
                                 option.label === t('loading:device')
                               }
                               noOptionsMessage={() => t('table:no_device')}
-                              onMenuOpen={() => {
-                                if (deviceListCache?.devices) {
-                                  return
-                                } else refetchDeviceData()
-                              }}
                               onChange={e => {
                                 setSelectedDeviceId(e?.value)
-                                if (selectedDeviceId) {
-                                  refetchAttrData()
-                                  setValue(`condition.${index}.device_id`, e)
-                                }
+                                setValue(`condition.${index}.device_id`, e)
                               }}
-                              // onMenuClose={() => {
-                              //   const deviceId = watch(
-                              //     'condition.0.device_id.value',
-                              //   ) as unknown as string
-                              //   setSelectedDeviceId(deviceId)
-                              //   if (
-                              //     (selectedDeviceId == null ||
-                              //       selectedDeviceId === '') &&
-                              //     (attrListCache == null ||
-                              //       attrListCache?.length === 0)
-                              //   ) {
-                              //     return
-                              //   } else refetchAttrData()
-                              // }}
                             />
                             <p className="text-body-sm text-primary-400">
                               {
@@ -602,20 +669,7 @@ export function UpdateEvent({
                                 'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
                               )}
                               name={`condition.${index}.condition_type`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-                                  ),
-                                  value: 'normal',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-                                  ),
-                                  value: 'delay',
-                                },
-                              ]}
+                              options={conditionTypeOptions}
                               control={control}
                             />
                             <p className="text-body-sm text-primary-400">
@@ -632,26 +686,7 @@ export function UpdateEvent({
                                 'cloud:org_manage.event_manage.add_event.condition.operator.title',
                               )}
                               name={`condition.${index}.operator`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-                                  ),
-                                  value: '>',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-                                  ),
-                                  value: '<',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.not',
-                                  ),
-                                  value: '!=',
-                                },
-                              ]}
+                              options={operatorOptions}
                               control={control}
                             />
                             <p className="text-body-sm text-primary-400">
@@ -677,20 +712,7 @@ export function UpdateEvent({
                                 'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
                               )}
                               name={`condition.${index}.logical_operator`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
-                                  ),
-                                  value: 'and',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
-                                  ),
-                                  value: 'or',
-                                },
-                              ]}
+                              options={logicalOperatorOption}
                               control={control}
                             />
                             <Button
@@ -746,50 +768,7 @@ export function UpdateEvent({
                             'cloud:org_manage.event_manage.add_event.action.action_type.title',
                           )}
                           name={`action.${index}.action_type`}
-                          options={[
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.sms',
-                              ),
-                              value: 'sms',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.email',
-                              ),
-                              value: 'email',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
-                              ),
-                              value: 'mqtt',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
-                              ),
-                              value: 'fcm',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.event',
-                              ),
-                              value: 'event',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
-                              ),
-                              value: 'eventactive',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.delay',
-                              ),
-                              value: 'delay',
-                            },
-                          ]}
+                          options={actionTypeOptions}
                           control={control}
                         />
                         <p className="text-body-sm text-primary-400">

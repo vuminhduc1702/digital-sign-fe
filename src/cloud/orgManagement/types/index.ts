@@ -58,7 +58,7 @@ export type ActionType =
   | 'eventactive'
   | 'delay'
 
-type Action = {
+export type Action = {
   receiver: string
 } & (
   | {
