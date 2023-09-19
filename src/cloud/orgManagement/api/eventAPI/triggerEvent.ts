@@ -13,8 +13,6 @@ export type TriggerEventDTO = {
 }
 
 export const triggerEvent = ({ data }: TriggerEventDTO) => {
-  console.log(data)
-
   return axios.post(
     `/api/events/${data.event_id}/activate?project_id=${data.project_id}`,
   )
