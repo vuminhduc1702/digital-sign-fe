@@ -48,5 +48,7 @@ body {
 
 .react-grid-layout {
   position: relative;
-  background: #f0f0f0;
+  .react-draggable {
+    cursor: pointer;
+  }
 }

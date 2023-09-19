@@ -13,6 +13,7 @@ import { Form, FormDrawer, InputField } from "~/components/Form";
 import { PlusIcon } from "~/components/SVGIcons";
 import GridLayout from "react-grid-layout";
 import storage from "~/utils/storage";
+import { WidgetItem } from "../Widget";
 
 export function DashboardWidget() {
   const { t } = useTranslation()
@@ -40,10 +41,12 @@ export function DashboardWidget() {
   return (
     <>
       {
-        <GridLayout layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1}>
-          <div key="blue-eyes-dragon" style={{background: '#ffffff'}}>
+        <GridLayout style={ editMode ? { background: '#f0f0f0' } : {}} layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1} isDraggable={ editMode ? true : false }>
+          <WidgetItem title='Blue eye dragon'></WidgetItem>
+          
+          {/* <div key="blue-eyes-dragon" style={{background: '#ffffff'}}>
             <div style={{padding: '8px'}}>Blue Eyes Dragon</div>
-          </div>
+          </div> */}
           <div key="dark-magician" style={{background: '#ffffff'}}>
             <div style={{padding: '8px'}}>Dark Magician</div>
           </div>
