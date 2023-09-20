@@ -30,6 +30,9 @@ import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
 import { ConfigChartTable } from './ConfigChartTable'
 import { type WSAgg } from '../../types'
 import {v4 as uuidv4} from 'uuid'
+import { ComboBoxSelectOrg } from '~/layout/MainLayout/components/ComboBoxSelectOrg'
+import { useDefaultCombobox } from '~/utils/hooks'
+import { OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
 export const configChartSchema = z.object({
   name: nameSchema,
@@ -39,11 +42,8 @@ export const configChartSchema = z.object({
 
 export type CreateConfigChartDTO = {
   data: {
-    name: string
-    unit: string
-    decimal: string
-    agg: string
-    interval: string
+    org: string,
+    device: string[]
   }
 }
 
@@ -61,6 +61,7 @@ export type CreateConfigChartChildDTO = {
 }
 
 export type EntityConfigChart = {
+  org: string
   device: string
   method: string
   attr: string
@@ -84,6 +85,7 @@ export function CreateConfigChart({
   const { t } = useTranslation()
   const params = useParams()
   const thingId = params.thingId as string
+  const defaultComboboxOrgData = useDefaultCombobox('org')
   const cancelButtonRef = useRef(null)
   const [offset, setOffset] = useState(0)
   const [dateValue, setDate] = React.useState<DateRange | undefined>({
@@ -134,6 +136,12 @@ export function CreateConfigChart({
     isLoading,
     isSuccess,
   } = useCreateAttrChart()
+
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    OrgMapType[]
+  >([])
+  const selectedOrgId =
+    filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
 
   const wsInterval = [
     { label: 'Second', value: 1000 },
@@ -216,26 +224,50 @@ export function CreateConfigChart({
             className="flex flex-col justify-between"
             onSubmit={values => {
               const dataSubmit = {
-                name: values.name,
-                unit: values.unit,
-                decimal: values.decimal,
-                agg: agg?.value,
-                interval: interval?.value,
+                org: values.org,
+                device: values.device,
                 dataConfigChart: dataConfigChart,
               }
               handleSubmitChart(dataSubmit)
             }}
             schema={configChartSchema}
           >
-            {({ register, formState, control }) => {
+            {({ register, formState, control, setValue }) => {
               return (
                 <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
-                  <InputField
-                    label={t('cloud:dashboard.config_chart.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
+                  <ComboBoxSelectOrg
+                    label={
+                      t('cloud:org_manage.user_manage.add_user.parent') ??
+                      'Parent organization'
+                    }
+                    setFilteredComboboxData={setFilteredComboboxData}
+                    hasDefaultComboboxData={defaultComboboxOrgData}
                   />
-                  <InputField
+                  <SelectDropdown
+                    label={t('cloud:dashboard.config_chart.device')}
+                    name="device"
+                    isClearable={false}
+                    control={control}
+                    options={deviceSelectData}
+                    value={deviceValue}
+                    isMulti={true}
+                    onChange={e => {
+                      setDeviceValue(e)
+                      setValue('device', e?.value)
+                      mutate({
+                        data: {
+                          entity_ids: [e?.value],
+                          entity_type: 'DEVICE',
+                          time_series: false,
+                        },
+                      })
+                      setAttrValue({label: '', value: ''})
+                    }}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.device?.message}
+                  </p>
+                  {/* <InputField
                     label={t('cloud:dashboard.config_chart.unit')}
                     error={formState.errors['unit']}
                     registration={register('unit')}
@@ -257,20 +289,20 @@ export function CreateConfigChart({
                           setInterval(e)
                         }}
                       />
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('ws:filter.data_aggregation')}
-                        name="interval"
-                        isClearable={false}
-                        control={control}
-                        options={wsAgg}
-                        value={agg}
-                        onChange={e => {
-                          setAgg(e)
-                        }}
-                      />
-                    </div>
+                  </div>
+                  <div className="space-y-1">
+                    <SelectDropdown
+                      label={t('ws:filter.data_aggregation')}
+                      name="interval"
+                      isClearable={false}
+                      control={control}
+                      options={wsAgg}
+                      value={agg}
+                      onChange={e => {
+                        setAgg(e)
+                      }}
+                    />
+                  </div> */}
 
                 </div>
               )

@@ -43,10 +43,9 @@ export function DashboardWidget() {
       {
         <GridLayout style={ editMode ? { background: '#f0f0f0' } : {}} layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1} isDraggable={ editMode ? true : false }>
           <WidgetItem title='Blue eye dragon'></WidgetItem>
-          
-          {/* <div key="blue-eyes-dragon" style={{background: '#ffffff'}}>
+          <div key="blue-eyes-dragon" style={{background: '#ffffff'}}>
             <div style={{padding: '8px'}}>Blue Eyes Dragon</div>
-          </div> */}
+          </div>
           <div key="dark-magician" style={{background: '#ffffff'}}>
             <div style={{padding: '8px'}}>Dark Magician</div>
           </div>

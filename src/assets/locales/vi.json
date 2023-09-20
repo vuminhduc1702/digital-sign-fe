@@ -448,7 +448,9 @@
         "decimal": "Chữ số thập phân",
         "road": "Kiểu đường",
         "show": "Hiển thị",
-        "pick_date": "Pick a date"
+        "pick_date": "Pick a date",
+        "org": "Tổ chức",
+        "label": "Nhãn"
       },
       "detail_dashboard": {
         "add_widget": {
