@@ -8,6 +8,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { queryClient } from '~/lib/react-query'
@@ -72,9 +73,20 @@ export function UpdateEvent({
   const [typeEvent, setTypeEvent] = useState(type)
   const [startTime, setStartTime] = useState(startTimeProps)
   const [endTime, setEndTime] = useState(endTimeProps)
+  const [orgValue, setOrgValue] = useState<SelectOption | null>()
+  const [groupValue, setGroupValue] = useState<SelectOption | null>({
+    label: data?.group_name,
+    value: data?.group_id,
+  })
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
+  
+  useEffect(() => {
+    if(!data?.group_id) {
+      setGroupValue(null)
+    }
+  }, [eventId])
 
   const params = useParams()
   const orgId = params.orgId as string
@@ -178,6 +190,7 @@ export function UpdateEvent({
   const { data: groupData, refetch: refetchGroupData } = useGetGroups({
     orgId,
     projectId,
+    entity_type: 'EVENT',
     config: { enabled: false },
   })
   const groupListCache: Group[] | undefined = queryClient.getQueryData(
@@ -248,7 +261,7 @@ export function UpdateEvent({
   }, [isSuccess, close])
 
   const renderDataCondition = () => {
-    const defaultCondition = conditionData.map(item => {
+    const defaultCondition = conditionData?.map(item => {
       const conditionType = conditionTypeOptions.filter(
         e => e.value === item.condition_type,
       )
@@ -277,7 +290,7 @@ export function UpdateEvent({
   }
 
   const renderDataAction = () => {
-    const defaultAction = dataAction.map(item => {
+    const defaultAction = dataAction?.map(item => {
       const actionType = actionTypeOptions.filter(
         e => e.value === item.action_type,
       )
@@ -329,10 +342,6 @@ export function UpdateEvent({
             retry: data.retry.toString(),
             status: data.status ? 'true' : 'false',
             condition: renderDataCondition(),
-            group_id: data?.group_id && {
-              label: data?.group_name,
-              value: data?.group_id,
-            },
           },
         }}
         onSubmit={values => {
@@ -404,16 +413,8 @@ export function UpdateEvent({
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                (values.org_id as unknown as { value: string; label: string })
-                  ?.value || '',
-              group_id:
-                (
-                  values.group_id as unknown as {
-                    value: string
-                    label: string
-                  }
-                )?.value || '',
+              org_id: orgValue?.value || '',
+              group_id: groupValue?.value || '',
               name: values.name,
               onClick:
                 typeEvent === 'event' ? values.onClick === 'true' : false,
@@ -467,10 +468,12 @@ export function UpdateEvent({
                           value: org?.id,
                         })) || [{ label: t('loading:org'), value: '' }]
                       }
+                      value={orgValue}
+                      onChange={e => setOrgValue(e)}
                     />
-                    <p className="text-body-sm text-primary-400">
+                    {/* <p className="text-body-sm text-primary-400">
                       {formState?.errors?.org_id?.message}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="space-y-1">
                     <SelectDropdown
@@ -488,10 +491,12 @@ export function UpdateEvent({
                           return
                         } else refetchGroupData()
                       }}
+                      value={groupValue}
+                      onChange={e => setGroupValue(e)}
                     />
-                    <p className="text-body-sm text-primary-400">
+                    {/* <p className="text-body-sm text-primary-400">
                       {formState?.errors?.org_id?.message}
-                    </p>
+                    </p> */}
                   </div>
                   <SelectField
                     label={t('cloud:org_manage.event_manage.add_event.status')}
