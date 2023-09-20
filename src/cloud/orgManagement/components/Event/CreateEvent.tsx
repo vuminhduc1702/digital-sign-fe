@@ -10,6 +10,7 @@ import {
   InputField,
   SelectField,
   SelectDropdown,
+  type SelectOption,
 } from '~/components/Form'
 import { useDefaultCombobox } from '~/utils/hooks'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
@@ -85,8 +86,8 @@ export const eventActionSchema = z
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
-    org_id: selectOptionSchema().optional(),
-    group_id: selectOptionSchema().optional(),
+    // org_id: selectOptionSchema().optional(),
+    // group_id: selectOptionSchema().optional(),
     name: nameSchema,
     action: eventActionSchema,
     // interval: eventIntervalSchema,
@@ -118,6 +119,8 @@ export function CreateEvent() {
   const [typeEvent, setTypeEvent] = useState('schedule')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
+  const [orgValue, setOrgValue] = useState<SelectOption | null>()
+  const [groupValue, setGroupValue] = useState<SelectOption | null>()
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateEvent()
@@ -128,6 +131,7 @@ export function CreateEvent() {
   const { data: groupData, refetch: refetchGroupData } = useGetGroups({
     orgId,
     projectId,
+    entity_type: 'EVENT',
     config: { enabled: false },
   })
   const groupListCache: Group[] | undefined = queryClient.getQueryData(
@@ -198,6 +202,8 @@ export function CreateEvent() {
       { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
       { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
     ])
+    setOrgValue(null)
+    setGroupValue(null)
   }
 
   const todoClicked = (e: any) => {
@@ -313,16 +319,8 @@ export function CreateEvent() {
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                (values.org_id as unknown as { value: string; label: string })
-                  ?.value || '',
-              group_id:
-                (
-                  values.group_id as unknown as {
-                    value: string
-                    label: string
-                  }
-                )?.value || '',
+              org_id: orgValue?.value || '',
+              group_id: groupValue?.value || '',
               name: values.name,
               onClick:
                 typeEvent === 'event' ? values.onClick === 'true' : false,
@@ -375,10 +373,12 @@ export function CreateEvent() {
                           value: org?.id,
                         })) || [{ label: t('loading:org'), value: '' }]
                       }
+                      value={orgValue}
+                      onChange={e => setOrgValue(e)}
                     />
-                    <p className="text-body-sm text-primary-400">
+                    {/* <p className="text-body-sm text-primary-400">
                       {formState?.errors?.org_id?.message}
-                    </p>
+                    </p> */}
                   </div>
                   <div className="space-y-1">
                     <SelectDropdown
@@ -401,10 +401,12 @@ export function CreateEvent() {
                           return
                         } else refetchGroupData()
                       }}
+                      value={groupValue}
+                      onChange={e => setGroupValue(e)}
                     />
-                    <p className="text-body-sm text-primary-400">
+                    {/* <p className="text-body-sm text-primary-400">
                       {formState?.errors?.org_id?.message}
-                    </p>
+                    </p> */}
                   </div>
                   <SelectField
                     label={t('cloud:org_manage.event_manage.add_event.status')}

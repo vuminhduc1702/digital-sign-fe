@@ -17,6 +17,7 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCheckBox from '~/assets/icons/btn-checkbox.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useTriggerEvent } from '../../api/eventAPI/triggerEvent'
 import { UpdateEvent } from './UpdateEvent'
@@ -234,7 +235,7 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
                 })
               }
             >
-              {info.row.original.onClick}
+              {info.row.original.onClick === 'true' && <img src={btnCheckBox} alt="Submit" className="h-5 w-5" />}
             </span>
           )
         },

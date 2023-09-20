@@ -8,7 +8,13 @@ import { type z } from 'zod'
 import { type createEventSchema } from '../../components/Event'
 
 export type UpdateEventDTO = {
-  data: z.infer<typeof createEventSchema>
+  data: z.infer<typeof createEventSchema> & {
+    org_id: string | boolean
+    group_id: string | boolean
+    type?: string
+    schedule?: any
+    interval?: any
+  }
   eventId: string
 }
 

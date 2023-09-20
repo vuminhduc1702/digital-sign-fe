@@ -258,7 +258,8 @@
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
-          "success_delete": "Xoá sự kiện thành công"
+          "success_delete": "Xoá sự kiện thành công",
+          "success_active": "Kích hoạt sự kiện thành công"
         }
       }
     },

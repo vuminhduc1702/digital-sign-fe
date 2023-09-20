@@ -34,7 +34,7 @@ export const useTriggerEvent = ({ config }: UseTriggerEventOptions = {}) => {
       })
       addNotification({
         type: 'success',
-        title: t('cloud:org_manage.event_manage.add_event.success_create'),
+        title: t('cloud:org_manage.event_manage.add_event.success_active'),
       })
     },
     ...config,
