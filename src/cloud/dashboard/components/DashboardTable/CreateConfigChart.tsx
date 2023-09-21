@@ -217,9 +217,10 @@ export function CreateConfigChart({
             id="config-chart-parent"
             className="flex flex-col justify-between"
             onSubmit={values => {
+              const deviceValueArr = deviceValue.map((item: any) => { return item.value })
               const dataSubmit = {
                 org: selectedOrgId,
-                device: values.device,
+                device: deviceValueArr,
                 dataConfigChart: dataConfigChart,
               }
               handleSubmitChart(dataSubmit)
@@ -247,9 +248,8 @@ export function CreateConfigChart({
                     isMulti
                     onChange={e => {
                       const entityIdsArr = e.length > 0 ? e.map((item: any) => { return item.value }) : [null]
-                      console.log(entityIdsArr)
-                      setDeviceValue(entityIdsArr)
-                      setValue('device', entityIdsArr)
+                      setDeviceValue(e)
+                      setValue('device', e?.value)
                       mutate({
                         data: {
                           entity_ids: entityIdsArr,
@@ -292,12 +292,11 @@ export function CreateConfigChart({
                 id: uuidv4()
               }
               setDataConfigChart(pre => [...pre, data])
-              resetData()
+              // resetData()
             }}
-            schema={configChartChildSchema}
+            
           >
             {({ register, formState, control }) => {
-              console.log(control)
               return (
                 <div className="border border-solid border-inherit px-8 py-6">
                   {dataConfigChart.length ? (

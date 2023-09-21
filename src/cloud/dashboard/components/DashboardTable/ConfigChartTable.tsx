@@ -148,7 +148,6 @@ export function ConfigChartTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          console.log(info.row.original)
           const id = info.row.original.id
 
           return ConfigChartContextMenu({ id, handleDelete })
