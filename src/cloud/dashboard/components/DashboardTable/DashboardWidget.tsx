@@ -142,26 +142,6 @@ export function DashboardWidget() {
                           style={{width: '100%'}}
                           onClick={() => setShowingConfigDialog(true)}
                         >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.line_chart')}</span>
-                        </Button>
-                        <Button
-                          type="button"
-                          size="square"
-                          className="bg-secondary-400 mb-4"
-                          variant="secondaryLight"
-                          style={{width: '100%'}}
-                          onClick={() => setShowingConfigDialog(true)}
-                        >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.line_chart')}</span>
-                        </Button>
-                        <Button
-                          type="button"
-                          size="square"
-                          className="bg-secondary-400 mb-4"
-                          variant="secondaryLight"
-                          style={{width: '100%'}}
-                          onClick={() => setShowingConfigDialog(true)}
-                        >
                           <span>{t('cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart')}</span>
                         </Button>
                       </div>

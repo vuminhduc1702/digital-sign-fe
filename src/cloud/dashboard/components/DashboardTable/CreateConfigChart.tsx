@@ -35,9 +35,9 @@ import { useDefaultCombobox } from '~/utils/hooks'
 import { OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 
 export const configChartSchema = z.object({
-  name: nameSchema,
-  unit: z.string(),
-  decimal: z.string()
+  // name: nameSchema,
+  // unit: z.string(),
+  // decimal: z.string()
 })
 
 export type CreateConfigChartDTO = {
@@ -48,26 +48,27 @@ export type CreateConfigChartDTO = {
 }
 
 export const configChartChildSchema = z.object({
-  device: z.string(),
+  // device: z.string(),
 })
 
 export type CreateConfigChartChildDTO = {
   data: {
-    device: string
-    method: string
     attr: string
-    typeRoad: string
+    label: string,
+    color: string,
+    unit: string,
+    decimal: string
   }
 }
 
 export type EntityConfigChart = {
-  org: string
-  device: string
-  method: string
+  org?: string
+  device?: string
   attr: string
-  date: any
+  date?: any
   color: string
   id: string
+  label: string
 }
 
 type CreateConfigChartProps = {
@@ -96,10 +97,7 @@ export function CreateConfigChart({
   const [dataConfigChart, setDataConfigChart] = useState<EntityConfigChart[]>(
     [],
   )
-  const [deviceValue, setDeviceValue] = useState<SelectOption>({
-    label: '',
-    value: '',
-  })
+  const [deviceValue, setDeviceValue] = useState<SelectOption[]>([])
   const [attrValue, setAttrValue] = useState<SelectOption>({
     label: '',
     value: '',
@@ -120,7 +118,6 @@ export function CreateConfigChart({
     label: '',
     value: '',
   })
-
   const orgId = params.orgId as string
   const { id: projectId } = storage.getProject()
   const { data: deviceData } = useGetDevices({
@@ -173,10 +170,7 @@ export function CreateConfigChart({
   })) || [{ value: '', label: '' }]
 
   const resetData = () => {
-    setDeviceValue({
-      label: '',
-      value: '',
-    })
+    setDeviceValue([])
     setAttrValue({
       label: '',
       value: '',
@@ -224,7 +218,7 @@ export function CreateConfigChart({
             className="flex flex-col justify-between"
             onSubmit={values => {
               const dataSubmit = {
-                org: values.org,
+                org: selectedOrgId,
                 device: values.device,
                 dataConfigChart: dataConfigChart,
               }
@@ -246,70 +240,33 @@ export function CreateConfigChart({
                   <SelectDropdown
                     label={t('cloud:dashboard.config_chart.device')}
                     name="device"
-                    isClearable={false}
+                    isClearable={true}
                     control={control}
                     options={deviceSelectData}
                     value={deviceValue}
-                    isMulti={true}
+                    isMulti
                     onChange={e => {
-                      setDeviceValue(e)
-                      setValue('device', e?.value)
+                      const entityIdsArr = e.length > 0 ? e.map((item: any) => { return item.value }) : [null]
+                      console.log(entityIdsArr)
+                      setDeviceValue(entityIdsArr)
+                      setValue('device', entityIdsArr)
                       mutate({
                         data: {
-                          entity_ids: [e?.value],
+                          entity_ids: entityIdsArr,
                           entity_type: 'DEVICE',
                           time_series: false,
                         },
                       })
-                      setAttrValue({label: '', value: ''})
                     }}
                   />
                   <p className="text-body-sm text-primary-400">
                     {formState?.errors?.device?.message}
                   </p>
-                  {/* <InputField
-                    label={t('cloud:dashboard.config_chart.unit')}
-                    error={formState.errors['unit']}
-                    registration={register('unit')}
-                  />
-                  <InputField
-                    label={t('cloud:dashboard.config_chart.decimal')}
-                    error={formState.errors['decimal']}
-                    registration={register('decimal')}
-                  />
-                  <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('ws:filter.interval')}
-                        name="interval"
-                        isClearable={false}
-                        control={control}
-                        options={wsInterval}
-                        value={interval}
-                        onChange={e => {
-                          setInterval(e)
-                        }}
-                      />
-                  </div>
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      label={t('ws:filter.data_aggregation')}
-                      name="interval"
-                      isClearable={false}
-                      control={control}
-                      options={wsAgg}
-                      value={agg}
-                      onChange={e => {
-                        setAgg(e)
-                      }}
-                    />
-                  </div> */}
-
                 </div>
               )
             }}
           </Form>
         </div>
-
         <div className="mt-2 flex flex-col gap-2">
           <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
@@ -327,10 +284,10 @@ export function CreateConfigChart({
             className="flex flex-col justify-between"
             onSubmit={values => {
               const data = {
-                device: deviceValue.label,
-                method: methodValue.label,
                 attr: attrValue.label,
-                date: dateValue,
+                label: values.label,
+                unit: values.unit,
+                decimal: values.decimal,
                 color: color,
                 id: uuidv4()
               }
@@ -339,7 +296,8 @@ export function CreateConfigChart({
             }}
             schema={configChartChildSchema}
           >
-            {({ register, formState, control, setValue }) => {
+            {({ register, formState, control }) => {
+              console.log(control)
               return (
                 <div className="border border-solid border-inherit px-8 py-6">
                   {dataConfigChart.length ? (
@@ -364,31 +322,6 @@ export function CreateConfigChart({
                   >
                     <div className="space-y-1">
                       <SelectDropdown
-                        label={t('cloud:dashboard.config_chart.device')}
-                        name="device"
-                        isClearable={false}
-                        control={control}
-                        options={deviceSelectData}
-                        value={deviceValue}
-                        onChange={e => {
-                          setDeviceValue(e)
-                          setValue('device', e?.value)
-                          mutate({
-                            data: {
-                              entity_ids: [e?.value],
-                              entity_type: 'DEVICE',
-                              time_series: false,
-                            },
-                          })
-                          setAttrValue({label: '', value: ''})
-                        }}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.device?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
                         label={t('cloud:dashboard.config_chart.attr')}
                         name="attr"
                         isClearable={false}
@@ -403,66 +336,16 @@ export function CreateConfigChart({
                       </p>
                     </div>
                     <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:dashboard.config_chart.method')}
-                        name="method"
-                        isClearable={false}
-                        control={control}
-                        options={[{ label: '', value: '' }]}
-                        value={methodValue}
-                        onChange={e => setMethodValue(e)}
+                      <InputField
+                        label={t('cloud:dashboard.config_chart.label')}
+                        error={formState.errors['label']}
+                        registration={register('label')}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.method?.message}
+                        {formState?.errors?.attr?.message}
                       </p>
                     </div>
-                    <div className="flex space-y-1">
-                      <div className="relative w-full">
-                        <p className="mb-1">
-                          {t('cloud:dashboard.config_chart.date')}
-                        </p>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              id="date"
-                              variant="trans"
-                              size="square"
-                              className={cn(
-                                'relative w-full justify-start rounded-md text-left font-normal',
-                                !dateValue && 'text-muted-foreground',
-                              )}
-                            >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
-                              {dateValue?.from ? (
-                                dateValue.to ? (
-                                  <>
-                                    {format(dateValue.from, 'dd/MM/y')} -{' '}
-                                    {format(dateValue.to, 'dd/MM/y')}
-                                  </>
-                                ) : (
-                                  format(dateValue.from, 'dd/MM/y')
-                                )
-                              ) : (
-                                <span>
-                                  {t('cloud:dashboard.config_chart.pick_date')}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              initialFocus
-                              mode="range"
-                              defaultMonth={dateValue?.from}
-                              selected={dateValue}
-                              onSelect={setDate}
-                              numberOfMonths={2}
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    </div>
-                    <div className="relative w-full space-y-1">
+                    <div className="space-y-1">
                       <p className="mb-1">
                         {t('cloud:dashboard.config_chart.color')}
                       </p>
@@ -488,7 +371,21 @@ export function CreateConfigChart({
                         </PopoverContent>
                       </Popover>
                     </div>
-                    {type === 'road' ? (
+                    <div className="flex space-y-1">
+                      <InputField
+                        label={t('cloud:dashboard.config_chart.unit')}
+                        error={formState.errors['unit']}
+                        registration={register('unit')}
+                      />
+                    </div>
+                    <div className="relative w-full space-y-1">
+                      <InputField
+                        label={t('cloud:dashboard.config_chart.decimal')}
+                        error={formState.errors['decimal']}
+                        registration={register('decimal')}
+                      />
+                    </div>
+                    {/* {type === 'road' ? (
                       <div className="space-y-1">
                         <SelectDropdown
                           label={t('cloud:dashboard.config_chart.road')}
@@ -510,7 +407,7 @@ export function CreateConfigChart({
                       </div>
                     ) : (
                       ''
-                    )}
+                    )} */}
                   </div>
                   <div className="mt-4 flex justify-end space-x-2">
                     <Button
