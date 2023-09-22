@@ -6,7 +6,7 @@ import { useNotificationStore } from "~/stores/notifications"
 import storage from "~/utils/storage"
 
 export type CreateWidgetItemDTO = {
-  dashboardId: string,
+  dashboardId?: string,
   data: any
 }
 

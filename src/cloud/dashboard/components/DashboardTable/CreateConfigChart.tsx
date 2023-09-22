@@ -12,7 +12,7 @@ import {
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { DateRange } from 'react-day-picker'
+import { DateRange, Matcher } from 'react-day-picker'
 import ColorPicker from 'react-pick-color'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
@@ -42,14 +42,17 @@ export const configChartSchema = z.object({
 
 export type CreateConfigChartDTO = {
   data: {
+    id: string,
     org: string,
-    device: string[]
+    device: string[],
+    dataConfigChart: any,
+    chartSetting: any
   }
 }
 
-export const configChartChildSchema = z.object({
-  // device: z.string(),
-})
+// export const configChartChildSchema = z.object({
+//   // device: z.string(),
+// })
 
 export type CreateConfigChartChildDTO = {
   data: {
@@ -57,28 +60,36 @@ export type CreateConfigChartChildDTO = {
     label: string,
     color: string,
     unit: string,
-    decimal: string
+    decimal: string,
+    startDate: string,
+    endDate: string,
+    interval: string,
+    agg: string
   }
 }
 
 export type EntityConfigChart = {
   org?: string
   device?: string
-  attr: string
+  attr?: string
   date?: any
-  color: string
-  id: string
-  label: string
+  color?: string
+  id?: string
+  label?: string
+  startDate?: string
+  endDate?: string
+  interval?: string
+  agg?: string
 }
 
 type CreateConfigChartProps = {
-  type: string
+  widgetType: string
   close: () => void
   isOpen: boolean
   handleSubmitChart: (value: any) => void
 }
 export function CreateConfigChart({
-  type,
+  widgetType,
   close,
   isOpen,
   handleSubmitChart,
@@ -89,10 +100,9 @@ export function CreateConfigChart({
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const cancelButtonRef = useRef(null)
   const [offset, setOffset] = useState(0)
-  const [dateValue, setDate] = React.useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  })
+  const [step, setStep] = useState(1)
+  const [startDate, setStartDate] = React.useState<Date>()
+  const [endDate, setEndDate] = React.useState<Date>()
   const [color, setColor] = useState('#fff')
   const [dataConfigChart, setDataConfigChart] = useState<EntityConfigChart[]>(
     [],
@@ -117,6 +127,10 @@ export function CreateConfigChart({
   const [agg, setAgg] = useState<SelectOption>({
     label: '',
     value: '',
+  })
+  const [dataType, setDataType] = useState<SelectOption>({
+    label: 'Realtime',
+    value: 'real',
   })
   const orgId = params.orgId as string
   const { id: projectId } = storage.getProject()
@@ -159,6 +173,11 @@ export function CreateConfigChart({
     { label: 'Count', value: 'COUNT' },
   ]
 
+  const wsDataType = [
+    { label: 'Realtime', value: 'real' },
+    { label: 'History', value: 'history' },
+  ]
+
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
     label: device.name,
@@ -180,10 +199,7 @@ export function CreateConfigChart({
       value: '',
     })
     setColor('#fff')
-    setDate({
-      from: undefined,
-      to: undefined,
-    })
+    setStartDate(undefined)
   }
 
   return (
@@ -205,257 +221,463 @@ export function CreateConfigChart({
             </div>
           </div>
         </div>
-        <div className="mt-2 flex flex-col gap-2">
-          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-            <div className="flex gap-3">
-              <p className="text-table-header">
-                {t('cloud:dashboard.config_chart.show')}
-              </p>
-            </div>
-          </div>
-          <Form<CreateConfigChartDTO['data'], typeof configChartSchema>
-            id="config-chart-parent"
-            className="flex flex-col justify-between"
-            onSubmit={values => {
-              const deviceValueArr = deviceValue.map((item: any) => { return item.value })
-              const dataSubmit = {
-                org: selectedOrgId,
-                device: deviceValueArr,
-                dataConfigChart: dataConfigChart,
-              }
-              handleSubmitChart(dataSubmit)
-            }}
-            schema={configChartSchema}
-          >
-            {({ register, formState, control, setValue }) => {
-              return (
-                <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
-                  <ComboBoxSelectOrg
-                    label={
-                      t('cloud:org_manage.user_manage.add_user.parent') ??
-                      'Parent organization'
-                    }
-                    setFilteredComboboxData={setFilteredComboboxData}
-                    hasDefaultComboboxData={defaultComboboxOrgData}
-                  />
-                  <SelectDropdown
-                    label={t('cloud:dashboard.config_chart.device')}
-                    name="device"
-                    isClearable={true}
-                    control={control}
-                    options={deviceSelectData}
-                    value={deviceValue}
-                    isMulti
-                    onChange={e => {
-                      const entityIdsArr = e.length > 0 ? e.map((item: any) => { return item.value }) : [null]
-                      setDeviceValue(e)
-                      setValue('device', e?.value)
-                      mutate({
-                        data: {
-                          entity_ids: entityIdsArr,
-                          entity_type: 'DEVICE',
-                          time_series: false,
-                        },
-                      })
-                    }}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.device?.message}
-                  </p>
+        {
+          step != 2 ? (
+            <div>
+              <div className="mt-2 flex flex-col gap-2">
+                <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="flex gap-3">
+                    <p className="text-table-header">
+                      {t('cloud:dashboard.config_chart.show')}
+                    </p>
+                  </div>
                 </div>
-              )
-            }}
-          </Form>
-        </div>
-        <div className="mt-2 flex flex-col gap-2">
-          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-            <div className="flex gap-3">
-              <p className="text-table-header">
-                {t('cloud:dashboard.config_chart.title')}
-              </p>
-            </div>
-          </div>
-
-          <Form<
-            CreateConfigChartChildDTO['data'],
-            typeof configChartChildSchema
-          >
-            id="config-chart-child"
-            className="flex flex-col justify-between"
-            onSubmit={values => {
-              const data = {
-                attr: attrValue.label,
-                label: values.label,
-                unit: values.unit,
-                decimal: values.decimal,
-                color: color,
-                id: uuidv4()
-              }
-              setDataConfigChart(pre => [...pre, data])
-              // resetData()
-            }}
-            
-          >
-            {({ register, formState, control }) => {
-              return (
-                <div className="border border-solid border-inherit px-8 py-6">
-                  {dataConfigChart.length ? (
-                    <div className="mb-6">
-                      <ConfigChartTable
-                        offset={offset}
-                        setOffset={setOffset}
-                        data={dataConfigChart || []}
-                        handleDataChart={(values) => setDataConfigChart(values)}
-                        total={0}
-                        isPreviousData={false}
-                      />
-                    </div>
-                  ) : (
-                    <div>{''}</div>
-                  )}
-                  <div
-                    className={cn(
-                      'grid grid-cols-1 gap-x-4 ',
-                      type === 'road' ? 'md:grid-cols-6' : 'md:grid-cols-5',
-                    )}
-                  >
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:dashboard.config_chart.attr')}
-                        name="attr"
-                        isClearable={false}
-                        control={control}
-                        options={attrSelectData}
-                        value={attrValue}
-                        onChange={e => setAttrValue(e)}
-                        maxMenuHeight={150}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.attr?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <InputField
-                        label={t('cloud:dashboard.config_chart.label')}
-                        error={formState.errors['label']}
-                        registration={register('label')}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.attr?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="mb-1">
-                        {t('cloud:dashboard.config_chart.color')}
-                      </p>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            className="relative w-full rounded-md"
-                            variant="trans"
-                            size="square"
-                          >
-                            {color}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <ColorPicker
-                            color={color}
-                            onChange={color => {
-                              const rgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-                              setColor(rgba)
-                            }
-                            }
-                          />
-                        </PopoverContent>
-                      </Popover>
-                    </div>
-                    <div className="flex space-y-1">
-                      <InputField
-                        label={t('cloud:dashboard.config_chart.unit')}
-                        error={formState.errors['unit']}
-                        registration={register('unit')}
-                      />
-                    </div>
-                    <div className="relative w-full space-y-1">
-                      <InputField
-                        label={t('cloud:dashboard.config_chart.decimal')}
-                        error={formState.errors['decimal']}
-                        registration={register('decimal')}
-                      />
-                    </div>
-                    {/* {type === 'road' ? (
-                      <div className="space-y-1">
+                <Form<CreateConfigChartDTO['data'], typeof configChartSchema>
+                  id="config-chart-parent"
+                  className="flex flex-col justify-between"
+                  onSubmit={values => {
+                    const deviceValueArr = deviceValue.map((item: any) => { return item.value })
+                    const dataSubmit = {
+                      id: uuidv4(),
+                      org: selectedOrgId,
+                      device: deviceValueArr,
+                      dataConfigChart: dataConfigChart,
+                    }
+                    handleSubmitChart(dataSubmit)
+                  }}
+                  schema={configChartSchema}
+                >
+                  {({ register, formState, control, setValue }) => {
+                    return (
+                      <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
+                        <ComboBoxSelectOrg
+                          label={
+                            t('cloud:org_manage.user_manage.add_user.parent') ??
+                            'Parent organization'
+                          }
+                          setFilteredComboboxData={setFilteredComboboxData}
+                          hasDefaultComboboxData={defaultComboboxOrgData}
+                        />
                         <SelectDropdown
-                          label={t('cloud:dashboard.config_chart.road')}
-                          name="typeRoad"
-                          isClearable={false}
+                          label={t('cloud:dashboard.config_chart.device')}
+                          name="device"
+                          isClearable={true}
                           control={control}
-                          options={[
-                            { label: 'Đường thẳng', value: 'Đường thẳng' },
-                            { label: 'Đường nét đứt', value: 'Đường nét đứt' },
-                          ]}
-                          value={typeRoadValue}
+                          options={deviceSelectData}
+                          value={deviceValue}
+                          isMulti
                           onChange={e => {
-                            setTypeRoadValue(e)
+                            const entityIdsArr = e.length > 0 ? e.map((item: any) => { return item.value }) : [null]
+                            setDeviceValue(e)
+                            setValue('device', e?.value)
+                            mutate({
+                              data: {
+                                entity_ids: entityIdsArr,
+                                entity_type: 'DEVICE',
+                                time_series: false,
+                              },
+                            })
                           }}
                         />
                         <p className="text-body-sm text-primary-400">
-                          {formState?.errors?.typeRoad?.message}
+                          {formState?.errors?.device?.message}
                         </p>
                       </div>
-                    ) : (
-                      ''
-                    )} */}
-                  </div>
-                  <div className="mt-4 flex justify-end space-x-2">
-                    <Button
-                      className="h-9 w-9 rounded-md"
-                      variant="trans"
-                      size="square"
-                      startIcon={
-                        <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                      }
-                    />
-                    <Button
-                      form="config-chart-child"
-                      type="submit"
-                      size="md"
-                      className="bg-primary-400"
-                      startIcon={
-                        <img
-                          src={btnSubmitIcon}
-                          alt="Submit"
-                          className="h-5 w-5"
-                        />
-                      }
-                    ></Button>
+                    )
+                  }}
+                </Form>
+              </div>
+              <div className="mt-2 flex flex-col gap-2">
+                <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="flex gap-3">
+                    <p className="text-table-header">
+                      {t('cloud:dashboard.config_chart.title')}
+                    </p>
                   </div>
                 </div>
-              )
-            }}
-          </Form>
-        </div>
+
+                <Form<
+                  CreateConfigChartChildDTO['data']
+                >
+                  id="config-chart-child"
+                  className="flex flex-col justify-between"
+                  onSubmit={values => {
+                    const data = {
+                      attr: attrValue.label,
+                      label: values.label,
+                      unit: values.unit,
+                      decimal: values.decimal,
+                      color: color,
+                      id: uuidv4()
+                    }
+                    setDataConfigChart(pre => [...pre, data])
+                    // resetData()
+                  }}
+                  
+                >
+                  {({ register, formState, control }) => {
+                    return (
+                      <div className="border border-solid border-inherit px-8 py-6">
+                        {dataConfigChart.length ? (
+                          <div className="mb-6">
+                            <ConfigChartTable
+                              offset={offset}
+                              setOffset={setOffset}
+                              data={dataConfigChart || []}
+                              handleDataChart={(values) => setDataConfigChart(values)}
+                              total={0}
+                              isPreviousData={false}
+                            />
+                          </div>
+                        ) : (
+                          <div>{''}</div>
+                        )}
+                        <div
+                          className={cn(
+                            'grid grid-cols-1 gap-x-4 ',
+                            widgetType === 'road' ? 'md:grid-cols-6' : 'md:grid-cols-5',
+                          )}
+                        >
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              label={t('cloud:dashboard.config_chart.attr')}
+                              name="attr"
+                              isClearable={false}
+                              control={control}
+                              options={attrSelectData}
+                              value={attrValue}
+                              onChange={e => setAttrValue(e)}
+                              maxMenuHeight={150}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {formState?.errors?.attr?.message}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.label')}
+                              error={formState.errors['label']}
+                              registration={register('label')}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {formState?.errors?.attr?.message}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <p className="mb-1">
+                              {t('cloud:dashboard.config_chart.color')}
+                            </p>
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  className="relative w-full rounded-md"
+                                  variant="trans"
+                                  size="square"
+                                >
+                                  {color}
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-auto p-0" align="start">
+                                <ColorPicker
+                                  color={color}
+                                  onChange={color => {
+                                    const rgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+                                    setColor(rgba)
+                                  }
+                                  }
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
+                          <div className="flex space-y-1">
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.unit')}
+                              error={formState.errors['unit']}
+                              registration={register('unit')}
+                            />
+                          </div>
+                          <div className="relative w-full space-y-1">
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.decimal')}
+                              error={formState.errors['decimal']}
+                              registration={register('decimal')}
+                            />
+                          </div>
+                          {/* {type === 'road' ? (
+                            <div className="space-y-1">
+                              <SelectDropdown
+                                label={t('cloud:dashboard.config_chart.road')}
+                                name="typeRoad"
+                                isClearable={false}
+                                control={control}
+                                options={[
+                                  { label: 'Đường thẳng', value: 'Đường thẳng' },
+                                  { label: 'Đường nét đứt', value: 'Đường nét đứt' },
+                                ]}
+                                value={typeRoadValue}
+                                onChange={e => {
+                                  setTypeRoadValue(e)
+                                }}
+                              />
+                              <p className="text-body-sm text-primary-400">
+                                {formState?.errors?.typeRoad?.message}
+                              </p>
+                            </div>
+                          ) : (
+                            ''
+                          )} */}
+                        </div>
+                        {/* <Button
+                          className="h-9 w-9 rounded-md"
+                          variant="trans"
+                          size="square"
+                          startIcon={
+                            <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                          }
+                        /> */}
+                        <div className="mt-4 flex justify-end space-x-2">
+                          <Button
+                            form="config-chart-child"
+                            type="submit"
+                            size="md"
+                            className="bg-primary-400"
+                            startIcon={
+                              <img
+                                src={btnSubmitIcon}
+                                alt="Submit"
+                                className="h-5 w-5"
+                              />
+                            }
+                          ></Button>
+                        </div>
+                      </div>
+                    )
+                  }}
+                </Form>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
+              <Form<
+                CreateConfigChartDTO['data']
+              >
+                id="config-chart-parent"
+                className="flex flex-col justify-between"
+                onSubmit={values => {
+                  const deviceValueArr = deviceValue.map((item: any) => { return item.value })
+                  const chartSetting = {
+                    startDate: startDate?.getTime(),
+                    endDate: endDate?.getTime(),
+                    interval: interval,
+                    agg: agg,
+                    dataType: dataType,
+                    widgetType: widgetType
+                  }
+                  const data = {
+                    id: uuidv4(),
+                    org: selectedOrgId,
+                    device: deviceValueArr,
+                    chartSetting: chartSetting,
+                    dataConfigChart: dataConfigChart
+                  }
+                  handleSubmitChart(data)
+                }}
+              >
+                {({ register, formState, control }) => {
+                  return (
+                    <div>
+                      <div className="flex space-y-1">
+                        <SelectDropdown
+                          name="dataType"
+                          isClearable={false}
+                          control={control}
+                          options={wsDataType}
+                          value={dataType}
+                          defaultValue={dataType}
+                          onChange={e => {
+                            setDataType(e)
+                          }}
+                        />
+                      </div>
+
+                      {/* Start date */}
+                      <div className="flex space-y-1">
+                        <div className="relative w-full">
+                          <p className="mb-1">
+                            {t('cloud:dashboard.config_chart.startDate')}
+                          </p>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                id="date"
+                                variant="trans"
+                                size="square"
+                                className={cn(
+                                  'relative w-full justify-start rounded-md text-left font-normal',
+                                  !startDate && 'text-muted-foreground',
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                { startDate ? (
+                                    <>
+                                      {format(startDate, 'dd/MM/y')}
+                                    </>
+                                ) : (
+                                  <span>
+                                    {t('cloud:dashboard.config_chart.pick_date')}
+                                  </span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                initialFocus
+                                mode="single"
+                                defaultMonth={new Date()}
+                                selected={startDate}
+                                onSelect={setStartDate}
+                                numberOfMonths={1}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                      {/* End date */}
+                      <div className="flex space-y-1">
+                        <div className="relative w-full">
+                          <p className="mb-1">
+                            {t('cloud:dashboard.config_chart.endDate')}
+                          </p>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <Button
+                                id="date"
+                                variant="trans"
+                                size="square"
+                                className={cn(
+                                  'relative w-full justify-start rounded-md text-left font-normal',
+                                  !endDate && 'text-muted-foreground',
+                                )}
+                              >
+                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                { endDate ? (
+                                    <>
+                                      {format(endDate, 'dd/MM/y')}
+                                    </>
+                                ) : (
+                                  <span>
+                                    {t('cloud:dashboard.config_chart.pick_date')}
+                                  </span>
+                                )}
+                              </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                initialFocus
+                                mode="single"
+                                defaultMonth={new Date()}
+                                selected={endDate}
+                                onSelect={setEndDate}
+                                numberOfMonths={1}
+                                disabled={{before: startDate}}
+                              />
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      </div>
+                      <div className="flex space-y-1">
+                        <SelectDropdown
+                          label={t('ws:filter.interval')}
+                          name="interval"
+                          isClearable={false}
+                          control={control}
+                          options={wsInterval}
+                          value={interval}
+                          onChange={e => {
+                            setInterval(e)
+                          }}
+                        />
+                      </div>
+                      <div className="flex space-y-1">
+                        <SelectDropdown
+                          label={t('ws:filter.data_aggregation')}
+                          name="interval"
+                          isClearable={false}
+                          control={control}
+                          options={wsAgg}
+                          value={agg}
+                          onChange={e => {
+                            setAgg(e)
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )
+                }}
+              </Form>
+            </div>
+          )
+        }
         <div className="mt-4 flex justify-center space-x-2">
-          <Button
-            type="button"
-            variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
-            onClick={close}
-            startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
-            }
-            ref={cancelButtonRef}
-          />
-          <Button
-            form="config-chart-parent"
-            type="submit"
-            size="md"
-            className="bg-primary-400"
-            startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-            }
-          ></Button>
+          {
+            widgetType == 'timeseries' ? (
+              step == 1 ? (
+                <div>
+                  <Button
+                    form="config-chart-parent"
+                    type="button"
+                    size="md"
+                    className="bg-primary-400"
+                    onClick={() => setStep(2)}
+                  >
+                    Next
+                  </Button>
+                </div>
+              ) : (
+                <div className="mt-4 flex justify-center space-x-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+                    onClick={() => setStep(1)}
+                    ref={cancelButtonRef}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    form="config-chart-parent"
+                    type="submit"
+                    size="md"
+                    className="bg-primary-400"
+                  >
+                    Confirm
+                  </Button>
+                </div>
+              )
+            ) : (
+              <div className="mt-4 flex justify-center space-x-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+                  onClick={close}
+                  startIcon={
+                    <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+                  }
+                  ref={cancelButtonRef}
+                />
+                <Button
+                  form="config-chart-parent"
+                  type="submit"
+                  size="md"
+                  className="bg-primary-400"
+                  startIcon={
+                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                  }
+                ></Button>
+              </div>
+            )
+          }
         </div>
       </div>
     </Dialog>

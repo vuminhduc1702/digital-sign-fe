@@ -8,14 +8,12 @@ import { useNotificationStore } from '~/stores/notifications'
 
 
 export type UpdateDashboardDTO = {
-  data: {
-    dashboards: Dashboard
-  }
-  projectId: string,
+  data: {},
+  dashboardId: string,
 }
 
-export const updateDashboard = ({ data, projectId }: UpdateDashboardDTO) => {
-  return axios.put(`/api/vtdashboard/${projectId}`, data)
+export const updateDashboard = ({ data, dashboardId }: UpdateDashboardDTO) => {
+  return axios.put(`/api/vtdashboard/${dashboardId}`, data)
 }
 
 export type UseUpdateDashboardOptions = {
@@ -30,6 +28,7 @@ export const useUpdateDashboard = ({ config }: UseUpdateDashboardOptions = {}) =
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['dashboards'])
+      await queryClient.invalidateQueries(['dashboardsById'])
       addNotification({
         type: 'success',
         title: t('cloud:dashboard.add_dashboard.success_update'),

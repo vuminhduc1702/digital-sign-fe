@@ -437,11 +437,12 @@
         "success_delete": "Xoá Dashboard thành công"
       },
       "config_chart": {
-        "title": "Dữ liệu",
+        "title": "Tạo biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
         "method": "Phương thức",
-        "date": "Thời gian",
+        "startDate": "Thời điểm bắt đầu",
+        "endDate": "Thời điểm kết thúc",
         "color": "Màu sắc",
         "name": "Tên",
         "unit": "Unit",

@@ -103,7 +103,7 @@ export function UpdateDashboard({
                     }
                   }
               },
-              projectId: projectId
+              dashboardId: projectId
             })
           }}
           options={{
