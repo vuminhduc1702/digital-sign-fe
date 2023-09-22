@@ -41,7 +41,7 @@ export function ThingServices() {
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
-            <CreateThingService />
+            <CreateThingService thingServiceData={thingData?.data} />
             {isSuccess ? (
               <ComboBoxSelectThingService
                 data={thingData.data}

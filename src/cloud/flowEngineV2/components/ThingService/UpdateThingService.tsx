@@ -62,7 +62,9 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
       config: { suspense: false },
     })
 
-  const [codeInput, setCodeInput] = useState(thingServiceData?.data.code || '')
+    console.log(thingServiceData?.data.code, 'thingServiceData')
+
+  const [codeInput, setCodeInput] = useState('')
   const [fullScreen, setFullScreen] = useState(false)
   const [codeOutput, setCodeOutput] = useState('')
 
@@ -77,6 +79,10 @@ export function UpdateThingService({ name, close, isOpen }: UpdateThingProps) {
     isError,
     error: errorExecute,
   } = useExecuteService()
+
+  useEffect(() => {
+    setCodeInput(thingServiceData?.data.code || '')
+  }, [thingServiceData])
 
   useEffect(() => {
     if (isSuccessExecute) {
