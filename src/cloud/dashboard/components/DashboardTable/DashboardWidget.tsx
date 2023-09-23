@@ -12,7 +12,7 @@ import { Form, FormDrawer, InputField } from "~/components/Form";
 import { PlusIcon } from "~/components/SVGIcons";
 import GridLayout from "react-grid-layout";
 import storage from "~/utils/storage";
-import { ValueWS, WS, WSAgg } from "../../types";
+import { ValueWS, WS, WSAgg, Widget } from "../../types";
 import { ListObj } from "~/components/SelectMenu";
 import { useWS } from "~/utils/hooks";
 import { Layout } from "lucide-react";
@@ -21,6 +21,8 @@ import { v4 as uuidv4 } from 'uuid'
 import { useUpdateDashboard } from "../../api/updateDashboard";
 import { useGetDashboardsById } from "../../api";
 import { useParams } from "react-router-dom";
+import { DashboardDetail } from "../../routes/DashboardDetail";
+import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
 
 export type CreateConfigChart = {
   id: string,
@@ -40,12 +42,10 @@ export function DashboardWidget() {
   const [widgetType, setWidgetType] = useState('')
   const { mutate: mutateDashboard } = useCreateDashboard()
   const { mutate: mutateUpdateDashboard, isLoading, isSuccess } = useUpdateDashboard()
-  const { data: detailDashboard } = useGetDashboardsById({
-    id: dashboardId,
-    config: { suspense: false },
-  })
+  const { data: detailDashboard } = useGetDashboardsById({ id: dashboardId, config: { suspense: false }})
   const [selectedWidget, setWidgetChecked] = useState('')
   const [showingConfigDialog, setShowingConfigDialog] = useState(false)
+  const [chartData, setChartData] = useState<CreateConfigChart>()
 
   const {
     isLoading: isLoadingThing,
@@ -89,323 +89,330 @@ export function DashboardWidget() {
     [date],
   )
 
-  const initMessage = JSON.stringify({
-    entityDataCmds: []
+  const lastestMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        latestCmd: {
+          keys: [
+            {
+              type: 'TIME_SERIES',
+              key: 'test',
+            },
+            {
+              type: 'TIME_SERIES',
+              key: 'test1',
+            },
+          ],
+        },
+        id: 1,
+      },
+    ],
   })
 
-const lastestMessage = JSON.stringify({
-  entityDataCmds: [
-    {
-      latestCmd: {
-        keys: [
-          {
-            type: 'TIME_SERIES',
-            key: 'test',
-          },
-          {
-            type: 'TIME_SERIES',
-            key: 'test1',
-          },
-        ],
+  const liveMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        tsCmd: {
+          keys: ['test', 'test1'],
+          startTs: parseDate,
+          interval: interval.value,
+          limit: 10,
+          offset: 0,
+          agg: agg.value,
+        },
+        id: 1,
       },
-      id: 1,
-    },
-  ],
-})
+    ],
+  })
 
-const liveMessage = JSON.stringify({
-  entityDataCmds: [
-    {
-      tsCmd: {
-        keys: ['test', 'test1'],
-        startTs: parseDate,
-        interval: interval.value,
-        limit: 10,
-        offset: 0,
-        agg: agg.value,
-      },
-      id: 1,
-    },
-  ],
-})
+  const historyMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        historyCmd: {
+            keys: [],
+            startTs: null,
+            endTs: null,
+            interval: 10000,
+            limit: 100,
+            offset: 0,
+            agg: ''
+        },
+        id: 1
+      }
+    ]
+  })
 
-const historyMessage = JSON.stringify({
-  entityDataCmds: [
-    {
-      historyCmd: {
+  const realtimeMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        tsCmd: {
           keys: [],
           startTs: null,
-          endTs: null,
-          interval: 10000,
+          interval: '',
           limit: 100,
           offset: 0,
           agg: ''
-      },
-      id: 1
-    }
-  ]
-})
+        },
+        id: 1
+      }
+    ]
+  })
 
-const realtimeMessage = JSON.stringify({
-  entityDataCmds: [
-    {
-      tsCmd: {
-        keys: [],
-        startTs: null,
-        interval: '',
-        limit: 100,
-        offset: 0,
-        agg: ''
-      },
-      id: 1
-    }
-  ]
-})
+  const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] = useWS<WS>()
 
-const [chartData, setChartData] = useState<CreateConfigChart>()
-const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] = useWS<WS>()
+  const liveValues: ValueWS[] = lastJsonMessage?.data?.[0]?.timeseries?.test || []
+  const prevValuesRef = useRef<ValueWS[]>([])
+  const newValuesRef = useRef<ValueWS[]>([])
+  useEffect(() => {
+    prevValuesRef.current = newValuesRef.current || liveValues
+  }, [liveValues[0]])
+  if (prevValuesRef.current && agg.value === 'NONE') {
+    newValuesRef.current = [...prevValuesRef.current, ...liveValues]
+  } else newValuesRef.current = liveValues
+  // const [initWSMessage, setInitMessage] = useState({})
+  const handleInit = useCallback((message: WebSocketMessage) => sendMessage(message), [])
+  const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
+  const handleLive = useCallback(
+    () => sendMessage(liveMessage),
+    [parseDate, interval, agg],
+  )
+  const handleHistory = useCallback(() => sendMessage(historyMessage), [])
+  const handleRealtime = useCallback(() => sendMessage(realtimeMessage), [])
 
-const liveValues: ValueWS[] = lastJsonMessage?.data?.[0]?.timeseries?.test || []
-const prevValuesRef = useRef<ValueWS[]>([])
-const newValuesRef = useRef<ValueWS[]>([])
-useEffect(() => {
-  prevValuesRef.current = newValuesRef.current || liveValues
-}, [liveValues[0]])
-if (prevValuesRef.current && agg.value === 'NONE') {
-  newValuesRef.current = [...prevValuesRef.current, ...liveValues]
-} else newValuesRef.current = liveValues
-const [initWSMessage, setInitMessage] = useState({})
-const handleInit = useCallback(() => sendMessage(initMessage), [])
-const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
-const handleLive = useCallback(
-  () => sendMessage(liveMessage),
-  [parseDate, interval, agg],
-)
-const handleHistory = useCallback(() => sendMessage(historyMessage), [])
-
-return (
-  <>
-    {/* {
-      <GridLayout style={editMode ? { background: '#f0f0f0' } : {}} layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1} isDraggable={editMode ? true : false}>
-        <WidgetItem title='Blue eye dragon'></WidgetItem>
-        
-      </GridLayout>
-    } */}
-    {
-      detailDashboard?.configuration.widgets ? (
-        <LineChart data={newValuesRef.current} />
-      ) : (
-      <div>
-        {'abc'}
-      </div>
-      )
-    }
-    
-    {editMode ? (
-      <div className="flex justify-end">
-        <Button
-          className="rounded border-none p-3 ml-2"
-          variant="secondary"
-          size="square"
-          onClick={() => toggleEdit(false)}
-          startIcon={
-            <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
-          }
-          children="Back"
-        />
-        <Button
-          className="rounded border-none p-3 ml-2"
-          form="update-dashboard"
-          type="submit"
-          size="square"
-          isLoading={isLoading}
-          onClick={() => {
-            toggleEdit(false)
-            const widgetId = uuidv4()
-            const latestData = chartData?.dataConfigChart.map((item: any) => { return {
-              type: "TIME_SERIES",
-              key: item.attr
-            }})
-            mutateUpdateDashboard({
-              data: {
-                configuration: {
-                  widgets: {
-                    [widgetId]: {
-                      type: "timeseries",
-                      title: "Test",
-                      datasource: {
-                        init: {
-                          query: {
-                            entityFilter : {
-                              type: "entityList",
-                              entityType: 'DEVICE',
-                              entityIds: chartData?.device
-                            },
-                            pageLink: {
-                              pageSize: 1,
-                              page: 0,
-                              sortOrder: {
-                                key: {
+  return (
+    <>
+      {/* {
+        <GridLayout style={editMode ? { background: '#f0f0f0' } : {}} layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1} isDraggable={editMode ? true : false}>
+          <WidgetItem title='Blue eye dragon'></WidgetItem>
+          
+        </GridLayout>
+      } */}
+      {
+        detailDashboard?.configuration.widgets ? (
+          <LineChart data={newValuesRef.current} />
+        ) : (
+        <div>
+          {'abc'}
+        </div>
+        )
+      }
+      
+      {editMode ? (
+        <div className="flex justify-end">
+          <Button
+            className="rounded border-none p-3 ml-2"
+            variant="secondary"
+            size="square"
+            onClick={() => toggleEdit(false)}
+            startIcon={
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+            }
+            children="Back"
+          />
+          <Button
+            className="rounded border-none p-3 ml-2"
+            form="update-dashboard"
+            type="submit"
+            size="square"
+            isLoading={isLoading}
+            onClick={() => {
+              toggleEdit(false)
+              const widgetId = uuidv4()
+              const latestData = chartData?.dataConfigChart.map((item: any) => { return {
+                type: "TIME_SERIES",
+                key: item.attr
+              }})
+              mutateUpdateDashboard({
+                data: {
+                  configuration: {
+                    widgets: {
+                      [widgetId]: {
+                        type: "timeseries",
+                        title: "Test",
+                        datasource: {
+                          init: {
+                            query: {
+                              entityFilter : {
+                                type: "entityList",
+                                entityType: 'DEVICE',
+                                entityIds: chartData?.device
+                              },
+                              pageLink: {
+                                pageSize: 1,
+                                page: 0,
+                                sortOrder: {
+                                  key: {
+                                    type: "ENTITY_FIELD",
+                                    key: "ts"
+                                  },
+                                  direction: "DESC"
+                                }
+                              },
+                              entityFields: [
+                                {
                                   type: "ENTITY_FIELD",
-                                  key: "ts"
-                                },
-                                direction: "DESC"
-                              }
-                            },
-                            entityFields: [
-                              {
-                                type: "ENTITY_FIELD",
-                                key: "name"
-                              }
-                            ],
-                            latestValues: latestData
+                                  key: "name"
+                                }
+                              ],
+                              latestValues: latestData
+                            }
                           }
-                        }
-                      },
-                      config: {}
+                        },
+                        config: {}
+                      }
                     }
                   }
-                }
-              },
-              dashboardId: dashboardId
-            })
-            const widget = detailDashboard?.configuration.widgets
-            setInitMessage({
-              entityDataCmds: [
-              ]
-            })
-            handleInit()
-            handleLive()
-          }}
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-          children="Save"
-        />
-        {showingConfigDialog ? (
-          <div>
-            <CreateConfigChart widgetType={widgetType} close={() => setShowingConfigDialog(false)} isOpen={true} handleSubmitChart={(values) => {
-              setShowingConfigDialog(false)
-              setChartData(values)
-              
-            }} />
-          </div>
-        ) : (
-          <div>
-            <FormDrawer
-              isDone={isSuccess}
-              title={t('cloud:dashboard.detail_dashboard.add_widget.create')}
-              triggerButton={
-                <Button
-                  className="h-9 rounded-md ml-2"
-                  variant="trans"
-                  size="lg"
-                  style={{ width: '6rem' }}
-                  startIcon={<PlusIcon width={15} height={16} viewBox="0 0 16 16" />}
-                  children="Widget"
-                />
-              }
-              submitButton={
-                <></>
-              }
-            >
-              <Form<CreateWidgetItemDTO['data']>
-                id="create-dashboard"
-                onSubmit={values => {
-                  mutateDashboard({
-                    data: {
-                      title: values.title,
-                      project_id: projectId,
-                      configuration: {
-                        description: values.description,
-                      },
+                },
+                dashboardId: dashboardId
+              })
+              const widgetInitId = Object.keys(detailDashboard?.configuration?.widgets as unknown as Widget)[0].toString()
+              const setInitMessage = {
+                id: widgetInitId,
+                data: chartData?.device.map((deviceId: string) => {
+                  return {
+                    entityId: {
+                      entityType: "DEVICE",
+                      id: deviceId
                     },
-                  })
-                }}
-              >
-                {({ register, formState }) => (
-                  <div className="flex gap-x-4">
-                    <div className="col-6 w-full">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="bg-secondary-400 mb-4"
-                        variant="secondaryLight"
-                        style={{ width: '100%' }}
-                        onClick={() => {
-                          setShowingConfigDialog(true)
-                          setWidgetType('timeseries')
-                        }}
-                      >
-                        <span>{t('cloud:dashboard.detail_dashboard.add_widget.line_chart')}</span>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="square"
-                        className="bg-secondary-400 mb-4"
-                        variant="secondaryLight"
-                        style={{ width: '100%' }}
-                        onClick={() => {
-                          setShowingConfigDialog(true)
-                          setWidgetType('')
-                        }}
-                      >
-                        <span>{t('cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart')}</span>
-                      </Button>
-                    </div>
-                    <div className="col-6 w-full">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="bg-secondary-400 mb-4"
-                        variant="secondaryLight"
-                        style={{ width: '100%' }}
-                        onClick={() => {
-                          setShowingConfigDialog(true)
-                          setWidgetType('')
-                        }}
-                      >
-                        <span>{t('cloud:dashboard.detail_dashboard.add_widget.map')}</span>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="square"
-                        className="bg-secondary-400 mb-4"
-                        variant="secondaryLight"
-                        style={{ width: '100%' }}
-                        onClick={() => {
-                          setShowingConfigDialog(true)
-                          setWidgetType('')
-                        }}
-                      >
-                        <span>{t('cloud:dashboard.detail_dashboard.add_widget.pie_chart')}</span>
-                      </Button>
-                    </div>
+                    latest: {
 
-                  </div>
-                )}
-              </Form>
-            </FormDrawer>
-          </div>
-        )}
-      </div>
-    ) : (
-      <div className="flex justify-end">
-        <Button
-          className="rounded mx-2"
-          form="update-dashboard"
-          size="square"
-          variant="primary"
-          isLoading={isLoading}
-          onClick={() => toggleEdit(true)}
-          startIcon={
-            <img src={btnEditIcon} alt="Edit" className="h-5 w-5" />
-          }
-          children="Edit"
-        />
-        <Button className="px-2" type="button" onClick={() => console.log(connectionStatus)} children="Test"></Button>
-      </div>
-    )}
-  </>
-)
+                    }
+                  }
+                })
+              }
+              handleInit(JSON.stringify(setInitMessage))
+              handleHistory()
+            }}
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
+            children="Save"
+          />
+          {showingConfigDialog ? (
+            <div>
+              <CreateConfigChart widgetType={widgetType} close={() => setShowingConfigDialog(false)} isOpen={true} handleSubmitChart={(values) => {
+                setShowingConfigDialog(false)
+                setChartData(values)
+              }} />
+            </div>
+          ) : (
+            <div>
+              <FormDrawer
+                isDone={isSuccess}
+                title={t('cloud:dashboard.detail_dashboard.add_widget.create')}
+                triggerButton={
+                  <Button
+                    className="h-9 rounded-md ml-2"
+                    variant="trans"
+                    size="lg"
+                    style={{ width: '6rem' }}
+                    startIcon={<PlusIcon width={15} height={16} viewBox="0 0 16 16" />}
+                    children="Widget"
+                  />
+                }
+                submitButton={
+                  <></>
+                }
+              >
+                <Form<CreateWidgetItemDTO['data']>
+                  id="create-dashboard"
+                  onSubmit={values => {
+                    mutateDashboard({
+                      data: {
+                        title: values.title,
+                        project_id: projectId,
+                        configuration: {
+                          description: values.description,
+                        },
+                      },
+                    })
+                  }}
+                >
+                  {({ register, formState }) => (
+                    <div className="flex gap-x-4">
+                      <div className="col-6 w-full">
+                        <Button
+                          type="button"
+                          size="square"
+                          className="bg-secondary-400 mb-4"
+                          variant="secondaryLight"
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            setShowingConfigDialog(true)
+                            setWidgetType('timeseries')
+                          }}
+                        >
+                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.line_chart')}</span>
+                        </Button>
+                        <Button
+                          type="button"
+                          size="square"
+                          className="bg-secondary-400 mb-4"
+                          variant="secondaryLight"
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            setShowingConfigDialog(true)
+                            setWidgetType('')
+                          }}
+                        >
+                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart')}</span>
+                        </Button>
+                      </div>
+                      <div className="col-6 w-full">
+                        <Button
+                          type="button"
+                          size="square"
+                          className="bg-secondary-400 mb-4"
+                          variant="secondaryLight"
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            setShowingConfigDialog(true)
+                            setWidgetType('')
+                          }}
+                        >
+                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.map')}</span>
+                        </Button>
+                        <Button
+                          type="button"
+                          size="square"
+                          className="bg-secondary-400 mb-4"
+                          variant="secondaryLight"
+                          style={{ width: '100%' }}
+                          onClick={() => {
+                            setShowingConfigDialog(true)
+                            setWidgetType('')
+                          }}
+                        >
+                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.pie_chart')}</span>
+                        </Button>
+                      </div>
+
+                    </div>
+                  )}
+                </Form>
+              </FormDrawer>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="flex justify-end">
+          <Button
+            className="rounded mx-2"
+            form="update-dashboard"
+            size="square"
+            variant="primary"
+            isLoading={isLoading}
+            onClick={() => toggleEdit(true)}
+            startIcon={
+              <img src={btnEditIcon} alt="Edit" className="h-5 w-5" />
+            }
+            children="Edit"
+          />
+          <Button className="px-2" type="button" onClick={() => {
+            console.log(Object.keys(detailDashboard?.configuration?.widgets as unknown as Widget))
+          }} children="Test"></Button>
+        </div>
+      )}
+    </>
+  )
 }
