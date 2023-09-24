@@ -20,19 +20,14 @@ const FileField = forwardRef(function FileField<
     <Controller
       control={control}
       name={name}
-      render={({ field: { value, onChange, ...field } }) => {
+      render={({ field: { value, ...field } }) => {
         return (
           <InputField
             {...field}
             {...props}
             type="file"
-            className="border-none shadow-none"
+            className="mt-2 border-none p-0 shadow-none"
             ref={ref}
-            onChange={event => {
-              console.log('wtf: ', event.target.files[0])
-              onChange(event.target.files[0])
-            }}
-            value={value?.fileName}
           />
         )
       }}

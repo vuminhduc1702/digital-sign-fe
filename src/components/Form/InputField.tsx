@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
-import clsx from 'clsx'
 import { type UseFormRegisterReturn } from 'react-hook-form'
+import { cn } from '~/utils/misc'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
@@ -36,7 +36,7 @@ export const InputField = forwardRef(function InputField(
       {startIcon}
       <input
         type={type}
-        className={clsx(
+        className={cn(
           'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 disabled:cursor-not-allowed disabled:bg-secondary-500 sm:text-body-sm',
           className,
           { 'pl-7': startIcon, 'pr-7': endIcon },

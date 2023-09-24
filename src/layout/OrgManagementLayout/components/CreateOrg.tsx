@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
 import {
@@ -16,7 +18,7 @@ import {
   useCreateOrg,
   useUploadImage,
   type CreateOrgDTO,
-  type UploadImageDTO,
+  type UploadImage,
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -27,6 +29,7 @@ import { useDefaultCombobox } from '~/utils/hooks.ts'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import defaultOrgImage from '~/assets/images/default-org.png'
 
 export const orgSchema = z.object({
   name: nameSchema,
@@ -36,7 +39,7 @@ export const orgSchema = z.object({
 })
 
 export const uploadImageSchema = z.object({
-  file: z.string(),
+  file: z.instanceof(File),
 })
 
 export const uploadImageResSchema = z.object({
@@ -76,6 +79,16 @@ export function CreateOrg() {
   const fileInputRef = useRef()
   const { mutate: mutateUploadImage, isLoading: isLoadingUploadImage } =
     useUploadImage()
+  const {
+    formState: formStateUploadImage,
+    control: controlUploadImage,
+    handleSubmit: handleSubmitUploadImage,
+    setValue: setValueUploadImage,
+  } = useForm<UploadImage>({
+    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
+  })
+  const avatarRef = useRef<HTMLImageElement>(null)
+  console.log('error image upload: ', formStateUploadImage.errors)
 
   return (
     <FormDrawer
@@ -156,30 +169,56 @@ export function CreateOrg() {
                 error={formState.errors['description']}
                 registration={register('description')}
               />
-              <Form<UploadImageDTO['data'], typeof uploadImageSchema>
-                onSubmit={values => {
-                  mutate({
+              <FileField
+                label={t('cloud:org_manage.org_manage.add_org.avatar')}
+                error={formStateUploadImage.errors['file']}
+                control={controlUploadImage}
+                name="upload-orgAvatar"
+                ref={fileInputRef}
+                onChange={event => {
+                  console.log('files[0]: ', event.target.files[0])
+                  const formData = new FormData()
+                  formData.append('file', event.target.files[0])
+                  console.log('formData.get: ', formData.get('file'))
+                  setValueUploadImage('file', formData.get('file'))
+                  const reader = new FileReader()
+                  reader.readAsDataURL(event.target.files[0])
+                  reader.onload = e => {
+                    console.log('readAsDataURL: ', e.target)
+                    if (avatarRef.current != null && e.target != null) {
+                      avatarRef.current.src = e.target.result as string
+                    }
+                  }
+                }}
+              />
+              <img
+                src={defaultOrgImage}
+                onError={e => {
+                  const target = e.target as HTMLImageElement
+                  target.onerror = null
+                  target.src = defaultOrgImage
+                }}
+                alt="Organization"
+                className="h-36 w-32"
+                ref={avatarRef}
+              />
+              <Button
+                className="border-none"
+                style={{ justifyContent: 'flex-start' }}
+                variant="primary"
+                size="square"
+                onClick={handleSubmitUploadImage(values => {
+                  console.log('values: ', values)
+                  mutateUploadImage({
                     data: {
                       project_id: projectId,
+                      file: values.file,
                     },
                   })
-                }}
-                schema={uploadImageSchema}
+                })}
               >
-                {({ formState, control }) => {
-                  console.log('zod errors: ', formState.errors)
-
-                  return (
-                    <FileField
-                      label={t('cloud:org_manage.org_manage.add_org.avatar')}
-                      error={formState.errors['file']}
-                      control={control}
-                      name="upload-orgAvatar"
-                      ref={fileInputRef}
-                    />
-                  )
-                }}
-              </Form>
+                {t('cloud:org_manage.org_manage.add_org.upload_ava')}
+              </Button>
             </>
           )
         }}

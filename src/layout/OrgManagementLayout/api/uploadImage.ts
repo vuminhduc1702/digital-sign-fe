@@ -2,7 +2,7 @@ import type * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
-import { axios } from '~/lib/axios'
+import { axiosUploadFile } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
@@ -13,12 +13,19 @@ import {
 
 type UploadImageRes = z.infer<typeof uploadImageResSchema>
 
-export type UploadImageDTO = { data: z.infer<typeof uploadImageSchema> }
+export type UploadImage = {
+  project_id: string
+  file: z.infer<typeof uploadImageSchema>
+}
+
+type UploadImageDTO = {
+  data: UploadImage
+}
 
 export const uploadImage = ({
   data,
 }: UploadImageDTO): Promise<UploadImageRes> => {
-  return axios.post(`/api/miniovt/file/upload`, data)
+  return axiosUploadFile.post(`/api/miniovt/file/upload`, data)
 }
 
 type UseUploadImageOptions = {
