@@ -13,7 +13,7 @@ import { lazyImport } from '~/utils/lazyImport'
 import { queryClient } from '~/lib/react-query'
 import { Spinner } from '~/components/Spinner'
 import { Notifications } from '~/components/Notifications'
-import { AuthLoader } from '~/lib/auth'
+import { AuthLoader, logoutFn } from '~/lib/auth'
 import { AppRoutes } from '~/routes'
 const { ErrorFallback } = lazyImport(
   () => import('~/pages/ErrorPage'),
@@ -41,8 +41,7 @@ function App() {
       new Date().getTime() - new Date(user?.timestamp).getTime() >
         24 * 60 * 60 * 1000
     ) {
-      storage.clearProject()
-      storage.clearToken()
+      logoutFn()
     }
   }, [])
 

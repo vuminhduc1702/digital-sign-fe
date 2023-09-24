@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
@@ -11,7 +11,13 @@ import {
   type SelectOption,
   TextAreaField,
 } from '~/components/Form'
-import { type CreateOrgDTO, useCreateOrg } from '../api'
+import FileField from '~/components/Form/FileField'
+import {
+  useCreateOrg,
+  useUploadImage,
+  type CreateOrgDTO,
+  type UploadImageDTO,
+} from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { type OrgList } from '~/layout/MainLayout/types'
@@ -26,6 +32,16 @@ export const orgSchema = z.object({
   name: nameSchema,
   org_id: z.string(),
   description: descSchema,
+  image: z.string().optional(),
+})
+
+export const uploadImageSchema = z.object({
+  file: z.string(),
+})
+
+export const uploadImageResSchema = z.object({
+  link: z.string(),
+  last_modified: z.number(),
 })
 
 export function CreateOrg() {
@@ -56,6 +72,10 @@ export function CreateOrg() {
       value: '',
     })
   }
+
+  const fileInputRef = useRef()
+  const { mutate: mutateUploadImage, isLoading: isLoadingUploadImage } =
+    useUploadImage()
 
   return (
     <FormDrawer
@@ -99,10 +119,11 @@ export function CreateOrg() {
       >
         {({ register, formState, control, setValue }) => {
           console.log('zod errors: ', formState.errors)
+
           return (
             <>
               <InputField
-                label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
+                label={t('cloud:org_manage.org_manage.add_org.name')}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
@@ -131,12 +152,34 @@ export function CreateOrg() {
                 </p>
               </div>
               <TextAreaField
-                label={
-                  t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
-                }
+                label={t('cloud:org_manage.org_manage.add_org.desc')}
                 error={formState.errors['description']}
                 registration={register('description')}
               />
+              <Form<UploadImageDTO['data'], typeof uploadImageSchema>
+                onSubmit={values => {
+                  mutate({
+                    data: {
+                      project_id: projectId,
+                    },
+                  })
+                }}
+                schema={uploadImageSchema}
+              >
+                {({ formState, control }) => {
+                  console.log('zod errors: ', formState.errors)
+
+                  return (
+                    <FileField
+                      label={t('cloud:org_manage.org_manage.add_org.avatar')}
+                      error={formState.errors['file']}
+                      control={control}
+                      name="upload-orgAvatar"
+                      ref={fileInputRef}
+                    />
+                  )
+                }}
+              </Form>
             </>
           )
         }}

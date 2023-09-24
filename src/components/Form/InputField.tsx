@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import clsx from 'clsx'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 
@@ -9,12 +10,17 @@ type IconProps =
   | { endIcon?: undefined; startIcon?: undefined }
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password' | 'number'
+  type?: 'text' | 'email' | 'password' | 'number' | 'file'
   className?: string
   registration?: Partial<UseFormRegisterReturn>
+  value?: any
+  onChange?: (e: any) => void
 } & IconProps
 
-export const InputField = (props: InputFieldProps) => {
+export const InputField = forwardRef(function InputField(
+  props: InputFieldProps,
+  ref,
+) {
   const {
     type = 'text',
     label,
@@ -23,7 +29,7 @@ export const InputField = (props: InputFieldProps) => {
     error,
     startIcon,
     endIcon,
-    disabled,
+    ...prop
   } = props
   return (
     <FieldWrapper label={label} error={error}>
@@ -35,10 +41,11 @@ export const InputField = (props: InputFieldProps) => {
           className,
           { 'pl-7': startIcon, 'pr-7': endIcon },
         )}
-        disabled={disabled}
+        ref={ref}
         {...registration}
+        {...prop}
       />
       {endIcon}
     </FieldWrapper>
   )
-}
+})

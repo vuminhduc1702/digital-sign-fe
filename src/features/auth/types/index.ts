@@ -1,3 +1,4 @@
+import { type RoleTypes } from '~/lib/authorization'
 import { type BasePagination } from '~/types'
 
 export type User = {
@@ -9,7 +10,7 @@ export type User = {
   role_id?: string
   role_name?: string
   name?: string
-  system_role: 'TENANT' | 'TENANT_DEV' | 'SYSTEM_ADMIN' | 'NORMAL_USER'
+  system_role: RoleTypes
 }
 
 export type EndUser = {
