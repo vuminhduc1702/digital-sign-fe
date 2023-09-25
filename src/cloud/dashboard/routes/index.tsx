@@ -1,4 +1,5 @@
 import { ErrorBoundary } from 'react-error-boundary'
+import { DashboardLayout } from '~/layout/DashboardLayout'
 import { ErrorFallback } from '~/pages/ErrorPage'
 
 import { PATHS } from '~/routes/PATHS'
@@ -15,18 +16,21 @@ const { DashboardDetail } = lazyImport(
 
 export const DashboardManagementRoutes = [
   {
-    path: PATHS.DASHBOARD,
+    element: <DashboardLayout />,
     children: [
       {
-        path: ':projectId',
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DashboardManage />
-          </ErrorBoundary>
-        ),
+        path: PATHS.DASHBOARD,
         children: [
           {
-            path: ':dashboardId',
+            path: ':projectId',
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <DashboardManage />
+              </ErrorBoundary>
+            ),
+          },
+          {
+            path: ':projectId/:dashboardId',
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <DashboardDetail />

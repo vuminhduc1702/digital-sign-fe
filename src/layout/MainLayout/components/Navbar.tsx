@@ -8,7 +8,7 @@ import { useProjects } from '~/cloud/project/api'
 import { useProjectIdStore } from '~/stores/project'
 import storage from '~/utils/storage'
 
-import { type Project } from '~/cloud/project'
+import { type Project } from '~/cloud/project/routes/ProjectManage'
 
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
@@ -16,7 +16,6 @@ import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
-import logo from '~/assets/images/logo.svg'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -29,11 +28,6 @@ function Navbar() {
 
   return (
     <div className="flex w-full">
-      {window.location.pathname === PATHS.PROJECT_MANAGE ? (
-        <div className="hidden h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white lg:flex">
-          <img src={logo} alt="logo" className="h-14" />
-        </div>
-      ) : null}
       <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">

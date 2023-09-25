@@ -18,10 +18,7 @@ export const otpSchema = z
   .string()
   .min(6, { message: 'Vui lòng nhập đúng OTP' })
 
-export const descSchema = z
-  .string()
-  .min(1, { message: 'Mô tả quá ngắn' })
-  .max(30, { message: 'Mô tả quá dài' })
+export const descSchema = z.string()
 
 export const emailSchema = z
   .string()

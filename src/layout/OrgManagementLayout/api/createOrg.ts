@@ -7,7 +7,10 @@ import { useNotificationStore } from '~/stores/notifications'
 
 import { type Org } from '~/layout/MainLayout/types'
 
-type CreateOrg = Pick<Org, 'name' | 'description' | 'org_id' | 'project_id'>
+type CreateOrg = Pick<
+  Org,
+  'name' | 'description' | 'org_id' | 'project_id' | 'image'
+>
 type CreateOrgRes = {
   id: string
   name: string

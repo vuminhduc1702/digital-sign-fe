@@ -15,15 +15,19 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
+import { DashboardDetail } from '../../routes/DashboardDetail'
+import { CreateConfigChart } from './CreateConfigChart'
+import { Link } from '~/components/Link'
+import { PATHS } from '~/routes/PATHS'
 
 function DashboardTableContextMenu({
   projectId,
-  dashboardId,
-  dbName,
+  id,
+  title
 }: {
-  projectId: string
-  dashboardId: string
-  dbName: string
+  projectId: string,
+  id: string,
+  title: string
 }) {
   const { t } = useTranslation()
 
@@ -62,10 +66,9 @@ function DashboardTableContextMenu({
               icon="danger"
               title={t('cloud:dashboard.table.delete_dashboard_full')}
               body={
-                t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                  '{{DBNAME}}',
-                  dbName,
-                ) ?? 'Confirm delete?'
+                t(
+                  'cloud:dashboard.table.delete_dashboard_confirm',
+                ).replace('{{DBNAME}}', title) ?? 'Confirm delete?'
               }
               triggerButton={
                 <Button
@@ -93,7 +96,9 @@ function DashboardTableContextMenu({
                   onClick={() =>
                     mutate({
                       projectId,
-                      dashboardId,
+                      data: {
+                        id: id
+                      }
                     })
                   }
                   startIcon={
@@ -106,11 +111,11 @@ function DashboardTableContextMenu({
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateDashboard
-          dashboardId={dashboardId}
+        <CreateConfigChart
+          type={'chart'}
           close={close}
           isOpen={isOpen}
-          projectId={projectId}
+          handleSubmitChart={(value) => console.log(value)}
         />
       ) : null}
     </>
@@ -118,61 +123,75 @@ function DashboardTableContextMenu({
 }
 
 export function DashboardTable({
-  data,
-  projectId,
-  ...props
-}: {
-  data: Dashboard[]
-  projectId: string
-}) {
-  const { t } = useTranslation()
-
-  const columnHelper = createColumnHelper<Dashboard>()
-
-  const dataSorted =
-    data?.sort((a, b) => b.created_time - a.created_time) || data
-
-  const columns = useMemo<ColumnDef<Dashboard, any>[]>(
-    () => [
-      columnHelper.display({
-        id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
-        header: () => <span>{t('table:no')}</span>,
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('name', {
-        header: () => <span>{t('cloud:dashboard.table.name')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.accessor('created_time', {
-        header: () => <span>{t('cloud:dashboard.table.create_time')}</span>,
-        cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id } = info.row.original
-          // TODO: name ???
-          return DashboardTableContextMenu({ projectId, dashboardId: id, name })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
-    ],
-    [],
-  )
-
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_dashboard')}
-    </div>
-  )
-}
+    data,
+    projectId,
+    ...props
+  }: {
+    data: Dashboard[]
+    projectId: string
+  }) {
+    const { t } = useTranslation()
+  
+    const columnHelper = createColumnHelper<Dashboard>()
+  
+    const dataSorted =
+      data?.sort((a, b) => b.created_time - a.created_time) || data
+  
+    const columns = useMemo<ColumnDef<Dashboard, any>[]>(
+      () => [
+        columnHelper.display({
+          id: 'stt',
+          cell: info => {
+            const orderId = parseInt(info.row.id) + 1
+            return orderId
+          },
+          header: () => <span>{t('table:no')}</span>,
+          footer: info => info.column.id,
+        }),
+        columnHelper.accessor('name', {
+            header: () => (
+              <span>{t('cloud:dashboard.table.name')}</span>
+            ),
+            cell: (info) => (<Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>{info.getValue()}</Link>),
+            footer: info => info.column.id
+        }),
+        columnHelper.display({
+          id: 'description',
+          cell: info => {
+            const { configuration } = info.row.original
+            return <span>{configuration.description}</span>
+          },
+          header: () => (
+            <span>{t('cloud:dashboard.table.configuration.description')}</span>
+          ),
+          footer: info => info.column.id,
+        }),
+        columnHelper.accessor('created_time', {
+            header: () => (
+              <span>{t('cloud:dashboard.table.create_time')}</span>
+            ),
+            cell: info => getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+            footer: info => info.column.id,
+        }),
+        columnHelper.display({
+          id: 'contextMenu',
+          cell: info => {
+            const { id, title } = info.row.original
+            return DashboardTableContextMenu({ projectId, id, title })
+          },
+          header: () => null,
+          footer: info => info.column.id,
+        }),
+      ],
+      [],
+    )
+  
+    return data != null && data?.length !== 0 ? (
+      <BaseTable data={dataSorted} columns={columns} {...props} />
+    ) : (
+      <div className="flex grow items-center justify-center">
+        {t('table:no_dashboard')}
+      </div>
+    )
+  }
+  

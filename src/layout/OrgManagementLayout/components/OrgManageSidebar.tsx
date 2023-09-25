@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useProjectById } from '~/cloud/project/api'
 import { Button } from '~/components/Button'
@@ -25,6 +25,7 @@ export type OrgMapType = {
   description: string
   parent_name: string
   org_id: string
+  image: string
   children: any[]
 }
 
@@ -42,8 +43,6 @@ function OrgManageSidebar() {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { orgId } = useParams()
-
   const { id: projectId } = storage.getProject()
 
   const { data: projectByIdData } = useProjectById({
@@ -58,6 +57,7 @@ function OrgManageSidebar() {
     description: '',
     parent_name: '',
     org_id: '',
+    image: '',
     children: [],
   })
   const [filteredComboboxData, setFilteredComboboxData] = useState<

@@ -4,9 +4,9 @@ import Axios, {
 } from 'axios'
 
 import { API_URL } from '~/config'
-import { PATHS } from '~/routes/PATHS'
 import { useNotificationStore } from '~/stores/notifications'
 import storage from '~/utils/storage'
+import { logoutFn } from './auth'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const userStorage = storage.getToken()
@@ -25,7 +25,15 @@ export const axios = Axios.create({
   },
 })
 
+export const axiosUploadFile = Axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+})
+
 axios.interceptors.request.use(authRequestInterceptor)
+axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
   response => {
     // console.log('response', response)
@@ -66,9 +74,7 @@ axios.interceptors.response.use(
         message = errMessage || 'Dữ liệu truyền lên không hợp lệ'
         break
       case 401:
-        storage.clearProject()
-        storage.clearToken()
-        return (window.location.href = PATHS.LOGIN)
+        return logoutFn()
       case 403:
         message = errMessage || 'Bạn không có quyền truy cập vào trang này'
         break
