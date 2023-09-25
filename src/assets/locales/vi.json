@@ -446,6 +446,32 @@
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
         "success_delete": "Xoá Dashboard thành công"
+      },
+      "config_chart": {
+        "title": "Dữ liệu",
+        "device": "Thiết bị",
+        "attr": "Thuộc tính",
+        "method": "Phương thức",
+        "date": "Thời gian",
+        "color": "Màu sắc",
+        "name": "Tên",
+        "unit": "Đơn vị",
+        "decimal": "Chữ số thập phân",
+        "road": "Kiểu đường",
+        "show": "Hiển thị",
+        "pick_date": "Pick a date"
+      },
+      "detail_dashboard": {
+        "add_item": {
+          "create": "Tạo mới bảng điều khiển",
+          "line_chart": "Biểu đồ đường",
+          "horizontal_bar_chart": "Biểu đồ cột",
+          "pie_chart": "Biểu đồ máy đo",
+          "map": "Bản đồ",
+          "data_table": "Bảng dữ liệu",
+          "switch": "Công tắc",
+          "data_chart": "Dữ liệu"
+        }
       }
     }
   },

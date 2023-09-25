@@ -28,6 +28,7 @@ type SelectProps<TFormValues extends FieldValues> = {
   placeholder?: string
   inputId?: string
   isClearable: boolean
+  maxMenuHeight?: number
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 

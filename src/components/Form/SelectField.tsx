@@ -6,7 +6,7 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
 export type SelectOption = {
   label: string
-  value: string | boolean
+  value: string | boolean | number
   selected?: boolean
 }
 

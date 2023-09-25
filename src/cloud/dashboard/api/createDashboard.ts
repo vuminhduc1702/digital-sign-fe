@@ -1,8 +1,9 @@
+import { Dashboard } from './../types/index';
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
-import { type MutationConfig } from '~/lib/react-query'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 export type CreateDashboardDTO = {
@@ -15,8 +16,9 @@ export type CreateDashboardDTO = {
   }
 }
 
-// TODO: response type ???
-type CreateDashboardRes = {}
+type CreateDashboardRes = {
+  dashboard: Dashboard
+}
 
 export const createDashboard = ({
   data,
@@ -37,9 +39,7 @@ export const useCreateDashboard = ({
 
   return useMutation({
     onSuccess: async () => {
-      // TODO: invalidateQueries sẽ gọi lại api để refresh mỗi lần thay đổi ???
-      // await queryClient.invalidateQueries(['attrs'])
-      // await queryClient.invalidateQueries(['deviceById'])
+      await queryClient.invalidateQueries(['dashboards'])
       addNotification({
         type: 'success',
         title: t('cloud:dashboard.add_dashboard.success_create'),

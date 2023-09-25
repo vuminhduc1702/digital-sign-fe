@@ -41,7 +41,7 @@ type UseDeviceOptions = {
 export const useGetDevices = ({
   orgId,
   projectId,
-  get_attributes = false,
+  get_attributes = true,
   offset = 0,
   limit = limitPagination,
   config,
