@@ -18,7 +18,7 @@ import {
   useCreateOrg,
   useUploadImage,
   type CreateOrgDTO,
-  type UploadImage,
+  type UploadImageDTO,
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -38,8 +38,19 @@ export const orgSchema = z.object({
   image: z.string().optional(),
 })
 
+const MAX_FILE_SIZE = 500000
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 export const uploadImageSchema = z.object({
-  file: z.instanceof(File),
+  file: z
+    .instanceof(File, { message: 'Vui lòng chọn ảnh tải lên' })
+    .refine(
+      file => file.size <= MAX_FILE_SIZE,
+      `Ảnh cho phép dung lượng tối đa 5MB`,
+    )
+    .refine(
+      file => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      'Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png',
+    ),
 })
 
 export const uploadImageResSchema = z.object({
@@ -77,18 +88,21 @@ export function CreateOrg() {
   }
 
   const fileInputRef = useRef()
-  const { mutate: mutateUploadImage, isLoading: isLoadingUploadImage } =
-    useUploadImage()
+  const {
+    data: dataUploadImage,
+    mutate: mutateUploadImage,
+    isLoading: isLoadingUploadImage,
+  } = useUploadImage()
   const {
     formState: formStateUploadImage,
     control: controlUploadImage,
     handleSubmit: handleSubmitUploadImage,
     setValue: setValueUploadImage,
-  } = useForm<UploadImage>({
+  } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
   const avatarRef = useRef<HTMLImageElement>(null)
-  console.log('error image upload: ', formStateUploadImage.errors)
+  console.log('zod image upload error: ', formStateUploadImage.errors)
 
   return (
     <FormDrawer
@@ -125,6 +139,7 @@ export function CreateOrg() {
               org_id: values.org_id,
               name: values.name,
               description: values.description,
+              image: dataUploadImage?.data?.link,
             },
           })
         }}
@@ -176,15 +191,12 @@ export function CreateOrg() {
                 name="upload-orgAvatar"
                 ref={fileInputRef}
                 onChange={event => {
-                  console.log('files[0]: ', event.target.files[0])
                   const formData = new FormData()
                   formData.append('file', event.target.files[0])
-                  console.log('formData.get: ', formData.get('file'))
                   setValueUploadImage('file', formData.get('file'))
                   const reader = new FileReader()
                   reader.readAsDataURL(event.target.files[0])
                   reader.onload = e => {
-                    console.log('readAsDataURL: ', e.target)
                     if (avatarRef.current != null && e.target != null) {
                       avatarRef.current.src = e.target.result as string
                     }
@@ -208,14 +220,15 @@ export function CreateOrg() {
                 variant="primary"
                 size="square"
                 onClick={handleSubmitUploadImage(values => {
-                  console.log('values: ', values)
                   mutateUploadImage({
                     data: {
                       project_id: projectId,
                       file: values.file,
                     },
                   })
+                  setValueUploadImage('file', { file: null as unknown as File })
                 })}
+                isLoading={isLoadingUploadImage}
               >
                 {t('cloud:org_manage.org_manage.add_org.upload_ava')}
               </Button>

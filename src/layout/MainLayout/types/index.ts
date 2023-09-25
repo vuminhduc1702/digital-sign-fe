@@ -3,7 +3,7 @@ import { type Attribute, type BasePagination } from '~/types'
 export type Org = {
   id: string
   name: string
-  image?: string
+  image: string
   description: string
   group_id?: string
   org_id: string

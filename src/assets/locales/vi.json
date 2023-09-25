@@ -91,7 +91,7 @@
           "name": "Tên tổ chức",
           "parent": "Trực thuộc tổ chức",
           "desc": "Mô tả",
-          "avatar": "Ảnh đại diện",
+          "avatar": "Chọn ảnh đại diện",
           "upload_ava": "Tải ảnh",
           "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb",
           "success_uploadImage": "Up ảnh đại diện thành công",

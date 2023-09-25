@@ -15,6 +15,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
+import { Device } from '~/types'
 
 function DashboardTableContextMenu({
   projectId,

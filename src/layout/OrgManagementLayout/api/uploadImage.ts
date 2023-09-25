@@ -13,12 +13,12 @@ import {
 
 type UploadImageRes = z.infer<typeof uploadImageResSchema>
 
-export type UploadImage = {
+type UploadImage = {
   project_id: string
   file: z.infer<typeof uploadImageSchema>
 }
 
-type UploadImageDTO = {
+export type UploadImageDTO = {
   data: UploadImage
 }
 

@@ -32,7 +32,15 @@ export const InputField = forwardRef(function InputField(
     ...prop
   } = props
   return (
-    <FieldWrapper label={label} error={error}>
+    <FieldWrapper
+      label={label}
+      error={error}
+      className={
+        type === 'file'
+          ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'
+          : ''
+      }
+    >
       {startIcon}
       <input
         type={type}
