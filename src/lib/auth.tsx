@@ -44,7 +44,7 @@ async function registerFn(data: RegisterCredentialsDTO) {
   return user
 }
 
-async function logoutFn() {
+export async function logoutFn() {
   storage.clearProject()
   storage.clearToken()
   window.location.assign(window.location.origin as unknown as string)

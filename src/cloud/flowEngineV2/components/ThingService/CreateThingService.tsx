@@ -135,7 +135,7 @@ export function CreateThingService() {
     }
   }
 
-  const [debugMode, setDebugMode] = useState(false)
+  const [debugMode, setDebugMode] = useState(true)
 
   return (
     <FormDialog
@@ -359,6 +359,7 @@ export function CreateThingService() {
                       >
                         <Switch
                           onCheckedChange={checked => setDebugMode(checked)}
+                          defaultChecked
                         />
                       </FieldWrapper>
                     </div>

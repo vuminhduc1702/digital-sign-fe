@@ -91,13 +91,15 @@
           "name": "Tên tổ chức",
           "parent": "Trực thuộc tổ chức",
           "desc": "Mô tả",
-          "avatar": "Ảnh đại diện",
+          "avatar": "Chọn ảnh đại diện",
           "upload_ava": "Tải ảnh",
           "note": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5mb",
+          "success_uploadImage": "Up ảnh đại diện thành công",
           "success_create": "Tạo tổ chức thành công",
           "success_update": "Sửa tổ chức thành công",
           "success_delete": "Xoá tổ chức thành công",
-          "choose_org": "Vui lòng chọn tổ chức"
+          "choose_org": "Vui lòng chọn tổ chức",
+          "choose_avatar": "Vui lòng chọn ảnh đại diện"
         },
         "add_attr": {
           "title": "Tạo mới thuộc tính",
@@ -209,10 +211,17 @@
           "edit": "Sửa sự kiện",
           "name": "Tên sự kiện",
           "parent": "Trực thuộc tổ chức",
+          "info": " Thông tin cơ bản",
+          "type_event": "Kiểu sự kiện",
+          "status": "Trạng thái",
+          "retry": " Số lần lặp lại",
+          "test_condition_time": "Thời gian kiểm tra điều kiện",
+          "start": "Bắt đầu",
+          "end": "Kết thúc",
           "group": "Nhóm",
           "condition": {
             "title": "Điều kiện kích hoạt",
-            "onClick": "onClick",
+            "onClick": "Onclick",
             "device": "Thiết bị",
             "attr": "Thuộc tính",
             "condition_type": {
@@ -235,8 +244,9 @@
           },
           "action": {
             "title": "Thao tác xử lý",
+            "subject": "Tiêu đề",
             "action_type": {
-              "title": "Kiểu thao tác",
+              "title": "Hành động",
               "sms": "SMS",
               "email": "Email",
               "mqtt": "MQTT",
@@ -245,12 +255,13 @@
               "eventactive": "Event active",
               "delay": "Delay"
             },
-            "receiver": "Bên nhận",
+            "address": "Địa chỉ",
             "message": "Nội dung gửi"
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
-          "success_delete": "Xoá sự kiện thành công"
+          "success_delete": "Xoá sự kiện thành công",
+          "success_active": "Kích hoạt sự kiện thành công"
         }
       }
     },

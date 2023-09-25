@@ -9,9 +9,11 @@ import { type User } from '~/features/auth'
 export enum ROLES {
   TENANT = 'TENANT',
   TENANT_DEV = 'TENANT_DEV',
+  SYSTEM_ADMIN = 'SYSTEM_ADMIN',
+  NORMAL_USER = 'NORMAL_USER',
 }
 
-type RoleTypes = keyof typeof ROLES
+export type RoleTypes = keyof typeof ROLES
 
 function isTenant(user: User): boolean {
   return user.system_role === ROLES.TENANT
@@ -30,7 +32,7 @@ export const useAuthorization = () => {
   const system_role = userStorage?.system_role
 
   if (!user.data) {
-    throw Error(t('error:no_user') ?? 'No user found')
+    throw Error(t('error:no_user'))
   }
 
   const checkAccess = useCallback(

@@ -1,14 +1,14 @@
+import type * as z from 'zod'
+
+import { type BasePaginationSchema } from '~/utils/schemaValidation'
+
 export type BaseEntity = {
   id: string
   created_by: string
   created_time: number
 }
 
-export type BasePagination = {
-  total: number
-  offset: number
-  limit: number
-}
+export type BasePagination = z.infer<typeof BasePaginationSchema>
 
 export type BaseTablePagination = {
   offset: number
@@ -29,4 +29,8 @@ export type Attribute = {
   value_as_string?: string
   last_update_ts: number
   value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
+}
+
+export interface Device {
+  log(test: number): void
 }

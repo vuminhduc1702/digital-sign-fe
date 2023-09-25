@@ -10,11 +10,25 @@ import { type createEventSchema } from '../../components/Event'
 import { type EventType } from '../../types'
 
 export type CreateEventDTO = {
-  data: z.infer<typeof createEventSchema>
+  data: z.infer<typeof createEventSchema> & {
+    org_id: string | boolean
+    group_id: string | boolean
+    type?: string
+    schedule?: any
+  }
 }
 
 export const createEvent = ({ data }: CreateEventDTO): Promise<EventType> => {
-  return axios.post(`/api/events`, data)
+  const typeEvent = data?.type
+  if (typeEvent === 'event') {
+    delete data?.schedule
+  }
+  delete data?.type
+
+  return axios.post(
+    `/api/events${typeEvent === 'schedule' ? '/schedule' : ''}`,
+    data,
+  )
 }
 
 type UseCreateEventOptions = {
