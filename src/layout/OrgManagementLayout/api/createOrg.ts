@@ -17,7 +17,7 @@ type CreateOrgRes = {
   image?: string
   description: string
   group_id?: string
-  org_id?: string
+  org_id?: string |number | boolean
   project_id: string
 }
 

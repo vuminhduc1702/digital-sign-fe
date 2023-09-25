@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, InputField, TextAreaField } from '~/components/Form'
+import { Form, InputField, SelectDropdown, SelectOption, TextAreaField } from '~/components/Form'
 import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg } from '../api'
@@ -12,6 +12,10 @@ import { type OrgMapType } from './OrgManageSidebar'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { useDefaultCombobox } from '~/utils/hooks'
+import { type OrgList } from '~/layout/MainLayout/types'
+import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
 
 export function UpdateOrg({
   close,
@@ -24,13 +28,30 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    OrgMapType[]
-  >([])
-  const selectedOrgId =
-    filteredComboboxData?.length !== 1
-      ? selectedUpdateOrg.id
-      : filteredComboboxData[0]?.id
+  const [optionOrg, setOptionOrg] = useState<SelectOption>({
+    label: selectedUpdateOrg?.name,
+    value: selectedUpdateOrg?.id,
+  })
+
+  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
+    exact: false,
+  })
+  const { acc: orgFlattenData } = flattenData(
+    orgListCache?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
+
+  useEffect(() => {
+    setOptionOrg({
+      label: selectedUpdateOrg?.parent_name,
+      value: selectedUpdateOrg?.id,
+    }
+    )
+  }, [selectedUpdateOrg])
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
 
@@ -77,32 +98,49 @@ export function UpdateOrg({
               name: values.name,
               description: values.description,
             },
-            orgId: selectedOrgId,
+            orgId: optionOrg?.value,
           })
         }}
         options={{
           defaultValues: {
             name: selectedUpdateOrg.name,
-            description: selectedUpdateOrg.description,
+            description: selectedUpdateOrg.description !== 'undefined' ? selectedUpdateOrg.description : '',
           },
         }}
         schema={orgSchema}
       >
-        {({ register, formState }) => (
+        {({ register, formState, control, setValue }) => {
+          return(
           <>
             <InputField
               label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
               error={formState.errors['name']}
               registration={register('name')}
             />
-            <ComboBoxSelectOrg
-              label={
-                t('cloud:org_manage.org_manage.add_org.parent') ??
-                'Parent organization'
-              }
-              setFilteredComboboxData={setFilteredComboboxData}
-              selectedData={selectedUpdateOrg}
-            />
+            <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={
+                    orgSelectOptions?.map(org => ({
+                      label: org?.name,
+                      value: org?.id,
+                    })) || [{ label: t('loading:org'), value: '' }]
+                  }
+                  onChange={e => {
+                    setOptionOrg(e)
+                    setValue('org_id', e?.value)
+                  }}
+                  value={optionOrg}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.org_id?.message === 'Required'
+                    ? t('cloud:org_manage.org_manage.add_org.choose_org')
+                    : formState?.errors?.org_id?.message}
+                </p>
+              </div>
             <TextAreaField
               label={
                 t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
@@ -111,7 +149,7 @@ export function UpdateOrg({
               registration={register('description')}
             />
           </>
-        )}
+        )}}
       </Form>
     </Drawer>
   )

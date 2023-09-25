@@ -156,7 +156,7 @@ export function UpdateDevice({
                 value={orgValue}
                 onChange={e => setOrgValue(e)}
                 options={
-                  defaultComboboxOrgData?.map(org => ({
+                  orgSelectOptions?.map(org => ({
                     label: org?.name,
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]
