@@ -22,10 +22,12 @@ function DashboardTableContextMenu({
   projectId,
   id,
   title,
+  ...props
 }: {
   projectId: string
   id: string
   title: string
+  description: string
 }) {
   const { t } = useTranslation()
 
@@ -92,14 +94,7 @@ function DashboardTableContextMenu({
                   type="button"
                   size="md"
                   className="bg-primary-400"
-                  onClick={() =>
-                    mutate({
-                      projectId,
-                      data: {
-                        id: id,
-                      },
-                    })
-                  }
+                  onClick={() => mutate({ id })}
                   startIcon={
                     <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                   }
@@ -116,6 +111,7 @@ function DashboardTableContextMenu({
           close={close}
           isOpen={isOpen}
           projectId={projectId}
+          {...props}
         />
       ) : null}
     </>
@@ -183,8 +179,18 @@ export function DashboardTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { id, title } = info.row.original
-          return DashboardTableContextMenu({ projectId, id, title })
+          console.log('info.row.original: ', info.row.original)
+          const {
+            id,
+            title,
+            configuration: { description },
+          } = info.row.original
+          return DashboardTableContextMenu({
+            projectId,
+            id,
+            title,
+            description,
+          })
         },
         header: () => null,
         footer: info => info.column.id,

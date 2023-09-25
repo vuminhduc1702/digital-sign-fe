@@ -1,4 +1,3 @@
-import { Dashboard } from './../types/index';
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
@@ -6,10 +5,9 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-
 export type UpdateDashboardDTO = {
-  data: {},
-  dashboardId: string,
+  data: {}
+  dashboardId: string
 }
 
 export const updateDashboard = ({ data, dashboardId }: UpdateDashboardDTO) => {
@@ -20,7 +18,9 @@ export type UseUpdateDashboardOptions = {
   config?: MutationConfig<typeof updateDashboard>
 }
 
-export const useUpdateDashboard = ({ config }: UseUpdateDashboardOptions = {}) => {
+export const useUpdateDashboard = ({
+  config,
+}: UseUpdateDashboardOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -28,7 +28,6 @@ export const useUpdateDashboard = ({ config }: UseUpdateDashboardOptions = {}) =
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['dashboards'])
-      await queryClient.invalidateQueries(['dashboardsById'])
       addNotification({
         type: 'success',
         title: t('cloud:dashboard.add_dashboard.success_update'),

@@ -2,10 +2,10 @@
 // import { useTranslation } from 'react-i18next'
 // import { ReadyState } from 'react-use-websocket'
 
-import { useTranslation } from "react-i18next";
-import TitleBar from "~/components/Head/TitleBar";
-import { ContentLayout } from "~/layout/ContentLayout";
-import { DashboardWidget } from "../components/DashboardTable/DashboardWidget";
+import { useTranslation } from 'react-i18next'
+import TitleBar from '~/components/Head/TitleBar'
+import { ContentLayout } from '~/layout/ContentLayout'
+import { DashboardWidget } from '../components/DashboardTable/DashboardWidget'
 
 // import { Button } from '~/components/Button'
 // import { Calendar } from '~/components/Calendar'
@@ -232,18 +232,18 @@ export function DashboardDetail() {
   const DBNAME = localStorage.getItem('dbname')
 
   const layout = [
-    { i: "a", x: 0, y: 0, w: 1, h: 2, static: true },
-    { i: "b", x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
-    { i: "c", x: 4, y: 0, w: 1, h: 2 }
-  ];
-  
+    { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
+    { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
+    { i: 'c', x: 4, y: 0, w: 1, h: 2 },
+  ]
+
   return (
     <>
       <ContentLayout title={t('sidebar:cloud.dashboard')}>
         <div className="flex grow flex-col">
-          <TitleBar title={('Dashboard ' + DBNAME)} />
-          <div className="flex grow flex-col px-9 py-3 shadow-lg justify-between">
-            <DashboardWidget />  
+          <TitleBar title={'Dashboard ' + DBNAME} />
+          <div className="flex grow flex-col justify-between px-9 py-3 shadow-lg">
+            <DashboardWidget />
           </div>
         </div>
       </ContentLayout>

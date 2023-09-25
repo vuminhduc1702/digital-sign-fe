@@ -1,34 +1,41 @@
-import { useTranslation } from "react-i18next";
-import { useCreateDashboard } from "../../api/createDashboard";
-import { Button } from "~/components/Button/Button";
+import { useTranslation } from 'react-i18next'
+import { useCreateDashboard } from '../../api/createDashboard'
+import { Button } from '~/components/Button/Button'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg';
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg';
-import btnEditIcon from '~/assets/icons/btn-edit.svg';
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CreateConfigChart, CreateConfigChartDTO, EntityConfigChart } from "./CreateConfigChart";
-import { CreateWidgetItemDTO, useCreateWidgetItem } from "../../api/createWidgetItem";
-import { Form, FormDrawer, InputField } from "~/components/Form";
-import { PlusIcon } from "~/components/SVGIcons";
-import GridLayout from "react-grid-layout";
-import storage from "~/utils/storage";
-import { ValueWS, WS, WSAgg, Widget } from "../../types";
-import { ListObj } from "~/components/SelectMenu";
-import { useWS } from "~/utils/hooks";
-import { Layout } from "lucide-react";
-import { LineChart } from "../LineChart";
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import {
+  CreateConfigChart,
+  CreateConfigChartDTO,
+  EntityConfigChart,
+} from './CreateConfigChart'
+import {
+  type CreateWidgetItemDTO,
+  useCreateWidgetItem,
+} from '../../api/createWidgetItem'
+import { Form, FormDrawer, InputField } from '~/components/Form'
+import { PlusIcon } from '~/components/SVGIcons'
+import GridLayout from 'react-grid-layout'
+import storage from '~/utils/storage'
+import { type ValueWS, type WS, type WSAgg, type Widget } from '../../types'
+import { type ListObj } from '~/components/SelectMenu'
+import { useWS } from '~/utils/hooks'
+import { Layout } from 'lucide-react'
+import { LineChart } from '../LineChart'
 import { v4 as uuidv4 } from 'uuid'
-import { useUpdateDashboard } from "../../api/updateDashboard";
-import { useGetDashboardsById } from "../../api";
-import { useParams } from "react-router-dom";
-import { DashboardDetail } from "../../routes/DashboardDetail";
-import { WebSocketMessage } from "react-use-websocket/dist/lib/types";
+import { useUpdateDashboard } from '../../api/updateDashboard'
+import { useGetDashboardsById } from '../../api'
+import { useParams } from 'react-router-dom'
+import { DashboardDetail } from '../../routes/DashboardDetail'
+import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 export type CreateConfigChart = {
-  id: string,
-  org: string,
-  device: string[],
-  dataConfigChart: any,
+  id: string
+  org: string
+  device: string[]
+  dataConfigChart: any
   chartSetting: any
 }
 
@@ -41,16 +48,21 @@ export function DashboardWidget() {
 
   const [widgetType, setWidgetType] = useState('')
   const { mutate: mutateDashboard } = useCreateDashboard()
-  const { mutate: mutateUpdateDashboard, isLoading, isSuccess } = useUpdateDashboard()
-  const { data: detailDashboard } = useGetDashboardsById({ id: dashboardId, config: { suspense: false }})
+  const {
+    mutate: mutateUpdateDashboard,
+    isLoading,
+    isSuccess,
+  } = useUpdateDashboard()
+  const { data: detailDashboard } = useGetDashboardsById({
+    id: dashboardId,
+    config: { suspense: false },
+  })
   const [selectedWidget, setWidgetChecked] = useState('')
   const [showingConfigDialog, setShowingConfigDialog] = useState(false)
   const [chartData, setChartData] = useState<CreateConfigChart>()
 
-  const {
-    isLoading: isLoadingThing,
-    isSuccess: isSuccessThing,
-  } = useCreateWidgetItem()
+  const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
+    useCreateWidgetItem()
   const [editMode, toggleEdit] = useState(false)
 
   const layout = [{}]
@@ -59,7 +71,6 @@ export function DashboardWidget() {
   // { i: "kuriboh", x: 2, y: 0, w: 1, h: 1 },
   // { i: "spell-caster", x: 3, y: 0, w: 1, h: 1 },
   // { i: "summoned-skull", x: 4, y: 0, w: 1, h: 1 }
-
 
   const wsInterval = [
     { label: 'Second', value: 1000 },
@@ -129,17 +140,17 @@ export function DashboardWidget() {
     entityDataCmds: [
       {
         historyCmd: {
-            keys: [],
-            startTs: null,
-            endTs: null,
-            interval: 10000,
-            limit: 100,
-            offset: 0,
-            agg: ''
+          keys: [],
+          startTs: null,
+          endTs: null,
+          interval: 10000,
+          limit: 100,
+          offset: 0,
+          agg: '',
         },
-        id: 1
-      }
-    ]
+        id: 1,
+      },
+    ],
   })
 
   const realtimeMessage = JSON.stringify({
@@ -151,16 +162,18 @@ export function DashboardWidget() {
           interval: '',
           limit: 100,
           offset: 0,
-          agg: ''
+          agg: '',
         },
-        id: 1
-      }
-    ]
+        id: 1,
+      },
+    ],
   })
 
-  const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] = useWS<WS>()
+  const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
+    useWS<WS>()
 
-  const liveValues: ValueWS[] = lastJsonMessage?.data?.[0]?.timeseries?.test || []
+  const liveValues: ValueWS[] =
+    lastJsonMessage?.data?.[0]?.timeseries?.test || []
   const prevValuesRef = useRef<ValueWS[]>([])
   const newValuesRef = useRef<ValueWS[]>([])
   useEffect(() => {
@@ -170,7 +183,10 @@ export function DashboardWidget() {
     newValuesRef.current = [...prevValuesRef.current, ...liveValues]
   } else newValuesRef.current = liveValues
   // const [initWSMessage, setInitMessage] = useState({})
-  const handleInit = useCallback((message: WebSocketMessage) => sendMessage(message), [])
+  const handleInit = useCallback(
+    (message: WebSocketMessage) => sendMessage(message),
+    [],
+  )
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
   const handleLive = useCallback(
     () => sendMessage(liveMessage),
@@ -187,20 +203,16 @@ export function DashboardWidget() {
           
         </GridLayout>
       } */}
-      {
-        detailDashboard?.configuration.widgets ? (
-          <LineChart data={newValuesRef.current} />
-        ) : (
-        <div>
-          {'abc'}
-        </div>
-        )
-      }
-      
+      {detailDashboard?.configuration.widgets ? (
+        <LineChart data={newValuesRef.current} />
+      ) : (
+        <div>{'abc'}</div>
+      )}
+
       {editMode ? (
         <div className="flex justify-end">
           <Button
-            className="rounded border-none p-3 ml-2"
+            className="ml-2 rounded border-none p-3"
             variant="secondary"
             size="square"
             onClick={() => toggleEdit(false)}
@@ -210,7 +222,7 @@ export function DashboardWidget() {
             children="Back"
           />
           <Button
-            className="rounded border-none p-3 ml-2"
+            className="ml-2 rounded border-none p-3"
             form="update-dashboard"
             type="submit"
             size="square"
@@ -218,67 +230,69 @@ export function DashboardWidget() {
             onClick={() => {
               toggleEdit(false)
               const widgetId = uuidv4()
-              const latestData = chartData?.dataConfigChart.map((item: any) => { return {
-                type: "TIME_SERIES",
-                key: item.attr
-              }})
+              const latestData = chartData?.dataConfigChart.map((item: any) => {
+                return {
+                  type: 'TIME_SERIES',
+                  key: item.attr,
+                }
+              })
               mutateUpdateDashboard({
                 data: {
                   configuration: {
                     widgets: {
                       [widgetId]: {
-                        type: "timeseries",
-                        title: "Test",
+                        type: 'timeseries',
+                        title: 'Test',
                         datasource: {
                           init: {
                             query: {
-                              entityFilter : {
-                                type: "entityList",
+                              entityFilter: {
+                                type: 'entityList',
                                 entityType: 'DEVICE',
-                                entityIds: chartData?.device
+                                entityIds: chartData?.device,
                               },
                               pageLink: {
                                 pageSize: 1,
                                 page: 0,
                                 sortOrder: {
                                   key: {
-                                    type: "ENTITY_FIELD",
-                                    key: "ts"
+                                    type: 'ENTITY_FIELD',
+                                    key: 'ts',
                                   },
-                                  direction: "DESC"
-                                }
+                                  direction: 'DESC',
+                                },
                               },
                               entityFields: [
                                 {
-                                  type: "ENTITY_FIELD",
-                                  key: "name"
-                                }
+                                  type: 'ENTITY_FIELD',
+                                  key: 'name',
+                                },
                               ],
-                              latestValues: latestData
-                            }
-                          }
+                              latestValues: latestData,
+                            },
+                          },
                         },
-                        config: {}
-                      }
-                    }
-                  }
+                        config: {},
+                      },
+                    },
+                  },
                 },
-                dashboardId: dashboardId
+                dashboardId: dashboardId,
               })
-              const widgetInitId = Object.keys(detailDashboard?.configuration?.widgets as unknown as Widget)[0].toString()
+              const widgetInitId = Object.keys(
+                detailDashboard?.configuration?.widgets as unknown as Widget,
+              )[0].toString()
               const setInitMessage = {
                 id: widgetInitId,
                 data: chartData?.device.map((deviceId: string) => {
                   return {
                     entityId: {
-                      entityType: "DEVICE",
-                      id: deviceId
+                      entityType: 'DEVICE',
+                      id: deviceId,
                     },
-                    latest: {
-
-                    }
+                    latest: {},
                   }
-                })
+                }),
               }
               handleInit(JSON.stringify(setInitMessage))
               handleHistory()
@@ -290,10 +304,15 @@ export function DashboardWidget() {
           />
           {showingConfigDialog ? (
             <div>
-              <CreateConfigChart widgetType={widgetType} close={() => setShowingConfigDialog(false)} isOpen={true} handleSubmitChart={(values) => {
-                setShowingConfigDialog(false)
-                setChartData(values)
-              }} />
+              <CreateConfigChart
+                widgetType={widgetType}
+                close={() => setShowingConfigDialog(false)}
+                isOpen={true}
+                handleSubmitChart={values => {
+                  setShowingConfigDialog(false)
+                  setChartData(values)
+                }}
+              />
             </div>
           ) : (
             <div>
@@ -302,17 +321,17 @@ export function DashboardWidget() {
                 title={t('cloud:dashboard.detail_dashboard.add_widget.create')}
                 triggerButton={
                   <Button
-                    className="h-9 rounded-md ml-2"
+                    className="ml-2 h-9 rounded-md"
                     variant="trans"
                     size="lg"
                     style={{ width: '6rem' }}
-                    startIcon={<PlusIcon width={15} height={16} viewBox="0 0 16 16" />}
+                    startIcon={
+                      <PlusIcon width={15} height={16} viewBox="0 0 16 16" />
+                    }
                     children="Widget"
                   />
                 }
-                submitButton={
-                  <></>
-                }
+                submitButton={<></>}
               >
                 <Form<CreateWidgetItemDTO['data']>
                   id="create-dashboard"
@@ -334,7 +353,7 @@ export function DashboardWidget() {
                         <Button
                           type="button"
                           size="square"
-                          className="bg-secondary-400 mb-4"
+                          className="mb-4 bg-secondary-400"
                           variant="secondaryLight"
                           style={{ width: '100%' }}
                           onClick={() => {
@@ -342,12 +361,16 @@ export function DashboardWidget() {
                             setWidgetType('timeseries')
                           }}
                         >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.line_chart')}</span>
+                          <span>
+                            {t(
+                              'cloud:dashboard.detail_dashboard.add_widget.line_chart',
+                            )}
+                          </span>
                         </Button>
                         <Button
                           type="button"
                           size="square"
-                          className="bg-secondary-400 mb-4"
+                          className="mb-4 bg-secondary-400"
                           variant="secondaryLight"
                           style={{ width: '100%' }}
                           onClick={() => {
@@ -355,14 +378,18 @@ export function DashboardWidget() {
                             setWidgetType('')
                           }}
                         >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart')}</span>
+                          <span>
+                            {t(
+                              'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
+                            )}
+                          </span>
                         </Button>
                       </div>
                       <div className="col-6 w-full">
                         <Button
                           type="button"
                           size="square"
-                          className="bg-secondary-400 mb-4"
+                          className="mb-4 bg-secondary-400"
                           variant="secondaryLight"
                           style={{ width: '100%' }}
                           onClick={() => {
@@ -370,12 +397,16 @@ export function DashboardWidget() {
                             setWidgetType('')
                           }}
                         >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.map')}</span>
+                          <span>
+                            {t(
+                              'cloud:dashboard.detail_dashboard.add_widget.map',
+                            )}
+                          </span>
                         </Button>
                         <Button
                           type="button"
                           size="square"
-                          className="bg-secondary-400 mb-4"
+                          className="mb-4 bg-secondary-400"
                           variant="secondaryLight"
                           style={{ width: '100%' }}
                           onClick={() => {
@@ -383,10 +414,13 @@ export function DashboardWidget() {
                             setWidgetType('')
                           }}
                         >
-                          <span>{t('cloud:dashboard.detail_dashboard.add_widget.pie_chart')}</span>
+                          <span>
+                            {t(
+                              'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                            )}
+                          </span>
                         </Button>
                       </div>
-
                     </div>
                   )}
                 </Form>
@@ -397,20 +431,27 @@ export function DashboardWidget() {
       ) : (
         <div className="flex justify-end">
           <Button
-            className="rounded mx-2"
+            className="mx-2 rounded"
             form="update-dashboard"
             size="square"
             variant="primary"
             isLoading={isLoading}
             onClick={() => toggleEdit(true)}
-            startIcon={
-              <img src={btnEditIcon} alt="Edit" className="h-5 w-5" />
-            }
+            startIcon={<img src={btnEditIcon} alt="Edit" className="h-5 w-5" />}
             children="Edit"
           />
-          <Button className="px-2" type="button" onClick={() => {
-            console.log(Object.keys(detailDashboard?.configuration?.widgets as unknown as Widget))
-          }} children="Test"></Button>
+          <Button
+            className="px-2"
+            type="button"
+            onClick={() => {
+              console.log(
+                Object.keys(
+                  detailDashboard?.configuration?.widgets as unknown as Widget,
+                ),
+              )
+            }}
+            children="Test"
+          ></Button>
         </div>
       )}
     </>

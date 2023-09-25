@@ -9,18 +9,14 @@ import { Spinner } from '~/components/Spinner'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import {
-  type UpdateDashboardDTO,
-  useUpdateDashboard,
-  useGetDashboardsById,
-} from '../../api'
+import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
 
 type UpdateDashboardProps = {
-  projectId: string,
-  id: string,
-  title: string,
+  projectId: string
+  id: string
   close: () => void
   isOpen: boolean
+  description: string
 }
 
 export function UpdateDashboard({
@@ -28,28 +24,17 @@ export function UpdateDashboard({
   id,
   close,
   isOpen,
+  ...props
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateDashboard()
-
-  const { data: dashboardData, isLoading: dashboardLoading } = useGetDashboardsById(
-    {
-      id,
-      config: { suspense: false },
-    },
-  )
 
   useEffect(() => {
     if (isSuccess) {
       close()
     }
   }, [isSuccess, close])
-
-  const showSpinner = useSpinDelay(dashboardLoading, {
-    delay: 150,
-    minDuration: 300,
-  })
 
   return (
     <Drawer
@@ -80,62 +65,52 @@ export function UpdateDashboard({
         </>
       )}
     >
-      {dashboardLoading ? (
-        <div className="flex grow items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
-        </div>
-      ) : (
-        <Form<UpdateDashboardDTO['data']['dashboards']>
-          id="update-dashboard"
-          onSubmit={values => {
-            mutate({
-              data: {
-                dashboards: 
-                  {
-                    id: values.id,
-                    name: values.id,
-                    title: values.title,
-                    tenant_id: values.tenant_id,
-                    created_time: values.created_time,
-                    configuration: {
-                      description: values.configuration.description,
-                      widgets: null
-                    }
-                  }
+      <Form<UpdateDashboardDTO['data']>
+        id="update-dashboard"
+        onSubmit={values => {
+          mutate({
+            data: {
+              dashboards: {
+                id: values.id,
+                name: values.id,
+                title: values.title,
+                tenant_id: values.tenant_id,
+                created_time: values.created_time,
+                configuration: {
+                  description: values.configuration.description,
+                  widgets: null,
+                },
               },
-              dashboardId: projectId
-            })
-          }}
-          options={{
-            defaultValues: {
-              title: dashboardData?.title,
-              configuration: {
-                description: dashboardData?.configuration.description
-              }
             },
-          }}
-        >
-          {({ register, formState }) => (
-            <>
-              {}
-              <InputField
-                label={
-                  t('cloud:dashboard.add_dashboard.name') ?? 'Name'
-                }
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={
-                  t('cloud:dashboard.add_dashboard.description') ??
-                  'Description'
-                }
-                registration={register('configuration.description')}
-              />
-            </>
-          )}
-        </Form>
-      )}
+            dashboardId: projectId,
+          })
+        }}
+        options={{
+          defaultValues: {
+            title: dashboardData?.title,
+            configuration: {
+              description: dashboardData?.configuration.description,
+            },
+          },
+        }}
+      >
+        {({ register, formState }) => (
+          <>
+            {}
+            <InputField
+              label={t('cloud:dashboard.add_dashboard.name') ?? 'Name'}
+              error={formState.errors['title']}
+              registration={register('title')}
+            />
+            <InputField
+              label={
+                t('cloud:dashboard.add_dashboard.description') ?? 'Description'
+              }
+              registration={register('configuration.description')}
+            />
+          </>
+        )}
+      </Form>
     </Drawer>
   )
 }

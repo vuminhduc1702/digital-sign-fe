@@ -64,6 +64,7 @@
     "tailwind-merge": "^1.12.0",
     "tailwindcss-animate": "^1.0.5",
     "use-gauge": "^0.6.0",
+    "uuid": "^9.0.1",
     "ws": "^8.13.0",
     "xlsx": "^0.18.5",
     "zod": "^3.21.4",
