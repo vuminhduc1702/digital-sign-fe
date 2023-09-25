@@ -27,7 +27,6 @@ export const executeService = ({
   name,
   isDebugMode,
 }: executeServiceDTO): Promise<executeServices> => {
-  console.log('data: ', data)
   return axios.post(`/api/fe/thing/${thingId}/service/${name}`, data, {
     params: {
       project_id: projectId,

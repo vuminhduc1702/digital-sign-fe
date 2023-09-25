@@ -12,6 +12,8 @@
     "type-check": "tsc"
   },
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.7.1",
+    "@codesandbox/sandpack-themes": "^2.0.21",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^3.0.0",
