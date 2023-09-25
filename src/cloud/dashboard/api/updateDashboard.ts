@@ -1,4 +1,3 @@
-import { Dashboard } from './../types/index';
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
@@ -6,23 +5,22 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-
 export type UpdateDashboardDTO = {
-  data: {
-    dashboards: Dashboard
-  }
-  projectId: string,
+  data: {}
+  dashboardId: string
 }
 
-export const updateDashboard = ({ data, projectId }: UpdateDashboardDTO) => {
-  return axios.put(`/api/vtdashboard/${projectId}`, data)
+export const updateDashboard = ({ data, dashboardId }: UpdateDashboardDTO) => {
+  return axios.put(`/api/vtdashboard/${dashboardId}`, data)
 }
 
 export type UseUpdateDashboardOptions = {
   config?: MutationConfig<typeof updateDashboard>
 }
 
-export const useUpdateDashboard = ({ config }: UseUpdateDashboardOptions = {}) => {
+export const useUpdateDashboard = ({
+  config,
+}: UseUpdateDashboardOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()

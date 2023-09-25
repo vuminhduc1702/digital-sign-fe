@@ -5,15 +5,9 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
-import { type attrSchema } from '~/utils/schemaValidation'
 
-export type EntityType =
-  | 'ORGANIZATION'
-  | 'GROUP'
-  | 'DEVICE'
-  | 'USER'
-  | 'TEMPLATE'
-  | 'EVENT'
+import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
+import { type attrSchema } from '~/utils/schemaValidation'
 
 export type AttributesDTO = z.infer<typeof attrSchema>
 
@@ -22,7 +16,6 @@ export type CreateAttrDTO = {
     entity_ids: string[]
     entity_type: EntityType
     time_series: boolean
-    
   }
 }
 

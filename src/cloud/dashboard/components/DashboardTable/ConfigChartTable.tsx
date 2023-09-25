@@ -111,35 +111,35 @@ export function ConfigChartTable({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('method', {
-        header: () => <span>{t('cloud:dashboard.config_chart.method')}</span>,
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'date',
-        cell: info => {
-          const dateFormat = info.row.original.date
-          return (
-            <>
-              {dateFormat?.from ? (
-                dateFormat.to ? (
-                  <>
-                    {format(dateFormat.from, 'dd/MM/y')} -{' '}
-                    {format(dateFormat.to, 'dd/MM/y')}
-                  </>
-                ) : (
-                  format(dateFormat.from, 'dd/MM/y')
-                )
-              ) : (
-                <span> </span>
-              )}
-            </>
-          )
-        },
-        header: () => <span>{t('cloud:dashboard.config_chart.date')}</span>,
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('method', {
+      //   header: () => <span>{t('cloud:dashboard.config_chart.method')}</span>,
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
+      // columnHelper.display({
+      //   id: 'date',
+      //   cell: info => {
+      //     const dateFormat = info.row.original.date
+      //     return (
+      //       <>
+      //         {dateFormat?.from ? (
+      //           dateFormat.to ? (
+      //             <>
+      //               {format(dateFormat.from, 'dd/MM/y')} -{' '}
+      //               {format(dateFormat.to, 'dd/MM/y')}
+      //             </>
+      //           ) : (
+      //             format(dateFormat.from, 'dd/MM/y')
+      //           )
+      //         ) : (
+      //           <span> </span>
+      //         )}
+      //       </>
+      //     )
+      //   },
+      //   header: () => <span>{t('cloud:dashboard.config_chart.date')}</span>,
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('color', {
         header: () => <span>{t('cloud:dashboard.config_chart.color')}</span>,
         cell: info => info.getValue(),
@@ -148,7 +148,6 @@ export function ConfigChartTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          console.log(info.row.original)
           const id = info.row.original.id
 
           return ConfigChartContextMenu({ id, handleDelete })

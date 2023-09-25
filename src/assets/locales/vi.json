@@ -450,22 +450,25 @@
         "success_delete": "Xoá Dashboard thành công"
       },
       "config_chart": {
-        "title": "Dữ liệu",
+        "title": "Tạo biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
         "method": "Phương thức",
-        "date": "Thời gian",
+        "startDate": "Thời điểm bắt đầu",
+        "endDate": "Thời điểm kết thúc",
         "color": "Màu sắc",
         "name": "Tên",
-        "unit": "Đơn vị",
-        "decimal": "Chữ số thập phân",
+        "unit": "Unit",
+        "decimal": "Decimal",
         "road": "Kiểu đường",
         "show": "Hiển thị",
-        "pick_date": "Pick a date"
+        "pick_date": "Pick a date",
+        "org": "Tổ chức",
+        "label": "Nhãn"
       },
       "detail_dashboard": {
-        "add_item": {
-          "create": "Tạo mới bảng điều khiển",
+        "add_widget": {
+          "create": "Tạo widget cho bảng điều khiển",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ máy đo",

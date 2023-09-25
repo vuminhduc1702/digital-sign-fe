@@ -43,7 +43,7 @@ export type WS = {
 export type Widget = {
   type: string
   title: string
-  datasources: {
+  datasource: {
     [key: string]: string
   }
   config: {
@@ -71,7 +71,7 @@ export type Dashboard = {
   tenant_id: string
   configuration: {
     description: string
-    widgets: Widgets | null
+    widgets: Widgets
   }
 }
 

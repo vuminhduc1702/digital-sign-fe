@@ -1,18 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+
 import { axios } from '~/lib/axios'
-import { type MutationConfig } from '~/lib/react-query'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 type DeleteDashboardDTO = {
-  projectId: string,
-  data: {
-    id: string
-  }
+  id: string
 }
 
-export const deleteDashboard = ({ projectId, data }: DeleteDashboardDTO) => {
-  return axios.delete(`/api/vtdashboard/${projectId}`, { data })
+export const deleteDashboard = ({ id }: DeleteDashboardDTO) => {
+  return axios.delete(`/api/vtdashboard/${id}`)
 }
 
 type UseDeleteDashboardOptions = {
@@ -28,6 +26,7 @@ export const useDeleteDashboard = ({
 
   return useMutation({
     onSuccess: async () => {
+      await queryClient.invalidateQueries(['dashboards'])
       addNotification({
         type: 'success',
         title: t('cloud:dashboard.add_dashboard.success_delete'),
