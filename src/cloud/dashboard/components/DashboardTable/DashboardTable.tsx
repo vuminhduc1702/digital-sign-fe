@@ -15,16 +15,17 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
-import { Device } from '~/types'
+import { Link } from '~/components/Link'
+import { PATHS } from '~/routes/PATHS'
 
 function DashboardTableContextMenu({
   projectId,
-  dashboardId,
-  dbName,
+  id,
+  title,
 }: {
   projectId: string
-  dashboardId: string
-  dbName: string
+  id: string
+  title: string
 }) {
   const { t } = useTranslation()
 
@@ -65,7 +66,7 @@ function DashboardTableContextMenu({
               body={
                 t('cloud:dashboard.table.delete_dashboard_confirm').replace(
                   '{{DBNAME}}',
-                  dbName,
+                  title,
                 ) ?? 'Confirm delete?'
               }
               triggerButton={
@@ -94,7 +95,9 @@ function DashboardTableContextMenu({
                   onClick={() =>
                     mutate({
                       projectId,
-                      dashboardId,
+                      data: {
+                        id: id,
+                      },
                     })
                   }
                   startIcon={
@@ -108,7 +111,8 @@ function DashboardTableContextMenu({
       </Dropdown>
       {isOpen ? (
         <UpdateDashboard
-          dashboardId={dashboardId}
+          id={id}
+          title={title}
           close={close}
           isOpen={isOpen}
           projectId={projectId}
@@ -146,7 +150,28 @@ export function DashboardTable({
       }),
       columnHelper.accessor('name', {
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
-        cell: info => info.getValue(),
+        cell: info => (
+          <Link
+            to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}
+            target="_blank"
+            onClick={() => {
+              window.localStorage.setItem('dbname', info.row.original.name)
+            }}
+          >
+            {info.getValue()}
+          </Link>
+        ),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'description',
+        cell: info => {
+          const { configuration } = info.row.original
+          return <span>{configuration.description}</span>
+        },
+        header: () => (
+          <span>{t('cloud:dashboard.table.configuration.description')}</span>
+        ),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {
@@ -158,9 +183,8 @@ export function DashboardTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { id } = info.row.original
-          // TODO: name ???
-          return DashboardTableContextMenu({ projectId, dashboardId: id, name })
+          const { id, title } = info.row.original
+          return DashboardTableContextMenu({ projectId, id, title })
         },
         header: () => null,
         footer: info => info.column.id,

@@ -8,12 +8,7 @@ import { useNotificationStore } from '~/stores/notifications'
 
 
 export type UpdateDashboardDTO = {
-  data: {
-    name: string,
-    configuration: {
-      description: string
-    }
-  }
+  data: {},
   dashboardId: string,
 }
 
@@ -32,6 +27,8 @@ export const useUpdateDashboard = ({ config }: UseUpdateDashboardOptions = {}) =
 
   return useMutation({
     onSuccess: async () => {
+      await queryClient.invalidateQueries(['dashboards'])
+      await queryClient.invalidateQueries(['dashboardsById'])
       addNotification({
         type: 'success',
         title: t('cloud:dashboard.add_dashboard.success_update'),
