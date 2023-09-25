@@ -24,11 +24,13 @@ function ThingServiceTableContextMenu({
   thingId,
   name,
   description,
+  data,
   ...props
 }: {
   thingId: string
   name: string
   description: string
+  data: ThingService[]
 }) {
   const { t } = useTranslation()
 
@@ -105,6 +107,7 @@ function ThingServiceTableContextMenu({
           name={name}
           close={close}
           isOpen={isOpen}
+          thingServiceDataProps={data}
           {...props}
         />
       ) : null}
@@ -153,13 +156,14 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
             name,
             description,
             thingId,
+            data
           })
         },
         header: () => null,
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [data],
   )
 
   return data != null && data?.length !== 0 ? (

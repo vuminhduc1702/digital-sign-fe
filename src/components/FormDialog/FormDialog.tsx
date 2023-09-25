@@ -22,6 +22,8 @@ export type ConfirmationDialogProps = {
   isDone?: boolean
   className?: string
   id?: string
+  resetData?: () => void
+  isFullScreen?: boolean
 }
 
 export const FormDialog = ({
@@ -31,6 +33,8 @@ export const FormDialog = ({
   body = '',
   isDone = false,
   id,
+  resetData,
+  isFullScreen,
   className
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
@@ -44,7 +48,10 @@ export const FormDialog = ({
   }, [isDone, close])
 
   const trigger = cloneElement(triggerButton, {
-    onClick: open,
+    onClick: () => {
+      open()
+      resetData?.()
+    },
   })
 
   return (
@@ -56,7 +63,10 @@ export const FormDialog = ({
         initialFocus={cancelButtonRef}
       >
         <div id={id} className={cn("inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle", className)}>
-          <div className="mt-3 text-center sm:mt-0 sm:text-left">
+          <div 
+          className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
+            'h-[95%]': isFullScreen,
+          })}>
             <div className="flex items-center justify-between">
               <DialogTitle as="h3" className="text-h1 text-secondary-900">
                 {title}
@@ -72,7 +82,9 @@ export const FormDialog = ({
               </div>
             </div>
             {body && (
-              <div className="mt-2">
+              <div className={cn('mt-2', {
+                'h-[95%]': isFullScreen,
+              })}>
                 <p className="text-body-sm text-secondary-900">{body}</p>
               </div>
             )}

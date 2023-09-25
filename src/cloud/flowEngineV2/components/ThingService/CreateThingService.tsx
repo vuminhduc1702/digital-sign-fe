@@ -4,11 +4,10 @@ import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
-  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
-  TextAreaField,
+  TextAreaField
 } from '~/components/Form'
 import { nameSchemaRegex } from '~/utils/schemaValidation'
 import {
@@ -21,19 +20,17 @@ import { cn } from '~/utils/misc'
 
 import { useParams } from 'react-router-dom'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { CodeEditor } from '~/cloud/customProtocol/components'
+import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
+import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Switch } from '~/components/Switch'
 import { type ThingService } from '../../types'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -162,11 +159,32 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [debugMode, setDebugMode] = useState(true)
 
+  const clearData = () => {
+    setCodeInput('')
+    setCodeOutput('')
+    setFullScreen(false)
+  }
+
+  useEffect(() => {
+    const handleEsc = (event: any) => {
+      if(event.key === 'Escape') { 
+        setFullScreen(false)
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+    };
+  }, []);
+
   return (
     <FormDialog
       className="thing-service-popup"
       title={t('cloud:custom_protocol.service.create')}
       id='create-service-screen'
+      isFullScreen={fullScreen}
+      resetData={clearData}
       body={
         <FormMultipleFields<
           CreateServiceThingDTO['data'],
@@ -257,8 +275,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     </div>
                     <div
                     className={cn('overflow-auto', {
-                      'max-h-36': !fullScreen,
-                      'max-h-52': fullScreen,
+                      'max-h-48': !fullScreen,
+                      'max-h-96': fullScreen,
                     })}>
                       {fields.map((field, index) => {
                         return (
@@ -365,7 +383,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               type="button"
                               size="square"
                               variant="trans"
-                              className={cn('mt-3 border-none shadow-none', {
+                              className={cn('mt-3 border-none !shadow-none', {
                                 '!justify-start': fullScreen,
                               })}
                               onClick={() => remove(index)}
@@ -424,10 +442,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           </p>
                         </div>
                       </div>
-                      <div className="mt-0 max-h-36 overflow-auto">
+                      <div className={cn('overflow-auto mt-0', {
+                        'max-h-44': !fullScreen,
+                        'max-h-52': fullScreen,
+                      })}>
                         {thingServiceData?.map(item => {
                           return (
-                            <div className="mt-2 cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
+                            <div className="mt-1.5 cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
                               {item.name}
                             </div>
                           )
@@ -442,7 +463,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       'md:col-span-3': fullScreen,
                     })}
                   >
-                    <div className={'flex flex-col gap-2 md:col-span-1'}>
+                    <div className='flex flex-col gap-2 md:col-span-1'>
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">
@@ -465,6 +486,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         value={codeInput}
                         className={`${fullScreen ? '' : '!block'}`}
                         setCodeInput={setCodeInput}
+                        isFullScreen={fullScreen}
                       />
                     </div>
                     <div className={'flex flex-col gap-2 md:col-span-1'}>
@@ -479,6 +501,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         value={codeOutput}
                         readOnly={true}
                         setCodeInput={setCodeOutput}
+                        isFullScreen={fullScreen}
                       />
                     </div>
                   </div>

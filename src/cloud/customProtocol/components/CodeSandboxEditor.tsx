@@ -16,6 +16,9 @@ type CodeSandboxEditorProps = {
   setCodeInput: React.Dispatch<React.SetStateAction<string>>
   isShowLog?: boolean
   className?: string
+  isFullScreen?: boolean
+  defaultValue?: string
+  isEdit?: boolean
 }
 
 type SimpleCodeProps = {
@@ -38,11 +41,15 @@ export function CodeSandboxEditor({
   readOnly,
   value,
   isShowLog,
+  isFullScreen,
+  defaultValue,
+  isEdit,
   className
 }: CodeSandboxEditorProps) {
-  const files = {
+
+  let files = {
     '/index.js': {
-      code: value || ``,
+      code: (value ? value : defaultValue) || '',
     },
   }
 
@@ -55,12 +62,19 @@ export function CodeSandboxEditor({
       <SandpackLayout className={cn('', className)}>
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor
-          className='border-0 border-b border-solid border-inherit'
+          className={cn('', {
+            '!h-96': isFullScreen,
+            'border-0 border-b border-solid border-inherit': !isFullScreen,
+            '!h-[600px] border-0': (!isFullScreen && !isShowLog),
+            '!h-[320px] border-0': (isFullScreen && !isShowLog && isEdit)
+          })}
           showInlineErrors={true}
           showLineNumbers={true}
           readOnly={readOnly}
         />
-        {isShowLog && <SandpackConsole standalone={true} showSyntaxError={true} />}
+        {isShowLog && <SandpackConsole className={cn('', {
+            '!h-96': isFullScreen
+          })} standalone={true} showSyntaxError={true} />}
       </SandpackLayout>
     </SandpackProvider>
   )
