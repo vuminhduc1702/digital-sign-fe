@@ -6,7 +6,12 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 export type UpdateDashboardDTO = {
-  data: {}
+  data: {
+    title: string
+    configuration: {
+      description: string
+    }
+  }
   dashboardId: string
 }
 
