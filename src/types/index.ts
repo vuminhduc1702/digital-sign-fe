@@ -30,7 +30,3 @@ export type Attribute = {
   last_update_ts: number
   value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
 }
-
-export interface Device {
-  log(test: number): void
-}

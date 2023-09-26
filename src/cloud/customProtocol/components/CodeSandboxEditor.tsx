@@ -3,7 +3,7 @@ import {
   SandpackConsole,
   SandpackLayout,
   SandpackProvider,
-  useSandpack
+  useSandpack,
 } from '@codesandbox/sandpack-react'
 import { ecoLight } from '@codesandbox/sandpack-themes'
 import { useEffect } from 'react'
@@ -44,9 +44,8 @@ export function CodeSandboxEditor({
   isFullScreen,
   defaultValue,
   isEdit,
-  className
+  className,
 }: CodeSandboxEditorProps) {
-
   let files = {
     '/index.js': {
       code: (value ? value : defaultValue) || '',
@@ -65,16 +64,22 @@ export function CodeSandboxEditor({
           className={cn('', {
             '!h-96': isFullScreen,
             'border-0 border-b border-solid border-inherit': !isFullScreen,
-            '!h-[600px] border-0': (!isFullScreen && !isShowLog),
-            '!h-[320px] border-0': (isFullScreen && !isShowLog && isEdit)
+            '!h-[600px] border-0': !isFullScreen && !isShowLog,
+            '!h-[320px] border-0': isFullScreen && !isShowLog && isEdit,
           })}
           showInlineErrors={true}
           showLineNumbers={true}
           readOnly={readOnly}
         />
-        {isShowLog && <SandpackConsole className={cn('', {
-            '!h-96': isFullScreen
-          })} standalone={true} showSyntaxError={true} />}
+        {isShowLog && (
+          <SandpackConsole
+            className={cn('', {
+              '!h-96': isFullScreen,
+            })}
+            standalone={true}
+            showSyntaxError={true}
+          />
+        )}
       </SandpackLayout>
     </SandpackProvider>
   )
