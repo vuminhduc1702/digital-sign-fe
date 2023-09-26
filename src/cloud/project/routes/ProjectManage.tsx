@@ -67,7 +67,7 @@ export function ProjectManage() {
             (
               <>
                 <div className="font-bold text-h2 mb-4">{t('cloud:project_manager.count_project').replace('{{NO_OF_PROJECT}}', Number(projectsData?.total).toString())}</div>
-                <ListProjectItem listProjectData={projectsData}/>
+                <ListProjectItem listProjectData={filteredComboboxData}/>
               </> 
             )
          : (

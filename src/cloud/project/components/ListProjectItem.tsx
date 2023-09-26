@@ -17,6 +17,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useTranslation } from "react-i18next";
 import { useDeleteProject } from "../api/deleteProject";
 import { UpdateProject } from "./UpdateProject";
+import { useState } from "react";
 
 export function ListProjectItem({listProjectData}: any) {
   const { t } = useTranslation()
@@ -27,15 +28,17 @@ export function ListProjectItem({listProjectData}: any) {
 
   const { mutate, isLoading, isSuccess } = useDeleteProject()
 
+  const [selectedUpdateProjectId, setSelectedUpdateProjectId] = useState('')
+
   const setProjectId = useProjectIdStore(state => state.setProjectId)
   
   return (
     <div>
       <div>
         {
-          project?.projects.map((project: Project) => {
+          project?.map((project: Project) => {
             return (
-              <div className="relative m-2" style={{width: '460px', height: '288px', backgroundImage: `url(${defaultProjectImage})`}}>
+              <div key={project.id} className="relative m-2" style={{width: '460px', height: '288px', backgroundImage: `url(${defaultProjectImage})`}}>
                 <div className="absolute top-3 right-3">
                 <Dropdown
                   icon={
@@ -57,7 +60,10 @@ export function ListProjectItem({listProjectData}: any) {
                             className="h-5 w-5"
                           />
                         }
-                        onClick={open}
+                        onClick={() => {
+                          setSelectedUpdateProjectId(project.id)
+                          open
+                        }}
                       >
                         {t('cloud:project_manager.add_project.edit')}
                       </MenuItem>
@@ -109,9 +115,9 @@ export function ListProjectItem({listProjectData}: any) {
                 </Dropdown>
                 {isOpen ? (
                   <UpdateProject
-                    projectId={project.id}
                     close={close}
-                    isOpen={isOpen}
+                    isOpen={isOpen} 
+                    selectedUpdateProjectId={selectedUpdateProjectId}                    
                   />
                 ) : null}
                 </div>
