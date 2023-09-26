@@ -4706,10 +4706,10 @@ inherits@2:
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
 
-innoway@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/innoway/-/innoway-1.0.0.tgz#473f0e48d4c2bf23d105d7397a1c7ae9a1588ff3"
-  integrity sha512-jZH10gYfeV3U1VV04Xgyst6Xv5ZuNWgObwdcE1oSr9orJv4ePIOpxnGM5ebwYXZVw8bWPg3qZ3exLRz31OcYew==
+innoway@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/innoway/-/innoway-1.0.2.tgz#8ae97614721dd9e9a717c140f168e08a95ad3ba4"
+  integrity sha512-8gwR+XtP/uF+GhRIaetDQtvOb7s5LwsTzuWjPHeILKTa98WftaxsbBhkZkEkax95y2ACAmf9opla9JUcfgdtSw==
 
 internal-slot@^1.0.4, internal-slot@^1.0.5:
   version "1.0.5"

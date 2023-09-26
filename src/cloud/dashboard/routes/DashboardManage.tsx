@@ -8,12 +8,9 @@ import storage from '~/utils/storage'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
 import { ComboBoxSelectDashboard } from '../components/DashboardTable/ComboBoxSelectDashboard'
 import { DashboardTable } from '../components/DashboardTable'
-import Device from 'index'
-
 
 export function DashboardManage() {
   const { t } = useTranslation()
-  Device().
 
   const ref = useRef(null)
 
