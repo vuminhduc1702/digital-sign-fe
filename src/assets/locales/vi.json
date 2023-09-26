@@ -1,6 +1,7 @@
 {
   "sidebar": {
     "overview": "Tổng quan",
+    "project": "Dự án",
     "device": {
       "title": "Thiết bị",
       "devkit": "Devkit",
@@ -50,7 +51,20 @@
   },
   "cloud": {
     "project_manager": {
-      "title": "Quản lý Project"
+      "title": "Quản lý Project",
+      "project": "Dự án",
+      "no_data": "Bạn chưa có dự án nào, hãy tạo mới dự án",
+      "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
+      "add_project": {
+        "title": "Tạo mới dự án",
+        "name": "Tên dự án",
+        "edit": "Sửa dự án",
+        "description": "Mô tả",
+        "delete_project": "Xoá dự án",
+        "confirm_delete": "Bạn có chắc chắn muốn xóa dự án {{PROJECT}}",
+        "success_add": "Tạo mới dự án thành công",
+        "success_delete": "Xóa dự án thành công"
+      }
     },
     "org_manage": {
       "org_list": "Danh sách tổ chức",

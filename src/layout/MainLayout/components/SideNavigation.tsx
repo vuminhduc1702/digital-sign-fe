@@ -4,7 +4,7 @@ import { forwardRef, useState, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { PATHS } from '~/routes/PATHS'
-import { NavLink } from '~/components/Link'
+import { Link, NavLink } from '~/components/Link'
 import storage from '~/utils/storage'
 
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
@@ -87,6 +87,9 @@ function SideNavigation() {
           className="aspect-square w-[20px]"
         />
         <div>{t('sidebar:overview')}</div>
+      </div>
+      <div className="mb-3 w-full flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
+        <Link className="w-full flex" to={PATHS.PROJECT_MANAGE}>{t('sidebar:project')}</Link>
       </div>
 
       <Accordion.Root

@@ -16,7 +16,6 @@ import { getVNDateFormat } from '~/utils/misc'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
-import { type Template } from '~/cloud/deviceTemplate/types'
 
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
