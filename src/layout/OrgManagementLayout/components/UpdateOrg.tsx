@@ -2,8 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectDropdown, SelectOption, TextAreaField } from '~/components/Form'
-import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import {
+  Form,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+  TextAreaField,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg } from '../api'
 import { orgSchema } from './CreateOrg'
@@ -49,8 +54,7 @@ export function UpdateOrg({
     setOptionOrg({
       label: selectedUpdateOrg?.parent_name,
       value: selectedUpdateOrg?.id,
-    }
-    )
+    })
   }, [selectedUpdateOrg])
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
@@ -104,20 +108,20 @@ export function UpdateOrg({
         options={{
           defaultValues: {
             name: selectedUpdateOrg.name,
-            description: selectedUpdateOrg.description !== 'undefined' ? selectedUpdateOrg.description : '',
+            description: selectedUpdateOrg?.description ?? '',
           },
         }}
         schema={orgSchema}
       >
         {({ register, formState, control, setValue }) => {
-          return(
-          <>
-            <InputField
-              label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <div className="space-y-1">
+          return (
+            <>
+              <InputField
+                label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <div className="space-y-1">
                 <SelectDropdown
                   isClearable={true}
                   label={t('cloud:org_manage.device_manage.add_device.parent')}
@@ -141,15 +145,16 @@ export function UpdateOrg({
                     : formState?.errors?.org_id?.message}
                 </p>
               </div>
-            <TextAreaField
-              label={
-                t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
-              }
-              error={formState.errors['description']}
-              registration={register('description')}
-            />
-          </>
-        )}}
+              <TextAreaField
+                label={
+                  t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
+                }
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          )
+        }}
       </Form>
     </Drawer>
   )

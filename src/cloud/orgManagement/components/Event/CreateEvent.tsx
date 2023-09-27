@@ -413,8 +413,11 @@ export function CreateEvent() {
                     // error={formState.errors['type']}
                     registration={register('status')}
                     options={[
-                      { value: true, label: 'Kích hoạt' },
-                      { value: false, label: 'Không kích hoạt' },
+                      { value: true as unknown as string, label: 'Kích hoạt' },
+                      {
+                        value: false as unknown as string,
+                        label: 'Không kích hoạt',
+                      },
                     ]}
                   />
                   <SelectField
@@ -425,8 +428,8 @@ export function CreateEvent() {
                     registration={register('onClick')}
                     disabled={typeEvent === 'schedule'}
                     options={[
-                      { value: true, label: 'Có' },
-                      { value: false, label: 'Không' },
+                      { value: true as unknown as string, label: 'Có' },
+                      { value: false as unknown as string, label: 'Không' },
                     ]}
                     onChange={event => setOnclickValue(event.target.value)}
                   />

@@ -33,7 +33,7 @@ import defaultOrgImage from '~/assets/images/default-org.png'
 
 export const orgSchema = z.object({
   name: nameSchema,
-  // org_id: z.string(),
+  org_id: z.string().optional(),
   description: descSchema,
   image: z.string().optional(),
 })

@@ -9,8 +9,8 @@ import { type createEventSchema } from '../../components/Event'
 
 export type UpdateEventDTO = {
   data: z.infer<typeof createEventSchema> & {
-    org_id: string | boolean
-    group_id: string | boolean
+    org_id: string
+    group_id: string
     type?: string
     schedule?: any
     interval?: any
@@ -19,15 +19,18 @@ export type UpdateEventDTO = {
 }
 
 export const updateEvent = ({ data, eventId }: UpdateEventDTO) => {
-    const typeEvent = data?.type
-  if(typeEvent === 'event') {
+  const typeEvent = data?.type
+  if (typeEvent === 'event') {
     delete data?.schedule
   } else {
     delete data?.interval
   }
-  delete data?.type;
-  
-  return axios.put(`/api/events${typeEvent === 'schedule' ? '/schedule' : ''}/${eventId}`, data)
+  delete data?.type
+
+  return axios.put(
+    `/api/events${typeEvent === 'schedule' ? '/schedule' : ''}/${eventId}`,
+    data,
+  )
 }
 
 type UseUpdateEventOptions = {
