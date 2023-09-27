@@ -12,7 +12,6 @@ import {
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { format } from 'date-fns'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { DateRange, Matcher } from 'react-day-picker'
 import ColorPicker from 'react-pick-color'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
@@ -21,18 +20,17 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { PlusIcon } from '~/components/SVGIcons'
-import { cn } from '~/utils/misc'
+import { cn, flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
-import { Calendar } from '../Calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
 import { ConfigChartTable } from './ConfigChartTable'
 import { type WSAgg } from '../../types'
 import { v4 as uuidv4 } from 'uuid'
-import { ComboBoxSelectOrg } from '~/layout/MainLayout/components/ComboBoxSelectOrg'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { Calendar } from '~/components/Calendar'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 export const configChartSchema = z.object({
   // name: nameSchema,
@@ -43,16 +41,12 @@ export const configChartSchema = z.object({
 export type CreateConfigChartDTO = {
   data: {
     id: string
-    org: string
+    org_id: string
     device: string[]
     dataConfigChart: any
     chartSetting: any
   }
 }
-
-// export const configChartChildSchema = z.object({
-//   // device: z.string(),
-// })
 
 export type CreateConfigChartChildDTO = {
   data: {
@@ -97,13 +91,12 @@ export function CreateConfigChart({
   const { t } = useTranslation()
   const params = useParams()
   const thingId = params.thingId as string
-  const defaultComboboxOrgData = useDefaultCombobox('org')
   const cancelButtonRef = useRef(null)
   const [offset, setOffset] = useState(0)
   const [step, setStep] = useState(1)
   const [startDate, setStartDate] = React.useState<Date>()
   const [endDate, setEndDate] = React.useState<Date>()
-  const [color, setColor] = useState('#fff')
+  const [color, setColor] = useState('red')
   const [dataConfigChart, setDataConfigChart] = useState<EntityConfigChart[]>(
     [],
   )
@@ -188,6 +181,18 @@ export function CreateConfigChart({
     label: item,
   })) || [{ value: '', label: '' }]
 
+  const [optionOrg, setOptionOrg] = useState<SelectOption>({
+    label: '',
+    value: '',
+  })
+  const { data: orgData } = useGetOrgs({ projectId })
+  const { acc: orgFlattenData } = flattenData(
+    orgData?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+  console.log('orgFlattenData: ', orgFlattenData)
+
   const resetData = () => {
     setDeviceValue([])
     setAttrValue({
@@ -200,6 +205,10 @@ export function CreateConfigChart({
     })
     setColor('#fff')
     setStartDate(undefined)
+    setOptionOrg({
+      label: '',
+      value: '',
+    })
   }
 
   return (
@@ -221,7 +230,7 @@ export function CreateConfigChart({
             </div>
           </div>
         </div>
-        {step != 2 ? (
+        {step !== 2 ? (
           <div>
             <div className="mt-2 flex flex-col gap-2">
               <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
@@ -232,7 +241,7 @@ export function CreateConfigChart({
                 </div>
               </div>
               <Form<CreateConfigChartDTO['data'], typeof configChartSchema>
-                id="config-chart-parent"
+                id="config-chart-parent-1"
                 className="flex flex-col justify-between"
                 onSubmit={values => {
                   const deviceValueArr = deviceValue.map((item: any) => {
@@ -240,7 +249,7 @@ export function CreateConfigChart({
                   })
                   const dataSubmit = {
                     id: uuidv4(),
-                    org: selectedOrgId,
+                    org_id: selectedOrgId,
                     device: deviceValueArr,
                     dataConfigChart: dataConfigChart,
                   }
@@ -251,14 +260,34 @@ export function CreateConfigChart({
                 {({ register, formState, control, setValue }) => {
                   return (
                     <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
-                      <ComboBoxSelectOrg
-                        label={
-                          t('cloud:org_manage.user_manage.add_user.parent') ??
-                          'Parent organization'
-                        }
-                        setFilteredComboboxData={setFilteredComboboxData}
-                        hasDefaultComboboxData={defaultComboboxOrgData}
-                      />
+                      <div className="space-y-1">
+                        <SelectDropdown
+                          isClearable={true}
+                          label={t(
+                            'cloud:org_manage.device_manage.add_device.parent',
+                          )}
+                          name="org_id"
+                          control={control}
+                          options={
+                            orgFlattenData?.map(org => ({
+                              label: org?.name,
+                              value: org?.id,
+                            })) || [{ label: t('loading:org'), value: '' }]
+                          }
+                          onChange={e => {
+                            setOptionOrg(e)
+                            setValue('org_id', e?.value)
+                          }}
+                          value={optionOrg}
+                        />
+                        <p className="text-body-sm text-primary-400">
+                          {formState?.errors?.org_id?.message === 'Required'
+                            ? t(
+                                'cloud:org_manage.org_manage.add_org.choose_org',
+                              )
+                            : formState?.errors?.org_id?.message}
+                        </p>
+                      </div>
                       <SelectDropdown
                         label={t('cloud:dashboard.config_chart.device')}
                         name="device"
@@ -436,29 +465,6 @@ export function CreateConfigChart({
                             ''
                           )} */}
                       </div>
-                      {/* <Button
-                          className="h-9 w-9 rounded-md"
-                          variant="trans"
-                          size="square"
-                          startIcon={
-                            <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                          }
-                        /> */}
-                      <div className="mt-4 flex justify-end space-x-2">
-                        <Button
-                          form="config-chart-child"
-                          type="submit"
-                          size="md"
-                          className="bg-primary-400"
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="h-5 w-5"
-                            />
-                          }
-                        ></Button>
-                      </div>
                     </div>
                   )
                 }}
@@ -468,7 +474,7 @@ export function CreateConfigChart({
         ) : (
           <div className="grid grid-cols-1 gap-x-4 border border-solid border-inherit px-8 py-6 md:grid-cols-5">
             <Form<CreateConfigChartDTO['data']>
-              id="config-chart-parent"
+              id="config-chart-parent-2"
               className="flex flex-col justify-between"
               onSubmit={values => {
                 const deviceValueArr = deviceValue.map((item: any) => {
@@ -623,17 +629,16 @@ export function CreateConfigChart({
           </div>
         )}
         <div className="mt-4 flex justify-center space-x-2">
-          {widgetType == 'timeseries' ? (
-            step == 1 ? (
+          {widgetType === 'timeseries' ? (
+            step === 1 ? (
               <div>
                 <Button
-                  form="config-chart-parent"
                   type="button"
                   size="md"
                   className="bg-primary-400"
                   onClick={() => setStep(2)}
                 >
-                  Next
+                  {t('btn:next')}
                 </Button>
               </div>
             ) : (
@@ -645,15 +650,15 @@ export function CreateConfigChart({
                   onClick={() => setStep(1)}
                   ref={cancelButtonRef}
                 >
-                  Back
+                  {t('btn:back')}
                 </Button>
                 <Button
-                  form="config-chart-parent"
+                  form="config-chart-parent-2"
                   type="submit"
                   size="md"
                   className="bg-primary-400"
                 >
-                  Confirm
+                  {t('btn:confirm')}
                 </Button>
               </div>
             )
@@ -677,7 +682,7 @@ export function CreateConfigChart({
                 startIcon={
                   <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                 }
-              ></Button>
+              />
             </div>
           )}
         </div>

@@ -16,13 +16,12 @@ import {
   useCreateWidgetItem,
 } from '../../api/createWidgetItem'
 import { Form, FormDrawer, InputField } from '~/components/Form'
-import { PlusIcon } from '~/components/SVGIcons'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import GridLayout from 'react-grid-layout'
 import storage from '~/utils/storage'
 import { type ValueWS, type WS, type WSAgg, type Widget } from '../../types'
 import { type ListObj } from '~/components/SelectMenu'
 import { useWS } from '~/utils/hooks'
-import { Layout } from 'lucide-react'
 import { LineChart } from '../LineChart'
 import { v4 as uuidv4 } from 'uuid'
 import { useUpdateDashboard } from '../../api/updateDashboard'
@@ -206,7 +205,7 @@ export function DashboardWidget() {
       {detailDashboard?.configuration.widgets ? (
         <LineChart data={newValuesRef.current} />
       ) : (
-        <div>{'abc'}</div>
+        <div>Vui lòng tạo widget</div>
       )}
 
       {editMode ? (
@@ -309,6 +308,7 @@ export function DashboardWidget() {
                 close={() => setShowingConfigDialog(false)}
                 isOpen={true}
                 handleSubmitChart={values => {
+                  console.log('values chart: ', values)
                   setShowingConfigDialog(false)
                   setChartData(values)
                 }}
@@ -437,21 +437,17 @@ export function DashboardWidget() {
             variant="primary"
             isLoading={isLoading}
             onClick={() => toggleEdit(true)}
-            startIcon={<img src={btnEditIcon} alt="Edit" className="h-5 w-5" />}
-            children="Edit"
-          />
-          <Button
-            className="px-2"
-            type="button"
-            onClick={() => {
-              console.log(
-                Object.keys(
-                  detailDashboard?.configuration?.widgets as unknown as Widget,
-                ),
-              )
-            }}
-            children="Test"
-          ></Button>
+            startIcon={
+              <EditBtnIcon
+                width={20}
+                height={20}
+                className="text-white"
+                viewBox="0 0 20 20"
+              />
+            }
+          >
+            Edit
+          </Button>
         </div>
       )}
     </>

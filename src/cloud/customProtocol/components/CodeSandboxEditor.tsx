@@ -5,7 +5,7 @@ import {
   SandpackProvider,
   useSandpack,
 } from '@codesandbox/sandpack-react'
-import { ecoLight } from '@codesandbox/sandpack-themes'
+import { githubLight } from '@codesandbox/sandpack-themes'
 import { useEffect } from 'react'
 import { cn } from '~/utils/misc'
 
@@ -57,7 +57,7 @@ export function CodeSandboxEditor({
   }
 
   return (
-    <SandpackProvider files={files} theme={ecoLight} template="vanilla">
+    <SandpackProvider files={files} theme={githubLight} template="vanilla">
       <SandpackLayout className={cn('', className)}>
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor

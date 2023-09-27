@@ -509,7 +509,9 @@
   "btn": {
     "create": "Tạo mới",
     "back": "Quay lại",
-    "next": "Tiếp theo"
+    "next": "Tiếp theo",
+    "close": "Đóng",
+    "confirm": "Xác nhận"
   },
   "error": {
     "no_data": "Không có dữ liệu",

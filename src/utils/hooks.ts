@@ -118,6 +118,9 @@ export function useDefaultCombobox(
         name: t('search:no_org'),
         description: '',
         parent_name: '',
+        children: [],
+        image: '',
+        org_id: '',
       }
   }
 }

@@ -64,11 +64,11 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
+
   const [optionOrg, setOptionOrg] = useState<SelectOption>({
     label: '',
     value: '',
   })
-
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -79,7 +79,6 @@ export function CreateOrg() {
   )
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
-
   const clearData = () => {
     setOptionOrg({
       label: '',

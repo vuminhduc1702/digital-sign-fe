@@ -242,7 +242,7 @@ export function DashboardDetail() {
       <ContentLayout title={t('sidebar:cloud.dashboard')}>
         <div className="flex grow flex-col">
           <TitleBar title={'Dashboard ' + DBNAME} />
-          <div className="flex grow flex-col justify-between px-9 py-3 shadow-lg">
+          <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
             <DashboardWidget />
           </div>
         </div>
