@@ -179,8 +179,6 @@ export function CreateEvent() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const [todos, setTodos] = useState([
     { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
@@ -368,7 +366,7 @@ export function CreateEvent() {
                       name="org_id"
                       control={control}
                       options={
-                        orgSelectOptions?.map(org => ({
+                        orgFlattenData?.map(org => ({
                           label: org?.name,
                           value: org?.id,
                         })) || [{ label: t('loading:org'), value: '' }]

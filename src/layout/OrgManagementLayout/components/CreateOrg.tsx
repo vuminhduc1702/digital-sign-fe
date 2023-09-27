@@ -64,10 +64,7 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
-  const [optionOrg, setOptionOrg] = useState<SelectOption>({
-    label: '',
-    value: '',
-  })
+  const [optionOrg, setOptionOrg] = useState<SelectOption | null>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -77,14 +74,9 @@ export function CreateOrg() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const clearData = () => {
-    setOptionOrg({
-      label: '',
-      value: '',
-    })
+    setOptionOrg(null)
   }
 
   const fileInputRef = useRef()
@@ -162,7 +154,7 @@ export function CreateOrg() {
                   name="org_id"
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]

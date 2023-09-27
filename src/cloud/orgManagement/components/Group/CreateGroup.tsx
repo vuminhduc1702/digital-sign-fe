@@ -8,6 +8,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  SelectOption,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
@@ -20,6 +21,7 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useState } from 'react'
 
 type EntityTypeGroup = {
   type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
@@ -36,11 +38,13 @@ export const entityTypeList: EntityTypeGroup[] = [
 const groupSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  org_id: selectOptionSchema(),
+  org_id: z.string().optional(),
 })
 
 export function CreateGroup() {
   const { t } = useTranslation()
+
+  const [option, setOption] = useState<SelectOption>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -50,8 +54,6 @@ export function CreateGroup() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
@@ -89,15 +91,13 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: (
-                values.org_id as unknown as { value: string; label: string }
-              ).value,
+              org_id: option?.value || '',
             },
           })
         }}
         schema={groupSchema}
       >
-        {({ register, formState, control }) => (
+        {({ register, formState, control, setValue }) => (
           <>
             <InputField
               label={
@@ -125,11 +125,16 @@ export function CreateGroup() {
                 name="org_id"
                 control={control}
                 options={
-                  orgSelectOptions?.map(org => ({
+                  orgFlattenData?.map(org => ({
                     label: org?.name,
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]
                 }
+                onChange={e => {
+                  setOption(e)
+                  setValue('org_id', e.value)
+                }}
+                value={option}
               />
               <p className="text-body-sm text-primary-400">
                 {formState?.errors?.org_id?.message}

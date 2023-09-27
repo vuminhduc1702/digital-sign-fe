@@ -42,9 +42,6 @@ export function UpdateOrg({
     'sub_orgs',
   )
 
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
-
   useEffect(() => {
     setOptionOrg({
       label: selectedUpdateOrg?.parent_name,
@@ -124,7 +121,7 @@ export function UpdateOrg({
                   name="org_id"
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]

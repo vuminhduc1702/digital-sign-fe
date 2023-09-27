@@ -25,6 +25,7 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useGetRoles } from '~/cloud/role/api'
 
 export const userSchema = z
   .object({
@@ -34,6 +35,7 @@ export const userSchema = z
     confirmPassword: passwordSchema.optional(),
     project_id: z.string().optional(),
     org_id: z.string().optional(),
+    role_id: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -56,13 +58,17 @@ export function CreateUser() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateUser()
+  const { data } = useGetRoles({ projectId })
+  const roleOptions = data?.roles?.map(item => ({
+    label: item.name,
+    value: item.id,
+  })) || [{ label: '', value: '' }]
 
-  const [option, setOption] = useState<SelectOption>({ label: '', value: '' })
+  const [option, setOption] = useState<SelectOption>()
+  const [role, setRole] = useState<SelectOption>()
 
   // TODO: Create Role SelectDropdown
 
@@ -97,10 +103,11 @@ export function CreateUser() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: option?.value || '',
               name: values.name,
               email: values.email,
               password: values.password,
+              role_id: role?.value || ''
             },
           })
         }}
@@ -146,7 +153,7 @@ export function CreateUser() {
                   name="org_id"
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]
@@ -159,6 +166,23 @@ export function CreateUser() {
                 />
                 <p className="text-body-sm text-primary-400">
                   {formState?.errors?.org_id?.message}
+                </p>
+              </div>
+              <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:org_manage.user_manage.add_user.role')}
+                  name="role_id"
+                  control={control}
+                  options={roleOptions}
+                  onChange={e => {
+                    setRole(e)
+                    setValue('role_id', e.value)
+                  }}
+                  value={role}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.role_id?.message}
                 </p>
               </div>
             </>

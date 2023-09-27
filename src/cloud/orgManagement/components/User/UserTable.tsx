@@ -25,11 +25,19 @@ function UserTableContextMenu({
   user_id,
   name,
   email,
+  org_id,
+  org_name,
+  role_id,
+  role_name,
   ...props
 }: {
   user_id: string
   name: string
   email: string
+  org_id: string
+  org_name: string
+  role_id: string
+  role_name: string
 }) {
   const { t } = useTranslation()
 
@@ -120,6 +128,10 @@ function UserTableContextMenu({
           userId={user_id}
           name={name}
           email={email}
+          org_id={org_id}
+          role_id={role_id}
+          org_name={org_name}
+          role_name={role_name}
           close={close}
           isOpen={isOpen}
           {...props}
@@ -179,11 +191,16 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, email, user_id } = info.row.original
+          const { name, email, user_id, org_id, org_name, role_id, role_name } =
+            info.row.original
           return UserTableContextMenu({
             name,
             email,
             user_id,
+            org_id,
+            org_name,
+            role_id,
+            role_name,
           })
         },
         header: () => null,
