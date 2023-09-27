@@ -32,14 +32,9 @@ export function CreateThing() {
 
   const { id: projectId } = storage.getProject()
 
-  const {
-    data: thingData,
-    isPreviousData,
-    isSuccess,
-  } = useGetEntityThings({
+  const { data: thingData, isSuccess } = useGetEntityThings({
     projectId,
     type: 'template',
-    config: { keepPreviousData: true },
   })
 
   const {

@@ -23,7 +23,7 @@ export function DashboardManage() {
   return (
     <ContentLayout title={t('sidebar:cloud.dashboard')}>
       <div ref={ref} className="flex grow flex-col">
-        <TitleBar title={t('dashboard:title') ?? 'Dashboard'} />
+        <TitleBar title={t('cloud:dashboard.title')} />
         <div className="flex grow flex-col px-9 py-3 shadow-lg">
           <div className="flex justify-between">
             <ExportTable refComponent={ref} />

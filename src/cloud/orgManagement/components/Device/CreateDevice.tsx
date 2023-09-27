@@ -61,7 +61,6 @@ export function CreateDevice() {
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: { keepPreviousData: true },
   })
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {

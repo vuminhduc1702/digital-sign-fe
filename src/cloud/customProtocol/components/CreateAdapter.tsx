@@ -196,7 +196,7 @@ export function CreateAdapter() {
   })
 
   useEffect(() => {
-    if (selectedThingId != "") {
+    if (selectedThingId != '') {
       setSelectedThingId('')
     }
   }, [])
@@ -210,14 +210,9 @@ export function CreateAdapter() {
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
-  const {
-    data: thingDataTemplate,
-    isPreviousData,
-    isSuccess,
-  } = useGetEntityThings({
+  const { data: thingDataTemplate } = useGetEntityThings({
     projectId,
     type: 'template',
-    config: { keepPreviousData: true },
   })
 
   const thingSelectDataTemplate = thingDataTemplate?.data?.list?.map(thing => ({
@@ -449,11 +444,11 @@ export function CreateAdapter() {
                               thingData
                                 ? thingSelectData
                                 : [
-                                  {
-                                    label: t('loading:entity_thing'),
-                                    value: '',
-                                  },
-                                ]
+                                    {
+                                      label: t('loading:entity_thing'),
+                                      value: '',
+                                    },
+                                  ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -473,7 +468,7 @@ export function CreateAdapter() {
                               setValue('thing_id', e?.value)
                             }}
                             value={optionThingId}
-                          // defaultValue={defaultThingValues}
+                            // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -566,7 +561,7 @@ export function CreateAdapter() {
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                      thingType === 'template' ? (
+                                    thingType === 'template' ? (
                                       <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -644,13 +639,13 @@ export function CreateAdapter() {
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                  ? [
+                                ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                  : [
+                                : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
