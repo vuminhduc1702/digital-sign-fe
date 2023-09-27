@@ -33,7 +33,7 @@ import defaultOrgImage from '~/assets/images/default-org.png'
 
 export const orgSchema = z.object({
   name: nameSchema,
-  org_id: z.string(),
+  // org_id: z.string(),
   description: descSchema,
   image: z.string().optional(),
 })
@@ -135,7 +135,7 @@ export function CreateOrg() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: optionOrg?.value,
               name: values.name,
               description: values.description,
               image: dataUploadImage?.data?.link,
