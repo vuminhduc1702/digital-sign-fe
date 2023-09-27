@@ -28,99 +28,120 @@ export function ListProjectItem({listProjectData}: any) {
 
   const { mutate, isLoading, isSuccess } = useDeleteProject()
 
-  const [selectedUpdateProjectId, setSelectedUpdateProjectId] = useState('')
-
   const setProjectId = useProjectIdStore(state => state.setProjectId)
+
+  const [selectedUpdateProject, setSelectedUpdateProject] = useState<Project>({
+    id: '',
+    name: '',
+    image: '',
+    description: '',
+    app_key: '',
+    app_secret: '',
+    sms_config: {
+      type: '',
+      config: {
+        code: '',
+        password: '',
+        service_id: '',
+        url: '',
+        user: ''
+      },
+      content: "",
+      reset_password_content: ''
+    }
+  })
   
   return (
     <div>
-      <div>
+      <div className="grid grid-cols-1 md:grid-cols-3">
         {
           project?.map((project: Project) => {
             return (
-              <div key={project.id} className="relative m-2" style={{width: '460px', height: '288px', backgroundImage: `url(${defaultProjectImage})`}}>
+              <div key={project.id} className="relative m-2" style={{height: '288px', backgroundImage: `url(${defaultProjectImage})`, borderRadius: '10px 10px 10px 0'}}>
                 <div className="absolute top-3 right-3">
-                <Dropdown
-                  icon={
-                    <BtnContextMenuIcon
-                      height={20}
-                      width={10}
-                      viewBox="0 0 1 20"
-                      className="text-secondary-700 hover:text-primary-400"
-                    />
-                  }
-                >
-                  <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                    <div className="px-1 py-1">
-                      <MenuItem
-                        icon={
-                          <img
-                            src={btnEditIcon}
-                            alt="Edit project"
-                            className="h-5 w-5"
-                          />
-                        }
-                        onClick={() => {
-                          setSelectedUpdateProjectId(project.id)
-                          open
-                        }}
-                      >
-                        {t('cloud:project_manager.add_project.edit')}
-                      </MenuItem>
-                      <ConfirmationDialog
-                        isDone={isSuccess}
-                        icon="danger"
-                        title={t('cloud:project_manager.add_project.delete_project')}
-                        body={
-                          t(
-                            'cloud:project_manager.add_project.confirm_delete',
-                          ).replace('{{PROJECT}}', project.name) ?? 'Confirm delete?'
-                        }
-                        triggerButton={
-                          <Button
-                            className="w-full border-none hover:text-primary-400"
-                            style={{ justifyContent: 'flex-start' }}
-                            variant="trans"
-                            size="square"
-                            startIcon={
-                              <img
-                                src={btnDeleteIcon}
-                                alt="Delete project"
-                                className="h-5 w-5"
-                              />
-                            }
-                          >
-                            {t('cloud:project_manager.add_project.delete_project')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoading}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() =>
-                              mutate({
-                                projectId: project.id
-                              })
-                            }
-                            startIcon={
-                              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                            }
-                          />
-                        }
+                  <Dropdown
+                    icon={
+                      <BtnContextMenuIcon
+                        height={20}
+                        width={10}
+                        viewBox="0 0 1 20"
+                        className="hover:text-primary-400"
                       />
-                    </div>
-                  </Menu.Items>
-                </Dropdown>
-                {isOpen ? (
+                    }
+                  >
+                    <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="px-1 py-1">
+                        <MenuItem
+                          icon={
+                            <img
+                              src={btnEditIcon}
+                              alt="Edit project"
+                              className="h-5 w-5"
+                            />
+                          }
+                          onClick={() => {
+                            open()
+                            setSelectedUpdateProject(project)
+                          }}
+                        >
+                          {t('cloud:project_manager.add_project.edit')}
+                        </MenuItem>
+                        <ConfirmationDialog
+                          isDone={isSuccess}
+                          icon="danger"
+                          title={t('cloud:project_manager.add_project.delete_project')}
+                          body={
+                            t(
+                              'cloud:project_manager.add_project.confirm_delete',
+                            ).replace('{{PROJECT}}', project.name) ?? 'Confirm delete?'
+                          }
+                          triggerButton={
+                            <Button
+                              className="w-full border-none hover:text-primary-400"
+                              style={{ justifyContent: 'flex-start' }}
+                              variant="trans"
+                              size="square"
+                              startIcon={
+                                <img
+                                  src={btnDeleteIcon}
+                                  alt="Delete project"
+                                  className="h-5 w-5"
+                                />
+                              }
+                            >
+                              {t('cloud:project_manager.add_project.delete_project')}
+                            </Button>
+                          }
+                          confirmButton={
+                            <Button
+                              isLoading={isLoading}
+                              type="button"
+                              size="md"
+                              className="bg-primary-400"
+                              onClick={() =>
+                                mutate({
+                                  projectId: project.id
+                                })
+                              }
+                              startIcon={
+                                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                              }
+                            />
+                          }
+                        />
+                      </div>
+                    </Menu.Items>
+                  </Dropdown>
+                  { isOpen && selectedUpdateProject.id == project.id ? (
                   <UpdateProject
                     close={close}
                     isOpen={isOpen} 
-                    selectedUpdateProjectId={selectedUpdateProjectId}                    
+                    selectedUpdateProject={selectedUpdateProject}                   
                   />
                 ) : null}
                 </div>
+
+                {/* Project card */}
                 < Link
                   to={`${PATHS.ORG_MANAGE}/${project.id}`}
                   key={project.id}
@@ -129,7 +150,7 @@ export function ListProjectItem({listProjectData}: any) {
                     setProjectId(project.id)
                   }}
                 >
-                  <div className="flex no-wrap gap-x-3 absolute bottom-0" style={{height: '60px', width: '80%'}}>
+                  <div className="flex no-wrap gap-x-3 absolute bottom-0 pl-5 py-3 " style={{height: '120px', width: '80%', backgroundColor: `rgba(85, 86, 87, 0.6)`, borderRadius: '0 10px 10px 0'}}>
                     <img
                       src={project?.image || defaultProjectImage}
                       alt="Project"
@@ -144,7 +165,7 @@ export function ListProjectItem({listProjectData}: any) {
                       <p className="text-h2 text-white">{project.name}</p>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger className="text-white">{project.description.length > 30 ? project.description.slice(0,45) + '...' : project.description}</TooltipTrigger>
+                          <TooltipTrigger className="text-white text-left">{project.description.length > 100 ? project.description.slice(0,100) + '...' : project.description}</TooltipTrigger>
                           <TooltipContent>
                             <p>{project.description}</p>
                           </TooltipContent>

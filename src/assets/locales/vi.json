@@ -57,6 +57,7 @@
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
       "add_project": {
         "title": "Tạo mới dự án",
+        "avatar": "Ảnh đại diện",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",

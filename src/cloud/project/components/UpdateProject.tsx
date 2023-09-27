@@ -1,4 +1,4 @@
-import { Form, InputField } from "~/components/Form"
+import { Form, InputField, TextAreaField } from "~/components/Form"
 import { FormDialog } from "~/components/FormDialog"
 import { CreateProjectDTO } from "../api/createProject"
 import { useTranslation } from "react-i18next"
@@ -12,14 +12,13 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { Dialog, DialogTitle } from "~/components/Dialog"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { useEffect, useRef } from "react"
+import { Project } from "../routes/ProjectManage"
 
-type UpdateProjectProps = {
-  selectedUpdateProjectId: string
+export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
   close: () => void
   isOpen: boolean
-}
-
-export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProjectProps) {
+  selectedUpdateProject: Project
+}) {
   const { t } = useTranslation()
 
   const cancelButtonRef = useRef(null)
@@ -27,7 +26,7 @@ export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProject
   const { mutate, isLoading, isSuccess } = useUpdateProject()
 
   const { data: projectData } = useProjectById({
-    projectId: selectedUpdateProjectId,
+    projectId: selectedUpdateProject.id,
     config: { suspense: false },
   })
 
@@ -41,7 +40,7 @@ export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProject
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
               {t('cloud:project_manager.add_project.edit')}
             </DialogTitle>
@@ -55,7 +54,7 @@ export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProject
               </button>
             </div>
           </div>
-          <Form<UpdateProjectDTO['data']>
+          <Form<UpdateProjectDTO['data'], typeof projectSchema>
             id="update-project"
             className="flex flex-col justify-between"
             onSubmit={values => {
@@ -64,14 +63,14 @@ export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProject
                   name: values.name,
                   description: values.description
                 },
-                projectId: selectedUpdateProjectId
+                projectId: selectedUpdateProject.id
               })
             }}
-            // schema={projectSchema}
+            schema={projectSchema}
             options={{
               defaultValues: {
-                name: projectData?.name,
-                description: projectData?.description
+                name: selectedUpdateProject?.name,
+                description: selectedUpdateProject?.description
               }
             }}
           >
@@ -83,16 +82,12 @@ export function UpdateProject({ selectedUpdateProjectId, isOpen }: UpdateProject
                     error={formState.errors['name']}
                     registration={register('name')}
                   />
-                  <InputField
+                  <TextAreaField
                     label={t('cloud:project_manager.add_project.description')}
                     error={formState.errors['description']}
                     registration={register('description')}
+                    rows={5}
                   />
-                  {/* <InputField
-                  label={t('cloud:custom_protocol.thing.base_template')}
-                  error={formState.errors['base_template']}
-                  registration={register('base_template')}
-                /> */}
                 </>
               )
             }}

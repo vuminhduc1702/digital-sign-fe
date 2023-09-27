@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import { useTranslation } from "react-i18next"
 import { MutationConfig, queryClient } from "~/lib/react-query"
 import { useNotificationStore } from "~/stores/notifications"
 import { BaseAPIRes } from "~/types"
 import { z } from "zod"
 import { projectSchema } from "../components/CreateProject"
+import { axios } from "~/lib/axios"
 
 type CreateProjectRes = {
   data: {
@@ -37,7 +37,7 @@ export const useCreateProject = ({ config }: UseCreateProjectOptions = {}) => {
       await queryClient.invalidateQueries(['projects'])
       addNotification({
         type: 'success',
-        title: t('cloud:project_manager.add_project.success'),
+        title: t('cloud:project_manager.add_project.success_add'),
       })
     },
     ...config,

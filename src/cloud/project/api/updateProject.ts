@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import { useTranslation } from "react-i18next"
+import { axios } from "~/lib/axios"
 import { MutationConfig, queryClient } from "~/lib/react-query"
 import { useNotificationStore } from "~/stores/notifications"
 
