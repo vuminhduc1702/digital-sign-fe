@@ -1,24 +1,30 @@
-import { z } from 'zod'
-import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import { z } from 'zod'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { type UpdateUserDTO, useUpdateUser } from '../../api/userAPI'
-import { ComboBoxSelectOrg } from '~/layout/MainLayout/components'
+import {
+  Form,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
 import { useDefaultCombobox } from '~/utils/hooks'
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
+import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
 
-import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
-
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useGetRoles } from '~/cloud/role/api'
+import { type OrgList } from '~/layout/MainLayout/types'
+import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
+import storage from '~/utils/storage'
 
 type UpdateUserProps = {
   userId: string
@@ -26,6 +32,10 @@ type UpdateUserProps = {
   email: string
   close: () => void
   isOpen: boolean
+  org_id: string
+  org_name: string
+  role_id: string
+  role_name: string
 }
 
 // FIXME: password can not validate passwordSchema if add .or(z.string().optional())
@@ -37,6 +47,7 @@ export const updatedUserSchema = z
     confirmPassword: passwordSchema.or(z.string().optional()),
     project_id: z.string().optional(),
     org_id: z.string().optional(),
+    role_id: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -54,10 +65,12 @@ export function UpdateUser({
   close,
   isOpen,
   email,
+  org_id,
+  org_name,
+  role_id,
+  role_name,
 }: UpdateUserProps) {
   const { t } = useTranslation()
-
-  const defaultComboboxOrgData = useDefaultCombobox('org')
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
@@ -67,11 +80,31 @@ export function UpdateUser({
     }
   }, [isSuccess, close])
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    OrgMapType[]
-  >([])
-  const selectedOrgId =
-    filteredComboboxData.length !== 1 ? '' : filteredComboboxData[0]?.id
+  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
+    exact: false,
+  })
+  const { acc: orgFlattenData } = flattenData(
+    orgListCache?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+
+  const { id: projectId } = storage.getProject()
+
+  const { data } = useGetRoles({ projectId })
+  const roleOptions = data?.roles?.map(item => ({
+    label: item.name,
+    value: item.id,
+  })) || [{ label: '', value: '' }]
+
+  const [option, setOption] = useState<SelectOption>({
+    label: org_name !== 'undefined' ? org_name : '',
+    value: org_id !== 'undefined' ? org_id : '',
+  })
+  const [role, setRole] = useState<SelectOption>({
+    label: role_name !== 'undefined' ? role_name : '',
+    value: role_id !== 'undefined' ? role_id : '',
+  })
 
   return (
     <Drawer
@@ -110,7 +143,8 @@ export function UpdateUser({
               name: values.name,
               email: values.email,
               password: values.password,
-              org_id: selectedOrgId,
+              org_id: option?.value || '',
+              role_id: role?.value || '',
             },
             userId,
           })
@@ -120,7 +154,7 @@ export function UpdateUser({
           defaultValues: { name, email },
         }}
       >
-        {({ register, formState }) => (
+        {({ register, formState, control, setValue }) => (
           <>
             <InputField
               label={
@@ -153,14 +187,45 @@ export function UpdateUser({
               error={formState.errors['confirmPassword']}
               registration={register('confirmPassword')}
             />
-            <ComboBoxSelectOrg
-              label={
-                t('cloud:org_manage.user_manage.add_user.parent') ??
-                'Parent organization'
-              }
-              setFilteredComboboxData={setFilteredComboboxData}
-              hasDefaultComboboxData={defaultComboboxOrgData}
-            />
+            <div className="space-y-1">
+              <SelectDropdown
+                isClearable={true}
+                label={t('cloud:org_manage.device_manage.add_device.parent')}
+                name="org_id"
+                control={control}
+                options={
+                  orgFlattenData?.map(org => ({
+                    label: org?.name,
+                    value: org?.id,
+                  })) || [{ label: t('loading:org'), value: '' }]
+                }
+                onChange={e => {
+                  setOption(e)
+                  setValue('org_id', e.value)
+                }}
+                value={option}
+              />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.org_id?.message}
+              </p>
+            </div>
+            <div className="space-y-1">
+              <SelectDropdown
+                isClearable={true}
+                label={t('cloud:org_manage.user_manage.add_user.role')}
+                name="role_id"
+                control={control}
+                options={roleOptions}
+                onChange={e => {
+                  setRole(e)
+                  setValue('role_id', e.value)
+                }}
+                value={role}
+              />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.role_id?.message}
+              </p>
+            </div>
           </>
         )}
       </Form>

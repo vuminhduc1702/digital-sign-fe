@@ -62,8 +62,6 @@ export function UpdateDevice({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const { orgId } = useParams()
   const { id: projectId } = storage.getProject()
@@ -155,7 +153,7 @@ export function UpdateDevice({
                 value={orgValue}
                 onChange={e => setOrgValue(e)}
                 options={
-                  orgSelectOptions?.map(org => ({
+                  orgFlattenData?.map(org => ({
                     label: org?.name,
                     value: org?.id,
                   })) || [{ label: t('loading:org'), value: '' }]

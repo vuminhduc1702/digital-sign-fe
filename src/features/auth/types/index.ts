@@ -49,11 +49,13 @@ export type UserInfo = {
   user_id: string
   is_admin: boolean
   activate: boolean
-  role_id?: string
+  role_id: string
   role_name: string
   group_id?: string
   group_name?: string
   profile: Profile
+  org_id: string
+  org_name: string
 }
 
 export type UserList = {

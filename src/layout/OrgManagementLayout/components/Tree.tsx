@@ -197,7 +197,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
         data.children.map((child: OrgMapType) => {
           return (
             <Tree
-              key={child.name}
+              key={child.id}
               data={child}
               handleEdit={(child: OrgMapType) => handleEdit(child)}
             />

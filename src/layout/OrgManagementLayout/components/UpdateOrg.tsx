@@ -33,10 +33,7 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
-  const [optionOrg, setOptionOrg] = useState<SelectOption>({
-    label: selectedUpdateOrg?.name,
-    value: selectedUpdateOrg?.id,
-  })
+  const [optionOrg, setOptionOrg] = useState<SelectOption>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -47,14 +44,13 @@ export function UpdateOrg({
     'sub_orgs',
   )
 
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
-
   useEffect(() => {
-    setOptionOrg({
-      label: selectedUpdateOrg?.parent_name,
-      value: selectedUpdateOrg?.id,
-    })
+    if(selectedUpdateOrg.id) {
+      setOptionOrg({
+        label: selectedUpdateOrg?.parent_name,
+        value: selectedUpdateOrg?.id,
+      })
+    }
   }, [selectedUpdateOrg])
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
@@ -102,13 +98,14 @@ export function UpdateOrg({
               name: values.name,
               description: values.description,
             },
-            orgId: optionOrg?.value,
+            orgId: optionOrg?.value || '',
           })
         }}
         options={{
           defaultValues: {
             name: selectedUpdateOrg.name,
-            description: selectedUpdateOrg?.description ?? '',
+            description: selectedUpdateOrg?.description !== 'undefined' ? selectedUpdateOrg?.description : '',
+            org_id: selectedUpdateOrg?.id,
           },
         }}
         schema={orgSchema}
@@ -128,7 +125,7 @@ export function UpdateOrg({
                   name="org_id"
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]

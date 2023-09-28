@@ -71,8 +71,6 @@ export function CreateDevice() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   return (
     <FormDrawer
@@ -134,7 +132,7 @@ export function CreateDevice() {
                   onChange={e => setOrgValue(e)}
                   control={control}
                   options={
-                    orgSelectOptions?.map(org => ({
+                    orgFlattenData?.map(org => ({
                       label: org?.name,
                       value: org?.id,
                     })) || [{ label: t('loading:org'), value: '' }]
