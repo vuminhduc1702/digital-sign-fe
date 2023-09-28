@@ -158,7 +158,7 @@ export function ListProjectItem({listProjectData}: any) {
                       onError={e => {
                         const target = e.target as HTMLImageElement
                         target.onerror = null
-                        target.src = defaultProjectImage
+                        target.src = project?.image || defaultProjectImage
                       }}
                     />
                     <div className="space-y-1">
