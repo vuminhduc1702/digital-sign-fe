@@ -8,6 +8,7 @@ import { Button } from '~/components/Button'
 import {
   Form,
   FormDrawer,
+  FormMultipleFields,
   InputField,
   SelectDropdown,
   SelectField,
@@ -32,6 +33,7 @@ import {
   useCreateServiceThing,
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
+import TitleBar from '~/components/Head/TitleBar'
 
 import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
 import { inputService, type EntityThingList } from '../types'
@@ -39,6 +41,7 @@ import { type BasePagination } from '~/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const adapterSchema = z
   .object({
@@ -51,14 +54,23 @@ export const adapterSchema = z
   .and(
     z.discriminatedUnion('protocol', [
       z.object({
-        protocol: z.enum(['tcp', 'udp'] as const),
-      }),
-      z.object({
         protocol: z.literal('mqtt'),
         host: z.string().min(1, { message: 'Vui lòng nhập host' }),
         port: z.string().min(1, { message: 'Vui lòng nhập port' }),
-        password: z.string(),
-        topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
+        configuration: z.object({
+          credentials: z.object({
+            username: z.string().min(1, { message: 'Vui lòng nhập tài khoản' }),
+            password: z.string().min(1, { message: 'Vui lòng nhập mật khẩu' }),
+          }),
+          topic_filters: z.array(
+            z.object({
+              topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
+            }),
+          ),
+        }),
+      }),
+      z.object({
+        protocol: z.enum(['tcp', 'udp'] as const),
       }),
     ]),
   )
@@ -256,24 +268,33 @@ export function CreateAdapter() {
       otherState={protocolType}
       setOtherState={setProtocolType}
     >
-      <Form<CreateAdapterDTO['data'], typeof adapterSchema>
+      <FormMultipleFields<CreateAdapterDTO['data'], typeof adapterSchema>
         id="create-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
-          // console.log('adapter values', values)
+          console.log('adapter values', values)
           if (protocolType === 'mqtt') {
             mutateAdapter({
               data: {
                 project_id: projectId,
                 name: values.name,
-                protocol: values.protocol,
+                protocol: values.protocol as 'mqtt',
                 content_type: values.content_type,
                 thing_id: values.thing_id,
                 handle_service: values.handle_service,
                 host: values.host,
                 port: values.port,
-                password: values.password,
-                topic: values.topic.split(',').map(word => word.trim() + '/#'),
+                configuration: {
+                  credentials: {
+                    username: values.configuration.credentials.username,
+                    password: values.configuration.credentials.password,
+                  },
+                  topic_filters: values.configuration.topic_filters.map(
+                    (topic: { topic: string }) => ({
+                      topic: topic.topic.trim(),
+                    }),
+                  ),
+                },
               },
             })
           } else {
@@ -281,7 +302,7 @@ export function CreateAdapter() {
               data: {
                 project_id: projectId,
                 name: values.name,
-                protocol: values.protocol,
+                protocol: values.protocol as 'tcp' | 'udp',
                 content_type: values.content_type,
                 thing_id: values.thing_id,
                 handle_service: values.handle_service,
@@ -290,9 +311,13 @@ export function CreateAdapter() {
           }
         }}
         schema={adapterSchema}
+        name={['adapter']}
       >
-        {({ register, formState, control, watch, setValue }) => {
-          // console.log('zod adapter errors: ', formState.errors)
+        {(
+          { register, formState, control, watch, setValue },
+          { fields, append, remove },
+        ) => {
+          console.log('zod adapter errors: ', formState.errors)
           return (
             <>
               <Tab.Group
@@ -337,18 +362,6 @@ export function CreateAdapter() {
                         <p>{t('cloud:custom_protocol.service.title')}</p>
                       </div>
                     </Tab>
-                    {/* <Tab
-                      className={({ selected }) =>
-                        clsx(
-                          'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
-                          { 'text-primary-400': selected },
-                        )
-                      }
-                    >
-                      <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.finish')}</p>
-                      </div>
-                    </Tab> */}
                   </Tab.List>
                   <Tab.Panels className="mt-2 flex grow flex-col">
                     <Tab.Panel
@@ -394,15 +407,89 @@ export function CreateAdapter() {
                               registration={register('port')}
                             />
                             <InputField
-                              label={t('cloud:custom_protocol.adapter.pass')}
-                              error={formState.errors['password']}
-                              registration={register('password')}
+                              label={t(
+                                'cloud:custom_protocol.adapter.username',
+                              )}
+                              error={
+                                formState.errors[
+                                  'configuration.credentials.username'
+                                ]
+                              }
+                              registration={register(
+                                'configuration.credentials.username',
+                              )}
                             />
                             <InputField
-                              label={t('cloud:custom_protocol.adapter.topic')}
-                              error={formState.errors['topic']}
-                              registration={register('topic')}
+                              label={t('cloud:custom_protocol.adapter.pass')}
+                              error={
+                                formState.errors[
+                                  'configuration.credentials.password'
+                                ]
+                              }
+                              registration={register(
+                                'configuration.credentials.password',
+                              )}
                             />
+                            <div className="flex justify-between space-x-3">
+                              <TitleBar
+                                title={t(
+                                  'cloud:custom_protocol.adapter.topic_list',
+                                )}
+                                className="w-full rounded-md bg-gray-500 pl-3"
+                              />
+                              <Button
+                                className="rounded-md"
+                                variant="trans"
+                                size="square"
+                                startIcon={
+                                  <PlusIcon
+                                    width={16}
+                                    height={16}
+                                    viewBox="0 0 16 16"
+                                  />
+                                }
+                                onClick={() => append({ topic: '' })}
+                              />
+                            </div>
+                            {fields.map((field, index) => (
+                              <section
+                                className="flex justify-between gap-x-2"
+                                style={{ marginTop: 10 }}
+                                key={field.id}
+                              >
+                                <div className="space-y-1">
+                                  <InputField
+                                    label={`${t(
+                                      'cloud:custom_protocol.adapter.topic',
+                                    )} ${index + 1}`}
+                                    registration={register(
+                                      `configuration.topic_filters.${index}.topic` as const,
+                                    )}
+                                    classNameFieldWrapper="flex items-center gap-x-3"
+                                  />
+                                  <p className="text-body-sm text-primary-400">
+                                    {
+                                      formState?.errors?.configuration
+                                        ?.topic_filters?.[index]?.topic?.message
+                                    }
+                                  </p>
+                                </div>
+                                <Button
+                                  type="button"
+                                  size="square"
+                                  variant="none"
+                                  className="mt-0 self-start p-0"
+                                  onClick={() => remove(index)}
+                                  startIcon={
+                                    <img
+                                      src={btnDeleteIcon}
+                                      alt="Delete topic"
+                                      className="h-10 w-10"
+                                    />
+                                  }
+                                />
+                              </section>
+                            ))}
                             <div className="flex justify-end">
                               <Button
                                 className="rounded-sm border-none"
@@ -413,7 +500,12 @@ export function CreateAdapter() {
                                     data: {
                                       host: watch('host'),
                                       port: watch('port'),
-                                      password: watch('password'),
+                                      username: watch(
+                                        'configuration.credentials.username',
+                                      ),
+                                      password: watch(
+                                        'configuration.credentials.password',
+                                      ),
                                     },
                                   })
                                 }
@@ -507,7 +599,7 @@ export function CreateAdapter() {
                                       name: values.name,
                                       project_id: projectId,
                                       description: values.description,
-                                      type: values.type,
+                                      type: values.type as 'shape',
                                       base_shapes: values.base_shapes || null,
                                     },
                                   })
@@ -865,7 +957,7 @@ export function CreateAdapter() {
             </>
           )
         }}
-      </Form>
+      </FormMultipleFields>
     </FormDrawer>
   )
 }

@@ -83,7 +83,7 @@ function DashboardTableContextMenu({
                     />
                   }
                 >
-                  {t('cloud:dashboard.table.delete_dashboard_full')}
+                  {t('cloud:dashboard.table.delete_dashboard')}
                 </Button>
               }
               confirmButton={

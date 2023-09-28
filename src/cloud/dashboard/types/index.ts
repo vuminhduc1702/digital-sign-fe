@@ -2,9 +2,8 @@ import { type BasePagination } from '~/types'
 
 export type ValueWS = { ts: number; value: string }
 
+type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
 export type WSAgg = { label: string; value: WSAggValue }
-
-export type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
 
 type EntityId = {
   entityType: 'DEVICE'

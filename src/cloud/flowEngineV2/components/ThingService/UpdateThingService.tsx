@@ -157,16 +157,16 @@ export function UpdateThingService({
 
   useEffect(() => {
     const handleEsc = (event: any) => {
-      if(event.key === 'Escape') { 
+      if (event.key === 'Escape') {
         setFullScreen(false)
       }
-    };
-    window.addEventListener('keydown', handleEsc);
+    }
+    window.addEventListener('keydown', handleEsc)
 
     return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, []);
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -200,7 +200,7 @@ export function UpdateThingService({
                 }
               >
                 <div className="flex items-center gap-x-2">
-                  <p>{t('cloud:custom_protocol.service.infor')}</p>
+                  <p>{t('cloud:custom_protocol.service.info')}</p>
                 </div>
               </Tab>
               <Tab

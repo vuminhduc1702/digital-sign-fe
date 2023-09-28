@@ -8,8 +8,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   CreateConfigChart,
-  CreateConfigChartDTO,
-  EntityConfigChart,
+  type CreateConfigChartDTO,
 } from './CreateConfigChart'
 import {
   type CreateWidgetItemDTO,
@@ -29,14 +28,6 @@ import { useGetDashboardsById } from '../../api'
 import { useParams } from 'react-router-dom'
 import { DashboardDetail } from '../../routes/DashboardDetail'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-
-export type CreateConfigChart = {
-  id: string
-  org: string
-  device: string[]
-  dataConfigChart: any
-  chartSetting: any
-}
 
 export function DashboardWidget() {
   const { t } = useTranslation()
@@ -58,13 +49,13 @@ export function DashboardWidget() {
   })
   const [selectedWidget, setWidgetChecked] = useState('')
   const [showingConfigDialog, setShowingConfigDialog] = useState(false)
-  const [chartData, setChartData] = useState<CreateConfigChart>()
+  const [chartData, setChartData] = useState<CreateConfigChartDTO>()
 
   const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
     useCreateWidgetItem()
   const [editMode, toggleEdit] = useState(false)
 
-  const layout = [{}]
+  // const layout = [{}]
   // { i: "blue-eyes-dragon", x: 0, y: 0, w: 1, h: 1 },
   // { i: "dark-magician", x: 1, y: 0, w: 1, h: 1 },
   // { i: "kuriboh", x: 2, y: 0, w: 1, h: 1 },
@@ -218,8 +209,9 @@ export function DashboardWidget() {
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
-            children="Back"
-          />
+          >
+            {t('btn:back')}
+          </Button>
           <Button
             className="ml-2 rounded border-none p-3"
             form="update-dashboard"
@@ -299,8 +291,9 @@ export function DashboardWidget() {
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            children="Save"
-          />
+          >
+            {t('btn:confirm')}
+          </Button>
           {showingConfigDialog ? (
             <div>
               <CreateConfigChart
@@ -328,10 +321,10 @@ export function DashboardWidget() {
                     startIcon={
                       <PlusIcon width={15} height={16} viewBox="0 0 16 16" />
                     }
-                    children="Widget"
-                  />
+                  >
+                    Widget
+                  </Button>
                 }
-                submitButton={<></>}
               >
                 <Form<CreateWidgetItemDTO['data']>
                   id="create-dashboard"

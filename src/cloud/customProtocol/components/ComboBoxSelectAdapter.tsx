@@ -32,8 +32,8 @@ export function ComboBoxSelectAdapter({
       'handle_service',
       'host',
       'port',
-      'topic',
       'content_type',
+      'configuration',
     ],
   )
 

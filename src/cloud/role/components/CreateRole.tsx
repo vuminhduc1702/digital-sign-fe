@@ -91,7 +91,7 @@ export function CreateRole() {
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
         onSubmit={values => {
-          console.log('values', values)
+          // console.log('values', values)
           const policies = values.policies.map(policy => {
             resourceArrRef.current = policy.resources.map(
               // @ts-ignore
@@ -156,7 +156,7 @@ export function CreateRole() {
                 >
                   <div className="space-y-1">
                     <InputField
-                      label={t('cloud:role_manage.add_policy.name') ?? 'Policy'}
+                      label={t('cloud:role_manage.add_policy.name')}
                       registration={register(
                         `policies.${index}.policy_name` as const,
                       )}
@@ -171,10 +171,7 @@ export function CreateRole() {
                   <div className="space-y-1">
                     <SelectDropdown
                       isClearable={true}
-                      label={
-                        t('cloud:role_manage.add_policy.resources') ??
-                        'Authorization resources'
-                      }
+                      label={t('cloud:role_manage.add_policy.resources')}
                       name={`policies.${index}.resources`}
                       options={resourcesList.map(
                         resourcesType => resourcesType,
@@ -190,10 +187,7 @@ export function CreateRole() {
                   <div className="space-y-1">
                     <SelectDropdown
                       isClearable={true}
-                      label={
-                        t('cloud:role_manage.add_policy.actions') ??
-                        'Authorization actions'
-                      }
+                      label={t('cloud:role_manage.add_policy.actions')}
                       name={`policies.${index}.actions`}
                       options={actionsList.map(actionsType => actionsType)}
                       control={control}
@@ -207,8 +201,8 @@ export function CreateRole() {
                   <Button
                     type="button"
                     size="square"
-                    variant="trans"
-                    className="mt-3 self-start border-none"
+                    variant="none"
+                    className="mt-0 self-start"
                     onClick={() => remove(index)}
                     startIcon={
                       <img

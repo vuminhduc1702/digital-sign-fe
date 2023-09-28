@@ -14,6 +14,11 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { type EntityConfigChart } from './CreateConfigChart'
 
+type ConfigChartTableProps = {
+  data: EntityConfigChart[]
+  handleDataChart: (data: EntityConfigChart[]) => void
+} & BaseTablePagination
+
 function ConfigChartContextMenu({
   id,
   handleDelete,
@@ -68,11 +73,6 @@ function ConfigChartContextMenu({
   )
 }
 
-type ConfigChartTableProps = {
-  data: EntityConfigChart[]
-  handleDataChart: (data: EntityConfigChart[]) => void
-} & BaseTablePagination
-
 export function ConfigChartTable({
   data,
   handleDataChart,
@@ -111,11 +111,6 @@ export function ConfigChartTable({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('method', {
-      //   header: () => <span>{t('cloud:dashboard.config_chart.method')}</span>,
-      //   cell: info => info.getValue(),
-      //   footer: info => info.column.id,
-      // }),
       // columnHelper.display({
       //   id: 'date',
       //   cell: info => {
@@ -163,7 +158,7 @@ export function ConfigChartTable({
     <BaseTable data={dataConvert} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {'Không có data'}
+      {t('table:no_attr')}
     </div>
   )
 }
