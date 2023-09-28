@@ -25,7 +25,7 @@ type FormMultipleFieldsProps<TFormValues extends FieldValues, Schema> = {
   schema?: Schema
   className?: string
   id?: string
-  name: string[]
+  name: ArrayPath<TFormValues>[]
 }
 
 export const FormMultipleFields = <
@@ -46,12 +46,12 @@ export const FormMultipleFields = <
   })
 
   const fieldArrayOneMethods = useFieldArray({
-    name: name[0] as ArrayPath<TFormValues>,
+    name: name[0],
     control: formMethods.control,
   })
 
   const fieldArrayTwoMethods = useFieldArray({
-    name: name[1] as ArrayPath<TFormValues>,
+    name: name[1],
     control: formMethods.control,
   })
 
