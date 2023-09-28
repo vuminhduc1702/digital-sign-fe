@@ -311,6 +311,102 @@ export function CreateRole() {
                         </p>
                       </div>
                     )}
+                    {type === 'Group' && (
+                      <div>
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={'Thiết bị'
+                            }
+                            name={`policies.${index}.devices`}
+                            options={
+                              groupDataDevice?.groups?.map(groups => ({
+                                label: groups?.name,
+                                value: groups?.id,
+                              })) || [{ label: t('loading:org'), value: '' }]
+                            }
+                            isMulti
+                            control={control}
+                            closeMenuOnSelect={false}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.policies?.[index]?.devices
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={'Sự kiện'
+                            }
+                            name={`policies.${index}.events`}
+                            options={
+                              groupDataEvent?.groups?.map(groups => ({
+                                label: groups?.name,
+                                value: groups?.id,
+                              })) || [{ label: t('loading:org'), value: '' }]
+                            }
+                            isMulti
+                            control={control}
+                            closeMenuOnSelect={false}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.policies?.[index]?.events
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={'Người dùng'
+                            }
+                            name={`policies.${index}.users`}
+                            options={
+                              groupDataUser?.groups?.map(groups => ({
+                                label: groups?.name,
+                                value: groups?.id,
+                              })) || [{ label: t('loading:org'), value: '' }]
+                            }
+                            isMulti
+                            control={control}
+                            closeMenuOnSelect={false}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.policies?.[index]?.users
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={'Tổ chức'
+                            }
+                            name={`policies.${index}.orgs`}
+                            options={
+                              groupDataOrg?.groups?.map(groups => ({
+                                label: groups?.name,
+                                value: groups?.id,
+                              })) || [{ label: t('loading:org'), value: '' }]
+                            }
+                            isMulti
+                            control={control}
+                            closeMenuOnSelect={false}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.policies?.[index]?.orgs
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <div className="space-y-1">
                       <SelectDropdown
                         isClearable={true}
@@ -328,106 +424,6 @@ export function CreateRole() {
                         {formState?.errors?.policies?.[index]?.actions?.message}
                       </p>
                     </div>
-                    {type === 'Group' && (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={'Thiết bị'
-                          }
-                          name={`policies.${index}.devices`}
-                          options={
-                            groupDataDevice?.groups?.map(groups => ({
-                              label: groups?.name,
-                              value: groups?.id,
-                            })) || [{ label: t('loading:org'), value: '' }]
-                          }
-                          isMulti
-                          control={control}
-                          closeMenuOnSelect={false}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.policies?.[index]?.devices
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
-                    {type === 'Group' && (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={'Sự kiện'
-                          }
-                          name={`policies.${index}.events`}
-                          options={
-                            groupDataEvent?.groups?.map(groups => ({
-                              label: groups?.name,
-                              value: groups?.id,
-                            })) || [{ label: t('loading:org'), value: '' }]
-                          }
-                          isMulti
-                          control={control}
-                          closeMenuOnSelect={false}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.policies?.[index]?.events
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
-                    {type === 'Group' && (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={'Người dùng'
-                          }
-                          name={`policies.${index}.users`}
-                          options={
-                            groupDataUser?.groups?.map(groups => ({
-                              label: groups?.name,
-                              value: groups?.id,
-                            })) || [{ label: t('loading:org'), value: '' }]
-                          }
-                          isMulti
-                          control={control}
-                          closeMenuOnSelect={false}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.policies?.[index]?.users
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
-                    {type === 'Group' && (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={'Tổ chức'
-                          }
-                          name={`policies.${index}.orgs`}
-                          options={
-                            groupDataOrg?.groups?.map(groups => ({
-                              label: groups?.name,
-                              value: groups?.id,
-                            })) || [{ label: t('loading:org'), value: '' }]
-                          }
-                          isMulti
-                          control={control}
-                          closeMenuOnSelect={false}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.policies?.[index]?.orgs
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                    )}
                   </div>
                   <Button
                     type="button"
