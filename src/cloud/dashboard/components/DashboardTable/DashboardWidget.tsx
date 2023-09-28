@@ -28,6 +28,7 @@ import { useGetDashboardsById } from '../../api'
 import { useParams } from 'react-router-dom'
 import { DashboardDetail } from '../../routes/DashboardDetail'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
+import { WidgetItem } from '../Widget'
 
 export function DashboardWidget() {
   const { t } = useTranslation()
@@ -55,12 +56,13 @@ export function DashboardWidget() {
     useCreateWidgetItem()
   const [editMode, toggleEdit] = useState(false)
 
-  // const layout = [{}]
-  // { i: "blue-eyes-dragon", x: 0, y: 0, w: 1, h: 1 },
-  // { i: "dark-magician", x: 1, y: 0, w: 1, h: 1 },
-  // { i: "kuriboh", x: 2, y: 0, w: 1, h: 1 },
-  // { i: "spell-caster", x: 3, y: 0, w: 1, h: 1 },
-  // { i: "summoned-skull", x: 4, y: 0, w: 1, h: 1 }
+  const layout = [
+    { i: 'blue-eyes-dragon', x: 0, y: 0, w: 1, h: 1 },
+    { i: 'dark-magician', x: 1, y: 0, w: 1, h: 1 },
+    { i: 'kuriboh', x: 2, y: 0, w: 1, h: 1 },
+    { i: 'spell-caster', x: 3, y: 0, w: 1, h: 1 },
+    { i: 'summoned-skull', x: 4, y: 0, w: 1, h: 1 },
+  ]
 
   const wsInterval = [
     { label: 'Second', value: 1000 },
@@ -188,9 +190,16 @@ export function DashboardWidget() {
   return (
     <>
       {/* {
-        <GridLayout style={editMode ? { background: '#f0f0f0' } : {}} layout={layout} cols={8} rowHeight={300} width={1560} maxRows={1} isDraggable={editMode ? true : false}>
-          <WidgetItem title='Blue eye dragon'></WidgetItem>
-          
+        <GridLayout
+          style={editMode ? { background: '#f0f0f0' } : {}}
+          layout={layout}
+          cols={8}
+          rowHeight={300}
+          width={1560}
+          maxRows={1}
+          isDraggable={editMode ? true : false}
+        >
+          <WidgetItem title="Blue eye dragon"></WidgetItem>
         </GridLayout>
       } */}
       {detailDashboard?.configuration.widgets ? (

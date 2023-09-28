@@ -330,6 +330,28 @@ export function UpdateAdapter({
                               error={formState.errors['port']}
                               registration={register('port')}
                             />
+                            <InputField
+                              label={t(
+                                'cloud:custom_protocol.adapter.username',
+                              )}
+                              error={
+                                formState.errors?.configuration?.credentials
+                                  ?.username
+                              }
+                              registration={register(
+                                'configuration.credentials.username',
+                              )}
+                            />
+                            <InputField
+                              label={t('cloud:custom_protocol.adapter.pass')}
+                              error={
+                                formState.errors?.configuration?.credentials
+                                  ?.password
+                              }
+                              registration={register(
+                                'configuration.credentials.password',
+                              )}
+                            />
                             <div className="flex justify-between space-x-3">
                               <TitleBar
                                 title={t(
