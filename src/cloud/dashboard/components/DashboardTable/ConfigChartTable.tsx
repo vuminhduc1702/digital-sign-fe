@@ -12,7 +12,6 @@ import { format } from 'date-fns'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { type EntityConfigChart } from './CreateConfigChart'
 
 type ConfigChartTableProps = {
   data: EntityConfigChart[]

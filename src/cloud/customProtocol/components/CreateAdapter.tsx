@@ -311,7 +311,7 @@ export function CreateAdapter() {
           }
         }}
         schema={adapterSchema}
-        name={['adapter']}
+        name={['configuration.topic_filters']}
       >
         {(
           { register, formState, control, watch, setValue },
@@ -411,9 +411,8 @@ export function CreateAdapter() {
                                 'cloud:custom_protocol.adapter.username',
                               )}
                               error={
-                                formState.errors[
-                                  'configuration.credentials.username'
-                                ]
+                                formState.errors?.configuration?.credentials
+                                  ?.username
                               }
                               registration={register(
                                 'configuration.credentials.username',
@@ -422,9 +421,8 @@ export function CreateAdapter() {
                             <InputField
                               label={t('cloud:custom_protocol.adapter.pass')}
                               error={
-                                formState.errors[
-                                  'configuration.credentials.password'
-                                ]
+                                formState.errors?.configuration?.credentials
+                                  ?.password
                               }
                               registration={register(
                                 'configuration.credentials.password',
@@ -457,23 +455,19 @@ export function CreateAdapter() {
                                 style={{ marginTop: 10 }}
                                 key={field.id}
                               >
-                                <div className="space-y-1">
-                                  <InputField
-                                    label={`${t(
-                                      'cloud:custom_protocol.adapter.topic',
-                                    )} ${index + 1}`}
-                                    registration={register(
-                                      `configuration.topic_filters.${index}.topic` as const,
-                                    )}
-                                    classNameFieldWrapper="flex items-center gap-x-3"
-                                  />
-                                  <p className="text-body-sm text-primary-400">
-                                    {
-                                      formState?.errors?.configuration
-                                        ?.topic_filters?.[index]?.topic?.message
-                                    }
-                                  </p>
-                                </div>
+                                <InputField
+                                  label={`${t(
+                                    'cloud:custom_protocol.adapter.topic',
+                                  )} ${index + 1}`}
+                                  error={
+                                    formState.errors?.configuration
+                                      ?.topic_filters?.[index]?.topic
+                                  }
+                                  registration={register(
+                                    `configuration.topic_filters.${index}.topic` as const,
+                                  )}
+                                  classNameFieldWrapper="flex items-center gap-x-3"
+                                />
                                 <Button
                                   type="button"
                                   size="square"
