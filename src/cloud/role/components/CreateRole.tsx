@@ -432,8 +432,8 @@ export function CreateRole() {
                   <Button
                     type="button"
                     size="square"
-                    variant="trans"
-                    className="mt-3 self-start border-none"
+                    variant="none"
+                    className="mt-0 self-start"
                     onClick={() => remove(index)}
                     startIcon={
                       <img

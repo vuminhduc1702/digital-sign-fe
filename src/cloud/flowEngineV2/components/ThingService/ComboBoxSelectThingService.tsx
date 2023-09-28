@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type UserInfo, type UserList } from '~/features/auth'
-
 import { SearchIcon } from '~/components/SVGIcons'
-import { type ThingServiceList, type ThingService } from '../../types'
+import { type ThingService } from '../../types'
 
 export function ComboBoxSelectThingService({
   data,

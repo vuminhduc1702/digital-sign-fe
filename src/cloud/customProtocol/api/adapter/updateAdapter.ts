@@ -6,10 +6,10 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type updateAdapterSchema } from '../../components/UpdateAdapter'
+import { type adapterSchema } from '../../components'
 
 export type UpdateAdapterDTO = {
-  data: z.infer<typeof updateAdapterSchema>
+  data: z.infer<typeof adapterSchema>
   id: string
 }
 

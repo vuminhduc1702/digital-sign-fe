@@ -4,7 +4,6 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
 
 import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { type attrSchema } from '~/utils/schemaValidation'
@@ -37,17 +36,9 @@ export type UseCreateAttrOptions = {
 }
 
 export const useCreateAttrChart = ({ config }: UseCreateAttrOptions = {}) => {
-  const { t } = useTranslation()
-
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs-chart'])
-      // addNotification({
-      //   type: 'success',
-      //   title: t('cloud:org_manage.org_manage.add_attr.success_create'),
-      // })
     },
     ...config,
     mutationFn: createAttrChart,
