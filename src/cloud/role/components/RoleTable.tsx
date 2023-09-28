@@ -25,7 +25,6 @@ function RoleTableContextMenu({
   id,
   name,
   role,
-  ...props
 }: {
   id: string
   name: string

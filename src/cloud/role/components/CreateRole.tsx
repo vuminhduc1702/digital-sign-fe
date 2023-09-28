@@ -154,6 +154,7 @@ export function CreateRole() {
           }
         />
       }
+      size="md"
     >
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
@@ -161,11 +162,7 @@ export function CreateRole() {
           if (type === 'Generic') {
             const policies = values.policies.map(policy => {
               resourceArrRef.current =
-                policy?.resources?.map(
-                  // @ts-ignore
-                  resource => resource.value,
-                ) || []
-              // @ts-ignore
+                policy?.resources?.map(resource => resource.value) || []
               actionArrRef.current = policy.actions.map(action => action.value)
               return {
                 policy_name: policy.policy_name,
@@ -188,8 +185,9 @@ export function CreateRole() {
               const userArr = policy.users.map(users => users?.value)
               const orgsArr = policy.orgs.map(orgs => orgs?.value)
 
-              const group_resources = { groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr] }
-              // @ts-ignore
+              const group_resources = {
+                groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr],
+              }
               actionArrRef.current = policy.actions.map(action => action.value)
               return {
                 policy_name: policy.policy_name,
@@ -206,13 +204,22 @@ export function CreateRole() {
               },
             })
           }
-
         }}
         schema={roleSchema}
         options={{
           defaultValues: {
             name: '',
-            policies: [{ policy_name: '', resources: [], actions: [], devices: [], users: [], events: [], orgs: [] }],
+            policies: [
+              {
+                policy_name: '',
+                resources: [],
+                actions: [],
+                devices: [],
+                users: [],
+                events: [],
+                orgs: [],
+              },
+            ],
             role_type: 'Generic',
           },
         }}
@@ -261,7 +268,16 @@ export function CreateRole() {
                     <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                   }
                   onClick={() =>
-                    append({ policy_name: '', resources: [], devices: [], actions: [], users: [], events: [], orgs: [] })}
+                    append({
+                      policy_name: '',
+                      resources: [],
+                      devices: [],
+                      actions: [],
+                      users: [],
+                      events: [],
+                      orgs: [],
+                    })
+                  }
                 />
               </div>
               {fields.map((field, index) => (

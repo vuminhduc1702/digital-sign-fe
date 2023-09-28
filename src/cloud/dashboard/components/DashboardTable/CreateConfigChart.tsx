@@ -338,22 +338,6 @@ export function CreateConfigChart({
                     {({ register, formState, control }) => {
                       return (
                         <div className="border border-solid border-inherit px-8 py-6">
-                          {dataConfigChart.length ? (
-                            <div className="mb-6">
-                              <ConfigChartTable
-                                offset={offset}
-                                setOffset={setOffset}
-                                data={dataConfigChart || []}
-                                handleDataChart={values =>
-                                  setDataConfigChart(values)
-                                }
-                                total={0}
-                                isPreviousData={false}
-                              />
-                            </div>
-                          ) : (
-                            <div>{''}</div>
-                          )}
                           <div
                             className={cn(
                               'grid grid-cols-1 gap-x-4 ',
