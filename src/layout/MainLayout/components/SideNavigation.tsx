@@ -88,10 +88,6 @@ function SideNavigation() {
         />
         <div>{t('sidebar:overview')}</div>
       </div>
-      <div className="mb-3 w-full flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
-        <Link className="w-full flex" to={PATHS.PROJECT_MANAGE}>{t('sidebar:project')}</Link>
-      </div>
-
       <Accordion.Root
         type="single"
         collapsible
