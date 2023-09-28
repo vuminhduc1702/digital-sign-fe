@@ -65,8 +65,6 @@ export function CreateProject(){
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
   const avatarRef = useRef<HTMLImageElement>(null)
-  console.log('zod image upload error: ', formStateUploadImage.errors)
-
 
   return (
     <FormDialog
@@ -117,6 +115,18 @@ export function CreateProject(){
                     alt="Organization"
                     className="h-36 w-32 mb-3"
                     ref={avatarRef}
+                    onClick={event => {
+                      const formData = new FormData()
+                      formData.append('file', event.target.files[0])
+                      setValueUploadImage('file', formData.get('file'))
+                      const reader = new FileReader()
+                      reader.readAsDataURL(event.target.files[0])
+                      reader.onload = e => {
+                        if (avatarRef.current != null && e.target != null) {
+                          avatarRef.current.src = e.target.result as string
+                        }
+                      }
+                    }}
                   />
                   <FileField
                     label={t('cloud:project_manager.add_project.avatar')}

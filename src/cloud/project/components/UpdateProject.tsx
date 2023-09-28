@@ -3,7 +3,7 @@ import { FormDialog } from "~/components/FormDialog"
 import { CreateProjectDTO } from "../api/createProject"
 import { useTranslation } from "react-i18next"
 import { UpdateProjectDTO, useUpdateProject } from "../api/updateProject"
-import { projectSchema } from "./CreateProject"
+import { projectSchema, uploadImageSchema } from "./CreateProject"
 import { useProjectById } from "../api"
 import { Button } from "~/components/Button"
 
@@ -13,6 +13,11 @@ import { Dialog, DialogTitle } from "~/components/Dialog"
 import { XMarkIcon } from "@heroicons/react/20/solid"
 import { useEffect, useRef } from "react"
 import { Project } from "../routes/ProjectManage"
+import FileField from "~/components/Form/FileField"
+import { UploadImageDTO, useUploadImage } from "~/layout/OrgManagementLayout/api"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import defaultProjectImage from '~/assets/images/default-project.png'
 
 export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
   close: () => void
@@ -35,6 +40,22 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
       close()
     }
   }, [isSuccess, close])
+
+  const fileInputRef = useRef()
+  const {
+    data: dataUploadImage,
+    mutate: mutateUploadImage,
+    isLoading: isLoadingUploadImage,
+  } = useUploadImage()
+  const {
+    formState: formStateUploadImage,
+    control: controlUploadImage,
+    handleSubmit: handleSubmitUploadImage,
+    setValue: setValueUploadImage,
+  } = useForm<UploadImageDTO['data']>({
+    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
+  })
+  const avatarRef = useRef<HTMLImageElement>(null)
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -61,7 +82,8 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
               mutate({
                 data: {
                   name: values.name,
-                  description: values.description
+                  description: values.description,
+                  image: dataUploadImage?.data?.link
                 },
                 projectId: selectedUpdateProject.id
               })
@@ -70,25 +92,90 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
             options={{
               defaultValues: {
                 name: selectedUpdateProject?.name,
-                description: selectedUpdateProject?.description
+                description: selectedUpdateProject?.description,
+                image: selectedUpdateProject?.image
               }
             }}
           >
             {({ register, formState }) => {
               return (
-                <>
-                  <InputField
-                    label={t('cloud:project_manager.add_project.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <TextAreaField
-                    label={t('cloud:project_manager.add_project.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                    rows={5}
-                  />
-                </>
+                <div className="grid grid-cols-1 md:grid-cols-2">
+                  <div style={{height: '250px'}}>
+                    <InputField
+                      label={t('cloud:project_manager.add_project.name')}
+                      error={formState.errors['name']}
+                      registration={register('name')}
+                    />
+                    <TextAreaField
+                      label={t('cloud:project_manager.add_project.description')}
+                      error={formState.errors['description']}
+                      registration={register('description')}
+                      rows={5}
+                    />
+                  </div>
+                  <div className="pl-4">
+                    <img
+                      src={selectedUpdateProject.image}
+                      onError={e => {
+                        const target = e.target as HTMLImageElement
+                        target.onerror = null
+                        target.src = defaultProjectImage
+                      }}
+                      alt="Project"
+                      className="h-36 w-32 mb-3"
+                      ref={avatarRef}
+                      onClick={event => {
+                        const formData = new FormData()
+                        formData.append('file', event.target.files[0])
+                        setValueUploadImage('file', formData.get('file'))
+                        const reader = new FileReader()
+                        reader.readAsDataURL(event.target.files[0])
+                        reader.onload = e => {
+                          if (avatarRef.current != null && e.target != null) {
+                            avatarRef.current.src = e.target.result as string
+                          }
+                        }
+                      }}
+                    />
+                    <FileField
+                      label={t('cloud:project_manager.add_project.avatar')}
+                      error={formStateUploadImage.errors['file']}
+                      control={controlUploadImage}
+                      name="upload-image"
+                      ref={fileInputRef}
+                      onChange={event => {
+                        const formData = new FormData()
+                        formData.append('file', event.target.files[0])
+                        setValueUploadImage('file', formData.get('file'))
+                        const reader = new FileReader()
+                        reader.readAsDataURL(event.target.files[0])
+                        reader.onload = e => {
+                          if (avatarRef.current != null && e.target != null) {
+                            avatarRef.current.src = e.target.result as string
+                          }
+                        }
+                      }}
+                    />
+                    <Button
+                      className="border-none mt-3"
+                      style={{ justifyContent: 'flex-start' }}
+                      variant="primary"
+                      size="square"
+                      onClick={handleSubmitUploadImage(values => {
+                        mutateUploadImage({
+                          data: {
+                            project_id: selectedUpdateProject.id,
+                            file: values.file,
+                          },
+                        })
+                        setValueUploadImage('file', { file: null as unknown as File })
+                      })}
+                      isLoading={isLoadingUploadImage}
+                    >
+                      {t('cloud:org_manage.org_manage.add_org.upload_ava')}
+                    </Button>
+                  </div>
+                </div>
               )
             }}
           </Form>

@@ -79,10 +79,10 @@ function Navbar() {
               </div>
             </DropdownMenu.Trigger>
           </div>
-          <DropdownMenu.Portal style={{transform: `translate3d(1545px, 80px, 0px)`}}>
+          <DropdownMenu.Portal>
             <DropdownMenu.Content
               className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={5}
+              sideOffset={40}
             >
               {projectsData?.projects.map((project: Project) => {
                 return (
