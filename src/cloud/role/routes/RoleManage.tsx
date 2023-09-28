@@ -20,11 +20,11 @@ export function RoleManage() {
   return (
     <ContentLayout title={t('sidebar:cloud.role_manage')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
-        <div className="flex grow flex-col gap-2 md:col-span-1">
+        <div className="flex grow flex-col gap-2 md:col-span-3">
           <RoleSidebar />
         </div>
 
-        {projectId && roleId ? (
+        {/* {projectId && roleId ? (
           <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
             <Suspense
               fallback={
@@ -47,7 +47,7 @@ export function RoleManage() {
               </div>
             </Suspense>
           </div>
-        ) : null}
+        ) : null} */}
       </div>
     </ContentLayout>
   )

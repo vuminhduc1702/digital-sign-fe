@@ -18,6 +18,7 @@ export type CreateRoleDTO = {
     name: string
     project_id: string
     policies: PoliciesReq[]
+    role_type: string
   }
 }
 

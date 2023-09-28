@@ -314,6 +314,7 @@
         "title": "Tạo mới vai trò",
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
+        "role_type": "Loại vai trò",
         "success_create": "Tạo vai trò thành công",
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"

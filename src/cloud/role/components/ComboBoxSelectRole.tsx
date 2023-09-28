@@ -10,19 +10,18 @@ import { type Role } from '../types'
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function ComboBoxSelectRole({
+  data,
   setFilteredComboboxData,
   ...props
 }: {
+  data: Role[]
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Role[]>>
 }) {
   const [query, setQuery] = useState('')
 
-  const { id: projectId } = storage.getProject()
-  const { data } = useGetRoles({ projectId })
-
   const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
-    data?.roles,
-    ['id', 'name', 'policies'],
+    data,
+    ['id', 'name', 'policies', 'role_type'],
   )
 
   const filteredData = filteredComboboxData(

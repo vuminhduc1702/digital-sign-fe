@@ -31,6 +31,7 @@ export type Role = {
   project_id: string
   name: string
   policies: Policies[]
+  role_type: string
 }
 
 export type Policies = {
