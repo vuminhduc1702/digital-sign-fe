@@ -154,7 +154,7 @@ export function CreateRole() {
           }
         />
       }
-      size="md"
+      size="lg"
     >
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
@@ -286,7 +286,7 @@ export function CreateRole() {
                   style={{ marginTop: 10 }}
                   key={field.id}
                 >
-                  <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
+                  <div className="grid grid-cols-1 w-full gap-x-4 md:grid-cols-3">
                     <div className="space-y-1">
                       <InputField
                         label={
@@ -445,7 +445,7 @@ export function CreateRole() {
                     type="button"
                     size="square"
                     variant="none"
-                    className="mt-0 self-start"
+                    className="mt-3 self-start"
                     onClick={() => remove(index)}
                     startIcon={
                       <img
