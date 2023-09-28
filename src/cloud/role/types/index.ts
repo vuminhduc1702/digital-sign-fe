@@ -25,6 +25,11 @@ export type ActionsType = {
   label: string
 }
 
+export type SelectType = {
+  value: string
+  label: string
+}
+
 export type Role = {
   id: string
   owner: string

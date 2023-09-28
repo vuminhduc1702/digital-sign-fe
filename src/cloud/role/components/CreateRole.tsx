@@ -70,23 +70,23 @@ export const roleSchema = z
             actions: z
               .array(selectOptionSchema())
               .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
+            devices: z
+              .array(selectOptionSchema())
+              .nonempty({ message: 'Vui lòng chọn ít nhất 1 thiết bị' }),
+            events: z
+              .array(selectOptionSchema())
+              .nonempty({ message: 'Vui lòng chọn ít nhất 1 sự kiện' }),
+            users: z
+              .array(selectOptionSchema())
+              .nonempty({ message: 'Vui lòng chọn ít nhất 1 người dùng' }),
+            orgs: z
+              .array(selectOptionSchema())
+              .nonempty({ message: 'Vui lòng chọn ít nhất 1 tổ chức' }),
           }),
         ),
       }),
     ]),
   )
-
-export const roleGroupSchema = z.object({
-  name: nameSchema,
-  policies: z.array(
-    z.object({
-      policy_name: nameSchema,
-      actions: z
-        .array(selectOptionSchema())
-        .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
-    }),
-  ),
-})
 
 export function CreateRole() {
   const { t } = useTranslation()
@@ -158,35 +158,61 @@ export function CreateRole() {
       <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
         id="create-role"
         onSubmit={values => {
-          console.log('values', values)
-          const policies = values.policies.map(policy => {
-            resourceArrRef.current =
-              policy?.resources?.map(
-                // @ts-ignore
-                resource => resource.value,
-              ) || []
-            // @ts-ignore
-            actionArrRef.current = policy.actions.map(action => action.value)
-            return {
-              policy_name: policy.policy_name,
-              resources: resourceArrRef.current,
-              actions: actionArrRef.current,
-            }
-          })
-          mutate({
-            data: {
-              name: values.name,
-              policies,
-              project_id: projectId,
-              role_type: type,
-            },
-          })
+          if (type === 'Generic') {
+            const policies = values.policies.map(policy => {
+              resourceArrRef.current =
+                policy?.resources?.map(
+                  // @ts-ignore
+                  resource => resource.value,
+                ) || []
+              // @ts-ignore
+              actionArrRef.current = policy.actions.map(action => action.value)
+              return {
+                policy_name: policy.policy_name,
+                resources: resourceArrRef.current,
+                actions: actionArrRef.current,
+              }
+            })
+            mutate({
+              data: {
+                name: values.name,
+                policies,
+                project_id: projectId,
+                role_type: type,
+              },
+            })
+          } else {
+            const policies = values.policies.map(policy => {
+              const deviceArr = policy.devices.map(devices => devices?.value)
+              const eventArr = policy.events.map(events => events?.value)
+              const userArr = policy.users.map(users => users?.value)
+              const orgsArr = policy.orgs.map(orgs => orgs?.value)
+
+              const group_resources = { groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr] }
+              // @ts-ignore
+              actionArrRef.current = policy.actions.map(action => action.value)
+              return {
+                policy_name: policy.policy_name,
+                group_resources,
+                actions: actionArrRef.current,
+              }
+            })
+            mutate({
+              data: {
+                name: values.name,
+                policies,
+                project_id: projectId,
+                role_type: type,
+              },
+            })
+          }
+
         }}
         schema={roleSchema}
         options={{
           defaultValues: {
             name: '',
-            policies: [{ policy_name: '', resources: [], actions: [] }],
+            policies: [{ policy_name: '', resources: [], actions: [], devices: [], users: [], events: [], orgs: [] }],
             role_type: 'Generic',
           },
         }}
@@ -196,7 +222,6 @@ export function CreateRole() {
           { register, formState, control, setValue },
           { fields, append, remove },
         ) => {
-          console.log('errors zod: ', formState.errors)
           return (
             <>
               <div className="w-fit rounded-2xl bg-slate-200">
@@ -236,8 +261,7 @@ export function CreateRole() {
                     <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                   }
                   onClick={() =>
-                    append({ policy_name: '', resources: [], actions: [] })
-                  }
+                    append({ policy_name: '', resources: [], devices: [], actions: [], users: [], events: [], orgs: [] })}
                 />
               </div>
               {fields.map((field, index) => (
@@ -308,21 +332,22 @@ export function CreateRole() {
                       <div className="space-y-1">
                         <SelectDropdown
                           isClearable={true}
-                          label={'hahahah'
+                          label={'Thiết bị'
                           }
-                          name={`policies.${index}.resources`}
+                          name={`policies.${index}.devices`}
                           options={
                             groupDataDevice?.groups?.map(groups => ({
                               label: groups?.name,
                               value: groups?.id,
                             })) || [{ label: t('loading:org'), value: '' }]
                           }
+                          isMulti
                           control={control}
                           closeMenuOnSelect={false}
                         />
                         <p className="text-body-sm text-primary-400">
                           {
-                            formState?.errors?.policies?.[index]?.resources
+                            formState?.errors?.policies?.[index]?.devices
                               ?.message
                           }
                         </p>
@@ -332,21 +357,22 @@ export function CreateRole() {
                       <div className="space-y-1">
                         <SelectDropdown
                           isClearable={true}
-                          label={'hahahah'
+                          label={'Sự kiện'
                           }
-                          name={`policies.${index}.resources`}
+                          name={`policies.${index}.events`}
                           options={
                             groupDataEvent?.groups?.map(groups => ({
                               label: groups?.name,
                               value: groups?.id,
                             })) || [{ label: t('loading:org'), value: '' }]
                           }
+                          isMulti
                           control={control}
                           closeMenuOnSelect={false}
                         />
                         <p className="text-body-sm text-primary-400">
                           {
-                            formState?.errors?.policies?.[index]?.resources
+                            formState?.errors?.policies?.[index]?.events
                               ?.message
                           }
                         </p>
@@ -356,21 +382,22 @@ export function CreateRole() {
                       <div className="space-y-1">
                         <SelectDropdown
                           isClearable={true}
-                          label={'hahahah'
+                          label={'Người dùng'
                           }
-                          name={`policies.${index}.resources`}
+                          name={`policies.${index}.users`}
                           options={
                             groupDataUser?.groups?.map(groups => ({
                               label: groups?.name,
                               value: groups?.id,
                             })) || [{ label: t('loading:org'), value: '' }]
                           }
+                          isMulti
                           control={control}
                           closeMenuOnSelect={false}
                         />
                         <p className="text-body-sm text-primary-400">
                           {
-                            formState?.errors?.policies?.[index]?.resources
+                            formState?.errors?.policies?.[index]?.users
                               ?.message
                           }
                         </p>
@@ -380,21 +407,22 @@ export function CreateRole() {
                       <div className="space-y-1">
                         <SelectDropdown
                           isClearable={true}
-                          label={'hahahah'
+                          label={'Tổ chức'
                           }
-                          name={`policies.${index}.resources`}
+                          name={`policies.${index}.orgs`}
                           options={
                             groupDataOrg?.groups?.map(groups => ({
                               label: groups?.name,
                               value: groups?.id,
                             })) || [{ label: t('loading:org'), value: '' }]
                           }
+                          isMulti
                           control={control}
                           closeMenuOnSelect={false}
                         />
                         <p className="text-body-sm text-primary-400">
                           {
-                            formState?.errors?.policies?.[index]?.resources
+                            formState?.errors?.policies?.[index]?.orgs
                               ?.message
                           }
                         </p>
