@@ -66,14 +66,12 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
         {({ register, formState }) => (
           <>
             <InputField
-              label={t('cloud:dashboard.add_dashboard.name') ?? 'Title'}
+              label={t('cloud:dashboard.add_dashboard.name')}
               error={formState.errors['title']}
               registration={register('title')}
             />
             <InputField
-              label={
-                t('cloud:dashboard.add_dashboard.description') ?? 'Description'
-              }
+              label={t('cloud:dashboard.add_dashboard.description')}
               error={formState.errors['description']}
               registration={register('description')}
             />

@@ -19,12 +19,10 @@ import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 
 function DashboardTableContextMenu({
-  projectId,
   id,
   title,
   ...props
 }: {
-  projectId: string
   id: string
   title: string
   description: string
@@ -85,7 +83,7 @@ function DashboardTableContextMenu({
                     />
                   }
                 >
-                  {t('cloud:dashboard.table.delete_dashboard_full')}
+                  {t('cloud:dashboard.table.delete_dashboard')}
                 </Button>
               }
               confirmButton={
@@ -107,10 +105,9 @@ function DashboardTableContextMenu({
       {isOpen ? (
         <UpdateDashboard
           id={id}
-          title={title}
           close={close}
           isOpen={isOpen}
-          projectId={projectId}
+          title={title}
           {...props}
         />
       ) : null}
@@ -144,14 +141,13 @@ export function DashboardTable({
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('name', {
+      columnHelper.accessor('title', {
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
         cell: info => (
           <Link
             to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}
-            target="_blank"
             onClick={() => {
-              window.localStorage.setItem('dbname', info.row.original.name)
+              window.localStorage.setItem('dbname', info.row.original.title)
             }}
           >
             {info.getValue()}
@@ -163,7 +159,11 @@ export function DashboardTable({
         id: 'description',
         cell: info => {
           const { configuration } = info.row.original
-          return <span>{configuration.description}</span>
+          return (
+            <span>
+              {JSON.parse(configuration as unknown as string).description}
+            </span>
+          )
         },
         header: () => (
           <span>{t('cloud:dashboard.table.configuration.description')}</span>
@@ -179,14 +179,12 @@ export function DashboardTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          console.log('info.row.original: ', info.row.original)
           const {
             id,
             title,
             configuration: { description },
           } = info.row.original
           return DashboardTableContextMenu({
-            projectId,
             id,
             title,
             description,

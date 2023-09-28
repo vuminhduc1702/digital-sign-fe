@@ -2,6 +2,15 @@ import { type BasePagination } from '~/types'
 
 export type ProtocolType = 'mqtt' | 'tcp' | 'udp'
 export type ContentType = 'json' | 'hex' | 'text'
+export type Configuration = {
+  credentials: {
+    username: string
+    password: string
+  }
+  topic_filters: {
+    topic: string
+  }[]
+}
 export type Adapter = {
   id: string
   name: string
@@ -10,8 +19,7 @@ export type Adapter = {
   protocol: ProtocolType
   host: string
   port: string
-  password: string
-  topic: string[] | null
+  configuration: Configuration
   content_type: ContentType
   created_time: number
   thing_id: string

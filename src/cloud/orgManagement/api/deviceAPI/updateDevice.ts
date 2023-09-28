@@ -9,7 +9,7 @@ export type UpdateDeviceDTO = {
   data: {
     name: string
     key: string
-    org_id: string | boolean | number
+    org_id: string
     group_id: string
   }
   deviceId: string

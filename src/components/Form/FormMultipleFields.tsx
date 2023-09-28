@@ -14,7 +14,7 @@ import { type ZodType } from 'zod'
 
 import { cn } from '~/utils/misc'
 
-type FormProps<TFormValues extends FieldValues, Schema> = {
+type FormMultipleFieldsProps<TFormValues extends FieldValues, Schema> = {
   onSubmit: SubmitHandler<TFormValues>
   children: (
     methods: UseFormReturn<TFormValues>,
@@ -25,7 +25,7 @@ type FormProps<TFormValues extends FieldValues, Schema> = {
   schema?: Schema
   className?: string
   id?: string
-  name: string[]
+  name: ArrayPath<TFormValues>[]
 }
 
 export const FormMultipleFields = <
@@ -39,19 +39,19 @@ export const FormMultipleFields = <
   id,
   schema,
   name,
-}: FormProps<TFormValues, Schema>) => {
+}: FormMultipleFieldsProps<TFormValues, Schema>) => {
   const formMethods = useForm<TFormValues>({
     ...options,
     resolver: schema && zodResolver(schema),
   })
 
   const fieldArrayOneMethods = useFieldArray({
-    name: name[0] as ArrayPath<TFormValues>,
+    name: name[0],
     control: formMethods.control,
   })
 
   const fieldArrayTwoMethods = useFieldArray({
-    name: name[1] as ArrayPath<TFormValues>,
+    name: name[1],
     control: formMethods.control,
   })
 

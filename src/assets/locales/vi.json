@@ -314,6 +314,7 @@
         "title": "Tạo mới vai trò",
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
+        "role_type": "Loại vai trò",
         "success_create": "Tạo vai trò thành công",
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"
@@ -322,21 +323,21 @@
     "custom_protocol": {
       "title": "Quản lí Adapter",
       "protocol": "Protocol",
-      "finish": "Finish",
       "service": {
         "service_input": {
           "name": "Nhập tên biến",
           "type": "Kiểu dữ liệu",
           "value": "Giá trị"
         },
-        "title": "Service",
-        "infor": "Thông tin",
+        "title": "Nghiệp vụ",
+        "info": "Thông tin",
         "tab_2": "Tab 2",
-        "create": "Tạo service",
-        "success_create": "Tạo Service thành công",
-        "success_update": "Sửa Service thành công",
-        "success_delete": "Xoá Service thành công",
-        "name": "Tên service",
+        "create": "Tạo nghiệp vụ",
+        "list_service": "Danh sách nghiệp vụ",
+        "success_create": "Tạo nghiệp vụ thành công",
+        "success_update": "Sửa nghiệp vụ thành công",
+        "success_delete": "Xoá nghiệp vụ thành công",
+        "name": "Tên nghiệp vụ",
         "output": "Kết quả",
         "input": "Đầu vào",
         "add_other": "Thêm biến khác",
@@ -352,10 +353,11 @@
         "description": "Mô tả",
         "code": "Code",
         "title_thing_service": "Danh sách nghiệp vụ",
-        "choose": "Vui lòng chọn Service",
-        "delete": "Xóa Service",
-        "edit": " Sửa Service",
-        "delete_service_confirm": "Bạn có chắc chắn muốn xóa Service {{SERVICENAME}}?",
+        "choose": "Vui lòng chọn nghiệp vụ",
+        "delete": "Xóa nghiệp vụ",
+        "edit": "Sửa nghiệp vụ",
+        "info_service": "Thông tin nghiệp vụ",
+        "delete_service_confirm": "Bạn có chắc chắn muốn xóa nghiệp vụ {{SERVICENAME}}?",
         "note": "Ghi chú",
         "status": "Trạng thái",
         "run": "Run",
@@ -368,7 +370,7 @@
         "success_update": "Sửa thing thành công",
         "success_delete": "Xoá thing thành công",
         "name": "Tên thing",
-        "id": "Thing ID",
+        "id": "Thing",
         "type": "Kiểu thing",
         "thing": "Thing",
         "template": "Template",
@@ -393,8 +395,8 @@
         "table": {
           "name": "Tên",
           "protocol": "Protocol",
-          "thing_id": "Thing ID",
-          "handle_service": "Service",
+          "thing_id": "Thing",
+          "handle_service": "Nghiệp vụ",
           "host": "Host",
           "port": "Port",
           "edit": "Sửa adapter",
@@ -415,7 +417,9 @@
         "name": "Tên adapter",
         "host": "Host",
         "port": "Port",
+        "username": "Tài khoản",
         "pass": "Mật khẩu",
+        "topic_list": "Danh sách Topic",
         "topic": "Topic",
         "ping_MQTT": {
           "title": "Test MQTT connection",
@@ -425,6 +429,7 @@
       }
     },
     "dashboard": {
+      "title": "Dashboard",
       "table": {
         "id": "ID",
         "name": "Tên Dashboard",
@@ -435,6 +440,7 @@
           "description": "Mô tả",
           "widgets": "Widgets"
         },
+        "delete_dashboard": "Xoá DB",
         "delete_dashboard_full": "Xoá Dashboard",
         "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa Dashboard {{DBNAME}}?"
       },
@@ -442,7 +448,7 @@
         "title": "Thêm mới Dashboard",
         "name": "Tên Dashboard",
         "description": "Mô tả",
-        "edit": "Sửa Dashboard",
+        "edit": "Sửa DB",
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
         "success_delete": "Xoá Dashboard thành công"
@@ -451,7 +457,6 @@
         "title": "Tạo biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
-        "method": "Phương thức",
         "startDate": "Thời điểm bắt đầu",
         "endDate": "Thời điểm kết thúc",
         "color": "Màu sắc",
@@ -485,6 +490,11 @@
     "excel": "Excel",
     "pdf": "PDF",
     "print": "In",
+    "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
+    "view_detail": "Xem chi tiết",
+    "edit": "Chỉnh sửa",
+    "copy_id": "Sao chép ID",
+    "delete": "Xoá",
     "no_attr": "Không có thuộc tính",
     "no_device": "Không có thiết bị",
     "no_group": "Không có nhóm",
@@ -494,20 +504,18 @@
     "no_event": "Không có sự kiện",
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
-    "no_service": "Không có Service. Vui lòng tạo service.",
+    "no_service": "Không có nghiệp vụ. Vui lòng tạo nghiệp vụ.",
     "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",
-    "show_in": "Hiển thị {{PAGE}} trong số {{TOTAL}} kết quả",
-    "view_detail": "Xem chi tiết",
-    "edit": "Chỉnh sửa",
-    "copy_id": "Sao chép ID",
-    "delete": "Xoá",
-    "no_in_org": "Không thuộc TC"
+    "no_in_org": "Không thuộc TC",
+    "no_widget": "Không có Widget"
   },
   "btn": {
     "create": "Tạo mới",
     "back": "Quay lại",
-    "next": "Tiếp theo"
+    "next": "Tiếp theo",
+    "close": "Đóng",
+    "confirm": "Xác nhận"
   },
   "error": {
     "no_data": "Không có dữ liệu",
@@ -563,8 +571,5 @@
   },
   "misc": {
     "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
-  },
-  "dashboard": {
-    "title": "Dashboard"
   }
 }

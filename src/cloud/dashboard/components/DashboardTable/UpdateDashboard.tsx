@@ -1,30 +1,28 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
-import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { Spinner } from '~/components/Spinner'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
 
 type UpdateDashboardProps = {
-  projectId: string
   id: string
   close: () => void
   isOpen: boolean
+  title: string
   description: string
 }
 
 export function UpdateDashboard({
-  projectId,
   id,
   close,
   isOpen,
-  ...props
+  title,
+  description,
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
@@ -70,26 +68,19 @@ export function UpdateDashboard({
         onSubmit={values => {
           mutate({
             data: {
-              dashboards: {
-                id: values.id,
-                name: values.id,
-                title: values.title,
-                tenant_id: values.tenant_id,
-                created_time: values.created_time,
-                configuration: {
-                  description: values.configuration.description,
-                  widgets: null,
-                },
+              title: values.title,
+              configuration: {
+                description: values.configuration.description,
               },
             },
-            dashboardId: projectId,
+            dashboardId: id,
           })
         }}
         options={{
           defaultValues: {
-            title: dashboardData?.title,
+            title,
             configuration: {
-              description: dashboardData?.configuration.description,
+              description,
             },
           },
         }}
@@ -98,14 +89,12 @@ export function UpdateDashboard({
           <>
             {}
             <InputField
-              label={t('cloud:dashboard.add_dashboard.name') ?? 'Name'}
+              label={t('cloud:dashboard.add_dashboard.name')}
               error={formState.errors['title']}
               registration={register('title')}
             />
             <InputField
-              label={
-                t('cloud:dashboard.add_dashboard.description') ?? 'Description'
-              }
+              label={t('cloud:dashboard.add_dashboard.description')}
               registration={register('configuration.description')}
             />
           </>

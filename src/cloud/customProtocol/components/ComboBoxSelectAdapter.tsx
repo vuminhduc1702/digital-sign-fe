@@ -1,30 +1,25 @@
 import { useEffect, useState } from 'react'
-import { type FieldValues } from 'react-hook-form'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import {
-  type FieldWrapperPassThroughProps,
-  type ControllerPassThroughProps,
-} from '~/components/Form'
+import { type FieldWrapperPassThroughProps } from '~/components/Form'
 import { type Adapter, type AdapterList } from '../types'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
-type ComboBoxSelectAdapterProps<TFormValues extends FieldValues> = {
+type ComboBoxSelectAdapterProps = {
   data: AdapterList
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Adapter[]>>
   offset?: number
-} & FieldWrapperPassThroughProps &
-  ControllerPassThroughProps<TFormValues>
+} & FieldWrapperPassThroughProps
 
-export function ComboBoxSelectAdapter<TFormValues extends FieldValues>({
+export function ComboBoxSelectAdapter({
   data,
   setFilteredComboboxData,
   offset,
   ...props
-}: ComboBoxSelectAdapterProps<TFormValues>) {
+}: ComboBoxSelectAdapterProps) {
   const [query, setQuery] = useState('')
 
   const { acc: adapterFlattenData, extractedPropertyKeys } = flattenData(
@@ -37,8 +32,8 @@ export function ComboBoxSelectAdapter<TFormValues extends FieldValues>({
       'handle_service',
       'host',
       'port',
-      'topic',
       'content_type',
+      'configuration',
     ],
   )
 

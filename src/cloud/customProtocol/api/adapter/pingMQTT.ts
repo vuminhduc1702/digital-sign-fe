@@ -10,6 +10,7 @@ export type pingMQTTDTO = {
   data: {
     host: string
     port: string
+    username: string
     password: string
   }
 }

@@ -25,12 +25,18 @@ export type ActionsType = {
   label: string
 }
 
+export type SelectType = {
+  value: string
+  label: string
+}
+
 export type Role = {
   id: string
   owner: string
   project_id: string
   name: string
   policies: Policies[]
+  role_type: string
 }
 
 export type Policies = {

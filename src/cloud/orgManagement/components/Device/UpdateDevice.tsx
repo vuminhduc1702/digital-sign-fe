@@ -70,7 +70,6 @@ export function UpdateDevice({
     projectId,
     offset,
     entity_type: 'DEVICE',
-    config: { keepPreviousData: true },
   })
 
   useEffect(() => {

@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
 import { useEffect, useRef, useState } from 'react'
-import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
   Form,
+  FormMultipleFields,
   InputField,
   SelectDropdown,
   SelectField,
@@ -19,6 +19,7 @@ import {
   usePingMQTT,
 } from '../api/adapter'
 import {
+  adapterSchema,
   contentTypeList,
   entityThingSchema,
   protocolList,
@@ -38,44 +39,23 @@ import {
   type CreateServiceThingDTO,
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
+import TitleBar from '~/components/Head/TitleBar'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
 import { inputService, type EntityThingList } from '../types'
 import { type BasePagination } from '~/types'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
 type UpdateDeviceProps = {
   close: () => void
   isOpen: boolean
   thingData: GetEntityThingsRes
   refetchThingData: any
-} & AdapterTableContextMenuProps
-
-export const updateAdapterSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    content_type: z.enum(['json', 'hex', 'text'] as const),
-    thing_id: z.string(),
-    handle_service: z.string(),
-  })
-  .and(
-    z.discriminatedUnion('protocol', [
-      z.object({
-        protocol: z.enum(['tcp', 'udp'] as const),
-      }),
-      z.object({
-        protocol: z.literal('mqtt'),
-        host: z.string(),
-        port: z.string(),
-        password: z.string(),
-        topic: z.string(),
-      }),
-    ]),
-  )
+} & AdapterTableContextMenuProps & { configuration: string }
 
 export function UpdateAdapter({
   id,
@@ -85,9 +65,8 @@ export function UpdateAdapter({
   thing_id,
   handle_service,
   host,
-  password,
   port,
-  topic,
+  configuration,
   close,
   isOpen,
   thingData,
@@ -115,7 +94,6 @@ export function UpdateAdapter({
   })
 
   const {
-    data: dataCreateThing,
     mutate: mutateThing,
     isLoading: isLoadingThing,
     isSuccess: isSuccessThing,
@@ -141,7 +119,6 @@ export function UpdateAdapter({
     value: '',
   })
 
-  console.log(thingSelectData, thing_id, 'thingSelectData')
   const { data: serviceData } = useGetServiceThings({
     thingId: selectedThingId ? selectedThingId : thing_id,
     config: { enabled: !!selectedThingId, suspense: false },
@@ -197,7 +174,7 @@ export function UpdateAdapter({
         </>
       )}
     >
-      <Form<UpdateAdapterDTO['data'], typeof updateAdapterSchema>
+      <FormMultipleFields<UpdateAdapterDTO['data'], typeof adapterSchema>
         id="update-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
@@ -205,54 +182,62 @@ export function UpdateAdapter({
           if (protocolType === 'mqtt') {
             mutate({
               data: {
-                name: values.name,
                 project_id: projectId,
-                protocol: values.protocol,
+                name: values.name,
+                protocol: values.protocol as 'mqtt',
                 content_type: values.content_type,
-                thing_id: selectedThingId,
+                thing_id: values.thing_id,
                 handle_service: values.handle_service,
                 host: values.host,
                 port: values.port,
-                password: values.password,
-                topic: values.topic.split(',').map(word => word.trim() + '/#'),
+                configuration: {
+                  credentials: {
+                    username: values.configuration.credentials.username,
+                    password: values.configuration.credentials.password,
+                  },
+                  topic_filters: values.configuration.topic_filters.map(
+                    (topic: { topic: string }) => ({
+                      topic: topic.topic.trim(),
+                    }),
+                  ),
+                },
               },
               id,
             })
           } else {
             mutate({
               data: {
-                name: values.name,
                 project_id: projectId,
-                protocol: values.protocol,
+                name: values.name,
+                protocol: values.protocol as 'tcp' | 'udp',
                 content_type: values.content_type,
-                thing_id: selectedThingId,
+                thing_id: values.thing_id,
                 handle_service: values.handle_service,
               },
               id,
             })
           }
         }}
-        schema={updateAdapterSchema}
+        schema={adapterSchema}
+        name={['configuration.topic_filters']}
         options={{
           defaultValues: {
             name,
             content_type,
-            handle_service: handle_service,
+            handle_service,
             host,
-            password,
             port,
             protocol,
-            thing_id: thing_id,
-            topic:
-              topic !== 'null'
-                ? JSON.parse(topic)
-                  .map((item: string) => item.split('/')[0])
-                  .join(', ')
-                : null,
+            thing_id,
+            configuration:
+              configuration !== 'null' ? JSON.parse(configuration) : null,
           },
         }}
       >
-        {({ register, formState, control, watch, setValue }) => {
+        {(
+          { register, formState, control, watch, setValue },
+          { fields, append, remove },
+        ) => {
           // console.log('zod adapter errors: ', formState.errors)
           setIsCreateAdapterFormUpdated(formState.isDirty)
 
@@ -300,18 +285,6 @@ export function UpdateAdapter({
                         <p>{t('cloud:custom_protocol.service.title')}</p>
                       </div>
                     </Tab>
-                    {/* <Tab
-                      className={({ selected }) =>
-                        clsx(
-                          'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
-                          { 'text-primary-400': selected },
-                        )
-                      }
-                    >
-                      <div className="flex items-center gap-x-2">
-                        <p>{t('cloud:custom_protocol.finish')}</p>
-                      </div>
-                    </Tab> */}
                   </Tab.List>
                   <Tab.Panels className="mt-2 flex grow flex-col">
                     <Tab.Panel
@@ -357,16 +330,62 @@ export function UpdateAdapter({
                               error={formState.errors['port']}
                               registration={register('port')}
                             />
-                            <InputField
-                              label={t('cloud:custom_protocol.adapter.pass')}
-                              error={formState.errors['password']}
-                              registration={register('password')}
-                            />
-                            <InputField
-                              label={t('cloud:custom_protocol.adapter.topic')}
-                              error={formState.errors['topic']}
-                              registration={register('topic')}
-                            />
+                            <div className="flex justify-between space-x-3">
+                              <TitleBar
+                                title={t(
+                                  'cloud:custom_protocol.adapter.topic_list',
+                                )}
+                                className="w-full rounded-md bg-gray-500 pl-3"
+                              />
+                              <Button
+                                className="rounded-md"
+                                variant="trans"
+                                size="square"
+                                startIcon={
+                                  <PlusIcon
+                                    width={16}
+                                    height={16}
+                                    viewBox="0 0 16 16"
+                                  />
+                                }
+                                onClick={() => append({ topic: '' })}
+                              />
+                            </div>
+                            {fields.map((field, index) => (
+                              <section
+                                className="flex justify-between gap-x-2"
+                                style={{ marginTop: 10 }}
+                                key={field.id}
+                              >
+                                <InputField
+                                  label={`${t(
+                                    'cloud:custom_protocol.adapter.topic',
+                                  )} ${index + 1}`}
+                                  error={
+                                    formState.errors?.configuration
+                                      ?.topic_filters?.[index]?.topic
+                                  }
+                                  registration={register(
+                                    `configuration.topic_filters.${index}.topic` as const,
+                                  )}
+                                  classNameFieldWrapper="flex items-center gap-x-3"
+                                />
+                                <Button
+                                  type="button"
+                                  size="square"
+                                  variant="none"
+                                  className="mt-0 self-start p-0"
+                                  onClick={() => remove(index)}
+                                  startIcon={
+                                    <img
+                                      src={btnDeleteIcon}
+                                      alt="Delete topic"
+                                      className="h-10 w-10"
+                                    />
+                                  }
+                                />
+                              </section>
+                            ))}
                             <div className="flex justify-end">
                               <Button
                                 className="rounded-sm border-none"
@@ -377,7 +396,12 @@ export function UpdateAdapter({
                                     data: {
                                       host: watch('host'),
                                       port: watch('port'),
-                                      password: watch('password'),
+                                      username: watch(
+                                        'configuration.credentials.username',
+                                      ),
+                                      password: watch(
+                                        'configuration.credentials.password',
+                                      ),
                                     },
                                   })
                                 }
@@ -408,11 +432,11 @@ export function UpdateAdapter({
                               thingData
                                 ? thingSelectData
                                 : [
-                                  {
-                                    label: t('loading:entity_thing'),
-                                    value: '',
-                                  },
-                                ]
+                                    {
+                                      label: t('loading:entity_thing'),
+                                      value: '',
+                                    },
+                                  ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -438,7 +462,7 @@ export function UpdateAdapter({
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
-                          // defaultValue={defaultThingValues}
+                            // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -531,7 +555,7 @@ export function UpdateAdapter({
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                      thingType === 'template' ? (
+                                    thingType === 'template' ? (
                                       <InputField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -607,13 +631,13 @@ export function UpdateAdapter({
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                  ? [
+                                ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                  : [
+                                : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
@@ -833,7 +857,7 @@ export function UpdateAdapter({
             </>
           )
         }}
-      </Form>
+      </FormMultipleFields>
     </Drawer>
   )
 }

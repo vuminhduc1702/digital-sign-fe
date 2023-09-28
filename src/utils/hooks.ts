@@ -66,7 +66,7 @@ export const useWS = <T extends JsonValue | null>() => {
         title: t('ws:connect_error'),
       }),
     shouldReconnect: closeEvent => true,
-    reconnectAttempts: 10,
+    reconnectAttempts: 5,
     // attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
     reconnectInterval: attemptNumber =>
       Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
@@ -118,6 +118,9 @@ export function useDefaultCombobox(
         name: t('search:no_org'),
         description: '',
         parent_name: '',
+        children: [],
+        image: '',
+        org_id: '',
       }
   }
 }

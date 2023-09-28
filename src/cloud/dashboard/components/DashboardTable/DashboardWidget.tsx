@@ -8,21 +8,19 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   CreateConfigChart,
-  CreateConfigChartDTO,
-  EntityConfigChart,
+  type CreateConfigChartDTO,
 } from './CreateConfigChart'
 import {
   type CreateWidgetItemDTO,
   useCreateWidgetItem,
 } from '../../api/createWidgetItem'
 import { Form, FormDrawer, InputField } from '~/components/Form'
-import { PlusIcon } from '~/components/SVGIcons'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import GridLayout from 'react-grid-layout'
 import storage from '~/utils/storage'
 import { type ValueWS, type WS, type WSAgg, type Widget } from '../../types'
 import { type ListObj } from '~/components/SelectMenu'
 import { useWS } from '~/utils/hooks'
-import { Layout } from 'lucide-react'
 import { LineChart } from '../LineChart'
 import { v4 as uuidv4 } from 'uuid'
 import { useUpdateDashboard } from '../../api/updateDashboard'
@@ -30,14 +28,6 @@ import { useGetDashboardsById } from '../../api'
 import { useParams } from 'react-router-dom'
 import { DashboardDetail } from '../../routes/DashboardDetail'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-
-export type CreateConfigChart = {
-  id: string
-  org: string
-  device: string[]
-  dataConfigChart: any
-  chartSetting: any
-}
 
 export function DashboardWidget() {
   const { t } = useTranslation()
@@ -59,13 +49,13 @@ export function DashboardWidget() {
   })
   const [selectedWidget, setWidgetChecked] = useState('')
   const [showingConfigDialog, setShowingConfigDialog] = useState(false)
-  const [chartData, setChartData] = useState<CreateConfigChart>()
+  const [chartData, setChartData] = useState<CreateConfigChartDTO>()
 
   const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
     useCreateWidgetItem()
   const [editMode, toggleEdit] = useState(false)
 
-  const layout = [{}]
+  // const layout = [{}]
   // { i: "blue-eyes-dragon", x: 0, y: 0, w: 1, h: 1 },
   // { i: "dark-magician", x: 1, y: 0, w: 1, h: 1 },
   // { i: "kuriboh", x: 2, y: 0, w: 1, h: 1 },
@@ -206,7 +196,7 @@ export function DashboardWidget() {
       {detailDashboard?.configuration.widgets ? (
         <LineChart data={newValuesRef.current} />
       ) : (
-        <div>{'abc'}</div>
+        <div>Vui lòng tạo widget</div>
       )}
 
       {editMode ? (
@@ -219,8 +209,9 @@ export function DashboardWidget() {
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
-            children="Back"
-          />
+          >
+            {t('btn:back')}
+          </Button>
           <Button
             className="ml-2 rounded border-none p-3"
             form="update-dashboard"
@@ -300,8 +291,9 @@ export function DashboardWidget() {
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            children="Save"
-          />
+          >
+            {t('btn:confirm')}
+          </Button>
           {showingConfigDialog ? (
             <div>
               <CreateConfigChart
@@ -309,6 +301,7 @@ export function DashboardWidget() {
                 close={() => setShowingConfigDialog(false)}
                 isOpen={true}
                 handleSubmitChart={values => {
+                  console.log('values chart: ', values)
                   setShowingConfigDialog(false)
                   setChartData(values)
                 }}
@@ -328,10 +321,10 @@ export function DashboardWidget() {
                     startIcon={
                       <PlusIcon width={15} height={16} viewBox="0 0 16 16" />
                     }
-                    children="Widget"
-                  />
+                  >
+                    Widget
+                  </Button>
                 }
-                submitButton={<></>}
               >
                 <Form<CreateWidgetItemDTO['data']>
                   id="create-dashboard"
@@ -437,21 +430,17 @@ export function DashboardWidget() {
             variant="primary"
             isLoading={isLoading}
             onClick={() => toggleEdit(true)}
-            startIcon={<img src={btnEditIcon} alt="Edit" className="h-5 w-5" />}
-            children="Edit"
-          />
-          <Button
-            className="px-2"
-            type="button"
-            onClick={() => {
-              console.log(
-                Object.keys(
-                  detailDashboard?.configuration?.widgets as unknown as Widget,
-                ),
-              )
-            }}
-            children="Test"
-          ></Button>
+            startIcon={
+              <EditBtnIcon
+                width={20}
+                height={20}
+                className="text-white"
+                viewBox="0 0 20 20"
+              />
+            }
+          >
+            Edit
+          </Button>
         </div>
       )}
     </>

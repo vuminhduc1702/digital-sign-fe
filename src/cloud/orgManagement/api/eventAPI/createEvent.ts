@@ -11,8 +11,8 @@ import { type EventType } from '../../types'
 
 export type CreateEventDTO = {
   data: z.infer<typeof createEventSchema> & {
-    org_id: string | boolean
-    group_id: string | boolean
+    org_id: string
+    group_id: string
     type?: string
     schedule?: any
   }

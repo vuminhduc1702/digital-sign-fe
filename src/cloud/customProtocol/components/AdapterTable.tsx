@@ -25,7 +25,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 export type AdapterTableContextMenuProps = Omit<
   Adapter,
   'owner' | 'project_id' | 'created_time' | 'topic'
-> & { topic: string }
+>
 
 function AdapterTableContextMenu({
   id,
@@ -36,8 +36,7 @@ function AdapterTableContextMenu({
   handle_service,
   host,
   port,
-  password,
-  topic,
+  configuration,
 }: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
@@ -138,8 +137,7 @@ function AdapterTableContextMenu({
           handle_service={handle_service}
           host={host}
           port={port}
-          password={password}
-          topic={topic}
+          configuration={configuration}
           close={close}
           isOpen={isOpen}
           thingData={thingData}
@@ -232,8 +230,7 @@ export function AdapterTable({
             handle_service,
             host,
             port,
-            password,
-            topic,
+            configuration,
           } = info.row.original
           return AdapterTableContextMenu({
             id,
@@ -244,9 +241,7 @@ export function AdapterTable({
             handle_service,
             host,
             port,
-            password,
-            // @ts-ignore
-            topic,
+            configuration,
           })
         },
         header: () => null,
