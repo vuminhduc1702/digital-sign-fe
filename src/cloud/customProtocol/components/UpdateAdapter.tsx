@@ -55,7 +55,7 @@ type UpdateDeviceProps = {
   isOpen: boolean
   thingData: GetEntityThingsRes
   refetchThingData: any
-} & AdapterTableContextMenuProps & { configuration: string }
+} & AdapterTableContextMenuProps
 
 export function UpdateAdapter({
   id,

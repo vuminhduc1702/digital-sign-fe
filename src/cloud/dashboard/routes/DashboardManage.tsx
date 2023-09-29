@@ -2,7 +2,6 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ContentLayout } from '~/layout/ContentLayout'
 import { type Dashboard } from '../types'
 import storage from '~/utils/storage'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
@@ -21,23 +20,21 @@ export function DashboardManage() {
   )
 
   return (
-    <ContentLayout title={t('sidebar:cloud.dashboard')}>
-      <div ref={ref} className="flex grow flex-col">
-        <TitleBar title={t('cloud:dashboard.title')} />
-        <div className="flex grow flex-col px-9 py-3 shadow-lg">
-          <div className="flex justify-between">
-            <ExportTable refComponent={ref} />
-            <div className="flex items-center gap-x-3">
-              <CreateDashboard projectId={projectId} />
-              <ComboBoxSelectDashboard
-                projectId={projectId}
-                setFilteredComboboxData={setFilteredComboboxData}
-              />
-            </div>
+    <div ref={ref} className="flex grow flex-col">
+      <TitleBar title={t('cloud:dashboard.title')} />
+      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+        <div className="flex justify-between">
+          <ExportTable refComponent={ref} />
+          <div className="flex items-center gap-x-3">
+            <CreateDashboard projectId={projectId} />
+            <ComboBoxSelectDashboard
+              projectId={projectId}
+              setFilteredComboboxData={setFilteredComboboxData}
+            />
           </div>
-          <DashboardTable data={filteredComboboxData} projectId={projectId} />
         </div>
+        <DashboardTable data={filteredComboboxData} projectId={projectId} />
       </div>
-    </ContentLayout>
+    </div>
   )
 }

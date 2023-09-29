@@ -25,7 +25,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 export type AdapterTableContextMenuProps = Omit<
   Adapter,
   'owner' | 'project_id' | 'created_time' | 'topic'
->
+> & { configuration: string }
 
 function AdapterTableContextMenu({
   id,

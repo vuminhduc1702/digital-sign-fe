@@ -2,8 +2,7 @@ import { type BasePagination } from '~/types'
 
 export type ValueWS = { ts: number; value: string }
 
-type WSAggValue = 'NONE' | 'AVG' | 'MIN' | 'MAX' | 'SUM' | 'COUNT'
-export type WSAgg = { label: string; value: WSAggValue }
+export type WidgetType = 'TIMESERIES' | 'LASTEST'
 
 type EntityId = {
   entityType: 'DEVICE'

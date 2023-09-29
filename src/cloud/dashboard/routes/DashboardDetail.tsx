@@ -1,252 +1,460 @@
-// import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-// import { useTranslation } from 'react-i18next'
-// import { ReadyState } from 'react-use-websocket'
-
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
-import { ContentLayout } from '~/layout/ContentLayout'
-import { DashboardWidget } from '../components/DashboardTable/DashboardWidget'
+import { Button } from '~/components/Button/Button'
+import GridLayout from 'react-grid-layout'
+import storage from '~/utils/storage'
+import { useDisclosure, useWS } from '~/utils/hooks'
+import {
+  useCreateDashboard,
+  useGetDashboardsById,
+  useUpdateDashboard,
+} from '../api'
+import { useCreateWidgetItem } from '../api/createWidgetItem'
+import { LineChart } from '../components'
+import { CreateWidget, type WidgetAgg } from '../components/Widget'
+import { Drawer } from '~/components/Drawer'
 
-// import { Button } from '~/components/Button'
-// import { Calendar } from '~/components/Calendar'
-// import SelectMenu, { type ListObj } from '~/components/SelectMenu/SelectMenu'
-// import { Spinner } from '~/components/Spinner'
-// import { useWS } from '~/utils/hooks'
-// import { LineChart } from '../components'
+import {
+  type WS,
+  type ValueWS,
+  type Widget,
+  type WidgetType,
+} from '../types'
+import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
+import { type ListObj } from '~/components/SelectMenu'
 
-// import { type ValueWS, type WS, type WSAgg } from '../types'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-// const wsInterval = [
-//   { label: 'Second', value: 1000 },
-//   { label: 'Minute', value: 60 * 1000 },
-//   { label: 'Hour', value: 60 * 60 * 1000 },
-//   { label: 'Day', value: 24 * 60 * 60 * 1000 },
-//   { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
-//   { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
-//   { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
-// ]
+export const wsInterval = [
+  { label: 'Second', value: 1000 },
+  { label: 'Minute', value: 60 * 1000 },
+  { label: 'Hour', value: 60 * 60 * 1000 },
+  { label: 'Day', value: 24 * 60 * 60 * 1000 },
+  { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
+  { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
+  { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
+]
 
-// const wsAgg: WSAgg[] = [
-//   { label: 'None', value: 'NONE' },
-//   { label: 'Avg', value: 'AVG' },
-//   { label: 'Min', value: 'MIN' },
-//   { label: 'Max', value: 'MAX' },
-//   { label: 'Sum', value: 'SUM' },
-//   { label: 'Count', value: 'COUNT' },
-// ]
-
-// export function DashboardDetail() {
-//   const { t } = useTranslation()
-
-//   const [date, setDate] = useState<Date | undefined>(new Date())
-//   const parseDate = useMemo(
-//     () => Date.parse(date?.toISOString() || new Date().toISOString()),
-//     [date],
-//   )
-
-//   const [interval, setInterval] = useState<ListObj<number>>(wsInterval[0])
-//   const [agg, setAgg] = useState<WSAgg>(wsAgg[0])
-
-//   const initMessage = JSON.stringify({
-//     entityDataCmds: [
-//       {
-//         query: {
-//           entityFilter: {
-//             type: 'entityList',
-//             entityType: 'DEVICE',
-//             entityIds: [
-//               '2841c536-3023-4840-93c6-e3e4d4b2e6f1',
-//               '7b78f659-b5fe-4d26-86b0-91b60aebf876',
-//             ],
-//           },
-//           pageLink: {
-//             pageSize: 1,
-//             page: 0,
-//             sortOrder: {
-//               key: {
-//                 type: 'ENTITY_FIELD',
-//                 key: 'ts',
-//               },
-//               direction: 'DESC',
-//             },
-//           },
-//           entityFields: [
-//             {
-//               type: 'ENTITY_FIELD',
-//               key: 'name',
-//             },
-//           ],
-//           latestValues: [
-//             {
-//               type: 'TIME_SERIES',
-//               key: 'test',
-//             },
-//             {
-//               type: 'TIME_SERIES',
-//               key: 'test1',
-//             },
-//           ],
-//         },
-//         id: 1,
-//       },
-//     ],
-//   })
-
-//   const lastestMessage = JSON.stringify({
-//     entityDataCmds: [
-//       {
-//         latestCmd: {
-//           keys: [
-//             {
-//               type: 'TIME_SERIES',
-//               key: 'test',
-//             },
-//             {
-//               type: 'TIME_SERIES',
-//               key: 'test1',
-//             },
-//           ],
-//         },
-//         id: 1,
-//       },
-//     ],
-//   })
-
-//   const liveMessage = JSON.stringify({
-//     entityDataCmds: [
-//       {
-//         tsCmd: {
-//           keys: ['test', 'test1'],
-//           startTs: parseDate,
-//           interval: interval.value,
-//           limit: 10,
-//           offset: 0,
-//           agg: agg.value,
-//         },
-//         id: 1,
-//       },
-//     ],
-//   })
-
-//   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-//     useWS<WS>()
-
-//   const liveValues: ValueWS[] =
-//     lastJsonMessage?.data?.[0]?.timeseries?.test || []
-//   const prevValuesRef = useRef<ValueWS[]>([])
-//   const newValuesRef = useRef<ValueWS[]>([])
-//   useEffect(() => {
-//     prevValuesRef.current = newValuesRef.current || liveValues
-//   }, [liveValues[0]])
-//   if (prevValuesRef.current && agg.value === 'NONE') {
-//     newValuesRef.current = [...prevValuesRef.current, ...liveValues]
-//   } else newValuesRef.current = liveValues
-
-//   const handleInit = useCallback(() => sendMessage(initMessage), [])
-//   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
-//   const handleLive = useCallback(
-//     () => sendMessage(liveMessage),
-//     [parseDate, interval, agg],
-//   )
-
-//   useEffect(() => {
-//     if (readyState === ReadyState.OPEN) {
-//       handleInit()
-//     }
-//   }, [handleInit, readyState])
-
-//   function testClick(){
-//     return console.info('asdf')
-//   }
-
-//   return (
-//     <>
-//       <div className="flex flex-col gap-x-3">
-//         <div className="space-y-3">
-//           <Calendar
-//             className="rounded-md border"
-//             mode="single"
-//             selected={date}
-//             onSelect={setDate}
-//           />
-//           <div className="flex gap-x-3">
-//             <Button
-//               className="h-5 w-10"
-//               size="lg"
-//               onClick={handleLastest}
-//               disabled={readyState !== ReadyState.OPEN}
-//             >
-//               Lastest
-//             </Button>
-//             <Button
-//               className="h-5 w-10"
-//               size="lg"
-//               onClick={handleLive}
-//               disabled={readyState !== ReadyState.OPEN}
-//             >
-//               Live
-//             </Button>
-//           </div>
-//           <SelectMenu
-//             label={t('ws:filter.interval')}
-//             data={wsInterval.map(interval => ({
-//               label: interval.label,
-//               value: interval.value,
-//             }))}
-//             selected={interval}
-//             setSelected={setInterval}
-//           />
-//           <SelectMenu
-//             label={t('ws:filter.data_aggregation')}
-//             data={wsAgg.map(agg => ({
-//               label: agg.label,
-//               value: agg.value,
-//             }))}
-//             selected={agg}
-//             setSelected={setAgg}
-//           />
-//         </div>
-//       </div>
-//       {
-//         <Button onClick={testClick}>Test</Button>
-//       }
-//       {connectionStatus !== 'Connecting' ? (
-//         <>
-//           <LineChart data={newValuesRef.current} />
-//           {/* <GaugeChart data={parseFloat(lastestValue)} /> */}
-//           {/* <Map position={[21.068174, 105.81182]} /> */}
-//           {/* <BarChart data={lastJsonMessage?.data || []} /> */}
-//         </>
-//       ) : (
-//         <div className="flex grow items-center justify-center">
-//           <Spinner showSpinner size="xl" />
-//         </div>
-//       )}
-//     </>
-//   )
-// }
+export const widgetAgg: WidgetAgg[] = [
+  { label: 'None', value: 'NONE' },
+  { label: 'Avg', value: 'AVG' },
+  { label: 'Min', value: 'MIN' },
+  { label: 'Max', value: 'MAX' },
+  { label: 'Sum', value: 'SUM' },
+  { label: 'Count', value: 'COUNT' },
+]
 
 export function DashboardDetail() {
   const { t } = useTranslation()
 
   const DBNAME = localStorage.getItem('dbname')
 
-  const layout = [
-    { i: 'a', x: 0, y: 0, w: 1, h: 2, static: true },
-    { i: 'b', x: 1, y: 0, w: 3, h: 2, minW: 2, maxW: 4 },
-    { i: 'c', x: 4, y: 0, w: 1, h: 2 },
-  ]
+  const params = useParams()
+  const dashboardId = params.dashboardId as string
+  const projectId = params.projectId as string
+
+  const { close, open, isOpen } = useDisclosure()
+
+  const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
+  const { mutate: mutateDashboard } = useCreateDashboard()
+  const {
+    mutate: mutateUpdateDashboard,
+    isLoading,
+    isSuccess,
+  } = useUpdateDashboard()
+  const { data: detailDashboard } = useGetDashboardsById({
+    id: dashboardId,
+    config: { suspense: false },
+  })
+  const [showingConfigDialog, setShowingConfigDialog] = useState(false)
+  const [chartData, setChartData] = useState()
+
+  const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
+    useCreateWidgetItem()
+  const [isEditMode, setIsEditMode] = useState(false)
+
+  const [interval, setInterval] = useState<ListObj<number>>(wsInterval[0])
+  const [agg, setAgg] = useState<WidgetAgg>(widgetAgg[0])
+
+  const [date, setDate] = useState<Date | undefined>(new Date())
+  const parseDate = useMemo(
+    () => Date.parse(date?.toISOString() || new Date().toISOString()),
+    [date],
+  )
+
+  const lastestMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        latestCmd: {
+          keys: [
+            {
+              type: 'TIME_SERIES',
+              key: 'test',
+            },
+            {
+              type: 'TIME_SERIES',
+              key: 'test1',
+            },
+          ],
+        },
+        id: 1,
+      },
+    ],
+  })
+
+  const liveMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        tsCmd: {
+          keys: ['test', 'test1'],
+          startTs: parseDate,
+          interval: interval.value,
+          limit: 10,
+          offset: 0,
+          agg: agg.value,
+        },
+        id: 1,
+      },
+    ],
+  })
+
+  const historyMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        historyCmd: {
+          keys: [],
+          startTs: null,
+          endTs: null,
+          interval: 10000,
+          limit: 100,
+          offset: 0,
+          agg: '',
+        },
+        id: 1,
+      },
+    ],
+  })
+
+  const realtimeMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        tsCmd: {
+          keys: [],
+          startTs: null,
+          interval: '',
+          limit: 100,
+          offset: 0,
+          agg: '',
+        },
+        id: 1,
+      },
+    ],
+  })
+
+  const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
+    useWS<WS>()
+
+  const liveValues: ValueWS[] =
+    lastJsonMessage?.data?.[0]?.timeseries?.test || []
+  const prevValuesRef = useRef<ValueWS[]>([])
+  const newValuesRef = useRef<ValueWS[]>([])
+  useEffect(() => {
+    prevValuesRef.current = newValuesRef.current || liveValues
+  }, [liveValues[0]])
+  if (prevValuesRef.current && agg.value === 'NONE') {
+    newValuesRef.current = [...prevValuesRef.current, ...liveValues]
+  } else newValuesRef.current = liveValues
+  // const [initWSMessage, setInitMessage] = useState({})
+  const handleInit = useCallback(
+    (message: WebSocketMessage) => sendMessage(message),
+    [],
+  )
+  const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
+  const handleLive = useCallback(
+    () => sendMessage(liveMessage),
+    [parseDate, interval, agg],
+  )
+  const handleHistory = useCallback(() => sendMessage(historyMessage), [])
+  const handleRealtime = useCallback(() => sendMessage(realtimeMessage), [])
 
   return (
-    <>
-      <ContentLayout title={t('sidebar:cloud.dashboard')}>
-        <div className="flex grow flex-col">
-          <TitleBar title={'Dashboard ' + DBNAME} />
-          <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
-            <DashboardWidget />
+    <div className="flex grow flex-col">
+      <TitleBar title={'Dashboard ' + DBNAME} />
+      <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
+        {/* <GridLayout
+          style={editMode ? { background: '#f0f0f0' } : {}}
+          layout={layout}
+          cols={8}
+          rowHeight={300}
+          width={1560}
+          maxRows={1}
+          isDraggable={editMode ? true : false}
+        >
+          <WidgetItem title="Blue eye dragon"></WidgetItem>
+        </GridLayout> */}
+        {detailDashboard?.configuration.widgets ? (
+          <LineChart data={newValuesRef.current} />
+        ) : (
+          <div>Vui lòng tạo widget</div>
+        )}
+
+        {isEditMode ? (
+          <div className="flex justify-end">
+            <Button
+              className="ml-2 rounded border-none p-3"
+              variant="secondary"
+              size="square"
+              onClick={() => setIsEditMode(false)}
+              startIcon={
+                <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+              }
+            >
+              {t('btn:back')}
+            </Button>
+            <Button
+              className="ml-2 rounded border-none p-3"
+              form="update-dashboard"
+              type="submit"
+              size="square"
+              isLoading={isLoading}
+              onClick={() => {
+                setIsEditMode(false)
+                const widgetId = uuidv4()
+                const latestData = chartData?.dataConfigChart.map(
+                  (item: any) => {
+                    return {
+                      type: 'TIME_SERIES',
+                      key: item.attr,
+                    }
+                  },
+                )
+                mutateUpdateDashboard({
+                  data: {
+                    configuration: {
+                      widgets: {
+                        [widgetId]: {
+                          type: 'timeseries',
+                          title: 'Test',
+                          datasource: {
+                            init: {
+                              query: {
+                                entityFilter: {
+                                  type: 'entityList',
+                                  entityType: 'DEVICE',
+                                  entityIds: chartData?.device,
+                                },
+                                pageLink: {
+                                  pageSize: 1,
+                                  page: 0,
+                                  sortOrder: {
+                                    key: {
+                                      type: 'ENTITY_FIELD',
+                                      key: 'ts',
+                                    },
+                                    direction: 'DESC',
+                                  },
+                                },
+                                entityFields: [
+                                  {
+                                    type: 'ENTITY_FIELD',
+                                    key: 'name',
+                                  },
+                                ],
+                                latestValues: latestData,
+                              },
+                            },
+                          },
+                          config: {},
+                        },
+                      },
+                    },
+                  },
+                  dashboardId: dashboardId,
+                })
+                const widgetInitId = Object.keys(
+                  detailDashboard?.configuration?.widgets as unknown as Widget,
+                )[0].toString()
+                const setInitMessage = {
+                  id: widgetInitId,
+                  data: chartData?.device.map((deviceId: string) => {
+                    return {
+                      entityId: {
+                        entityType: 'DEVICE',
+                        id: deviceId,
+                      },
+                      latest: {},
+                    }
+                  }),
+                }
+                handleInit(JSON.stringify(setInitMessage))
+                handleHistory()
+              }}
+              startIcon={
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              }
+            >
+              {t('btn:confirm')}
+            </Button>
+            <Button
+              className="ml-2 rounded p-3"
+              size="square"
+              variant="trans"
+              onClick={() => open()}
+              startIcon={
+                <PlusIcon
+                  width={16}
+                  height={16}
+                  viewBox="0 0 16 16"
+                  className="text-black"
+                />
+              }
+            >
+              {t('cloud:dashboard.config_chart.title')}
+            </Button>
+            {showingConfigDialog ? (
+              <div>
+                <CreateWidget
+                  widgetType={widgetType}
+                  isOpen={showingConfigDialog}
+                  close={() => setShowingConfigDialog(false)}
+                  handleSubmitChart={values => {
+                    console.log('values chart: ', values)
+                    setShowingConfigDialog(false)
+                    setChartData(values)
+                  }}
+                />
+              </div>
+            ) : (
+              <div>
+                <Drawer
+                  isOpen={isOpen}
+                  onClose={close}
+                  title={t(
+                    'cloud:dashboard.detail_dashboard.add_widget.create',
+                  )}
+                  renderFooter={() => (
+                    <>
+                      <Button
+                        className="rounded border-none"
+                        variant="secondary"
+                        size="lg"
+                        onClick={close}
+                        startIcon={
+                          <img
+                            src={btnCancelIcon}
+                            alt="Submit"
+                            className="h-5 w-5"
+                          />
+                        }
+                      />
+                    </>
+                  )}
+                >
+                  <div className="flex w-full gap-x-4">
+                    <div className="col-6 w-full space-y-3">
+                      <Button
+                        type="button"
+                        size="square"
+                        className="bg-secondary-400 w-full"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('TIMESERIES')
+                          setShowingConfigDialog(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.line_chart',
+                          )}
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="square"
+                        className="bg-secondary-400 w-full"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('TIMESERIES')
+                          setShowingConfigDialog(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
+                          )}
+                        </span>
+                      </Button>
+                    </div>
+                    <div className="col-6 w-full space-y-3">
+                      <Button
+                        type="button"
+                        size="square"
+                        className="bg-secondary-400 w-full active:bg-primary-300"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('LASTEST')
+                          setShowingConfigDialog(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t('cloud:dashboard.detail_dashboard.add_widget.map')}
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="square"
+                        className="bg-secondary-400 w-full"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('LASTEST')
+                          setShowingConfigDialog(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                          )}
+                        </span>
+                      </Button>
+                    </div>
+                  </div>
+                </Drawer>
+              </div>
+            )}
           </div>
-        </div>
-      </ContentLayout>
-    </>
+        ) : (
+          <div className="flex justify-end">
+            <Button
+              className="mx-2 rounded"
+              form="update-dashboard"
+              size="square"
+              variant="primary"
+              isLoading={isLoading}
+              onClick={() => setIsEditMode(true)}
+              startIcon={
+                <EditBtnIcon
+                  width={20}
+                  height={20}
+                  className="text-white"
+                  viewBox="0 0 20 20"
+                />
+              }
+            >
+              {t('cloud:dashboard.add_dashboard.edit_full')}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }

@@ -453,7 +453,7 @@
         "tenant_id": "Tenant ID",
         "configuration": {
           "description": "Mô tả",
-          "widgets": "Widgets"
+          "widgets": "Biểu đồ"
         },
         "delete_dashboard": "Xoá DB",
         "delete_dashboard_full": "Xoá Dashboard",
@@ -464,6 +464,7 @@
         "name": "Tên Dashboard",
         "description": "Mô tả",
         "edit": "Sửa DB",
+        "edit_full": "Sửa Dashboard",
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
         "success_delete": "Xoá Dashboard thành công"
@@ -486,7 +487,7 @@
       },
       "detail_dashboard": {
         "add_widget": {
-          "create": "Tạo widget cho bảng điều khiển",
+          "create": "Tạo biểu đồ cho bảng điều khiển",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ máy đo",
@@ -523,7 +524,7 @@
     "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",
     "no_in_org": "Không thuộc TC",
-    "no_widget": "Không có Widget"
+    "no_widget": "Không có biểu đồ"
   },
   "btn": {
     "create": "Tạo mới",
