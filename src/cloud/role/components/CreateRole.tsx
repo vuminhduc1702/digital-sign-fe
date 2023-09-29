@@ -282,7 +282,7 @@ export function CreateRole() {
               </div>
               {fields.map((field, index) => (
                 <section
-                  className="flex justify-between gap-x-2"
+                  className="flex justify-between rounded-md bg-slate-200 px-2 py-4"
                   style={{ marginTop: 10 }}
                   key={field.id}
                 >
@@ -445,7 +445,7 @@ export function CreateRole() {
                     type="button"
                     size="square"
                     variant="none"
-                    className="mt-3 self-start"
+                    className="mt-3 self-start !pr-0"
                     onClick={() => remove(index)}
                     startIcon={
                       <img
