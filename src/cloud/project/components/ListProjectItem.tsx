@@ -59,7 +59,7 @@ export function ListProjectItem({listProjectData}: any) {
         {
           project?.map((project: Project) => {
             return (
-              <div key={project.id} className="relative m-2" style={{height: '288px', backgroundImage: `url(${defaultProjectImage})`, borderRadius: '10px 10px 10px 0'}}>
+              <div key={project.id} className="relative m-2" style={{height: '288px', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundImage: `url(${defaultProjectImage})`, borderRadius: '10px 10px 10px 0'}}>
                 <div className="absolute top-3 right-3">
                   <Dropdown
                     icon={
