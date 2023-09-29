@@ -59,8 +59,8 @@ export const adapterSchema = z
         port: z.string().min(1, { message: 'Vui lòng nhập port' }),
         configuration: z.object({
           credentials: z.object({
-            username: z.string().min(1, { message: 'Vui lòng nhập tài khoản' }),
-            password: z.string().min(1, { message: 'Vui lòng nhập mật khẩu' }),
+            username: z.string(),
+            password: z.string(),
           }),
           topic_filters: z.array(
             z.object({

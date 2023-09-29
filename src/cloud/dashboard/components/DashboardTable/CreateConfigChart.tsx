@@ -17,7 +17,6 @@ import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
-import { ConfigChartTable } from './ConfigChartTable'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Calendar } from '~/components/Calendar'
 import { useGetOrgs } from '~/layout/MainLayout/api'
@@ -106,9 +105,7 @@ export function CreateConfigChart({
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [color, setColor] = useState('#FF0000')
-  const [dataConfigChart, setDataConfigChart] = useState<
-    CreateConfigChartDTO[]
-  >([])
+  const [dataConfigChart, setDataConfigChart] = useState<>([])
   const [interval, setInterval] = useState<SelectOption>({
     label: '',
     value: '',

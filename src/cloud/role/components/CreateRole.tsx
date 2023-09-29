@@ -286,7 +286,7 @@ export function CreateRole() {
                   style={{ marginTop: 10 }}
                   key={field.id}
                 >
-                  <div className="grid grid-cols-1 w-full gap-x-4 md:grid-cols-3">
+                  <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-3">
                     <div className="space-y-1">
                       <InputField
                         label={
@@ -328,12 +328,11 @@ export function CreateRole() {
                       </div>
                     )}
                     {type === 'Group' && (
-                      <div>
+                      <div className="space-y-3">
                         <div className="space-y-1">
                           <SelectDropdown
                             isClearable={true}
-                            label={'Thiết bị'
-                            }
+                            label={'Thiết bị'}
                             name={`policies.${index}.devices`}
                             options={
                               groupDataDevice?.groups?.map(groups => ({
@@ -355,8 +354,7 @@ export function CreateRole() {
                         <div className="space-y-1">
                           <SelectDropdown
                             isClearable={true}
-                            label={'Sự kiện'
-                            }
+                            label={'Sự kiện'}
                             name={`policies.${index}.events`}
                             options={
                               groupDataEvent?.groups?.map(groups => ({
@@ -378,8 +376,7 @@ export function CreateRole() {
                         <div className="space-y-1">
                           <SelectDropdown
                             isClearable={true}
-                            label={'Người dùng'
-                            }
+                            label={'Người dùng'}
                             name={`policies.${index}.users`}
                             options={
                               groupDataUser?.groups?.map(groups => ({
@@ -401,8 +398,7 @@ export function CreateRole() {
                         <div className="space-y-1">
                           <SelectDropdown
                             isClearable={true}
-                            label={'Tổ chức'
-                            }
+                            label={'Tổ chức'}
                             name={`policies.${index}.orgs`}
                             options={
                               groupDataOrg?.groups?.map(groups => ({
