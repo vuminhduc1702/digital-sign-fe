@@ -41,8 +41,12 @@ export type Role = {
 
 export type Policies = {
   policy_name: string
-  resources: ResourcesType[]
+  resources?: ResourcesType[]
   actions: ActionsType[]
+  devices?: SelectType[]
+  users?: SelectType[]
+  orgs?: SelectType[]
+  events?: SelectType[]
 }
 
 export type RoleList = {

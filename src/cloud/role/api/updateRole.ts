@@ -10,13 +10,14 @@ import { type PoliciesReq } from './createRole'
 export type UpdateRoleDTO = {
   data: {
     name: string
+    role_type: string
     policies: PoliciesReq[]
   }
   roleId: string
 }
 
 export const updateRole = ({ data, roleId }: UpdateRoleDTO) => {
-  return axios.put(`/api/roles/${roleId}`, data)
+  return axios.put(`/api/roles${data.role_type === 'Group' ? '/group' : ''}/${roleId}`, data)
 }
 
 type UseUpdateRoleOptions = {

@@ -126,6 +126,7 @@ function RoleTableContextMenu({
           roleId={selectedUpdateRole.id}
           name={selectedUpdateRole.name}
           policy={selectedUpdateRole.policies}
+          role_type={selectedUpdateRole.role_type}
         />
       ) : null}
     </>
