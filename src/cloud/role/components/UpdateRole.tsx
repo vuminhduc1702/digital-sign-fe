@@ -245,7 +245,6 @@ export function UpdateRole({
           { register, formState, control, setValue },
           { fields, append, remove },
         ) => {
-          console.log(formState.errors, 'formState')
           return (
             <>
               <InputField
