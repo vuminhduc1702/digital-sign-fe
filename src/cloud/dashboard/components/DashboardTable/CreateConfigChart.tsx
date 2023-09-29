@@ -105,7 +105,7 @@ export function CreateConfigChart({
   const [startDate, setStartDate] = useState<Date>()
   const [endDate, setEndDate] = useState<Date>()
   const [color, setColor] = useState('#FF0000')
-  const [dataConfigChart, setDataConfigChart] = useState<>([])
+  const [dataConfigChart, setDataConfigChart] = useState([])
   const [interval, setInterval] = useState<SelectOption>({
     label: '',
     value: '',
