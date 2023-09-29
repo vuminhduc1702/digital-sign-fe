@@ -160,7 +160,10 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
       }),
       columnHelper.accessor('role_type', {
         header: () => <span>{t('cloud:role_manage.add_role.role_type')}</span>,
-        cell: info => info.getValue(),
+        cell: info => {
+          const { role_type } = info.row.original
+          return <>{role_type ? role_type : 'Generic'}</>
+        },
         footer: info => info.column.id,
       }),
       columnHelper.display({

@@ -26,7 +26,7 @@ type UseOrgByIdOptions = {
 
 export const useOrgById = ({ orgId, config }: UseOrgByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['orgById', orgId],
+    queryKey: ['orgs', orgId],
     queryFn: () => getOrgById({ orgId, get_attributes: false }),
     enabled: !!orgId,
     ...config,
