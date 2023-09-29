@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
+import { cn } from '~/utils/misc'
 
 type TextAreaFieldProps = FieldWrapperPassThroughProps & {
   rows?: number,
@@ -14,7 +15,7 @@ export const TextAreaField = (props: TextAreaFieldProps) => {
   return (
     <FieldWrapper label={label} error={error}>
       <textarea 
-        className={clsx(
+        className={cn(
           'focus:secondary-900 block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-none focus:ring-secondary-900 sm:text-body-sm',
           className,
         )}

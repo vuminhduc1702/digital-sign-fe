@@ -19,6 +19,8 @@ import { useDeleteProject } from "../api/deleteProject";
 import { UpdateProject } from "./UpdateProject";
 import { useState } from "react";
 
+
+
 export function ListProjectItem({listProjectData}: any) {
   const { t } = useTranslation()
   
@@ -117,7 +119,7 @@ export function ListProjectItem({listProjectData}: any) {
                               isLoading={isLoading}
                               type="button"
                               size="md"
-                              className="bg-primary-400"
+                              className="bg-primary-400 rounded-md border"
                               onClick={() =>
                                 mutate({
                                   projectId: project.id

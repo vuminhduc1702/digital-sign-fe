@@ -14,6 +14,9 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadImageDTO, useUploadImage } from "~/layout/OrgManagementLayout/api"
 import defaultProjectImage from '~/assets/images/default-project.png'
 import FileField from "~/components/Form/FileField"
+import { cn } from "~/utils/misc"
+import { useUpdateProject } from "../api"
+import { da } from "date-fns/locale"
 
 export const projectSchema = z.object({
   name: nameSchema,
@@ -21,7 +24,7 @@ export const projectSchema = z.object({
   image: z.string().optional()
 })
 
-const MAX_FILE_SIZE = 500000
+const MAX_FILE_SIZE = 5000000
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 export const uploadImageSchema = z.object({
   file: z
@@ -45,10 +48,13 @@ export function CreateProject(){
   const { t } = useTranslation()
 
   const {
+    data: dataCreateProject,
     mutate: mutateProject,
     isLoading: isLoadingProject,
     isSuccess: isSuccessProject,
   } = useCreateProject()
+
+  // const { mutateUpdateProject: mutateUpdateProject } = useUpdateProject()
 
   const fileInputRef = useRef()
   const {
@@ -68,7 +74,8 @@ export function CreateProject(){
 
   return (
     <FormDialog
-      className="project-popup"
+      className='project-popup'
+      size='md'
       title={t('cloud:project_manager.add_project.title')}
       id='create-project-screen'
       isDone={isSuccessProject}
@@ -81,7 +88,7 @@ export function CreateProject(){
               data: {
                 name: values.name,
                 description: values.description,
-                image: dataUploadImage?.data?.link
+                image: ''
               },
             })
           }}
@@ -89,7 +96,7 @@ export function CreateProject(){
         >
           {({ register, formState }) => {
             return (
-              <div className="grid grid-cols-1 md:grid-cols-2">
+              <div className="grid grid-cols-1 md:grid-cols-[70%_30%]">
                 <div style={{height: '250px'}}>
                   <InputField
                     label={t('cloud:project_manager.add_project.name')}
@@ -98,13 +105,35 @@ export function CreateProject(){
                     className="mb-5"
                   />
                   <TextAreaField
+                    
                     label={t('cloud:project_manager.add_project.description')}
                     error={formState.errors['description']}
                     registration={register('description')}
-                    rows={5}
+                    rows={7}
                   />
                 </div>
                 <div className="pl-4">
+                  <div className="mb-3">
+                    <FileField
+                      label={t('cloud:project_manager.add_project.avatar')}
+                      error={formStateUploadImage.errors['file']}
+                      control={controlUploadImage}
+                      name="upload-image"
+                      ref={fileInputRef}
+                      onChange={event => {
+                        const formData = new FormData()
+                        formData.append('file', event.target.files[0])
+                        setValueUploadImage('file', formData.get('file'))
+                        const reader = new FileReader()
+                        reader.readAsDataURL(event.target.files[0])
+                        reader.onload = e => {
+                          if (avatarRef.current != null && e.target != null) {
+                            avatarRef.current.src = e.target.result as string
+                          }
+                        }
+                      }}
+                    />
+                  </div>
                   <img
                     src={defaultProjectImage}
                     onError={e => {
@@ -112,7 +141,7 @@ export function CreateProject(){
                       target.onerror = null
                       target.src = defaultProjectImage
                     }}
-                    alt="Organization"
+                    alt="Project"
                     className="h-36 w-32 mb-3"
                     ref={avatarRef}
                     onClick={event => {
@@ -128,29 +157,24 @@ export function CreateProject(){
                       }
                     }}
                   />
-                  <FileField
-                    label={t('cloud:project_manager.add_project.avatar')}
-                    error={formStateUploadImage.errors['file']}
-                    control={controlUploadImage}
-                    name="upload-image"
-                    ref={fileInputRef}
-                    onChange={event => {
-                      const formData = new FormData()
-                      formData.append('file', event.target.files[0])
-                      setValueUploadImage('file', formData.get('file'))
-                      const reader = new FileReader()
-                      reader.readAsDataURL(event.target.files[0])
-                      reader.onload = e => {
-                        if (avatarRef.current != null && e.target != null) {
-                          avatarRef.current.src = e.target.result as string
-                        }
+                  <Button
+                    className="border-none mb-3"
+                    style={{ justifyContent: 'flex-start' }}
+                    variant="secondaryLight"
+                    size="square"
+                    onClick={() => {
+                      if (avatarRef.current != null) {
+                        avatarRef.current.src = defaultProjectImage as string
                       }
                     }}
-                  />
+                    isLoading={isLoadingUploadImage}
+                  >
+                    {t('cloud:project_manager.add_project.upload_ava_default')}
+                  </Button>
                   <Button
-                    className="border-none mt-3"
+                    className="border-none mb-3"
                     style={{ justifyContent: 'flex-start' }}
-                    variant="primary"
+                    variant="secondaryLight"
                     size="square"
                     onClick={handleSubmitUploadImage(values => {
                       mutateUploadImage({
@@ -163,8 +187,9 @@ export function CreateProject(){
                     })}
                     isLoading={isLoadingUploadImage}
                   >
-                    {t('cloud:org_manage.org_manage.add_org.upload_ava')}
+                    {t('cloud:project_manager.add_project.upload_ava')}
                   </Button>
+                  <div style={{fontSize: '12px'}}>{t('cloud:project_manager.add_project.upload_instruction')}</div>
                 </div>
               </div>
             )
@@ -185,7 +210,7 @@ export function CreateProject(){
           form="create-project"
           type="submit"
           size="md"
-          className="bg-primary-400"
+          className="bg-primary-400 rounded-md border"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }

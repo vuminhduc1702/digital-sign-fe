@@ -12,6 +12,7 @@ import { CreateProject } from '../components/CreateProject'
 import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
 import { useState } from 'react'
 import { ListProjectItem } from './../components/ListProjectItem';
+import projectBackgroundImage from '~/assets/images/project-background.png'
 
 const ProjectSchema = z.object({
   id: z.string(),
@@ -62,7 +63,7 @@ export function ProjectManage() {
         </div>
       </div>
       
-      <div className="mt-3">
+      <div className="mt-3" style={{height: '100%', backgroundImage: `url(${projectBackgroundImage})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 5% bottom 0'}}>
         { Number(projectsData?.total) > 0 ? 
             (
               <>

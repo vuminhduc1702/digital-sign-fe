@@ -11,7 +11,10 @@ type CreateProjectRes = {
   data: {
     name: string,
     description: string,
-    image?: string
+    image: string,
+    app_key: string,
+    app_secret: string,
+    sms_config: {}
   }
 } & BaseAPIRes
 
