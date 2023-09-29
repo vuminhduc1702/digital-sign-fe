@@ -4,7 +4,7 @@ import { forwardRef, useState, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 import { PATHS } from '~/routes/PATHS'
-import { NavLink } from '~/components/Link'
+import { Link, NavLink } from '~/components/Link'
 import storage from '~/utils/storage'
 
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
@@ -88,7 +88,6 @@ function SideNavigation() {
         />
         <div>{t('sidebar:overview')}</div>
       </div>
-
       <Accordion.Root
         type="single"
         collapsible

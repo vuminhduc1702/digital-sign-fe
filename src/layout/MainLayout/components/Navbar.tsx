@@ -61,26 +61,28 @@ function Navbar() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
         <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-            <div className="cursor-pointer">
-              <img
-                src={qldaIcon}
-                alt="Project management"
-                className="aspect-square w-[20px]"
-              />
-              <p className="text-white">{t('nav:qlda')}</p>
-              <SidebarDropDownIcon
-                width={12}
-                height={7}
-                viewBox="0 0 12 7"
-                className="text-white"
-              />
-            </div>
-          </DropdownMenu.Trigger>
+          <div className="flex items-center gap-x-2">
+            <img
+              src={qldaIcon}
+              alt="Project management"
+              className="aspect-square w-[20px]"
+            />
+            <p className="text-white"><Link className="w-full flex" to={PATHS.PROJECT_MANAGE}>{t('nav:qlda')}</Link></p>
+            <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+              <div className="cursor-pointer">
+                <SidebarDropDownIcon
+                  width={12}
+                  height={7}
+                  viewBox="0 0 12 7"
+                  className="text-white"
+                />
+              </div>
+            </DropdownMenu.Trigger>
+          </div>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
               className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={5}
+              sideOffset={40}
             >
               {projectsData?.projects.map((project: Project) => {
                 return (

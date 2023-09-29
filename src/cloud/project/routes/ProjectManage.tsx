@@ -1,16 +1,17 @@
-import { Link } from '~/components/Link'
 import { useProjects } from '../api'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
 import { useProjectIdStore } from '~/stores/project'
 import { ContentLayout } from '~/layout/ContentLayout'
 
 import { BasePaginationSchema } from '~/utils/schemaValidation'
 
-import defaultProjectImage from '~/assets/images/default-project.png'
+import TitleBar from '~/components/Head/TitleBar'
+import { CreateProject } from '../components/CreateProject'
+import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
+import { useState } from 'react'
+import { ListProjectItem } from './../components/ListProjectItem';
 
 const ProjectSchema = z.object({
   id: z.string(),
@@ -44,41 +45,37 @@ export const ProjectListSchema = z
 export function ProjectManage() {
   const { t } = useTranslation()
 
-  const { data: projectsData } = useProjects()
-
-  const setProjectId = useProjectIdStore(state => state.setProjectId)
+  const { data: projectsData } = useProjects({})
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Project[]>(
+    [],
+  )
 
   return (
     <ContentLayout title={t('cloud:project_manager.title')}>
-      {projectsData?.projects.map((project: Project) => {
-        return (
-          <Link
-            to={`${PATHS.ORG_MANAGE}/${project.id}`}
-            key={project.id}
-            onClick={() => {
-              storage.setProject(project)
-              setProjectId(project.id)
-            }}
-          >
-            <div className="flex gap-x-3">
-              <img
-                src={project?.image || defaultProjectImage}
-                alt="Project"
-                className="aspect-square w-[45px] rounded-full"
-                onError={e => {
-                  const target = e.target as HTMLImageElement
-                  target.onerror = null
-                  target.src = defaultProjectImage
-                }}
-              />
-              <div className="space-y-1">
-                <p className="text-h2">{project.name}</p>
-                <p>{project.description}</p>
-              </div>
-            </div>
-          </Link>
-        )
-      })}
+      <div className="flex">
+        <TitleBar className="w-full" title={t('cloud:project_manager.project') ?? 'Dự án'} />
+        <div className="flex items-center gap-x-3 ml-3">
+          <CreateProject />
+          <ComboBoxSelectProject
+            setFilteredComboboxData={setFilteredComboboxData}
+          />
+        </div>
+      </div>
+      
+      <div className="mt-3">
+        { Number(projectsData?.total) > 0 ? 
+            (
+              <>
+                <div className="font-bold text-h2 mb-4">{t('cloud:project_manager.count_project').replace('{{NO_OF_PROJECT}}', Number(projectsData?.total).toString())}</div>
+                <ListProjectItem listProjectData={filteredComboboxData}/>
+              </> 
+            )
+         : (
+          <div>
+            {t('cloud:project_manager.no_data')}
+          </div>
+        )}
+      </div>
     </ContentLayout>
   )
 }
