@@ -8,14 +8,13 @@ import { projectSchema } from "../components/CreateProject"
 import { axios } from "~/lib/axios"
 
 type CreateProjectRes = {
-  data: {
-    name: string,
-    description: string,
-    image: string,
-    app_key: string,
-    app_secret: string,
-    sms_config: {}
-  }
+  id: string,
+  name: string,
+  description: string,
+  image: string,
+  app_key: string,
+  app_secret: string,
+  sms_config: {},
 } & BaseAPIRes
 
 export type CreateProjectDTO = {

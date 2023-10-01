@@ -8,15 +8,13 @@ import { CreateProjectDTO, useCreateProject } from "../api/createProject"
 import { Form, InputField, TextAreaField } from "~/components/Form"
 import { z } from "zod"
 import { nameSchema } from "~/utils/schemaValidation"
-import { useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { UploadImageDTO, useUploadImage } from "~/layout/OrgManagementLayout/api"
 import defaultProjectImage from '~/assets/images/default-project.png'
 import FileField from "~/components/Form/FileField"
-import { cn } from "~/utils/misc"
 import { useUpdateProject } from "../api"
-import { da } from "date-fns/locale"
 
 export const projectSchema = z.object({
   name: nameSchema,
@@ -54,24 +52,35 @@ export function CreateProject(){
     isSuccess: isSuccessProject,
   } = useCreateProject()
 
-  // const { mutateUpdateProject: mutateUpdateProject } = useUpdateProject()
-
   const fileInputRef = useRef()
   const {
     data: dataUploadImage,
     mutate: mutateUploadImage,
     isLoading: isLoadingUploadImage,
+    isSuccess: isSuccessUploadImage
   } = useUploadImage()
+
+  const { mutate: mutateUpdateProject } = useUpdateProject()
+
   const {
     formState: formStateUploadImage,
     control: controlUploadImage,
     handleSubmit: handleSubmitUploadImage,
     setValue: setValueUploadImage,
+    getValues: getValueUploadImage
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
   const avatarRef = useRef<HTMLImageElement>(null)
-
+  const [newProjectId, setNewProjectId] = useState('')
+  const [uploadImage, setUploadImage] = useState('')
+  useEffect(() => {
+    if(isSuccessProject) {
+      setNewProjectId(dataCreateProject.id)
+      setUploadImage(dataUploadImage?.link as string)
+    }
+  }, [isSuccessProject, isSuccessUploadImage, dataUploadImage, dataCreateProject])
+  
   return (
     <FormDialog
       className='project-popup'
@@ -88,9 +97,27 @@ export function CreateProject(){
               data: {
                 name: values.name,
                 description: values.description,
-                image: ''
+                image: defaultProjectImage ?? values.image
               },
             })
+            if (isSuccessProject) {
+              mutateUploadImage({
+                data: {
+                  project_id: newProjectId,
+                  file: getValueUploadImage().file
+                }
+              })
+              if (isSuccessUploadImage) {
+                mutateUpdateProject({
+                  data: {
+                    name: values.name,
+                    description: values.description,
+                    image: dataUploadImage.link
+                  },
+                  projectId: newProjectId
+                })
+              }
+            }
           }}
           schema={projectSchema}
         >
@@ -177,12 +204,6 @@ export function CreateProject(){
                     variant="secondaryLight"
                     size="square"
                     onClick={handleSubmitUploadImage(values => {
-                      mutateUploadImage({
-                        data: {
-                          project_id: '',
-                          file: values.file,
-                        },
-                      })
                       setValueUploadImage('file', { file: null as unknown as File })
                     })}
                     isLoading={isLoadingUploadImage}

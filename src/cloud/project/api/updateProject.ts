@@ -6,9 +6,9 @@ import { useNotificationStore } from "~/stores/notifications"
 
 export type UpdateProjectDTO = {
   data: {
-    name: string,
-    description: string,
-    image: string
+    name?: string,
+    description?: string,
+    image?: string
   }
   projectId: string
 }
