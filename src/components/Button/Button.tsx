@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import * as React from 'react'
 
 import { Spinner } from '~/components/Spinner'
@@ -50,7 +51,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         type={type}
-        className={cn(
+        className={clsx(
           'flex cursor-pointer items-center justify-center gap-x-2 border border-gray-400 shadow-sm hover:opacity-80 focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
           variants[variant],
           sizes[size],

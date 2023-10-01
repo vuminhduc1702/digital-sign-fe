@@ -1,4 +1,5 @@
 import Select, { type PropsValue } from 'react-select'
+import { useTranslation } from 'react-i18next'
 import {
   Controller,
   type Control,
@@ -42,6 +43,8 @@ export function SelectDropdown<TFormValues extends FieldValues>({
   isClearable,
   ...props
 }: SelectProps<TFormValues>) {
+  const { t } = useTranslation()
+
   return (
     <FieldWrapper label={label} error={error}>
       <Controller
@@ -53,6 +56,7 @@ export function SelectDropdown<TFormValues extends FieldValues>({
               {...field}
               isSearchable
               isClearable={isClearable}
+              placeholder={t('placeholder:general')}
               options={options}
               {...props}
             />

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 import {
-  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
@@ -19,7 +18,7 @@ import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { CodeEditor } from '~/cloud/customProtocol/components'
+import { outputList } from '~/cloud/customProtocol/components'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -261,50 +260,7 @@ export function UpdateThingService({
                               )}
                               error={formState.errors['output']}
                               registration={register('output')}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:custom_protocol.service.json',
-                                  ),
-                                  value: 'json',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.str'),
-                                  value: 'str',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.i32'),
-                                  value: 'i32',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.i64'),
-                                  value: 'i64',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.f32'),
-                                  value: 'f32',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.f64'),
-                                  value: 'f64',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:custom_protocol.service.bool',
-                                  ),
-                                  value: 'bool',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:custom_protocol.service.time',
-                                  ),
-                                  value: 'time',
-                                },
-                                {
-                                  label: t('cloud:custom_protocol.service.bin'),
-                                  value: 'bin',
-                                },
-                              ]}
+                              options={outputList}
                             />
                           </div>
                           <div
@@ -370,62 +326,7 @@ export function UpdateThingService({
                                         registration={register(
                                           `input.${index}.type` as const,
                                         )}
-                                        options={[
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.json',
-                                            ),
-                                            value: 'json',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.str',
-                                            ),
-                                            value: 'str',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.i32',
-                                            ),
-                                            value: 'i32',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.i64',
-                                            ),
-                                            value: 'i64',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.f32',
-                                            ),
-                                            value: 'f32',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.f64',
-                                            ),
-                                            value: 'f64',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.bool',
-                                            ),
-                                            value: 'bool',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.time',
-                                            ),
-                                            value: 'time',
-                                          },
-                                          {
-                                            label: t(
-                                              'cloud:custom_protocol.service.bin',
-                                            ),
-                                            value: 'bin',
-                                          },
-                                        ]}
+                                        options={outputList}
                                       />
                                       <InputField
                                         label={t(

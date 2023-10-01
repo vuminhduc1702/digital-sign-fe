@@ -81,9 +81,9 @@ export function UpdateEvent({
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
-  
+
   useEffect(() => {
-    if(!data?.group_id) {
+    if (!data?.group_id) {
       setGroupValue(null)
     }
   }, [eventId])
@@ -501,8 +501,11 @@ export function UpdateEvent({
                     // error={formState.errors['type']}
                     registration={register('status')}
                     options={[
-                      { value: true, label: 'Kích hoạt' },
-                      { value: false, label: 'Không kích hoạt' },
+                      { value: true as unknown as string, label: 'Kích hoạt' },
+                      {
+                        value: false as unknown as string,
+                        label: 'Không kích hoạt',
+                      },
                     ]}
                   />
                   <SelectField
@@ -513,10 +516,12 @@ export function UpdateEvent({
                     registration={register('onClick')}
                     disabled={typeEvent === 'schedule'}
                     options={[
-                      { value: true, label: 'Có' },
-                      { value: false, label: 'Không' },
+                      { value: true as unknown as string, label: 'Có' },
+                      { value: false as unknown as string, label: 'Không' },
                     ]}
-                    onChange={event => setOnclickValue(event.target.value)}
+                    onChange={event =>
+                      setOnclickValue(event.target.value as unknown as boolean)
+                    }
                   />
                   <SelectField
                     label={t(

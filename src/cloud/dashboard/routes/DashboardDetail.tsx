@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
+import * as z from 'zod'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
@@ -15,21 +16,21 @@ import {
 } from '../api'
 import { useCreateWidgetItem } from '../api/createWidgetItem'
 import { LineChart } from '../components'
-import { CreateWidget, type WidgetAgg } from '../components/Widget'
+import { CreateWidget } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 
-import {
-  type WS,
-  type ValueWS,
-  type Widget,
-  type WidgetType,
-} from '../types'
+import { type WS, type ValueWS, type Widget, type WidgetType } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-import { type ListObj } from '~/components/SelectMenu'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+
+const widgetAggSchema = z.object({
+  label: z.string(),
+  value: z.enum(['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT'] as const),
+})
+export type WidgetAgg = z.infer<typeof widgetAggSchema>
 
 export const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -79,7 +80,7 @@ export function DashboardDetail() {
     useCreateWidgetItem()
   const [isEditMode, setIsEditMode] = useState(false)
 
-  const [interval, setInterval] = useState<ListObj<number>>(wsInterval[0])
+  const [interval, setInterval] = useState(wsInterval[0])
   const [agg, setAgg] = useState<WidgetAgg>(widgetAgg[0])
 
   const [date, setDate] = useState<Date | undefined>(new Date())
@@ -361,7 +362,7 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
-                        className="bg-secondary-400 w-full"
+                        className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
@@ -378,7 +379,7 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
-                        className="bg-secondary-400 w-full"
+                        className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
@@ -397,7 +398,7 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
-                        className="bg-secondary-400 w-full active:bg-primary-300"
+                        className="w-full bg-secondary-400 active:bg-primary-300"
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
@@ -412,7 +413,7 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
-                        className="bg-secondary-400 w-full"
+                        className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')

@@ -22,6 +22,7 @@ import {
   adapterSchema,
   contentTypeList,
   entityThingSchema,
+  outputList,
   protocolList,
   serviceThingSchema,
 } from './CreateAdapter'
@@ -730,62 +731,7 @@ export function UpdateAdapter({
                                       )}
                                       error={formState.errors['output']}
                                       registration={register('output')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.json',
-                                          ),
-                                          value: 'json',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.str',
-                                          ),
-                                          value: 'str',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.i32',
-                                          ),
-                                          value: 'i32',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.i64',
-                                          ),
-                                          value: 'i64',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.f32',
-                                          ),
-                                          value: 'f32',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.f64',
-                                          ),
-                                          value: 'f64',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.bool',
-                                          ),
-                                          value: 'bool',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.time',
-                                          ),
-                                          value: 'time',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.bin',
-                                          ),
-                                          value: 'bin',
-                                        },
-                                      ]}
+                                      options={outputList}
                                       onChange={event =>
                                         setThingType(
                                           String(

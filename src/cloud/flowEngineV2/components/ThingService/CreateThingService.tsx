@@ -7,7 +7,7 @@ import {
   FormMultipleFields,
   InputField,
   SelectField,
-  TextAreaField
+  TextAreaField,
 } from '~/components/Form'
 import { nameSchemaRegex } from '~/utils/schemaValidation'
 import {
@@ -31,6 +31,7 @@ import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type ThingService } from '../../types'
+import { outputList } from '~/cloud/customProtocol/components'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -112,17 +113,16 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
-    if(!fullScreen) {
-      const elem = document.getElementById("create-service-screen")
+    if (!fullScreen) {
+      const elem = document.getElementById('create-service-screen')
       if (elem?.requestFullscreen) {
-        elem.requestFullscreen();
-      } 
+        elem.requestFullscreen()
+      }
     } else {
       if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } 
+        document.exitFullscreen()
+      }
     }
-     
   }
 
   const handleSubmit = (data: CreateServiceForm) => {
@@ -167,22 +167,22 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   useEffect(() => {
     const handleEsc = (event: any) => {
-      if(event.key === 'Escape') { 
+      if (event.key === 'Escape') {
         setFullScreen(false)
       }
-    };
-    window.addEventListener('keydown', handleEsc);
+    }
+    window.addEventListener('keydown', handleEsc)
 
     return () => {
-      window.removeEventListener('keydown', handleEsc);
-    };
-  }, []);
+      window.removeEventListener('keydown', handleEsc)
+    }
+  }, [])
 
   return (
     <FormDialog
       className="thing-service-popup"
       title={t('cloud:custom_protocol.service.create')}
-      id='create-service-screen'
+      id="create-service-screen"
       isFullScreen={fullScreen}
       resetData={clearData}
       body={
@@ -219,44 +219,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     )}
                     error={formState.errors['output']}
                     registration={register('output')}
-                    options={[
-                      {
-                        label: t('cloud:custom_protocol.service.json'),
-                        value: 'json',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.str'),
-                        value: 'str',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.i32'),
-                        value: 'i32',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.i64'),
-                        value: 'i64',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.f32'),
-                        value: 'f32',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.f64'),
-                        value: 'f64',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.bool'),
-                        value: 'bool',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.time'),
-                        value: 'time',
-                      },
-                      {
-                        label: t('cloud:custom_protocol.service.bin'),
-                        value: 'bin',
-                      },
-                    ]}
+                    options={outputList}
                   />
                 </div>
                 <div
@@ -274,22 +237,26 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       </div>
                     </div>
                     <div
-                    className={cn('overflow-auto', {
-                      'max-h-48': !fullScreen,
-                      'max-h-96': fullScreen,
-                    })}>
+                      className={cn('overflow-auto', {
+                        'max-h-48': !fullScreen,
+                        'max-h-96': fullScreen,
+                      })}
+                    >
                       {fields.map((field, index) => {
                         return (
                           <div
                             key={field.id}
-                            className={cn('flex  border-0 border-b border-solid border-inherit', {
-                              'flex-col': fullScreen,
-                            })}
+                            className={cn(
+                              'flex  border-0 border-b border-solid border-inherit',
+                              {
+                                'flex-col': fullScreen,
+                              },
+                            )}
                           >
                             <div
                               className={cn('grid grid-cols-1 gap-x-4', {
                                 'md:grid-cols-3': !fullScreen,
-                                'pr-2': fullScreen
+                                'pr-2': fullScreen,
                               })}
                             >
                               <InputField
@@ -310,62 +277,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 registration={register(
                                   `input.${index}.type` as const,
                                 )}
-                                options={[
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.json',
-                                    ),
-                                    value: 'json',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.str',
-                                    ),
-                                    value: 'str',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.i32',
-                                    ),
-                                    value: 'i32',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.i64',
-                                    ),
-                                    value: 'i64',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.f32',
-                                    ),
-                                    value: 'f32',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.f64',
-                                    ),
-                                    value: 'f64',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.bool',
-                                    ),
-                                    value: 'bool',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.time',
-                                    ),
-                                    value: 'time',
-                                  },
-                                  {
-                                    label: t(
-                                      'cloud:custom_protocol.service.bin',
-                                    ),
-                                    value: 'bin',
-                                  },
-                                ]}
+                                options={outputList}
                               />
                               <InputField
                                 label={t(
@@ -442,10 +354,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           </p>
                         </div>
                       </div>
-                      <div className={cn('overflow-auto mt-0', {
-                        'max-h-44': !fullScreen,
-                        'max-h-52': fullScreen,
-                      })}>
+                      <div
+                        className={cn('mt-0 overflow-auto', {
+                          'max-h-44': !fullScreen,
+                          'max-h-52': fullScreen,
+                        })}
+                      >
                         {thingServiceData?.map(item => {
                           return (
                             <div className="mt-1.5 cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
@@ -463,7 +377,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       'md:col-span-3': fullScreen,
                     })}
                   >
-                    <div className='flex flex-col gap-2 md:col-span-1'>
+                    <div className="flex flex-col gap-2 md:col-span-1">
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">

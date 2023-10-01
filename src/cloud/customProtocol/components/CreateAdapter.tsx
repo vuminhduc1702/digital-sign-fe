@@ -3,6 +3,7 @@ import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import * as z from 'zod'
+import i18n from '~/i18n'
 
 import { Button } from '~/components/Button'
 import {
@@ -115,31 +116,70 @@ export const serviceThingSchema = z.object({
 
 export const protocolList = [
   {
-    label: 'MQTT',
+    label: i18n.t('cloud:custom_protocol.adapter.protocol.mqtt'),
     value: 'mqtt',
   },
   {
-    label: 'TCP',
+    label: i18n.t('cloud:custom_protocol.adapter.protocol.tcp'),
     value: 'tcp',
   },
   {
-    label: 'UDP',
+    label: i18n.t('cloud:custom_protocol.adapter.protocol.udp'),
     value: 'udp',
   },
 ]
 
 export const contentTypeList = [
   {
-    label: 'JSON',
+    label: i18n.t('cloud:custom_protocol.adapter.content_type.json'),
     value: 'json',
   },
   {
-    label: 'Hex',
+    label: i18n.t('cloud:custom_protocol.adapter.content_type.hex'),
     value: 'hex',
   },
   {
-    label: 'Text',
+    label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
+  },
+]
+
+export const outputList = [
+  {
+    label: i18n.t('cloud:custom_protocol.service.json'),
+    value: 'json',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.str'),
+    value: 'str',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.i32'),
+    value: 'i32',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.i64'),
+    value: 'i64',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.f32'),
+    value: 'f32',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.f64'),
+    value: 'f64',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.bool'),
+    value: 'bool',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.time'),
+    value: 'time',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.service.bin'),
+    value: 'bin',
   },
 ]
 
@@ -801,62 +841,7 @@ export function CreateAdapter() {
                                       )}
                                       error={formState.errors['output']}
                                       registration={register('output')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.json',
-                                          ),
-                                          value: 'json',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.str',
-                                          ),
-                                          value: 'str',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.i32',
-                                          ),
-                                          value: 'i32',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.i64',
-                                          ),
-                                          value: 'i64',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.f32',
-                                          ),
-                                          value: 'f32',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.f64',
-                                          ),
-                                          value: 'f64',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.bool',
-                                          ),
-                                          value: 'bool',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.time',
-                                          ),
-                                          value: 'time',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.service.bin',
-                                          ),
-                                          value: 'bin',
-                                        },
-                                      ]}
+                                      options={outputList}
                                       onChange={event =>
                                         setThingType(
                                           String(

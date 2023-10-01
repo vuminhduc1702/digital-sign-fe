@@ -72,13 +72,10 @@ export default function CreateTemplate() {
     >
       <FormMultipleFields<CreateTemplateDTO['data'], typeof templateAttrSchema>
         id="create-template"
-        onSubmit={values =>
-          {
-            mutate({ data: { ...values, project_id: projectId } })
-            console.log(values)
-          }
-         
-        }
+        onSubmit={values => {
+          mutate({ data: { ...values, project_id: projectId } })
+          console.log(values)
+        }}
         schema={templateAttrSchema}
         options={{
           defaultValues: {
@@ -116,7 +113,7 @@ export default function CreateTemplate() {
                   label={
                     t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
                   }
-                  error={formState.errors[`attributes.${index}.attribute_key`]}
+                  error={formState?.errors?.attributes?.[index]?.attribute_key}
                   registration={register(
                     `attributes.${index}.attribute_key` as const,
                   )}
@@ -126,7 +123,7 @@ export default function CreateTemplate() {
                     t('cloud:org_manage.org_manage.add_attr.value_type') ??
                     'Value type'
                   }
-                  error={formState.errors[`attributes.${index}.value_t`]}
+                  error={formState?.errors?.attributes?.[index]?.value_t}
                   registration={register(
                     `attributes.${index}.value_t` as const,
                   )}
@@ -139,18 +136,18 @@ export default function CreateTemplate() {
                   label={
                     t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
                   }
-                  error={formState.errors[`attributes.${index}.value`]}
+                  error={formState?.errors?.attributes?.[index]?.value}
                   registration={register(`attributes.${index}.value` as const)}
                 />
                 <SelectField
                   label={
                     t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
                   }
-                  error={formState.errors[`attributes.${index}.logged`]}
+                  error={formState?.errors?.attributes?.[index]?.logged}
                   registration={register(`attributes.${index}.logged` as const)}
                   options={loggedList.map(logged => ({
                     label: logged.name,
-                    value: logged.type,
+                    value: logged.type as unknown as string,
                   }))}
                 />
                 <button type="button" onClick={() => remove(index)}>

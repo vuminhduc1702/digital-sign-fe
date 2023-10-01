@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query'
-import { useTranslation } from 'react-i18next'
 import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
@@ -19,10 +18,7 @@ export type CreateAttrDTO = {
 }
 
 type CreateAttrRes = {
-  entity_ids: string[]
-  entity_type: EntityType
-  time_series: boolean
-  keys: any[]
+  keys: string[]
 }
 
 export const createAttrChart = ({

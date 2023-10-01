@@ -15,7 +15,7 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   className?: string
   placeholder?: string
   registration?: Partial<UseFormRegisterReturn>
-  value?: string
+  value?: string | number | boolean
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 

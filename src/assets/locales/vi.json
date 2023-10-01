@@ -125,7 +125,8 @@
           "logged": "Lưu lịch sử",
           "success_create": "Tạo thuộc tính thành công",
           "success_update": "Sửa thuộc tính thành công",
-          "success_delete": "Xoá thuộc tính thành công"
+          "success_delete": "Xoá thuộc tính thành công",
+          "choose_attr": "Vui lòng chọn thuộc tính"
         }
       },
       "group_manage": {
@@ -203,7 +204,8 @@
           "device_type": "Mẫu thiết bị",
           "success_create": "Tạo thiết bị thành công",
           "success_update": "Sửa thiết bị thành công",
-          "success_delete": "Xoá thiết bị thành công"
+          "success_delete": "Xoá thiết bị thành công",
+          "choose_device": "Vui lòng chọn thiết bị"
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
@@ -477,13 +479,15 @@
         "endDate": "Thời điểm kết thúc",
         "color": "Màu sắc",
         "name": "Tên",
-        "unit": "Unit",
-        "decimal": "Decimal",
+        "unit": "Đơn vị",
+        "decimal": "Hệ thập phân",
         "road": "Kiểu đường",
         "show": "Hiển thị",
-        "pick_date": "Pick a date",
+        "pick_date": "Chọn ngày",
         "org": "Tổ chức",
-        "label": "Nhãn"
+        "label": "Nhãn",
+        "data_config": "Cài đặt dữ liệu",
+        "widget_config": "Cài đặt biểu đồ"
       },
       "detail_dashboard": {
         "add_widget": {
@@ -555,6 +559,9 @@
     "entity_thing": "Đang tải danh sách Entity thing...",
     "service_thing": "Vui lòng chọn Entity thing trước"
   },
+  "placeholder": {
+    "general": "Vui lòng chọn"
+  },
   "search": {
     "title": "Tìm kiếm",
     "no_org": "Không trực thuộc tổ chức"
@@ -582,7 +589,8 @@
     "filter": {
       "date": "Ngày",
       "interval": "Khoảng thời gian",
-      "data_aggregation": "Tổng hợp dữ liệu"
+      "data_aggregation": "Tổng hợp dữ liệu",
+      "dataType": "Loại biểu đồ"
     }
   },
   "misc": {

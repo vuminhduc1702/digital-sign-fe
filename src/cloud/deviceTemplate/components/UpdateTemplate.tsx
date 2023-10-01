@@ -146,7 +146,7 @@ export function UpdateTemplate({
                       t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
                     }
                     error={
-                      formState.errors[`attributes.${index}.attribute_key`]
+                      formState?.errors?.attributes?.[index]?.attribute_key
                     }
                     registration={register(
                       `attributes.${index}.attribute_key` as const,
@@ -158,7 +158,7 @@ export function UpdateTemplate({
                       t('cloud:org_manage.org_manage.add_attr.value_type') ??
                       'Value type'
                     }
-                    error={formState.errors[`attributes.${index}.value_t`]}
+                    error={formState?.errors?.attributes?.[index]?.value_t}
                     registration={register(
                       `attributes.${index}.value_t` as const,
                     )}
@@ -171,7 +171,7 @@ export function UpdateTemplate({
                     label={
                       t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
                     }
-                    error={formState.errors[`attributes.${index}.value`]}
+                    error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
@@ -181,13 +181,13 @@ export function UpdateTemplate({
                       t('cloud:org_manage.org_manage.add_attr.logged') ??
                       'Logged'
                     }
-                    error={formState.errors[`attributes.${index}.logged`]}
+                    error={formState?.errors?.attributes?.[index]?.logged}
                     registration={register(
                       `attributes.${index}.logged` as const,
                     )}
                     options={loggedList.map(logged => ({
                       label: logged.name,
-                      value: logged.type,
+                      value: logged.type as unknown as string,
                     }))}
                   />
                   <button type="button" onClick={() => remove(index)}>
