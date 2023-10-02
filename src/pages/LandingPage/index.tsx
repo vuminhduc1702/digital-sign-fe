@@ -12,7 +12,7 @@ export function LandingPage() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <h1 className="text-h1">Landing Page</h1>
-      {user.data ? (
+      { user.data && user.data != null ? (
         <Button
           className="mt-4"
           size="lg"

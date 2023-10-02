@@ -137,7 +137,6 @@ export function CreateOrg() {
         schema={orgSchema}
       >
         {({ register, formState, control, setValue }) => {
-          console.log('zod errors: ', formState.errors)
 
           return (
             <>

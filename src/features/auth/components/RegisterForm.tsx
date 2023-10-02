@@ -42,7 +42,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         }}
       >
         {({ register, formState }) => {
-          console.log('formState', formState.errors)
           return (
             <>
               <InputField
