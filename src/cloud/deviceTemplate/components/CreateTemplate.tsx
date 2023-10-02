@@ -22,6 +22,7 @@ import { nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -92,8 +93,11 @@ export default function CreateTemplate() {
       >
         {({ register, formState, control }, { fields, append, remove }) => (
           <>
-            <button
-              type="button"
+            <Button
+              className="h-9 w-9 rounded-md"
+              variant="trans"
+              size="square"
+              startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
               onClick={() =>
                 append({
                   attribute_key: '',
@@ -102,9 +106,7 @@ export default function CreateTemplate() {
                   value_t: '',
                 })
               }
-            >
-              APPEND
-            </button>
+            />
             <InputField
               label={t('cloud:device_template.add_template.name') ?? 'Name'}
               error={formState.errors['name']}
@@ -153,9 +155,20 @@ export default function CreateTemplate() {
                     value: logged.type,
                   }))}
                 />
-                <button type="button" onClick={() => remove(index)}>
-                  X
-                </button>
+                <Button
+                    type="button"
+                    size="square"
+                    variant="trans"
+                    className="mt-3 self-start border-none"
+                    onClick={() => remove(index)}
+                    startIcon={
+                      <img
+                        src={btnDeleteIcon}
+                        alt="Delete device template"
+                        className="h-8 w-8"
+                      />
+                    }
+                  />
               </section>
             ))}
           </>
