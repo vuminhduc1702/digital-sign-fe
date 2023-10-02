@@ -122,7 +122,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
               registration={register('logged')}
               options={loggedList.map(logged => ({
                 label: logged.name,
-                value: logged.type as unknown as string,
+                value: logged.type,
               }))}
             />
           </>

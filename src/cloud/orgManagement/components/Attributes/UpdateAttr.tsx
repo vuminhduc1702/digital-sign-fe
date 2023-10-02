@@ -151,7 +151,7 @@ export function UpdateAttr({
                 registration={register('logged')}
                 options={loggedList.map(logged => ({
                   label: logged.name,
-                  value: logged.type as unknown as string,
+                  value: logged.type,
                 }))}
               />
             </>

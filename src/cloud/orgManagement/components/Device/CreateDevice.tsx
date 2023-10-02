@@ -7,7 +7,7 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import { nameSchema } from '~/utils/schemaValidation'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
@@ -36,11 +36,11 @@ export function CreateDevice() {
   const { orgId } = useParams()
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
-  const [orgValue, setOrgValue] = useState<SelectOption>({
+  const [orgValue, setOrgValue] = useState<SelectOptionString>({
     label: '',
     value: '',
   })
-  const [groupValue, setGroupValue] = useState<SelectOption>({
+  const [groupValue, setGroupValue] = useState<SelectOptionString>({
     label: '',
     value: '',
   })

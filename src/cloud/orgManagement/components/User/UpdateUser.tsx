@@ -8,7 +8,7 @@ import {
   Form,
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import { useDefaultCombobox } from '~/utils/hooks'
 import {
@@ -97,11 +97,11 @@ export function UpdateUser({
     value: item.id,
   })) || [{ label: '', value: '' }]
 
-  const [option, setOption] = useState<SelectOption>({
+  const [option, setOption] = useState<SelectOptionString>({
     label: org_name !== 'undefined' ? org_name : '',
     value: org_id !== 'undefined' ? org_id : '',
   })
-  const [role, setRole] = useState<SelectOption>({
+  const [role, setRole] = useState<SelectOptionString>({
     label: role_name !== 'undefined' ? role_name : '',
     value: role_id !== 'undefined' ? role_id : '',
   })

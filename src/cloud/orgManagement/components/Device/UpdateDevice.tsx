@@ -7,7 +7,7 @@ import {
   Form,
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { deviceSchema } from './CreateDevice'
@@ -48,7 +48,7 @@ export function UpdateDevice({
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
   const [offset, setOffset] = useState(0)
-  const [orgValue, setOrgValue] = useState<SelectOption>({
+  const [orgValue, setOrgValue] = useState<SelectOptionString>({
     label: '',
     value: '',
   })

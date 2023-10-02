@@ -324,7 +324,7 @@ export function DashboardDetail() {
                   widgetType={widgetType}
                   isOpen={showingConfigDialog}
                   close={() => setShowingConfigDialog(false)}
-                  handleSubmitChart={values => {
+                  handleSubmitWidget={values => {
                     console.log('values chart: ', values)
                     setShowingConfigDialog(false)
                     setChartData(values)

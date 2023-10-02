@@ -187,7 +187,7 @@ export function UpdateTemplate({
                     )}
                     options={loggedList.map(logged => ({
                       label: logged.name,
-                      value: logged.type as unknown as string,
+                      value: logged.type,
                     }))}
                   />
                   <button type="button" onClick={() => remove(index)}>

@@ -11,7 +11,7 @@ type UpdateOrg = Pick<Org, 'name'> & Partial<Omit<Org, 'name'>>
 
 export type UpdateOrgDTO = {
   data: UpdateOrg
-  orgId: string
+  orgId?: string
 }
 
 export const updateOrg = ({ data, orgId }: UpdateOrgDTO) => {

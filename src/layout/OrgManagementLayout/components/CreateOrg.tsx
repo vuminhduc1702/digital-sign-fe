@@ -10,8 +10,8 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  type SelectOption,
   TextAreaField,
+  type SelectOptionString,
 } from '~/components/Form'
 import FileField from '~/components/Form/FileField'
 import {
@@ -64,7 +64,7 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
-  const [optionOrg, setOptionOrg] = useState<SelectOption | null>()
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,

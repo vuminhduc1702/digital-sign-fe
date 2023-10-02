@@ -484,9 +484,9 @@
         "road": "Kiểu đường",
         "show": "Hiển thị",
         "pick_date": "Chọn ngày",
+        "pick_date_alert": "Vui lòng chọn ngày",
         "org": "Tổ chức",
         "label": "Nhãn",
-        "data_config": "Cài đặt dữ liệu",
         "widget_config": "Cài đặt biểu đồ"
       },
       "detail_dashboard": {
@@ -560,7 +560,8 @@
     "service_thing": "Vui lòng chọn Entity thing trước"
   },
   "placeholder": {
-    "general": "Vui lòng chọn"
+    "general": "Vui lòng chọn",
+    "search": "Nhập để tìm kiếm"
   },
   "search": {
     "title": "Tìm kiếm",
