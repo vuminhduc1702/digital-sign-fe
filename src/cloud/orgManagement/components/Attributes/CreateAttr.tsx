@@ -88,7 +88,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
           })
         }}
         schema={attrSchema}
-        name={['attributes']}
       >
         {({ register, formState }) => (
           <>

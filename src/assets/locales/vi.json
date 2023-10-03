@@ -297,6 +297,7 @@
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
+        "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
