@@ -58,6 +58,9 @@
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Ảnh đại diện",
+        "upload_ava": "Tải ảnh",
+        "upload_ava_default": "Chọn ảnh mặc định",
+        "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặv png có dung lượng tối đa 5MB",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",

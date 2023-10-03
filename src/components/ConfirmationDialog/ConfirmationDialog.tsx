@@ -82,6 +82,7 @@ export const ConfirmationDialog = ({
             </div>
           </div>
           <div className="mt-4 flex justify-end space-x-2">
+            {confirmButton}
             <Button
               type="button"
               variant="secondary"
@@ -92,7 +93,6 @@ export const ConfirmationDialog = ({
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
             />
-            {confirmButton}
           </div>
         </div>
       </Dialog>

@@ -19,6 +19,8 @@ import { useDeleteProject } from "../api/deleteProject";
 import { UpdateProject } from "./UpdateProject";
 import { useState } from "react";
 
+
+
 export function ListProjectItem({listProjectData}: any) {
   const { t } = useTranslation()
   
@@ -57,7 +59,7 @@ export function ListProjectItem({listProjectData}: any) {
         {
           project?.map((project: Project) => {
             return (
-              <div key={project.id} className="relative m-2" style={{height: '288px', backgroundImage: `url(${defaultProjectImage})`, borderRadius: '10px 10px 10px 0'}}>
+              <div key={project.id} className="relative m-2" style={{height: '288px', backgroundSize: '100% 100%', backgroundRepeat: 'no-repeat', backgroundImage: `url(${defaultProjectImage})`, borderRadius: '10px 10px 10px 0'}}>
                 <div className="absolute top-3 right-3">
                   <Dropdown
                     icon={
@@ -117,7 +119,7 @@ export function ListProjectItem({listProjectData}: any) {
                               isLoading={isLoading}
                               type="button"
                               size="md"
-                              className="bg-primary-400"
+                              className="bg-primary-400 rounded-md border"
                               onClick={() =>
                                 mutate({
                                   projectId: project.id
