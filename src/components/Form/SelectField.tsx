@@ -33,10 +33,11 @@ export const SelectField = ({
   registration,
   placeholder,
   value,
+  require,
   ...props
 }: SelectFieldProps) => {
   return (
-    <FieldWrapper label={label} error={error}>
+    <FieldWrapper require={require} label={label} error={error}>
       <select
         placeholder={placeholder}
         name="location"

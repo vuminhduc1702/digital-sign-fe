@@ -11,6 +11,7 @@ type FieldWrapperProps = {
   error?: FieldError | undefined
   description?: string
   disabled?: boolean
+  require?: boolean
 }
 
 export type FieldWrapperPassThroughProps = Omit<
@@ -19,13 +20,15 @@ export type FieldWrapperPassThroughProps = Omit<
 >
 
 export const FieldWrapper = (props: FieldWrapperProps) => {
-  const { label, className, error, children } = props
+  const { label, className, error, children, require } = props
   return (
     <div className="relative w-full">
       <label
         className={cn('block text-body-sm', { 'space-y-1': label }, className)}
       >
-        <p>{label}</p>
+        {
+          require ? <p>{label} <span className='text-[#EE0033]' >*</span></p> : <p>{label}</p>
+        }
         <div>{children}</div>
       </label>
       {error?.message && (
