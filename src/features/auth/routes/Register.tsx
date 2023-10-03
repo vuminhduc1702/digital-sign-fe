@@ -5,18 +5,19 @@ import { Layout } from '../components/Layout'
 import { RegisterForm } from '../components/RegisterForm'
 import { PATHS } from '~/routes/PATHS'
 import { useNotificationStore } from '~/stores/notifications'
-import { useLogout } from '~/lib/auth'
+import { logoutFn, useLogout } from '~/lib/auth'
+import storage from '~/utils/storage'
+import { useEffect } from 'react'
 
 export const Register = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { addNotification } = useNotificationStore()
-  const logout = useLogout()
 
   return (
     <Layout title={t('user:register')}>
       <RegisterForm onSuccess={() => {
-        logout.mutate({})
+        logoutFn()
         navigate(PATHS.LOGIN)
         addNotification({
           type: 'success',
