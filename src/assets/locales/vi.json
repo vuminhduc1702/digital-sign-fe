@@ -585,7 +585,8 @@
     "change_avatar": "Đổi ảnh đại diện",
     "change_email": "Đổi email",
     "change_phone": "Đổi số điện thoại",
-    "change_address": "Đổi địa chỉ"
+    "change_address": "Đổi địa chỉ",
+    "create_user": "Đăng ký tài khoản thành công"
   },
   "flow_engine": {
     "title": "Flow Engine"
