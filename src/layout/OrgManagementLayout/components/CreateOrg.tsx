@@ -36,6 +36,7 @@ export const orgSchema = z.object({
   org_id: z.string().optional(),
   description: descSchema,
   image: z.string().optional(),
+  project_id: z.string().optional(),
 })
 
 const MAX_FILE_SIZE = 500000
@@ -78,7 +79,7 @@ export function CreateOrg() {
     setOptionOrg(null)
   }
 
-  const fileInputRef = useRef()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const {
     data: dataUploadImage,
     mutate: mutateUploadImage,
@@ -92,8 +93,8 @@ export function CreateOrg() {
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
-  const avatarRef = useRef<HTMLImageElement>(null)
-  console.log('zod image upload error: ', formStateUploadImage.errors)
+  const avatarRef = useRef<HTMLImageElement | null>(null)
+  // console.log('zod image upload error: ', formStateUploadImage.errors)
 
   return (
     <FormDrawer
@@ -196,11 +197,6 @@ export function CreateOrg() {
               />
               <img
                 src={defaultOrgImage}
-                onError={e => {
-                  const target = e.target as HTMLImageElement
-                  target.onerror = null
-                  target.src = defaultOrgImage
-                }}
                 alt="Organization"
                 className="h-36 w-32"
                 ref={avatarRef}

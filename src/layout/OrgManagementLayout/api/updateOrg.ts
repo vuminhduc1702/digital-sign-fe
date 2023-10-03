@@ -1,16 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type Org } from '~/layout/MainLayout/types'
-
-type UpdateOrg = Pick<Org, 'name'> & Partial<Omit<Org, 'name'>>
+import { type orgSchema } from '../components/CreateOrg'
 
 export type UpdateOrgDTO = {
-  data: UpdateOrg
+  data: Omit<z.infer<typeof orgSchema>, 'project_id'>
   orgId?: string
 }
 

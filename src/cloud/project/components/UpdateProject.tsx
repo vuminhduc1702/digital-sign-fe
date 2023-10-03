@@ -1,25 +1,31 @@
-import { Form, InputField, TextAreaField } from "~/components/Form"
-import { FormDialog } from "~/components/FormDialog"
-import { CreateProjectDTO } from "../api/createProject"
-import { useTranslation } from "react-i18next"
-import { UpdateProjectDTO, useUpdateProject } from "../api/updateProject"
-import { projectSchema, uploadImageSchema } from "./CreateProject"
-import { useProjectById } from "../api"
-import { Button } from "~/components/Button"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
+import { Form, InputField, TextAreaField } from '~/components/Form'
+import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
+import { CreateProjectSchema } from '../api'
+import { Button } from '~/components/Button'
+import { Dialog, DialogTitle } from '~/components/Dialog'
+import { useEffect, useRef } from 'react'
+import { type Project } from '../routes/ProjectManage'
+import FileField from '~/components/Form/FileField'
+import {
+  type UploadImageDTO,
+  useUploadImage,
+} from '~/layout/OrgManagementLayout/api'
+import { uploadImageSchema } from '~/layout/OrgManagementLayout/components/CreateOrg'
+
+import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { Dialog, DialogTitle } from "~/components/Dialog"
-import { XMarkIcon } from "@heroicons/react/20/solid"
-import { useEffect, useRef } from "react"
-import { Project } from "../routes/ProjectManage"
-import FileField from "~/components/Form/FileField"
-import { UploadImageDTO, useUploadImage } from "~/layout/OrgManagementLayout/api"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import defaultProjectImage from '~/assets/images/default-project.png'
 
-export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
+export function UpdateProject({
+  close,
+  isOpen,
+  selectedUpdateProject,
+}: {
   close: () => void
   isOpen: boolean
   selectedUpdateProject: Project
@@ -29,11 +35,6 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
   const cancelButtonRef = useRef(null)
 
   const { mutate, isLoading, isSuccess } = useUpdateProject()
-
-  const { data: projectData } = useProjectById({
-    projectId: selectedUpdateProject.id,
-    config: { suspense: false },
-  })
 
   useEffect(() => {
     if (isSuccess) {
@@ -61,7 +62,7 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
               {t('cloud:project_manager.add_project.edit')}
             </DialogTitle>
@@ -75,7 +76,7 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
               </button>
             </div>
           </div>
-          <Form<UpdateProjectDTO['data'], typeof projectSchema>
+          <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema>
             id="update-project"
             className="flex flex-col justify-between"
             onSubmit={values => {
@@ -83,24 +84,24 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
                 data: {
                   name: values.name,
                   description: values.description,
-                  image: dataUploadImage?.data?.link
+                  image: dataUploadImage?.data?.link,
                 },
-                projectId: selectedUpdateProject.id
+                projectId: selectedUpdateProject.id,
               })
             }}
-            schema={projectSchema}
+            schema={CreateProjectSchema}
             options={{
               defaultValues: {
                 name: selectedUpdateProject?.name,
                 description: selectedUpdateProject?.description,
-                image: selectedUpdateProject?.image
-              }
+                image: selectedUpdateProject?.image,
+              },
             }}
           >
             {({ register, formState }) => {
               return (
                 <div className="grid grid-cols-1 md:grid-cols-2">
-                  <div style={{height: '250px'}}>
+                  <div style={{ height: '250px' }}>
                     <InputField
                       label={t('cloud:project_manager.add_project.name')}
                       error={formState.errors['name']}
@@ -122,7 +123,7 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
                         target.src = defaultProjectImage
                       }}
                       alt="Project"
-                      className="h-36 w-32 mb-3"
+                      className="mb-3 h-36 w-32"
                       ref={avatarRef}
                       onClick={event => {
                         const formData = new FormData()
@@ -157,7 +158,7 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
                       }}
                     />
                     <Button
-                      className="border-none mt-3"
+                      className="mt-3 border-none"
                       style={{ justifyContent: 'flex-start' }}
                       variant="primary"
                       size="square"
@@ -168,7 +169,9 @@ export function UpdateProject({ close, isOpen, selectedUpdateProject }: {
                             file: values.file,
                           },
                         })
-                        setValueUploadImage('file', { file: null as unknown as File })
+                        setValueUploadImage('file', {
+                          file: null as unknown as File,
+                        })
                       })}
                       isLoading={isLoadingUploadImage}
                     >

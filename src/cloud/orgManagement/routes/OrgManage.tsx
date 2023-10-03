@@ -44,9 +44,11 @@ export function OrgManage() {
             <div className="flex gap-6 px-11 py-3 shadow-lg">
               <div className="flex flex-none items-center">
                 <img
-                  src={
-                    `${API_URL}/file/${orgByIdData?.image}` || defaultOrgImage
-                  }
+                  src={`${
+                    orgByIdData?.image
+                      ? `${API_URL}/file/${orgByIdData?.image}`
+                      : defaultOrgImage
+                  }`}
                   onError={e => {
                     const target = e.target as HTMLImageElement
                     target.onerror = null

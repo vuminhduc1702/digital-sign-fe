@@ -1,27 +1,40 @@
-import { useMutation } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { MutationConfig, queryClient } from "~/lib/react-query"
-import { useNotificationStore } from "~/stores/notifications"
-import { BaseAPIRes } from "~/types"
-import { z } from "zod"
-import { projectSchema } from "../components/CreateProject"
-import { axios } from "~/lib/axios"
+import { type z } from 'zod'
+import { axios } from '~/lib/axios'
+import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+
+import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { useNotificationStore } from '~/stores/notifications'
+
+import { type BaseAPIRes } from '~/types'
+import { ProjectSchema } from '../routes/ProjectManage'
 
 type CreateProjectRes = {
-  id: string,
-  name: string,
-  description: string,
-  image: string,
-  app_key: string,
-  app_secret: string,
-  sms_config: {},
+  id: string
+  name: string
+  description: string
+  image: string
+  app_key: string
+  app_secret: string
+  sms_config: {}
 } & BaseAPIRes
 
+export const CreateProjectSchema = ProjectSchema.pick({
+  name: true,
+  description: true,
+}).merge(
+  ProjectSchema.pick({
+    image: true,
+  }).partial(),
+)
+
 export type CreateProjectDTO = {
-  data: z.infer<typeof projectSchema>
+  data: z.infer<typeof CreateProjectSchema>
 }
 
-export const createProject = ({ data }: CreateProjectDTO): Promise<CreateProjectRes> => {
+export const createProject = ({
+  data,
+}: CreateProjectDTO): Promise<CreateProjectRes> => {
   return axios.post(`/api/projects`, data)
 }
 

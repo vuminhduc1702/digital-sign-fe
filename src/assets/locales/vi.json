@@ -57,7 +57,7 @@
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
       "add_project": {
         "title": "Tạo mới dự án",
-        "avatar": "Ảnh đại diện",
+        "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặv png có dung lượng tối đa 5MB",
@@ -67,6 +67,7 @@
         "delete_project": "Xoá dự án",
         "confirm_delete": "Bạn có chắc chắn muốn xóa dự án {{PROJECT}}",
         "success_add": "Tạo mới dự án thành công",
+        "success_update": "Sửa dự án thành công",
         "success_delete": "Xóa dự án thành công"
       }
     },
@@ -553,7 +554,8 @@
       "malformed_data": "Dữ liệu truyền lên không hợp lệ",
       "authorization": "Bạn không có quyền truy cập vào trang này",
       "server_err": "Server đang bị lỗi, vui lòng thử lại"
-    }
+    },
+    "no_data_res": "Dữ liệu trả về không đúng: "
   },
   "loading": {
     "org": "Đang tải danh sách tổ chức...",

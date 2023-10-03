@@ -7,6 +7,7 @@ import { PATHS } from '~/routes/PATHS'
 import { useProjects } from '~/cloud/project/api'
 import { useProjectIdStore } from '~/stores/project'
 import storage from '~/utils/storage'
+import { API_URL } from '~/config'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -67,7 +68,11 @@ function Navbar() {
               alt="Project management"
               className="aspect-square w-[20px]"
             />
-            <p className="text-white"><Link className="w-full flex" to={PATHS.PROJECT_MANAGE}>{t('nav:qlda')}</Link></p>
+            <p className="text-white">
+              <Link className="flex w-full" to={PATHS.PROJECT_MANAGE}>
+                {t('nav:qlda')}
+              </Link>
+            </p>
             <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
               <div className="cursor-pointer">
                 <SidebarDropDownIcon
@@ -98,7 +103,11 @@ function Navbar() {
                       }}
                     >
                       <img
-                        src={project?.image || defaultProjectImage}
+                        src={`${
+                          project?.image !== ''
+                            ? `${API_URL}/file/${project?.image}`
+                            : defaultProjectImage
+                        }`}
                         alt="Project"
                         className="aspect-square w-[45px] rounded-full"
                         onError={e => {

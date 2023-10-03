@@ -12,6 +12,8 @@ import {
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg } from '../api'
 import { orgSchema } from './CreateOrg'
+import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
@@ -19,8 +21,6 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { useDefaultCombobox } from '~/utils/hooks'
 import { type OrgList } from '~/layout/MainLayout/types'
-import { queryClient } from '~/lib/react-query'
-import { flattenData } from '~/utils/misc'
 
 export function UpdateOrg({
   close,

@@ -11,10 +11,10 @@ import TitleBar from '~/components/Head/TitleBar'
 import { CreateProject } from '../components/CreateProject'
 import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
 import { useState } from 'react'
-import { ListProjectItem } from './../components/ListProjectItem';
+import { ListProjectItem } from './../components/ListProjectItem'
 import projectBackgroundImage from '~/assets/images/project-background.png'
 
-const ProjectSchema = z.object({
+export const ProjectSchema = z.object({
   id: z.string(),
   name: z.string(),
   image: z.string(),
@@ -23,13 +23,15 @@ const ProjectSchema = z.object({
   app_secret: z.string(),
   sms_config: z.object({
     type: z.string(),
-    config: z.object({
-      code: z.string(),
-      password: z.string(),
-      service_id: z.string(),
-      url: z.string(),
-      user: z.string(),
-    }).nullable(),
+    config: z
+      .object({
+        code: z.string(),
+        password: z.string(),
+        service_id: z.string(),
+        url: z.string(),
+        user: z.string(),
+      })
+      .nullable(),
     content: z.string(),
     reset_password_content: z.string(),
   }),
@@ -46,7 +48,7 @@ export const ProjectListSchema = z
 export function ProjectManage() {
   const { t } = useTranslation()
 
-  const { data: projectsData } = useProjects({})
+  const { data: projectsData } = useProjects()
   const [filteredComboboxData, setFilteredComboboxData] = useState<Project[]>(
     [],
   )
@@ -54,27 +56,39 @@ export function ProjectManage() {
   return (
     <ContentLayout title={t('cloud:project_manager.title')}>
       <div className="flex">
-        <TitleBar className="w-full" title={t('cloud:project_manager.project') ?? 'Dự án'} />
-        <div className="flex items-center gap-x-3 ml-3">
+        <TitleBar
+          className="w-full"
+          title={t('cloud:project_manager.project')}
+        />
+        <div className="ml-3 flex items-center gap-x-3">
           <CreateProject />
           <ComboBoxSelectProject
             setFilteredComboboxData={setFilteredComboboxData}
           />
         </div>
       </div>
-      
-      <div className="mt-3" style={{height: '100%', backgroundImage: `url(${projectBackgroundImage})`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 5% bottom 0'}}>
-        { Number(projectsData?.total) > 0 ? 
-            (
-              <>
-                <div className="font-bold text-h2 mb-4">{t('cloud:project_manager.count_project').replace('{{NO_OF_PROJECT}}', Number(projectsData?.total).toString())}</div>
-                <ListProjectItem listProjectData={filteredComboboxData}/>
-              </> 
-            )
-         : (
-          <div>
-            {t('cloud:project_manager.no_data')}
-          </div>
+
+      <div
+        className="mt-3"
+        style={{
+          height: '100%',
+          backgroundImage: `url(${projectBackgroundImage})`,
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'right 5% bottom 0',
+        }}
+      >
+        {Number(projectsData?.total) > 0 ? (
+          <>
+            <div className="mb-4 text-h2 font-bold">
+              {t('cloud:project_manager.count_project').replace(
+                '{{NO_OF_PROJECT}}',
+                Number(projectsData?.total).toString(),
+              )}
+            </div>
+            <ListProjectItem listProjectData={filteredComboboxData} />
+          </>
+        ) : (
+          <div>{t('cloud:project_manager.no_data')}</div>
         )}
       </div>
     </ContentLayout>

@@ -431,7 +431,7 @@ export function UpdateEvent({
         name={['condition', 'action']}
       >
         {(
-          { register, formState, control, watch, setValue, getValues },
+          { register, formState, control, setValue },
           {
             append: conditionAppend,
             fields: conditionFields,
