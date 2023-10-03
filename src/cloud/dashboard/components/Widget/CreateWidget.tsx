@@ -82,15 +82,17 @@ export const widgetConfigSchema = z.object({
   id: z.string().optional(),
 })
 
-export type WidgetConfigDTO = {
+type WidgetConfigDTO = {
   data: z.infer<typeof widgetConfigSchema>
 }
+
+export type WidgetConfig = WidgetConfigDTO['data']
 
 type CreateWidgetProps = {
   widgetType: WidgetType
   isOpen: boolean
   close: () => void
-  handleSubmitWidget: (value: any) => void
+  handleSubmitWidget: (value: WidgetConfig) => void
 }
 
 const widgetDataType = [
@@ -170,10 +172,7 @@ export function CreateWidget({
             </div>
           </div>
 
-          <FormMultipleFields<
-            WidgetConfigDTO['data'],
-            typeof widgetConfigSchema
-          >
+          <FormMultipleFields<WidgetConfig, typeof widgetConfigSchema>
             id="create-widget"
             className="flex flex-col justify-between"
             onSubmit={values => {

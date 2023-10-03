@@ -5,27 +5,33 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-export type UpdateDashboardDTO = {
+import { type Widgets } from '../types'
+
+export type UpdateDetailDashboardDTO = {
   data: {
     title: string
     configuration: {
       description: string
+      widgets: Widgets
     }
   }
   dashboardId: string
 }
 
-export const updateDashboard = ({ data, dashboardId }: UpdateDashboardDTO) => {
+export const updateDetailDashboard = ({
+  data,
+  dashboardId,
+}: UpdateDetailDashboardDTO) => {
   return axios.put(`/api/vtdashboard/${dashboardId}`, data)
 }
 
-export type UseUpdateDashboardOptions = {
-  config?: MutationConfig<typeof updateDashboard>
+export type UseUpdateDetailDashboardOptions = {
+  config?: MutationConfig<typeof updateDetailDashboard>
 }
 
-export const useUpdateDashboard = ({
+export const useUpdateDetailDashboard = ({
   config,
-}: UseUpdateDashboardOptions = {}) => {
+}: UseUpdateDetailDashboardOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -39,6 +45,6 @@ export const useUpdateDashboard = ({
       })
     },
     ...config,
-    mutationFn: updateDashboard,
+    mutationFn: updateDetailDashboard,
   })
 }

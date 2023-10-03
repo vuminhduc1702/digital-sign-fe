@@ -469,7 +469,8 @@
         "edit_full": "Sửa Dashboard",
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
-        "success_delete": "Xoá Dashboard thành công"
+        "success_delete": "Xoá Dashboard thành công",
+        "note": "Vui lòng tạo biểu đồ"
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
@@ -491,7 +492,7 @@
       },
       "detail_dashboard": {
         "add_widget": {
-          "create": "Tạo biểu đồ cho bảng điều khiển",
+          "create": "Tạo biểu đồ cho dashboard",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ máy đo",

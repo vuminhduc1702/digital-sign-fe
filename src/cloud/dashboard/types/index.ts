@@ -1,6 +1,6 @@
 import { type BasePagination } from '~/types'
 
-export type ValueWS = { ts: number; value: string }
+export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
 
@@ -11,10 +11,10 @@ type EntityId = {
 
 type LatestData = {
   TIME_SERIES: {
-    [key: string]: ValueWS
+    [key: string]: WSWidgetData
   } | null
   ENTITY_FIELD: {
-    name: ValueWS
+    name: WSWidgetData
   } | null
 }
 
@@ -24,7 +24,7 @@ type AggLatestData = {
 }
 
 type TimeSeries = {
-  [key: string]: ValueWS[]
+  [key: string]: WSWidgetData[]
 }
 
 type DataItem = {
@@ -39,7 +39,7 @@ export type WS = {
 }
 
 export type Widget = {
-  type: string
+  type: WidgetType
   title: string
   datasource: {
     [key: string]: string

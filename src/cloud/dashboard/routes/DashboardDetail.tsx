@@ -9,17 +9,17 @@ import { Button } from '~/components/Button/Button'
 import GridLayout from 'react-grid-layout'
 import storage from '~/utils/storage'
 import { useDisclosure, useWS } from '~/utils/hooks'
-import {
-  useCreateDashboard,
-  useGetDashboardsById,
-  useUpdateDashboard,
-} from '../api'
-import { useCreateWidgetItem } from '../api/createWidgetItem'
+import { useGetDashboardsById, useUpdateDetailDashboard } from '../api'
 import { LineChart } from '../components'
-import { CreateWidget } from '../components/Widget'
+import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 
-import { type WS, type ValueWS, type Widget, type WidgetType } from '../types'
+import {
+  type WS,
+  type WSWidgetData,
+  type Widget,
+  type WidgetType,
+} from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -58,32 +58,22 @@ export function DashboardDetail() {
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
-  const projectId = params.projectId as string
 
   const { close, open, isOpen } = useDisclosure()
 
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
-  const { mutate: mutateDashboard } = useCreateDashboard()
-  const {
-    mutate: mutateUpdateDashboard,
-    isLoading,
-    isSuccess,
-  } = useUpdateDashboard()
+  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
+    useUpdateDetailDashboard()
   const { data: detailDashboard } = useGetDashboardsById({
     id: dashboardId,
     config: { suspense: false },
   })
-  const [showingConfigDialog, setShowingConfigDialog] = useState(false)
-  const [chartData, setChartData] = useState()
+  const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+  const [widgetData, setWidgetData] = useState<WidgetConfig>()
 
-  const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
-    useCreateWidgetItem()
   const [isEditMode, setIsEditMode] = useState(false)
 
-  const [interval, setInterval] = useState(wsInterval[0])
-  const [agg, setAgg] = useState<WidgetAgg>(widgetAgg[0])
-
-  const [date, setDate] = useState<Date | undefined>(new Date())
+  const [date, setDate] = useState<Date>(new Date())
   const parseDate = useMemo(
     () => Date.parse(date?.toISOString() || new Date().toISOString()),
     [date],
@@ -115,10 +105,10 @@ export function DashboardDetail() {
         tsCmd: {
           keys: ['test', 'test1'],
           startTs: parseDate,
-          interval: interval.value,
+          interval: widgetData?.widgetSetting?.interval,
           limit: 10,
           offset: 0,
-          agg: agg.value,
+          agg: widgetData?.widgetSetting?.agg,
         },
         id: 1,
       },
@@ -161,14 +151,14 @@ export function DashboardDetail() {
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<WS>()
 
-  const liveValues: ValueWS[] =
+  const liveValues: WSWidgetData[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
-  const prevValuesRef = useRef<ValueWS[]>([])
-  const newValuesRef = useRef<ValueWS[]>([])
+  const prevValuesRef = useRef<WSWidgetData[]>([])
+  const newValuesRef = useRef<WSWidgetData[]>([])
   useEffect(() => {
     prevValuesRef.current = newValuesRef.current || liveValues
   }, [liveValues[0]])
-  if (prevValuesRef.current && agg.value === 'NONE') {
+  if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
     newValuesRef.current = [...prevValuesRef.current, ...liveValues]
   } else newValuesRef.current = liveValues
   // const [initWSMessage, setInitMessage] = useState({})
@@ -179,7 +169,11 @@ export function DashboardDetail() {
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
   const handleLive = useCallback(
     () => sendMessage(liveMessage),
-    [parseDate, interval, agg],
+    [
+      parseDate,
+      widgetData?.widgetSetting?.interval,
+      widgetData?.widgetSetting?.agg,
+    ],
   )
   const handleHistory = useCallback(() => sendMessage(historyMessage), [])
   const handleRealtime = useCallback(() => sendMessage(realtimeMessage), [])
@@ -202,7 +196,7 @@ export function DashboardDetail() {
         {detailDashboard?.configuration.widgets ? (
           <LineChart data={newValuesRef.current} />
         ) : (
-          <div>Vui lòng tạo widget</div>
+          <div>{t('cloud:dashboard.add_dashboard.note')}</div>
         )}
 
         {isEditMode ? (
@@ -223,24 +217,22 @@ export function DashboardDetail() {
               form="update-dashboard"
               type="submit"
               size="square"
-              isLoading={isLoading}
+              isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
                 const widgetId = uuidv4()
-                const latestData = chartData?.dataConfigChart.map(
-                  (item: any) => {
-                    return {
-                      type: 'TIME_SERIES',
-                      key: item.attr,
-                    }
-                  },
-                )
+                const latestData = widgetData?.attributeConfig.map(item => {
+                  return {
+                    type: 'TIME_SERIES',
+                    key: item.attr,
+                  }
+                })
                 mutateUpdateDashboard({
                   data: {
                     configuration: {
                       widgets: {
                         [widgetId]: {
-                          type: 'timeseries',
+                          type: 'TIMESERIES',
                           title: 'Test',
                           datasource: {
                             init: {
@@ -248,7 +240,7 @@ export function DashboardDetail() {
                                 entityFilter: {
                                   type: 'entityList',
                                   entityType: 'DEVICE',
-                                  entityIds: chartData?.device,
+                                  entityIds: widgetData?.device ?? [],
                                 },
                                 pageLink: {
                                   pageSize: 1,
@@ -269,21 +261,21 @@ export function DashboardDetail() {
                                 ],
                                 latestValues: latestData,
                               },
+                              id: widgetId,
                             },
                           },
-                          config: {},
                         },
                       },
                     },
                   },
-                  dashboardId: dashboardId,
+                  dashboardId,
                 })
                 const widgetInitId = Object.keys(
                   detailDashboard?.configuration?.widgets as unknown as Widget,
                 )[0].toString()
                 const setInitMessage = {
                   id: widgetInitId,
-                  data: chartData?.device.map((deviceId: string) => {
+                  data: widgetData?.device.map((deviceId: string) => {
                     return {
                       entityId: {
                         entityType: 'DEVICE',
@@ -318,16 +310,16 @@ export function DashboardDetail() {
             >
               {t('cloud:dashboard.config_chart.title')}
             </Button>
-            {showingConfigDialog ? (
+            {isShowCreateWidget ? (
               <div>
                 <CreateWidget
                   widgetType={widgetType}
-                  isOpen={showingConfigDialog}
-                  close={() => setShowingConfigDialog(false)}
+                  isOpen={isShowCreateWidget}
+                  close={() => setIsShowCreateWidget(false)}
                   handleSubmitWidget={values => {
                     console.log('values chart: ', values)
-                    setShowingConfigDialog(false)
-                    setChartData(values)
+                    setIsShowCreateWidget(false)
+                    setWidgetData(values)
                   }}
                 />
               </div>
@@ -366,7 +358,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -383,7 +375,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -402,7 +394,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -417,7 +409,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -440,7 +432,7 @@ export function DashboardDetail() {
               form="update-dashboard"
               size="square"
               variant="primary"
-              isLoading={isLoading}
+              isLoading={updateDashboardIsLoading}
               onClick={() => setIsEditMode(true)}
               startIcon={
                 <EditBtnIcon
