@@ -11,6 +11,7 @@
       "title": "Cloud",
       "org_management": "Quản lý tổ chức",
       "flow_engine_v2": "Quản lý nghiệp vụ",
+      "firm_ware": "Quản lý Firmware",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
       "dashboard": "Dashboard",
@@ -501,6 +502,34 @@
           "data_chart": "Dữ liệu"
         }
       }
+    },
+    "firmware": {
+      "title": "Quản lý Firmware",
+      "table": {
+        "id": "ID",
+        "name": "Tên Firmware",
+        "template": "Thiết bị mẫu",
+        "tag": "Firmware Type",
+        "version": "Firmware Version",
+        "create_time": "Ngày tạo",
+        "created_by": "Người tạo",
+        "delete_firmware": "Xoá Firmware",
+        "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?"
+      },
+      "add_firmware": {
+        "title": "Thêm mới Firmware",
+        "edit_firmware": "Sửa Firmware",
+        "name": "Tên Firmware",
+        "upload_firmware": "Upload File",
+        "template": "Thiết bị mẫu",
+        "tag": "Firmware Type",
+        "description": "Mô tả",
+        "version": "Firmware Version",
+        "success_create": "Tạo Firmware thành công",
+        "success_update": "Cập nhật Firmware thành công",
+        "success_delete": "Xoá Firmware thành công",
+        "success_upload": "Upload File thành công"
+      }
     }
   },
   "table": {
@@ -524,6 +553,7 @@
     "no_event": "Không có sự kiện",
     "no_adapter": "Không có Adapter",
     "no_thing": "Không có Thing",
+    "no_firmware": "Không có Firmware",
     "no_service": "Không có nghiệp vụ. Vui lòng tạo nghiệp vụ.",
     "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",

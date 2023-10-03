@@ -6,6 +6,7 @@ import MainLayout from '~/layout/MainLayout'
 
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
 import { FlowEngineV2Routes } from '~/cloud/flowEngineV2'
+import { FirmWareRoutes } from '~/cloud/firmware'
 
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
@@ -33,6 +34,7 @@ export const protectedRoutes = [
       ...FlowEngineV2Routes,
       ...ProjectManagementRoutes,
       ...DashboardManagementRoutes,
+      ...FirmWareRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (
