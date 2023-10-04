@@ -29,12 +29,14 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       error,
       startIcon,
       endIcon,
+      require,
       ...prop
     } = props
     return (
       <FieldWrapper
         label={label}
         error={error}
+        require={require}
         className={cn(
           type === 'file'
             ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'

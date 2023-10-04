@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField, SelectField } from '~/components/Form'
+import { Form, FormDrawer, FormMultipleFields, InputField, SelectField } from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
@@ -72,7 +72,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
       <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
-          console.log('values', values)
           mutate({
             data: {
               entity_id: entityId,

@@ -111,54 +111,64 @@ export default function CreateTemplate() {
               registration={register('name')}
             />
             {fields.map((field, index) => (
-              <section key={field.id} className="space-y-3">
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.name')}
-                  error={formState?.errors?.attributes?.[index]?.attribute_key}
-                  registration={register(
-                    `attributes.${index}.attribute_key` as const,
-                  )}
-                />
-                <SelectField
-                  label={t('cloud:org_manage.org_manage.add_attr.value_type')}
-                  error={formState?.errors?.attributes?.[index]?.value_t}
-                  registration={register(
-                    `attributes.${index}.value_t` as const,
-                  )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
-                />
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
-                />
-                <FieldWrapper
-                  label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                  error={formState?.errors?.attributes?.[index]?.logged}
-                  className="flex items-center gap-x-3"
-                >
-                  <Controller
-                    control={control}
-                    name={`attributes.${index}.logged`}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
+              <section
+                key={field.id}
+                className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
+              >
+                <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-2">
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.name')}
+                    error={
+                      formState?.errors?.attributes?.[index]?.attribute_key
+                    }
+                    registration={register(
+                      `attributes.${index}.attribute_key` as const,
+                    )}
                   />
-                </FieldWrapper>
+                  <SelectField
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                    error={formState?.errors?.attributes?.[index]?.value_t}
+                    registration={register(
+                      `attributes.${index}.value_t` as const,
+                    )}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  <InputField
+                    classNameFieldWrapper="mt-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                  />
+                  <FieldWrapper
+                    className="mt-2 space-y-3"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState?.errors?.attributes?.[index]?.logged}
+                  >
+                    <Controller
+                      control={control}
+                      name={`attributes.${index}.logged`}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
                 <Button
                   type="button"
                   size="square"
                   variant="trans"
-                  className="mt-3 self-start border-none"
+                  className="mt-10 self-start border-none"
                   onClick={() => remove(index)}
                   startIcon={
                     <img

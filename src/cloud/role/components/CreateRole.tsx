@@ -282,8 +282,7 @@ export function CreateRole() {
               </div>
               {fields.map((field, index) => (
                 <section
-                  className="flex justify-between rounded-md bg-slate-200 px-2 py-4"
-                  style={{ marginTop: 10 }}
+                  className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
                   key={field.id}
                 >
                   <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-3">
