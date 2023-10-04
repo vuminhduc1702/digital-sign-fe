@@ -20,7 +20,11 @@ import {
 import FileField from '~/components/Form/FileField'
 import { useUpdateProject } from '../api'
 
-import { uploadImageSchema } from '~/layout/OrgManagementLayout/components/CreateOrg'
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  uploadImageSchema,
+} from '~/layout/OrgManagementLayout/components/CreateOrg'
 
 import defaultProjectImage from '~/assets/images/default-project.png'
 import { PlusIcon } from '~/components/SVGIcons'
@@ -46,7 +50,6 @@ export function CreateProject() {
 
   const avatarRef = useRef<HTMLImageElement>(null)
   const {
-    formState: formStateUploadImage,
     control: controlUploadImage,
     setValue: setValueUploadImage,
     getValues: getValueUploadImage,
@@ -99,10 +102,15 @@ export function CreateProject() {
           const defaultFile = new File([blob], 'default-project.png', blob)
           const formData = new FormData()
           formData.append('file', defaultFile)
-          setValueUploadImage('file', formData.get('file'))
+          setValueUploadImage(
+            'file',
+            formData.get('file') as unknown as { file: File },
+          )
         })
     }
   }
+
+  const [uploadImageErr, setUploadImageErr] = useState('')
 
   return (
     <FormDialog
@@ -111,6 +119,7 @@ export function CreateProject() {
       title={t('cloud:project_manager.add_project.title')}
       id="create-project-screen"
       isDone={isSuccessCreateProject}
+      setCustomState={() => setUploadImageErr('')}
       body={
         <Form<CreateProjectDTO['data'], typeof CreateProjectSchema>
           id="create-project"
@@ -145,26 +154,46 @@ export function CreateProject() {
                   />
                 </div>
                 <div className="pl-4">
-                  <div className="mb-3">
+                  <div className="mb-3 space-y-1">
                     <FileField
                       label={t('cloud:project_manager.add_project.avatar')}
-                      error={formStateUploadImage?.errors?.['file']}
                       control={controlUploadImage}
                       name="upload-image"
                       ref={fileInputRef}
                       onChange={event => {
+                        const file = event.target.files[0]
                         const formData = new FormData()
                         formData.append('file', event.target.files[0])
-                        setValueUploadImage('file', formData.get('file'))
+                        setValueUploadImage(
+                          'file',
+                          formData.get('file') as unknown as { file: File },
+                        )
+
+                        if (file.size > MAX_FILE_SIZE) {
+                          setUploadImageErr(t('validate:image_max_size'))
+                          return false
+                        }
+                        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                          setUploadImageErr(t('validate:image_type'))
+                          return false
+                        }
+
                         const reader = new FileReader()
-                        reader.readAsDataURL(event.target.files[0])
+                        reader.readAsDataURL(file)
                         reader.onload = e => {
-                          if (avatarRef.current != null && e.target != null) {
+                          if (
+                            avatarRef.current != null &&
+                            e.target != null &&
+                            reader.readyState === 2
+                          ) {
                             avatarRef.current.src = e.target.result as string
                           }
                         }
                       }}
                     />
+                    <p className="text-body-sm text-primary-400">
+                      {uploadImageErr}
+                    </p>
                   </div>
                   <img
                     src={defaultProjectImage}

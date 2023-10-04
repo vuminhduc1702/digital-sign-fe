@@ -33,7 +33,7 @@ export const templateAttrSchema = z.object({
         .min(1, { message: 'Tên thuộc tính quá ngắn' })
         .max(30, { message: 'Tên thuộc tính quá dài' }),
       value: z.string().optional(),
-      logged: z.boolean(),
+      logged: z.string(),
       value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
     }),
   ),
@@ -74,8 +74,18 @@ export default function CreateTemplate() {
       <FormMultipleFields<CreateTemplateDTO['data'], typeof templateAttrSchema>
         id="create-template"
         onSubmit={values => {
+          console.log('values: ', values)
           mutate({ data: { ...values, project_id: projectId } })
-          console.log(values)
+          // data: {
+          //   name: values.name,
+          //   attributes: {
+          //     attribute_key: values.attributes.attribute_key,
+          //     value: values.attributes.value,
+          //     logged: values.attributes.logged,
+          //     value_t: values.attributes.value_t,
+          //   },
+          //   project_id: projectId,
+          // },
         }}
         schema={templateAttrSchema}
         options={{
@@ -94,7 +104,9 @@ export default function CreateTemplate() {
               className="h-9 w-9 rounded-md"
               variant="trans"
               size="square"
-              startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+              startIcon={
+                <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+              }
               onClick={() =>
                 append({
                   attribute_key: '',
@@ -153,19 +165,19 @@ export default function CreateTemplate() {
                   }))}
                 />
                 <Button
-                    type="button"
-                    size="square"
-                    variant="trans"
-                    className="mt-3 self-start border-none"
-                    onClick={() => remove(index)}
-                    startIcon={
-                      <img
-                        src={btnDeleteIcon}
-                        alt="Delete device template"
-                        className="h-8 w-8"
-                      />
-                    }
-                  />
+                  type="button"
+                  size="square"
+                  variant="trans"
+                  className="mt-3 self-start border-none"
+                  onClick={() => remove(index)}
+                  startIcon={
+                    <img
+                      src={btnDeleteIcon}
+                      alt="Delete device template"
+                      className="h-8 w-8"
+                    />
+                  }
+                />
               </section>
             ))}
           </>

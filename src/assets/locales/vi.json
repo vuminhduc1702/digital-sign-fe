@@ -60,7 +60,7 @@
         "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
-        "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặv png có dung lượng tối đa 5MB",
+        "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
@@ -601,7 +601,9 @@
       "dataType": "Loại biểu đồ"
     }
   },
-  "misc": {
-    "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+  "validate": {
+    "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự",
+    "image_max_size": "Ảnh cho phép dung lượng tối đa 5MB",
+    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png"
   }
 }

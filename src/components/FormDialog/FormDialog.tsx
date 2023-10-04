@@ -31,6 +31,7 @@ export type ConfirmationDialogProps = {
   resetData?: () => void
   size?: keyof typeof formDialogSizes
   isFullScreen?: boolean
+  setCustomState?: React.Dispatch<React.SetStateAction<any>>
 }
 
 export const FormDialog = ({
@@ -43,7 +44,8 @@ export const FormDialog = ({
   resetData,
   isFullScreen,
   size,
-  className
+  className,
+  setCustomState,
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
 
@@ -59,6 +61,7 @@ export const FormDialog = ({
     onClick: () => {
       open()
       resetData?.()
+      setCustomState?.()
     },
   })
 
@@ -70,11 +73,19 @@ export const FormDialog = ({
         onClose={() => null}
         initialFocus={cancelButtonRef}
       >
-        <div id={id} className={cn("inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle", className, size ? formDialogSizes[size] : 'sm:max-w-lg')}>
-          <div 
-          className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
-            'h-[95%]': isFullScreen,
-          })}>
+        <div
+          id={id}
+          className={cn(
+            'inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle',
+            className,
+            size ? formDialogSizes[size] : 'sm:max-w-lg',
+          )}
+        >
+          <div
+            className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
+              'h-[95%]': isFullScreen,
+            })}
+          >
             <div className="flex items-center justify-between">
               <DialogTitle as="h3" className="text-h1 text-secondary-900">
                 {title}
@@ -90,9 +101,11 @@ export const FormDialog = ({
               </div>
             </div>
             {body && (
-              <div className={cn('mt-2', {
-                'h-[95%]': isFullScreen,
-              })}>
+              <div
+                className={cn('mt-2', {
+                  'h-[95%]': isFullScreen,
+                })}
+              >
                 <p className="text-body-sm text-secondary-900">{body}</p>
               </div>
             )}
