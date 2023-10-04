@@ -69,7 +69,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         />
       }
     >
-      <FormMultipleFields<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
+      <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="create-attr"
         onSubmit={values => {
           mutate({
@@ -126,7 +126,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             />
           </>
         )}
-      </FormMultipleFields>
+      </Form>
     </FormDrawer>
   )
 }
