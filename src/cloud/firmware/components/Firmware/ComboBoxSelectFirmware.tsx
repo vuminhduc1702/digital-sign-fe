@@ -31,6 +31,8 @@ export function ComboBoxSelectFirmWare({
     'tag',
     'created_by',
     'template_id',
+    'email',
+    'description'
   ])
 
   const filteredData = filteredComboboxData(

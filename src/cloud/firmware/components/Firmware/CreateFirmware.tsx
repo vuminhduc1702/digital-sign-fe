@@ -13,7 +13,7 @@ import {
 } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema, versionSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import {
   useCreateFireWare,
@@ -22,9 +22,11 @@ import {
 
 export const entityFirmWareSchema = z.object({
   name: nameSchema,
-  template_id: z.string().optional(),
+  template_id: z
+    .string()
+    .nonempty({ message: 'Vui lòng chọn ít nhất 1 thiết bị mẫu' }),
   tag: z.string(),
-  version: z.string(),
+  version: versionSchema,
   description: z.string(),
 })
 
@@ -54,30 +56,42 @@ export function CreateThing() {
                 project_id: projectId,
                 tag: values.tag,
                 version: values.version,
-                template_id: templateValue?.value,
+                template_id: templateValue?.value || '',
                 description: values.description,
               },
             })
           }}
+          options={{
+            defaultValues: { template_id: '' },
+          }}
           schema={entityFirmWareSchema}
         >
-          {({ register, formState, control }) => {
+          {({ register, formState, control, setError, setValue }) => {
             return (
               <>
-                <SelectDropdown
-                  isClearable={false}
-                  label={t('cloud:firmware.add_firmware.template')}
-                  name="template_id"
-                  control={control}
-                  value={templateValue}
-                  onChange={e => setTemplateValue(e)}
-                  options={
-                    data?.templates?.map(org => ({
-                      label: org?.name,
-                      value: org?.id,
-                    })) || [{ label: '', value: '' }]
-                  }
-                />
+                <div className="space-y-1">
+                  <SelectDropdown
+                    isClearable={false}
+                    label={t('cloud:firmware.add_firmware.template')}
+                    name="template_id"
+                    control={control}
+                    value={templateValue}
+                    onChange={e => {
+                      setValue('template_id', e.value)
+                      setError('template_id', { message: '' })
+                      setTemplateValue(e)
+                    }}
+                    options={
+                      data?.templates?.map(template => ({
+                        label: template?.name,
+                        value: template?.id,
+                      })) || [{ label: '', value: '' }]
+                    }
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.template_id?.message}
+                  </p>
+                </div>
                 <InputField
                   label={t('cloud:firmware.add_firmware.name')}
                   error={formState.errors['name']}

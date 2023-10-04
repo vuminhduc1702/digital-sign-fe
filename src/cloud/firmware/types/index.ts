@@ -17,6 +17,7 @@ export type FirmWare = {
   template_name: string
   description: string
   link: string
+  email: string
 }
 
 export type FirmWareList = {

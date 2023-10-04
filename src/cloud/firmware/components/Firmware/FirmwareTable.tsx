@@ -188,7 +188,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('created_by', {
+      columnHelper.accessor('email', {
         header: () => <span>{t('cloud:firmware.table.created_by')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,

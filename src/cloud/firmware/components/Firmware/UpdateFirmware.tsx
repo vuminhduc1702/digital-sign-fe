@@ -96,26 +96,31 @@ export function UpdateFirmWare({
             }}
             schema={entityFirmWareSchema}
             options={{
-              defaultValues: { name, description, tag, version },
+              defaultValues: { name, description, tag, version, template_id },
             }}
           >
             {({ register, formState, control }) => {
               return (
                 <>
-                  <SelectDropdown
-                    isClearable={false}
-                    label={t('cloud:firmware.add_firmware.template')}
-                    name="template_id"
-                    control={control}
-                    value={templateValue}
-                    onChange={e => setTemplateValue(e)}
-                    options={
-                      data?.templates?.map(org => ({
-                        label: org?.name,
-                        value: org?.id,
-                      })) || [{ label: '', value: '' }]
-                    }
-                  />
+                  <div>
+                    <SelectDropdown
+                      isClearable={false}
+                      label={t('cloud:firmware.add_firmware.template')}
+                      name="template_id"
+                      control={control}
+                      value={templateValue}
+                      onChange={e => setTemplateValue(e)}
+                      options={
+                        data?.templates?.map(template => ({
+                          label: template?.name,
+                          value: template?.id,
+                        })) || [{ label: '', value: '' }]
+                      }
+                    />
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.template_id?.message}
+                    </p>
+                  </div>
                   <InputField
                     label={t('cloud:firmware.add_firmware.name')}
                     error={formState.errors['name']}

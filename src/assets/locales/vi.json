@@ -505,6 +505,7 @@
     },
     "firmware": {
       "title": "Quản lý Firmware",
+      "fota": "Fota",
       "table": {
         "id": "ID",
         "name": "Tên Firmware",
@@ -516,6 +517,7 @@
         "delete_firmware": "Xoá Firmware",
         "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?"
       },
+      "update_version": "Update Version Firmware",
       "add_firmware": {
         "title": "Thêm mới Firmware",
         "edit_firmware": "Sửa Firmware",
@@ -528,7 +530,8 @@
         "success_create": "Tạo Firmware thành công",
         "success_update": "Cập nhật Firmware thành công",
         "success_delete": "Xoá Firmware thành công",
-        "success_upload": "Upload File thành công"
+        "success_upload": "Upload File thành công",
+        "success_update_version": "Upload Version thành công"
       }
     }
   },
