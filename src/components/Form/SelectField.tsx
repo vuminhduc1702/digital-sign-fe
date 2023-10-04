@@ -42,7 +42,7 @@ export const SelectField = ({
         placeholder={placeholder}
         value={value}
         className={clsx(
-          'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
+          'mt-1 block w-full rounded-md border border-secondary-600 py-1 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900 h-[36px]',
           className,
         )}
         {...registration}
