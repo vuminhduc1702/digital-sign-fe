@@ -17,7 +17,12 @@ export type EntityType =
   | 'TEMPLATE'
   | 'EVENT'
 
-export type AttributesDTO = z.infer<typeof attrSchema>
+export type AttributesDTO = {
+  attribute_key: string
+  logged: boolean
+  value_t: string
+  value?: string | undefined
+}
 
 export type CreateAttrDTO = {
   data: {
