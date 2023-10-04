@@ -7,19 +7,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import GridLayout from 'react-grid-layout'
-import storage from '~/utils/storage'
 import { useDisclosure, useWS } from '~/utils/hooks'
-import { useGetDashboardsById, useUpdateDetailDashboard } from '../api'
+import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
 import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 
-import {
-  type WS,
-  type WSWidgetData,
-  type Widget,
-  type WidgetType,
-} from '../types'
+import { type WS, type WSWidgetData, type WidgetType } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -60,23 +54,27 @@ export function DashboardDetail() {
   const dashboardId = params.dashboardId as string
 
   const { close, open, isOpen } = useDisclosure()
-
+  const [isEditMode, setIsEditMode] = useState(false)
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
+  const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
-    useUpdateDetailDashboard()
+    useUpdateDashboard()
+
   const { data: detailDashboard } = useGetDashboardsById({
     id: dashboardId,
     config: { suspense: false },
   })
-  const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+
   const [widgetData, setWidgetData] = useState<WidgetConfig>()
 
-  const [isEditMode, setIsEditMode] = useState(false)
-
-  const [date, setDate] = useState<Date>(new Date())
-  const parseDate = useMemo(
-    () => Date.parse(date?.toISOString() || new Date().toISOString()),
-    [date],
+  const parseStartDate = useMemo(
+    () =>
+      Date.parse(
+        widgetData?.widgetSetting?.startDate?.toISOString() ||
+          new Date().toISOString(),
+      ),
+    [widgetData?.widgetSetting?.startDate],
   )
 
   const lastestMessage = JSON.stringify({
@@ -99,12 +97,12 @@ export function DashboardDetail() {
     ],
   })
 
-  const liveMessage = JSON.stringify({
+  const realtimeMessage = JSON.stringify({
     entityDataCmds: [
       {
         tsCmd: {
-          keys: ['test', 'test1'],
-          startTs: parseDate,
+          keys: widgetData?.attributeConfig.map(item => item.attr),
+          startTs: parseStartDate,
           interval: widgetData?.widgetSetting?.interval,
           limit: 10,
           offset: 0,
@@ -132,72 +130,107 @@ export function DashboardDetail() {
     ],
   })
 
-  const realtimeMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        tsCmd: {
-          keys: [],
-          startTs: null,
-          interval: '',
-          limit: 100,
-          offset: 0,
-          agg: '',
-        },
-        id: 1,
-      },
-    ],
-  })
-
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<WS>()
 
-  const liveValues: WSWidgetData[] =
+  // Handle new data point in realtime
+  const realtimeValues: WSWidgetData[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
   const prevValuesRef = useRef<WSWidgetData[]>([])
   const newValuesRef = useRef<WSWidgetData[]>([])
   useEffect(() => {
-    prevValuesRef.current = newValuesRef.current || liveValues
-  }, [liveValues[0]])
+    prevValuesRef.current = newValuesRef.current || realtimeValues
+  }, [realtimeValues[0]])
   if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
-    newValuesRef.current = [...prevValuesRef.current, ...liveValues]
-  } else newValuesRef.current = liveValues
-  // const [initWSMessage, setInitMessage] = useState({})
+    newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
+  } else newValuesRef.current = realtimeValues
+
   const handleInit = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
-  const handleLive = useCallback(
-    () => sendMessage(liveMessage),
+  const handleRealtime = useCallback(
+    () => sendMessage(realtimeMessage),
     [
-      parseDate,
+      parseStartDate,
       widgetData?.widgetSetting?.interval,
       widgetData?.widgetSetting?.agg,
+      realtimeMessage,
     ],
   )
   const handleHistory = useCallback(() => sendMessage(historyMessage), [])
-  const handleRealtime = useCallback(() => sendMessage(realtimeMessage), [])
+
+  const layout: GridLayout.Layout[] = [
+    { i: 'a', x: 0, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'b', x: 5, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'c', x: 0, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'd', x: 5, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
+  ]
+
+  useEffect(() => {
+    if (detailDashboard?.configuration.widgets != null) {
+      handleInit(JSON.stringify(setInitMessage))
+    }
+  }, [detailDashboard?.configuration.widgets])
+
+  useEffect(() => {
+    handleRealtime()
+  }, [])
+
+  const dataTest = [
+    {
+      ts: 1696403582463,
+      value: '908',
+    },
+    {
+      ts: 1696244842837,
+      value: '623',
+    },
+    {
+      ts: 1696244837572,
+      value: '65',
+    },
+  ]
 
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
       <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
-        {/* <GridLayout
-          style={editMode ? { background: '#f0f0f0' } : {}}
-          layout={layout}
-          cols={8}
-          rowHeight={300}
-          width={1560}
-          maxRows={1}
-          isDraggable={editMode ? true : false}
-        >
-          <WidgetItem title="Blue eye dragon"></WidgetItem>
-        </GridLayout> */}
-        {detailDashboard?.configuration.widgets ? (
-          <LineChart data={newValuesRef.current} />
+        {/* {detailDashboard?.configuration.widgets ? (
+          <GridLayout
+            layout={layout}
+            cols={4}
+            // rowHeight={300}
+            // width={1560}
+            isDraggable={isEditMode ? true : false}
+          >
+            <LineChart data={newValuesRef.current} />
+          </GridLayout>
         ) : (
           <div>{t('cloud:dashboard.add_dashboard.note')}</div>
-        )}
+        )} */}
+        <GridLayout
+          layout={layout}
+          cols={4}
+          maxRows={4}
+          rowHeight={50}
+          width={400}
+          // isDraggable={isEditMode ? true : false}
+        >
+          <div key="a" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="b" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="c" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="d" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+        </GridLayout>
 
         {isEditMode ? (
           <div className="flex justify-end">
@@ -221,19 +254,16 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
                 const widgetId = uuidv4()
-                const latestData = widgetData?.attributeConfig.map(item => {
-                  return {
-                    type: 'TIME_SERIES',
-                    key: item.attr,
-                  }
-                })
+                const latestData = widgetData?.attributeConfig.map(item => ({
+                  type: 'TIME_SERIES',
+                  key: item.attr,
+                }))
                 mutateUpdateDashboard({
                   data: {
                     configuration: {
                       widgets: {
                         [widgetId]: {
-                          type: 'TIMESERIES',
-                          title: 'Test',
+                          title: detailDashboard?.title,
                           datasource: {
                             init: {
                               query: {
@@ -264,29 +294,41 @@ export function DashboardDetail() {
                               id: widgetId,
                             },
                           },
+                          config: {
+                            aggregation: widgetData?.widgetSetting?.agg,
+                            timewindow: {
+                              interval: widgetData?.widgetSetting?.interval,
+                              startDate: widgetData?.widgetSetting?.startDate,
+                              endDate: widgetData?.widgetSetting?.endDate,
+                            },
+                            widgetSetting: {
+                              widgetType: widgetData?.widgetSetting?.widgetType,
+                              dataType: widgetData?.widgetSetting?.dataType,
+                            },
+                          },
                         },
                       },
                     },
                   },
                   dashboardId,
                 })
-                const widgetInitId = Object.keys(
-                  detailDashboard?.configuration?.widgets as unknown as Widget,
-                )[0].toString()
-                const setInitMessage = {
-                  id: widgetInitId,
-                  data: widgetData?.device.map((deviceId: string) => {
-                    return {
-                      entityId: {
-                        entityType: 'DEVICE',
-                        id: deviceId,
-                      },
-                      latest: {},
-                    }
-                  }),
-                }
-                handleInit(JSON.stringify(setInitMessage))
-                handleHistory()
+                // const widgetInitId = Object.keys(
+                //   detailDashboard?.configuration?.widgets as unknown as Widget,
+                // )[0].toString()
+                // const setInitMessage = {
+                //   id: widgetInitId,
+                //   data: widgetData?.device.map((deviceId: string) => {
+                //     return {
+                //       entityId: {
+                //         entityType: 'DEVICE',
+                //         id: deviceId,
+                //       },
+                //       latest: {},
+                //     }
+                //   }),
+                // }
+                // handleInit(JSON.stringify(setInitMessage))
+                // handleRealtime()
               }}
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />

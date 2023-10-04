@@ -5,11 +5,14 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type Widgets } from '../types'
+
 export type UpdateDashboardDTO = {
   data: {
-    title: string
-    configuration: {
+    title?: string
+    configuration?: {
       description: string
+      widgets: Widgets
     }
   }
   dashboardId: string

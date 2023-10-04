@@ -1,3 +1,4 @@
+import { type SelectOptionString } from '~/components/Form'
 import { type BasePagination } from '~/types'
 
 export type WSWidgetData = { ts: number; value: string }
@@ -39,20 +40,20 @@ export type WS = {
 }
 
 export type Widget = {
-  type: WidgetType
   title: string
   datasource: {
     [key: string]: string
   }
   config: {
-    chartsetting: {
-      [key: string]: string
-    }
     timewindow: {
       interval: number
+      startDate: number
+      endDate: number
     }
-    aggregation: {
-      limit: number
+    aggregation: number
+    widgetSetting: {
+      widgetType: WidgetType
+      dataType: SelectOptionString
     }
   }
 }

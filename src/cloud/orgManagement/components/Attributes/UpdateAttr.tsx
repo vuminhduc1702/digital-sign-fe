@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
 import { Form, InputField, SelectField } from '~/components/Form'
-import { loggedList, valueTypeList } from './CreateAttr'
+import { attrListSchema, loggedList, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import {
@@ -13,7 +13,6 @@ import {
   useUpdateAttr,
   useGetAttrs,
 } from '../../api/attrAPI'
-import { attrSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -89,7 +88,7 @@ export function UpdateAttr({
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
+        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrListSchema>
           id="update-attr"
           onSubmit={values => {
             mutate({
@@ -107,7 +106,7 @@ export function UpdateAttr({
               entityId,
             })
           }}
-          schema={attrSchema}
+          schema={attrListSchema}
           options={{
             defaultValues: {
               attribute_key: attrData?.attributes[0].attribute_key,

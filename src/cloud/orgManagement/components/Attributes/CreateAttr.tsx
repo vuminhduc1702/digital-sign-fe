@@ -1,12 +1,19 @@
 import { useTranslation } from 'react-i18next'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import { FormDrawer, FormMultipleFields, InputField, SelectField } from '~/components/Form'
+import {
+  FormDrawer,
+  FormMultipleFields,
+  InputField,
+  SelectField,
+} from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
+import TitleBar from '~/components/Head/TitleBar'
 
 import { type Attribute } from '~/types'
 import { attrSchema } from '~/utils/schemaValidation'
@@ -14,7 +21,6 @@ import { attrSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import TitleBar from '~/components/Head/TitleBar'
 
 type ValueType = {
   type: Attribute['value_type']
@@ -26,6 +32,11 @@ type CreateAttrProps = {
   entityType: EntityType
 }
 
+export const attrListSchema = z.object({
+  entity_id: z.string(),
+  attributes: attrSchema,
+})
+
 export const valueTypeList: ValueType[] = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
@@ -35,8 +46,8 @@ export const valueTypeList: ValueType[] = [
 ]
 
 export const loggedList = [
-  { type: '0', name: 'Không' },
-  { type: '1', name: 'Có' },
+  { type: false, name: 'Không' },
+  { type: true, name: 'Có' },
 ]
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
@@ -71,7 +82,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         />
       }
     >
-      <FormMultipleFields<CreateAttrDTO['data'], typeof attrSchema>
+      <FormMultipleFields<CreateAttrDTO['data'], typeof attrListSchema>
         id="create-attr"
         onSubmit={values => {
           console.log(values)
@@ -92,12 +103,12 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             ],
           },
         }}
-        schema={attrSchema}
+        schema={attrListSchema}
         name={['attributes']}
       >
         {({ register, formState }, { fields, append, remove }) => (
           <>
-          <div className="flex justify-between space-x-3">
+            <div className="flex justify-between space-x-3">
               <TitleBar
                 title={t('cloud:org_manage.org_manage.attr_list')}
                 className="w-full rounded-md bg-gray-500 pl-3"
@@ -130,8 +141,12 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     label={
                       t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
                     }
-                    error={formState?.errors?.attributes?.[index]?.attribute_key}
-                    registration={register(`attributes.${index}.attribute_key` as const)}
+                    error={
+                      formState?.errors?.attributes?.[index]?.attribute_key
+                    }
+                    registration={register(
+                      `attributes.${index}.attribute_key` as const,
+                    )}
                   />
                   <SelectField
                     label={

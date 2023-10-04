@@ -1,15 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type AttributesDTO } from './createAttr'
+import { type attrSchema } from '~/utils/schemaValidation'
 
 export type UpdateAttrDTO = {
   data: {
-    attributes: AttributesDTO[]
+    attributes: z.infer<typeof attrSchema>
   }
   entityType: string
   entityId: string
