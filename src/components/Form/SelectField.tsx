@@ -6,7 +6,7 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
 export type SelectOption = {
   label: string
-  value: string | boolean | number
+  value: string | number
   selected?: boolean
 }
 
@@ -21,7 +21,7 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   className?: string
   placeholder?: string
   registration?: Partial<UseFormRegisterReturn>
-  value?: string | number | boolean
+  value?: string | number
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
 }
 
@@ -39,7 +39,6 @@ export const SelectField = ({
     <FieldWrapper label={label} error={error}>
       <select
         placeholder={placeholder}
-        name="location"
         value={value}
         className={clsx(
           'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
