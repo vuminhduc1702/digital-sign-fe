@@ -123,6 +123,7 @@
         "add_attr": {
           "title": "Tạo mới thuộc tính",
           "edit": "Sửa TT",
+          "edit_full": "Sửa thuộc tính",
           "name": "Tên thuộc tính",
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",

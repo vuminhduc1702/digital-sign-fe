@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectField } from '~/components/Form'
-import { attrListSchema, loggedList, valueTypeList } from './CreateAttr'
+import { FieldWrapper, Form, InputField, SelectField } from '~/components/Form'
+import { attrListSchema, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import {
@@ -16,6 +16,9 @@ import {
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
+import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
 type UpdateAttrProps = {
   entityId: string
@@ -34,6 +37,7 @@ export function UpdateAttr({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
+  const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
@@ -58,7 +62,7 @@ export function UpdateAttr({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud:org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:org_manage.org_manage.add_attr.edit_full')}
       renderFooter={() => (
         <>
           <Button
@@ -88,7 +92,7 @@ export function UpdateAttr({
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       ) : (
-        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrListSchema>
+        <Form<UpdateAttrDTO['data']['attributes'][0]>
           id="update-attr"
           onSubmit={values => {
             mutate({
@@ -106,7 +110,6 @@ export function UpdateAttr({
               entityId,
             })
           }}
-          schema={attrListSchema}
           options={{
             defaultValues: {
               attribute_key: attrData?.attributes[0].attribute_key,
@@ -116,43 +119,63 @@ export function UpdateAttr({
             },
           }}
         >
-          {({ register, formState }) => (
+          {({ register, formState, control }) => (
             <>
-              {/* <InputField
-                label={t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'}
-                error={formState.errors['attribute_key']}
-                registration={register('attribute_key')}
-              /> */}
-              <SelectField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                  "Attribute's value type"
-                }
-                error={formState.errors['value_t']}
-                registration={register('value_t')}
-                options={valueTypeList.map(valueType => ({
-                  label: valueType.name,
-                  value: valueType.type,
-                }))}
-              />
-              <InputField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
-                }
-                error={formState.errors['value']}
-                registration={register('value')}
-              />
-              <SelectField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
-                }
-                error={formState.errors['logged']}
-                registration={register('logged')}
-                options={loggedList.map(logged => ({
-                  label: logged.name,
-                  value: logged.type,
-                }))}
-              />
+              <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
+                <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-2">
+                  <SelectField
+                    label={
+                      t('cloud:org_manage.org_manage.add_attr.value_type') ??
+                      "Attribute's value type"
+                    }
+                    error={formState.errors['value_t']}
+                    registration={register('value_t')}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  <InputField
+                    label={
+                      t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
+                    }
+                    error={formState.errors['value']}
+                    registration={register('value')}
+                  />
+                  <FieldWrapper
+                    className="mt-2 space-y-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState.errors['logged']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'logged'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                            onClick={() => {
+                              mutateUpdateLogged({
+                                data: {
+                                  logged: !value,
+                                },
+                                device_id: entityId,
+                                attribute_type:
+                                  attrData?.attributes[0].attribute_type,
+                                attribute_key:
+                                  attrData?.attributes[0].attribute_key,
+                                entityType: entityType,
+                              })
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
+              </section>
             </>
           )}
         </Form>

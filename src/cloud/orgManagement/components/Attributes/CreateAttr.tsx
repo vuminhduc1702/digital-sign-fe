@@ -146,7 +146,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     )}
                   />
                   <SelectField
-                  className='h-[36px]'
+                    className="py-1 h-[36px]"
                     label={
                       t('cloud:org_manage.org_manage.add_attr.value_type') ??
                       'Value type'
@@ -182,7 +182,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                           <Checkbox
                             {...field}
                             checked={value}
-                            onCheckedChange={onChange}
+                            onCheckedChange={() => onChange}
                           />
                         )
                       }}

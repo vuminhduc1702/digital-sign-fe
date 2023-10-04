@@ -147,6 +147,7 @@ export function UpdateTemplate({
                       disabled
                     />
                     <SelectField
+                      className="py-1 h-[36px]"
                       label={
                         t('cloud:org_manage.org_manage.add_attr.value_type') ??
                         'Value type'
