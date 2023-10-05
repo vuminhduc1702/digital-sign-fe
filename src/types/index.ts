@@ -24,6 +24,7 @@ export type BaseAPIRes = {
 
 export type Attribute = {
   attribute_key: string
+  attribute_type: string
   logged: boolean
   value: string | number | boolean
   value_as_string?: string

@@ -3,6 +3,7 @@ import { type UseFormRegisterReturn } from 'react-hook-form'
 import { type ChangeEvent } from 'react'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
+import { cn } from '~/utils/misc'
 
 export type SelectOption = {
   label: string
@@ -41,7 +42,7 @@ export const SelectField = ({
       <select
         placeholder={placeholder}
         value={value}
-        className={clsx(
+        className={cn(
           'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
           className,
         )}

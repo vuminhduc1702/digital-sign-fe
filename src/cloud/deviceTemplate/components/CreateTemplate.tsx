@@ -126,6 +126,7 @@ export default function CreateTemplate() {
                     )}
                   />
                   <SelectField
+                    className="py-1 h-[36px]"
                     label={t('cloud:org_manage.org_manage.add_attr.value_type')}
                     error={formState?.errors?.attributes?.[index]?.value_t}
                     registration={register(

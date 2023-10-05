@@ -2,18 +2,12 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import {
-  FormDrawer,
-  FormMultipleFields,
-  InputField,
-  SelectField,
-} from '~/components/Form'
+import { FieldWrapper, FormDrawer, FormMultipleFields, InputField, SelectField } from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
-import TitleBar from '~/components/Head/TitleBar'
 
 import { type Attribute } from '~/types'
 import { attrSchema } from '~/utils/schemaValidation'
@@ -21,6 +15,9 @@ import { attrSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import TitleBar from '~/components/Head/TitleBar'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 type ValueType = {
   type: Attribute['value_type']
@@ -106,7 +103,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         schema={attrListSchema}
         name={['attributes']}
       >
-        {({ register, formState }, { fields, append, remove }) => (
+        {({ register, formState, control }, { fields, append, remove }) => (
           <>
             <div className="flex justify-between space-x-3">
               <TitleBar
@@ -149,6 +146,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     )}
                   />
                   <SelectField
+                    className="py-1 h-[36px]"
                     label={
                       t('cloud:org_manage.org_manage.add_attr.value_type') ??
                       'Value type'
@@ -171,20 +169,25 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                       `attributes.${index}.value` as const,
                     )}
                   />
-                  <SelectField
-                    label={
-                      t('cloud:org_manage.org_manage.add_attr.logged') ??
-                      'Logged'
-                    }
+                  <FieldWrapper
+                    className="space-y-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
                     error={formState?.errors?.attributes?.[index]?.logged}
-                    registration={register(
-                      `attributes.${index}.logged` as const,
-                    )}
-                    options={loggedList.map(logged => ({
-                      label: logged.name,
-                      value: logged.type,
-                    }))}
-                  />
+                  >
+                    <Controller
+                      control={control}
+                      name={`attributes.${index}.logged`}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={() => onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
                 </div>
                 <Button
                   type="button"
