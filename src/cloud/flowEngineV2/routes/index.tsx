@@ -21,6 +21,16 @@ const { ThingServices } = lazyImport(
   'ThingServices',
 )
 
+const { ShapeFlow } = lazyImport(
+  () => import('./ShapeFlow'),
+  'ShapeFlow',
+)
+
+const { TemplateFlow } = lazyImport(
+  () => import('./TemplateFlow'),
+  'TemplateFlow',
+)
+
 export const FlowEngineV2Routes = [
   {
     element: <FlowEngineV2Layout />,
@@ -33,6 +43,34 @@ export const FlowEngineV2Routes = [
             element: (
               <ErrorBoundary FallbackComponent={ErrorFallback}>
                 <ThingTemplate />
+              </ErrorBoundary>
+            ),
+            children: [{ path: ':orgId' }],
+          },
+        ],
+      },
+      {
+        path: PATHS.TEMPLATE_FLOW,
+        children: [
+          {
+            path: ':projectId',
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <TemplateFlow />
+              </ErrorBoundary>
+            ),
+            children: [{ path: ':orgId' }],
+          },
+        ],
+      },
+      {
+        path: PATHS.SHAPE_FLOW,
+        children: [
+          {
+            path: ':projectId',
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <ShapeFlow />
               </ErrorBoundary>
             ),
             children: [{ path: ':orgId' }],

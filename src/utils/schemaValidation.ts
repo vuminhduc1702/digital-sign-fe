@@ -11,7 +11,14 @@ export const nameSchemaRegex = z
   .max(30, { message: 'Tên quá dài' })
   .regex(new RegExp('^[a-zA-Z0-9_]*$'), {
     message:
-      'Tên service chỉ bao gồm chữ, số, hoăc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt',
+    'Tên service chỉ bao gồm chữ, số, hoăc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt',
+  })
+
+export const versionSchema = z
+  .string()
+  .regex(new RegExp('^[1-9]\d*(\.[1-9]\d*)*$'), {
+    message:
+      'Vui lòng nhập số phiên bản có dạng x.x.x | VD 1.0.0',
   })
 
 export const otpSchema = z

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -30,6 +30,8 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { UpdateIcon } from '@radix-ui/react-icons'
+import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 
 function DeviceTableContextMenu({
   id,
@@ -46,6 +48,8 @@ function DeviceTableContextMenu({
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  
+  const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -92,9 +96,21 @@ function DeviceTableContextMenu({
               icon={
                 <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
               }
-              onClick={open}
+              onClick={() => {
+                open()
+                setType('update-device')
+              }}
             >
               {t('cloud:org_manage.device_manage.add_device.edit')}
+            </MenuItem>
+            <MenuItem
+              icon={<UpdateIcon className="h-5 w-5" />}
+              onClick={() => {
+                open()
+                setType('update-version')
+              }}
+            >
+              {t('cloud:firmware.fota')}
             </MenuItem>
             <MenuItem
               icon={
@@ -152,13 +168,20 @@ function DeviceTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      {isOpen ? (
+      {(isOpen && type === 'update-device') ? (
         <UpdateDevice
           deviceId={id}
           org_id={org_id}
           name={name}
           keyDevice={key}
           group={group}
+          close={close}
+          isOpen={isOpen}
+        />
+      ) : null}
+      {(isOpen && type === 'update-version') ? (
+        <UpdateVersionFirmWare
+          deviceId={id}
           close={close}
           isOpen={isOpen}
         />
