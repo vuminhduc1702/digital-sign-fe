@@ -75,7 +75,6 @@ export function UploadFileFirmWare({
             schema={uploadFileSchema}
           >
             {({ register, formState, control, setValue, setError }) => {
-              console.log(formState, 'formStateformStateformStateformState')
               return (
                 <>
                   <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
