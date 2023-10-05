@@ -6,7 +6,7 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react'
 import { githubLight } from '@codesandbox/sandpack-themes'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '~/utils/misc'
 
 type CodeSandboxEditorProps = {
@@ -46,14 +46,16 @@ export function CodeSandboxEditor({
   isEdit,
   className,
 }: CodeSandboxEditorProps) {
+  const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
     '/index.js': {
-      code: (value ? value : defaultValue) || '',
+      code: (textDefault ? textDefault : value) || '',
     },
   }
 
   const onChangeSimple = (e: string) => {
     setCodeInput(e)
+    setTextDefault('')
   }
 
   return (
