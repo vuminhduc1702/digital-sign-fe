@@ -18,7 +18,7 @@ export const versionSchema = z
   .string()
   .regex(new RegExp('^[1-9]\d*(\.[1-9]\d*)*$'), {
     message:
-      'Vui lòng nhập số phiên bản có dạng xx.xx.xx | VD 1.0.0',
+      'Vui lòng nhập số phiên bản có dạng x.x.x | VD 1.0.0',
   })
 
 export const otpSchema = z

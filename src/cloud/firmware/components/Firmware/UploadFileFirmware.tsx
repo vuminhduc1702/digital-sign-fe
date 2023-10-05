@@ -11,13 +11,19 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn } from '~/utils/misc'
-import { useUploadFileFireWare } from '../../api/firmwareAPI/uploadFileFirmware'
+import { type UploadFileFirmWareDTO, useUploadFileFireWare } from '../../api/firmwareAPI/uploadFileFirmware'
+import * as z from 'zod'
 
 type UploadFileFirmWareProps = {
   firmwareId: string
   close: () => void
   isOpen: boolean
 }
+
+export const uploadFileSchema = z.object({
+  file: z
+    .instanceof(File, { message: 'Vui lòng chọn file tải lên' })
+})
 export function UploadFileFirmWare({
   firmwareId,
   close,
@@ -26,13 +32,7 @@ export function UploadFileFirmWare({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
-  const [file, setFile] = useState<any | null>(null)
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0])
-    }
-  }
+  const [file, setFile] = useState<File | null>(null)
 
   const { mutate, isLoading, isSuccess } = useUploadFileFireWare()
 
@@ -60,7 +60,7 @@ export function UploadFileFirmWare({
               </button>
             </div>
           </div>
-          <Form<UpdateFirmwareDTO['data']>
+          <Form<UploadFileFirmWareDTO, typeof uploadFileSchema>
             id="update-firm-ware"
             className="mt-2 flex flex-col justify-between"
             onSubmit={values => {
@@ -68,12 +68,14 @@ export function UploadFileFirmWare({
               formData.append('file', file)
               file &&
                 mutate({
-                  formData,
+                  file: formData,
                   firmwareId,
                 })
             }}
+            schema={uploadFileSchema}
           >
-            {({ register, formState, control }) => {
+            {({ register, formState, control, setValue, setError }) => {
+              console.log(formState, 'formStateformStateformStateformState')
               return (
                 <>
                   <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
@@ -95,14 +97,26 @@ export function UploadFileFirmWare({
                     {file && (
                       <button
                         className="rounded-md text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                        onClick={() => setFile(null)}
+                        onClick={() => {
+                          setValue('file', null)
+                          setFile(null)
+                        }}
                       >
                         <span className="sr-only">Close panel</span>
                         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                       </button>
                     )}
-                    <input id="file" type="file" onChange={handleFileChange} />
+                    <input id="file" type="file" onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      if (e.target.files) {
+                        setFile(e.target.files[0])
+                        setValue('file', e.target.files[0])
+                        setError('file', { message: '' })
+                      }
+                    }} />
                   </div>
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.file?.message}
+                  </p>
                 </>
               )
             }}

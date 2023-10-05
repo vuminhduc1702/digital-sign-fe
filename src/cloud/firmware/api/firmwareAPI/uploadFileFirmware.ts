@@ -6,12 +6,12 @@ import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 export type UploadFileFirmWareDTO = {
-  formData: any
+  file: any
   firmwareId: string
 }
 
-export const uploadFileFirmWare = ({ formData, firmwareId }: UploadFileFirmWareDTO) => {
-  return axiosUploadFile.post(`/api/ota/${firmwareId}`, formData)
+export const uploadFileFirmWare = ({ file, firmwareId }: UploadFileFirmWareDTO) => {
+  return axiosUploadFile.post(`/api/ota/${firmwareId}`, file)
 }
 
 type UseUploadFileFirmWareOptions = {
