@@ -376,8 +376,7 @@ export function UpdateAdapter({
                             </div>
                             {fields.map((field, index) => (
                               <section
-                                className="flex justify-between gap-x-2"
-                                style={{ marginTop: 10 }}
+                                className="mt-3 flex justify-between gap-x-2"
                                 key={field.id}
                               >
                                 <InputField

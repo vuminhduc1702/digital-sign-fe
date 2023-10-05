@@ -22,7 +22,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 
-export const status = {
+export const STATUS = {
   true: 'Có',
   false: 'Không',
 }
@@ -31,10 +31,14 @@ function AttrTableContextMenu({
   entityId,
   entityType,
   attribute_key,
+  ...props
 }: {
   entityId: string
   entityType: EntityType
   attribute_key: string
+  value: string | number | boolean
+  value_type: Attribute['value_type']
+  logged: boolean
 }) {
   const { t } = useTranslation()
 
@@ -123,6 +127,7 @@ function AttrTableContextMenu({
           attributeKey={attribute_key}
           close={close}
           isOpen={isOpen}
+          {...props}
         />
       ) : null}
     </>
@@ -198,7 +203,7 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.logged')}</span>
         ),
-        cell: info => status[info.getValue()],
+        cell: info => STATUS[info.getValue()],
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {
@@ -211,8 +216,15 @@ export function AttrTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { attribute_key } = info.row.original
-          return AttrTableContextMenu({ entityId, attribute_key, entityType })
+          const { attribute_key, value, value_type, logged } = info.row.original
+          return AttrTableContextMenu({
+            entityId,
+            entityType,
+            attribute_key,
+            value,
+            value_type,
+            logged,
+          })
         },
         header: () => null,
         footer: info => info.column.id,

@@ -128,6 +128,7 @@
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",
           "logged": "Lưu lịch sử",
+          "success_update_logged": "Sửa lưu lịch sử thành công",
           "success_create": "Tạo thuộc tính thành công",
           "success_update": "Sửa thuộc tính thành công",
           "success_delete": "Xoá thuộc tính thành công",

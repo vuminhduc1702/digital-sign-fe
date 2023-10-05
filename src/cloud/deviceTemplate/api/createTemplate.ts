@@ -7,13 +7,13 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type Template } from '../types'
-import { type attrSchema } from '~/utils/schemaValidation'
+import { type attrListSchema } from '~/utils/schemaValidation'
 
 export type CreateTemplateDTO = {
   data: {
     name: string
     project_id: string
-    attributes: z.infer<typeof attrSchema>
+    attributes: z.infer<typeof attrListSchema>
   }
 }
 

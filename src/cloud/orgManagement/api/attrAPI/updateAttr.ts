@@ -6,11 +6,11 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type attrSchema } from '~/utils/schemaValidation'
+import { type attrListSchema } from '~/utils/schemaValidation'
 
 export type UpdateAttrDTO = {
   data: {
-    attributes: z.infer<typeof attrSchema>
+    attributes: z.infer<typeof attrListSchema>
   }
   entityType: string
   entityId: string
@@ -32,7 +32,7 @@ export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      await queryClient.invalidateQueries(['deviceById'])
+      // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.org_manage.add_attr.success_update'),

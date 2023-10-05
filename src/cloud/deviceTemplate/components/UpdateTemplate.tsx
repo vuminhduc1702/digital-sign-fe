@@ -3,14 +3,17 @@ import { useEffect } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, FormMultipleFields, InputField, SelectField } from '~/components/Form'
+import {
+  FieldWrapper,
+  FormMultipleFields,
+  InputField,
+  SelectField,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { type UpdateTemplateDTO, useUpdateTemplate } from '../api'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
-import {
-  valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
+import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import { templateAttrSchema } from './CreateTemplate'
 
 import { type Template } from '../types'
@@ -133,7 +136,7 @@ export function UpdateTemplate({
                   key={field.id}
                   className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
                 >
-                  <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-2">
+                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
                     <InputField
                       label={
                         t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
@@ -147,7 +150,7 @@ export function UpdateTemplate({
                       disabled
                     />
                     <SelectField
-                      className="py-1 h-[36px]"
+                      className="h-[36px] py-1"
                       label={
                         t('cloud:org_manage.org_manage.add_attr.value_type') ??
                         'Value type'

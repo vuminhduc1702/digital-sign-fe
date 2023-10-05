@@ -31,17 +31,17 @@ export const passwordSchema = z
   .min(6, { message: 'Password quá ngắn' })
   .max(100, { message: 'Password quá dài' })
 
-export const attrSchema = z.array(
-  z.object({
-    attribute_key: z
-      .string()
-      .min(1, { message: 'Tên thuộc tính quá ngắn' })
-      .max(30, { message: 'Tên thuộc tính quá dài' }),
-    value: z.string().optional(),
-    logged: z.boolean(),
-    value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
-  }),
-)
+export const attrSchema = z.object({
+  attribute_key: z
+    .string()
+    .min(1, { message: 'Tên thuộc tính quá ngắn' })
+    .max(30, { message: 'Tên thuộc tính quá dài' }),
+  value: z.string().optional(),
+  logged: z.boolean(),
+  value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
+})
+
+export const attrListSchema = z.array(attrSchema)
 
 export const selectOptionSchema = (valueSchema?: ZodTypeAny) => {
   return z.object({

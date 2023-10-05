@@ -285,7 +285,7 @@ export function CreateRole() {
                   className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
                   key={field.id}
                 >
-                  <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-3">
+                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
                     <div className="space-y-1">
                       <InputField
                         label={

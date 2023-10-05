@@ -358,8 +358,7 @@ export function CreateWidget({
                             </div>
                             {fields.map((field, index) => (
                               <section
-                                className="flex justify-between gap-x-2"
-                                style={{ marginTop: 10 }}
+                                className="mt-3 flex justify-between gap-x-2"
                                 key={field.id}
                               >
                                 <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">

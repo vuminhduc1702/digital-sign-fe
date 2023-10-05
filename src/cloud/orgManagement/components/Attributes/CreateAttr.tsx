@@ -2,7 +2,13 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, FormDrawer, FormMultipleFields, InputField, SelectField } from '~/components/Form'
+import {
+  FieldWrapper,
+  FormDrawer,
+  FormMultipleFields,
+  InputField,
+  SelectField,
+} from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
@@ -10,7 +16,7 @@ import {
 } from '~/cloud/orgManagement/api/attrAPI'
 
 import { type Attribute } from '~/types'
-import { attrSchema } from '~/utils/schemaValidation'
+import { attrListSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -29,9 +35,9 @@ type CreateAttrProps = {
   entityType: EntityType
 }
 
-export const attrListSchema = z.object({
+export const attrListCreateSchema = z.object({
   entity_id: z.string(),
-  attributes: attrSchema,
+  attributes: attrListSchema,
 })
 
 export const valueTypeList: ValueType[] = [
@@ -79,10 +85,9 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         />
       }
     >
-      <FormMultipleFields<CreateAttrDTO['data'], typeof attrListSchema>
+      <FormMultipleFields<CreateAttrDTO['data'], typeof attrListCreateSchema>
         id="create-attr"
         onSubmit={values => {
-          console.log(values)
           mutate({
             data: {
               entity_id: entityId,
@@ -100,7 +105,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             ],
           },
         }}
-        schema={attrListSchema}
+        schema={attrListCreateSchema}
         name={['attributes']}
       >
         {({ register, formState, control }, { fields, append, remove }) => (
@@ -129,15 +134,12 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             </div>
             {fields.map((field, index) => (
               <section
-                className="flex justify-between rounded-md bg-slate-200 px-2 py-4"
-                style={{ marginTop: 10 }}
+                className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
                 key={field.id}
               >
-                <div className="grid w-full grid-cols-1 gap-x-4 md:grid-cols-2">
+                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
                   <InputField
-                    label={
-                      t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
-                    }
+                    label={t('cloud:org_manage.org_manage.add_attr.name')}
                     error={
                       formState?.errors?.attributes?.[index]?.attribute_key
                     }
@@ -146,11 +148,8 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     )}
                   />
                   <SelectField
-                    className="py-1 h-[36px]"
-                    label={
-                      t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                      'Value type'
-                    }
+                    className="h-[36px] py-1"
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
                     error={formState?.errors?.attributes?.[index]?.value_t}
                     registration={register(
                       `attributes.${index}.value_t` as const,
@@ -161,9 +160,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     }))}
                   />
                   <InputField
-                    label={
-                      t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
-                    }
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(
                       `attributes.${index}.value` as const,
@@ -182,7 +179,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                           <Checkbox
                             {...field}
                             checked={value}
-                            onCheckedChange={() => onChange}
+                            onCheckedChange={onChange}
                           />
                         )
                       }}
