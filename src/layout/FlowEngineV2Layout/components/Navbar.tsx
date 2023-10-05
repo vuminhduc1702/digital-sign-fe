@@ -49,7 +49,7 @@ function FlowEngineV2Navbar() {
         </p>
       </NavLink>
       <NavLink
-        to={`${PATHS.TEMPLATE_SHAPE}/${projectId}${
+        to={`${PATHS.SHAPE_FLOW}/${projectId}${
           orgId === '' ? '' : `/${orgId}`
         }`}
         className="flex cursor-pointer gap-2"
