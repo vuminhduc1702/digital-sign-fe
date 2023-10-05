@@ -1,13 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
-import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 
 import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
-import { type attrSchema } from '~/utils/schemaValidation'
-
-export type AttributesDTO = z.infer<typeof attrSchema>
 
 export type CreateAttrDTO = {
   data: {

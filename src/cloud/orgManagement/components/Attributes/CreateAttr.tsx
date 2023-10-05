@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField, SelectField } from '~/components/Form'
+import {
+  FieldWrapper,
+  FormDrawer,
+  FormMultipleFields,
+  InputField,
+  SelectField,
+} from '~/components/Form'
 import {
   type CreateAttrDTO,
   useCreateAttr,
@@ -9,10 +16,14 @@ import {
 } from '~/cloud/orgManagement/api/attrAPI'
 
 import { type Attribute } from '~/types'
-import { attrSchema } from '~/utils/schemaValidation'
+import { attrListSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import TitleBar from '~/components/Head/TitleBar'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 type ValueType = {
   type: Attribute['value_type']
@@ -23,6 +34,11 @@ type CreateAttrProps = {
   entityId: string
   entityType: EntityType
 }
+
+export const attrListCreateSchema = z.object({
+  entity_id: z.string(),
+  attributes: attrListSchema,
+})
 
 export const valueTypeList: ValueType[] = [
   { type: 'STR', name: 'String' },
@@ -69,65 +85,126 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
         />
       }
     >
-      <Form<CreateAttrDTO['data']['attributes'][0], typeof attrSchema>
+      <FormMultipleFields<CreateAttrDTO['data'], typeof attrListCreateSchema>
         id="create-attr"
         onSubmit={values => {
-          console.log('values', values)
           mutate({
             data: {
               entity_id: entityId,
               entity_type: entityType,
-              attributes: [
-                {
-                  attribute_key: values.attribute_key,
-                  value: values.value?.toString(),
-                  logged: String(values.logged).toLowerCase() === 'true',
-                  value_t: values.value_t,
-                },
-              ],
+              attributes: [...values.attributes],
             },
           })
         }}
-        schema={attrSchema}
+        options={{
+          defaultValues: {
+            entity_id: entityId,
+            entity_type: entityType,
+            attributes: [
+              { attribute_key: '', value: '', logged: true, value_t: '' },
+            ],
+          },
+        }}
+        schema={attrListCreateSchema}
+        name={['attributes']}
       >
-        {({ register, formState }) => (
+        {({ register, formState, control }, { fields, append, remove }) => (
           <>
-            <InputField
-              label={t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'}
-              error={formState.errors['attribute_key']}
-              registration={register('attribute_key')}
-            />
-            <SelectField
-              label={
-                t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                'Value type'
-              }
-              error={formState.errors['value_t']}
-              registration={register('value_t')}
-              options={valueTypeList.map(valueType => ({
-                label: valueType.name,
-                value: valueType.type,
-              }))}
-            />
-            <InputField
-              label={t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'}
-              error={formState.errors['value']}
-              registration={register('value')}
-            />
-            <SelectField
-              label={
-                t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
-              }
-              error={formState.errors['logged']}
-              registration={register('logged')}
-              options={loggedList.map(logged => ({
-                label: logged.name,
-                value: logged.type as unknown as string,
-              }))}
-            />
+            <div className="flex justify-between space-x-3">
+              <TitleBar
+                title={t('cloud:org_manage.org_manage.attr_list')}
+                className="w-full rounded-md bg-gray-500 pl-3"
+              />
+              <Button
+                className="rounded-md"
+                variant="trans"
+                size="square"
+                startIcon={
+                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                }
+                onClick={() =>
+                  append({
+                    attribute_key: '',
+                    value: '',
+                    logged: true,
+                    value_t: '',
+                  })
+                }
+              />
+            </div>
+            {fields.map((field, index) => (
+              <section
+                className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
+                key={field.id}
+              >
+                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.name')}
+                    error={
+                      formState?.errors?.attributes?.[index]?.attribute_key
+                    }
+                    registration={register(
+                      `attributes.${index}.attribute_key` as const,
+                    )}
+                  />
+                  <SelectField
+                    className="h-[36px] py-1"
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                    error={formState?.errors?.attributes?.[index]?.value_t}
+                    registration={register(
+                      `attributes.${index}.value_t` as const,
+                    )}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                  />
+                  <FieldWrapper
+                    className="space-y-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState?.errors?.attributes?.[index]?.logged}
+                  >
+                    <Controller
+                      control={control}
+                      name={`attributes.${index}.logged`}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
+                <Button
+                  type="button"
+                  size="square"
+                  variant="trans"
+                  className="mt-3 border-none"
+                  onClick={() => remove(index)}
+                  startIcon={
+                    <img
+                      src={btnDeleteIcon}
+                      alt="Delete device template"
+                      className="h-8 w-8"
+                    />
+                  }
+                />
+              </section>
+            ))}
           </>
         )}
-      </Form>
+      </FormMultipleFields>
     </FormDrawer>
   )
 }

@@ -5,9 +5,9 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
-import { type attrSchema } from '~/utils/schemaValidation'
 
 import { type Attribute } from '~/types'
+import { type attrListSchema } from '~/utils/schemaValidation'
 
 export type EntityType =
   | 'ORGANIZATION'
@@ -17,13 +17,11 @@ export type EntityType =
   | 'TEMPLATE'
   | 'EVENT'
 
-export type AttributesDTO = z.infer<typeof attrSchema>
-
 export type CreateAttrDTO = {
   data: {
     entity_id: string
     entity_type: EntityType
-    attributes: AttributesDTO[]
+    attributes: z.infer<typeof attrListSchema>
   }
 }
 
@@ -57,7 +55,7 @@ export const useCreateAttr = ({ config }: UseCreateAttrOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      await queryClient.invalidateQueries(['deviceById'])
+      // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.org_manage.add_attr.success_create'),

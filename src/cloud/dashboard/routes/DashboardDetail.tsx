@@ -7,19 +7,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import GridLayout from 'react-grid-layout'
-import storage from '~/utils/storage'
 import { useDisclosure, useWS } from '~/utils/hooks'
-import {
-  useCreateDashboard,
-  useGetDashboardsById,
-  useUpdateDashboard,
-} from '../api'
-import { useCreateWidgetItem } from '../api/createWidgetItem'
+import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
-import { CreateWidget } from '../components/Widget'
+import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 
-import { type WS, type ValueWS, type Widget, type WidgetType } from '../types'
+import { type WS, type WSWidgetData, type WidgetType } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -58,35 +52,29 @@ export function DashboardDetail() {
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
-  const projectId = params.projectId as string
 
   const { close, open, isOpen } = useDisclosure()
-
+  const [isEditMode, setIsEditMode] = useState(false)
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
-  const { mutate: mutateDashboard } = useCreateDashboard()
-  const {
-    mutate: mutateUpdateDashboard,
-    isLoading,
-    isSuccess,
-  } = useUpdateDashboard()
+  const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+
+  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
+    useUpdateDashboard()
+
   const { data: detailDashboard } = useGetDashboardsById({
     id: dashboardId,
     config: { suspense: false },
   })
-  const [showingConfigDialog, setShowingConfigDialog] = useState(false)
-  const [chartData, setChartData] = useState()
 
-  const { isLoading: isLoadingThing, isSuccess: isSuccessThing } =
-    useCreateWidgetItem()
-  const [isEditMode, setIsEditMode] = useState(false)
+  const [widgetData, setWidgetData] = useState<WidgetConfig>()
 
-  const [interval, setInterval] = useState(wsInterval[0])
-  const [agg, setAgg] = useState<WidgetAgg>(widgetAgg[0])
-
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const parseDate = useMemo(
-    () => Date.parse(date?.toISOString() || new Date().toISOString()),
-    [date],
+  const parseStartDate = useMemo(
+    () =>
+      Date.parse(
+        widgetData?.widgetSetting?.startDate?.toISOString() ||
+          new Date().toISOString(),
+      ),
+    [widgetData?.widgetSetting?.startDate],
   )
 
   const lastestMessage = JSON.stringify({
@@ -109,16 +97,16 @@ export function DashboardDetail() {
     ],
   })
 
-  const liveMessage = JSON.stringify({
+  const realtimeMessage = JSON.stringify({
     entityDataCmds: [
       {
         tsCmd: {
-          keys: ['test', 'test1'],
-          startTs: parseDate,
-          interval: interval.value,
+          keys: widgetData?.attributeConfig.map(item => item.attr),
+          startTs: parseStartDate,
+          interval: widgetData?.widgetSetting?.interval,
           limit: 10,
           offset: 0,
-          agg: agg.value,
+          agg: widgetData?.widgetSetting?.agg,
         },
         id: 1,
       },
@@ -142,68 +130,107 @@ export function DashboardDetail() {
     ],
   })
 
-  const realtimeMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        tsCmd: {
-          keys: [],
-          startTs: null,
-          interval: '',
-          limit: 100,
-          offset: 0,
-          agg: '',
-        },
-        id: 1,
-      },
-    ],
-  })
-
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<WS>()
 
-  const liveValues: ValueWS[] =
+  // Handle new data point in realtime
+  const realtimeValues: WSWidgetData[] =
     lastJsonMessage?.data?.[0]?.timeseries?.test || []
-  const prevValuesRef = useRef<ValueWS[]>([])
-  const newValuesRef = useRef<ValueWS[]>([])
+  const prevValuesRef = useRef<WSWidgetData[]>([])
+  const newValuesRef = useRef<WSWidgetData[]>([])
   useEffect(() => {
-    prevValuesRef.current = newValuesRef.current || liveValues
-  }, [liveValues[0]])
-  if (prevValuesRef.current && agg.value === 'NONE') {
-    newValuesRef.current = [...prevValuesRef.current, ...liveValues]
-  } else newValuesRef.current = liveValues
-  // const [initWSMessage, setInitMessage] = useState({})
+    prevValuesRef.current = newValuesRef.current || realtimeValues
+  }, [realtimeValues[0]])
+  if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
+    newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
+  } else newValuesRef.current = realtimeValues
+
   const handleInit = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
   const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
-  const handleLive = useCallback(
-    () => sendMessage(liveMessage),
-    [parseDate, interval, agg],
+  const handleRealtime = useCallback(
+    () => sendMessage(realtimeMessage),
+    [
+      parseStartDate,
+      widgetData?.widgetSetting?.interval,
+      widgetData?.widgetSetting?.agg,
+      realtimeMessage,
+    ],
   )
   const handleHistory = useCallback(() => sendMessage(historyMessage), [])
-  const handleRealtime = useCallback(() => sendMessage(realtimeMessage), [])
+
+  const layout: GridLayout.Layout[] = [
+    { i: 'a', x: 0, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'b', x: 5, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'c', x: 0, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
+    { i: 'd', x: 5, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
+  ]
+
+  useEffect(() => {
+    if (detailDashboard?.configuration.widgets != null) {
+      handleInit(JSON.stringify(setInitMessage))
+    }
+  }, [detailDashboard?.configuration.widgets])
+
+  useEffect(() => {
+    handleRealtime()
+  }, [])
+
+  const dataTest = [
+    {
+      ts: 1696403582463,
+      value: '908',
+    },
+    {
+      ts: 1696244842837,
+      value: '623',
+    },
+    {
+      ts: 1696244837572,
+      value: '65',
+    },
+  ]
 
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
       <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
-        {/* <GridLayout
-          style={editMode ? { background: '#f0f0f0' } : {}}
-          layout={layout}
-          cols={8}
-          rowHeight={300}
-          width={1560}
-          maxRows={1}
-          isDraggable={editMode ? true : false}
-        >
-          <WidgetItem title="Blue eye dragon"></WidgetItem>
-        </GridLayout> */}
-        {detailDashboard?.configuration.widgets ? (
-          <LineChart data={newValuesRef.current} />
+        {/* {detailDashboard?.configuration.widgets ? (
+          <GridLayout
+            layout={layout}
+            cols={4}
+            // rowHeight={300}
+            // width={1560}
+            isDraggable={isEditMode ? true : false}
+          >
+            <LineChart data={newValuesRef.current} />
+          </GridLayout>
         ) : (
-          <div>Vui lòng tạo widget</div>
-        )}
+          <div>{t('cloud:dashboard.add_dashboard.note')}</div>
+        )} */}
+        <GridLayout
+          layout={layout}
+          cols={4}
+          maxRows={4}
+          rowHeight={50}
+          width={400}
+          // isDraggable={isEditMode ? true : false}
+        >
+          <div key="a" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="b" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="c" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+          <div key="d" className="bg-secondary-500">
+            <LineChart data={dataTest} />
+          </div>
+        </GridLayout>
 
         {isEditMode ? (
           <div className="flex justify-end">
@@ -223,32 +250,27 @@ export function DashboardDetail() {
               form="update-dashboard"
               type="submit"
               size="square"
-              isLoading={isLoading}
+              isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
                 const widgetId = uuidv4()
-                const latestData = chartData?.dataConfigChart.map(
-                  (item: any) => {
-                    return {
-                      type: 'TIME_SERIES',
-                      key: item.attr,
-                    }
-                  },
-                )
+                const latestData = widgetData?.attributeConfig.map(item => ({
+                  type: 'TIME_SERIES',
+                  key: item.attr,
+                }))
                 mutateUpdateDashboard({
                   data: {
                     configuration: {
                       widgets: {
                         [widgetId]: {
-                          type: 'timeseries',
-                          title: 'Test',
+                          title: detailDashboard?.title,
                           datasource: {
                             init: {
                               query: {
                                 entityFilter: {
                                   type: 'entityList',
                                   entityType: 'DEVICE',
-                                  entityIds: chartData?.device,
+                                  entityIds: widgetData?.device ?? [],
                                 },
                                 pageLink: {
                                   pageSize: 1,
@@ -269,32 +291,44 @@ export function DashboardDetail() {
                                 ],
                                 latestValues: latestData,
                               },
+                              id: widgetId,
                             },
                           },
-                          config: {},
+                          config: {
+                            aggregation: widgetData?.widgetSetting?.agg,
+                            timewindow: {
+                              interval: widgetData?.widgetSetting?.interval,
+                              startDate: widgetData?.widgetSetting?.startDate,
+                              endDate: widgetData?.widgetSetting?.endDate,
+                            },
+                            widgetSetting: {
+                              widgetType: widgetData?.widgetSetting?.widgetType,
+                              dataType: widgetData?.widgetSetting?.dataType,
+                            },
+                          },
                         },
                       },
                     },
                   },
-                  dashboardId: dashboardId,
+                  dashboardId,
                 })
-                const widgetInitId = Object.keys(
-                  detailDashboard?.configuration?.widgets as unknown as Widget,
-                )[0].toString()
-                const setInitMessage = {
-                  id: widgetInitId,
-                  data: chartData?.device.map((deviceId: string) => {
-                    return {
-                      entityId: {
-                        entityType: 'DEVICE',
-                        id: deviceId,
-                      },
-                      latest: {},
-                    }
-                  }),
-                }
-                handleInit(JSON.stringify(setInitMessage))
-                handleHistory()
+                // const widgetInitId = Object.keys(
+                //   detailDashboard?.configuration?.widgets as unknown as Widget,
+                // )[0].toString()
+                // const setInitMessage = {
+                //   id: widgetInitId,
+                //   data: widgetData?.device.map((deviceId: string) => {
+                //     return {
+                //       entityId: {
+                //         entityType: 'DEVICE',
+                //         id: deviceId,
+                //       },
+                //       latest: {},
+                //     }
+                //   }),
+                // }
+                // handleInit(JSON.stringify(setInitMessage))
+                // handleRealtime()
               }}
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
@@ -318,16 +352,16 @@ export function DashboardDetail() {
             >
               {t('cloud:dashboard.config_chart.title')}
             </Button>
-            {showingConfigDialog ? (
+            {isShowCreateWidget ? (
               <div>
                 <CreateWidget
                   widgetType={widgetType}
-                  isOpen={showingConfigDialog}
-                  close={() => setShowingConfigDialog(false)}
-                  handleSubmitChart={values => {
+                  isOpen={isShowCreateWidget}
+                  close={() => setIsShowCreateWidget(false)}
+                  handleSubmitWidget={values => {
                     console.log('values chart: ', values)
-                    setShowingConfigDialog(false)
-                    setChartData(values)
+                    setIsShowCreateWidget(false)
+                    setWidgetData(values)
                   }}
                 />
               </div>
@@ -366,7 +400,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -383,7 +417,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -402,7 +436,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -417,7 +451,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
-                          setShowingConfigDialog(true)
+                          setIsShowCreateWidget(true)
                           close()
                         }}
                       >
@@ -440,7 +474,7 @@ export function DashboardDetail() {
               form="update-dashboard"
               size="square"
               variant="primary"
-              isLoading={isLoading}
+              isLoading={updateDashboardIsLoading}
               onClick={() => setIsEditMode(true)}
               startIcon={
                 <EditBtnIcon

@@ -44,9 +44,11 @@ export const attrSchema = z.object({
     .min(1, { message: 'Tên thuộc tính quá ngắn' })
     .max(30, { message: 'Tên thuộc tính quá dài' }),
   value: z.string().optional(),
-  logged: z.boolean().or(z.string()),
+  logged: z.boolean(),
   value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
 })
+
+export const attrListSchema = z.array(attrSchema)
 
 export const selectOptionSchema = (valueSchema?: ZodTypeAny) => {
   return z.object({

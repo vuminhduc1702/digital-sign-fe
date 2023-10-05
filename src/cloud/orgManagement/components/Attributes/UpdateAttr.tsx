@@ -1,18 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
-import { useSpinDelay } from 'spin-delay'
+import { Controller } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectField } from '~/components/Form'
-import { loggedList, valueTypeList } from './CreateAttr'
+import { FieldWrapper, Form, InputField, SelectField } from '~/components/Form'
+import { valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
-import { Spinner } from '~/components/Spinner'
 import {
   type UpdateAttrDTO,
   type EntityType,
   useUpdateAttr,
-  useGetAttrs,
 } from '../../api/attrAPI'
+import { Checkbox } from '~/components/Checkbox'
+import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
+
+import { type Attribute } from '~/types'
 import { attrSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -22,6 +24,9 @@ type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
   attributeKey: string
+  value: string | number | boolean
+  value_type: Attribute['value_type']
+  logged: boolean
   close: () => void
   isOpen: boolean
 }
@@ -30,19 +35,16 @@ export function UpdateAttr({
   entityId,
   entityType,
   attributeKey,
+  value,
+  value_type,
+  logged,
   close,
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
+  const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-
-  const { data: attrData, isLoading: attrLoading } = useGetAttrs({
-    entityType,
-    entityId,
-    key: attributeKey,
-    config: { suspense: false },
-  })
 
   useEffect(() => {
     if (isSuccess) {
@@ -50,16 +52,11 @@ export function UpdateAttr({
     }
   }, [isSuccess, close])
 
-  const showSpinner = useSpinDelay(attrLoading, {
-    delay: 150,
-    minDuration: 300,
-  })
-
   return (
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud:org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:org_manage.org_manage.add_attr.edit_full')}
       renderFooter={() => (
         <>
           <Button
@@ -84,80 +81,89 @@ export function UpdateAttr({
         </>
       )}
     >
-      {attrLoading ? (
-        <div className="flex grow items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
-        </div>
-      ) : (
-        <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
-          id="update-attr"
-          onSubmit={values => {
-            mutate({
-              data: {
-                attributes: [
-                  {
-                    attribute_key: values.attribute_key,
-                    logged: String(values.logged).toLowerCase() === 'true',
-                    value: values.value,
-                    value_t: values.value_t,
-                  },
-                ],
-              },
-              entityType,
-              entityId,
-            })
-          }}
-          schema={attrSchema}
-          options={{
-            defaultValues: {
-              attribute_key: attrData?.attributes[0].attribute_key,
-              logged: attrData?.attributes[0].logged,
-              value: attrData?.attributes[0].value.toString(),
-              value_t: attrData?.attributes[0].value_type,
+      <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
+        id="update-attr"
+        onSubmit={values => {
+          mutate({
+            data: {
+              attributes: [
+                {
+                  attribute_key: attributeKey,
+                  logged: values.logged,
+                  value: values.value,
+                  value_t: values.value_t,
+                },
+              ],
             },
-          }}
-        >
-          {({ register, formState }) => (
+            entityType,
+            entityId,
+          })
+        }}
+        options={{
+          defaultValues: {
+            attribute_key: attributeKey,
+            logged: String(logged) === 'true',
+            value: value.toString(),
+            value_t: value_type,
+          },
+        }}
+        schema={attrSchema}
+      >
+        {({ register, formState, control }) => {
+          console.log('formState errors: ', formState.errors)
+          return (
             <>
-              {/* <InputField
-                label={t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'}
-                error={formState.errors['attribute_key']}
-                registration={register('attribute_key')}
-              /> */}
-              <SelectField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                  "Attribute's value type"
-                }
-                error={formState.errors['value_t']}
-                registration={register('value_t')}
-                options={valueTypeList.map(valueType => ({
-                  label: valueType.name,
-                  value: valueType.type,
-                }))}
-              />
-              <InputField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
-                }
-                error={formState.errors['value']}
-                registration={register('value')}
-              />
-              <SelectField
-                label={
-                  t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
-                }
-                error={formState.errors['logged']}
-                registration={register('logged')}
-                options={loggedList.map(logged => ({
-                  label: logged.name,
-                  value: logged.type as unknown as string,
-                }))}
-              />
+              <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
+                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                  <SelectField
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                    error={formState.errors['value_t']}
+                    registration={register('value_t')}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState.errors['value']}
+                    registration={register('value')}
+                  />
+                  <FieldWrapper
+                    className="mt-2 space-y-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState.errors['logged']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'logged'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                            onClick={() => {
+                              mutateUpdateLogged({
+                                data: {
+                                  logged: !value,
+                                },
+                                device_id: entityId,
+                                attribute_key: attributeKey,
+                                entityType: entityType,
+                              })
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
+              </section>
             </>
-          )}
-        </Form>
-      )}
+          )
+        }}
+      </Form>
     </Drawer>
   )
 }

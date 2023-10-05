@@ -431,7 +431,7 @@ export function UpdateEvent({
         name={['condition', 'action']}
       >
         {(
-          { register, formState, control, watch, setValue, getValues },
+          { register, formState, control, setValue },
           {
             append: conditionAppend,
             fields: conditionFields,
@@ -501,9 +501,9 @@ export function UpdateEvent({
                     // error={formState.errors['type']}
                     registration={register('status')}
                     options={[
-                      { value: true as unknown as string, label: 'Kích hoạt' },
+                      { value: true, label: 'Kích hoạt' },
                       {
-                        value: false as unknown as string,
+                        value: false,
                         label: 'Không kích hoạt',
                       },
                     ]}
@@ -516,8 +516,8 @@ export function UpdateEvent({
                     registration={register('onClick')}
                     disabled={typeEvent === 'schedule'}
                     options={[
-                      { value: true as unknown as string, label: 'Có' },
-                      { value: false as unknown as string, label: 'Không' },
+                      { value: true, label: 'Có' },
+                      { value: false, label: 'Không' },
                     ]}
                     onChange={event =>
                       setOnclickValue(event.target.value as unknown as boolean)

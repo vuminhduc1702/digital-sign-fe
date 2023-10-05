@@ -3,25 +3,26 @@ import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormDrawer,
   FormMultipleFields,
   InputField,
   SelectField,
 } from '~/components/Form'
-import {
-  loggedList,
-  valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
+import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
 } from '../api/createTemplate'
 import storage from '~/utils/storage'
+import { Checkbox } from '~/components/Checkbox'
+import { Controller } from 'react-hook-form'
 
 import { nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -32,7 +33,7 @@ export const templateAttrSchema = z.object({
         .min(1, { message: 'Tên thuộc tính quá ngắn' })
         .max(30, { message: 'Tên thuộc tính quá dài' }),
       value: z.string().optional(),
-      logged: z.boolean(),
+      logged: z.boolean().default(true),
       value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
     }),
   ),
@@ -74,7 +75,6 @@ export default function CreateTemplate() {
         id="create-template"
         onSubmit={values => {
           mutate({ data: { ...values, project_id: projectId } })
-          console.log(values)
         }}
         schema={templateAttrSchema}
         options={{
@@ -89,8 +89,13 @@ export default function CreateTemplate() {
       >
         {({ register, formState, control }, { fields, append, remove }) => (
           <>
-            <button
-              type="button"
+            <Button
+              className="h-9 w-9 rounded-md"
+              variant="trans"
+              size="square"
+              startIcon={
+                <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+              }
               onClick={() =>
                 append({
                   attribute_key: '',
@@ -99,60 +104,81 @@ export default function CreateTemplate() {
                   value_t: '',
                 })
               }
-            >
-              APPEND
-            </button>
+            />
             <InputField
-              label={t('cloud:device_template.add_template.name') ?? 'Name'}
+              label={t('cloud:device_template.add_template.name')}
               error={formState.errors['name']}
               registration={register('name')}
             />
             {fields.map((field, index) => (
-              <section key={field.id}>
-                <InputField
-                  label={
-                    t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
+              <section
+                key={field.id}
+                className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
+              >
+                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.name')}
+                    error={
+                      formState?.errors?.attributes?.[index]?.attribute_key
+                    }
+                    registration={register(
+                      `attributes.${index}.attribute_key` as const,
+                    )}
+                  />
+                  <SelectField
+                    className="h-[36px] py-1"
+                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                    error={formState?.errors?.attributes?.[index]?.value_t}
+                    registration={register(
+                      `attributes.${index}.value_t` as const,
+                    )}
+                    options={valueTypeList.map(valueType => ({
+                      label: valueType.name,
+                      value: valueType.type,
+                    }))}
+                  />
+                  <InputField
+                    classNameFieldWrapper="mt-2"
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                  />
+                  <FieldWrapper
+                    className="mt-2 space-y-3"
+                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                    error={formState?.errors?.attributes?.[index]?.logged}
+                  >
+                    <Controller
+                      control={control}
+                      name={`attributes.${index}.logged`}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                </div>
+                <Button
+                  type="button"
+                  size="square"
+                  variant="trans"
+                  className="mt-10 self-start border-none"
+                  onClick={() => remove(index)}
+                  startIcon={
+                    <img
+                      src={btnDeleteIcon}
+                      alt="Delete device template"
+                      className="h-8 w-8"
+                    />
                   }
-                  error={formState?.errors?.attributes?.[index]?.attribute_key}
-                  registration={register(
-                    `attributes.${index}.attribute_key` as const,
-                  )}
                 />
-                <SelectField
-                  label={
-                    t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                    'Value type'
-                  }
-                  error={formState?.errors?.attributes?.[index]?.value_t}
-                  registration={register(
-                    `attributes.${index}.value_t` as const,
-                  )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
-                />
-                <InputField
-                  label={
-                    t('cloud:org_manage.org_manage.add_attr.value') ?? 'Value'
-                  }
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
-                />
-                <SelectField
-                  label={
-                    t('cloud:org_manage.org_manage.add_attr.logged') ?? 'Logged'
-                  }
-                  error={formState?.errors?.attributes?.[index]?.logged}
-                  registration={register(`attributes.${index}.logged` as const)}
-                  options={loggedList.map(logged => ({
-                    label: logged.name,
-                    value: logged.type as unknown as string,
-                  }))}
-                />
-                <button type="button" onClick={() => remove(index)}>
-                  X
-                </button>
               </section>
             ))}
           </>

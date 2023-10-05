@@ -411,9 +411,9 @@ export function CreateEvent() {
                     // error={formState.errors['type']}
                     registration={register('status')}
                     options={[
-                      { value: true as unknown as string, label: 'Kích hoạt' },
+                      { value: true, label: 'Kích hoạt' },
                       {
-                        value: false as unknown as string,
+                        value: false,
                         label: 'Không kích hoạt',
                       },
                     ]}
@@ -426,8 +426,8 @@ export function CreateEvent() {
                     registration={register('onClick')}
                     disabled={typeEvent === 'schedule'}
                     options={[
-                      { value: true as unknown as string, label: 'Có' },
-                      { value: false as unknown as string, label: 'Không' },
+                      { value: true, label: 'Có' },
+                      { value: false, label: 'Không' },
                     ]}
                     onChange={event => setOnclickValue(event.target.value)}
                   />

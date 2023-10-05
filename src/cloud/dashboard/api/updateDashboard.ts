@@ -9,8 +9,8 @@ import { type Widgets } from '../types'
 
 export type UpdateDashboardDTO = {
   data: {
-    title: string
-    configuration: {
+    title?: string
+    configuration?: {
       description: string
       widgets: Widgets
     }

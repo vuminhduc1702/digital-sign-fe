@@ -5,9 +5,10 @@ import { Button } from '~/components/Button'
 import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 
+import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
+
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
 
 type UpdateDashboardProps = {
   id: string

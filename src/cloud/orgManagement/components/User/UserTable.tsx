@@ -9,7 +9,7 @@ import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { UpdateUser } from './UpdateUser'
-import { status } from '../Attributes'
+import { STATUS } from '../Attributes'
 import { useDeleteUser } from '../../api/userAPI'
 
 import { type UserInfo } from '~/features/auth'
@@ -185,7 +185,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.user_manage.table.activate')}</span>
         ),
-        cell: info => status[info.getValue()],
+        cell: info => STATUS[info.getValue()],
         footer: info => info.column.id,
       }),
       columnHelper.display({

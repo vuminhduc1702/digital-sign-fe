@@ -6,12 +6,14 @@ import {
   Form,
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
   TextAreaField,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg } from '../api'
 import { orgSchema } from './CreateOrg'
+import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
 
 import { type OrgMapType } from './OrgManageSidebar'
 
@@ -19,8 +21,6 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { useDefaultCombobox } from '~/utils/hooks'
 import { type OrgList } from '~/layout/MainLayout/types'
-import { queryClient } from '~/lib/react-query'
-import { flattenData } from '~/utils/misc'
 
 export function UpdateOrg({
   close,
@@ -33,7 +33,7 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
-  const [optionOrg, setOptionOrg] = useState<SelectOption>()
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -45,7 +45,7 @@ export function UpdateOrg({
   )
 
   useEffect(() => {
-    if(selectedUpdateOrg.id) {
+    if (selectedUpdateOrg.id) {
       setOptionOrg({
         label: selectedUpdateOrg?.parent_name,
         value: selectedUpdateOrg?.id,
@@ -98,13 +98,16 @@ export function UpdateOrg({
               name: values.name,
               description: values.description,
             },
-            orgId: optionOrg?.value || '',
+            orgId: optionOrg?.value,
           })
         }}
         options={{
           defaultValues: {
             name: selectedUpdateOrg.name,
-            description: selectedUpdateOrg?.description !== 'undefined' ? selectedUpdateOrg?.description : '',
+            description:
+              selectedUpdateOrg?.description !== 'undefined'
+                ? selectedUpdateOrg?.description
+                : '',
             org_id: selectedUpdateOrg?.id,
           },
         }}

@@ -14,6 +14,12 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { cn } from '~/utils/misc'
 
+const formDialogSizes = {
+  sm: 'max-w-[32rem]',
+  md: 'max-w-[48rem]',
+  lg: 'max-w-[60rem]',
+}
+
 export type ConfirmationDialogProps = {
   triggerButton: ReactElement
   confirmButton: ReactElement
@@ -23,7 +29,9 @@ export type ConfirmationDialogProps = {
   className?: string
   id?: string
   resetData?: () => void
+  size?: keyof typeof formDialogSizes
   isFullScreen?: boolean
+  setCustomState?: React.Dispatch<React.SetStateAction<any>>
 }
 
 export const FormDialog = ({
@@ -35,7 +43,9 @@ export const FormDialog = ({
   id,
   resetData,
   isFullScreen,
-  className
+  size,
+  className,
+  setCustomState,
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
 
@@ -51,6 +61,7 @@ export const FormDialog = ({
     onClick: () => {
       open()
       resetData?.()
+      setCustomState?.()
     },
   })
 
@@ -62,11 +73,19 @@ export const FormDialog = ({
         onClose={() => null}
         initialFocus={cancelButtonRef}
       >
-        <div id={id} className={cn("inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle", className)}>
-          <div 
-          className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
-            'h-[95%]': isFullScreen,
-          })}>
+        <div
+          id={id}
+          className={cn(
+            'inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle',
+            className,
+            size ? formDialogSizes[size] : 'sm:max-w-lg',
+          )}
+        >
+          <div
+            className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
+              'h-[95%]': isFullScreen,
+            })}
+          >
             <div className="flex items-center justify-between">
               <DialogTitle as="h3" className="text-h1 text-secondary-900">
                 {title}
@@ -82,14 +101,17 @@ export const FormDialog = ({
               </div>
             </div>
             {body && (
-              <div className={cn('mt-2', {
-                'h-[95%]': isFullScreen,
-              })}>
+              <div
+                className={cn('mt-2', {
+                  'h-[95%]': isFullScreen,
+                })}
+              >
                 <p className="text-body-sm text-secondary-900">{body}</p>
               </div>
             )}
           </div>
           <div className="mt-4 flex justify-center space-x-2">
+            {confirmButton}
             <Button
               type="button"
               variant="secondary"
@@ -100,7 +122,6 @@ export const FormDialog = ({
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
             />
-            {confirmButton}
           </div>
         </div>
       </Dialog>

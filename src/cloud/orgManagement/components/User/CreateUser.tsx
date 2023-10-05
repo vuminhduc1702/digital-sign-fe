@@ -8,7 +8,7 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
@@ -67,8 +67,8 @@ export function CreateUser() {
     value: item.id,
   })) || [{ label: '', value: '' }]
 
-  const [option, setOption] = useState<SelectOption>()
-  const [role, setRole] = useState<SelectOption>()
+  const [option, setOption] = useState<SelectOptionString>()
+  const [role, setRole] = useState<SelectOptionString>()
 
   // TODO: Create Role SelectDropdown
 
@@ -107,7 +107,7 @@ export function CreateUser() {
               name: values.name,
               email: values.email,
               password: values.password,
-              role_id: role?.value || ''
+              role_id: role?.value || '',
             },
           })
         }}

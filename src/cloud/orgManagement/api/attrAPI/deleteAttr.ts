@@ -31,7 +31,7 @@ export const useDeleteAttr = ({ config }: UseDeleteAttrOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      await queryClient.invalidateQueries(['deviceById'])
+      // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.org_manage.add_attr.success_delete'),

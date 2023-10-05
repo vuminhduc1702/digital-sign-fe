@@ -58,13 +58,17 @@
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
       "add_project": {
         "title": "Tạo mới dự án",
-        "avatar": "Ảnh đại diện",
+        "avatar": "Chọn ảnh đại diện",
+        "upload_ava": "Tải ảnh",
+        "upload_ava_default": "Chọn ảnh mặc định",
+        "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
         "delete_project": "Xoá dự án",
         "confirm_delete": "Bạn có chắc chắn muốn xóa dự án {{PROJECT}}",
         "success_add": "Tạo mới dự án thành công",
+        "success_update": "Sửa dự án thành công",
         "success_delete": "Xóa dự án thành công"
       }
     },
@@ -120,10 +124,12 @@
         "add_attr": {
           "title": "Tạo mới thuộc tính",
           "edit": "Sửa TT",
+          "edit_full": "Sửa thuộc tính",
           "name": "Tên thuộc tính",
           "value_type": "Loại giá trị",
           "value": "Giá trị mặc định",
           "logged": "Lưu lịch sử",
+          "success_update_logged": "Sửa lưu lịch sử thành công",
           "success_create": "Tạo thuộc tính thành công",
           "success_update": "Sửa thuộc tính thành công",
           "success_delete": "Xoá thuộc tính thành công",
@@ -295,6 +301,7 @@
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
+        "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
@@ -470,7 +477,8 @@
         "edit_full": "Sửa Dashboard",
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
-        "success_delete": "Xoá Dashboard thành công"
+        "success_delete": "Xoá Dashboard thành công",
+        "note": "Vui lòng tạo biểu đồ"
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
@@ -485,14 +493,14 @@
         "road": "Kiểu đường",
         "show": "Hiển thị",
         "pick_date": "Chọn ngày",
+        "pick_date_alert": "Vui lòng chọn ngày",
         "org": "Tổ chức",
         "label": "Nhãn",
-        "data_config": "Cài đặt dữ liệu",
         "widget_config": "Cài đặt biểu đồ"
       },
       "detail_dashboard": {
         "add_widget": {
-          "create": "Tạo biểu đồ cho bảng điều khiển",
+          "create": "Tạo biểu đồ cho dashboard",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ máy đo",
@@ -582,7 +590,8 @@
       "malformed_data": "Dữ liệu truyền lên không hợp lệ",
       "authorization": "Bạn không có quyền truy cập vào trang này",
       "server_err": "Server đang bị lỗi, vui lòng thử lại"
-    }
+    },
+    "no_data_res": "Dữ liệu trả về không đúng: "
   },
   "loading": {
     "org": "Đang tải danh sách tổ chức...",
@@ -593,7 +602,8 @@
     "service_thing": "Vui lòng chọn Entity thing trước"
   },
   "placeholder": {
-    "general": "Vui lòng chọn"
+    "general": "Vui lòng chọn",
+    "search": "Nhập để tìm kiếm"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -611,7 +621,8 @@
     "change_avatar": "Đổi ảnh đại diện",
     "change_email": "Đổi email",
     "change_phone": "Đổi số điện thoại",
-    "change_address": "Đổi địa chỉ"
+    "change_address": "Đổi địa chỉ",
+    "create_user": "Đăng ký tài khoản thành công"
   },
   "flow_engine": {
     "title": "Flow Engine"
@@ -626,7 +637,9 @@
       "dataType": "Loại biểu đồ"
     }
   },
-  "misc": {
-    "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự"
+  "validate": {
+    "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự",
+    "image_max_size": "Ảnh cho phép dung lượng tối đa 5MB",
+    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png"
   }
 }

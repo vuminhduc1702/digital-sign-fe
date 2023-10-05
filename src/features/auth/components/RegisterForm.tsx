@@ -33,7 +33,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     <div>
       <Form<RegisterValues, typeof registerSchema>
         onSubmit={async values => {
-          await registerMutation.mutate(values)
+          await registerMutation.mutateAsync(values)
           onSuccess()
         }}
         schema={registerSchema}
@@ -42,7 +42,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         }}
       >
         {({ register, formState }) => {
-          console.log('formState', formState.errors)
           return (
             <>
               <InputField

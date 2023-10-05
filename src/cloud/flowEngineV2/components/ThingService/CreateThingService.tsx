@@ -209,6 +209,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
                   <InputField
+                    require={true}
                     label={t('cloud:custom_protocol.service.name')}
                     error={formState.errors['name']}
                     registration={register('name')}
@@ -217,6 +218,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     label={t(
                       'cloud:custom_protocol.service.service_input.type',
                     )}
+                    require={true}
                     error={formState.errors['output']}
                     registration={register('output')}
                     options={outputList}
@@ -260,6 +262,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               })}
                             >
                               <InputField
+                                require={true}
                                 label={t(
                                   'cloud:custom_protocol.service.service_input.name',
                                 )}
@@ -272,6 +275,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 label={t(
                                   'cloud:custom_protocol.service.service_input.type',
                                 )}
+                                require={true}
                                 className="pr-2"
                                 error={formState.errors[`input`]?.[index]?.type}
                                 registration={register(
@@ -332,12 +336,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       </span>
                     </div>
                     <div className="flex flex-col gap-y-1">
-                      <TextAreaField
-                        className="mb-2"
-                        label={t('cloud:custom_protocol.service.note')}
-                        error={formState.errors['description']}
-                        registration={register('description')}
-                      />
+                      <div className="mb-2">
+                        <TextAreaField
+                          label={t('cloud:custom_protocol.service.note')}
+                          error={formState.errors['description']}
+                          registration={register('description')}
+                          rows={5}
+                        />
+                      </div>
                       <div className="flex items-center gap-2">
                         <Switch
                           onCheckedChange={checked => setDebugMode(checked)}

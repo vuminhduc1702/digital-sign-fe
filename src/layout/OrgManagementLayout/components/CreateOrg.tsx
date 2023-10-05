@@ -10,8 +10,8 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  type SelectOption,
   TextAreaField,
+  type SelectOptionString,
 } from '~/components/Form'
 import FileField from '~/components/Form/FileField'
 import {
@@ -26,6 +26,7 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import { queryClient } from '~/lib/react-query.ts'
 import { flattenData } from '~/utils/misc.ts'
 import { useDefaultCombobox } from '~/utils/hooks.ts'
+import i18n from '~/i18n'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -36,20 +37,23 @@ export const orgSchema = z.object({
   org_id: z.string().optional(),
   description: descSchema,
   image: z.string().optional(),
+  project_id: z.string().optional(),
 })
 
-const MAX_FILE_SIZE = 500000
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+export const MAX_FILE_SIZE = 500000
+export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 export const uploadImageSchema = z.object({
   file: z
-    .instanceof(File, { message: 'Vui lòng chọn ảnh tải lên' })
+    .instanceof(File, {
+      message: i18n.t('cloud:org_manage.org_manage.add_org.choose_avatar'),
+    })
     .refine(
       file => file.size <= MAX_FILE_SIZE,
-      `Ảnh cho phép dung lượng tối đa 5MB`,
+      i18n.t('validate:image_max_size'),
     )
     .refine(
       file => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      'Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png',
+      i18n.t('validate:image_type'),
     ),
 })
 
@@ -64,7 +68,7 @@ export function CreateOrg() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateOrg()
-  const [optionOrg, setOptionOrg] = useState<SelectOption | null>()
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -78,7 +82,7 @@ export function CreateOrg() {
     setOptionOrg(null)
   }
 
-  const fileInputRef = useRef()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
   const {
     data: dataUploadImage,
     mutate: mutateUploadImage,
@@ -92,8 +96,8 @@ export function CreateOrg() {
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
-  const avatarRef = useRef<HTMLImageElement>(null)
-  console.log('zod image upload error: ', formStateUploadImage.errors)
+  const avatarRef = useRef<HTMLImageElement | null>(null)
+  // console.log('zod image upload error: ', formStateUploadImage.errors)
 
   return (
     <FormDrawer
@@ -137,8 +141,6 @@ export function CreateOrg() {
         schema={orgSchema}
       >
         {({ register, formState, control, setValue }) => {
-          console.log('zod errors: ', formState.errors)
-
           return (
             <>
               <InputField
@@ -184,7 +186,10 @@ export function CreateOrg() {
                 onChange={event => {
                   const formData = new FormData()
                   formData.append('file', event.target.files[0])
-                  setValueUploadImage('file', formData.get('file'))
+                  setValueUploadImage(
+                    'file',
+                    formData.get('file') as unknown as { file: File },
+                  )
                   const reader = new FileReader()
                   reader.readAsDataURL(event.target.files[0])
                   reader.onload = e => {
@@ -196,11 +201,6 @@ export function CreateOrg() {
               />
               <img
                 src={defaultOrgImage}
-                onError={e => {
-                  const target = e.target as HTMLImageElement
-                  target.onerror = null
-                  target.src = defaultOrgImage
-                }}
                 alt="Organization"
                 className="h-36 w-32"
                 ref={avatarRef}

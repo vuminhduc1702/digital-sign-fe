@@ -33,7 +33,7 @@ const CommandInput = React.forwardRef<
           'placeholder:text-muted-foreground flex h-9 w-full rounded-md bg-transparent py-3 text-body-sm outline-none disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
-        placeholder={t('placeholder:general')}
+        placeholder={t('placeholder:search')}
         {...props}
       />
     </div>

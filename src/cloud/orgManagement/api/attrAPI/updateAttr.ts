@@ -1,15 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type AttributesDTO } from './createAttr'
+import { type attrListSchema } from '~/utils/schemaValidation'
 
 export type UpdateAttrDTO = {
   data: {
-    attributes: AttributesDTO[]
+    attributes: z.infer<typeof attrListSchema>
   }
   entityType: string
   entityId: string
@@ -31,7 +32,7 @@ export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      await queryClient.invalidateQueries(['deviceById'])
+      // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.org_manage.add_attr.success_update'),

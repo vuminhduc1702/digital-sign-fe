@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import { axios } from '~/lib/axios'
 import type * as z from 'zod'
+
+import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { ProjectListSchema } from '../routes/ProjectManage'
@@ -24,7 +25,10 @@ export const useProjects = ({ config }: UseProjectsOptions = {}) => {
     ...config,
   })
 
-  ProjectListSchema.parse(projectQuery.data)
+  const result = ProjectListSchema.safeParse(projectQuery.data)
+  if (!result.success) {
+    console.error('error api: ', result.error.issues)
+  }
 
   return projectQuery
 }

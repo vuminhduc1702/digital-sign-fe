@@ -2,11 +2,11 @@ import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type ValueWS } from '../../types'
+import { type WSWidgetData } from '../../types'
 
-export function LineChart({ data }: { data: ValueWS[] }) {
+export function LineChart({ data }: { data: WSWidgetData[] }) {
   const liveValuesTransformed: Datum[] = data
-    ?.map(({ ts, value }: ValueWS) => ({
+    ?.map(({ ts, value }: WSWidgetData) => ({
       x: getVNDateFormat({
         date: ts,
         config: { ...defaultDateConfig, second: '2-digit' },

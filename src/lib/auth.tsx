@@ -9,6 +9,7 @@ import {
   type RegisterCredentialsDTO,
   registerWithEmailAndPassword,
 } from '~/features/auth/api/register'
+import { PATHS } from '~/routes/PATHS'
 
 import storage from '~/utils/storage'
 
@@ -47,7 +48,7 @@ async function registerFn(data: RegisterCredentialsDTO) {
 export async function logoutFn() {
   storage.clearProject()
   storage.clearToken()
-  window.location.assign(window.location.origin as unknown as string)
+  window.location.assign(PATHS.LOGIN)
 }
 
 const authConfig = {

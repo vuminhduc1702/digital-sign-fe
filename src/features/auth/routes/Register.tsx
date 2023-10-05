@@ -1,17 +1,25 @@
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { Layout } from '../components/Layout'
 import { RegisterForm } from '../components/RegisterForm'
-import { PATHS } from '~/routes/PATHS'
+import { useNotificationStore } from '~/stores/notifications'
+import { logoutFn } from '~/lib/auth'
 
 export const Register = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { addNotification } = useNotificationStore()
 
   return (
     <Layout title={t('user:register')}>
-      <RegisterForm onSuccess={() => navigate(PATHS.HOME)} />
+      <RegisterForm
+        onSuccess={() => {
+          logoutFn()
+          addNotification({
+            type: 'success',
+            title: t('user:create_user'),
+          })
+        }}
+      />
     </Layout>
   )
 }
