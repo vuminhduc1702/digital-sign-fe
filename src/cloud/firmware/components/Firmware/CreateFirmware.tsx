@@ -19,12 +19,13 @@ import {
   useCreateFireWare,
   type CreateFirmWareDTO,
 } from '../../api/firmwareAPI/createFirmware'
+import i18n from '~/i18n'
 
 export const entityFirmWareSchema = z.object({
   name: nameSchema,
   template_id: z
     .string()
-    .nonempty({ message: 'Vui lòng chọn ít nhất 1 thiết bị mẫu' }),
+    .nonempty({ message: i18n.t('cloud:firmware.choose_template') }),
   tag: z.string(),
   version: versionSchema,
   description: z.string(),

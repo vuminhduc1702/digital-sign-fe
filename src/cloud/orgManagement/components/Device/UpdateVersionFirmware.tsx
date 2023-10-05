@@ -14,6 +14,7 @@ import {
 } from '~/cloud/firmware/api/firmwareAPI/updateVersionFirmware'
 import { Drawer } from '~/components/Drawer'
 import storage from '~/utils/storage'
+import i18n from '~/i18n'
 
 type UploadFileFirmWareProps = {
   deviceId: string
@@ -22,7 +23,9 @@ type UploadFileFirmWareProps = {
 }
 
 export const updateVersionSchema = z.object({
-  version: z.string().nonempty({ message: 'Vui lòng chọn ít nhất 1 Fota' }),
+  version: z
+    .string()
+    .nonempty({ message: i18n.t('cloud:firmware.choose_fota') }),
 })
 
 export function UpdateVersionFirmWare({
