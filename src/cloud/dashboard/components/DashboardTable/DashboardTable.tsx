@@ -5,7 +5,6 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Menu } from '@headlessui/react'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
-import { type Dashboard } from '../../types'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { getVNDateFormat } from '~/utils/misc'
@@ -17,6 +16,7 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
+import { type Dashboard } from '.'
 
 function DashboardTableContextMenu({
   id,
@@ -179,15 +179,12 @@ export function DashboardTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const {
-            id,
-            title,
-            configuration: { description },
-          } = info.row.original
+          const { id, title, configuration } = info.row.original
           return DashboardTableContextMenu({
             id,
             title,
-            description,
+            description: JSON.parse(configuration as unknown as string)
+              .description,
           })
         },
         header: () => null,

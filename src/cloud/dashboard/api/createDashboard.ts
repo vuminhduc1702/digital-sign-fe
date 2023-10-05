@@ -1,4 +1,3 @@
-import { Dashboard } from './../types/index';
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 
@@ -6,18 +5,19 @@ import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type Dashboard } from '../components/DashboardTable'
+
 export type CreateDashboardDTO = {
-  data: {
-    title: string
-    project_id: string
-    configuration: {
-      description: string
-    }
-  }
+  data: Dashboard
 }
 
 type CreateDashboardRes = {
-  dashboard: Dashboard
+  id: string
+  name: string
+  created_time: number
+  title: string
+  tenant_id: string
+  configuration: Dashboard['configuration']
 }
 
 export const createDashboard = ({

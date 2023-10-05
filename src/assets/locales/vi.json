@@ -478,7 +478,7 @@
         "success_create": "Tạo Dashboard thành công",
         "success_update": "Cập nhật Dashboard thành công",
         "success_delete": "Xoá Dashboard thành công",
-        "note": "Vui lòng tạo biểu đồ"
+        "note": "Nhấn vào nút Sửa Dashboard để tạo biểu đồ"
       },
       "config_chart": {
         "title": "Tạo biểu đồ",

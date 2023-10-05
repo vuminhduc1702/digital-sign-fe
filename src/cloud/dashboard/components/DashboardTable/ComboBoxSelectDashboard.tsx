@@ -4,8 +4,8 @@ import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
 import { SearchIcon } from '~/components/SVGIcons'
-import { type Dashboard } from '../../types'
 import { useGetDashboards } from '../../api/getDashboards'
+import { type Dashboard } from '.'
 
 export function ComboBoxSelectDashboard({
   projectId,

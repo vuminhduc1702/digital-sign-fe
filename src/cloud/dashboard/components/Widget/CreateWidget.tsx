@@ -75,7 +75,7 @@ export const widgetConfigSchema = z.object({
     endDate: z.date({
       required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
     }),
-    interval: z.string(),
+    interval: z.number(),
     agg: z.enum(['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT'] as const),
     widgetType: z.enum(['TIMESERIES', 'LASTEST'] as const).optional(),
   }),

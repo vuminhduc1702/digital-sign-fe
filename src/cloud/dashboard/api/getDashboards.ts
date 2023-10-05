@@ -4,13 +4,18 @@ import { axios } from '~/lib/axios'
 import { limitPagination } from '~/utils/const'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type DashboardList } from '../types'
+import { type Dashboard } from '../components/DashboardTable'
+import { type BasePagination } from '~/types'
 
 type GetDashboard = {
   projectId: string
   offset?: number
   limit?: number
 }
+
+export type DashboardList = {
+  dashboard: Dashboard[]
+} & BasePagination
 
 export const getDashboards = ({
   projectId,

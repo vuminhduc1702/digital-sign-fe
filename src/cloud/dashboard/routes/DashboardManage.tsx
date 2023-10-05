@@ -2,11 +2,10 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { type Dashboard } from '../types'
 import storage from '~/utils/storage'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
 import { ComboBoxSelectDashboard } from '../components/DashboardTable/ComboBoxSelectDashboard'
-import { DashboardTable } from '../components/DashboardTable'
+import { type Dashboard, DashboardTable } from '../components/DashboardTable'
 
 export function DashboardManage() {
   const { t } = useTranslation()

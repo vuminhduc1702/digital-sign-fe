@@ -217,11 +217,13 @@ export function DashboardDetail() {
             </div>
           </ReactGridLayout>
         ) : (
-          <div>{t('cloud:dashboard.add_dashboard.note')}</div>
+          <div className="grid grow place-content-center text-h1">
+            {t('cloud:dashboard.add_dashboard.note')}
+          </div>
         )}
 
         {isEditMode ? (
-          <div className="flex justify-end">
+          <div className="flex justify-end p-3">
             <Button
               className="ml-2 rounded border-none p-3"
               variant="secondary"
@@ -251,7 +253,7 @@ export function DashboardDetail() {
                     configuration: {
                       widgets: {
                         [widgetId]: {
-                          title: detailDashboard?.title,
+                          title: detailDashboard?.title ?? '',
                           datasource: {
                             init: {
                               query: {
@@ -283,15 +285,25 @@ export function DashboardDetail() {
                             },
                           },
                           config: {
-                            aggregation: widgetData?.widgetSetting?.agg,
+                            aggregation:
+                              widgetData?.widgetSetting?.agg ?? 'NONE',
                             timewindow: {
-                              interval: widgetData?.widgetSetting?.interval,
-                              startDate: widgetData?.widgetSetting?.startDate,
-                              endDate: widgetData?.widgetSetting?.endDate,
+                              interval:
+                                widgetData?.widgetSetting?.interval ?? 1000,
+                              startDate:
+                                (widgetData?.widgetSetting
+                                  ?.startDate as unknown as number) ?? 0,
+                              endDate:
+                                (widgetData?.widgetSetting
+                                  ?.endDate as unknown as number) ?? 0,
                             },
                             widgetSetting: {
-                              widgetType: widgetData?.widgetSetting?.widgetType,
-                              dataType: widgetData?.widgetSetting?.dataType,
+                              widgetType:
+                                widgetData?.widgetSetting?.widgetType ??
+                                'TIMESERIES',
+                              dataType:
+                                widgetData?.widgetSetting?.dataType ??
+                                'realtime',
                             },
                           },
                         },
@@ -456,9 +468,9 @@ export function DashboardDetail() {
             )}
           </div>
         ) : (
-          <div className="flex justify-end">
+          <div className="flex justify-end p-3">
             <Button
-              className="mx-2 rounded"
+              className="rounded"
               form="update-dashboard"
               size="square"
               variant="primary"

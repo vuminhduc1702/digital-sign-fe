@@ -6,6 +6,7 @@ import { Form, InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 
 import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
+import { dashboardSchema } from '.'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -64,7 +65,7 @@ export function UpdateDashboard({
         </>
       )}
     >
-      <Form<UpdateDashboardDTO['data']>
+      <Form<UpdateDashboardDTO['data'], typeof dashboardSchema>
         id="update-dashboard"
         onSubmit={values => {
           mutate({
@@ -72,6 +73,7 @@ export function UpdateDashboard({
               title: values.title,
               configuration: {
                 description: values.configuration.description,
+                widgets: null,
               },
             },
             dashboardId: id,
@@ -82,24 +84,29 @@ export function UpdateDashboard({
             title,
             configuration: {
               description,
+              widgets: null,
             },
           },
         }}
+        schema={dashboardSchema}
       >
-        {({ register, formState }) => (
-          <>
-            {}
-            <InputField
-              label={t('cloud:dashboard.add_dashboard.name')}
-              error={formState.errors['title']}
-              registration={register('title')}
-            />
-            <InputField
-              label={t('cloud:dashboard.add_dashboard.description')}
-              registration={register('configuration.description')}
-            />
-          </>
-        )}
+        {({ register, formState }) => {
+          console.log('formState errors: ', formState.errors)
+          return (
+            <>
+              <InputField
+                label={t('cloud:dashboard.add_dashboard.name')}
+                error={formState.errors['title']}
+                registration={register('title')}
+              />
+              <InputField
+                label={t('cloud:dashboard.add_dashboard.description')}
+                error={formState?.errors?.configuration?.description}
+                registration={register('configuration.description')}
+              />
+            </>
+          )
+        }}
       </Form>
     </Drawer>
   )
