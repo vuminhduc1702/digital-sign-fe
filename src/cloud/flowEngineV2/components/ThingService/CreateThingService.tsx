@@ -24,14 +24,17 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
+import { BtnContextMenuIcon, PlusIcon } from '~/components/SVGIcons'
 import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
+import { Dropdown } from '~/components/Dropdown'
+import { Menu } from '@headlessui/react'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -75,6 +78,7 @@ type CreateServiceProps = {
   thingServiceData?: ThingService[]
 }
 
+
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { t } = useTranslation()
   const { id: projectId } = storage.getProject()
@@ -84,6 +88,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
+  const [viewMode, setViewMode] = useState('')
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
@@ -381,9 +386,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       'grid grow grid-cols-1 gap-x-4 md:col-span-2 md:grid-cols-2':
                         !fullScreen,
                       'md:col-span-3': fullScreen,
-                    })}
+                    }, {'md:grid-cols-6': viewMode != 'default'})}
                   >
-                    <div className="flex flex-col gap-2 md:col-span-1">
+                    <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_code' || viewMode == 'minimize_result'}, {'md:col-span-1': viewMode == 'minimize_code'})}>
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">
@@ -391,6 +396,24 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           </p>
                         </div>
                         <div className="flex gap-3">
+                          <Dropdown
+                            icon={
+                              <img
+                                height={20}
+                                width={20}
+                                src={btnChevronDownIcon}
+                                className="text-secondary-700 hover:text-primary-400"
+                              />
+                            }
+                          >
+                            <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <div className="px-2 py-2">
+                                <div className="py-1 hover:cursor-pointer hover:background" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_code')}}>Thu nhỏ editor</div>
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                              </div>
+                            </Menu.Items>
+                          </Dropdown>
                           <button form="create-serviceThing" type="submit">
                             <img
                               onClick={() => setTypeInput('Run')}
@@ -409,12 +432,32 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         isFullScreen={fullScreen}
                       />
                     </div>
-                    <div className={'flex flex-col gap-2 md:col-span-1'}>
-                      <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                    <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_result' || viewMode == 'minimize_code'}, {'md:col-span-1': viewMode == 'minimize_result' || viewMode == 'maximize_code'})}>
+                      <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">
                             {t('cloud:custom_protocol.service.output')}
                           </p>
+                        </div>
+                        <div className="flex gap-3">
+                          <Dropdown
+                            icon={
+                              <img
+                                height={20}
+                                width={20}
+                                src={btnChevronDownIcon}
+                                className="text-secondary-700 hover:text-primary-400"
+                              />
+                            }
+                          >
+                            <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <div className="px-2 py-2">
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('maximize_result')}}>Phóng to editor</div>
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_result')}}>Thu nhỏ editor</div>
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                              </div>
+                            </Menu.Items>
+                          </Dropdown>
                         </div>
                       </div>
                       <CodeSandboxEditor

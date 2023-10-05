@@ -1,14 +1,17 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
+import { Form, InputField, SelectDropdown, SelectOptionString } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { queryClient } from '~/lib/react-query'
+import { OrgList } from '~/layout/MainLayout/types'
+import { flattenData } from '~/utils/misc'
 
 const groupSchema = z.object({
   name: z.string(),
@@ -29,6 +32,17 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
+  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
+    exact: false,
+  })
+
+  const { acc: orgFlattenData } = flattenData(
+    orgListCache?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
+
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
 
   useEffect(() => {
@@ -36,6 +50,16 @@ export function UpdateGroup({
       close()
     }
   }, [isSuccess, close])
+
+
+  // useEffect(() => {
+  //   if (organization.id) {
+  //     setOptionOrg({
+  //       label: selectedUpdateOrg?.parent_name,
+  //       value: selectedUpdateOrg?.id,
+  //     })
+  //   }
+  // }, [selectedUpdateOrg])
 
   return (
     <Drawer
@@ -91,6 +115,36 @@ export function UpdateGroup({
               error={formState.errors['name']}
               registration={register('name')}
             />
+            {/* <div className="space-y-1">
+              <SelectDropdown
+                isClearable={true}
+                label={t('cloud:org_manage.device_manage.add_device.parent')}
+                name="org_id"
+                control={control}
+                options={
+                  orgFlattenData?.map(org => ({
+                    label: org?.name,
+                    value: org?.id,
+                  })) || [{ label: t('loading:org'), value: '' }]
+                }
+                onChange={e => {
+                  setOptionOrg(e)
+                  mutateUpdateOrg({
+                    data: {
+                      ids: [e?.value]
+                    },
+                    orgId: selectedUpdateOrg.id
+                  })
+                  setValue('org_id', e?.value)
+                }}
+                value={optionOrg}
+              />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.org_id?.message === 'Required'
+                  ? t('cloud:org_manage.org_manage.add_org.choose_org')
+                  : formState?.errors?.org_id?.message}
+              </p>
+            </div> */}
           </>
         )}
       </Form>

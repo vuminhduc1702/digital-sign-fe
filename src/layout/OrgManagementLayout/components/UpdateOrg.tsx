@@ -19,8 +19,8 @@ import { type OrgMapType } from './OrgManageSidebar'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { type OrgList } from '~/layout/MainLayout/types'
+import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 
 export function UpdateOrg({
   close,
@@ -54,6 +54,8 @@ export function UpdateOrg({
   }, [selectedUpdateOrg])
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
+
+  const { mutate: mutateUpdateOrg } = useUpdateOrgForOrg()
 
   useEffect(() => {
     if (isSuccess) {
@@ -135,6 +137,17 @@ export function UpdateOrg({
                   }
                   onChange={e => {
                     setOptionOrg(e)
+                    e ? mutateUpdateOrg({
+                      data: {
+                        ids: [e?.value],
+                        org_id: selectedUpdateOrg?.id
+                      },
+                    }) : mutateUpdateOrg({
+                      data: {
+                        ids: [''],
+                        org_id: selectedUpdateOrg?.id
+                      }
+                    })
                     setValue('org_id', e?.value)
                   }}
                   value={optionOrg}
