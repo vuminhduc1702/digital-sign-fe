@@ -43,13 +43,8 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T extends JsonValue | null>() => {
+export const useWS = <T extends JsonValue | null>(url: string) => {
   const { t } = useTranslation()
-
-  const { token } = storage.getToken() as UserStorage
-  const WS_URL = `${
-    import.meta.env.VITE_WS_URL as string
-  }/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
 
   const { addNotification } = useNotificationStore()
 
@@ -59,7 +54,7 @@ export const useWS = <T extends JsonValue | null>() => {
     lastMessage,
     lastJsonMessage,
     readyState,
-  } = useWebSocket<T>(WS_URL, {
+  } = useWebSocket<T>(url, {
     onError: () =>
       addNotification({
         type: 'error',

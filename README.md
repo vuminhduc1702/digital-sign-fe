@@ -6,6 +6,6 @@
 
 - yarn run dev
 
-- Đổi tên env.example ->> .env
+- Copy .env.example sang file, đổi tên thành .env, bỏ comment mục Dev local
 
 - HAPPY CODING !!!

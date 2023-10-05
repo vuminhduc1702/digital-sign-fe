@@ -2,16 +2,17 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
+import RGL, { WidthProvider } from 'react-grid-layout'
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
-import GridLayout from 'react-grid-layout'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
 import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
+import storage, { type UserStorage } from '~/utils/storage'
 
 import { type WS, type WSWidgetData, type WidgetType } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
@@ -45,6 +46,11 @@ export const widgetAgg: WidgetAgg[] = [
   { label: 'Count', value: 'COUNT' },
 ]
 
+const { token } = storage.getToken() as UserStorage
+const WS_URL = `${
+  import.meta.env.VITE_WS_URL as string
+}/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
+
 export function DashboardDetail() {
   const { t } = useTranslation()
 
@@ -65,6 +71,10 @@ export function DashboardDetail() {
     id: dashboardId,
     config: { suspense: false },
   })
+  console.log(
+    'detailDashboard?.configuration.widgets',
+    detailDashboard?.configuration.widgets,
+  )
 
   const [widgetData, setWidgetData] = useState<WidgetConfig>()
 
@@ -131,7 +141,7 @@ export function DashboardDetail() {
   })
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<WS>()
+    useWS<WS>(WS_URL)
 
   // Handle new data point in realtime
   const realtimeValues: WSWidgetData[] =
@@ -161,11 +171,13 @@ export function DashboardDetail() {
   )
   const handleHistory = useCallback(() => sendMessage(historyMessage), [])
 
-  const layout: GridLayout.Layout[] = [
-    { i: 'a', x: 0, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
-    { i: 'b', x: 5, y: 0, w: 5, h: 5, isDraggable: true, isResizable: true },
-    { i: 'c', x: 0, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
-    { i: 'd', x: 5, y: 5, w: 5, h: 5, isDraggable: true, isResizable: true },
+  const ReactGridLayout = WidthProvider(RGL)
+
+  const layout: RGL.Layout[] = [
+    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
+    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
+    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
+    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
   ]
 
   useEffect(() => {
@@ -178,59 +190,35 @@ export function DashboardDetail() {
     handleRealtime()
   }, [])
 
-  const dataTest = [
-    {
-      ts: 1696403582463,
-      value: '908',
-    },
-    {
-      ts: 1696244842837,
-      value: '623',
-    },
-    {
-      ts: 1696244837572,
-      value: '65',
-    },
-  ]
-
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
-      <div className="flex grow flex-col justify-between px-5 py-3 shadow-lg">
-        {/* {detailDashboard?.configuration.widgets ? (
-          <GridLayout
+      <div className="flex grow flex-col justify-between shadow-lg">
+        {detailDashboard?.configuration.widgets ? (
+          <ReactGridLayout
+            // isDraggable={isEditMode ? true : false}
             layout={layout}
-            cols={4}
-            // rowHeight={300}
-            // width={1560}
-            isDraggable={isEditMode ? true : false}
+            rowHeight={50}
+            isDraggable
+            isResizable
+            margin={[20, 20]}
           >
-            <LineChart data={newValuesRef.current} />
-          </GridLayout>
+            <div key="a" className="bg-secondary-500">
+              <LineChart data={newValuesRef.current} />
+            </div>
+            <div key="b" className="bg-secondary-500">
+              <LineChart data={newValuesRef.current.toReversed()} />
+            </div>
+            <div key="c" className="bg-secondary-500">
+              <LineChart data={newValuesRef.current} />
+            </div>
+            <div key="d" className="bg-secondary-500">
+              <LineChart data={newValuesRef.current.toReversed()} />
+            </div>
+          </ReactGridLayout>
         ) : (
           <div>{t('cloud:dashboard.add_dashboard.note')}</div>
-        )} */}
-        <GridLayout
-          layout={layout}
-          cols={4}
-          maxRows={4}
-          rowHeight={50}
-          width={400}
-          // isDraggable={isEditMode ? true : false}
-        >
-          <div key="a" className="bg-secondary-500">
-            <LineChart data={dataTest} />
-          </div>
-          <div key="b" className="bg-secondary-500">
-            <LineChart data={dataTest} />
-          </div>
-          <div key="c" className="bg-secondary-500">
-            <LineChart data={dataTest} />
-          </div>
-          <div key="d" className="bg-secondary-500">
-            <LineChart data={dataTest} />
-          </div>
-        </GridLayout>
+        )}
 
         {isEditMode ? (
           <div className="flex justify-end">
