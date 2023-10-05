@@ -40,7 +40,7 @@ export const orgSchema = z.object({
   project_id: z.string().optional(),
 })
 
-export const MAX_FILE_SIZE = 500000
+export const MAX_FILE_SIZE = 5000000
 export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
 export const uploadImageSchema = z.object({
   file: z

@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, type ReactNode } from 'react'
+import { Fragment, LegacyRef, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 type IconProps =
@@ -10,6 +10,7 @@ type MenuItemProps = {
   children: ReactNode
   className?: string
   icon?: React.ReactElement
+  ref?: LegacyRef<HTMLButtonElement>
   onClick: () => Promise<void> | void
 }
 
