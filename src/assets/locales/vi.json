@@ -514,6 +514,9 @@
     "firmware": {
       "title": "Quản lý Firmware",
       "fota": "Fota",
+      "choose_fota": "Vui lòng chọn ít nhất 1 Fota",
+      "choose_template": "Vui lòng chọn ít nhất 1 thiết bị mẫu",
+      "choose_file": "Vui lòng chọn file tải lên",
       "table": {
         "id": "ID",
         "name": "Tên Firmware",

@@ -13,6 +13,7 @@ import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn } from '~/utils/misc'
 import { type UploadFileFirmWareDTO, useUploadFileFireWare } from '../../api/firmwareAPI/uploadFileFirmware'
 import * as z from 'zod'
+import i18n from '~/i18n'
 
 type UploadFileFirmWareProps = {
   firmwareId: string
@@ -22,7 +23,7 @@ type UploadFileFirmWareProps = {
 
 export const uploadFileSchema = z.object({
   file: z
-    .instanceof(File, { message: 'Vui lòng chọn file tải lên' })
+    .instanceof(File, { message: i18n.t('cloud:firmware.choose_file') })
 })
 export function UploadFileFirmWare({
   firmwareId,
