@@ -111,7 +111,6 @@ export const FormDialog = ({
             )}
           </div>
           <div className="mt-4 flex justify-center space-x-2">
-            {confirmButton}
             <Button
               type="button"
               variant="secondary"
@@ -122,6 +121,7 @@ export const FormDialog = ({
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
             />
+            {confirmButton}
           </div>
         </div>
       </Dialog>

@@ -7,7 +7,8 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export type UpdateGroupDTO = {
   data: {
-    name: string
+    name: string,
+    org_id?: string
   }
   groupId: string
 }
