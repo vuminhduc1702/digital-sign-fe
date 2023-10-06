@@ -86,7 +86,7 @@ export function CreateProject() {
         data: {
           name: dataCreateProject.name,
           description: dataCreateProject.description,
-          image: dataUploadImage.data.link,
+          image: dataUploadImage.link,
         },
         projectId: dataCreateProject.id,
       })

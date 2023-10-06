@@ -8,18 +8,29 @@ import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
 import { CreateProjectSchema } from '../api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { type Project } from '../routes/ProjectManage'
 import FileField from '~/components/Form/FileField'
 import {
   type UploadImageDTO,
   useUploadImage,
 } from '~/layout/OrgManagementLayout/api'
-import { uploadImageSchema } from '~/layout/OrgManagementLayout/components/CreateOrg'
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  uploadImageSchema,
+} from '~/layout/OrgManagementLayout/components/CreateOrg'
 
 import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { API_URL } from '~/config'
+
+export type UpdateProject = {
+  name?: string,
+  description?: string,
+  image?: string
+}
 
 export function UpdateProject({
   close,
@@ -47,16 +58,52 @@ export function UpdateProject({
     data: dataUploadImage,
     mutate: mutateUploadImage,
     isLoading: isLoadingUploadImage,
+    isSuccess: isSuccessUploadImage,
   } = useUploadImage()
   const {
-    formState: formStateUploadImage,
     control: controlUploadImage,
-    handleSubmit: handleSubmitUploadImage,
     setValue: setValueUploadImage,
+    getValues: getValueUploadImage,
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
   const avatarRef = useRef<HTMLImageElement>(null)
+  const [uploadImageErr, setUploadImageErr] = useState('')
+
+  function handleResetDefaultImage() {
+    if (avatarRef.current != null) {
+      avatarRef.current.src = defaultProjectImage
+      fetch(avatarRef.current.src)
+        .then(res => res.blob())
+        .then(blob => {
+          const defaultFile = new File([blob], 'default-project.png', blob)
+          const formData = new FormData()
+          formData.append('file', defaultFile)
+          setValueUploadImage(
+            'file',
+            formData.get('file') as unknown as { file: File },
+          )
+        })
+    }
+  }
+  const [updateDataForm, setUpdateDataForm] = useState<UpdateProject>({})
+
+  function handleSubmitUpdate(updateData: UpdateProject) {
+    mutate({
+      data: {
+        name: updateData.name,
+        description: updateData.description,
+        image: dataUploadImage?.data?.link,
+      },
+      projectId: selectedUpdateProject.id,
+    })
+  }
+
+  useEffect(() => {
+    if (isSuccessUploadImage && dataUploadImage != null) {
+      handleSubmitUpdate(updateDataForm)
+    }
+  }, [dataUploadImage])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -80,14 +127,14 @@ export function UpdateProject({
             id="update-project"
             className="flex flex-col justify-between"
             onSubmit={values => {
-              mutate({
+              mutateUploadImage({
                 data: {
-                  name: values.name,
-                  description: values.description,
-                  image: dataUploadImage?.data?.link,
+                  project_id: selectedUpdateProject.id,
+                  file: getValueUploadImage('file'),
                 },
-                projectId: selectedUpdateProject.id,
               })
+              handleResetDefaultImage()
+              setUpdateDataForm(values)
             }}
             schema={CreateProjectSchema}
             options={{
@@ -115,68 +162,73 @@ export function UpdateProject({
                     />
                   </div>
                   <div className="pl-4">
+                    <div className="mb-3 space-y-1">
+                      <FileField
+                        label={t('cloud:project_manager.add_project.avatar')}
+                        control={controlUploadImage}
+                        name="upload-image"
+                        ref={fileInputRef}
+                        onChange={event => {
+                          const file = event.target.files[0]
+                          const formData = new FormData()
+                          formData.append('file', event.target.files[0])
+                          setValueUploadImage(
+                            'file',
+                            formData.get('file') as unknown as { file: File },
+                          )
+
+                          if (file.size > MAX_FILE_SIZE) {
+                            setUploadImageErr(t('validate:image_max_size'))
+                            return false
+                          }
+                          if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                            setUploadImageErr(t('validate:image_type'))
+                            return false
+                          }
+
+                          const reader = new FileReader()
+                          reader.readAsDataURL(file)
+                          reader.onload = e => {
+                            if (
+                              avatarRef.current != null &&
+                              e.target != null &&
+                              reader.readyState === 2
+                            ) {
+                              avatarRef.current.src = e.target.result as string
+                            }
+                          }
+                        }}
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {uploadImageErr}
+                      </p>
+                    </div>
                     <img
-                      src={selectedUpdateProject.image}
-                      onError={e => {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = defaultProjectImage
-                      }}
+                      src={`${
+                        selectedUpdateProject?.image !== ''
+                          ? `${API_URL}/file/${selectedUpdateProject?.image}`
+                          : defaultProjectImage
+                      }`}
                       alt="Project"
                       className="mb-3 h-36 w-32"
                       ref={avatarRef}
-                      onClick={event => {
-                        const formData = new FormData()
-                        formData.append('file', event.target.files[0])
-                        setValueUploadImage('file', formData.get('file'))
-                        const reader = new FileReader()
-                        reader.readAsDataURL(event.target.files[0])
-                        reader.onload = e => {
-                          if (avatarRef.current != null && e.target != null) {
-                            avatarRef.current.src = e.target.result as string
-                          }
-                        }
-                      }}
-                    />
-                    <FileField
-                      label={t('cloud:project_manager.add_project.avatar')}
-                      error={formStateUploadImage.errors['file']}
-                      control={controlUploadImage}
-                      name="upload-image"
-                      ref={fileInputRef}
-                      onChange={event => {
-                        const formData = new FormData()
-                        formData.append('file', event.target.files[0])
-                        setValueUploadImage('file', formData.get('file'))
-                        const reader = new FileReader()
-                        reader.readAsDataURL(event.target.files[0])
-                        reader.onload = e => {
-                          if (avatarRef.current != null && e.target != null) {
-                            avatarRef.current.src = e.target.result as string
-                          }
-                        }
-                      }}
                     />
                     <Button
-                      className="mt-3 border-none"
+                      className="mb-3 border-none"
                       style={{ justifyContent: 'flex-start' }}
-                      variant="primary"
+                      variant="secondaryLight"
                       size="square"
-                      onClick={handleSubmitUploadImage(values => {
-                        mutateUploadImage({
-                          data: {
-                            project_id: selectedUpdateProject.id,
-                            file: values.file,
-                          },
-                        })
-                        setValueUploadImage('file', {
-                          file: null as unknown as File,
-                        })
-                      })}
-                      isLoading={isLoadingUploadImage}
+                      onClick={handleResetDefaultImage}
                     >
-                      {t('cloud:org_manage.org_manage.add_org.upload_ava')}
+                      {t(
+                        'cloud:project_manager.add_project.upload_ava_default',
+                      )}
                     </Button>
+                    <div style={{ fontSize: '12px' }}>
+                      {t(
+                        'cloud:project_manager.add_project.upload_instruction',
+                      )}
+                    </div>
                   </div>
                 </div>
               )
