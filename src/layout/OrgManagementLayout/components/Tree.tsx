@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -23,25 +23,30 @@ import { cn } from '~/utils/misc'
 interface TreeViewProps {
   data: OrgMapType[]
   handleEditTreeView: (data: OrgMapType) => void
+  isShow: any
 }
 
 interface TreeProps {
   data: OrgMapType
   handleEdit: (data: OrgMapType) => void
+  isShow: any
 }
 
-const TreeView = ({ data, handleEditTreeView }: TreeViewProps) => {
-  const dataSorted = data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
+  const dataSorted = data.sort((a, b) =>
+    a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
+  )
   return dataSorted.map(item => (
     <Tree
       key={item.id}
       data={item}
       handleEdit={(data: OrgMapType) => handleEditTreeView(data)}
+      isShow={isShow}
     />
   ))
 }
 
-const Tree = ({ data, handleEdit }: TreeProps) => {
+const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(false)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
@@ -51,8 +56,14 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
 
+  useEffect(() => {
+    setShowChildren(isShow)
+  }, [isShow])
+
   if (!data) return null
-  const dataSorted = data.children.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+  const dataSorted = data.children.sort((a, b) =>
+    a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
+  )
 
   return (
     <ul className="mt-4 pl-6">
@@ -202,6 +213,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
         dataSorted.map((child: OrgMapType) => {
           return (
             <Tree
+              isShow={isShow}
               key={child.id}
               data={child}
               handleEdit={(child: OrgMapType) => handleEdit(child)}
