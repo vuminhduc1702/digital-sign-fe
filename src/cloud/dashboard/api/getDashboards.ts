@@ -4,24 +4,35 @@ import { axios } from '~/lib/axios'
 import { limitPagination } from '~/utils/const'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type Dashboard } from '../components/DashboardTable'
 import { type BasePagination } from '~/types'
 
-type GetDashboard = {
+export type DashboardRes = {
+  id: string
+  name: string
+  created_time: number
+  title: string
+  tenant_id: string
+  configuration: {
+    description: string
+    widgets: null
+  }
+}
+
+export type DashboardList = {
+  dashboard: DashboardRes[]
+} & BasePagination
+
+type GetDashboards = {
   projectId: string
   offset?: number
   limit?: number
 }
 
-export type DashboardList = {
-  dashboard: Dashboard[]
-} & BasePagination
-
 export const getDashboards = ({
   projectId,
   offset,
   limit,
-}: GetDashboard): Promise<DashboardList> => {
+}: GetDashboards): Promise<DashboardList> => {
   return axios.get(`/api/vtdashboard`, {
     params: {
       project_id: projectId,
@@ -35,7 +46,7 @@ type QueryFnType = typeof getDashboards
 
 type UseDashboardOptions = {
   config?: QueryConfig<QueryFnType>
-} & GetDashboard
+} & GetDashboards
 
 export const useGetDashboards = ({
   projectId,

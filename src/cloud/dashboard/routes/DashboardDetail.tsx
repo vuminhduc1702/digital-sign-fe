@@ -10,11 +10,15 @@ import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
-import { CreateWidget, type WidgetConfig } from '../components/Widget'
+import {
+  CreateWidget,
+  aggSchema,
+  type WidgetConfig,
+} from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 
-import { type WS, type WSWidgetData, type WidgetType } from '../types'
+import { type DashboardWS, type WSWidgetData, type WidgetType } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -23,7 +27,7 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
 const widgetAggSchema = z.object({
   label: z.string(),
-  value: z.enum(['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT'] as const),
+  value: aggSchema,
 })
 export type WidgetAgg = z.infer<typeof widgetAggSchema>
 
@@ -77,6 +81,7 @@ export function DashboardDetail() {
   )
 
   const [widgetData, setWidgetData] = useState<WidgetConfig>()
+  console.log('widgetData', widgetData)
 
   const parseStartDate = useMemo(
     () =>
@@ -86,6 +91,44 @@ export function DashboardDetail() {
       ),
     [widgetData?.widgetSetting?.startDate],
   )
+
+  const widgetId = uuidv4()
+  const latestData = widgetData?.attributeConfig.map(item => ({
+    type: 'TIME_SERIES',
+    key: item.attribute_key,
+  }))
+  const initMessage = JSON.stringify({
+    entityDataCmds: [
+      {
+        query: {
+          entityFilter: {
+            type: 'entityList',
+            entityType: 'DEVICE',
+            entityIds: widgetData?.device ?? [],
+          },
+          pageLink: {
+            pageSize: 1,
+            page: 0,
+            sortOrder: {
+              key: {
+                type: 'ENTITY_FIELD',
+                key: 'ts',
+              },
+              direction: 'DESC',
+            },
+          },
+          entityFields: [
+            {
+              type: 'ENTITY_FIELD',
+              key: 'name',
+            },
+          ],
+          latestValues: latestData,
+        },
+        id: widgetId,
+      },
+    ],
+  })
 
   const lastestMessage = JSON.stringify({
     entityDataCmds: [
@@ -111,7 +154,7 @@ export function DashboardDetail() {
     entityDataCmds: [
       {
         tsCmd: {
-          keys: widgetData?.attributeConfig.map(item => item.attr),
+          keys: widgetData?.attributeConfig.map(item => item.attribute_key),
           startTs: parseStartDate,
           interval: widgetData?.widgetSetting?.interval,
           limit: 10,
@@ -141,11 +184,11 @@ export function DashboardDetail() {
   })
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<WS>(WS_URL)
+    useWS<DashboardWS>(WS_URL)
 
   // Handle new data point in realtime
   const realtimeValues: WSWidgetData[] =
-    lastJsonMessage?.data?.[0]?.timeseries?.test || []
+    lastJsonMessage?.data?.[0]?.timeseries?.rawr2 || []
   const prevValuesRef = useRef<WSWidgetData[]>([])
   const newValuesRef = useRef<WSWidgetData[]>([])
   useEffect(() => {
@@ -154,22 +197,12 @@ export function DashboardDetail() {
   if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
     newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
   } else newValuesRef.current = realtimeValues
+  console.log('newValuesRef.current: ', newValuesRef.current)
 
-  const handleInit = useCallback(
+  const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
-    [],
+    [lastJsonMessage],
   )
-  const handleLastest = useCallback(() => sendMessage(lastestMessage), [])
-  const handleRealtime = useCallback(
-    () => sendMessage(realtimeMessage),
-    [
-      parseStartDate,
-      widgetData?.widgetSetting?.interval,
-      widgetData?.widgetSetting?.agg,
-      realtimeMessage,
-    ],
-  )
-  const handleHistory = useCallback(() => sendMessage(historyMessage), [])
 
   const ReactGridLayout = WidthProvider(RGL)
 
@@ -182,13 +215,13 @@ export function DashboardDetail() {
 
   useEffect(() => {
     if (detailDashboard?.configuration.widgets != null) {
-      handleInit(JSON.stringify(setInitMessage))
+      handleSendMessage(JSON.stringify(initMessage))
     }
-  }, [detailDashboard?.configuration.widgets])
+  }, [detailDashboard?.configuration.widgets, handleSendMessage, initMessage])
 
   useEffect(() => {
-    handleRealtime()
-  }, [])
+    handleSendMessage(JSON.stringify(realtimeMessage))
+  }, [handleSendMessage, realtimeMessage])
 
   return (
     <div className="flex grow flex-col">
@@ -243,65 +276,54 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
-                const widgetId = uuidv4()
-                const latestData = widgetData?.attributeConfig.map(item => ({
-                  type: 'TIME_SERIES',
-                  key: item.attr,
-                }))
                 mutateUpdateDashboard({
                   data: {
+                    title: detailDashboard?.title ?? '',
                     configuration: {
+                      description:
+                        detailDashboard?.configuration?.description ?? '',
                       widgets: {
                         [widgetId]: {
-                          title: detailDashboard?.title ?? '',
-                          datasource: {
-                            init: {
-                              query: {
-                                entityFilter: {
-                                  type: 'entityList',
-                                  entityType: 'DEVICE',
-                                  entityIds: widgetData?.device ?? [],
-                                },
-                                pageLink: {
-                                  pageSize: 1,
-                                  page: 0,
-                                  sortOrder: {
-                                    key: {
-                                      type: 'ENTITY_FIELD',
-                                      key: 'ts',
-                                    },
-                                    direction: 'DESC',
-                                  },
-                                },
-                                entityFields: [
-                                  {
-                                    type: 'ENTITY_FIELD',
-                                    key: 'name',
-                                  },
-                                ],
-                                latestValues: latestData,
-                              },
-                              id: widgetId,
-                            },
+                          title: widgetData?.title ?? '',
+                          datasources: {
+                            init_message: initMessage,
+                            lastest_message: lastestMessage ?? null,
+                            realtime_message: realtimeMessage ?? null,
+                            history_message: historyMessage ?? null,
                           },
+                          attribute_config: [
+                            {
+                              attribute_key:
+                                widgetData?.attributeConfig?.[0]?.attribute_key,
+                              color: widgetData?.attributeConfig?.[0]?.color,
+                              decimal:
+                                widgetData?.attributeConfig?.[0]?.decimal,
+                              label: widgetData?.attributeConfig?.[0]?.label,
+                              unit: widgetData?.attributeConfig?.[0]?.unit,
+                            },
+                          ],
                           config: {
                             aggregation:
                               widgetData?.widgetSetting?.agg ?? 'NONE',
                             timewindow: {
                               interval:
                                 widgetData?.widgetSetting?.interval ?? 1000,
-                              startDate:
-                                (widgetData?.widgetSetting
-                                  ?.startDate as unknown as number) ?? 0,
-                              endDate:
-                                (widgetData?.widgetSetting
-                                  ?.endDate as unknown as number) ?? 0,
                             },
-                            widgetSetting: {
-                              widgetType:
+                            chartsetting: {
+                              start_date:
+                                new Date(
+                                  widgetData?.widgetSetting
+                                    ?.startDate as unknown as number,
+                                ).getTime() ?? 0,
+                              end_date:
+                                new Date(
+                                  widgetData?.widgetSetting
+                                    ?.endDate as unknown as number,
+                                ).getTime() ?? 0,
+                              widget_type:
                                 widgetData?.widgetSetting?.widgetType ??
                                 'TIMESERIES',
-                              dataType:
+                              data_type:
                                 widgetData?.widgetSetting?.dataType ??
                                 'realtime',
                             },

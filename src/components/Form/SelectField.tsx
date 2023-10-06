@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 import { type ChangeEvent } from 'react'
 

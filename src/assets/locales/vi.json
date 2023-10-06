@@ -482,12 +482,12 @@
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
+        "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
         "startDate": "Thời điểm bắt đầu",
         "endDate": "Thời điểm kết thúc",
         "color": "Màu sắc",
-        "name": "Tên",
         "unit": "Đơn vị",
         "decimal": "Hệ thập phân",
         "road": "Kiểu đường",

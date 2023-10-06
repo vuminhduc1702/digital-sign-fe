@@ -38,6 +38,7 @@ import {
 } from '~/components/Command'
 
 import { type WidgetType } from '../../types'
+import { nameSchema } from '~/utils/schemaValidation'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -46,7 +47,33 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
-export const widgetConfigSchema = z.object({
+export const aggSchema = z.enum([
+  'NONE',
+  'AVG',
+  'MIN',
+  'MAX',
+  'SUM',
+  'COUNT',
+] as const)
+
+export const attrWidgetSchema = z.array(
+  z.object({
+    attribute_key: z.string(),
+    label: z.string(),
+    color: z.string(),
+    unit: z.string(),
+    decimal: z.string(),
+  }),
+)
+
+export const widgetDataTypeSchema = z.enum(['realtime', 'history'] as const)
+
+export const widgetTypeSchema = z
+  .enum(['TIMESERIES', 'LASTEST'] as const)
+  .optional()
+
+export const widgetSchema = z.object({
+  title: nameSchema,
   org_id: z.string(),
   device: z.array(
     z.string().min(1, {
@@ -55,35 +82,24 @@ export const widgetConfigSchema = z.object({
       ),
     }),
   ),
-  attributeConfig: z.array(
-    z.object({
-      attr: z.string().min(1, {
-        message: i18n.t('cloud:org_manage.org_manage.add_attr.choose_attr'),
-      }),
-      label: z.string(),
-      color: z.string(),
-      unit: z.string(),
-      decimal: z.string(),
-      id: z.string().optional(),
-    }),
-  ),
+  attributeConfig: attrWidgetSchema,
   widgetSetting: z.object({
-    dataType: z.string(),
+    agg: aggSchema,
+    interval: z.coerce.number(),
     startDate: z.date({
       required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
     }),
     endDate: z.date({
       required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
     }),
-    interval: z.number(),
-    agg: z.enum(['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT'] as const),
-    widgetType: z.enum(['TIMESERIES', 'LASTEST'] as const).optional(),
+    dataType: widgetDataTypeSchema,
+    widgetType: widgetTypeSchema,
   }),
   id: z.string().optional(),
 })
 
 type WidgetConfigDTO = {
-  data: z.infer<typeof widgetConfigSchema>
+  data: z.infer<typeof widgetSchema>
 }
 
 export type WidgetConfig = WidgetConfigDTO['data']
@@ -172,21 +188,19 @@ export function CreateWidget({
             </div>
           </div>
 
-          <FormMultipleFields<WidgetConfig, typeof widgetConfigSchema>
+          <FormMultipleFields<WidgetConfig, typeof widgetSchema>
             id="create-widget"
             className="flex flex-col justify-between"
             onSubmit={values => {
               console.log('values: ', values)
               const widgetData = {
                 id: uuidv4(),
-                org_id: values.org_id,
-                device: values.device,
-                attribute_config: values.attributeConfig,
-                widget_setting: values.widgetSetting,
+                attributeConfig: values.attributeConfig,
+                widgetSetting: values.widgetSetting,
               }
               handleSubmitWidget(widgetData)
             }}
-            schema={widgetConfigSchema}
+            schema={widgetSchema}
             name={['attributeConfig']}
           >
             {(
@@ -236,6 +250,11 @@ export function CreateWidget({
                               className="w-full rounded-md bg-gray-500 pl-3"
                             />
                             <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5">
+                              <InputField
+                                label={t('cloud:dashboard.config_chart.name')}
+                                error={formState.errors['title']}
+                                registration={register('title')}
+                              />
                               <div className="space-y-1">
                                 <SelectDropdown
                                   isClearable={true}
@@ -346,12 +365,11 @@ export function CreateWidget({
                                 }
                                 onClick={() =>
                                   append({
-                                    attr: '',
+                                    attribute_key: '',
                                     label: '',
                                     color: '',
                                     unit: '',
                                     decimal: '',
-                                    id: '',
                                   })
                                 }
                               />
@@ -370,12 +388,12 @@ export function CreateWidget({
                                       error={
                                         formState?.errors?.attributeConfig?.[
                                           index
-                                        ]?.attr
+                                        ]?.attribute_key
                                       }
                                     >
                                       <Controller
                                         control={control}
-                                        name={`attributeConfig.${index}.attr`}
+                                        name={`attributeConfig.${index}.attribute_key`}
                                         render={({
                                           field: { onChange, value, ...field },
                                         }) => {
@@ -414,7 +432,7 @@ export function CreateWidget({
                                                           key={attr.value}
                                                           onSelect={() => {
                                                             setValue(
-                                                              `attributeConfig.${index}.attr`,
+                                                              `attributeConfig.${index}.attribute_key`,
                                                               attr.value,
                                                             )
                                                           }}

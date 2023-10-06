@@ -6,23 +6,15 @@ import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type Dashboard } from '../components/DashboardTable'
+import { type DashboardRes } from './getDashboards'
 
 export type CreateDashboardDTO = {
   data: Dashboard
 }
 
-type CreateDashboardRes = {
-  id: string
-  name: string
-  created_time: number
-  title: string
-  tenant_id: string
-  configuration: Dashboard['configuration']
-}
-
 export const createDashboard = ({
   data,
-}: CreateDashboardDTO): Promise<CreateDashboardRes> => {
+}: CreateDashboardDTO): Promise<DashboardRes> => {
   return axios.post(`/api/vtdashboard`, data)
 }
 

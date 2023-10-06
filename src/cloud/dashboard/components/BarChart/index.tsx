@@ -1,14 +1,14 @@
 import { useRef } from 'react'
 import { ResponsiveBar } from '@nivo/bar'
 
-import { type WS } from '../../types'
+import { type DashboardWS } from '../../types'
 
 type BarChartData = {
   device: string
   [key: string]: string
 }
 
-export const BarChart = ({ data }: { data: WS['data'] }) => {
+export const BarChart = ({ data }: { data: DashboardWS['data'] }) => {
   const prevEntityNameRef = useRef('')
 
   const lastestMultiValue = data?.map(item => {

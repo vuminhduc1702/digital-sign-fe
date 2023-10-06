@@ -32,6 +32,6 @@ type DataItem = {
   aggLatest: AggLatestData
 }
 
-export type WS = {
+export type DashboardWS = {
   data: DataItem[]
 }
