@@ -17,6 +17,7 @@ export type CreateDeviceDTO = {
     org_id: string
     key: string
     group_id: string
+    template_id: string
   }
 }
 

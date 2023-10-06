@@ -55,8 +55,8 @@ export const eventIntervalSchema = z.object({
   friday: z.boolean().optional(),
   saturday: z.boolean().optional(),
   sunday: z.boolean().optional(),
-  start_time: z.string(),
-  end_time: z.string(),
+  start_time: z.string().optional(),
+  end_time: z.string().optional(),
 })
 
 export const eventActionSchema = z
@@ -86,11 +86,11 @@ export const eventActionSchema = z
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
-    // org_id: selectOptionSchema().optional(),
-    // group_id: selectOptionSchema().optional(),
+    org_id: selectOptionSchema().optional(),
+    group_id: selectOptionSchema().optional(),
     name: nameSchema,
     action: eventActionSchema,
-    // interval: eventIntervalSchema,
+    interval: eventIntervalSchema,
     status: z.string(),
     retry: z.string(),
     onClick: z.string(),
@@ -460,7 +460,29 @@ export function CreateEvent() {
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   {todos.map(todo => (
                     <div
-                      onClick={todoClicked}
+                      onClick={e => {
+                        const todoInterval = todos.map(todo =>
+                          todo.id === e.target.getAttribute('data-id')
+                            ? { ...todo, selected: !todo.selected }
+                            : todo,
+                        )
+                        const dataFilter = todoInterval.filter(item => item.selected)
+                        let repeat = ''
+                        dataFilter.map(item => {
+                          repeat = repeat + item.value + ','
+                        })
+                        const intervalDay: IntervalData = {}
+                        dataFilter.map(item => {
+                          intervalDay[item.value] = item.selected
+                        })
+                        const interval = {
+                          ...intervalDay,
+                          start_time: startTime,
+                          end_time: endTime,
+                        }
+                        setValue('interval', interval)
+                        todoClicked(e)
+                      }}
                       data-id={todo.id}
                       key={todo.id}
                       className={cn(

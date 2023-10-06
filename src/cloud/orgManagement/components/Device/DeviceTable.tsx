@@ -39,12 +39,16 @@ function DeviceTableContextMenu({
   key,
   org_id,
   group,
+  template_name,
+  template_id,
 }: {
   id: string
   name: string
   key: string
   org_id: string
   group: { label: string; value: string }
+  template_name: string
+  template_id: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -177,6 +181,8 @@ function DeviceTableContextMenu({
           group={group}
           close={close}
           isOpen={isOpen}
+          template_name={template_name}
+          template_id={template_id}
         />
       ) : null}
       {isOpen && type === 'update-version' ? (
@@ -274,13 +280,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id, key, org_id, group_id, group_name } =
+          const { name, id, key, org_id, group_id, group_name, template_id, template_name } =
             info.row.original
           const group = {
             label: group_name,
             value: group_id,
           }
-          return DeviceTableContextMenu({ name, id, key, org_id, group })
+          return DeviceTableContextMenu({ name, id, key, org_id, group,  template_name,
+            template_id })
         },
         header: () => null,
         footer: info => info.column.id,

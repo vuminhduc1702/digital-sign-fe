@@ -6,7 +6,7 @@ import { type EntityType } from '../api/attrAPI'
 export type Device = {
   key: string
   token: string
-  template_id?: string
+  template_id: string
   name: string
   group_id: string
   group_name: string

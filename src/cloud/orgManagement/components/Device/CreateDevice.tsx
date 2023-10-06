@@ -1,5 +1,5 @@
-import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
@@ -9,24 +9,25 @@ import {
   SelectDropdown,
   type SelectOptionString,
 } from '~/components/Form'
-import { nameSchema } from '~/utils/schemaValidation'
-import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
-import { useDefaultCombobox } from '~/utils/hooks'
+import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
+import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useState } from 'react'
-import { useGetGroups } from '../../api/groupAPI'
 import { useParams } from 'react-router-dom'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useGetTemplates } from '~/cloud/deviceTemplate/api'
+import { PlusIcon } from '~/components/SVGIcons'
+import { useGetGroups } from '../../api/groupAPI'
 
 export const deviceSchema = z.object({
   name: nameSchema,
   key: z.string(),
+  template_id: z.string().optional(),
 })
 
 export function CreateDevice() {
@@ -54,7 +55,13 @@ export function CreateDevice() {
       label: '',
       value: '',
     })
+    setTemplateValue(null)
   }
+
+  const [templateValue, setTemplateValue] =
+    useState<SelectOptionString | null>()
+
+  const { data } = useGetTemplates({ projectId })
 
   const { data: groupData } = useGetGroups({
     orgId,
@@ -108,12 +115,13 @@ export function CreateDevice() {
               name: values.name,
               key: values.key,
               group_id: groupValue?.value,
+              template_id: templateValue?.value || '',
             },
           })
         }}
         schema={deviceSchema}
       >
-        {({ register, formState, control }) => {
+        {({ register, formState, control, setValue }) => {
           return (
             <>
               <InputField
@@ -157,6 +165,28 @@ export function CreateDevice() {
                     })) || [{ label: t('loading:org'), value: '' }]
                   }
                 />
+              </div>
+              <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={false}
+                  label={t('cloud:firmware.add_firmware.template')}
+                  name="template_id"
+                  control={control}
+                  value={templateValue}
+                  onChange={e => {
+                    setValue('template_id', e.value)
+                    setTemplateValue(e)
+                  }}
+                  options={
+                    data?.templates?.map(template => ({
+                      label: template?.name,
+                      value: template?.id,
+                    })) || [{ label: '', value: '' }]
+                  }
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.template_id?.message}
+                </p>
               </div>
               <InputField
                 label={

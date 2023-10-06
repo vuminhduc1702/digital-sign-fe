@@ -60,7 +60,7 @@ function EventTableContextMenu({
       const newArr = todos.map(item => {
         if (myArray.includes(item.value)) {
           return { ...item, selected: true }
-        } else return item
+        } else return { ...item, selected: false }
       })
       setTodos(newArr)
       setStartTime(scheduleParse?.time)
@@ -71,7 +71,7 @@ function EventTableContextMenu({
       const newInterval = todos.map(item => {
         if (intervalObj[item.value]) {
           return { ...item, selected: true }
-        } else return item
+        } else return { ...item, selected: false }
       })
       setTodos(newInterval)
       setStartTime(intervalObj?.start_time)

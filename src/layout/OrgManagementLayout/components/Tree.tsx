@@ -18,6 +18,7 @@ import storage from '~/utils/storage'
 import { useDeleteOrg } from '../api/deleteOrg'
 import { useCopyId } from '~/utils/hooks'
 import clsx from 'clsx'
+import { cn } from '~/utils/misc'
 
 interface TreeViewProps {
   data: OrgMapType[]
@@ -30,7 +31,8 @@ interface TreeProps {
 }
 
 const TreeView = ({ data, handleEditTreeView }: TreeViewProps) => {
-  return data.map(item => (
+  const dataSorted = data.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
+  return dataSorted.map(item => (
     <Tree
       key={item.id}
       data={item}
@@ -41,7 +43,7 @@ const TreeView = ({ data, handleEditTreeView }: TreeViewProps) => {
 
 const Tree = ({ data, handleEdit }: TreeProps) => {
   const { t } = useTranslation()
-  const [showChildren, setShowChildren] = useState(true)
+  const [showChildren, setShowChildren] = useState(false)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const navigate = useNavigate()
   const { id: projectId } = storage.getProject()
@@ -50,6 +52,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
   const { orgId } = useParams()
 
   if (!data) return null
+  const dataSorted = data.children.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0))
 
   return (
     <ul className="mt-4 pl-6">
@@ -70,7 +73,9 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
             )}
           </div>
           <Button
-            className="ml-1 h-10 gap-y-3 rounded-l-md border-none px-4"
+            className={cn('ml-1 h-10 gap-y-3 rounded-l-md border-none px-4', {
+              '!bg-red-200': data.isSearch,
+            })}
             key={data.id}
             variant="muted"
             size="no-p"
@@ -194,7 +199,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
       </li>
       {showChildren &&
         data.children &&
-        data.children.map((child: OrgMapType) => {
+        dataSorted.map((child: OrgMapType) => {
           return (
             <Tree
               key={child.id}
