@@ -5,7 +5,6 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-
 export type UpdateOrgForOrgDTO = {
   data: {
     ids?: string[],

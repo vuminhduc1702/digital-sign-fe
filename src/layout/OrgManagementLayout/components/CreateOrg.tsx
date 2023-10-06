@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,6 +19,7 @@ import {
   useUploadImage,
   type CreateOrgDTO,
   type UploadImageDTO,
+  useUpdateOrg,
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -67,7 +68,6 @@ export function CreateOrg() {
 
   const { id: projectId } = storage.getProject()
 
-  const { mutate, isLoading, isSuccess } = useCreateOrg()
   const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
@@ -83,25 +83,81 @@ export function CreateOrg() {
   }
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const avatarRef = useRef<HTMLImageElement>(null)
   const {
-    data: dataUploadImage,
-    mutate: mutateUploadImage,
-    isLoading: isLoadingUploadImage,
-  } = useUploadImage()
-  const {
-    formState: formStateUploadImage,
     control: controlUploadImage,
-    handleSubmit: handleSubmitUploadImage,
     setValue: setValueUploadImage,
+    getValues: getValueUploadImage,
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
-  const avatarRef = useRef<HTMLImageElement | null>(null)
-  // console.log('zod image upload error: ', formStateUploadImage.errors)
+  const { mutate: mutateUpdateOrg } = useUpdateOrg()
+
+  const {
+    data: dataCreateOrg,
+    mutate: mutateCreateOrg,
+    isLoading: isLoadingCreateOrg,
+    isSuccess: isSuccessCreateOrg,
+  } = useCreateOrg()
+
+  const {
+    data: dataUploadImage,
+    mutate: mutateUploadImage,
+    isSuccess: isSuccessUploadImage,
+  } = useUploadImage()
+
+  useEffect(() => {
+    if (isSuccessCreateOrg && dataCreateOrg != null) {
+      mutateUploadImage({
+        data: {
+          project_id: projectId,
+          file: getValueUploadImage('file'),
+        },
+      })
+      handleResetDefaultImage()
+    }
+  }, [dataCreateOrg])
+
+  useEffect(() => {
+    if (
+      isSuccessUploadImage &&
+      dataUploadImage != null &&
+      dataCreateOrg != null
+    ) {
+      mutateUpdateOrg({
+        data: {
+          name: dataCreateOrg.name,
+          description: dataCreateOrg.description,
+          org_id: dataCreateOrg.org_id,
+          image: dataUploadImage.data.link,
+        },
+        org_id: dataCreateOrg.id,
+      })
+    }
+  }, [dataUploadImage])
+
+  function handleResetDefaultImage() {
+    if (avatarRef.current != null) {
+      avatarRef.current.src = defaultOrgImage
+      fetch(avatarRef.current.src)
+        .then(res => res.blob())
+        .then(blob => {
+          const defaultFile = new File([blob], 'default-project.png', blob)
+          const formData = new FormData()
+          formData.append('file', defaultFile)
+          setValueUploadImage(
+            'file',
+            formData.get('file') as unknown as { file: File },
+          )
+        })
+    }
+  }
+
+  const [uploadImageErr, setUploadImageErr] = useState('')
 
   return (
     <FormDrawer
-      isDone={isSuccess}
+      isDone={isSuccessCreateOrg}
       resetData={clearData}
       triggerButton={
         <Button
@@ -118,7 +174,7 @@ export function CreateOrg() {
           form="create-org"
           type="submit"
           size="lg"
-          isLoading={isLoading}
+          isLoading={isLoadingCreateOrg}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
@@ -128,13 +184,12 @@ export function CreateOrg() {
       <Form<CreateOrgDTO['data'], typeof orgSchema>
         id="create-org"
         onSubmit={values => {
-          mutate({
+          mutateCreateOrg({
             data: {
               project_id: projectId,
               org_id: optionOrg?.value,
               name: values.name,
               description: values.description,
-              image: dataUploadImage?.data?.link,
             },
           })
         }}
@@ -177,52 +232,65 @@ export function CreateOrg() {
                 error={formState.errors['description']}
                 registration={register('description')}
               />
-              <FileField
-                label={t('cloud:org_manage.org_manage.add_org.avatar')}
-                error={formStateUploadImage.errors['file']}
-                control={controlUploadImage}
-                name="upload-orgAvatar"
-                ref={fileInputRef}
-                onChange={event => {
-                  const formData = new FormData()
-                  formData.append('file', event.target.files[0])
-                  setValueUploadImage(
-                    'file',
-                    formData.get('file') as unknown as { file: File },
-                  )
-                  const reader = new FileReader()
-                  reader.readAsDataURL(event.target.files[0])
-                  reader.onload = e => {
-                    if (avatarRef.current != null && e.target != null) {
-                      avatarRef.current.src = e.target.result as string
+              <div className="mb-3 space-y-1">
+                <FileField
+                  label={t('cloud:project_manager.add_project.avatar')}
+                  control={controlUploadImage}
+                  name="upload-image"
+                  ref={fileInputRef}
+                  onChange={event => {
+                    const file = event.target.files[0]
+                    const formData = new FormData()
+                    formData.append('file', event.target.files[0])
+                    setValueUploadImage(
+                      'file',
+                      formData.get('file') as unknown as { file: File },
+                    )
+
+                    if (file.size > MAX_FILE_SIZE) {
+                      setUploadImageErr(t('validate:image_max_size'))
+                      return false
                     }
-                  }
-                }}
-              />
+                    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                      setUploadImageErr(t('validate:image_type'))
+                      return false
+                    }
+
+                    const reader = new FileReader()
+                    reader.readAsDataURL(file)
+                    reader.onload = e => {
+                      if (
+                        avatarRef.current != null &&
+                        e.target != null &&
+                        reader.readyState === 2
+                      ) {
+                        avatarRef.current.src = e.target.result as string
+                      }
+                    }
+                  }}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {uploadImageErr}
+                </p>
+              </div>
               <img
                 src={defaultOrgImage}
-                alt="Organization"
-                className="h-36 w-32"
+                alt="Project"
+                className="mb-3 h-36 w-32"
                 ref={avatarRef}
               />
               <Button
-                className="border-none"
+                className="mb-3 border-none"
                 style={{ justifyContent: 'flex-start' }}
-                variant="primary"
+                variant="secondaryLight"
                 size="square"
-                onClick={handleSubmitUploadImage(values => {
-                  mutateUploadImage({
-                    data: {
-                      project_id: projectId,
-                      file: values.file,
-                    },
-                  })
-                  setValueUploadImage('file', { file: null as unknown as File })
-                })}
-                isLoading={isLoadingUploadImage}
+                onClick={handleResetDefaultImage}
               >
-                {t('cloud:org_manage.org_manage.add_org.upload_ava')}
+                {t('cloud:project_manager.add_project.upload_ava_default')}
               </Button>
+              <div style={{ fontSize: '12px' }}>
+                {t('cloud:project_manager.add_project.upload_instruction')}
+              </div>
             </>
           )
         }}

@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react'
 import { Button } from '~/components/Button'
 import { Form, InputField, SelectDropdown, SelectOptionString } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
+import { useUpdateGroup, type UpdateGroupDTO, useGroupById } from '../../api/groupAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { queryClient } from '~/lib/react-query'
 import { OrgList } from '~/layout/MainLayout/types'
 import { flattenData } from '~/utils/misc'
+import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 
 const groupSchema = z.object({
   name: z.string(),
@@ -44,6 +45,9 @@ export function UpdateGroup({
   const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
+  const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
+  const { data: groupData } = useGroupById({groupId})
+  const filterOrg = orgFlattenData?.filter(org => org.id == groupData?.organization)[0]
 
   useEffect(() => {
     if (isSuccess) {
@@ -51,15 +55,14 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-
-  // useEffect(() => {
-  //   if (organization.id) {
-  //     setOptionOrg({
-  //       label: selectedUpdateOrg?.parent_name,
-  //       value: selectedUpdateOrg?.id,
-  //     })
-  //   }
-  // }, [selectedUpdateOrg])
+  useEffect(() => {
+    if (groupId) {
+      setOptionOrg({
+        label: filterOrg?.name,
+        value: filterOrg?.id,
+      })
+    }
+  }, [groupId])
 
   return (
     <Drawer
@@ -96,16 +99,17 @@ export function UpdateGroup({
           mutate({
             data: {
               name: values.name,
+              org_id: optionOrg?.value
             },
             groupId,
           })
         }
         schema={groupSchema}
         options={{
-          defaultValues: { name },
+          defaultValues: { name: name },
         }}
       >
-        {({ register, formState }) => (
+        {({ register, formState, control, setValue }) => (
           <>
             <InputField
               label={
@@ -115,7 +119,7 @@ export function UpdateGroup({
               error={formState.errors['name']}
               registration={register('name')}
             />
-            {/* <div className="space-y-1">
+            <div className="space-y-1">
               <SelectDropdown
                 isClearable={true}
                 label={t('cloud:org_manage.device_manage.add_device.parent')}
@@ -129,11 +133,11 @@ export function UpdateGroup({
                 }
                 onChange={e => {
                   setOptionOrg(e)
-                  mutateUpdateOrg({
+                  mutateUpdateOrgForGroup({
                     data: {
-                      ids: [e?.value]
+                      ids: [groupId],
+                      org_id: e?.value
                     },
-                    orgId: selectedUpdateOrg.id
                   })
                   setValue('org_id', e?.value)
                 }}
@@ -144,7 +148,7 @@ export function UpdateGroup({
                   ? t('cloud:org_manage.org_manage.add_org.choose_org')
                   : formState?.errors?.org_id?.message}
               </p>
-            </div> */}
+            </div>
           </>
         )}
       </Form>

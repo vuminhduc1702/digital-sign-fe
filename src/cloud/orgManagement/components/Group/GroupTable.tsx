@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -23,6 +23,16 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+
+export type GroupType = {
+  id: string,
+  name: string,
+  org_name: string,
+  organization: string,
+  project_id: string,
+  entity_type: string,
+  attributes: string
+}
 
 function GroupTableContextMenu({ id, name }: { id: string; name: string }) {
   const { t } = useTranslation()

@@ -10,11 +10,11 @@ import { type orgSchema } from '../components/CreateOrg'
 
 export type UpdateOrgDTO = {
   data: Omit<z.infer<typeof orgSchema>, 'project_id'>
-  orgId?: string
+  org_id?: string
 }
 
-export const updateOrg = ({ data, orgId }: UpdateOrgDTO) => {
-  return axios.put(`/api/organizations/${orgId}`, data)
+export const updateOrg = ({ data, org_id }: UpdateOrgDTO) => {
+  return axios.put(`/api/organizations/${org_id}`, data)
 }
 
 type UseUpdateOrgOptions = {

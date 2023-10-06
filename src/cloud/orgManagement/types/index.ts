@@ -41,6 +41,7 @@ export type Group = {
   project_id: string
   entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
   attributes: Attribute[]
+  parent_name?: string
 }
 
 export type GroupList = {
