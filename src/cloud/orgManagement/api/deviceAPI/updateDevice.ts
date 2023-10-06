@@ -11,6 +11,7 @@ export type UpdateDeviceDTO = {
     key: string
     org_id: string
     group_id: string
+    template_id: string
   }
   deviceId: string
 }

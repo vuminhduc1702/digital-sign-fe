@@ -1,27 +1,27 @@
-import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
-import { type UpdateDeviceDTO, useUpdateDevice } from '../../api/deviceAPI'
+import { useParams } from 'react-router-dom'
 import { Button } from '~/components/Button'
+import { Drawer } from '~/components/Drawer'
 import {
   Form,
   InputField,
   SelectDropdown,
   type SelectOptionString,
 } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
-import { deviceSchema } from './CreateDevice'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
-import { useParams } from 'react-router-dom'
 import storage from '~/utils/storage'
+import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
-import { useDefaultCombobox } from '~/utils/hooks'
+import { deviceSchema } from './CreateDevice'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -34,6 +34,8 @@ type UpdateDeviceProps = {
   }
   close: () => void
   isOpen: boolean
+  template_name: string
+  template_id: string
 }
 export function UpdateDevice({
   deviceId,
@@ -43,6 +45,8 @@ export function UpdateDevice({
   group,
   close,
   isOpen,
+  template_name,
+  template_id,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
@@ -51,6 +55,10 @@ export function UpdateDevice({
   const [orgValue, setOrgValue] = useState<SelectOptionString>({
     label: '',
     value: '',
+  })
+  const [templateValue, setTemplateValue] = useState<SelectOptionString>({
+    label: template_name,
+    value: template_id,
   })
   const [groupValue, setGroupValue] = useState(group)
 
@@ -71,6 +79,8 @@ export function UpdateDevice({
     offset,
     entity_type: 'DEVICE',
   })
+
+  const { data } = useGetTemplates({ projectId })
 
   useEffect(() => {
     if (isSuccess) {
@@ -125,6 +135,7 @@ export function UpdateDevice({
               key: values.key,
               org_id: orgValue?.value,
               group_id: groupValue?.value,
+              template_id: templateValue?.value || '',
             },
             deviceId,
           })
@@ -175,6 +186,25 @@ export function UpdateDevice({
                   })) || [{ label: t('loading:org'), value: '' }]
                 }
               />
+            </div>
+            <div>
+              <SelectDropdown
+                isClearable={false}
+                label={t('cloud:firmware.add_firmware.template')}
+                name="template_id"
+                control={control}
+                value={templateValue}
+                onChange={e => setTemplateValue(e)}
+                options={
+                  data?.templates?.map(template => ({
+                    label: template?.name,
+                    value: template?.id,
+                  })) || [{ label: '', value: '' }]
+                }
+              />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.template_id?.message}
+              </p>
             </div>
             <InputField
               label={
