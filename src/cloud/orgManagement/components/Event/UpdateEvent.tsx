@@ -300,6 +300,21 @@ export function UpdateEvent({
     return defaultAction
   }
 
+  const renderInterval = () => {
+    const dataFilter = dateArr.filter(item => item.selected)
+
+    const intervalDay: IntervalData = {}
+    dataFilter.map(item => {
+      intervalDay[item.value] = item.selected
+    })
+    const interval = {
+      ...intervalDay,
+      start_time: startTime,
+      end_time: endTime,
+    }
+     return interval
+  }
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -340,6 +355,7 @@ export function UpdateEvent({
             retry: data.retry.toString(),
             status: data.status ? 'true' : 'false',
             condition: renderDataCondition(),
+            interval: renderInterval(),
           },
         }}
         onSubmit={values => {
