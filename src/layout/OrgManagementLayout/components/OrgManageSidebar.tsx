@@ -266,7 +266,7 @@ function OrgManageSidebar() {
         <TreeView
           data={convertData(filteredComboboxData)}
           handleEditTreeView={(data: OrgMapType) => handleEdit(data)}
-          isShow={selected?.id}
+          isShow={selected?.id ? true : false}
         />
       </div>
     </>

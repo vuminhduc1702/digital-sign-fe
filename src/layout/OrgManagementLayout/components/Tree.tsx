@@ -23,13 +23,13 @@ import { cn } from '~/utils/misc'
 interface TreeViewProps {
   data: OrgMapType[]
   handleEditTreeView: (data: OrgMapType) => void
-  isShow: any
+  isShow: boolean
 }
 
 interface TreeProps {
   data: OrgMapType
   handleEdit: (data: OrgMapType) => void
-  isShow: any
+  isShow: boolean
 }
 
 const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
