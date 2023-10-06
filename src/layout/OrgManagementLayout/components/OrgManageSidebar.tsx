@@ -27,6 +27,7 @@ export type OrgMapType = {
   org_id: string
   image: string
   children: any[]
+  isSearch?: boolean
 }
 
 export type EntityTypeURL =
@@ -69,10 +70,17 @@ function OrgManageSidebar() {
 
   const getInt = (x: string) => Number.parseInt(x)
   const convertData = (data: OrgMapType[]) => {
+    const findIndexSearch = filteredComboboxData.findIndex(
+      item => item.isSearch,
+    )
+    if(findIndexSearch !== -1) {
+      filteredComboboxData[findIndexSearch].isSearch = false
+    }
     if (selected?.id) {
       const findIndex = filteredComboboxData.findIndex(
         item => item.id === selected?.id,
       )
+      filteredComboboxData[findIndex].isSearch = true
       let arr = []
       let currentLevel = selected?.level
       for (let i = findIndex; i >= 0; i--) {
