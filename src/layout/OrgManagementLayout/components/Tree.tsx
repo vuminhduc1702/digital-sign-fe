@@ -114,7 +114,7 @@ const Tree = ({ data, handleEdit }: TreeProps) => {
                 <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
               }
             >
-              <Menu.Items className="absolute left-0 z-10 mt-11 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div className="px-1 py-1">
                   <MenuItem
                     icon={

@@ -99,7 +99,7 @@ function EventTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-1 py-1">
             <MenuItem
               icon={
@@ -235,7 +235,9 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
                 })
               }
             >
-              {info.row.original.onClick === 'true' && <img src={btnCheckBox} alt="Submit" className="h-5 w-5" />}
+              {info.row.original.onClick === 'true' && (
+                <img src={btnCheckBox} alt="Submit" className="h-5 w-5" />
+              )}
             </span>
           )
         },

@@ -6,10 +6,10 @@ import { flattenData } from '~/utils/misc'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
 
 import { SearchIcon } from '~/components/SVGIcons'
-import { type FirmWare } from '../../types'
+import { type FirmWare, type FirmWareList } from '../../types'
 
 type ComboBoxSelectFirmWareProps = {
-  data: FirmWare[]
+  data: FirmWareList
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<FirmWare[]>>
   offset?: number
 } & FieldWrapperPassThroughProps
@@ -22,18 +22,21 @@ export function ComboBoxSelectFirmWare({
 }: ComboBoxSelectFirmWareProps) {
   const [query, setQuery] = useState('')
 
-  const { acc: firmwareFlattenData, extractedPropertyKeys } = flattenData(data, [
-    'id',
-    'name',
-    'template_name',
-    'version',
-    'created_time',
-    'tag',
-    'created_by',
-    'template_id',
-    'email',
-    'description'
-  ])
+  const { acc: firmwareFlattenData, extractedPropertyKeys } = flattenData(
+    data?.data,
+    [
+      'id',
+      'name',
+      'template_name',
+      'version',
+      'created_time',
+      'tag',
+      'created_by',
+      'template_id',
+      'email',
+      'description',
+    ],
+  )
 
   const filteredData = filteredComboboxData(
     query,

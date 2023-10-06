@@ -25,7 +25,7 @@ export const PATHS: { [key: string]: string } = {
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
-  FIRM_WARE: `${BASE_PATH_CLOUD}firm-ware`,
+  FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,
 
   // Public routes
   LOGIN: `${BASE_PATH}auth/login`,

@@ -14,12 +14,11 @@ import { useGetFirmwares } from '../api/firmwareAPI'
 import { type FirmWare } from '../types'
 
 export function FirmwareTemplate() {
-
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-  FirmWare[]
-  >([])
+  const [filteredComboboxData, setFilteredComboboxData] = useState<FirmWare[]>(
+    [],
+  )
   const [offset, setOffset] = useState(0)
   const { id: projectId } = storage.getProject()
   const {
@@ -33,15 +32,14 @@ export function FirmwareTemplate() {
 
   return (
     <>
-    <TitleBar title={t('cloud:firmware.title')} />
+      <TitleBar title={t('cloud:firmware.title')} />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
-        
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateThing />
             {isSuccess ? (
               <ComboBoxSelectFirmWare
-                data={firmwareData?.data || []}
+                data={firmwareData}
                 setFilteredComboboxData={setFilteredComboboxData}
                 offset={offset}
               />
