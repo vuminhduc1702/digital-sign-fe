@@ -6,6 +6,7 @@ module.exports = {
     'react-app',
     'prettier',
     'plugin:@tanstack/eslint-plugin-query/recommended',
+    'plugin:tailwindcss/recommended',
   ],
   plugins: ['@tanstack/query'],
   rules: {

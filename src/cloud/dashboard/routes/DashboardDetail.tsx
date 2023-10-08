@@ -414,7 +414,7 @@ export function DashboardDetail() {
                   )}
                 >
                   <div className="flex w-full gap-x-4">
-                    <div className="col-6 w-full space-y-3">
+                    <div className="w-full space-y-3">
                       <Button
                         type="button"
                         size="square"
@@ -450,7 +450,7 @@ export function DashboardDetail() {
                         </span>
                       </Button>
                     </div>
-                    <div className="col-6 w-full space-y-3">
+                    <div className="w-full space-y-3">
                       <Button
                         type="button"
                         size="square"
