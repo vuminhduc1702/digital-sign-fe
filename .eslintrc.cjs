@@ -22,5 +22,11 @@ module.exports = {
     'jest-dom/prefer-in-document': 'off',
     '@typescript-eslint/no-duplicate-imports': 'warn',
     'no-unused-vars': 'off',
+    'tailwindcss/migration-from-tailwind-2': 'off',
+  },
+  settings: {
+    tailwindcss: {
+      callees: ['classnames', 'clsx', 'ctl', 'cn'],
+    },
   },
 }

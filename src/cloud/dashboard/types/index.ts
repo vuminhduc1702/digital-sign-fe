@@ -1,3 +1,5 @@
+import * as z from 'zod'
+
 export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
@@ -35,3 +37,31 @@ type DataItem = {
 export type DashboardWS = {
   data: DataItem[]
 }
+
+export const aggSchema = z.enum([
+  'NONE',
+  'AVG',
+  'MIN',
+  'MAX',
+  'SUM',
+  'COUNT',
+] as const)
+
+export const dataTest = [
+  {
+    ts: 1696178540,
+    value: 1,
+  },
+  {
+    ts: 1696351340,
+    value: 2,
+  },
+  {
+    ts: 1696524140,
+    value: 3,
+  },
+  {
+    ts: 1696696940,
+    value: 4,
+  },
+]

@@ -10,15 +10,17 @@ import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
-import {
-  CreateWidget,
-  aggSchema,
-  type WidgetConfig,
-} from '../components/Widget'
+import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 
-import { type DashboardWS, type WSWidgetData, type WidgetType } from '../types'
+import {
+  aggSchema,
+  type DashboardWS,
+  type WSWidgetData,
+  type WidgetType,
+  dataTest,
+} from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -92,97 +94,6 @@ export function DashboardDetail() {
     [widgetData?.widgetSetting?.startDate],
   )
 
-  const widgetId = uuidv4()
-  const latestData = widgetData?.attributeConfig.map(item => ({
-    type: 'TIME_SERIES',
-    key: item.attribute_key,
-  }))
-  const initMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        query: {
-          entityFilter: {
-            type: 'entityList',
-            entityType: 'DEVICE',
-            entityIds: widgetData?.device ?? [],
-          },
-          pageLink: {
-            pageSize: 1,
-            page: 0,
-            sortOrder: {
-              key: {
-                type: 'ENTITY_FIELD',
-                key: 'ts',
-              },
-              direction: 'DESC',
-            },
-          },
-          entityFields: [
-            {
-              type: 'ENTITY_FIELD',
-              key: 'name',
-            },
-          ],
-          latestValues: latestData,
-        },
-        id: widgetId,
-      },
-    ],
-  })
-
-  const lastestMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        latestCmd: {
-          keys: [
-            {
-              type: 'TIME_SERIES',
-              key: 'test',
-            },
-            {
-              type: 'TIME_SERIES',
-              key: 'test1',
-            },
-          ],
-        },
-        id: 1,
-      },
-    ],
-  })
-
-  const realtimeMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        tsCmd: {
-          keys: widgetData?.attributeConfig.map(item => item.attribute_key),
-          startTs: parseStartDate,
-          interval: widgetData?.widgetSetting?.interval,
-          limit: 10,
-          offset: 0,
-          agg: widgetData?.widgetSetting?.agg,
-        },
-        id: 1,
-      },
-    ],
-  })
-
-  const historyMessage = JSON.stringify({
-    entityDataCmds: [
-      {
-        historyCmd: {
-          keys: [],
-          startTs: null,
-          endTs: null,
-          interval: 10000,
-          limit: 100,
-          offset: 0,
-          agg: '',
-        },
-        id: 1,
-      },
-    ],
-  })
-
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WS_URL)
 
@@ -213,15 +124,15 @@ export function DashboardDetail() {
     { i: 'd', x: 5, y: 5, w: 5, h: 5 },
   ]
 
-  useEffect(() => {
-    if (detailDashboard?.configuration.widgets != null) {
-      handleSendMessage(JSON.stringify(initMessage))
-    }
-  }, [detailDashboard?.configuration.widgets, handleSendMessage, initMessage])
+  // useEffect(() => {
+  //   if (detailDashboard?.configuration.widgets != null) {
+  //     handleSendMessage(JSON.stringify(initMessage))
+  //   }
+  // }, [detailDashboard?.configuration.widgets, handleSendMessage, initMessage])
 
-  useEffect(() => {
-    handleSendMessage(JSON.stringify(realtimeMessage))
-  }, [handleSendMessage, realtimeMessage])
+  // useEffect(() => {
+  //   handleSendMessage(JSON.stringify(realtimeMessage))
+  // }, [handleSendMessage, realtimeMessage])
 
   return (
     <div className="flex grow flex-col">
@@ -276,6 +187,100 @@ export function DashboardDetail() {
               isLoading={updateDashboardIsLoading}
               onClick={() => {
                 setIsEditMode(false)
+
+                const widgetId = uuidv4()
+                const attrData = widgetData?.attributeConfig.map(item => ({
+                  type: 'TIME_SERIES',
+                  key: item.attribute_key,
+                }))
+                const initMessage = {
+                  entityDataCmds: [
+                    {
+                      query: {
+                        entityFilter: {
+                          type: 'entityList',
+                          entityType: 'DEVICE',
+                          entityIds: widgetData?.device ?? [],
+                        },
+                        pageLink: {
+                          pageSize: 1,
+                          page: 0,
+                          sortOrder: {
+                            key: {
+                              type: 'ENTITY_FIELD',
+                              key: 'ts',
+                            },
+                            direction: 'DESC',
+                          },
+                        },
+                        entityFields: [
+                          {
+                            type: 'ENTITY_FIELD',
+                            key: 'name',
+                          },
+                        ],
+                        latestValues: attrData,
+                      },
+                      id: widgetId,
+                    },
+                  ],
+                }
+
+                const lastestMessage = {
+                  entityDataCmds: [
+                    {
+                      latestCmd: {
+                        keys: [
+                          {
+                            type: 'TIME_SERIES',
+                            key: 'test',
+                          },
+                          {
+                            type: 'TIME_SERIES',
+                            key: 'test1',
+                          },
+                        ],
+                      },
+                      id: widgetId,
+                    },
+                  ],
+                }
+
+                const realtimeMessage = {
+                  entityDataCmds: [
+                    {
+                      tsCmd: {
+                        keys: widgetData?.attributeConfig.map(
+                          item => item.attribute_key,
+                        ),
+                        startTs: parseStartDate,
+                        interval: widgetData?.widgetSetting?.interval,
+                        limit: 10,
+                        offset: 0,
+                        agg: widgetData?.widgetSetting?.agg,
+                      },
+                      id: widgetId,
+                    },
+                  ],
+                }
+
+                const historyMessage = {
+                  entityDataCmds: [
+                    {
+                      historyCmd: {
+                        keys: [],
+                        startTs: null,
+                        endTs: null,
+                        interval: 10000,
+                        limit: 100,
+                        offset: 0,
+                        agg: '',
+                      },
+                      id: widgetId,
+                    },
+                  ],
+                }
+
                 mutateUpdateDashboard({
                   data: {
                     title: detailDashboard?.title ?? '',

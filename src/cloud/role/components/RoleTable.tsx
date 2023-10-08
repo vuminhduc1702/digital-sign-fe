@@ -52,7 +52,7 @@ function RoleTableContextMenu({
         }
       >
         <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-1 py-1">
+          <div className="p-1">
             <MenuItem
               icon={
                 <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
@@ -189,7 +189,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_service')}
+      {t('table:no_role')}
     </div>
   )
 }

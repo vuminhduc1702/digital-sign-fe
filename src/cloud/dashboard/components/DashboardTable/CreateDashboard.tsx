@@ -8,11 +8,12 @@ import {
   useCreateDashboard,
 } from '../../api/createDashboard'
 import {
-  aggSchema,
   attrWidgetSchema,
   widgetDataTypeSchema,
   widgetTypeSchema,
 } from '../Widget'
+
+import { aggSchema } from '../../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'

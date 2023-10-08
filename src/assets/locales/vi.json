@@ -572,7 +572,8 @@
     "no_event_service": "Không có Event Service",
     "no_dashboard": "Không có dashboard",
     "no_in_org": "Không thuộc TC",
-    "no_widget": "Không có biểu đồ"
+    "no_widget": "Không có biểu đồ",
+    "no_role": "Không có vai trò"
   },
   "btn": {
     "create": "Tạo mới",

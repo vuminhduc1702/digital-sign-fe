@@ -16,7 +16,7 @@ type UpdateDashboardProps = {
   close: () => void
   isOpen: boolean
   title: string
-  description: string
+  configuration: string
 }
 
 export function UpdateDashboard({
@@ -24,7 +24,7 @@ export function UpdateDashboard({
   close,
   isOpen,
   title,
-  description,
+  configuration,
 }: UpdateDashboardProps) {
   const { t } = useTranslation()
 
@@ -83,7 +83,8 @@ export function UpdateDashboard({
           defaultValues: {
             title,
             configuration: {
-              description,
+              description: JSON.parse(configuration as unknown as string)
+                ?.description,
               widgets: null,
             },
           },

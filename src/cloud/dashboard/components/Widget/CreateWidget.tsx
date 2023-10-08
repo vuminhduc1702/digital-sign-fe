@@ -37,7 +37,7 @@ import {
   CommandItem,
 } from '~/components/Command'
 
-import { type WidgetType } from '../../types'
+import { aggSchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
@@ -46,15 +46,6 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-
-export const aggSchema = z.enum([
-  'NONE',
-  'AVG',
-  'MIN',
-  'MAX',
-  'SUM',
-  'COUNT',
-] as const)
 
 export const attrWidgetSchema = z.array(
   z.object({
@@ -171,7 +162,7 @@ export function CreateWidget({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="thing-service-popup inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">

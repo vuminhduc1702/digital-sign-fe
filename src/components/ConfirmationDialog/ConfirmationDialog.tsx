@@ -51,10 +51,10 @@ export const ConfirmationDialog = ({
     <>
       {trigger}
       <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+        <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
           <div className="sm:flex sm:items-start">
             {icon === 'danger' && (
-              <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-primary-300 sm:mx-0 sm:h-10 sm:w-10">
+              <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-300 sm:mx-0 sm:h-10 sm:w-10">
                 <ExclamationCircleIcon
                   className="h-6 w-6 text-primary-400"
                   aria-hidden="true"
@@ -63,7 +63,7 @@ export const ConfirmationDialog = ({
             )}
 
             {icon === 'info' && (
-              <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-secondary-400 sm:mx-0 sm:h-10 sm:w-10">
+              <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary-400 sm:mx-0 sm:h-10 sm:w-10">
                 <InformationCircleIcon
                   className="h-6 w-6 text-secondary-600"
                   aria-hidden="true"

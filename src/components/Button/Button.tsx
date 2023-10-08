@@ -45,6 +45,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    console.log('isLoading: ', isLoading)
     return (
       <button
         ref={ref}

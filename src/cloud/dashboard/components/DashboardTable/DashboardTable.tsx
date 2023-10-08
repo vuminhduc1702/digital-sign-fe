@@ -1,31 +1,27 @@
 import { useTranslation } from 'react-i18next'
 import { useDisclosure } from '~/utils/hooks'
 import { useDeleteDashboard } from '../../api/deleteDashboard'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { getVNDateFormat } from '~/utils/misc'
 import { BaseTable } from '~/components/Table'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateDashboard } from './UpdateDashboard'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
-import { type Dashboard } from '.'
+import { type DashboardRes } from '../../api'
 
-function DashboardTableContextMenu({
-  id,
-  title,
+export function DashboardTable({
+  data,
+  projectId,
   ...props
 }: {
-  id: string
-  title: string
-  description: string
+  data: DashboardRes[]
+  projectId: string
 }) {
   const { t } = useTranslation()
 
@@ -33,104 +29,14 @@ function DashboardTableContextMenu({
 
   const { mutate, isLoading, isSuccess } = useDeleteDashboard()
 
-  return (
-    <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-1 py-1">
-            <MenuItem
-              icon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit Dashboard"
-                  className="h-5 w-5"
-                />
-              }
-              onClick={open}
-            >
-              {t('cloud:dashboard.add_dashboard.edit')}
-            </MenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:dashboard.table.delete_dashboard_full')}
-              body={
-                t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                  '{{DBNAME}}',
-                  title,
-                ) ?? 'Confirm delete?'
-              }
-              triggerButton={
-                <Button
-                  className="w-full border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete Dashboard"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:dashboard.table.delete_dashboard')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
-          </div>
-        </Menu.Items>
-      </Dropdown>
-      {isOpen ? (
-        <UpdateDashboard
-          id={id}
-          close={close}
-          isOpen={isOpen}
-          title={title}
-          {...props}
-        />
-      ) : null}
-    </>
-  )
-}
+  const [dashboardInfo, setDashboardInfo] = useState<DashboardRes>()
 
-export function DashboardTable({
-  data,
-  projectId,
-  ...props
-}: {
-  data: Dashboard[]
-  projectId: string
-}) {
-  const { t } = useTranslation()
-
-  const columnHelper = createColumnHelper<Dashboard>()
+  const columnHelper = createColumnHelper<DashboardRes>()
 
   const dataSorted =
     data?.sort((a, b) => b.created_time - a.created_time) || data
 
-  const columns = useMemo<ColumnDef<Dashboard, any>[]>(
+  const columns = useMemo<ColumnDef<DashboardRes, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -179,13 +85,70 @@ export function DashboardTable({
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { id, title, configuration } = info.row.original
-          return DashboardTableContextMenu({
-            id,
-            title,
-            description: JSON.parse(configuration as unknown as string)
-              .description,
-          })
+          const { title, id } = info.row.original
+          setDashboardInfo(info.row.original)
+          // return DashboardTableContextMenu({
+          //   id,
+          //   title,
+          //   description: JSON.parse(configuration as unknown as string)
+          //     .description,
+          // })
+          return (
+            <div className="flex items-center gap-x-2">
+              <Button
+                type="button"
+                size="square"
+                variant="none"
+                className="mt-1 p-0"
+                onClick={open}
+                startIcon={
+                  <img
+                    src={btnEditIcon}
+                    alt="Edit Dashboard"
+                    className="h-6 w-6"
+                  />
+                }
+              />
+              <ConfirmationDialog
+                isDone={isSuccess}
+                icon="danger"
+                title={t('cloud:dashboard.table.delete_dashboard_full')}
+                body={t(
+                  'cloud:dashboard.table.delete_dashboard_confirm',
+                ).replace('{{DBNAME}}', title)}
+                triggerButton={
+                  <Button
+                    size="square"
+                    variant="none"
+                    className="p-0"
+                    startIcon={
+                      <img
+                        src={btnDeleteIcon}
+                        alt="Delete Dashboard"
+                        className="h-6 w-6"
+                      />
+                    }
+                  ></Button>
+                }
+                confirmButton={
+                  <Button
+                    isLoading={isLoading}
+                    type="button"
+                    size="md"
+                    className="bg-primary-400"
+                    onClick={() => mutate({ id })}
+                    startIcon={
+                      <img
+                        src={btnSubmitIcon}
+                        alt="Submit"
+                        className="h-5 w-5"
+                      />
+                    }
+                  />
+                }
+              />
+            </div>
+          )
         },
         header: () => null,
         footer: info => info.column.id,
@@ -195,7 +158,16 @@ export function DashboardTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <>
+      <BaseTable data={dataSorted} columns={columns} {...props} />
+      <UpdateDashboard
+        id={dashboardInfo?.id as string}
+        close={close}
+        isOpen={isOpen}
+        title={dashboardInfo?.title as string}
+        configuration={dashboardInfo?.configuration as unknown as string}
+      />
+    </>
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_dashboard')}
