@@ -591,7 +591,7 @@ export function CreateWidget({
                               )}
                               className="w-full rounded-md bg-gray-500 pl-3"
                             />
-                            <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5">
+                            <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5 ">
                               <SelectField
                                 label={t('ws:filter.dataType')}
                                 error={

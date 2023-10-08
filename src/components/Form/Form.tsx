@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import clsx from 'clsx'
 import * as React from 'react'
 import {
   useForm,
@@ -8,6 +7,8 @@ import {
   type UseFormProps,
   type FieldValues,
 } from 'react-hook-form'
+import { cn } from '~/utils/misc'
+
 import { type ZodType } from 'zod'
 
 type FormProps<TFormValues extends FieldValues, Schema> = {
@@ -37,7 +38,7 @@ export const Form = <
 
   return (
     <form
-      className={clsx('w-full space-y-6', className)}
+      className={cn('w-full space-y-6', className)}
       onSubmit={methods.handleSubmit(onSubmit)}
       id={id}
     >

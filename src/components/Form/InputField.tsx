@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { type HTMLProps, forwardRef } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 import { cn } from '~/utils/misc'
 
@@ -14,14 +14,13 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   className?: string
   classNameFieldWrapper?: string
   registration?: Partial<UseFormRegisterReturn>
-  value?: any
   classNameError?: string
-  onChange?: (e: any) => void
-} & IconProps
+} & IconProps &
+  HTMLProps<HTMLInputElement>
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  function InputField(props: InputFieldProps, ref) {
-    const {
+  function InputField(
+    {
       type = 'text',
       label,
       className,
@@ -32,8 +31,10 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       endIcon,
       require,
       classNameError,
-      ...prop
-    } = props
+      ...props
+    }: InputFieldProps,
+    ref,
+  ) {
     return (
       <FieldWrapper
         label={label}
@@ -53,11 +54,11 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           className={cn(
             'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 disabled:cursor-not-allowed disabled:bg-secondary-500 sm:text-body-sm',
             className,
-            { 'pl-7': startIcon, 'pr-7': endIcon },
+            { 'pl-8': startIcon, 'pr-8': endIcon },
           )}
           ref={ref}
           {...registration}
-          {...prop}
+          {...props}
         />
         {endIcon}
       </FieldWrapper>

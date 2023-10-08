@@ -1,20 +1,22 @@
-import { Link } from '~/components/Link'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 
+import { Link } from '~/components/Link'
 import { useRegister } from '~/lib/auth'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
+import { sentOTP } from '../api/otp'
+import i18n from '~/i18n'
+
 import {
   emailSchema,
-  nameSchema,
   otpSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
+
 import { BtnPasswordLoginIcon, BtnUserLoginIcon } from '~/components/SVGIcons'
-import { sentOTP } from '../api/otp'
-import { useEffect, useState } from 'react'
 
 const registerSchema = z
   .object({
@@ -28,7 +30,7 @@ const registerSchema = z
       ctx.addIssue({
         path: ['confirmPassword'],
         code: 'custom',
-        message: 'Mật khẩu nhập lại không đúng',
+        message: i18n.t('auth:pass_invalid'),
       })
     }
   })
@@ -45,20 +47,16 @@ type RegisterFormProps = {
 }
 
 export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-  let startCountdown = 180
-
   const { t } = useTranslation()
 
   const registerMutation = useRegister()
   const [email, setEmail] = useState('')
-  const [countdown, setCountdown] = useState<number>(startCountdown)
+  const [countdown, setCountdown] = useState<number>(180)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
   useEffect(() => {
-    let timerId: NodeJS.Timeout | null = null
-
-    timerId = setInterval(() => {
+    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
       setCountdown(prevState => {
         if (prevState > 0) return prevState - 1
         else {
@@ -81,7 +79,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     <div>
       <Form<RegisterValues, typeof registerSchema>
         onSubmit={async values => {
-          await registerMutation.mutate(values)
+          await registerMutation.mutateAsync(values)
           onSuccess()
         }}
         schema={registerSchema}
@@ -96,27 +94,26 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               <InputField
                 type="email"
                 className="mt-5 bg-stone-300"
-                // classNameError="absolute top-100%"
+                classNameFieldWrapper="relative"
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
-                onChange={e => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setEmail(e.target.value)
-                  console.log(e.target.value)
                 }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
                     width={20}
                     viewBox="0 0 20 20"
-                    className="absolute left--5 top--5  z-20 m-2 h-5 w-5 border-e-red-600 hover:text-primary-400"
+                    className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
               />
               <InputField
                 type="password"
                 className="bg-stone-300"
-                // classNameError="absolute top-100%"
+                classNameFieldWrapper="relative"
                 placeholder={t('auth:require_password')}
                 error={formState.errors['password']}
                 registration={register('password')}
@@ -125,14 +122,14 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     height={20}
                     width={20}
                     viewBox="0 0 20 20"
-                    className="absolute left--5 top--5 z-20  m-2 h-5 w-5  hover:text-primary-400"
+                    className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
               />
               <InputField
                 type="password"
                 className="bg-stone-300"
-                // classNameError="absolute top-100%"
+                classNameFieldWrapper="relative"
                 error={formState.errors['confirmPassword']}
                 registration={register('confirmPassword')}
                 placeholder={t('auth:confirm_password')}
@@ -141,54 +138,50 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     height={20}
                     width={20}
                     viewBox="0 0 20 20"
-                    className="absolute left--5 top--5 z-20  m-2 h-5 w-5 hover:text-primary-400"
+                    className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
               />
+              <Button
+                variant="none"
+                className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
+                disabled={btnOtpDisable}
+                onClick={() => {
+                  setBtnOtpDisable(true)
+                  sentOTP({
+                    email: email,
+                    phone: '0337463520',
+                  })
+                    .then(() => {
+                      setCountdown(countdown)
+                      setCheckCountdown(true)
+                    })
+                    .catch(error => {
+                      setBtnOtpDisable(false)
+                      console.log(error)
+                    })
+                }}
+              >
+                {checkCountdown === true && (
+                  <>
+                    {countdown}
+                    {'s '}
+                  </>
+                )}
+                {t('auth:sent_otp')}
+              </Button>
               <InputField
                 type="text"
-                // classNameError="absolute top-100%"
                 error={formState.errors['otp']}
                 registration={register('otp')}
                 className="bg-stone-300"
                 placeholder={t('auth:require_otp')}
-                endIcon={
-                  <Button
-                    variant="none"
-                    className="absolute bottom-[105%] right-[-20px] h-[1rem] border-none bg-transparent text-slate-800 underline"
-                    disabled={btnOtpDisable}
-                    onClick={() => {
-                      setBtnOtpDisable(true)
-                      sentOTP({
-                        email: email,
-                        phone: '0337463520',
-                      })
-                        .then(response => {
-                          setCountdown(startCountdown)
-                          setCheckCountdown(true)
-                          console.log(response)
-                        })
-                        .catch(error => {
-                          setBtnOtpDisable(false)
-                          console.log(error)
-                        })
-                    }}
-                  >
-                    {checkCountdown === true && (
-                      <>
-                        {countdown}
-                        {'s '}
-                      </>
-                    )}
-                    {t('auth:sent_otp')}
-                  </Button>
-                }
               />
-              <div className="container mx-auto text-center text-xs">
+              <div className="container mx-auto text-center text-body-xs">
                 <Button
                   isLoading={registerMutation.isLoading}
                   type="submit"
-                  className="w-full bg-stone-500"
+                  className="w-full bg-primary-400"
                 >
                   {t('user:register')}
                 </Button>
@@ -198,9 +191,9 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         }}
       </Form>
       <div className="mt-8 flex justify-center">
-        <div className="text-body-sm  text-black">
+        <div className="text-body-sm text-black">
           {t('auth:have_an_account')}{' '}
-          <Link to={PATHS.LOGIN} className="font-bold hover:text-blue-500">
+          <Link to={PATHS.LOGIN} className="font-bold">
             {t('user:login')}
           </Link>
         </div>

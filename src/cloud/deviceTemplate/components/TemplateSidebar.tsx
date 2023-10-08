@@ -66,10 +66,9 @@ export function TemplateSidebar() {
             {filteredComboboxData?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
-                  className={clsx('gap-y-3 rounded-l-md border-none px-4')}
+                  className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}
                   key={template.id}
                   variant="muted"
-                  size="no-p"
                   onClick={() =>
                     navigate(
                       `${PATHS.DEVICE_TEMPLATE}/${projectId}/${template.id}`,

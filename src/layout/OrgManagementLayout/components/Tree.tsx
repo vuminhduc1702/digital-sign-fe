@@ -84,12 +84,14 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             )}
           </div>
           <Button
-            className={cn('ml-1 h-10 gap-y-3 rounded-l-md border-none px-4', {
-              '!bg-red-200': data.isSearch,
-            })}
+            className={cn(
+              'ml-1 h-10 gap-y-3 rounded-l-md border-none px-4 py-0',
+              {
+                '!bg-red-200': data.isSearch,
+              },
+            )}
             key={data.id}
             variant="muted"
-            size="no-p"
             onClick={() => {
               switch (entityTypeURL) {
                 case 'org':

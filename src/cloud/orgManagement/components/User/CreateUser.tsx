@@ -20,6 +20,7 @@ import { useDefaultCombobox } from '~/utils/hooks'
 import storage from '~/utils/storage'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
+import i18n from '~/i18n'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 
@@ -42,7 +43,7 @@ export const userSchema = z
       ctx.addIssue({
         path: ['confirmPassword'],
         code: 'custom',
-        message: 'Mật khẩu nhập lại không đúng',
+        message: i18n.t('auth:pass_invalid'),
       })
     }
   })

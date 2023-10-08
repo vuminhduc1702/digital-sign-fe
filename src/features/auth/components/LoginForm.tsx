@@ -2,15 +2,14 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Button } from '~/components/Button'
 
-import { Form, InputField } from '~/components/Form'
-import { CheckBox } from './CheckBox'
+import { FieldWrapper, Form, InputField } from '~/components/Form'
 import { Link } from '~/components/Link'
 import { useLogin } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
 import { emailSchema, passwordSchema } from '~/utils/schemaValidation'
+import { Checkbox } from '~/components/Checkbox'
 
-import { BtnPasswordLoginIcon } from '~/components/SVGIcons'
-import { BtnUserLoginIcon } from '~/components/SVGIcons'
+import { BtnPasswordLoginIcon, BtnUserLoginIcon } from '~/components/SVGIcons'
 
 const schema = z.object({
   identifier: emailSchema,
@@ -45,14 +44,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             <InputField
               type="email"
               className="mt-10 bg-stone-300"
+              classNameFieldWrapper="relative"
               placeholder={t('auth:require_email')}
-              // classNameError="absolute top-100%"
               startIcon={
                 <BtnUserLoginIcon
                   height={20}
                   width={20}
                   viewBox="0 0 20 20"
-                  className="absolute left--5 top--5  z-20 m-2 h-5 w-5 border-e-red-600 hover:text-primary-400"
+                  className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                 />
               }
               error={formState.errors['identifier']}
@@ -60,27 +59,32 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             />
             <InputField
               type="password"
-              // classNameError="absolute top-100%"
               placeholder={t('user:password')}
               className="bg-stone-300"
+              classNameFieldWrapper="relative"
               startIcon={
                 <BtnPasswordLoginIcon
                   height={20}
                   width={20}
                   viewBox="0 0 20 20"
-                  className="absolute left--5 top--5  z-20 m-2 h-5 w-5 hover:text-primary-400"
+                  className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                 />
               }
               error={formState.errors['password']}
               registration={register('password')}
             />
 
-            <CheckBox label={t('auth:checkbox')} />
+            <FieldWrapper
+              className="mt-2 flex h-8 flex-row-reverse items-center justify-end gap-x-2"
+              label={t('auth:checkbox')}
+            >
+              <Checkbox />
+            </FieldWrapper>
             <div>
               <Button
                 isLoading={login.isLoading}
                 type="submit"
-                className="w-full bg-stone-500"
+                className="w-full bg-primary-400"
                 variant="primary"
               >
                 {t('user:login')}
@@ -92,22 +96,16 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
 
       <div className="py-[13%]">
         <div className="container mx-auto text-center">
-          <ul className="text-xs">
+          <ul className="text-body-xs">
             <li className="m-1">
               {t('auth:no_account')}{' '}
-              <Link
-                to={PATHS.REGISTER}
-                className="font-bold text-black hover:text-blue-500"
-              >
+              <Link to={PATHS.REGISTER} className="font-bold text-black">
                 {t('auth:from_login_to_register')}
               </Link>
             </li>
             <li>
               {t('auth:forgot_password')}{' '}
-              <Link
-                to={PATHS.REGISTER}
-                className="font-bold text-black hover:text-blue-500"
-              >
+              <Link to={PATHS.REGISTER} className="font-bold text-black">
                 {t('auth:change_password')}
               </Link>
             </li>
