@@ -114,10 +114,9 @@ export function CreateProject() {
 
   return (
     <FormDialog
-      className="project-popup"
       size="md"
       title={t('cloud:project_manager.add_project.title')}
-      id="create-project-screen"
+      id="create-project"
       isDone={isSuccessCreateProject}
       setCustomState={() => setUploadImageErr('')}
       body={
@@ -138,7 +137,7 @@ export function CreateProject() {
             console.log('formState errors: ', formState.errors)
 
             return (
-              <div className="grid grid-cols-1 md:grid-cols-[70%_30%]">
+              <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
                 <div style={{ height: '250px' }}>
                   <InputField
                     label={t('cloud:project_manager.add_project.name')}
@@ -153,7 +152,7 @@ export function CreateProject() {
                     rows={9}
                   />
                 </div>
-                <div className="pl-4">
+                <div className="pl-5">
                   <div className="mb-3 space-y-1">
                     <FileField
                       label={t('cloud:project_manager.add_project.avatar')}

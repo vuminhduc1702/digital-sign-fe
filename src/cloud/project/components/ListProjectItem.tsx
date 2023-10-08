@@ -159,7 +159,7 @@ export function ListProjectItem({
                 }}
               >
                 <div
-                  className="no-wrap absolute bottom-0 flex gap-x-3 py-3 pl-5"
+                  className="no-wrap absolute bottom-0 flex items-center gap-x-3 py-3 pl-5"
                   style={{
                     height: '120px',
                     width: '80%',

@@ -27,8 +27,8 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { API_URL } from '~/config'
 
 export type UpdateProject = {
-  name?: string,
-  description?: string,
+  name?: string
+  description?: string
   image?: string
 }
 
@@ -107,7 +107,7 @@ export function UpdateProject({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-4 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -147,21 +147,22 @@ export function UpdateProject({
           >
             {({ register, formState }) => {
               return (
-                <div className="grid grid-cols-1 md:grid-cols-2">
+                <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
                   <div style={{ height: '250px' }}>
                     <InputField
                       label={t('cloud:project_manager.add_project.name')}
                       error={formState.errors['name']}
                       registration={register('name')}
+                      className="mb-5"
                     />
                     <TextAreaField
                       label={t('cloud:project_manager.add_project.description')}
                       error={formState.errors['description']}
                       registration={register('description')}
-                      rows={5}
+                      rows={9}
                     />
                   </div>
-                  <div className="pl-4">
+                  <div className="pl-5">
                     <div className="mb-3 space-y-1">
                       <FileField
                         label={t('cloud:project_manager.add_project.avatar')}
