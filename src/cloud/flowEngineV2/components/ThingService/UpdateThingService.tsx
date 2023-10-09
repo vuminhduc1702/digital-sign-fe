@@ -209,7 +209,7 @@ export function UpdateThingService({
             {({ register, formState }, { fields, append, remove }) => {
               return (
                 <>
-                  <div className="mb-2 mt-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
+                  <div className="my-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
                     <InputField
                       require={true}
                       label={t('cloud:custom_protocol.service.name')}
@@ -504,7 +504,7 @@ export function UpdateThingService({
                                 <img
                                   onClick={handleFullScreen}
                                   src={btnFullScreen}
-                                  alt="add-icon"
+                                  alt="fullscreen-update-service"
                                   className="h-5 w-5 cursor-pointer"
                                 />
                               </div>

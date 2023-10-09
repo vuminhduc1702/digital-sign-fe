@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import { Form, InputField, TextAreaField } from '~/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
-import { CreateProjectSchema } from '../api'
+import { type CreateProjectDTO, CreateProjectSchema } from '../api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { useEffect, useRef, useState } from 'react'
@@ -25,12 +25,6 @@ import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { API_URL } from '~/config'
-
-export type UpdateProject = {
-  name?: string
-  description?: string
-  image?: string
-}
 
 export function UpdateProject({
   close,
@@ -53,13 +47,8 @@ export function UpdateProject({
     }
   }, [isSuccess, close])
 
-  const fileInputRef = useRef()
-  const {
-    data: dataUploadImage,
-    mutate: mutateUploadImage,
-    isLoading: isLoadingUploadImage,
-    isSuccess: isSuccessUploadImage,
-  } = useUploadImage()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
   const {
     control: controlUploadImage,
     setValue: setValueUploadImage,
@@ -86,28 +75,10 @@ export function UpdateProject({
         })
     }
   }
-  const [updateDataForm, setUpdateDataForm] = useState<UpdateProject>({})
-
-  function handleSubmitUpdate(updateData: UpdateProject) {
-    mutate({
-      data: {
-        name: updateData.name,
-        description: updateData.description,
-        image: dataUploadImage?.data?.link,
-      },
-      projectId: selectedUpdateProject.id,
-    })
-  }
-
-  useEffect(() => {
-    if (isSuccessUploadImage && dataUploadImage != null) {
-      handleSubmitUpdate(updateDataForm)
-    }
-  }, [dataUploadImage])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-4 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -126,15 +97,39 @@ export function UpdateProject({
           <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema>
             id="update-project"
             className="flex flex-col justify-between"
-            onSubmit={values => {
-              mutateUploadImage({
-                data: {
-                  project_id: selectedUpdateProject.id,
-                  file: getValueUploadImage('file'),
-                },
-              })
-              handleResetDefaultImage()
-              setUpdateDataForm(values)
+            onSubmit={async values => {
+              const defaultFileName = avatarRef.current?.src.split('/')
+              if (getValueUploadImage('file') != null) {
+                const dataUploadImage = await mutateAsyncUploadImage({
+                  data: {
+                    project_id: selectedUpdateProject.id,
+                    file: getValueUploadImage('file'),
+                  },
+                })
+                mutate({
+                  data: {
+                    name: values.name,
+                    description: values.description,
+                    image: dataUploadImage.data.link,
+                  },
+                  projectId: selectedUpdateProject.id,
+                })
+              }
+
+              if (
+                getValueUploadImage('file') == null ||
+                (getValueUploadImage('file') != null &&
+                  defaultFileName?.[defaultFileName?.length - 1] ===
+                    'default-project.png')
+              ) {
+                mutate({
+                  data: {
+                    name: values.name,
+                    description: values.description,
+                  },
+                  projectId: selectedUpdateProject.id,
+                })
+              }
             }}
             schema={CreateProjectSchema}
             options={{

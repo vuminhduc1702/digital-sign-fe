@@ -69,8 +69,8 @@ export function CodeSandboxEditor({
             '!h-[600px] border-0': !isFullScreen && !isShowLog,
             '!h-[320px] border-0': isFullScreen && !isShowLog && isEdit,
           })}
-          showInlineErrors={true}
-          showLineNumbers={true}
+          showInlineErrors
+          showLineNumbers
           readOnly={readOnly}
         />
         {isShowLog && (

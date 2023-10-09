@@ -407,8 +407,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             }
                           >
                             <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="px-2 py-2">
-                                <div className="py-1 hover:cursor-pointer hover:background" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
+                              <div className="p-2">
+                                <div className="hover:background py-1 hover:cursor-pointer" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_code')}}>Thu nhỏ editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
                               </div>
@@ -451,7 +451,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             }
                           >
                             <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="px-2 py-2">
+                              <div className="p-2">
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('maximize_result')}}>Phóng to editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_result')}}>Thu nhỏ editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
@@ -473,7 +473,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   <img
                     onClick={handleFullScreen}
                     src={btnFullScreen}
-                    alt="add-icon"
+                    alt="fullscreen-create-service"
                     className="h-5 w-5 cursor-pointer"
                   />
                 </div>
