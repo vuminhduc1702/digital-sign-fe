@@ -47,6 +47,10 @@ export function UpdateProject({
     }
   }, [isSuccess, close])
 
+  useEffect(() => {
+    setUploadImageErr('')
+  }, [isOpen])
+
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
   const {
@@ -60,6 +64,7 @@ export function UpdateProject({
   const [uploadImageErr, setUploadImageErr] = useState('')
 
   function handleResetDefaultImage() {
+    setUploadImageErr('')
     if (avatarRef.current != null) {
       avatarRef.current.src = defaultProjectImage
       fetch(avatarRef.current.src)
@@ -165,6 +170,7 @@ export function UpdateProject({
                         name="upload-image"
                         ref={fileInputRef}
                         onChange={event => {
+                          setUploadImageErr('')
                           const file = event.target.files[0]
                           const formData = new FormData()
                           formData.append('file', event.target.files[0])

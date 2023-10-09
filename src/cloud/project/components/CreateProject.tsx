@@ -41,7 +41,9 @@ export function CreateProject() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
 
-  const { mutate: mutateUpdateProject } = useUpdateProject()
+  const { mutate: mutateUpdateProject } = useUpdateProject({
+    isOnCreateProject: true,
+  })
 
   const avatarRef = useRef<HTMLImageElement>(null)
   const {
@@ -59,6 +61,7 @@ export function CreateProject() {
   } = useCreateProject()
 
   function handleResetDefaultImage() {
+    setUploadImageErr('')
     if (getValueUploadImage('file') != null) {
       if (avatarRef.current != null) {
         avatarRef.current.src = defaultProjectImage
@@ -85,7 +88,6 @@ export function CreateProject() {
       title={t('cloud:project_manager.add_project.title')}
       isDone={isSuccessCreateProject}
       resetData={handleResetDefaultImage}
-      setCustomState={() => setUploadImageErr('')}
       body={
         <Form<CreateProjectDTO['data'], typeof CreateProjectSchema>
           id="create-project"
@@ -143,6 +145,7 @@ export function CreateProject() {
                       name="upload-image"
                       ref={fileInputRef}
                       onChange={event => {
+                        setUploadImageErr('')
                         const file = event.target.files[0]
                         const formData = new FormData()
                         formData.append('file', event.target.files[0])

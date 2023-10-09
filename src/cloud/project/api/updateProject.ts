@@ -19,9 +19,13 @@ export const updateProject = ({ data, projectId }: UpdateProjectDTO) => {
 
 export type UseUpdateProjectOptions = {
   config?: MutationConfig<typeof updateProject>
+  isOnCreateProject?: boolean
 }
 
-export const useUpdateProject = ({ config }: UseUpdateProjectOptions = {}) => {
+export const useUpdateProject = ({
+  config,
+  isOnCreateProject,
+}: UseUpdateProjectOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -29,10 +33,11 @@ export const useUpdateProject = ({ config }: UseUpdateProjectOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['projects'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:project_manager.add_project.success_update'),
-      })
+      !isOnCreateProject &&
+        addNotification({
+          type: 'success',
+          title: t('cloud:project_manager.add_project.success_update'),
+        })
     },
     ...config,
     mutationFn: updateProject,
