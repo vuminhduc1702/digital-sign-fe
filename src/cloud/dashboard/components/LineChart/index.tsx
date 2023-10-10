@@ -5,28 +5,34 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type WSWidgetData } from '../../types'
 
 export function LineChart({ data }: { data: WSWidgetData[] }) {
-  const liveValuesTransformed: Datum[] = data
-    ?.map(({ ts, value }: WSWidgetData) => ({
-      x: getVNDateFormat({
-        date: ts,
-        config: { ...defaultDateConfig, second: '2-digit' },
-      }),
-      y: parseFloat(value),
-    }))
-    // .reverse()
-    .slice(-10)
+  console.log('data', data)
+  // const liveValuesTransformed: Datum[] = data
+  //   ?.map(({ ts, value }: WSWidgetData) => ({
+  //     x: getVNDateFormat({
+  //       date: ts,
+  //       config: { ...defaultDateConfig, second: '2-digit' },
+  //     }),
+  //     y: parseFloat(value),
+  //   }))
+  //   // .reverse()
+  //   .slice(-10)
 
-  const liveValuesTransformedFeedToChart: Serie[] = [
-    {
-      id: 'test',
-      color: 'hsl(106, 70%, 50%)',
-      data: liveValuesTransformed,
-    },
-  ]
+  // const liveValuesTransformedFeedToChart: Serie[] = [
+  //   {
+  //     id: 'test',
+  //     color: 'hsl(106, 70%, 50%)',
+  //     data: liveValuesTransformed,
+  //   },
+  //   {
+  //     id: 'test 2',
+  //     color: 'red',
+  //     data: liveValuesTransformed.reverse(),
+  //   },
+  // ]
 
   return (
     <ResponsiveLine
-      data={liveValuesTransformedFeedToChart}
+      data={[]}
       margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{

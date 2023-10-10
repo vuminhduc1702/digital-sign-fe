@@ -19,6 +19,7 @@ import {
   type DashboardWS,
   type WSWidgetData,
   type WidgetType,
+  type TimeSeries,
 } from '../types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
@@ -58,7 +59,6 @@ const WS_URL = `${
 }/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
 
 export function DashboardDetail() {
-  console.log('rerender')
   const { t } = useTranslation()
 
   const DBNAME = localStorage.getItem('dbname')
@@ -97,8 +97,8 @@ export function DashboardDetail() {
     [],
   )
 
-  const newValuesRef = useRef<WSWidgetData[]>([])
-  const prevValuesRef = useRef<WSWidgetData[]>([])
+  const newValuesRef = useRef<TimeSeries>()
+  const prevValuesRef = useRef<TimeSeries>()
 
   useEffect(() => {
     if (detailDashboard?.configuration.widgets != null) {
@@ -148,50 +148,77 @@ export function DashboardDetail() {
     }
   }, [])
 
-  const realtimeValues: WSWidgetData[] =
-    lastJsonMessage?.data?.[0]?.timeseries?.attr1 || []
+  const realtimeValues = lastJsonMessage?.data?.[0]?.timeseries
+  console.log('realtimeValues: ', realtimeValues)
+  prevValuesRef.current = newValuesRef.current || realtimeValues
+  console.log('prevValuesRef.current: ', prevValuesRef.current)
   useEffect(() => {
-    prevValuesRef.current = newValuesRef.current || realtimeValues
-  }, [realtimeValues[0]])
-  if (prevValuesRef.current) {
-    newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
-  } else newValuesRef.current = realtimeValues
-  // console.log('newValuesRef.current', newValuesRef.current)
+    if (prevValuesRef.current != null) {
+      for (const key in prevValuesRef.current) {
+        console.log('key', key)
+        if (prevValuesRef.current.hasOwnProperty(key)) {
+          // Check if the key exists in mergedObject
+          if (newValuesRef.current != null) {
+            if (newValuesRef.current.hasOwnProperty(key)) {
+              console.log('222222222222: ', newValuesRef.current[key])
+              // Concatenate the arrays in the corresponding keys
+              newValuesRef.current[key] = [
+                ...newValuesRef.current[key],
+                ...prevValuesRef.current[key],
+              ]
+            } else {
+              // If the key doesn't exist, create it and set the value from newItem
+              newValuesRef.current[key] = prevValuesRef.current[key]
+            }
+          } else {
+            console.log('11111111111')
+            newValuesRef.current = realtimeValues
+          }
+        }
+      }
+    }
+  }, [realtimeValues])
 
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {detailDashboard?.configuration.widgets ? (
-          <ReactGridLayout
-            layout={layout}
-            rowHeight={50}
-            isDraggable={isEditMode ? true : false}
-            isResizable={isEditMode ? true : false}
-            margin={[20, 20]}
-          >
-            <div key="a" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current} />
-            </div>
-            {/* {connectionStatus !== 'Connecting' ? (
-              <>
+          // <ReactGridLayout
+          //   layout={layout}
+          //   rowHeight={50}
+          //   isDraggable={isEditMode ? true : false}
+          //   isResizable={isEditMode ? true : false}
+          //   margin={[20, 20]}
+          // >
+          //   <div key="a" className="bg-secondary-500">
+          //     <LineChart data={newValuesRef.current} />
+          //   </div>
+          //   <div key="b" className="bg-secondary-500">
+          //     <LineChart data={lastJsonMessage} />
+          //   </div>
+          //   <div key="c" className="bg-secondary-500">
+          //     <LineChart data={lastJsonMessage} />
+          //   </div>
+          //   <div key="d" className="bg-secondary-500">
+          //     <LineChart data={lastJsonMessage} />
+          //   </div>
+          // </ReactGridLayout>
+
+          connectionStatus === 'Open' ? (
+            <div className="grid grow grid-cols-2 grid-rows-2 gap-3">
+              <div>
                 <LineChart data={newValuesRef.current} />
-              </>
-            ) : (
-              <div className="flex grow items-center justify-center">
-                <Spinner showSpinner size="xl" />
               </div>
-            )} */}
-            {/* <div key="b" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
+              <div>Part 2</div>
+              <div>Part 3</div>
+              <div>Part 4</div>
             </div>
-            <div key="c" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
+          ) : (
+            <div className="flex grow items-center justify-center">
+              <Spinner showSpinner size="xl" />
             </div>
-            <div key="d" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
-            </div> */}
-          </ReactGridLayout>
+          )
         ) : (
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
@@ -373,23 +400,6 @@ export function DashboardDetail() {
                   },
                   dashboardId,
                 })
-                // const widgetInitId = Object.keys(
-                //   detailDashboard?.configuration?.widgets as unknown as Widget,
-                // )[0].toString()
-                // const setInitMessage = {
-                //   id: widgetInitId,
-                //   data: widgetData?.device.map((deviceId: string) => {
-                //     return {
-                //       entityId: {
-                //         entityType: 'DEVICE',
-                //         id: deviceId,
-                //       },
-                //       latest: {},
-                //     }
-                //   }),
-                // }
-                // handleInit(JSON.stringify(setInitMessage))
-                // handleRealtime()
               }}
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />

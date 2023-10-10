@@ -23,7 +23,7 @@ type AggLatestData = {
   ENTITY_FIELD: null
 }
 
-type TimeSeries = {
+export type TimeSeries = {
   [key: string]: WSWidgetData[]
 }
 
