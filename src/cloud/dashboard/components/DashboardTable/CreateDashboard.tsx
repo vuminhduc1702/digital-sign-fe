@@ -22,7 +22,7 @@ export const widgetConfigSchema = z
   .record(
     z.object({
       title: z.string(),
-      datasources: z.object({
+      datasource: z.object({
         init_message: z.string(),
         lastest_message: z.string().nullable(),
         realtime_message: z.string().nullable(),
@@ -31,8 +31,8 @@ export const widgetConfigSchema = z
       attribute_config: attrWidgetSchema,
       config: z.object({
         chartsetting: z.object({
-          start_date: z.date(),
-          end_date: z.date(),
+          start_date: z.number(),
+          end_date: z.number(),
           data_type: widgetDataTypeSchema,
           widget_type: widgetTypeSchema,
         }),

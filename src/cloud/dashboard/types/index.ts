@@ -46,22 +46,3 @@ export const aggSchema = z.enum([
   'SUM',
   'COUNT',
 ] as const)
-
-export const dataTest = [
-  {
-    ts: 1696178540,
-    value: 1,
-  },
-  {
-    ts: 1696351340,
-    value: 2,
-  },
-  {
-    ts: 1696524140,
-    value: 3,
-  },
-  {
-    ts: 1696696940,
-    value: 4,
-  },
-]

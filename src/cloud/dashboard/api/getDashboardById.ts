@@ -9,7 +9,7 @@ import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
 type WidgetConfig = z.infer<typeof widgetConfigSchema>
 
-type DashboardByIdRes = {
+export type DashboardByIdRes = {
   id: string
   name: string
   created_time: number

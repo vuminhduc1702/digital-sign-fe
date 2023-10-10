@@ -183,9 +183,12 @@ export function CreateWidget({
             id="create-widget"
             className="flex flex-col justify-between"
             onSubmit={values => {
-              console.log('values: ', values)
-              const widgetData = {
+              // console.log('values: ', values)
+              const widgetData: typeof values = {
                 id: uuidv4(),
+                title: values.title,
+                org_id: values.org_id,
+                device: values.device,
                 attributeConfig: values.attributeConfig,
                 widgetSetting: values.widgetSetting,
               }

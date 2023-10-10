@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 import RGL, { WidthProvider } from 'react-grid-layout'
+import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
@@ -19,13 +19,13 @@ import {
   type DashboardWS,
   type WSWidgetData,
   type WidgetType,
-  dataTest,
 } from '../types'
-import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { Spinner } from '~/components/Spinner'
+import { ReadyState } from 'react-use-websocket'
 
 const widgetAggSchema = z.object({
   label: z.string(),
@@ -58,12 +58,21 @@ const WS_URL = `${
 }/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
 
 export function DashboardDetail() {
+  console.log('rerender')
   const { t } = useTranslation()
 
   const DBNAME = localStorage.getItem('dbname')
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
+
+  const ReactGridLayout = WidthProvider(RGL)
+  const layout: RGL.Layout[] = [
+    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
+    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
+    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
+    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
+  ]
 
   const { close, open, isOpen } = useDisclosure()
   const [isEditMode, setIsEditMode] = useState(false)
@@ -75,90 +84,113 @@ export function DashboardDetail() {
 
   const { data: detailDashboard } = useGetDashboardsById({
     id: dashboardId,
-    config: { suspense: false },
   })
-  console.log(
-    'detailDashboard?.configuration.widgets',
-    detailDashboard?.configuration.widgets,
-  )
 
   const [widgetData, setWidgetData] = useState<WidgetConfig>()
-  console.log('widgetData', widgetData)
-
-  const parseStartDate = useMemo(
-    () =>
-      Date.parse(
-        widgetData?.widgetSetting?.startDate?.toISOString() ||
-          new Date().toISOString(),
-      ),
-    [widgetData?.widgetSetting?.startDate],
-  )
+  // console.log('widgetData', widgetData)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WS_URL)
 
-  // Handle new data point in realtime
-  const realtimeValues: WSWidgetData[] =
-    lastJsonMessage?.data?.[0]?.timeseries?.rawr2 || []
-  const prevValuesRef = useRef<WSWidgetData[]>([])
+  const handleSendMessage = useCallback(
+    (message: WebSocketMessage) => sendMessage(message),
+    [],
+  )
+
   const newValuesRef = useRef<WSWidgetData[]>([])
+  const prevValuesRef = useRef<WSWidgetData[]>([])
+
+  useEffect(() => {
+    if (detailDashboard?.configuration.widgets != null) {
+      const widgetIdList = Object.keys(
+        detailDashboard?.configuration?.widgets as unknown as WidgetConfig,
+      )
+      if (widgetIdList.length > 0) {
+        widgetIdList.map(widgetId => {
+          handleSendMessage(
+            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+              ?.init_message,
+          )
+          handleSendMessage(
+            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+              ?.realtime_message,
+          )
+
+          // ws.onopen = event => {
+          //   ws.send(
+          //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+          //       ?.init_message,
+          //   )
+          //   ws.send(
+          //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+          //       ?.realtime_message,
+          //   )
+          // }
+
+          // const ws = new WebSocket(WS_URL)
+
+          // ws.onmessage = function (event) {
+          //   const json = JSON.parse(event.data)
+          //   const realtimeValues: WSWidgetData[] =
+          //     json?.data?.[0]?.timeseries?.attr1 || []
+          //   prevValuesRef.current = newValuesRef.current || realtimeValues
+          //   if (
+          //     prevValuesRef.current
+          //   ) {
+          //     newValuesRef.current = [
+          //       ...prevValuesRef.current,
+          //       ...realtimeValues,
+          //     ]
+          //   } else newValuesRef.current = realtimeValues
+          // }
+        })
+      }
+    }
+  }, [])
+
+  const realtimeValues: WSWidgetData[] =
+    lastJsonMessage?.data?.[0]?.timeseries?.attr1 || []
   useEffect(() => {
     prevValuesRef.current = newValuesRef.current || realtimeValues
   }, [realtimeValues[0]])
-  if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
+  if (prevValuesRef.current) {
     newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
   } else newValuesRef.current = realtimeValues
-  console.log('newValuesRef.current: ', newValuesRef.current)
-
-  const handleSendMessage = useCallback(
-    (message: WebSocketMessage) => sendMessage(message),
-    [lastJsonMessage],
-  )
-
-  const ReactGridLayout = WidthProvider(RGL)
-
-  const layout: RGL.Layout[] = [
-    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
-    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
-    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
-    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
-  ]
-
-  // useEffect(() => {
-  //   if (detailDashboard?.configuration.widgets != null) {
-  //     handleSendMessage(JSON.stringify(initMessage))
-  //   }
-  // }, [detailDashboard?.configuration.widgets, handleSendMessage, initMessage])
-
-  // useEffect(() => {
-  //   handleSendMessage(JSON.stringify(realtimeMessage))
-  // }, [handleSendMessage, realtimeMessage])
+  // console.log('newValuesRef.current', newValuesRef.current)
 
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
-      <div className="flex grow flex-col justify-between shadow-lg">
+      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {detailDashboard?.configuration.widgets ? (
           <ReactGridLayout
-            // isDraggable={isEditMode ? true : false}
             layout={layout}
             rowHeight={50}
-            isDraggable
-            isResizable
+            isDraggable={isEditMode ? true : false}
+            isResizable={isEditMode ? true : false}
             margin={[20, 20]}
           >
             <div key="a" className="bg-secondary-500">
               <LineChart data={newValuesRef.current} />
             </div>
-            <div key="b" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current.toReversed()} />
+            {/* {connectionStatus !== 'Connecting' ? (
+              <>
+                <LineChart data={newValuesRef.current} />
+              </>
+            ) : (
+              <div className="flex grow items-center justify-center">
+                <Spinner showSpinner size="xl" />
+              </div>
+            )} */}
+            {/* <div key="b" className="bg-secondary-500">
+              <LineChart data={lastJsonMessage} />
             </div>
             <div key="c" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current} />
+              <LineChart data={lastJsonMessage} />
             </div>
             <div key="d" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current.toReversed()} />
-            </div>
+              <LineChart data={lastJsonMessage} />
+            </div> */}
           </ReactGridLayout>
         ) : (
           <div className="grid grow place-content-center text-h1">
@@ -188,7 +220,6 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
 
-                const widgetId = uuidv4()
                 const attrData = widgetData?.attributeConfig.map(item => ({
                   type: 'TIME_SERIES',
                   key: item.attribute_key,
@@ -221,7 +252,7 @@ export function DashboardDetail() {
                         ],
                         latestValues: attrData,
                       },
-                      id: widgetId,
+                      id: widgetData?.id ?? '',
                     },
                   ],
                 }
@@ -241,7 +272,7 @@ export function DashboardDetail() {
                           },
                         ],
                       },
-                      id: widgetId,
+                      id: widgetData?.id ?? '',
                     },
                   ],
                 }
@@ -253,13 +284,16 @@ export function DashboardDetail() {
                         keys: widgetData?.attributeConfig.map(
                           item => item.attribute_key,
                         ),
-                        startTs: parseStartDate,
+                        startTs: Date.parse(
+                          widgetData?.widgetSetting?.startDate?.toISOString() ||
+                            new Date().toISOString(),
+                        ),
                         interval: widgetData?.widgetSetting?.interval,
                         limit: 10,
                         offset: 0,
                         agg: widgetData?.widgetSetting?.agg,
                       },
-                      id: widgetId,
+                      id: widgetData?.id ?? '',
                     },
                   ],
                 }
@@ -276,7 +310,7 @@ export function DashboardDetail() {
                         offset: 0,
                         agg: '',
                       },
-                      id: widgetId,
+                      id: widgetData?.id ?? '',
                     },
                   ],
                 }
@@ -288,13 +322,13 @@ export function DashboardDetail() {
                       description:
                         detailDashboard?.configuration?.description ?? '',
                       widgets: {
-                        [widgetId]: {
+                        [widgetData?.id ?? '']: {
                           title: widgetData?.title ?? '',
-                          datasources: {
-                            init_message: initMessage,
-                            lastest_message: lastestMessage ?? null,
-                            realtime_message: realtimeMessage ?? null,
-                            history_message: historyMessage ?? null,
+                          datasource: {
+                            init_message: JSON.stringify(initMessage),
+                            lastest_message: JSON.stringify(lastestMessage),
+                            realtime_message: JSON.stringify(realtimeMessage),
+                            history_message: JSON.stringify(historyMessage),
                           },
                           attribute_config: [
                             {
