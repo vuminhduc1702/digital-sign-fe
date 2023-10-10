@@ -88,7 +88,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
-  const [viewMode, setViewMode] = useState('')
+  const [viewMode, setViewMode] = useState('default')
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()

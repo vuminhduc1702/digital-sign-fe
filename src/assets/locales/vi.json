@@ -119,7 +119,8 @@
           "success_update": "Sửa tổ chức thành công",
           "success_delete": "Xoá tổ chức thành công",
           "choose_org": "Vui lòng chọn tổ chức",
-          "choose_avatar": "Vui lòng chọn ảnh đại diện"
+          "choose_avatar": "Vui lòng chọn ảnh đại diện",
+          "no_org": "Không trực thuộc tổ chức"
         },
         "add_attr": {
           "title": "Tạo mới thuộc tính",
