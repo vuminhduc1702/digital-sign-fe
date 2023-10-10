@@ -31,6 +31,9 @@ export const useUpdateGroup = ({ config }: UseUpdateGroupOptions = {}) => {
       await queryClient.invalidateQueries({
         queryKey: ['groups'],
       })
+      await queryClient.invalidateQueries({
+        queryKey: ['groupById'],
+      })
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.group_manage.add_group.success_update'),

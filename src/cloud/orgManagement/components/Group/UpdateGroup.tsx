@@ -33,6 +33,12 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
+  const defaultOrgOptions = 
+  {
+    label: t('cloud:org_manage.org_manage.add_org.no_org'),
+    value: ''
+  }
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -42,12 +48,15 @@ export function UpdateGroup({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id
+  })).concat(defaultOrgOptions)
+  .sort((a,b) => a.value.length - b.value.length)
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
   const { data: groupData } = useGroupById({groupId})
-  const filterOrg = orgFlattenData?.filter(org => org.id == groupData?.organization)[0]
 
   useEffect(() => {
     if (isSuccess) {
@@ -56,14 +65,15 @@ export function UpdateGroup({
   }, [isSuccess, close])
 
   useEffect(() => {
-    if (groupId) {
+    const filterOrg = orgFlattenData.filter(org => org.id === groupData?.organization)[0]
+    if (groupData) {
       setOptionOrg({
         label: filterOrg?.name,
         value: filterOrg?.id,
       })
     }
-  }, [groupId])
-
+  }, [groupData])
+  
   return (
     <Drawer
       isOpen={isOpen}
@@ -126,10 +136,7 @@ export function UpdateGroup({
                 name="org_id"
                 control={control}
                 options={
-                  orgFlattenData?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
+                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                 }
                 onChange={e => {
                   setOptionOrg(e)

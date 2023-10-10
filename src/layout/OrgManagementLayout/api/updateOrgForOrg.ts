@@ -27,9 +27,9 @@ export const useUpdateOrgForOrg = ({ config }: UseUpdateOrgForOrgOptions = {}) =
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['orgs'],
-      })
+      // await queryClient.invalidateQueries({
+      //   queryKey: ['orgs'],
+      // })
       // addNotification({
       //   type: 'success',
       //   title: t('cloud:org_manage.org_manage.add_org.success_update'),
