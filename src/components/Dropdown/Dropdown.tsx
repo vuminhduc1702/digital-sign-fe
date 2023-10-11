@@ -10,7 +10,6 @@ type MenuItemProps = {
   children: ReactNode
   className?: string
   icon?: React.ReactElement
-  ref?: LegacyRef<HTMLButtonElement>
   onClick: () => Promise<void> | void
 }
 

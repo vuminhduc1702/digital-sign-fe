@@ -41,6 +41,8 @@ import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { cn } from '~/utils/misc'
 import { type ThingService } from '../../types'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
+import { Dropdown } from '~/components/Dropdown'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -75,6 +77,7 @@ export function UpdateThingService({
   const [codeInput, setCodeInput] = useState('')
   const [fullScreen, setFullScreen] = useState(false)
   const [codeOutput, setCodeOutput] = useState('')
+  const [viewMode, setViewMode] = useState('default')
 
   const { id: projectId } = storage.getProject()
 
@@ -142,6 +145,7 @@ export function UpdateThingService({
 
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
+    setViewMode('default')
     if (!fullScreen) {
       const elem = document.getElementById('update-service-screen')
       if (elem?.requestFullscreen) {
@@ -443,9 +447,10 @@ export function UpdateThingService({
                                   'grid grow grid-cols-1 gap-x-4 md:col-span-2 md:grid-cols-2':
                                     !fullScreen,
                                   'md:col-span-3': fullScreen,
+                                  'md:grid-cols-6': viewMode != 'default'
                                 })}
                               >
-                                <div className="flex flex-col gap-2 md:col-span-1">
+                                <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_code' || viewMode == 'minimize_result'}, {'md:col-span-1': viewMode == 'minimize_code'})}>
                                   <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
@@ -455,6 +460,24 @@ export function UpdateThingService({
                                       </p>
                                     </div>
                                     <div className="flex gap-3">
+                                    <Dropdown
+                                      icon={
+                                        <img
+                                          height={20}
+                                          width={20}
+                                          src={btnChevronDownIcon}
+                                          className="text-secondary-700 hover:text-primary-400"
+                                        />
+                                      }
+                                    >
+                                      <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="px-2 py-2">
+                                          <div className="py-1 hover:cursor-pointer hover:background" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
+                                          <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_code')}}>Thu nhỏ editor</div>
+                                          <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                                        </div>
+                                      </div>
+                                    </Dropdown>
                                       <button
                                         form="create-serviceThing"
                                         type="submit"
@@ -475,20 +498,46 @@ export function UpdateThingService({
                                     className={`${fullScreen ? '' : '!block'}`}
                                     setCodeInput={setCodeInput}
                                     isFullScreen={fullScreen}
+                                    viewMode={viewMode}
+                                    editorName={'code'}
+                                    isUpdate={true}
                                   />
                                 </div>
                                 <div
-                                  className={
-                                    'flex flex-col gap-2 md:col-span-1'
+                                  className={cn(
+                                    'flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_result' || viewMode == 'minimize_code'}, {'md:col-span-1': viewMode == 'minimize_result' || viewMode == 'maximize_code'})
                                   }
                                 >
-                                  <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                  <div className="flex justify-between items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
                                         {t(
                                           'cloud:custom_protocol.service.output',
                                         )}
                                       </p>
+                                    </div>
+                                    <div className="flex gap-3">
+                                      <Dropdown
+                                        icon={
+                                          <img
+                                            height={20}
+                                            width={20}
+                                            src={btnChevronDownIcon}
+                                            className="text-secondary-700 hover:text-primary-400"
+                                          />
+                                        }
+                                      >
+                                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                          <div className="px-2 py-2">
+                                            <div className="py-1 hover:cursor-pointer" onClick={() => {
+                                              setViewMode('maximize_result')
+                                              close
+                                            }}>Phóng to editor</div>
+                                            <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_result')}}>Thu nhỏ editor</div>
+                                            <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                                          </div>
+                                        </div>
+                                      </Dropdown>
                                     </div>
                                   </div>
                                   <CodeSandboxEditor
@@ -497,6 +546,9 @@ export function UpdateThingService({
                                     setCodeInput={setCodeOutput}
                                     isFullScreen={fullScreen}
                                     isEdit={true}
+                                    viewMode={viewMode}
+                                    editorName={'result'}
+                                    isUpdate={true}
                                   />
                                 </div>
                               </div>

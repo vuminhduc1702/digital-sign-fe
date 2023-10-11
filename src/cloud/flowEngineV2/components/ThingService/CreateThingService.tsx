@@ -27,14 +27,13 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import { FormDialog } from '~/components/FormDialog'
-import { BtnContextMenuIcon, PlusIcon } from '~/components/SVGIcons'
+import { PlusIcon } from '~/components/SVGIcons'
 import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -118,6 +117,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
+    setViewMode('default')
     if (!fullScreen) {
       const elem = document.getElementById('create-service-screen')
       if (elem?.requestFullscreen) {
@@ -406,13 +406,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               />
                             }
                           >
-                            <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="p-2">
-                                <div className="hover:background py-1 hover:cursor-pointer" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
+                            <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <div className="px-2 py-2">
+                                <div className="py-1 hover:cursor-pointer hover:background" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_code')}}>Thu nhỏ editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
                               </div>
-                            </Menu.Items>
+                            </div>
                           </Dropdown>
                           <button form="create-serviceThing" type="submit">
                             <img
@@ -430,6 +430,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         className={`${fullScreen ? '' : '!block'}`}
                         setCodeInput={setCodeInput}
                         isFullScreen={fullScreen}
+                        viewMode={viewMode}
+                        editorName={'code'}
                       />
                     </div>
                     <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_result' || viewMode == 'minimize_code'}, {'md:col-span-1': viewMode == 'minimize_result' || viewMode == 'maximize_code'})}>
@@ -450,13 +452,16 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               />
                             }
                           >
-                            <Menu.Items className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="p-2">
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('maximize_result')}}>Phóng to editor</div>
+                            <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                              <div className="px-2 py-2">
+                                <div className="py-1 hover:cursor-pointer" onClick={() => {
+                                  setViewMode('maximize_result')
+                                  close
+                                }}>Phóng to editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_result')}}>Thu nhỏ editor</div>
                                 <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
                               </div>
-                            </Menu.Items>
+                            </div>
                           </Dropdown>
                         </div>
                       </div>
@@ -465,6 +470,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         readOnly={true}
                         setCodeInput={setCodeOutput}
                         isFullScreen={fullScreen}
+                        viewMode={viewMode}
+                        editorName={'result'}
                       />
                     </div>
                   </div>
