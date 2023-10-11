@@ -27,7 +27,7 @@ export type TimeSeries = {
   [key: string]: WSWidgetData[]
 }
 
-type DataItem = {
+export type DataItem = {
   entityId: EntityId
   latest: LatestData
   timeseries: TimeSeries | null

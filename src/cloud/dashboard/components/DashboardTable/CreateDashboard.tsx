@@ -24,9 +24,9 @@ export const widgetConfigSchema = z
       title: z.string(),
       datasource: z.object({
         init_message: z.string(),
-        lastest_message: z.string().nullable(),
-        realtime_message: z.string().nullable(),
-        history_message: z.string().nullable(),
+        lastest_message: z.string(),
+        realtime_message: z.string(),
+        history_message: z.string(),
       }),
       attribute_config: attrWidgetSchema,
       config: z.object({

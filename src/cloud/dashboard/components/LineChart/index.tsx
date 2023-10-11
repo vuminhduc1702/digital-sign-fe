@@ -5,14 +5,13 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type TimeSeries, type WSWidgetData } from '../../types'
 import { useRef } from 'react'
 
-export function LineChart({ data: realtime }: { data: TimeSeries }) {
-  console.log('realtime', realtime)
+export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
   function realtimeValuesTransformation(data: WSWidgetData[]): Datum[] {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
     return data
-      .toSorted((a, b) => a.ts - b.ts)
-      .map(({ ts, value }: WSWidgetData) => ({
+      ?.toSorted((a, b) => a.ts - b.ts)
+      ?.map(({ ts, value }: WSWidgetData) => ({
         x: getVNDateFormat({
           date: ts,
           config: {
@@ -25,17 +24,25 @@ export function LineChart({ data: realtime }: { data: TimeSeries }) {
       .slice(-10)
   }
 
-  const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([])
+  const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([
+    {
+      id: '',
+      color: 'hsl(106, 70%, 50%)',
+      data: [{ x: 0, y: 0 }],
+    },
+  ])
   if (realtime != null) {
-    const data: Serie[] = Object.entries(realtime).map(([id, data], index) => {
-      return {
-        id,
-        color: index === 0 ? 'hsl(106, 70%, 50%)' : 'red',
-        data: realtimeValuesTransformation(data),
-      }
-    })
+    const data: Serie[] = Object.entries(realtime).map(([id, data], index) => ({
+      id,
+      color: 'hsl(106, 70%, 50%)',
+      data: realtimeValuesTransformation(data),
+    }))
     realtimeValuesTransformedFeedToChart.current = data
   }
+  console.log(
+    'realtimeValuesTransformedFeedToChart.current',
+    realtimeValuesTransformedFeedToChart.current,
+  )
 
   return (
     <ResponsiveLine

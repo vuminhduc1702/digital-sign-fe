@@ -2,8 +2,9 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
 import RGL, { WidthProvider } from 'react-grid-layout'
-import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
+import { useSpinDelay } from 'spin-delay'
 
+import { Spinner } from '~/components/Spinner'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
@@ -17,16 +18,14 @@ import storage, { type UserStorage } from '~/utils/storage'
 import {
   aggSchema,
   type DashboardWS,
-  type WSWidgetData,
   type WidgetType,
   type TimeSeries,
 } from '../types'
+import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { Spinner } from '~/components/Spinner'
-import { ReadyState } from 'react-use-websocket'
 
 const widgetAggSchema = z.object({
   label: z.string(),
@@ -58,6 +57,14 @@ const WS_URL = `${
   import.meta.env.VITE_WS_URL as string
 }/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
 
+const ReactGridLayout = WidthProvider(RGL)
+const layout: RGL.Layout[] = [
+  { i: 'a', x: 0, y: 0, w: 5, h: 5 },
+  { i: 'b', x: 5, y: 0, w: 5, h: 5 },
+  { i: 'c', x: 0, y: 5, w: 5, h: 5 },
+  { i: 'd', x: 5, y: 5, w: 5, h: 5 },
+]
+
 export function DashboardDetail() {
   const { t } = useTranslation()
 
@@ -65,14 +72,6 @@ export function DashboardDetail() {
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
-
-  const ReactGridLayout = WidthProvider(RGL)
-  const layout: RGL.Layout[] = [
-    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
-    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
-    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
-    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
-  ]
 
   const { close, open, isOpen } = useDisclosure()
   const [isEditMode, setIsEditMode] = useState(false)
@@ -116,6 +115,7 @@ export function DashboardDetail() {
               ?.realtime_message,
           )
 
+          // const ws = new WebSocket(WS_URL)
           // ws.onopen = event => {
           //   ws.send(
           //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
@@ -126,42 +126,28 @@ export function DashboardDetail() {
           //       ?.realtime_message,
           //   )
           // }
-
-          // const ws = new WebSocket(WS_URL)
-
           // ws.onmessage = function (event) {
           //   const json = JSON.parse(event.data)
-          //   const realtimeValues: WSWidgetData[] =
-          //     json?.data?.[0]?.timeseries?.attr1 || []
-          //   prevValuesRef.current = newValuesRef.current || realtimeValues
-          //   if (
-          //     prevValuesRef.current
-          //   ) {
-          //     newValuesRef.current = [
-          //       ...prevValuesRef.current,
-          //       ...realtimeValues,
-          //     ]
-          //   } else newValuesRef.current = realtimeValues
           // }
         })
       }
     }
-  }, [])
+  }, [detailDashboard?.configuration.widgets, handleSendMessage])
 
-  const realtimeValues = lastJsonMessage?.data?.[0]?.timeseries
+  const realtimeValues = combinedObject(
+    lastJsonMessage?.data?.map(device => device?.timeseries),
+  )
   useEffect(() => {
-    if (realtimeValues != null) {
+    if (realtimeValues != null && Object.keys(realtimeValues).length !== 0) {
       prevValuesRef.current = newValuesRef.current || realtimeValues
       if (newValuesRef.current != null) {
         for (const key in realtimeValues) {
-          // console.log('realtimeValues[key]: ', key, realtimeValues[key])
           if (
             JSON.stringify(prevValuesRef.current[key]) !==
               JSON.stringify(newValuesRef.current[key]) ||
             JSON.stringify(prevValuesRef.current[key]) !==
               JSON.stringify(realtimeValues[key])
           ) {
-            // console.log('11111111111: ', newValuesRef.current)
             newValuesRef.current[key] = [
               ...prevValuesRef.current[key],
               ...realtimeValues[key],
@@ -176,46 +162,53 @@ export function DashboardDetail() {
     }
   }, [realtimeValues])
 
+  function combinedObject(data: Array<TimeSeries | null>) {
+    let combinedObject: TimeSeries | null = {}
+    if (data != null) {
+      combinedObject = data.reduce((result, obj) => {
+        for (const key in obj) {
+          if (obj[key] !== null) {
+            if (!result[key]) {
+              result[key] = []
+            }
+            result[key] = result[key].concat(obj[key])
+          }
+        }
+        return result
+      }, {})
+    }
+
+    return combinedObject
+  }
+
+  const showSpinner = useSpinDelay(connectionStatus !== 'Open', {
+    delay: 150,
+    minDuration: 300,
+  })
+
   return (
     <div className="flex grow flex-col">
       <TitleBar title={'Dashboard ' + DBNAME} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {detailDashboard?.configuration.widgets ? (
-          <ReactGridLayout
-            layout={layout}
-            rowHeight={50}
-            isDraggable={isEditMode ? true : false}
-            isResizable={isEditMode ? true : false}
-            margin={[20, 20]}
-          >
-            <div key="a" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current} />
+          connectionStatus === 'Open' ? (
+            <ReactGridLayout
+              layout={layout}
+              rowHeight={50}
+              isDraggable={isEditMode ? true : false}
+              isResizable={isEditMode ? true : false}
+              margin={[20, 20]}
+            >
+              <div key="a" className="bg-secondary-500">
+                <LineChart data={newValuesRef.current} />
+              </div>
+            </ReactGridLayout>
+          ) : (
+            <div className="flex grow items-center justify-center">
+              <Spinner showSpinner={showSpinner} size="xl" />
             </div>
-            {/* <div key="b" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
-            </div>
-            <div key="c" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
-            </div>
-            <div key="d" className="bg-secondary-500">
-              <LineChart data={lastJsonMessage} />
-            </div> */}
-          </ReactGridLayout>
+          )
         ) : (
-          // connectionStatus === 'Open' ? (
-          //   <div className="grid grow grid-cols-2 grid-rows-2 gap-3">
-          //     <div>
-          //       <LineChart data={newValuesRef.current} />
-          //     </div>
-          //     <div></div>
-          //     <div></div>
-          //     <div></div>
-          //   </div>
-          // ) : (
-          //   <div className="flex grow items-center justify-center">
-          //     <Spinner showSpinner size="xl" />
-          //   </div>
-          // )
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
