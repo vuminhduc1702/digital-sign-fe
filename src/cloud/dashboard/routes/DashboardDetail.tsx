@@ -97,8 +97,8 @@ export function DashboardDetail() {
     [],
   )
 
-  const newValuesRef = useRef<TimeSeries>()
-  const prevValuesRef = useRef<TimeSeries>()
+  const newValuesRef = useRef<TimeSeries | null>(null)
+  const prevValuesRef = useRef<TimeSeries | null>(null)
 
   useEffect(() => {
     if (detailDashboard?.configuration.widgets != null) {
@@ -149,32 +149,29 @@ export function DashboardDetail() {
   }, [])
 
   const realtimeValues = lastJsonMessage?.data?.[0]?.timeseries
-  console.log('realtimeValues: ', realtimeValues)
-  prevValuesRef.current = newValuesRef.current || realtimeValues
-  console.log('prevValuesRef.current: ', prevValuesRef.current)
   useEffect(() => {
-    if (prevValuesRef.current != null) {
-      for (const key in prevValuesRef.current) {
-        console.log('key', key)
-        if (prevValuesRef.current.hasOwnProperty(key)) {
-          // Check if the key exists in mergedObject
-          if (newValuesRef.current != null) {
-            if (newValuesRef.current.hasOwnProperty(key)) {
-              console.log('222222222222: ', newValuesRef.current[key])
-              // Concatenate the arrays in the corresponding keys
-              newValuesRef.current[key] = [
-                ...newValuesRef.current[key],
-                ...prevValuesRef.current[key],
-              ]
-            } else {
-              // If the key doesn't exist, create it and set the value from newItem
-              newValuesRef.current[key] = prevValuesRef.current[key]
-            }
+    if (realtimeValues != null) {
+      prevValuesRef.current = newValuesRef.current || realtimeValues
+      if (newValuesRef.current != null) {
+        for (const key in realtimeValues) {
+          // console.log('realtimeValues[key]: ', key, realtimeValues[key])
+          if (
+            JSON.stringify(prevValuesRef.current[key]) !==
+              JSON.stringify(newValuesRef.current[key]) ||
+            JSON.stringify(prevValuesRef.current[key]) !==
+              JSON.stringify(realtimeValues[key])
+          ) {
+            // console.log('11111111111: ', newValuesRef.current)
+            newValuesRef.current[key] = [
+              ...prevValuesRef.current[key],
+              ...realtimeValues[key],
+            ]
           } else {
-            console.log('11111111111')
-            newValuesRef.current = realtimeValues
+            prevValuesRef.current = realtimeValues
           }
         }
+      } else {
+        newValuesRef.current = realtimeValues
       }
     }
   }, [realtimeValues])
@@ -184,42 +181,41 @@ export function DashboardDetail() {
       <TitleBar title={'Dashboard ' + DBNAME} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {detailDashboard?.configuration.widgets ? (
-          // <ReactGridLayout
-          //   layout={layout}
-          //   rowHeight={50}
-          //   isDraggable={isEditMode ? true : false}
-          //   isResizable={isEditMode ? true : false}
-          //   margin={[20, 20]}
-          // >
-          //   <div key="a" className="bg-secondary-500">
-          //     <LineChart data={newValuesRef.current} />
-          //   </div>
-          //   <div key="b" className="bg-secondary-500">
-          //     <LineChart data={lastJsonMessage} />
-          //   </div>
-          //   <div key="c" className="bg-secondary-500">
-          //     <LineChart data={lastJsonMessage} />
-          //   </div>
-          //   <div key="d" className="bg-secondary-500">
-          //     <LineChart data={lastJsonMessage} />
-          //   </div>
-          // </ReactGridLayout>
-
-          connectionStatus === 'Open' ? (
-            <div className="grid grow grid-cols-2 grid-rows-2 gap-3">
-              <div>
-                <LineChart data={newValuesRef.current} />
-              </div>
-              <div>Part 2</div>
-              <div>Part 3</div>
-              <div>Part 4</div>
+          <ReactGridLayout
+            layout={layout}
+            rowHeight={50}
+            isDraggable={isEditMode ? true : false}
+            isResizable={isEditMode ? true : false}
+            margin={[20, 20]}
+          >
+            <div key="a" className="bg-secondary-500">
+              <LineChart data={newValuesRef.current} />
             </div>
-          ) : (
-            <div className="flex grow items-center justify-center">
-              <Spinner showSpinner size="xl" />
+            {/* <div key="b" className="bg-secondary-500">
+              <LineChart data={lastJsonMessage} />
             </div>
-          )
+            <div key="c" className="bg-secondary-500">
+              <LineChart data={lastJsonMessage} />
+            </div>
+            <div key="d" className="bg-secondary-500">
+              <LineChart data={lastJsonMessage} />
+            </div> */}
+          </ReactGridLayout>
         ) : (
+          // connectionStatus === 'Open' ? (
+          //   <div className="grid grow grid-cols-2 grid-rows-2 gap-3">
+          //     <div>
+          //       <LineChart data={newValuesRef.current} />
+          //     </div>
+          //     <div></div>
+          //     <div></div>
+          //     <div></div>
+          //   </div>
+          // ) : (
+          //   <div className="flex grow items-center justify-center">
+          //     <Spinner showSpinner size="xl" />
+          //   </div>
+          // )
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>

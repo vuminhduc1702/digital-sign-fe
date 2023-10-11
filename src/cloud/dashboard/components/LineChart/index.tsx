@@ -2,44 +2,51 @@ import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type WSWidgetData } from '../../types'
+import { type TimeSeries, type WSWidgetData } from '../../types'
+import { useRef } from 'react'
 
-export function LineChart({ data }: { data: WSWidgetData[] }) {
-  console.log('data', data)
-  // const liveValuesTransformed: Datum[] = data
-  //   ?.map(({ ts, value }: WSWidgetData) => ({
-  //     x: getVNDateFormat({
-  //       date: ts,
-  //       config: { ...defaultDateConfig, second: '2-digit' },
-  //     }),
-  //     y: parseFloat(value),
-  //   }))
-  //   // .reverse()
-  //   .slice(-10)
+export function LineChart({ data: realtime }: { data: TimeSeries }) {
+  console.log('realtime', realtime)
+  function realtimeValuesTransformation(data: WSWidgetData[]): Datum[] {
+    const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
+      defaultDateConfig
+    return data
+      .toSorted((a, b) => a.ts - b.ts)
+      .map(({ ts, value }: WSWidgetData) => ({
+        x: getVNDateFormat({
+          date: ts,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+            second: '2-digit',
+          },
+        }),
+        y: parseFloat(value),
+      }))
+      .slice(-10)
+  }
 
-  // const liveValuesTransformedFeedToChart: Serie[] = [
-  //   {
-  //     id: 'test',
-  //     color: 'hsl(106, 70%, 50%)',
-  //     data: liveValuesTransformed,
-  //   },
-  //   {
-  //     id: 'test 2',
-  //     color: 'red',
-  //     data: liveValuesTransformed.reverse(),
-  //   },
-  // ]
+  const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([])
+  if (realtime != null) {
+    const data: Serie[] = Object.entries(realtime).map(([id, data], index) => {
+      return {
+        id,
+        color: index === 0 ? 'hsl(106, 70%, 50%)' : 'red',
+        data: realtimeValuesTransformation(data),
+      }
+    })
+    realtimeValuesTransformedFeedToChart.current = data
+  }
 
   return (
     <ResponsiveLine
-      data={[]}
+      data={realtimeValuesTransformedFeedToChart.current}
       margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{
         type: 'linear',
         min: 'auto',
         max: 'auto',
-        stacked: true,
+        stacked: false,
         reverse: false,
       }}
       yFormat=" >-.2f"
