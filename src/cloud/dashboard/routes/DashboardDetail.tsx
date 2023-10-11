@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom'
 import * as z from 'zod'
 import RGL, { WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { Spinner } from '~/components/Spinner'
-import { useCallback, useEffect, useRef, useState } from 'react'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
@@ -14,6 +14,7 @@ import { LineChart } from '../components'
 import { CreateWidget, type WidgetConfig } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
+import { cn } from '~/utils/misc'
 
 import {
   aggSchema,
@@ -57,14 +58,6 @@ const WS_URL = `${
   import.meta.env.VITE_WS_URL as string
 }/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
 
-const ReactGridLayout = WidthProvider(RGL)
-const layout: RGL.Layout[] = [
-  { i: 'a', x: 0, y: 0, w: 5, h: 5 },
-  { i: 'b', x: 5, y: 0, w: 5, h: 5 },
-  { i: 'c', x: 0, y: 5, w: 5, h: 5 },
-  { i: 'd', x: 5, y: 5, w: 5, h: 5 },
-]
-
 export function DashboardDetail() {
   const { t } = useTranslation()
 
@@ -77,6 +70,14 @@ export function DashboardDetail() {
   const [isEditMode, setIsEditMode] = useState(false)
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+
+  const ReactGridLayout = useMemo(() => WidthProvider(RGL), [])
+  const layout: RGL.Layout[] = [
+    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
+    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
+    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
+    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
+  ]
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -167,7 +168,7 @@ export function DashboardDetail() {
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
-          if (obj[key] !== null) {
+          if (obj[key] !== null && result != null) {
             if (!result[key]) {
               result[key] = []
             }
@@ -198,8 +199,13 @@ export function DashboardDetail() {
               isDraggable={isEditMode ? true : false}
               isResizable={isEditMode ? true : false}
               margin={[20, 20]}
+              onLayoutChange={e => console.log(e)}
             >
-              <div key="a" className="bg-secondary-500">
+              <div
+                key="a"
+                className={cn('bg-secondary-500', isEditMode && 'cursor-grab')}
+                data-iseditmode={isEditMode}
+              >
                 <LineChart data={newValuesRef.current} />
               </div>
             </ReactGridLayout>
@@ -220,7 +226,9 @@ export function DashboardDetail() {
               className="ml-2 rounded border-none p-3"
               variant="secondary"
               size="square"
-              onClick={() => setIsEditMode(false)}
+              onClick={() => {
+                setIsEditMode(false)
+              }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
               }

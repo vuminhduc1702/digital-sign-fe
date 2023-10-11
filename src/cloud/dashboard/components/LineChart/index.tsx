@@ -9,19 +9,22 @@ export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
   function realtimeValuesTransformation(data: WSWidgetData[]): Datum[] {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
-    return data
-      ?.toSorted((a, b) => a.ts - b.ts)
-      ?.map(({ ts, value }: WSWidgetData) => ({
-        x: getVNDateFormat({
-          date: ts,
-          config: {
-            ...dateTimeOptionsWithoutYearMonthDay,
-            second: '2-digit',
-          },
-        }),
-        y: parseFloat(value),
-      }))
-      .slice(-10)
+    return (
+      data
+        // @ts-expect-error: toSorted - TS lib is not up to date
+        ?.toSorted((a, b) => a.ts - b.ts)
+        ?.map(({ ts, value }: WSWidgetData) => ({
+          x: getVNDateFormat({
+            date: ts,
+            config: {
+              ...dateTimeOptionsWithoutYearMonthDay,
+              second: '2-digit',
+            },
+          }),
+          y: parseFloat(value),
+        }))
+        .slice(-10)
+    )
   }
 
   const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([
@@ -37,10 +40,13 @@ export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
       color: 'hsl(106, 70%, 50%)',
       data: realtimeValuesTransformation(data),
     }))
-    realtimeValuesTransformedFeedToChart.current = data
+    realtimeValuesTransformedFeedToChart.current = data.map(item => ({
+      ...item,
+      data: item.data.filter(subItem => subItem.y !== null),
+    }))
   }
   console.log(
-    'realtimeValuesTransformedFeedToChart.current',
+    'realtimeValuesTransformedFeedToChart',
     realtimeValuesTransformedFeedToChart.current,
   )
 
@@ -77,6 +83,7 @@ export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
       }}
       pointSize={10}
       useMesh={true}
+      enableSlices="x"
       legends={[
         {
           anchor: 'top',
