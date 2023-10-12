@@ -25,17 +25,17 @@ export function getVNDateFormat({ date, config }: DateFormat) {
   return new Intl.DateTimeFormat('vi-VN', dateConfig).format(new Date(date))
 }
 
-export function flattenData<T extends Record<K, any>, K extends string>(
+export function flattenData<T>(
   arr: T[] = [],
-  propertyKeys: K[],
+  propertyKeys: Array<keyof T>,
   subArr?: keyof T,
-): { acc: Array<Record<K, any>>; extractedPropertyKeys: K[] } {
+): { acc: T[]; extractedPropertyKeys: Array<keyof T> } {
   const extractedPropertyKeys = propertyKeys
 
-  const result = arr?.reduce((acc: Array<Record<K, any>>, obj: T) => {
+  const result = arr?.reduce((acc: T[], obj: T) => {
     const extractedObj = propertyKeys.reduce(
       (result, key) => ({ ...result, [key]: obj[key] }),
-      {},
+      {} as T,
     )
 
     const stringObj = Object.entries(extractedObj).reduce(
@@ -45,8 +45,8 @@ export function flattenData<T extends Record<K, any>, K extends string>(
         }
         return { ...newObj, [key]: String(value) }
       },
-      {},
-    ) as Record<K, any>
+      {} as T,
+    )
 
     acc.push(stringObj)
 

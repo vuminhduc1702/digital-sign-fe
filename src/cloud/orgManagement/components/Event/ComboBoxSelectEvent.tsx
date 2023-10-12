@@ -19,14 +19,27 @@ export function ComboBoxSelectEvent({
 
   const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
     data?.events,
-    ['id', 'name', 'group_name', 'onClick', 'status', 'interval', 'retry', 'schedule', 'action', 'condition', 'org_id', 'group_id'],
+    [
+      'id',
+      'name',
+      'group_name',
+      'onClick',
+      'status',
+      'interval',
+      'retry',
+      'schedule',
+      'action',
+      'condition',
+      'org_id',
+      'group_id',
+    ],
   )
 
   const filteredData = filteredComboboxData(
     query,
     eventFlattenData,
     extractedPropertyKeys,
-  ) as EventType[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

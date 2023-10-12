@@ -55,11 +55,6 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
-  const defaultOrgOptions = {
-    label: t('cloud:org_manage.org_manage.add_org.no_org'),
-    value: '',
-  }
-
   const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {

@@ -71,7 +71,7 @@ export function UpdateThingService({
     useThingServiceById({
       thingId,
       name,
-      config: { suspense: false },
+      // config: { suspense: false },
     })
 
   const [codeInput, setCodeInput] = useState('')

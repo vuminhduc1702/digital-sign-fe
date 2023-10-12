@@ -68,14 +68,7 @@ export function CreateOrg() {
 
   const { id: projectId } = storage.getProject()
 
-  const defaultOrgOptions = {
-    label: t('cloud:org_manage.org_manage.add_org.no_org'),
-    value: '',
-  }
-
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>(
-    defaultOrgOptions,
-  )
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,

@@ -42,7 +42,7 @@ export function ComboBoxSelectFirmWare({
     query,
     firmwareFlattenData,
     extractedPropertyKeys,
-  ) as FirmWare[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

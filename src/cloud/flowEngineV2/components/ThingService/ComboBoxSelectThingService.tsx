@@ -27,7 +27,7 @@ export function ComboBoxSelectThingService({
     query,
     thingServiceFlattenData,
     extractedPropertyKeys,
-  ) as ThingService[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

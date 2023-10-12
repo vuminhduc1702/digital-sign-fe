@@ -41,7 +41,7 @@ export function ComboBoxSelectAdapter({
     query,
     adapterFlattenData,
     extractedPropertyKeys,
-  ) as Adapter[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

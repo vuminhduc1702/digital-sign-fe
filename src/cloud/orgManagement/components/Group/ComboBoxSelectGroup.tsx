@@ -29,14 +29,14 @@ export function ComboBoxSelectGroup({
 
   const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(
     data?.groups,
-    ['id', 'name', 'entity_type', 'org_name'],
+    ['id', 'name', 'entity_type', 'org_name', 'organization'],
   )
 
   const filteredData = filteredComboboxData(
     query,
     groupFlattenData,
     extractedPropertyKeys,
-  ) as Group[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

@@ -157,7 +157,8 @@
           "parent": "Trực thuộc tổ chức",
           "success_create": "Tạo nhóm thành công",
           "success_update": "Sửa nhóm thành công",
-          "success_delete": "Xoá nhóm thành công"
+          "success_delete": "Xoá nhóm thành công",
+          "success_update_org": "Chuyển nhóm sang tổ chức khác thành công"
         }
       },
       "user_manage": {

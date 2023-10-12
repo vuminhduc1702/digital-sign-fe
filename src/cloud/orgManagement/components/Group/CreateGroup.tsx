@@ -8,7 +8,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  SelectOption,
+  type SelectOption,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
@@ -44,11 +44,6 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
-  const defaultOrgOptions = 
-  {
-    label: t('cloud:org_manage.org_manage.add_org.no_org'),
-    value: ''
-  }
   const [option, setOption] = useState<SelectOption>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
@@ -59,11 +54,12 @@ export function CreateGroup() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id
-  })).concat(defaultOrgOptions)
-  .sort((a,b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
