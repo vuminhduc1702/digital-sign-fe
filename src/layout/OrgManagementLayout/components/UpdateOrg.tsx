@@ -55,6 +55,12 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
+  const defaultOrgOptions = 
+  {
+    label: t('cloud:org_manage.org_manage.add_org.no_org'),
+    value: ''
+  }
+
   const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
@@ -65,13 +71,24 @@ export function UpdateOrg({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id
+  })).concat(defaultOrgOptions)
+  .sort((a,b) => a.value.length - b.value.length)
+  .filter(org => org.value != selectedUpdateOrg.id)
 
   useEffect(() => {
     if (selectedUpdateOrg.id) {
-      setOptionOrg({
-        label: selectedUpdateOrg?.parent_name,
-        value: selectedUpdateOrg?.id,
-      })
+      if (selectedUpdateOrg.parent_name) {
+        setOptionOrg({
+          label: selectedUpdateOrg.parent_name,
+          value: selectedUpdateOrg.id,
+        })
+      } else {
+        setOptionOrg(defaultOrgOptions)
+      }
     }
   }, [selectedUpdateOrg])
 
@@ -121,6 +138,8 @@ export function UpdateOrg({
   useEffect(() => {
     setUploadImageErr('')
   }, [isOpen])
+
+
 
   return (
     <Drawer
@@ -216,10 +235,7 @@ export function UpdateOrg({
                   name="org_id"
                   control={control}
                   options={
-                    orgFlattenData?.map(org => ({
-                      label: org?.name,
-                      value: org?.id,
-                    })) || [{ label: t('loading:org'), value: '' }]
+                    orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
                   onChange={e => {
                     setOptionOrg(e)

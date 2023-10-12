@@ -19,6 +19,9 @@ type CodeSandboxEditorProps = {
   isFullScreen?: boolean
   defaultValue?: string
   isEdit?: boolean
+  viewMode?: string
+  editorName?: string
+  isUpdate?: boolean
 }
 
 type SimpleCodeProps = {
@@ -45,6 +48,9 @@ export function CodeSandboxEditor({
   defaultValue,
   isEdit,
   className,
+  viewMode,
+  editorName,
+  isUpdate
 }: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
@@ -68,6 +74,9 @@ export function CodeSandboxEditor({
             'border-0 border-b border-solid border-inherit': !isFullScreen,
             '!h-[600px] border-0': !isFullScreen && !isShowLog,
             '!h-[320px] border-0': isFullScreen && !isShowLog && isEdit,
+            '!h-[45rem]': isFullScreen ? editorName == 'code' ? viewMode == 'maximize_code' || viewMode == 'minimize_result' : viewMode == 'maximize_result' || viewMode == 'minimize_code' : '',
+            '!h-[41rem]': isUpdate && isFullScreen ? editorName == 'code' ? viewMode == 'maximize_code' || viewMode == 'minimize_result' : viewMode == 'maximize_result' || viewMode == 'minimize_code' : '',
+            '!h-[3rem]': isFullScreen ? editorName == 'code' ? viewMode == 'maximize_result' || viewMode == 'minimize_code' : viewMode == 'maximize_code' || viewMode == 'minimize_result' : '',
           })}
           showInlineErrors
           showLineNumbers
@@ -77,6 +86,9 @@ export function CodeSandboxEditor({
           <SandpackConsole
             className={cn('', {
               '!h-96': isFullScreen,
+              '!h-[45rem]': isFullScreen ? editorName == 'code' ? viewMode == 'maximize_code' || viewMode == 'minimize_result' : viewMode == 'maximize_result' || viewMode == 'minimize_code' : '',
+              '!h-[41rem]': isUpdate && isFullScreen ? editorName == 'code' ? viewMode == 'maximize_code' || viewMode == 'minimize_result' : viewMode == 'maximize_result' || viewMode == 'minimize_code' : '',
+              '!h-[3rem]': isFullScreen ? editorName == 'code' ? viewMode == 'maximize_result' || viewMode == 'minimize_code' : viewMode == 'maximize_code' || viewMode == 'minimize_result' : '',
             })}
             standalone={true}
             showSyntaxError={true}
