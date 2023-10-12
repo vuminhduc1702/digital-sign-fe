@@ -11,10 +11,15 @@ import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
-import { CreateWidget, type WidgetConfig } from '../components/Widget'
+import {
+  CreateWidget,
+  type WidgetCategoryType,
+  type WidgetConfig,
+} from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 import { cn } from '~/utils/misc'
+import { useDashboardNameStore } from '~/stores/dashboard'
 
 import {
   aggSchema,
@@ -23,6 +28,7 @@ import {
   type TimeSeries,
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
+import { WS_URL } from '~/config'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -54,14 +60,14 @@ export const widgetAgg: WidgetAgg[] = [
 ]
 
 const { token } = storage.getToken() as UserStorage
-const WS_URL = `${
-  import.meta.env.VITE_WS_URL as string
-}/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
+const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
+  `Bearer ${token}`,
+)}`
 
 export function DashboardDetail() {
   const { t } = useTranslation()
 
-  const DBNAME = localStorage.getItem('dbname')
+  const dashboardName = useDashboardNameStore(state => state.dashboardName)
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -69,14 +75,16 @@ export function DashboardDetail() {
   const { close, open, isOpen } = useDisclosure()
   const [isEditMode, setIsEditMode] = useState(false)
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
+  const [widgetCategory, setWidgetCategory] =
+    useState<WidgetCategoryType>('LINE')
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
 
   const ReactGridLayout = useMemo(() => WidthProvider(RGL), [])
   const layout: RGL.Layout[] = [
-    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
-    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
-    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
-    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
+    { i: '0', x: 0, y: 0, w: 5, h: 5 },
+    { i: '1', x: 5, y: 0, w: 5, h: 5 },
+    { i: '2', x: 0, y: 5, w: 5, h: 5 },
+    { i: '3', x: 5, y: 5, w: 5, h: 5 },
   ]
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
@@ -90,21 +98,20 @@ export function DashboardDetail() {
   // console.log('widgetData', widgetData)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WS_URL)
+    useWS<DashboardWS>(WEBSOCKET_URL)
 
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
 
-  const newValuesRef = useRef<TimeSeries | null>(null)
-  const prevValuesRef = useRef<TimeSeries | null>(null)
-
+  const widgetIdListRef = useRef<string[]>([])
   useEffect(() => {
     if (detailDashboard?.configuration.widgets != null) {
       const widgetIdList = Object.keys(
         detailDashboard?.configuration?.widgets as unknown as WidgetConfig,
       )
+      widgetIdListRef.current = widgetIdList
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
           handleSendMessage(
@@ -116,7 +123,7 @@ export function DashboardDetail() {
               ?.realtime_message,
           )
 
-          // const ws = new WebSocket(WS_URL)
+          // const ws = new WebSocket(WEBSOCKET_URL)
           // ws.onopen = event => {
           //   ws.send(
           //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
@@ -138,30 +145,6 @@ export function DashboardDetail() {
   const realtimeValues = combinedObject(
     lastJsonMessage?.data?.map(device => device?.timeseries),
   )
-  useEffect(() => {
-    if (realtimeValues != null && Object.keys(realtimeValues).length !== 0) {
-      prevValuesRef.current = newValuesRef.current || realtimeValues
-      if (newValuesRef.current != null) {
-        for (const key in realtimeValues) {
-          if (
-            JSON.stringify(prevValuesRef.current[key]) !==
-              JSON.stringify(newValuesRef.current[key]) ||
-            JSON.stringify(prevValuesRef.current[key]) !==
-              JSON.stringify(realtimeValues[key])
-          ) {
-            newValuesRef.current[key] = [
-              ...prevValuesRef.current[key],
-              ...realtimeValues[key],
-            ]
-          } else {
-            prevValuesRef.current = realtimeValues
-          }
-        }
-      } else {
-        newValuesRef.current = realtimeValues
-      }
-    }
-  }, [realtimeValues])
 
   function combinedObject(data: Array<TimeSeries | null>) {
     let combinedObject: TimeSeries | null = {}
@@ -189,30 +172,40 @@ export function DashboardDetail() {
 
   return (
     <div className="flex grow flex-col">
-      <TitleBar title={'Dashboard ' + DBNAME} />
+      <TitleBar title={`${t('cloud:dashboard.title')}: ${dashboardName}`} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {detailDashboard?.configuration.widgets ? (
-          connectionStatus === 'Open' ? (
-            <ReactGridLayout
-              layout={layout}
-              rowHeight={50}
-              isDraggable={isEditMode ? true : false}
-              isResizable={isEditMode ? true : false}
-              margin={[20, 20]}
-              onLayoutChange={e => console.log(e)}
-            >
-              <div
-                key="a"
-                className={cn('bg-secondary-500', isEditMode && 'cursor-grab')}
-                data-iseditmode={isEditMode}
+        {detailDashboard?.configuration.widgets != null &&
+        widgetIdListRef.current.length > 0 ? (
+          widgetIdListRef.current.map((widgetId, index) =>
+            connectionStatus === 'Open' ? (
+              <ReactGridLayout
+                // layout={layout}
+                rowHeight={500}
+                cols={2}
+                isDraggable={isEditMode ? true : false}
+                isResizable={isEditMode ? true : false}
+                margin={[20, 20]}
+                onLayoutChange={e => console.log(e)}
               >
-                <LineChart data={newValuesRef.current} />
+                <div
+                  key={index}
+                  className={cn(
+                    'relative bg-secondary-500',
+                    isEditMode && 'cursor-grab',
+                  )}
+                  data-iseditmode={isEditMode}
+                >
+                  <p className="absolute ml-2 mt-2">
+                    {detailDashboard?.configuration?.widgets?.[widgetId]?.title}
+                  </p>
+                  <LineChart data={realtimeValues} />
+                </div>
+              </ReactGridLayout>
+            ) : (
+              <div className="flex grow items-center justify-center">
+                <Spinner showSpinner={showSpinner} size="xl" />
               </div>
-            </ReactGridLayout>
-          ) : (
-            <div className="flex grow items-center justify-center">
-              <Spinner showSpinner={showSpinner} size="xl" />
-            </div>
+            ),
           )
         ) : (
           <div className="grid grow place-content-center text-h1">
@@ -388,7 +381,7 @@ export function DashboardDetail() {
                                 'TIMESERIES',
                               data_type:
                                 widgetData?.widgetSetting?.dataType ??
-                                'realtime',
+                                'REALTIME',
                             },
                           },
                         },
@@ -424,10 +417,11 @@ export function DashboardDetail() {
               <div>
                 <CreateWidget
                   widgetType={widgetType}
+                  widgetCategory={widgetCategory}
                   isOpen={isShowCreateWidget}
                   close={() => setIsShowCreateWidget(false)}
                   handleSubmitWidget={values => {
-                    console.log('values chart: ', values)
+                    // console.log('values chart: ', values)
                     setIsShowCreateWidget(false)
                     setWidgetData(values)
                   }}
@@ -468,6 +462,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
+                          setWidgetCategory('LINE')
                           setIsShowCreateWidget(true)
                           close()
                         }}
@@ -485,6 +480,7 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('TIMESERIES')
+                          setWidgetCategory('BAR')
                           setIsShowCreateWidget(true)
                           close()
                         }}
@@ -500,10 +496,67 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
+                        className="w-full bg-secondary-400"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('PIE')
+                          setIsShowCreateWidget(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                          )}
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="square"
                         className="w-full bg-secondary-400 active:bg-primary-300"
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
+                          setWidgetCategory('GAUGE')
+                          setIsShowCreateWidget(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.gauge',
+                          )}
+                        </span>
+                      </Button>
+                    </div>
+                    <div className="w-full space-y-3">
+                      <Button
+                        type="button"
+                        size="square"
+                        className="w-full bg-secondary-400"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('RTDATA')
+                          setIsShowCreateWidget(true)
+                          close()
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                          )}
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="square"
+                        className="w-full bg-secondary-400 active:bg-primary-300"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('MAP')
                           setIsShowCreateWidget(true)
                           close()
                         }}
@@ -512,6 +565,8 @@ export function DashboardDetail() {
                           {t('cloud:dashboard.detail_dashboard.add_widget.map')}
                         </span>
                       </Button>
+                    </div>
+                    <div className="w-full space-y-3">
                       <Button
                         type="button"
                         size="square"
@@ -519,13 +574,14 @@ export function DashboardDetail() {
                         variant="secondaryLight"
                         onClick={() => {
                           setWidgetType('LASTEST')
+                          setWidgetCategory('TABLE')
                           setIsShowCreateWidget(true)
                           close()
                         }}
                       >
                         <span>
                           {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                            'cloud:dashboard.detail_dashboard.add_widget.data_table',
                           )}
                         </span>
                       </Button>

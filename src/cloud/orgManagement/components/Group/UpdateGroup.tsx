@@ -45,7 +45,6 @@ export function UpdateGroup({
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
-  console.log('optionOrg', optionOrg)
 
   const { acc: orgFlattenData } = flattenData(
     orgListCache?.organizations,
@@ -71,7 +70,6 @@ export function UpdateGroup({
 
   useEffect(() => {
     const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
-    console.log('filterOrg', filterOrg)
     if (organization) {
       setOptionOrg({
         label: filterOrg?.name,

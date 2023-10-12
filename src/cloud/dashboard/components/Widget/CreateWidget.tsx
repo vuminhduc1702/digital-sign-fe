@@ -16,6 +16,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOptionGeneric,
   type SelectOptionString,
 } from '~/components/Form'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
@@ -57,14 +58,27 @@ export const attrWidgetSchema = z.array(
   }),
 )
 
-export const widgetDataTypeSchema = z.enum(['realtime', 'history'] as const)
+export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const)
+type WidgetDataType = z.infer<typeof widgetDataTypeSchema>
 
 export const widgetTypeSchema = z
   .enum(['TIMESERIES', 'LASTEST'] as const)
   .optional()
 
+export const widgetCategorySchema = z.enum([
+  'LINE',
+  'BAR',
+  'PIE',
+  'GAUGE',
+  'RTDATA',
+  'MAP',
+  'TABLE',
+] as const)
+export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
+
 export const widgetSchema = z.object({
   title: nameSchema,
+  type: widgetCategorySchema,
   org_id: z.string(),
   device: z.array(
     z.string().min(1, {
@@ -97,18 +111,20 @@ export type WidgetConfig = WidgetConfigDTO['data']
 
 type CreateWidgetProps = {
   widgetType: WidgetType
+  widgetCategory: WidgetCategoryType
   isOpen: boolean
   close: () => void
   handleSubmitWidget: (value: WidgetConfig) => void
 }
 
-const widgetDataType = [
-  { label: 'Realtime', value: 'realtime' },
-  { label: 'History', value: 'history' },
+const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
+  { label: 'Realtime', value: 'REALTIME' },
+  { label: 'History', value: 'HISTORY' },
 ]
 
 export function CreateWidget({
   widgetType,
+  widgetCategory,
   isOpen,
   close,
   handleSubmitWidget,
@@ -184,15 +200,15 @@ export function CreateWidget({
             className="flex flex-col justify-between"
             onSubmit={values => {
               // console.log('values: ', values)
-              const widgetData: typeof values = {
+              handleSubmitWidget({
                 id: uuidv4(),
                 title: values.title,
+                type: widgetCategory,
                 org_id: values.org_id,
                 device: values.device,
                 attributeConfig: values.attributeConfig,
                 widgetSetting: values.widgetSetting,
-              }
-              handleSubmitWidget(widgetData)
+              })
             }}
             schema={widgetSchema}
             name={['attributeConfig']}
@@ -811,8 +827,8 @@ export function CreateWidget({
             <div className="mt-4 flex justify-center space-x-2">
               <Button
                 type="button"
+                size="md"
                 variant="secondary"
-                className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
                 onClick={close}
                 startIcon={
                   <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
@@ -823,7 +839,7 @@ export function CreateWidget({
                 form="create-widget"
                 type="submit"
                 variant="primary"
-                size="square"
+                size="md"
                 startIcon={
                   <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                 }

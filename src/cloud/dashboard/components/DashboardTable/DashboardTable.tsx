@@ -17,6 +17,7 @@ import { UpdateDashboard } from './UpdateDashboard'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { type DashboardRes } from '../../api'
+import { useDashboardNameStore } from '~/stores/dashboard'
 
 function DashboardTableContextMenu({
   id,
@@ -125,6 +126,10 @@ export function DashboardTable({
 }) {
   const { t } = useTranslation()
 
+  const setDashboardName = useDashboardNameStore(
+    state => state.setDashboardName,
+  )
+
   const columnHelper = createColumnHelper<DashboardRes>()
 
   const dataSorted =
@@ -146,9 +151,7 @@ export function DashboardTable({
         cell: info => (
           <Link
             to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}
-            onClick={() => {
-              window.localStorage.setItem('dbname', info.row.original.title)
-            }}
+            onClick={() => setDashboardName(info.row.original.title)}
           >
             {info.getValue()}
           </Link>

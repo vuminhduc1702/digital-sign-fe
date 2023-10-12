@@ -1,12 +1,41 @@
+import { useEffect, useRef } from 'react'
 import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
 import { type TimeSeries, type WSWidgetData } from '../../types'
-import { useRef } from 'react'
 
-export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
-  function realtimeValuesTransformation(data: WSWidgetData[]): Datum[] {
+export function LineChart({ data }: { data: TimeSeries | null }) {
+  const newValuesRef = useRef<TimeSeries | null>(null)
+  const prevValuesRef = useRef<TimeSeries | null>(null)
+
+  // Handle real time value
+  useEffect(() => {
+    if (data != null && Object.keys(data).length !== 0) {
+      prevValuesRef.current = newValuesRef.current || data
+      if (newValuesRef.current != null) {
+        for (const key in data) {
+          if (
+            JSON.stringify(prevValuesRef.current[key]) !==
+              JSON.stringify(newValuesRef.current[key]) ||
+            JSON.stringify(prevValuesRef.current[key]) !==
+              JSON.stringify(data[key])
+          ) {
+            newValuesRef.current[key] = [
+              ...prevValuesRef.current[key],
+              ...data[key],
+            ]
+          } else {
+            prevValuesRef.current = data
+          }
+        }
+      } else {
+        newValuesRef.current = data
+      }
+    }
+  }, [data])
+
+  function dataTransformation(data: WSWidgetData[]): Datum[] {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
     return data
@@ -24,32 +53,34 @@ export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
       .slice(-10)
   }
 
-  const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([
+  const dataTransformedFeedToChart = useRef<Serie[]>([
     {
       id: '',
       color: 'hsl(106, 70%, 50%)',
       data: [{ x: 0, y: 0 }],
     },
   ])
-  if (realtime != null) {
-    const data: Serie[] = Object.entries(realtime).map(([id, data], index) => ({
-      id,
-      color: 'hsl(106, 70%, 50%)',
-      data: realtimeValuesTransformation(data),
-    }))
-    realtimeValuesTransformedFeedToChart.current = data.map(item => ({
+  if (newValuesRef.current != null) {
+    const data: Serie[] = Object.entries(newValuesRef.current).map(
+      ([id, data], index) => ({
+        id,
+        color: 'hsl(106, 70%, 50%)',
+        data: dataTransformation(data),
+      }),
+    )
+    dataTransformedFeedToChart.current = data.map(item => ({
       ...item,
       data: item.data.filter(subItem => subItem.y !== null),
     }))
   }
-  console.log(
-    'realtimeValuesTransformedFeedToChart',
-    realtimeValuesTransformedFeedToChart.current,
-  )
+  // console.log(
+  //   'dataTransformedFeedToChart',
+  //   dataTransformedFeedToChart.current,
+  // )
 
   return (
     <ResponsiveLine
-      data={realtimeValuesTransformedFeedToChart.current}
+      data={dataTransformedFeedToChart.current}
       margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
       xScale={{ type: 'point' }}
       yScale={{
