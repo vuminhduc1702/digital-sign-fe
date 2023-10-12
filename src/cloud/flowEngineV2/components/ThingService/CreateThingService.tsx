@@ -168,6 +168,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setCodeInput('')
     setCodeOutput('')
     setFullScreen(false)
+    setIsShowConsole(false)
   }
 
   useEffect(() => {
@@ -209,7 +210,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           }}
           name={['input']}
         >
-          {({ register, formState }, { fields, append, remove }) => {
+          {({ register, formState, getValues }, { fields, append, remove }) => {
             return (
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">

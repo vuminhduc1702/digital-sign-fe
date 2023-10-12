@@ -55,10 +55,9 @@ export function UpdateOrg({
 }) {
   const { t } = useTranslation()
 
-  const defaultOrgOptions = 
-  {
+  const defaultOrgOptions = {
     label: t('cloud:org_manage.org_manage.add_org.no_org'),
-    value: ''
+    value: '',
   }
 
   const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
@@ -71,13 +70,23 @@ export function UpdateOrg({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id
-  })).concat(defaultOrgOptions)
-  .sort((a,b) => a.value.length - b.value.length)
-  .filter(org => org.value != selectedUpdateOrg.id)
+  const { acc: selectedUpdateOrgChildren } = flattenData(
+    selectedUpdateOrg.children,
+    ['id'],
+    'children',
+  )
+
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+    .filter(
+      org =>
+        org.value !== selectedUpdateOrg.id &&
+        !selectedUpdateOrgChildren.some(child => child.id === org.value),
+    )
 
   useEffect(() => {
     if (selectedUpdateOrg.id) {
@@ -86,8 +95,6 @@ export function UpdateOrg({
           label: selectedUpdateOrg.parent_name,
           value: selectedUpdateOrg.id,
         })
-      } else {
-        setOptionOrg(defaultOrgOptions)
       }
     }
   }, [selectedUpdateOrg])
@@ -138,8 +145,6 @@ export function UpdateOrg({
   useEffect(() => {
     setUploadImageErr('')
   }, [isOpen])
-
-
 
   return (
     <Drawer
@@ -237,12 +242,12 @@ export function UpdateOrg({
                   options={
                     orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
-                  onChange={e => {
+                  onChange={(e: SelectOptionString) => {
                     setOptionOrg(e)
                     mutateUpdateOrgForOrg({
                       data: {
-                        ids: [e?.value],
-                        org_id: selectedUpdateOrg?.id,
+                        ids: [selectedUpdateOrg.id],
+                        org_id: e.value,
                       },
                     })
                     setValue('org_id', e?.value)

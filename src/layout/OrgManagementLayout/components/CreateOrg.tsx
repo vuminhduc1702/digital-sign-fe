@@ -68,13 +68,14 @@ export function CreateOrg() {
 
   const { id: projectId } = storage.getProject()
 
-  const defaultOrgOptions = 
-  {
+  const defaultOrgOptions = {
     label: t('cloud:org_manage.org_manage.add_org.no_org'),
-    value: ''
+    value: '',
   }
 
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>(defaultOrgOptions)
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>(
+    defaultOrgOptions,
+  )
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -84,11 +85,12 @@ export function CreateOrg() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id
-  })).concat(defaultOrgOptions)
-  .sort((a,b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
 
   const clearData = () => {
     setOptionOrg(null)

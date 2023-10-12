@@ -65,7 +65,17 @@ export function CodeSandboxEditor({
   }
 
   return (
-    <SandpackProvider files={files} theme={githubLight} template="vanilla">
+    <SandpackProvider
+      files={files}
+      theme={githubLight}
+      template="vanilla"
+      options={{
+        autoReload: false,
+        autorun: false,
+        recompileMode: 'delayed',
+        recompileDelay: 5000,
+      }}
+    >
       <SandpackLayout className={cn('', className)}>
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor
@@ -118,7 +128,7 @@ export function CodeSandboxEditor({
                   : viewMode == 'maximize_code' || viewMode == 'minimize_result'
                 : '',
             })}
-            standalone={false}
+            standalone
             showSyntaxError={true}
           />
         )}

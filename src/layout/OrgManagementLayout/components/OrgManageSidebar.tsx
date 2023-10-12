@@ -26,7 +26,7 @@ export type OrgMapType = {
   parent_name: string
   org_id: string
   image: string
-  children: any[]
+  children: OrgMapType[]
   isSearch?: boolean
 }
 
@@ -73,7 +73,7 @@ function OrgManageSidebar() {
     const findIndexSearch = filteredComboboxData.findIndex(
       item => item.isSearch,
     )
-    if(findIndexSearch !== -1) {
+    if (findIndexSearch !== -1) {
       filteredComboboxData[findIndexSearch].isSearch = false
     }
     if (selected?.id) {
