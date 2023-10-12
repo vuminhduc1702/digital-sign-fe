@@ -22,6 +22,7 @@ type CodeSandboxEditorProps = {
   viewMode?: string
   editorName?: string
   isUpdate?: boolean
+  showRunButton?: boolean
 }
 
 type SimpleCodeProps = {
@@ -51,6 +52,7 @@ export function CodeSandboxEditor({
   viewMode,
   editorName,
   isUpdate,
+  showRunButton,
 }: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
@@ -104,6 +106,7 @@ export function CodeSandboxEditor({
           showInlineErrors
           showLineNumbers
           readOnly={readOnly}
+          showRunButton={showRunButton}
         />
         {isShowLog && (
           <SandpackConsole

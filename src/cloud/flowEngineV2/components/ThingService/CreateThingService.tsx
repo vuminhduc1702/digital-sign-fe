@@ -568,6 +568,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       <CodeSandboxEditor
                         value={codeOutput}
                         readOnly={true}
+                        showRunButton={false}
                         setCodeInput={setCodeOutput}
                         isFullScreen={fullScreen}
                         viewMode={viewMode}
