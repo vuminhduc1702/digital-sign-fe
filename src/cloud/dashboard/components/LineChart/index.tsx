@@ -9,22 +9,19 @@ export function LineChart({ data: realtime }: { data: TimeSeries | null }) {
   function realtimeValuesTransformation(data: WSWidgetData[]): Datum[] {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
-    return (
-      data
-        // @ts-expect-error: toSorted - TS lib is not up to date
-        ?.toSorted((a, b) => a.ts - b.ts)
-        ?.map(({ ts, value }: WSWidgetData) => ({
-          x: getVNDateFormat({
-            date: ts,
-            config: {
-              ...dateTimeOptionsWithoutYearMonthDay,
-              second: '2-digit',
-            },
-          }),
-          y: parseFloat(value),
-        }))
-        .slice(-10)
-    )
+    return data
+      ?.toSorted((a, b) => a.ts - b.ts)
+      ?.map(({ ts, value }: WSWidgetData) => ({
+        x: getVNDateFormat({
+          date: ts,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+            second: '2-digit',
+          },
+        }),
+        y: parseFloat(value),
+      }))
+      .slice(-10)
   }
 
   const realtimeValuesTransformedFeedToChart = useRef<Serie[]>([

@@ -77,7 +77,6 @@ type CreateServiceProps = {
   thingServiceData?: ThingService[]
 }
 
-
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { t } = useTranslation()
   const { id: projectId } = storage.getProject()
@@ -88,6 +87,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
   const [viewMode, setViewMode] = useState('default')
+  const [isShowConsole, setIsShowConsole] = useState(false)
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
@@ -229,12 +229,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     options={outputList}
                   />
                 </div>
-                <div
-                  className={cn('grid grid-cols-1 gap-x-4', {
-                    'md:grid-cols-3': !fullScreen,
-                    'md:grid-cols-4': fullScreen,
-                  })}
-                >
+                <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
                   <div className={'relative flex flex-col gap-2 md:col-span-1'}>
                     <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                       <div className="flex gap-3">
@@ -254,17 +249,16 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           <div
                             key={field.id}
                             className={cn(
-                              'flex  border-0 border-b border-solid border-inherit',
+                              'flex items-center border-0 border-b border-solid border-inherit py-3 first:pt-0',
                               {
-                                'flex-col': fullScreen,
+                                'justify-between': fullScreen,
                               },
                             )}
                           >
                             <div
-                              className={cn('grid grid-cols-1 gap-x-4', {
-                                'md:grid-cols-3': !fullScreen,
-                                'pr-2': fullScreen,
-                              })}
+                              className={cn(
+                                'grid w-full grid-cols-1 gap-x-4 gap-y-2 pr-2',
+                              )}
                             >
                               <InputField
                                 require={true}
@@ -276,46 +270,47 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   `input.${index}.name` as const,
                                 )}
                               />
-                              <SelectField
-                                label={t(
-                                  'cloud:custom_protocol.service.service_input.type',
-                                )}
-                                require={true}
-                                className="pr-2"
-                                error={formState.errors[`input`]?.[index]?.type}
-                                registration={register(
-                                  `input.${index}.type` as const,
-                                )}
-                                options={outputList}
-                              />
-                              <InputField
-                                label={t(
-                                  'cloud:custom_protocol.service.service_input.value',
-                                )}
-                                error={
-                                  formState.errors[`input`]?.[index]?.value
-                                }
-                                registration={register(
-                                  `input.${index}.value` as const,
-                                )}
-                              />
+                              <div className="flex gap-x-2">
+                                <SelectField
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.type',
+                                  )}
+                                  require={true}
+                                  error={
+                                    formState.errors[`input`]?.[index]?.type
+                                  }
+                                  registration={register(
+                                    `input.${index}.type` as const,
+                                  )}
+                                  options={outputList}
+                                  className="h-9"
+                                />
+                                <InputField
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.value',
+                                  )}
+                                  error={
+                                    formState.errors[`input`]?.[index]?.value
+                                  }
+                                  registration={register(
+                                    `input.${index}.value` as const,
+                                  )}
+                                />
+                              </div>
                             </div>
                             <Button
                               type="button"
                               size="square"
-                              variant="trans"
-                              className={cn('mt-3 border-none !shadow-none', {
-                                '!justify-start': fullScreen,
+                              variant="none"
+                              className={cn('h-9 hover:bg-secondary-500', {
+                                '!justify-center': fullScreen,
                               })}
                               onClick={() => remove(index)}
                               startIcon={
                                 <img
                                   src={btnDeleteIcon}
-                                  alt="Delete condition"
-                                  className={cn('', {
-                                    'h-6 w-6': fullScreen,
-                                    'h-10 w-10': !fullScreen,
-                                  })}
+                                  alt="Delete input"
+                                  className={cn('h-10 w-10')}
                                 />
                               }
                             />
@@ -323,22 +318,24 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         )
                       })}
                     </div>
-                    <div className="flex items-center">
+                    <div
+                      className="flex w-fit items-center"
+                      onClick={() =>
+                        append({
+                          name: '',
+                          type: 'json',
+                          value: '',
+                        })
+                      }
+                    >
                       <img
-                        onClick={() =>
-                          append({
-                            name: '',
-                            type: 'json',
-                            value: '',
-                          })
-                        }
                         src={btnAddIcon}
                         alt="add-icon"
                         className="h-5 w-5 cursor-pointer"
                       />
-                      <span className="ml-2">
+                      <label className="ml-2 cursor-pointer">
                         {t('cloud:custom_protocol.service.add_other')}
-                      </span>
+                      </label>
                     </div>
                     <div className="flex flex-col gap-y-1">
                       <div className="mb-2">
@@ -382,13 +379,27 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     </div>
                   </div>
                   <div
-                    className={cn('flex flex-col gap-2 ', {
-                      'grid grow grid-cols-1 gap-x-4 md:col-span-2 md:grid-cols-2':
-                        !fullScreen,
-                      'md:col-span-3': fullScreen,
-                    }, {'md:grid-cols-6': viewMode != 'default'})}
+                    className={cn(
+                      'flex flex-col gap-2 ',
+                      {
+                        'grid grow grid-cols-1 gap-x-4 md:col-span-3 md:grid-cols-2':
+                          !fullScreen,
+                        'md:col-span-3': fullScreen,
+                      },
+                      { 'md:grid-cols-6': viewMode !== 'default' },
+                    )}
                   >
-                    <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_code' || viewMode == 'minimize_result'}, {'md:col-span-1': viewMode == 'minimize_code'})}>
+                    <div
+                      className={cn(
+                        'flex flex-col gap-2 md:col-span-1',
+                        {
+                          'md:col-span-5':
+                            viewMode === 'maximize_code' ||
+                            viewMode === 'minimize_result',
+                        },
+                        { 'md:col-span-1': viewMode === 'minimize_code' },
+                      )}
+                    >
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">
@@ -407,10 +418,60 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             }
                           >
                             <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="px-2 py-2">
-                                <div className="py-1 hover:cursor-pointer hover:background" onClick={() => {setViewMode('maximize_code')}}>Phóng to editor</div>
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_code')}}>Thu nhỏ editor</div>
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                              <div className="p-2">
+                                <div
+                                  className="hover:background py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('maximize_code')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.maximize_result',
+                                  )}
+                                </div>
+                                <div
+                                  className="py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('minimize_code')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.minimize_result',
+                                  )}
+                                </div>
+                                <div
+                                  className="py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('default')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.default_result',
+                                  )}
+                                </div>
+                                {isShowConsole ? (
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setIsShowConsole(false)
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.hide_console',
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setIsShowConsole(true)
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.view_console',
+                                    )}
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </Dropdown>
@@ -425,7 +486,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         </div>
                       </div>
                       <CodeSandboxEditor
-                        isShowLog={true}
+                        isShowLog={isShowConsole}
                         value={codeInput}
                         className={`${fullScreen ? '' : '!block'}`}
                         setCodeInput={setCodeInput}
@@ -434,7 +495,21 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         editorName={'code'}
                       />
                     </div>
-                    <div className={cn('flex flex-col gap-2 md:col-span-1', {'md:col-span-5': viewMode == 'maximize_result' || viewMode == 'minimize_code'}, {'md:col-span-1': viewMode == 'minimize_result' || viewMode == 'maximize_code'})}>
+                    <div
+                      className={cn(
+                        'flex flex-col gap-2 md:col-span-1',
+                        {
+                          'md:col-span-5':
+                            viewMode == 'maximize_result' ||
+                            viewMode == 'minimize_code',
+                        },
+                        {
+                          'md:col-span-1':
+                            viewMode == 'minimize_result' ||
+                            viewMode == 'maximize_code',
+                        },
+                      )}
+                    >
                       <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
                           <p className="text-table-header">
@@ -453,13 +528,37 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             }
                           >
                             <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                              <div className="px-2 py-2">
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {
-                                  setViewMode('maximize_result')
-                                  close
-                                }}>Phóng to editor</div>
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('minimize_result')}}>Thu nhỏ editor</div>
-                                <div className="py-1 hover:cursor-pointer" onClick={() => {setViewMode('default')}}>Mặc định</div>
+                              <div className="p-2">
+                                <div
+                                  className="py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('maximize_result')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.maximize_result',
+                                  )}
+                                </div>
+                                <div
+                                  className="py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('minimize_result')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.minimize_result',
+                                  )}
+                                </div>
+                                <div
+                                  className="py-1 hover:cursor-pointer"
+                                  onClick={() => {
+                                    setViewMode('default')
+                                  }}
+                                >
+                                  {t(
+                                    'cloud:custom_protocol.service.default_result',
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </Dropdown>

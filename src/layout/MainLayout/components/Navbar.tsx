@@ -15,6 +15,7 @@ import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import caidatIcon from '~/assets/icons/nav-caidat.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import hotroIcon from '~/assets/icons/nav-hotro.svg'
+import manualIcon from '~/assets/icons/nav-manual.svg'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
 
@@ -30,37 +31,20 @@ function Navbar() {
   return (
     <div className="flex w-full">
       <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-            <div className="cursor-pointer">
-              <img
-                src={defaultUserIcon}
-                alt="User's avatar"
-                className="aspect-square w-[20px]"
-              />
-              <p className="text-white">
-                {t('nav:hello')}{' '}
-                {userData?.name || userData?.email?.split('@')[0]}
-              </p>
-              <SidebarDropDownIcon
-                width={12}
-                height={7}
-                viewBox="0 0 12 7"
-                className="text-white"
-              />
-            </div>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={5}
-            >
-              <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-                {t('user:logout')}
-              </p>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+        <a
+          className="flex cursor-pointer items-center gap-x-2"
+          target="_blank"
+          href="https://innoway.gitbook.io/innoway/"
+          rel="noreferrer"
+        >
+          <img
+            src={manualIcon}
+            alt="Manual"
+            className="aspect-square w-[20px]"
+          />
+          <p className="text-white">{t('nav:manual')}</p>
+        </a>
+
         <DropdownMenu.Root>
           <div className="flex items-center gap-x-2">
             <img
@@ -143,6 +127,37 @@ function Navbar() {
           />
           <p className="text-white">{t('nav:support')}</p>
         </div>
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+            <div className="cursor-pointer">
+              <img
+                src={defaultUserIcon}
+                alt="User's avatar"
+                className="aspect-square w-[20px]"
+              />
+              <p className="text-white">
+                {t('nav:hello')}{' '}
+                {userData?.name || userData?.email?.split('@')[0]}
+              </p>
+              <SidebarDropDownIcon
+                width={12}
+                height={7}
+                viewBox="0 0 12 7"
+                className="text-white"
+              />
+            </div>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={5}
+            >
+              <p className="cursor-pointer" onClick={() => logout.mutate({})}>
+                {t('user:logout')}
+              </p>
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </nav>
     </div>
   )

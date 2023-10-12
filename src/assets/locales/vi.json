@@ -48,7 +48,8 @@
     "hello": "Chào",
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
-    "support": "Hỗ trợ"
+    "support": "Hỗ trợ",
+    "manual": "Hướng dẫn sử dụng"
   },
   "cloud": {
     "project_manager": {
@@ -387,7 +388,12 @@
         "note": "Ghi chú",
         "status": "Trạng thái",
         "run": "Run",
-        "debug": "Debug mode"
+        "debug": "Debug mode",
+        "maximize_result": "Phóng to editor",
+        "minimize_result": "Thu nhỏ editor",
+        "default_result": "Mặc định",
+        "hide_console": "Ẩn console",
+        "view_console": "Hiện console"
       },
       "thing": {
         "title": "Thing",
