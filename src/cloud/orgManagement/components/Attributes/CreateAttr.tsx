@@ -58,8 +58,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
 
   const { mutate, isLoading, isSuccess } = useCreateAttr()
 
-  // TODO: Choose bool valueType then InputField switch to Listbox
-
   return (
     <FormDrawer
       isDone={isSuccess}

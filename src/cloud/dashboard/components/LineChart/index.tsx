@@ -73,10 +73,7 @@ export function LineChart({ data }: { data: TimeSeries | null }) {
       data: item.data.filter(subItem => subItem.y !== null),
     }))
   }
-  // console.log(
-  //   'dataTransformedFeedToChart',
-  //   dataTransformedFeedToChart.current,
-  // )
+  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart.current)
 
   return (
     <ResponsiveLine

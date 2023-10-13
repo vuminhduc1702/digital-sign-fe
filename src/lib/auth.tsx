@@ -13,8 +13,6 @@ import { PATHS } from '~/routes/PATHS'
 
 import storage from '~/utils/storage'
 
-// TODO: [TS] fix userFn to accept type User
-
 async function handleUserResponse(data: UserResponse) {
   const user = data
   storage.setToken({

@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import ColorPicker from 'react-pick-color'
@@ -6,13 +7,12 @@ import * as z from 'zod'
 import { v4 as uuidv4 } from 'uuid'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
-import { Controller } from 'react-hook-form'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import i18n from '~/i18n'
 
 import { Button } from '~/components/Button'
 import {
   FieldWrapper,
-  FormMultipleFields,
   InputField,
   SelectDropdown,
   SelectField,
@@ -78,7 +78,7 @@ export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
 
 export const widgetSchema = z.object({
   title: nameSchema,
-  type: widgetCategorySchema,
+  type: widgetCategorySchema.optional(),
   org_id: z.string(),
   device: z.array(
     z.string().min(1, {
@@ -178,9 +178,30 @@ export function CreateWidget({
     label: item,
   })) || [{ value: '', label: '' }]
 
+  const { register, formState, control, handleSubmit, setValue, watch } =
+    useForm<WidgetConfig>({
+      resolver: widgetSchema && zodResolver(widgetSchema),
+    })
+  console.log('zod errors', formState.errors)
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'attributeConfig',
+    control: control,
+  })
+
+  useEffect(() => {
+    append({
+      attribute_key: '',
+      label: '',
+      color: '',
+      unit: '',
+      decimal: '',
+    })
+  }, [])
+
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -197,10 +218,10 @@ export function CreateWidget({
             </div>
           </div>
 
-          <FormMultipleFields<WidgetConfig, typeof widgetSchema>
+          <form
             id="create-widget"
-            className="flex flex-col justify-between"
-            onSubmit={values => {
+            className="flex w-full flex-col justify-between space-y-5"
+            onSubmit={handleSubmit(values => {
               // console.log('values: ', values)
               handleSubmitWidget({
                 id: uuidv4(),
@@ -211,430 +232,186 @@ export function CreateWidget({
                 attributeConfig: values.attributeConfig,
                 widgetSetting: values.widgetSetting,
               })
-            }}
-            schema={widgetSchema}
-            name={['attributeConfig']}
+            })}
           >
-            {(
-              { register, formState, control, setValue, watch },
-              { fields, append, remove },
-            ) => {
-              console.log('zod errors', formState.errors)
-
-              return (
+            <>
+              {orgIsLoading ? (
+                <div className="flex grow items-center justify-center">
+                  <Spinner showSpinner size="xl" />
+                </div>
+              ) : (
                 <>
-                  {orgIsLoading ? (
-                    <div className="flex grow items-center justify-center">
-                      <Spinner showSpinner size="xl" />
-                    </div>
-                  ) : (
-                    <>
-                      <Tab.Group
-                        selectedIndex={selectedIndex}
-                        onChange={setSelectedIndex}
+                  <Tab.Group
+                    selectedIndex={selectedIndex}
+                    onChange={setSelectedIndex}
+                  >
+                    <Tab.List className="hidden">
+                      <Tab
+                        className={({ selected }) =>
+                          clsx(
+                            'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                            { 'text-primary-400': selected },
+                          )
+                        }
+                      ></Tab>
+                      <Tab
+                        className={({ selected }) =>
+                          clsx(
+                            'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                            { 'text-primary-400': selected },
+                          )
+                        }
+                      ></Tab>
+                    </Tab.List>
+                    <Tab.Panels className="mt-2 flex grow flex-col">
+                      <Tab.Panel
+                        className={clsx(
+                          'flex grow flex-col bg-white focus:outline-none',
+                        )}
                       >
-                        <Tab.List className="hidden">
-                          <Tab
-                            className={({ selected }) =>
-                              clsx(
-                                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
-                                { 'text-primary-400': selected },
-                              )
-                            }
-                          ></Tab>
-                          <Tab
-                            className={({ selected }) =>
-                              clsx(
-                                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
-                                { 'text-primary-400': selected },
-                              )
-                            }
-                          ></Tab>
-                        </Tab.List>
-                        <Tab.Panels className="mt-2 flex grow flex-col">
-                          <Tab.Panel
-                            className={clsx(
-                              'flex grow flex-col bg-white focus:outline-none',
-                            )}
-                          >
-                            <TitleBar
-                              title={t('cloud:dashboard.config_chart.show')}
-                              className="w-full rounded-md bg-gray-500 pl-3"
-                            />
-                            <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5">
-                              <InputField
-                                label={t('cloud:dashboard.config_chart.name')}
-                                error={formState.errors['title']}
-                                registration={register('title')}
-                                placeholder={t(
-                                  'cloud:dashboard.config_chart.name',
-                                )}
-                              />
-                              <div className="space-y-1">
-                                <SelectDropdown
-                                  isClearable={true}
-                                  label={t(
-                                    'cloud:org_manage.device_manage.add_device.parent',
-                                  )}
-                                  name="org_id"
-                                  control={control}
-                                  options={
-                                    orgFlattenData?.map(org => ({
-                                      label: org?.name,
-                                      value: org?.id,
-                                    })) || [
-                                      { label: t('loading:org'), value: '' },
-                                    ]
-                                  }
-                                  onChange={e => {
-                                    setOptionOrg(e)
-                                    setValue('org_id', e?.value)
-                                  }}
-                                  value={optionOrg}
-                                />
-                                <p className="text-body-sm text-primary-400">
-                                  {formState?.errors?.org_id?.message ===
-                                  'Required'
-                                    ? t(
-                                        'cloud:org_manage.org_manage.add_org.choose_org',
-                                      )
-                                    : formState?.errors?.org_id?.message}
-                                </p>
-                              </div>
-                              <div className="space-y-1">
-                                <SelectDropdown
-                                  label={t(
-                                    'cloud:dashboard.config_chart.device',
-                                  )}
-                                  name="device"
-                                  isClearable
-                                  control={control}
-                                  options={
-                                    deviceData != null
-                                      ? deviceSelectData
-                                      : deviceData == null
-                                      ? [
-                                          {
-                                            label: t('table:no_device'),
-                                            value: '',
-                                          },
-                                        ]
-                                      : [
-                                          {
-                                            label: t('loading:device'),
-                                            value: '',
-                                          },
-                                        ]
-                                  }
-                                  isOptionDisabled={option =>
-                                    option.label === t('loading:device') ||
-                                    option.label === t('table:no_device')
-                                  }
-                                  isMulti
-                                  value={deviceValue}
-                                  onChange={(e: SelectOptionString[]) => {
-                                    const entityIdsArr =
-                                      e.length > 0
-                                        ? e.map(item => {
-                                            return item.value
-                                          })
-                                        : ['']
-                                    setDeviceValue(e)
-                                    setValue('device', entityIdsArr)
-                                    attrChartMutate({
-                                      data: {
-                                        entity_ids: entityIdsArr,
-                                        entity_type: 'DEVICE',
-                                        time_series: true,
-                                      },
-                                    })
-                                  }}
-                                />
-                                <p className="text-body-sm text-primary-400">
-                                  {formState?.errors?.device?.message ===
-                                  'Required'
-                                    ? t(
-                                        'cloud:org_manage.device_manage.add_device.choose_device',
-                                      )
-                                    : formState?.errors?.device?.[0]?.message}
-                                </p>
-                              </div>
-                            </div>
-                            <div className="flex justify-between space-x-3">
-                              <TitleBar
-                                title={t(
-                                  'cloud:dashboard.detail_dashboard.add_widget.data_chart',
-                                )}
-                                className="w-full rounded-md bg-gray-500 pl-3"
-                              />
-                              {isMultipleAttr ? (
-                                <Button
-                                  className="rounded-md"
-                                  variant="trans"
-                                  size="square"
-                                  startIcon={
-                                    <PlusIcon
-                                      width={16}
-                                      height={16}
-                                      viewBox="0 0 16 16"
-                                    />
-                                  }
-                                  onClick={() =>
-                                    append({
-                                      attribute_key: '',
-                                      label: '',
-                                      color: '',
-                                      unit: '',
-                                      decimal: '',
-                                    })
-                                  }
-                                />
-                              ) : null}
-                            </div>
-                            {fields.map((field, index) => (
-                              <section
-                                className="mt-3 flex justify-between gap-x-2"
-                                key={field.id}
-                              >
-                                <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
-                                  <div className="space-y-1">
-                                    <FieldWrapper
-                                      label={t(
-                                        'cloud:dashboard.config_chart.attr',
-                                      )}
-                                      error={
-                                        formState?.errors?.attributeConfig?.[
-                                          index
-                                        ]?.attribute_key
-                                      }
-                                    >
-                                      <Controller
-                                        control={control}
-                                        name={`attributeConfig.${index}.attribute_key`}
-                                        render={({
-                                          field: { onChange, value, ...field },
-                                        }) => {
-                                          return (
-                                            <Popover>
-                                              <PopoverTrigger asChild>
-                                                <Button
-                                                  variant="trans"
-                                                  size="md"
-                                                  role="combobox"
-                                                  className={cn(
-                                                    'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
-                                                    !value &&
-                                                      'text-secondary-700',
-                                                  )}
-                                                >
-                                                  {value !== ''
-                                                    ? attrSelectData.find(
-                                                        attr =>
-                                                          attr.value === value,
-                                                      )?.label
-                                                    : t('placeholder:general')}
-                                                </Button>
-                                              </PopoverTrigger>
-                                              <PopoverContent>
-                                                <Command>
-                                                  <CommandInput />
-                                                  <CommandEmpty>
-                                                    {t('table:no_attr')}
-                                                  </CommandEmpty>
-                                                  <CommandGroup>
-                                                    {attrSelectData.map(
-                                                      attr => (
-                                                        <CommandItem
-                                                          value={attr.label}
-                                                          key={attr.value}
-                                                          onSelect={() => {
-                                                            setValue(
-                                                              `attributeConfig.${index}.attribute_key`,
-                                                              attr.value,
-                                                            )
-                                                          }}
-                                                        >
-                                                          {attr.label}
-                                                        </CommandItem>
-                                                      ),
-                                                    )}
-                                                  </CommandGroup>
-                                                </Command>
-                                              </PopoverContent>
-                                            </Popover>
-                                          )
-                                        }}
-                                      />
-                                    </FieldWrapper>
-                                  </div>
-                                  <InputField
-                                    label={t(
-                                      'cloud:dashboard.config_chart.label',
-                                    )}
-                                    error={
-                                      formState?.errors?.attributeConfig?.[
-                                        index
-                                      ]?.label
-                                    }
-                                    registration={register(
-                                      `attributeConfig.${index}.label` as const,
-                                    )}
-                                  />
-                                  <div className="space-y-1">
-                                    <FieldWrapper
-                                      label={t(
-                                        'cloud:dashboard.config_chart.color',
-                                      )}
-                                      error={
-                                        formState?.errors?.attributeConfig?.[
-                                          index
-                                        ]?.color
-                                      }
-                                    >
-                                      <Controller
-                                        control={control}
-                                        name={`attributeConfig.${index}.color`}
-                                        render={({
-                                          field: { onChange, value, ...field },
-                                        }) => {
-                                          return (
-                                            <Popover>
-                                              <PopoverTrigger asChild>
-                                                <Button
-                                                  className="relative h-9 w-full rounded-md"
-                                                  variant="trans"
-                                                  size="square"
-                                                >
-                                                  {value}
-                                                </Button>
-                                              </PopoverTrigger>
-                                              <PopoverContent
-                                                className="w-auto p-0"
-                                                align="start"
-                                              >
-                                                <ColorPicker
-                                                  {...field}
-                                                  color={value}
-                                                  onChange={(color: {
-                                                    rgb: {
-                                                      r: number
-                                                      g: number
-                                                      b: number
-                                                      a: number
-                                                    }
-                                                  }) => {
-                                                    const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-                                                    onChange(rgb)
-                                                  }}
-                                                  // @ts-expect-error: ColorPicker don't have ref prop
-                                                  ref={colorPickerRef}
-                                                />
-                                              </PopoverContent>
-                                            </Popover>
-                                          )
-                                        }}
-                                      />
-                                    </FieldWrapper>
-                                  </div>
-                                  <InputField
-                                    label={t(
-                                      'cloud:dashboard.config_chart.unit',
-                                    )}
-                                    error={
-                                      formState?.errors?.attributeConfig?.[
-                                        index
-                                      ]?.unit
-                                    }
-                                    registration={register(
-                                      `attributeConfig.${index}.unit` as const,
-                                    )}
-                                  />
-                                  <InputField
-                                    label={t(
-                                      'cloud:dashboard.config_chart.decimal',
-                                    )}
-                                    error={
-                                      formState?.errors?.attributeConfig?.[
-                                        index
-                                      ]?.decimal
-                                    }
-                                    registration={register(
-                                      `attributeConfig.${index}.decimal` as const,
-                                    )}
-                                  />
-                                  {/* {type === 'road' ? (
-                                    <div className="space-y-1">
-                                      <SelectDropdown
-                                        label={t('cloud:dashboard.config_chart.road')}
-                                        name="typeRoad"
-                                        isClearable={false}
-                                        control={control}
-                                        options={[
-                                          { label: 'Đường thẳng', value: 'Đường thẳng' },
-                                          { label: 'Đường nét đứt', value: 'Đường nét đứt' },
-                                        ]}
-                                        value={typeRoadValue}
-                                        onChange={e => {
-                                          setTypeRoadValue(e)
-                                        }}
-                                      />
-                                      <p className="text-body-sm text-primary-400">
-                                        {formState?.errors?.typeRoad?.message}
-                                      </p>
-                                    </div>
-                                  ) : ('')} */}
-                                </div>
-                                <Button
-                                  type="button"
-                                  size="square"
-                                  variant="none"
-                                  className="self-start p-2 pt-3"
-                                  onClick={() => remove(index)}
-                                  startIcon={
-                                    <img
-                                      src={btnDeleteIcon}
-                                      alt="Delete widget attribute"
-                                      className="h-10 w-10"
-                                    />
-                                  }
-                                />
-                              </section>
-                            ))}
-                          </Tab.Panel>
-                          <Tab.Panel>
-                            <TitleBar
-                              title={t(
-                                'cloud:dashboard.config_chart.widget_config',
+                        <TitleBar
+                          title={t('cloud:dashboard.config_chart.show')}
+                          className="w-full rounded-md bg-gray-500 pl-3"
+                        />
+                        <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5">
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.name')}
+                            error={formState.errors['title']}
+                            registration={register('title')}
+                            placeholder={t('cloud:dashboard.config_chart.name')}
+                          />
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              isClearable={true}
+                              label={t(
+                                'cloud:org_manage.device_manage.add_device.parent',
                               )}
-                              className="w-full rounded-md bg-gray-500 pl-3"
+                              name="org_id"
+                              control={control}
+                              options={
+                                orgFlattenData?.map(org => ({
+                                  label: org?.name,
+                                  value: org?.id,
+                                })) || [{ label: t('loading:org'), value: '' }]
+                              }
+                              onChange={e => {
+                                setOptionOrg(e)
+                                setValue('org_id', e?.value)
+                              }}
+                              value={optionOrg}
                             />
-                            <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5 ">
-                              <SelectField
-                                label={t('ws:filter.dataType')}
-                                error={
-                                  formState?.errors?.widgetSetting?.dataType
-                                }
-                                registration={register(
-                                  `widgetSetting.dataType` as const,
-                                )}
-                                options={widgetDataType.map(dataType => ({
-                                  label: dataType.label,
-                                  value: dataType.value,
-                                }))}
-                              />
-
+                            <p className="text-body-sm text-primary-400">
+                              {formState?.errors?.org_id?.message === 'Required'
+                                ? t(
+                                    'cloud:org_manage.org_manage.add_org.choose_org',
+                                  )
+                                : formState?.errors?.org_id?.message}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <SelectDropdown
+                              label={t('cloud:dashboard.config_chart.device')}
+                              name="device"
+                              isClearable
+                              control={control}
+                              options={
+                                deviceData != null
+                                  ? deviceSelectData
+                                  : deviceData == null
+                                  ? [
+                                      {
+                                        label: t('table:no_device'),
+                                        value: '',
+                                      },
+                                    ]
+                                  : [
+                                      {
+                                        label: t('loading:device'),
+                                        value: '',
+                                      },
+                                    ]
+                              }
+                              isOptionDisabled={option =>
+                                option.label === t('loading:device') ||
+                                option.label === t('table:no_device')
+                              }
+                              isMulti
+                              value={deviceValue}
+                              onChange={(e: SelectOptionString[]) => {
+                                const entityIdsArr =
+                                  e.length > 0
+                                    ? e.map(item => {
+                                        return item.value
+                                      })
+                                    : ['']
+                                setDeviceValue(e)
+                                setValue('device', entityIdsArr)
+                                attrChartMutate({
+                                  data: {
+                                    entity_ids: entityIdsArr,
+                                    entity_type: 'DEVICE',
+                                    time_series: true,
+                                  },
+                                })
+                              }}
+                            />
+                            <p className="text-body-sm text-primary-400">
+                              {formState?.errors?.device?.message === 'Required'
+                                ? t(
+                                    'cloud:org_manage.device_manage.add_device.choose_device',
+                                  )
+                                : formState?.errors?.device?.[0]?.message}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex justify-between space-x-3">
+                          <TitleBar
+                            title={t(
+                              'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                            )}
+                            className="w-full rounded-md bg-gray-500 pl-3"
+                          />
+                          {isMultipleAttr ? (
+                            <Button
+                              className="rounded-md"
+                              variant="trans"
+                              size="square"
+                              startIcon={
+                                <PlusIcon
+                                  width={16}
+                                  height={16}
+                                  viewBox="0 0 16 16"
+                                />
+                              }
+                              onClick={() =>
+                                append({
+                                  attribute_key: '',
+                                  label: '',
+                                  color: '',
+                                  unit: '',
+                                  decimal: '',
+                                })
+                              }
+                            />
+                          ) : null}
+                        </div>
+                        {fields.map((field, index) => (
+                          <section
+                            className="mt-3 flex justify-between gap-x-2"
+                            key={field.id}
+                          >
+                            <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
                               <div className="space-y-1">
                                 <FieldWrapper
-                                  label={t(
-                                    'cloud:dashboard.config_chart.startDate',
-                                  )}
+                                  label={t('cloud:dashboard.config_chart.attr')}
                                   error={
-                                    formState?.errors?.widgetSetting?.startDate
+                                    formState?.errors?.attributeConfig?.[index]
+                                      ?.attribute_key
                                   }
                                 >
                                   <Controller
                                     control={control}
-                                    name="widgetSetting.startDate"
+                                    name={`attributeConfig.${index}.attribute_key`}
                                     render={({
                                       field: { onChange, value, ...field },
                                     }) => {
@@ -642,41 +419,45 @@ export function CreateWidget({
                                         <Popover>
                                           <PopoverTrigger asChild>
                                             <Button
-                                              id="date"
                                               variant="trans"
-                                              size="square"
+                                              size="md"
+                                              role="combobox"
                                               className={cn(
-                                                'relative w-full !justify-start rounded-md text-left font-normal',
+                                                'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
                                                 !value && 'text-secondary-700',
                                               )}
                                             >
-                                              <CalendarIcon className="mr-2 h-4 w-4" />
-                                              {value ? (
-                                                <span>
-                                                  {format(value, 'dd/MM/y')}
-                                                </span>
-                                              ) : (
-                                                <span>
-                                                  {t(
-                                                    'cloud:dashboard.config_chart.pick_date',
-                                                  )}
-                                                </span>
-                                              )}
+                                              {value !== ''
+                                                ? attrSelectData.find(
+                                                    attr =>
+                                                      attr.value === value,
+                                                  )?.label
+                                                : t('placeholder:general')}
                                             </Button>
                                           </PopoverTrigger>
-                                          <PopoverContent
-                                            className="w-auto p-0"
-                                            align="start"
-                                          >
-                                            <Calendar
-                                              {...field}
-                                              initialFocus
-                                              mode="single"
-                                              defaultMonth={new Date()}
-                                              selected={value}
-                                              onSelect={onChange}
-                                              numberOfMonths={1}
-                                            />
+                                          <PopoverContent>
+                                            <Command>
+                                              <CommandInput />
+                                              <CommandEmpty>
+                                                {t('table:no_attr')}
+                                              </CommandEmpty>
+                                              <CommandGroup>
+                                                {attrSelectData.map(attr => (
+                                                  <CommandItem
+                                                    value={attr.label}
+                                                    key={attr.value}
+                                                    onSelect={() => {
+                                                      setValue(
+                                                        `attributeConfig.${index}.attribute_key`,
+                                                        attr.value,
+                                                      )
+                                                    }}
+                                                  >
+                                                    {attr.label}
+                                                  </CommandItem>
+                                                ))}
+                                              </CommandGroup>
+                                            </Command>
                                           </PopoverContent>
                                         </Popover>
                                       )
@@ -684,19 +465,29 @@ export function CreateWidget({
                                   />
                                 </FieldWrapper>
                               </div>
-
+                              <InputField
+                                label={t('cloud:dashboard.config_chart.label')}
+                                error={
+                                  formState?.errors?.attributeConfig?.[index]
+                                    ?.label
+                                }
+                                registration={register(
+                                  `attributeConfig.${index}.label` as const,
+                                )}
+                              />
                               <div className="space-y-1">
                                 <FieldWrapper
                                   label={t(
-                                    'cloud:dashboard.config_chart.endDate',
+                                    'cloud:dashboard.config_chart.color',
                                   )}
                                   error={
-                                    formState?.errors?.widgetSetting?.startDate
+                                    formState?.errors?.attributeConfig?.[index]
+                                      ?.color
                                   }
                                 >
                                   <Controller
                                     control={control}
-                                    name="widgetSetting.endDate"
+                                    name={`attributeConfig.${index}.color`}
                                     render={({
                                       field: { onChange, value, ...field },
                                     }) => {
@@ -704,45 +495,33 @@ export function CreateWidget({
                                         <Popover>
                                           <PopoverTrigger asChild>
                                             <Button
-                                              id="date"
+                                              className="relative h-9 w-full rounded-md"
                                               variant="trans"
                                               size="square"
-                                              className={cn(
-                                                'relative w-full !justify-start rounded-md text-left font-normal',
-                                                !value && 'text-secondary-700',
-                                              )}
                                             >
-                                              <CalendarIcon className="mr-2 h-4 w-4" />
-                                              {value ? (
-                                                <span>
-                                                  {format(value, 'dd/MM/y')}
-                                                </span>
-                                              ) : (
-                                                <span>
-                                                  {t(
-                                                    'cloud:dashboard.config_chart.pick_date',
-                                                  )}
-                                                </span>
-                                              )}
+                                              {value}
                                             </Button>
                                           </PopoverTrigger>
                                           <PopoverContent
                                             className="w-auto p-0"
                                             align="start"
                                           >
-                                            <Calendar
+                                            <ColorPicker
                                               {...field}
-                                              initialFocus
-                                              mode="single"
-                                              defaultMonth={new Date()}
-                                              selected={value}
-                                              onSelect={onChange}
-                                              numberOfMonths={1}
-                                              disabled={{
-                                                before: watch(
-                                                  'widgetSetting.startDate',
-                                                ),
+                                              color={value}
+                                              onChange={(color: {
+                                                rgb: {
+                                                  r: number
+                                                  g: number
+                                                  b: number
+                                                  a: number
+                                                }
+                                              }) => {
+                                                const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+                                                onChange(rgb)
                                               }}
+                                              // @ts-expect-error: ColorPicker don't have ref prop
+                                              ref={colorPickerRef}
                                             />
                                           </PopoverContent>
                                         </Popover>
@@ -751,41 +530,246 @@ export function CreateWidget({
                                   />
                                 </FieldWrapper>
                               </div>
-
-                              <SelectField
-                                label={t('ws:filter.interval')}
+                              <InputField
+                                label={t('cloud:dashboard.config_chart.unit')}
                                 error={
-                                  formState?.errors?.widgetSetting?.interval
+                                  formState?.errors?.attributeConfig?.[index]
+                                    ?.unit
                                 }
                                 registration={register(
-                                  `widgetSetting.interval` as const,
+                                  `attributeConfig.${index}.unit` as const,
                                 )}
-                                options={wsInterval.map(interval => ({
-                                  label: interval.label,
-                                  value: interval.value,
-                                }))}
                               />
-                              <SelectField
-                                label={t('ws:filter.data_aggregation')}
-                                error={formState?.errors?.widgetSetting?.agg}
+                              <InputField
+                                label={t(
+                                  'cloud:dashboard.config_chart.decimal',
+                                )}
+                                error={
+                                  formState?.errors?.attributeConfig?.[index]
+                                    ?.decimal
+                                }
                                 registration={register(
-                                  `widgetSetting.agg` as const,
+                                  `attributeConfig.${index}.decimal` as const,
                                 )}
-                                options={widgetAgg.map(agg => ({
-                                  label: agg.label,
-                                  value: agg.value,
-                                }))}
                               />
+                              {/* {type === 'road' ? (
+                                <div className="space-y-1">
+                                  <SelectDropdown
+                                    label={t('cloud:dashboard.config_chart.road')}
+                                    name="typeRoad"
+                                    isClearable={false}
+                                    control={control}
+                                    options={[
+                                      { label: 'Đường thẳng', value: 'Đường thẳng' },
+                                      { label: 'Đường nét đứt', value: 'Đường nét đứt' },
+                                    ]}
+                                    value={typeRoadValue}
+                                    onChange={e => {
+                                      setTypeRoadValue(e)
+                                    }}
+                                  />
+                                  <p className="text-body-sm text-primary-400">
+                                    {formState?.errors?.typeRoad?.message}
+                                  </p>
+                                </div>
+                              ) : ('')} */}
                             </div>
-                          </Tab.Panel>
-                        </Tab.Panels>
-                      </Tab.Group>
-                    </>
-                  )}
+                            {isMultipleAttr ? (
+                              <Button
+                                type="button"
+                                size="square"
+                                variant="none"
+                                className="self-start p-2 pt-3"
+                                onClick={() => remove(index)}
+                                startIcon={
+                                  <img
+                                    src={btnDeleteIcon}
+                                    alt="Delete widget attribute"
+                                    className="h-10 w-10"
+                                  />
+                                }
+                              />
+                            ) : null}
+                          </section>
+                        ))}
+                      </Tab.Panel>
+                      <Tab.Panel>
+                        <TitleBar
+                          title={t(
+                            'cloud:dashboard.config_chart.widget_config',
+                          )}
+                          className="w-full rounded-md bg-gray-500 pl-3"
+                        />
+                        <div className="grid grid-cols-1 gap-x-4 px-2 py-6 md:grid-cols-5 ">
+                          <SelectField
+                            label={t('ws:filter.dataType')}
+                            error={formState?.errors?.widgetSetting?.dataType}
+                            registration={register(
+                              `widgetSetting.dataType` as const,
+                            )}
+                            options={widgetDataType.map(dataType => ({
+                              label: dataType.label,
+                              value: dataType.value,
+                            }))}
+                          />
+
+                          <div className="space-y-1">
+                            <FieldWrapper
+                              label={t(
+                                'cloud:dashboard.config_chart.startDate',
+                              )}
+                              error={
+                                formState?.errors?.widgetSetting?.startDate
+                              }
+                            >
+                              <Controller
+                                control={control}
+                                name="widgetSetting.startDate"
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => {
+                                  return (
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          id="date"
+                                          variant="trans"
+                                          size="square"
+                                          className={cn(
+                                            'relative w-full !justify-start rounded-md text-left font-normal',
+                                            !value && 'text-secondary-700',
+                                          )}
+                                        >
+                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          {value ? (
+                                            <span>
+                                              {format(value, 'dd/MM/y')}
+                                            </span>
+                                          ) : (
+                                            <span>
+                                              {t(
+                                                'cloud:dashboard.config_chart.pick_date',
+                                              )}
+                                            </span>
+                                          )}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          {...field}
+                                          initialFocus
+                                          mode="single"
+                                          defaultMonth={new Date()}
+                                          selected={value}
+                                          onSelect={onChange}
+                                          numberOfMonths={1}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  )
+                                }}
+                              />
+                            </FieldWrapper>
+                          </div>
+
+                          <div className="space-y-1">
+                            <FieldWrapper
+                              label={t('cloud:dashboard.config_chart.endDate')}
+                              error={
+                                formState?.errors?.widgetSetting?.startDate
+                              }
+                            >
+                              <Controller
+                                control={control}
+                                name="widgetSetting.endDate"
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => {
+                                  return (
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          id="date"
+                                          variant="trans"
+                                          size="square"
+                                          className={cn(
+                                            'relative w-full !justify-start rounded-md text-left font-normal',
+                                            !value && 'text-secondary-700',
+                                          )}
+                                        >
+                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          {value ? (
+                                            <span>
+                                              {format(value, 'dd/MM/y')}
+                                            </span>
+                                          ) : (
+                                            <span>
+                                              {t(
+                                                'cloud:dashboard.config_chart.pick_date',
+                                              )}
+                                            </span>
+                                          )}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
+                                      >
+                                        <Calendar
+                                          {...field}
+                                          initialFocus
+                                          mode="single"
+                                          defaultMonth={new Date()}
+                                          selected={value}
+                                          onSelect={onChange}
+                                          numberOfMonths={1}
+                                          disabled={{
+                                            before: watch(
+                                              'widgetSetting.startDate',
+                                            ),
+                                          }}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  )
+                                }}
+                              />
+                            </FieldWrapper>
+                          </div>
+
+                          <SelectField
+                            label={t('ws:filter.interval')}
+                            error={formState?.errors?.widgetSetting?.interval}
+                            registration={register(
+                              `widgetSetting.interval` as const,
+                            )}
+                            options={wsInterval.map(interval => ({
+                              label: interval.label,
+                              value: interval.value,
+                            }))}
+                          />
+                          <SelectField
+                            label={t('ws:filter.data_aggregation')}
+                            error={formState?.errors?.widgetSetting?.agg}
+                            registration={register(
+                              `widgetSetting.agg` as const,
+                            )}
+                            options={widgetAgg.map(agg => ({
+                              label: agg.label,
+                              value: agg.value,
+                            }))}
+                          />
+                        </div>
+                      </Tab.Panel>
+                    </Tab.Panels>
+                  </Tab.Group>
                 </>
-              )
-            }}
-          </FormMultipleFields>
+              )}
+            </>
+          </form>
         </div>
 
         <div className="mt-4 flex justify-center space-x-2">
