@@ -12,7 +12,7 @@ type IconProps =
 type InputFieldProps = FieldWrapperPassThroughProps & {
   type?: 'text' | 'email' | 'password' | 'number' | 'file'
   className?: string
-  classNameFieldWrapper?: string
+  classnamefieldwrapper?: string
   registration?: Partial<UseFormRegisterReturn>
   classNameError?: string
 } & IconProps &
@@ -24,7 +24,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       type = 'text',
       label,
       className,
-      classNameFieldWrapper,
+      classnamefieldwrapper,
       registration,
       error,
       startIcon,
@@ -45,7 +45,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           type === 'file'
             ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'
             : '',
-          classNameFieldWrapper,
+          classnamefieldwrapper,
         )}
       >
         {startIcon}

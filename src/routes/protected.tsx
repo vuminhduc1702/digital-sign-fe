@@ -16,6 +16,10 @@ const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
 )
+const { BillingPackageManage } = lazyImport(
+  () => import('~/cloud/billingPackage'),
+  'BillingPackageManage',
+)
 const { FlowEngine } = lazyImport(
   () => import('~/cloud/flowEngine'),
   'FlowEngine',
@@ -70,6 +74,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId' }],
+      },
+      {
+        path: PATHS.BILLING_PACKAGE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <BillingPackageManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
     ],
   },

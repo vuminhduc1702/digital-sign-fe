@@ -29,6 +29,7 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   registration?: Partial<UseFormRegisterReturn>
   value?: string | number
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
+  classnamefieldwrapper?: string
 }
 
 export const SelectField = ({
@@ -40,15 +41,16 @@ export const SelectField = ({
   placeholder,
   value,
   require,
+  classnamefieldwrapper,
   ...props
 }: SelectFieldProps) => {
   return (
-    <FieldWrapper require={require} label={label} error={error}>
+    <FieldWrapper className={cn('', classnamefieldwrapper)} require={require} label={label} error={error}>
       <select
         placeholder={placeholder}
         value={value}
         className={cn(
-          'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900',
+          'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900 disabled:cursor-not-allowed disabled:bg-secondary-500',
           className,
         )}
         {...registration}

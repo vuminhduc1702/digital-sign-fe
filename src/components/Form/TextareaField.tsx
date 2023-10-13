@@ -5,18 +5,24 @@ import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
 
 type TextAreaFieldProps = FieldWrapperPassThroughProps & {
-  rows?: number,
+  rows?: number
   className?: string
   registration?: Partial<UseFormRegisterReturn>
+  classnamefieldwrapper?: string
 }
 
 export const TextAreaField = (props: TextAreaFieldProps) => {
-  const { rows, label, className, registration, error } = props
+  const { rows, label, className, registration, error, classnamefieldwrapper } =
+    props
   return (
-    <FieldWrapper label={label} error={error}>
-      <textarea 
+    <FieldWrapper
+      className={cn('', classnamefieldwrapper)}
+      label={label}
+      error={error}
+    >
+      <textarea
         className={cn(
-          'focus:secondary-900 block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-none focus:ring-secondary-900 sm:text-body-sm',
+          'focus:secondary-900 block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-none focus:ring-secondary-900 sm:text-body-sm disabled:cursor-not-allowed disabled:bg-secondary-500',
           className,
         )}
         rows={rows}

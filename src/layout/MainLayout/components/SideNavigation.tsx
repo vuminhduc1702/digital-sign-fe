@@ -127,9 +127,7 @@ function SideNavigation() {
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.FIRM_WARE}/${projectId}`}>
-            <AccordionContent>
-              {t('sidebar:cloud.firm_ware')}
-            </AccordionContent>
+            <AccordionContent>{t('sidebar:cloud.firm_ware')}</AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DEVICE_TEMPLATE}/${projectId}`}>
             <AccordionContent>
@@ -180,7 +178,9 @@ function SideNavigation() {
             />
             <div>{t('sidebar:payment.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar:payment.plgc')}</AccordionContent>
+          <NavLink to={`${PATHS.BILLING_PACKAGE}/${projectId}`}>
+            <AccordionContent>{t('sidebar:payment.plgc')}</AccordionContent>
+          </NavLink>
           <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
           <AccordionContent>{t('sidebar:payment.pldk')}</AccordionContent>
           <AccordionContent>{t('sidebar:payment.plhd')}</AccordionContent>
