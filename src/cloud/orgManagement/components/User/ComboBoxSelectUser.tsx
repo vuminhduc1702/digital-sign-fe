@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type UserInfo, type UserList } from '~/features/auth'
+import { type UserInfo, type UserList } from '../../api/userAPI'
 
 import { SearchIcon } from '~/components/SVGIcons'
 

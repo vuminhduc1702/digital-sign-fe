@@ -8,6 +8,8 @@ import { useProjects } from '~/cloud/project/api'
 import { useProjectIdStore } from '~/stores/project'
 import storage from '~/utils/storage'
 import { API_URL } from '~/config'
+import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
+import { useCopyId } from '~/utils/hooks'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -21,12 +23,16 @@ import defaultProjectImage from '~/assets/images/default-project.png'
 
 function Navbar() {
   const { t } = useTranslation()
+
   const { data: projectsData } = useProjects()
+  const { data: userInfoData } = useUserInfo()
   const { data: userData } = useUser()
+
+  const setProjectId = useProjectIdStore(state => state.setProjectId)
 
   const logout = useLogout()
 
-  const setProjectId = useProjectIdStore(state => state.setProjectId)
+  const handleCopyId = useCopyId()
 
   return (
     <div className="flex w-full">
@@ -137,7 +143,7 @@ function Navbar() {
               />
               <p className="text-white">
                 {t('nav:hello')}{' '}
-                {userData?.name || userData?.email?.split('@')[0]}
+                {userInfoData?.name || userInfoData?.email?.split('@')[0]}
               </p>
               <SidebarDropDownIcon
                 width={12}
@@ -152,9 +158,21 @@ function Navbar() {
               className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={5}
             >
-              <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-                {t('user:logout')}
-              </p>
+              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                {userData ? (
+                  <p
+                    className="cursor-pointer"
+                    onClick={() => handleCopyId(userData.device_token)}
+                  >
+                    {t('user:copy_device_token')}
+                  </p>
+                ) : null}
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
+                  {t('user:logout')}
+                </p>
+              </DropdownMenu.Item>
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>

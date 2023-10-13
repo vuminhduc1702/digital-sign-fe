@@ -77,6 +77,7 @@ export function DashboardDetail() {
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
   const [widgetCategory, setWidgetCategory] =
     useState<WidgetCategoryType>('LINE')
+  const [isMultipleAttr, setIsMultipleAttr] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
 
   const ReactGridLayout = useMemo(() => WidthProvider(RGL), [])
@@ -418,6 +419,7 @@ export function DashboardDetail() {
                 <CreateWidget
                   widgetType={widgetType}
                   widgetCategory={widgetCategory}
+                  isMultipleAttr={isMultipleAttr}
                   isOpen={isShowCreateWidget}
                   close={() => setIsShowCreateWidget(false)}
                   handleSubmitWidget={values => {
@@ -461,10 +463,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('TIMESERIES')
                           setWidgetCategory('LINE')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -479,10 +482,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
-                          setWidgetType('TIMESERIES')
-                          setWidgetCategory('BAR')
-                          setIsShowCreateWidget(true)
                           close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('BAR')
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -499,10 +503,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
                           setWidgetCategory('PIE')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -517,10 +522,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400 active:bg-primary-300"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
                           setWidgetCategory('GAUGE')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(false)
                         }}
                       >
                         <span>
@@ -537,10 +543,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
                           setWidgetCategory('RTDATA')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(false)
                         }}
                       >
                         <span>
@@ -555,10 +562,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400 active:bg-primary-300"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
                           setWidgetCategory('MAP')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -573,10 +581,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
                           setWidgetCategory('TABLE')
-                          setIsShowCreateWidget(true)
-                          close()
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>

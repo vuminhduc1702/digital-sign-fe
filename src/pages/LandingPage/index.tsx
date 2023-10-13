@@ -12,7 +12,7 @@ export function LandingPage() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center">
       <h1 className="text-h1">Landing Page</h1>
-      { user.data ? (
+      {user.data ? (
         <Button
           className="mt-4"
           size="lg"
@@ -21,26 +21,7 @@ export function LandingPage() {
         >
           Nhấn vào đây để chọn Project
         </Button>
-      ) : (
-        <div className="flex gap-x-5">
-          <Button
-            className="mt-4 w-40"
-            size="lg"
-            variant="primary"
-            onClick={() => navigate(PATHS.LOGIN)}
-          >
-            Đăng nhập
-          </Button>
-          <Button
-            className="mt-4 w-40"
-            size="lg"
-            variant="primary"
-            onClick={() => navigate(PATHS.REGISTER)}
-          >
-            Đăng ký
-          </Button>
-        </div>
-      )}
+      ) : null}
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { type RoleTypes } from '~/lib/authorization'
-import { type BasePagination } from '~/types'
 
 export type User = {
   expired_at: number
@@ -22,42 +21,13 @@ export type EndUser = {
 export type UserResponse = {
   token: string
   refresh_token: string
-} & User
-
-type Profile = {
-  identity_info?: {
-    identity?: string
-    front_image?: string
-    back_image?: string
-  }
-  dob?: string | null
-  nationality?: string
-  province?: string
-  district?: string
-  ward?: string
-  full_address?: string
-  url?: string
-  company?: string
-  gender?: string
-  profile_image?: string
-}
-
-export type UserInfo = {
-  name: string
-  email: string
-  admin_id: string
-  user_id: string
-  is_admin: boolean
-  activate: boolean
-  role_id: string
-  role_name: string
-  group_id?: string
-  group_name?: string
-  profile: Profile
-  org_id: string
-  org_name: string
-}
-
-export type UserList = {
-  users: UserInfo[]
-} & BasePagination
+  timestamp: Date
+} & Pick<
+  User,
+  | 'device_token'
+  | 'email'
+  | 'expired_at'
+  | 'is_admin'
+  | 'system_role'
+  | 'user_id'
+>

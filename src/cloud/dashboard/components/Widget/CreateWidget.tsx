@@ -112,6 +112,7 @@ export type WidgetConfig = WidgetConfigDTO['data']
 type CreateWidgetProps = {
   widgetType: WidgetType
   widgetCategory: WidgetCategoryType
+  isMultipleAttr: boolean
   isOpen: boolean
   close: () => void
   handleSubmitWidget: (value: WidgetConfig) => void
@@ -125,6 +126,7 @@ const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
 export function CreateWidget({
   widgetType,
   widgetCategory,
+  isMultipleAttr,
   isOpen,
   close,
   handleSubmitWidget,
@@ -264,6 +266,9 @@ export function CreateWidget({
                                 label={t('cloud:dashboard.config_chart.name')}
                                 error={formState.errors['title']}
                                 registration={register('title')}
+                                placeholder={t(
+                                  'cloud:dashboard.config_chart.name',
+                                )}
                               />
                               <div className="space-y-1">
                                 <SelectDropdown
@@ -362,27 +367,29 @@ export function CreateWidget({
                                 )}
                                 className="w-full rounded-md bg-gray-500 pl-3"
                               />
-                              <Button
-                                className="rounded-md"
-                                variant="trans"
-                                size="square"
-                                startIcon={
-                                  <PlusIcon
-                                    width={16}
-                                    height={16}
-                                    viewBox="0 0 16 16"
-                                  />
-                                }
-                                onClick={() =>
-                                  append({
-                                    attribute_key: '',
-                                    label: '',
-                                    color: '',
-                                    unit: '',
-                                    decimal: '',
-                                  })
-                                }
-                              />
+                              {isMultipleAttr ? (
+                                <Button
+                                  className="rounded-md"
+                                  variant="trans"
+                                  size="square"
+                                  startIcon={
+                                    <PlusIcon
+                                      width={16}
+                                      height={16}
+                                      viewBox="0 0 16 16"
+                                    />
+                                  }
+                                  onClick={() =>
+                                    append({
+                                      attribute_key: '',
+                                      label: '',
+                                      color: '',
+                                      unit: '',
+                                      decimal: '',
+                                    })
+                                  }
+                                />
+                              ) : null}
                             </div>
                             {fields.map((field, index) => (
                               <section

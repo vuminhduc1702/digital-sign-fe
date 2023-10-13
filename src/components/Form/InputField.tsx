@@ -1,4 +1,4 @@
-import { type HTMLProps, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 import { cn } from '~/utils/misc'
 
@@ -16,7 +16,7 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   registration?: Partial<UseFormRegisterReturn>
   classNameError?: string
 } & IconProps &
-  HTMLProps<HTMLInputElement>
+  React.InputHTMLAttributes<HTMLInputElement>
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   function InputField(
