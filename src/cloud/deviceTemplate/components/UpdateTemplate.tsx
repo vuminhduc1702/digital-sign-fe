@@ -165,7 +165,7 @@ export function UpdateTemplate({
                       }))}
                     />
                     <InputField
-                      classNameFieldWrapper="mt-2"
+                      classnamefieldwrapper="mt-2"
                       label={
                         t('cloud:org_manage.org_manage.add_attr.value') ??
                         'Value'

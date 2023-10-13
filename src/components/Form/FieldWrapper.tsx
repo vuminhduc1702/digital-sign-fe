@@ -32,9 +32,9 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
             {label} <span className="text-primary-400">*</span>
           </p>
         ) : (
-          <p>{label}</p>
+          <p className={cn('', { 'w-2/12': label && className })}>{label}</p>
         )}
-        <div>{children}</div>
+        <div className={cn('', { 'w-10/12': label && className })}>{children}</div>
       </label>
       {error?.message && (
         <div

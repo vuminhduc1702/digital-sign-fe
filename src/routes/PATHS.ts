@@ -1,5 +1,6 @@
 export const BASE_PATH = '/'
 export const BASE_PATH_CLOUD = '/cloud/'
+export const BASE_PATH_PAYMENT = '/payment/'
 
 export const PATHS: { [key: string]: string } = {
   // Protected routes
@@ -23,6 +24,7 @@ export const PATHS: { [key: string]: string } = {
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
+  BILLING_PACKAGE: `${BASE_PATH_PAYMENT}billing-package`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,

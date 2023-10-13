@@ -390,7 +390,7 @@ export function UpdateAdapter({
                                   registration={register(
                                     `configuration.topic_filters.${index}.topic` as const,
                                   )}
-                                  classNameFieldWrapper="flex items-center gap-x-3"
+                                  classnamefieldwrapper="flex items-center gap-x-3"
                                 />
                                 <Button
                                   type="button"

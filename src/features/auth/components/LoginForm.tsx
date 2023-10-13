@@ -44,7 +44,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             <InputField
               type="email"
               className="mt-10 bg-stone-300"
-              classNameFieldWrapper="relative"
+              classnamefieldwrapper="relative"
               placeholder={t('auth:require_email')}
               startIcon={
                 <BtnUserLoginIcon
@@ -61,7 +61,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               type="password"
               placeholder={t('user:password')}
               className="bg-stone-300"
-              classNameFieldWrapper="relative"
+              classnamefieldwrapper="relative"
               startIcon={
                 <BtnPasswordLoginIcon
                   height={20}

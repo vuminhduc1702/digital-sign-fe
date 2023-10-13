@@ -546,6 +546,44 @@
       }
     }
   },
+  "billing": {
+    "package_manage": {
+      "list_package": "Danh sách gói cước",
+      "title": "Thông tin gói cước",
+      "create": "Tạo gói cước",
+      "delete_plan": "Xoá gói cước",
+      "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
+      "id": "ID",
+      "description": "Mô tả",
+      "popup": {
+        "name": "Tên gói",
+        "type": "Loại gói",
+        "description": "Mô tả gói",
+        "status": "Trạng thái",
+        "payment_type": "Loại thanh toán",
+        "type_period": "Loại chu kỳ tính tiền",
+        "period": "Chu kỳ tính tiền",
+        "fix_cost": "Chi phí cố định hàng kỳ",
+        "charging_unit": "Đơn vị tính",
+        "estimate": "Phương pháp định giá",
+        "estimated_payment": "Ước tính số tiền thanh toán",
+        "unit_price": "Đơn giá",
+        "max": "Tối đa",
+        "data_plan": "Dữ liệu gói cước",
+        "price": "Số tiền",
+        "quantity_free": "Miễn phí",
+        "level": "Từ {{NUMBER}} đến",
+        "free": "Miễn phí",
+        "tax": "Thuế GTGT(%)",
+        "expiry": "Thời gian gia hạn",
+        "expected_number": "Số lượng dự kiến",
+        "expected_payment": "Dự kiến thanh toán",
+        "success_create": "Tạo gói cước thành công",
+        "success_update": "Cập nhật gói cước thành công",
+        "success_delete": "Xoá gói cước thành công"
+      }
+    }
+  },
   "table": {
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
@@ -580,7 +618,11 @@
     "back": "Quay lại",
     "next": "Tiếp theo",
     "close": "Đóng",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "delete": "Xóa",
+    "update": "Sửa",
+    "save": "Lưu",
+    "cancel": "Hủy"
   },
   "error": {
     "no_data": "Không có dữ liệu",
