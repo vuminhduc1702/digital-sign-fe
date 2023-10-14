@@ -3,11 +3,11 @@ import * as z from 'zod'
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
-import { type widgetConfigSchema } from '../components/DashboardTable'
+import { type widgetSchema } from '../components/DashboardTable'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-type WidgetConfig = z.infer<typeof widgetConfigSchema>
+export type Widget = z.infer<typeof widgetSchema>
 
 export type DashboardByIdRes = {
   id: string
@@ -17,10 +17,10 @@ export type DashboardByIdRes = {
   tenant_id: string
   configuration: {
     description: string
-    widgets: WidgetConfig &
+    widgets: Widget &
       Partial<
         Record<
-          keyof WidgetConfig,
+          keyof Widget,
           {
             id: string
           }

@@ -18,38 +18,36 @@ import { aggSchema } from '../../types'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-export const widgetConfigSchema = z
-  .record(
-    z.object({
-      title: z.string(),
-      datasource: z.object({
-        init_message: z.string(),
-        lastest_message: z.string(),
-        realtime_message: z.string(),
-        history_message: z.string(),
-      }),
-      attribute_config: attrWidgetSchema,
-      config: z.object({
-        chartsetting: z.object({
-          start_date: z.number(),
-          end_date: z.number(),
-          data_type: widgetDataTypeSchema,
-          widget_type: widgetTypeSchema,
-        }),
-        timewindow: z.object({
-          interval: z.number(),
-        }),
-        aggregation: aggSchema,
-      }),
+export const widgetSchema = z.record(
+  z.object({
+    title: z.string(),
+    datasource: z.object({
+      init_message: z.string(),
+      lastest_message: z.string(),
+      realtime_message: z.string(),
+      history_message: z.string(),
     }),
-  )
-  .nullish()
+    attribute_config: attrWidgetSchema,
+    config: z.object({
+      chartsetting: z.object({
+        start_date: z.number(),
+        end_date: z.number(),
+        data_type: widgetDataTypeSchema,
+        widget_type: widgetTypeSchema,
+      }),
+      timewindow: z.object({
+        interval: z.number(),
+      }),
+      aggregation: aggSchema,
+    }),
+  }),
+)
 
 export const dashboardSchema = z.object({
   title: z.string(),
   configuration: z.object({
     description: z.string(),
-    widgets: widgetConfigSchema,
+    widgets: widgetSchema.nullish(),
   }),
   project_id: z.string().optional(),
 })

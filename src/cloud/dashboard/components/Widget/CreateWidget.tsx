@@ -23,7 +23,7 @@ import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
-import { useCreateAttrChart } from '../../api'
+import { useCreateAttrChart, type Widget } from '../../api'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Calendar } from '~/components/Calendar'
 import { useGetOrgs } from '~/layout/MainLayout/api'
@@ -76,7 +76,7 @@ export const widgetCategorySchema = z.enum([
 ] as const)
 export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
 
-export const widgetSchema = z.object({
+export const widgetCreateSchema = z.object({
   title: nameSchema,
   type: widgetCategorySchema.optional(),
   org_id: z.string(),
@@ -103,11 +103,11 @@ export const widgetSchema = z.object({
   id: z.string().optional(),
 })
 
-type WidgetConfigDTO = {
-  data: z.infer<typeof widgetSchema>
+type WidgetCreateDTO = {
+  data: z.infer<typeof widgetCreateSchema> & { id: string }
 }
 
-export type WidgetConfig = WidgetConfigDTO['data']
+export type WidgetCreate = WidgetCreateDTO['data']
 
 type CreateWidgetProps = {
   widgetType: WidgetType
@@ -115,7 +115,7 @@ type CreateWidgetProps = {
   isMultipleAttr: boolean
   isOpen: boolean
   close: () => void
-  handleSubmitWidget: (value: WidgetConfig) => void
+  widgetList: React.MutableRefObject<Widget>
 }
 
 const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
@@ -129,7 +129,7 @@ export function CreateWidget({
   isMultipleAttr,
   isOpen,
   close,
-  handleSubmitWidget,
+  widgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
@@ -179,8 +179,8 @@ export function CreateWidget({
   })) || [{ value: '', label: '' }]
 
   const { register, formState, control, handleSubmit, setValue, watch } =
-    useForm<WidgetConfig>({
-      resolver: widgetSchema && zodResolver(widgetSchema),
+    useForm<WidgetCreate>({
+      resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
   console.log('zod errors', formState.errors)
 
@@ -223,15 +223,132 @@ export function CreateWidget({
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
               // console.log('values: ', values)
-              handleSubmitWidget({
-                id: uuidv4(),
+              const widgetId = uuidv4()
+              const attrData = values.attributeConfig.map(item => ({
+                type: 'TIME_SERIES',
+                key: item.attribute_key,
+              }))
+              const initMessage = {
+                entityDataCmds: [
+                  {
+                    query: {
+                      entityFilter: {
+                        type: 'entityList',
+                        entityType: 'DEVICE',
+                        entityIds: values.device,
+                      },
+                      pageLink: {
+                        pageSize: 1,
+                        page: 0,
+                        sortOrder: {
+                          key: {
+                            type: 'ENTITY_FIELD',
+                            key: 'ts',
+                          },
+                          direction: 'DESC',
+                        },
+                      },
+                      entityFields: [
+                        {
+                          type: 'ENTITY_FIELD',
+                          key: 'name',
+                        },
+                      ],
+                      latestValues: attrData,
+                    },
+                    id: widgetId,
+                  },
+                ],
+              }
+
+              const lastestMessage = {
+                entityDataCmds: [
+                  {
+                    latestCmd: {
+                      keys: attrData,
+                    },
+                    id: widgetId,
+                  },
+                ],
+              }
+
+              const realtimeMessage = {
+                entityDataCmds: [
+                  {
+                    tsCmd: {
+                      keys: values.attributeConfig.map(
+                        item => item.attribute_key,
+                      ),
+                      startTs: Date.parse(
+                        values.widgetSetting?.startDate?.toISOString(),
+                      ),
+                      interval: values.widgetSetting?.interval,
+                      limit: 10,
+                      offset: 0,
+                      agg: values.widgetSetting?.agg,
+                    },
+                    id: widgetId,
+                  },
+                ],
+              }
+
+              const historyMessage = {
+                entityDataCmds: [
+                  {
+                    historyCmd: {
+                      keys: [],
+                      startTs: Date.parse(
+                        values.widgetSetting?.startDate?.toISOString(),
+                      ),
+                      endTs: Date.parse(
+                        values.widgetSetting?.endDate?.toISOString(),
+                      ),
+                      interval: values.widgetSetting?.interval,
+                      limit: 100,
+                      offset: 0,
+                      agg: values.widgetSetting?.agg,
+                    },
+                    id: widgetId,
+                  },
+                ],
+              }
+
+              const widget = {
                 title: values.title,
-                type: widgetCategory,
-                org_id: values.org_id,
-                device: values.device,
-                attributeConfig: values.attributeConfig,
-                widgetSetting: values.widgetSetting,
-              })
+                datasource: {
+                  init_message: JSON.stringify(initMessage),
+                  lastest_message: JSON.stringify(lastestMessage),
+                  realtime_message: JSON.stringify(realtimeMessage),
+                  history_message: JSON.stringify(historyMessage),
+                },
+                attribute_config: values.attributeConfig.map(item => ({
+                  attribute_key: item.attribute_key,
+                  color: item.color,
+                  decimal: item.decimal,
+                  label: item.label,
+                  unit: item.unit,
+                })),
+                config: {
+                  aggregation: values.widgetSetting?.agg,
+                  timewindow: {
+                    interval: values.widgetSetting?.interval,
+                  },
+                  chartsetting: {
+                    start_date: new Date(
+                      values.widgetSetting?.startDate as unknown as number,
+                    ).getTime(),
+                    end_date: new Date(
+                      values.widgetSetting?.endDate as unknown as number,
+                    ).getTime(),
+                    widget_type: values.widgetSetting?.widgetType,
+                    data_type: values.widgetSetting?.dataType,
+                  },
+                },
+              }
+
+              widgetList.current[widgetId] = widget
+
+              close()
             })}
           >
             <>

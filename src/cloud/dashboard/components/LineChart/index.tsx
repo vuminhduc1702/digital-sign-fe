@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
+import { useSpinDelay } from 'spin-delay'
 
+import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
+import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 import { type TimeSeries, type WSWidgetData } from '../../types'
-import { Spinner } from '~/components/Spinner'
 
 export function LineChart({ data }: { data: TimeSeries | null }) {
   console.log('new', data)
@@ -23,7 +24,6 @@ export function LineChart({ data }: { data: TimeSeries | null }) {
 
   // Handle real time value
   const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
-  console.log('newDataValue', newDataValue)
   useEffect(() => {
     if (data != null && Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
@@ -84,6 +84,14 @@ export function LineChart({ data }: { data: TimeSeries | null }) {
       }))
       .slice(-10)
   }
+
+  const showSpinner = useSpinDelay(
+    dataTransformedFeedToChart[0].data.length === 0,
+    {
+      delay: 150,
+      minDuration: 300,
+    },
+  )
 
   // console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
 
@@ -152,7 +160,7 @@ export function LineChart({ data }: { data: TimeSeries | null }) {
         />
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Spinner showSpinner size="xl" />
+          <Spinner showSpinner={showSpinner} size="xl" />
         </div>
       )}
     </>

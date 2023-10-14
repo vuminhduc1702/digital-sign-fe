@@ -9,12 +9,12 @@ import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
-import { useGetDashboardsById, useUpdateDashboard } from '../api'
+import { type Widget, useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
 import {
   CreateWidget,
+  type WidgetCreate,
   type WidgetCategoryType,
-  type WidgetConfig,
 } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
@@ -66,7 +66,7 @@ const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURICompo
 
 export function DashboardDetail() {
   const { t } = useTranslation()
-  console.log('rerender parent')
+  // console.log('rerender parent')
 
   const dashboardName = useDashboardNameStore(state => state.dashboardName)
 
@@ -96,8 +96,8 @@ export function DashboardDetail() {
     id: dashboardId,
   })
 
-  const [widgetData, setWidgetData] = useState<WidgetConfig>()
-  // console.log('widgetData', widgetData)
+  const widgetListRef = useRef<Widget>({})
+  // console.log('widgetListRef', widgetListRef.current)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
@@ -110,9 +110,7 @@ export function DashboardDetail() {
   const widgetIdListRef = useRef<string[]>([])
   useEffect(() => {
     if (detailDashboard?.configuration.widgets != null) {
-      const widgetIdList = Object.keys(
-        detailDashboard?.configuration?.widgets as unknown as WidgetConfig,
-      )
+      const widgetIdList = Object.keys(detailDashboard?.configuration?.widgets)
       widgetIdListRef.current = widgetIdList
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
@@ -124,21 +122,6 @@ export function DashboardDetail() {
             detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
               ?.realtime_message,
           )
-
-          // const ws = new WebSocket(WEBSOCKET_URL)
-          // ws.onopen = event => {
-          //   ws.send(
-          //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
-          //       ?.init_message,
-          //   )
-          //   ws.send(
-          //     detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
-          //       ?.realtime_message,
-          //   )
-          // }
-          // ws.onmessage = function (event) {
-          //   const json = JSON.parse(event.data)
-          // }
         })
       }
     }
@@ -147,6 +130,12 @@ export function DashboardDetail() {
   const realtimeValues = combinedObject(
     lastJsonMessage?.data?.map(device => device?.timeseries),
   )
+  // console.log('realtimeValues', realtimeValues)
+  console.log(
+    'lastJsonMessage',
+    lastJsonMessage?.data?.map(device => device),
+  )
+  console.log('detailDashboard: ', detailDashboard?.configuration?.widgets)
   function combinedObject(data: Array<TimeSeries | null>) {
     let combinedObject: TimeSeries | null = {}
     if (data != null) {
@@ -239,151 +228,14 @@ export function DashboardDetail() {
                 setIsEditMode(false)
 
                 if (detailDashboard != null) {
-                  if (widgetData != null) {
-                    const attrData = widgetData?.attributeConfig.map(item => ({
-                      type: 'TIME_SERIES',
-                      key: item.attribute_key,
-                    }))
-                    const initMessage = {
-                      entityDataCmds: [
-                        {
-                          query: {
-                            entityFilter: {
-                              type: 'entityList',
-                              entityType: 'DEVICE',
-                              entityIds: widgetData?.device,
-                            },
-                            pageLink: {
-                              pageSize: 1,
-                              page: 0,
-                              sortOrder: {
-                                key: {
-                                  type: 'ENTITY_FIELD',
-                                  key: 'ts',
-                                },
-                                direction: 'DESC',
-                              },
-                            },
-                            entityFields: [
-                              {
-                                type: 'ENTITY_FIELD',
-                                key: 'name',
-                              },
-                            ],
-                            latestValues: attrData,
-                          },
-                          id: widgetData?.id,
-                        },
-                      ],
-                    }
-
-                    const lastestMessage = {
-                      entityDataCmds: [
-                        {
-                          latestCmd: {
-                            keys: widgetData?.attributeConfig.map(item => ({
-                              type: 'TIME_SERIES',
-                              key: item.attribute_key,
-                            })),
-                          },
-                          id: widgetData?.id,
-                        },
-                      ],
-                    }
-
-                    const realtimeMessage = {
-                      entityDataCmds: [
-                        {
-                          tsCmd: {
-                            keys: widgetData?.attributeConfig.map(
-                              item => item.attribute_key,
-                            ),
-                            startTs: Date.parse(
-                              widgetData?.widgetSetting?.startDate?.toISOString(),
-                            ),
-                            interval: widgetData?.widgetSetting?.interval,
-                            limit: 10,
-                            offset: 0,
-                            agg: widgetData?.widgetSetting?.agg,
-                          },
-                          id: widgetData?.id,
-                        },
-                      ],
-                    }
-
-                    const historyMessage = {
-                      entityDataCmds: [
-                        {
-                          historyCmd: {
-                            keys: [],
-                            startTs: Date.parse(
-                              widgetData?.widgetSetting?.startDate?.toISOString(),
-                            ),
-                            endTs: Date.parse(
-                              widgetData?.widgetSetting?.endDate?.toISOString(),
-                            ),
-                            interval: widgetData?.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: widgetData?.widgetSetting?.agg,
-                          },
-                          id: widgetData?.id,
-                        },
-                      ],
-                    }
-
+                  if (Object.keys(widgetListRef.current).length !== 0) {
                     mutateUpdateDashboard({
                       data: {
                         title: detailDashboard?.title,
                         configuration: {
                           description:
                             detailDashboard?.configuration?.description,
-                          widgets: {
-                            [widgetData?.id as string]: {
-                              title: widgetData?.title,
-                              datasource: {
-                                init_message: JSON.stringify(initMessage),
-                                lastest_message: JSON.stringify(lastestMessage),
-                                realtime_message:
-                                  JSON.stringify(realtimeMessage),
-                                history_message: JSON.stringify(historyMessage),
-                              },
-                              attribute_config: [
-                                {
-                                  attribute_key:
-                                    widgetData?.attributeConfig?.[0]
-                                      ?.attribute_key,
-                                  color:
-                                    widgetData?.attributeConfig?.[0]?.color,
-                                  decimal:
-                                    widgetData?.attributeConfig?.[0]?.decimal,
-                                  label:
-                                    widgetData?.attributeConfig?.[0]?.label,
-                                  unit: widgetData?.attributeConfig?.[0]?.unit,
-                                },
-                              ],
-                              config: {
-                                aggregation: widgetData?.widgetSetting?.agg,
-                                timewindow: {
-                                  interval: widgetData?.widgetSetting?.interval,
-                                },
-                                chartsetting: {
-                                  start_date: new Date(
-                                    widgetData?.widgetSetting
-                                      ?.startDate as unknown as number,
-                                  ).getTime(),
-                                  end_date: new Date(
-                                    widgetData?.widgetSetting
-                                      ?.endDate as unknown as number,
-                                  ).getTime(),
-                                  widget_type:
-                                    widgetData?.widgetSetting?.widgetType,
-                                  data_type:
-                                    widgetData?.widgetSetting?.dataType,
-                                },
-                              },
-                            },
-                          },
+                          widgets: widgetListRef.current as Widget,
                         },
                       },
                       dashboardId,
@@ -429,11 +281,7 @@ export function DashboardDetail() {
                   isMultipleAttr={isMultipleAttr}
                   isOpen={isShowCreateWidget}
                   close={() => setIsShowCreateWidget(false)}
-                  handleSubmitWidget={values => {
-                    // console.log('values chart: ', values)
-                    setIsShowCreateWidget(false)
-                    setWidgetData(values)
-                  }}
+                  widgetList={widgetListRef}
                 />
               </div>
             ) : (
