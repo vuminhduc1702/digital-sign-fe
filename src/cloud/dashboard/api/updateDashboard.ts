@@ -8,7 +8,7 @@ import { useNotificationStore } from '~/stores/notifications'
 import { type Dashboard } from '../components/DashboardTable'
 
 export type UpdateDashboardDTO = {
-  data: Dashboard
+  data: Omit<Dashboard, 'project_id'>
   dashboardId: string
 }
 
