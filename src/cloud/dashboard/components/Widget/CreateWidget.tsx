@@ -23,7 +23,7 @@ import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
-import { useCreateAttrChart, type Widget } from '../../api'
+import { useCreateAttrChart } from '../../api'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Calendar } from '~/components/Calendar'
 import { useGetOrgs } from '~/layout/MainLayout/api'
@@ -75,6 +75,33 @@ export const widgetCategorySchema = z.enum([
   'TABLE',
 ] as const)
 export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
+
+export const widgetSchema = z.object({
+  title: z.string(),
+  type: widgetCategorySchema,
+  datasource: z.object({
+    init_message: z.string(),
+    lastest_message: z.string(),
+    realtime_message: z.string(),
+    history_message: z.string(),
+  }),
+  attribute_config: attrWidgetSchema,
+  config: z.object({
+    chartsetting: z.object({
+      start_date: z.number(),
+      end_date: z.number(),
+      data_type: widgetDataTypeSchema,
+      widget_type: widgetTypeSchema,
+    }),
+    timewindow: z.object({
+      interval: z.number(),
+    }),
+    aggregation: aggSchema,
+  }),
+})
+
+export const widgetListSchema = z.record(widgetSchema)
+export type Widget = z.infer<typeof widgetListSchema>
 
 export const widgetCreateSchema = z.object({
   title: nameSchema,
@@ -313,8 +340,9 @@ export function CreateWidget({
                 ],
               }
 
-              const widget = {
+              const widget: z.infer<typeof widgetSchema> = {
                 title: values.title,
+                type: widgetCategory,
                 datasource: {
                   init_message: JSON.stringify(initMessage),
                   lastest_message: JSON.stringify(lastestMessage),
@@ -340,7 +368,7 @@ export function CreateWidget({
                     end_date: new Date(
                       values.widgetSetting?.endDate as unknown as number,
                     ).getTime(),
-                    widget_type: values.widgetSetting?.widgetType,
+                    widget_type: widgetType,
                     data_type: values.widgetSetting?.dataType,
                   },
                 },

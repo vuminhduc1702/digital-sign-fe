@@ -1,13 +1,8 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-import * as z from 'zod'
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
-import { type widgetSchema } from '../components/DashboardTable'
-
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-
-export type Widget = z.infer<typeof widgetSchema>
+import { type Widget } from '../components/Widget'
 
 export type DashboardByIdRes = {
   id: string

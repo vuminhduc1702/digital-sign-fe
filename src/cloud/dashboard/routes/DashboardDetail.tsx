@@ -9,11 +9,11 @@ import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
-import { type Widget, useGetDashboardsById, useUpdateDashboard } from '../api'
+import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
 import {
   CreateWidget,
-  type WidgetCreate,
+  type Widget,
   type WidgetCategoryType,
 } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
@@ -164,9 +164,11 @@ export function DashboardDetail() {
     <div className="flex grow flex-col">
       <TitleBar title={`${t('cloud:dashboard.title')}: ${dashboardName}`} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {detailDashboard?.configuration.widgets != null &&
+        {detailDashboard?.configuration?.widgets != null &&
         widgetIdListRef.current.length > 0 ? (
           widgetIdListRef.current.map((widgetId, index) => {
+            const widgetFromDBByID =
+              detailDashboard?.configuration?.widgets?.[widgetId]
             return connectionStatus === 'Open' ? (
               <ReactGridLayout
                 // layout={layout}
@@ -186,9 +188,11 @@ export function DashboardDetail() {
                   data-iseditmode={isEditMode}
                 >
                   <p className="absolute ml-2 mt-2">
-                    {detailDashboard?.configuration?.widgets?.[widgetId]?.title}
+                    {widgetFromDBByID?.title ?? ''}
                   </p>
-                  <LineChart data={realtimeValues} />
+                  {widgetFromDBByID?.type === 'LINE' ? (
+                    <LineChart data={realtimeValues} />
+                  ) : null}
                 </div>
               </ReactGridLayout>
             ) : (
