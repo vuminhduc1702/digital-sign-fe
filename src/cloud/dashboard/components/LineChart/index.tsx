@@ -11,7 +11,6 @@ export function LineChart({ data }: { data?: TimeSeries }) {
   // console.log('new', data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
-  console.log('wtf: ', data, newValuesRef.current)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Serie[]

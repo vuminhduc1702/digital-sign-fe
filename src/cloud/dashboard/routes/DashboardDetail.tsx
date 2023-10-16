@@ -169,6 +169,10 @@ export function DashboardDetail() {
     delay: 150,
     minDuration: 300,
   })
+  console.log('wtf: ', {
+    ...detailDashboard?.configuration?.widgets,
+    ...widgetList,
+  })
 
   return (
     <div className="flex grow flex-col">
@@ -188,14 +192,13 @@ export function DashboardDetail() {
               ? detailDashboard?.configuration?.widgets
               : { ...detailDashboard?.configuration?.widgets, ...widgetList },
           ).map((widgetId, index) => {
-            const widgetFromDetailDBByID =
+            const allWidgetData =
               Object.keys(widgetList).length === 0
-                ? detailDashboard?.configuration?.widgets?.[widgetId]
+                ? detailDashboard?.configuration?.widgets
                 : {
-                    ...detailDashboard?.configuration?.widgets?.[widgetId],
-                    ...widgetList[widgetId],
+                    ...detailDashboard?.configuration?.widgets,
+                    ...widgetList,
                   }
-            console.log('widgetFromDetailDBByID', widgetFromDetailDBByID)
 
             const realtimeValues: TimeSeries =
               lastJsonMessage?.id === widgetId
@@ -223,9 +226,9 @@ export function DashboardDetail() {
                   data-iseditmode={isEditMode}
                 >
                   <p className="absolute ml-2 mt-2">
-                    {widgetFromDetailDBByID?.title ?? ''}
+                    {allWidgetData?.[widgetId]?.title ?? ''}
                   </p>
-                  {widgetFromDetailDBByID?.type === 'LINE' ? (
+                  {allWidgetData?.[widgetId]?.type === 'LINE' ? (
                     <LineChart data={realtimeValues} />
                   ) : null}
                 </div>
@@ -236,51 +239,6 @@ export function DashboardDetail() {
               </div>
             )
           })}
-
-        {/* {detailDashboard?.configuration?.widgets == null &&
-          Object.keys(widgetList).length > 0 &&
-          Object.keys(widgetList).map((widgetId, index) => {
-            const widgetFromDetailDBByID = widgetList[widgetId]
-
-            const realtimeValues: TimeSeries =
-              lastJsonMessage?.id === widgetId
-                ? combinedObject(
-                    lastJsonMessage?.data?.map(device => device.timeseries),
-                  )
-                : {}
-
-            return connectionStatus === 'Open' ? (
-              <ReactGridLayout
-                // layout={layout}
-                rowHeight={500}
-                cols={2}
-                isDraggable={isEditMode}
-                isResizable={isEditMode}
-                margin={[20, 20]}
-                // onLayoutChange={e => console.log(e)}
-              >
-                <div
-                  key={index}
-                  className={cn(
-                    'relative bg-secondary-500',
-                    isEditMode && 'cursor-grab',
-                  )}
-                  data-iseditmode={isEditMode}
-                >
-                  <p className="absolute ml-2 mt-2">
-                    {widgetFromDetailDBByID?.title ?? ''}
-                  </p>
-                  {widgetFromDetailDBByID?.type === 'LINE' ? (
-                    <LineChart data={realtimeValues} />
-                  ) : null}
-                </div>
-              </ReactGridLayout>
-            ) : (
-              <div className="flex grow items-center justify-center">
-                <Spinner showSpinner={showSpinner} size="xl" />
-              </div>
-            )
-          })} */}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
