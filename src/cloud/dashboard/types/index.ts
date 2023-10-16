@@ -36,6 +36,10 @@ export type DataItem = {
 
 export type DashboardWS = {
   data: DataItem[]
+  errorCode: number
+  id: string
+  errorMsg: string
+  update: any[]
 }
 
 export const aggSchema = z.enum([

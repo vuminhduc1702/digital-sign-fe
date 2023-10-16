@@ -142,7 +142,8 @@ type CreateWidgetProps = {
   isMultipleAttr: boolean
   isOpen: boolean
   close: () => void
-  widgetList: React.MutableRefObject<Widget>
+  widgetListRef: React.MutableRefObject<Widget>
+  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
 const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
@@ -156,7 +157,8 @@ export function CreateWidget({
   isMultipleAttr,
   isOpen,
   close,
-  widgetList,
+  widgetListRef,
+  setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
@@ -374,7 +376,8 @@ export function CreateWidget({
                 },
               }
 
-              widgetList.current[widgetId] = widget
+              widgetListRef.current[widgetId] = widget
+              setWidgetList(widgetListRef.current)
 
               close()
             })}
