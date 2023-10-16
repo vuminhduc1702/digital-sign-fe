@@ -9,16 +9,20 @@ type TextAreaFieldProps = FieldWrapperPassThroughProps & {
   className?: string
   registration?: Partial<UseFormRegisterReturn>
   classnamefieldwrapper?: string
+  classlabel?: string
+  classchild?: string
 }
 
 export const TextAreaField = (props: TextAreaFieldProps) => {
-  const { rows, label, className, registration, error, classnamefieldwrapper } =
+  const { rows, label, className, registration, error, classnamefieldwrapper, classlabel, classchild } =
     props
   return (
     <FieldWrapper
       className={cn('', classnamefieldwrapper)}
       label={label}
       error={error}
+      classlabel={classlabel}
+      classchild={classchild}
     >
       <textarea
         className={cn(

@@ -15,6 +15,8 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   classnamefieldwrapper?: string
   registration?: Partial<UseFormRegisterReturn>
   classNameError?: string
+  classlabel?: string
+  classchild?: string
 } & IconProps &
   React.InputHTMLAttributes<HTMLInputElement>
 
@@ -31,6 +33,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       endIcon,
       require,
       classNameError,
+      classlabel,
+      classchild,
       ...props
     }: InputFieldProps,
     ref,
@@ -41,6 +45,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         error={error}
         require={require}
         classNameError={classNameError}
+        classlabel={classlabel}
+        classchild={classchild}
         className={cn(
           type === 'file'
             ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'

@@ -30,6 +30,8 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   value?: string | number
   onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
   classnamefieldwrapper?: string
+  classlabel?: string
+  classchild?: string
 }
 
 export const SelectField = ({
@@ -42,10 +44,18 @@ export const SelectField = ({
   value,
   require,
   classnamefieldwrapper,
+  classlabel,
+  classchild,
   ...props
 }: SelectFieldProps) => {
   return (
-    <FieldWrapper className={cn('', classnamefieldwrapper)} require={require} label={label} error={error}>
+    <FieldWrapper
+      classlabel={classlabel}
+      classchild={classchild}
+      className={cn('', classnamefieldwrapper)}
+      require={require}
+      label={label}
+      error={error}>
       <select
         placeholder={placeholder}
         value={value}
