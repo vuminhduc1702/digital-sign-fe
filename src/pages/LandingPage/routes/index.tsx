@@ -235,7 +235,8 @@ export function LandingPage() {
       <div>
         <SectionSolution></SectionSolution>
       </div>
-      <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}></div>
+      <div className="h-[150px] " ref={PackOfDataRef}></div>
+      {/* h-[823px] bg-slate-200*/}
       <div ref={ProductRef}>
         <SectionProduct></SectionProduct>
       </div>
@@ -253,9 +254,9 @@ export function LandingPage() {
       <div ref={FAQRef}>
         <QandA></QandA>
       </div>
-      <div>
+      {/* <div>
         <SectionNews></SectionNews>
-      </div>
+      </div> */}
       <div>
         <SectionFooter></SectionFooter>
       </div>

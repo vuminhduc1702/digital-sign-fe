@@ -151,21 +151,23 @@ export function SectionSolution({}: {}) {
           </div>
           <div className="grid  justify-items-end pt-[40px]">
             <div className="h-fit w-fit ">
-              <Button
-                type="button"
-                className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
-                variant="primary"
-                endIcon={
-                  <ArrowRightUpLine
-                    width={23}
-                    height={23}
-                    viewBox="0 0 23 23"
-                    className=""
-                  ></ArrowRightUpLine>
-                }
-              >
-                Trải nghiệm ngay
-              </Button>
+              <a href="https://innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70">
+                <Button
+                  type="button"
+                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  variant="primary"
+                  endIcon={
+                    <ArrowRightUpLine
+                      width={23}
+                      height={23}
+                      viewBox="0 0 23 23"
+                      className=""
+                    ></ArrowRightUpLine>
+                  }
+                >
+                  Trải nghiệm ngay
+                </Button>
+              </a>
             </div>
           </div>
         </div>
