@@ -119,7 +119,11 @@ export function SectionFooter() {
               </div>
             </div>
             <div className="pl-[20px]">
-              <div className="flex pb-[15px] pt-[10px]">
+              <a
+                className="flex pb-[15px] pt-[10px]"
+                href="cskh@viettel.com.vn"
+                target="_blank"
+              >
                 <MailSendFill
                   width={33}
                   height={33}
@@ -129,8 +133,8 @@ export function SectionFooter() {
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   cskh@viettel.com.vn
                 </div>
-              </div>
-              <div className="flex pb-[15px]">
+              </a>
+              <a className="flex pb-[15px]" href="tel:0123456789">
                 <PhoneFill
                   width={33}
                   height={33}
@@ -140,7 +144,7 @@ export function SectionFooter() {
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   0123 456 789
                 </div>
-              </div>
+              </a>
             </div>
           </div>
 
@@ -152,24 +156,30 @@ export function SectionFooter() {
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 Follow us:
               </div>
-              <FacebookIcon
-                width={25}
-                height={25}
-                viewBox="0 0 25 25"
-                className="ml-2 mr-1"
-              />
-              <LinkedinIcon
-                width={25}
-                height={25}
-                viewBox="0 0 25 25"
-                className="mx-1"
-              />
-              <InstagramIcon
-                width={25}
-                height={25}
-                viewBox="0 0 25 25"
-                className="ml-1"
-              />
+              <a href="https://www.facebook.com/innoway.vn/" target="_blank">
+                <FacebookIcon
+                  width={25}
+                  height={25}
+                  viewBox="0 0 25 25"
+                  className="ml-2 mr-1"
+                />
+              </a>
+              <a href="https://twitter.com/VInnoway" target="_blank">
+                <LinkedinIcon
+                  width={25}
+                  height={25}
+                  viewBox="0 0 25 25"
+                  className="mx-1"
+                />
+              </a>
+              <a href="https://www.instagram.com/innoway.vn/" target="_blank">
+                <InstagramIcon
+                  width={25}
+                  height={25}
+                  viewBox="0 0 25 25"
+                  className="ml-1"
+                />
+              </a>
             </div>
           </div>
         </div>

@@ -182,6 +182,7 @@ export function LandingPage() {
                   <a
                     href="http://www.vietteliot2023.com"
                     className="flex text-center text-2xl font-bold text-[#DBFF00]"
+                    target="_blank"
                   >
                     Viettel M2M IoT 2023{' '}
                     <i className="mt-1 pl-4 text-base text-[(219,255,0,1)]">
@@ -235,7 +236,7 @@ export function LandingPage() {
       <div>
         <SectionSolution></SectionSolution>
       </div>
-      <div className="h-[150px] " ref={PackOfDataRef}></div>
+      <div className="h-[150px]" ref={PackOfDataRef}></div>
       {/* h-[823px] bg-slate-200*/}
       <div ref={ProductRef}>
         <SectionProduct></SectionProduct>

@@ -120,7 +120,7 @@ export function SectionProduct({}: {}) {
                   </div>
                   <div className="text-center text-base">{item.title_h2}</div>
                   <div className="flex justify-center pb-[30px] pt-[40px]">
-                    <a href="">
+                    <a href={item.href} target="_blank">
                       <Button
                         type="button"
                         className="rounded-r-lg rounded-tl-lg border-[#EA0033] bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
