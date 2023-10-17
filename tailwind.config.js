@@ -13,6 +13,7 @@ function withOpacity(variableName) {
 
 module.exports = {
   content: ['./src/**/*.{ts,tsx}'],
+  plugins: [],
   theme: {
     extend: {
       colors: {
@@ -91,6 +92,14 @@ module.exports = {
           from: { opacity: 0, transform: 'translateX(2px)' },
           to: { opacity: 1, transform: 'translateX(0)' },
         },
+        'accordion-down': {
+          from: { height: 0 },
+          to: { height: 'var(--radix-accordion-content-height)' },
+        },
+        'accordion-up': {
+          from: { height: 'var(--radix-accordion-content-height)' },
+          to: { height: 0 },
+        },
       },
       animation: {
         slideDown: 'slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1)',
@@ -102,6 +111,8 @@ module.exports = {
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade:
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
+        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
   },

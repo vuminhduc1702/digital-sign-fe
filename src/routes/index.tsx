@@ -8,6 +8,7 @@ import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
 import { useEffect } from 'react'
 import storage from '~/utils/storage'
+import { Item } from '@radix-ui/react-accordion'
 
 const { LandingPage } = lazyImport(
   () => import('~/pages/LandingPage'),
@@ -27,13 +28,6 @@ export const AppRoutes = () => {
 
   const user = useUser()
 
-  useEffect(() => {
-    const user = storage.getToken()
-    if (!user) {
-      navigate(PATHS.LOGIN)
-    }
-  }, [])
-
   const commonRoutes = [
     { path: BASE_PATH, element: <LandingPage /> },
     {
@@ -45,6 +39,17 @@ export const AppRoutes = () => {
       element: <NotFoundPage />,
     },
   ]
+
+  useEffect(() => {
+    const user = storage.getToken()
+
+    if (
+      !user &&
+      !commonRoutes.some(Item => Item.path === window.location.pathname)
+    ) {
+      navigate(PATHS.LOGIN)
+    }
+  }, [])
 
   const routes = user.data ? protectedRoutes : publicRoutes
 
