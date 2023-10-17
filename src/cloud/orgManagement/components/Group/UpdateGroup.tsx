@@ -3,16 +3,22 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectDropdown, SelectOptionString } from '~/components/Form'
+import {
+  Form,
+  InputField,
+  SelectDropdown,
+  type SelectOptionString,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { useUpdateGroup, type UpdateGroupDTO, useGroupById } from '../../api/groupAPI'
+import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
+import { queryClient } from '~/lib/react-query'
+import { flattenData } from '~/utils/misc'
+import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
+
+import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { queryClient } from '~/lib/react-query'
-import { OrgList } from '~/layout/MainLayout/types'
-import { flattenData } from '~/utils/misc'
-import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 
 const groupSchema = z.object({
   name: z.string(),
@@ -23,6 +29,7 @@ type UpdateGroupProps = {
   name: string
   close: () => void
   isOpen: boolean
+  organization: string
 }
 
 export function UpdateGroup({
@@ -30,9 +37,11 @@ export function UpdateGroup({
   name,
   close,
   isOpen,
+  organization,
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -42,12 +51,16 @@ export function UpdateGroup({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+    .filter(org => org.value !== organization)
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
-  const { data: groupData } = useGroupById({groupId})
-  const filterOrg = orgFlattenData?.filter(org => org.id == groupData?.organization)[0]
 
   useEffect(() => {
     if (isSuccess) {
@@ -56,13 +69,14 @@ export function UpdateGroup({
   }, [isSuccess, close])
 
   useEffect(() => {
-    if (groupId) {
+    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
+    if (organization) {
       setOptionOrg({
         label: filterOrg?.name,
         value: filterOrg?.id,
       })
     }
-  }, [groupId])
+  }, [organization])
 
   return (
     <Drawer
@@ -99,14 +113,14 @@ export function UpdateGroup({
           mutate({
             data: {
               name: values.name,
-              org_id: optionOrg?.value
+              org_id: optionOrg?.value,
             },
             groupId,
           })
         }
         schema={groupSchema}
         options={{
-          defaultValues: { name: name },
+          defaultValues: { name: name, org_id: organization },
         }}
       >
         {({ register, formState, control, setValue }) => (
@@ -126,17 +140,14 @@ export function UpdateGroup({
                 name="org_id"
                 control={control}
                 options={
-                  orgFlattenData?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
+                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                 }
-                onChange={e => {
+                onChange={(e: SelectOptionString) => {
                   setOptionOrg(e)
                   mutateUpdateOrgForGroup({
                     data: {
                       ids: [groupId],
-                      org_id: e?.value
+                      org_id: e.value,
                     },
                   })
                   setValue('org_id', e?.value)

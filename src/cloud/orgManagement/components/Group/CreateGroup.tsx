@@ -8,7 +8,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  SelectOption,
+  type SelectOption,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
@@ -54,6 +54,12 @@ export function CreateGroup() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
@@ -125,10 +131,7 @@ export function CreateGroup() {
                 name="org_id"
                 control={control}
                 options={
-                  orgFlattenData?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
+                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                 }
                 onChange={e => {
                   setOption(e)

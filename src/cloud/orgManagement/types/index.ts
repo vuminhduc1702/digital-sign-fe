@@ -36,7 +36,7 @@ export type DeviceList = {
 export type Group = {
   id: string
   name: string
-  organization?: string
+  organization: string
   org_name: string
   project_id: string
   entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>

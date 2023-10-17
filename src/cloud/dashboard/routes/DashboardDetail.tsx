@@ -1,27 +1,34 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import * as z from 'zod'
 import RGL, { WidthProvider } from 'react-grid-layout'
-
+import { useSpinDelay } from 'spin-delay'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+
+import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import { LineChart } from '../components'
-import { CreateWidget, type WidgetConfig } from '../components/Widget'
+import {
+  CreateWidget,
+  type Widget,
+  type WidgetCategoryType,
+} from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
+import { cn } from '~/utils/misc'
+import { useDashboardNameStore } from '~/stores/dashboard'
 
 import {
   aggSchema,
   type DashboardWS,
-  type WSWidgetData,
   type WidgetType,
-  dataTest,
+  type TimeSeries,
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
+import { WS_URL } from '~/config'
 
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -53,14 +60,15 @@ export const widgetAgg: WidgetAgg[] = [
 ]
 
 const { token } = storage.getToken() as UserStorage
-const WS_URL = `${
-  import.meta.env.VITE_WS_URL as string
-}/websocket/telemetry?auth-token=${encodeURIComponent(`Bearer ${token}`)}`
+const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
+  `Bearer ${token}`,
+)}`
 
 export function DashboardDetail() {
   const { t } = useTranslation()
+  // console.log('rerender parent')
 
-  const DBNAME = localStorage.getItem('dbname')
+  const dashboardName = useDashboardNameStore(state => state.dashboardName)
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -68,103 +76,169 @@ export function DashboardDetail() {
   const { close, open, isOpen } = useDisclosure()
   const [isEditMode, setIsEditMode] = useState(false)
   const [widgetType, setWidgetType] = useState<WidgetType>('TIMESERIES')
+  const [widgetCategory, setWidgetCategory] =
+    useState<WidgetCategoryType>('LINE')
+  const [isMultipleAttr, setIsMultipleAttr] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+
+  const ReactGridLayout = useMemo(() => WidthProvider(RGL), [])
+  const layout: RGL.Layout[] = [
+    { i: '0', x: 0, y: 0, w: 5, h: 5 },
+    { i: '1', x: 5, y: 0, w: 5, h: 5 },
+    { i: '2', x: 0, y: 5, w: 5, h: 5 },
+    { i: '3', x: 5, y: 5, w: 5, h: 5 },
+  ]
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
 
-  const { data: detailDashboard } = useGetDashboardsById({
-    id: dashboardId,
-    config: { suspense: false },
-  })
-  console.log(
-    'detailDashboard?.configuration.widgets',
-    detailDashboard?.configuration.widgets,
-  )
+  const { data: detailDashboard, refetch: detailDashboardRefetch } =
+    useGetDashboardsById({
+      id: dashboardId,
+      config: {
+        staleTime: 0,
+      },
+    })
 
-  const [widgetData, setWidgetData] = useState<WidgetConfig>()
-  console.log('widgetData', widgetData)
-
-  const parseStartDate = useMemo(
-    () =>
-      Date.parse(
-        widgetData?.widgetSetting?.startDate?.toISOString() ||
-          new Date().toISOString(),
-      ),
-    [widgetData?.widgetSetting?.startDate],
-  )
+  const widgetListRef = useRef<Widget>({})
+  // console.log('widgetListRef', widgetListRef.current)
+  const [widgetList, setWidgetList] = useState<Widget>({})
+  console.log('widgetList', widgetList)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WS_URL)
-
-  // Handle new data point in realtime
-  const realtimeValues: WSWidgetData[] =
-    lastJsonMessage?.data?.[0]?.timeseries?.rawr2 || []
-  const prevValuesRef = useRef<WSWidgetData[]>([])
-  const newValuesRef = useRef<WSWidgetData[]>([])
-  useEffect(() => {
-    prevValuesRef.current = newValuesRef.current || realtimeValues
-  }, [realtimeValues[0]])
-  if (prevValuesRef.current && widgetData?.widgetSetting?.agg === 'NONE') {
-    newValuesRef.current = [...prevValuesRef.current, ...realtimeValues]
-  } else newValuesRef.current = realtimeValues
-  console.log('newValuesRef.current: ', newValuesRef.current)
+    useWS<DashboardWS>(WEBSOCKET_URL)
 
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
-    [lastJsonMessage],
+    [],
   )
 
-  const ReactGridLayout = WidthProvider(RGL)
+  useEffect(() => {
+    if (detailDashboard?.configuration?.widgets != null) {
+      widgetListRef.current = detailDashboard?.configuration?.widgets
 
-  const layout: RGL.Layout[] = [
-    { i: 'a', x: 0, y: 0, w: 5, h: 5 },
-    { i: 'b', x: 5, y: 0, w: 5, h: 5 },
-    { i: 'c', x: 0, y: 5, w: 5, h: 5 },
-    { i: 'd', x: 5, y: 5, w: 5, h: 5 },
-  ]
+      const widgetIdList = Object.keys(detailDashboard?.configuration?.widgets)
+      if (widgetIdList.length > 0) {
+        widgetIdList.map(widgetId => {
+          handleSendMessage(
+            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+              .init_message,
+          )
+          handleSendMessage(
+            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
+              .realtime_message,
+          )
+        })
+      }
+    } else if (
+      detailDashboard?.configuration?.widgets == null &&
+      Object.keys(widgetList).length > 0
+    ) {
+      widgetListRef.current = widgetList
 
-  // useEffect(() => {
-  //   if (detailDashboard?.configuration.widgets != null) {
-  //     handleSendMessage(JSON.stringify(initMessage))
-  //   }
-  // }, [detailDashboard?.configuration.widgets, handleSendMessage, initMessage])
+      const widgetIdList = Object.keys(widgetList)
+      if (widgetIdList.length > 0) {
+        widgetIdList.map(widgetId => {
+          handleSendMessage(widgetList?.[widgetId]?.datasource.init_message)
+          handleSendMessage(widgetList?.[widgetId]?.datasource.realtime_message)
+        })
+      }
+    }
+  }, [detailDashboard?.configuration?.widgets, handleSendMessage, widgetList])
 
-  // useEffect(() => {
-  //   handleSendMessage(JSON.stringify(realtimeMessage))
-  // }, [handleSendMessage, realtimeMessage])
+  function combinedObject(data: Array<TimeSeries>) {
+    let combinedObject: TimeSeries = {}
+    if (data != null) {
+      combinedObject = data.reduce((result, obj) => {
+        for (const key in obj) {
+          if (obj[key] !== null && result != null) {
+            if (!result[key]) {
+              result[key] = []
+            }
+            result[key] = result[key].concat(obj[key])
+          }
+        }
+        return result
+      }, {})
+    }
+
+    return combinedObject
+  }
+
+  const showSpinner = useSpinDelay(connectionStatus !== 'Open', {
+    delay: 150,
+    minDuration: 300,
+  })
+  console.log('wtf: ', {
+    ...detailDashboard?.configuration?.widgets,
+    ...widgetList,
+  })
 
   return (
     <div className="flex grow flex-col">
-      <TitleBar title={'Dashboard ' + DBNAME} />
-      <div className="flex grow flex-col justify-between shadow-lg">
-        {detailDashboard?.configuration.widgets ? (
-          <ReactGridLayout
-            // isDraggable={isEditMode ? true : false}
-            layout={layout}
-            rowHeight={50}
-            isDraggable
-            isResizable
-            margin={[20, 20]}
-          >
-            <div key="a" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current} />
-            </div>
-            <div key="b" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current.toReversed()} />
-            </div>
-            <div key="c" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current} />
-            </div>
-            <div key="d" className="bg-secondary-500">
-              <LineChart data={newValuesRef.current.toReversed()} />
-            </div>
-          </ReactGridLayout>
-        ) : (
+      <TitleBar title={`${t('cloud:dashboard.title')}: ${dashboardName}`} />
+      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
+        {detailDashboard?.configuration?.widgets == null &&
+        Object.keys(widgetList).length === 0 ? (
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
-        )}
+        ) : null}
+
+        {(detailDashboard?.configuration?.widgets != null ||
+          Object.keys(widgetList).length > 0) &&
+          Object.keys(
+            Object.keys(widgetList).length === 0
+              ? detailDashboard?.configuration?.widgets
+              : { ...detailDashboard?.configuration?.widgets, ...widgetList },
+          ).map((widgetId, index) => {
+            const allWidgetData =
+              Object.keys(widgetList).length === 0
+                ? detailDashboard?.configuration?.widgets
+                : {
+                    ...detailDashboard?.configuration?.widgets,
+                    ...widgetList,
+                  }
+
+            const realtimeValues: TimeSeries =
+              lastJsonMessage?.id === widgetId
+                ? combinedObject(
+                    lastJsonMessage?.data?.map(device => device.timeseries),
+                  )
+                : {}
+
+            return connectionStatus === 'Open' ? (
+              <ReactGridLayout
+                // layout={layout}
+                rowHeight={500}
+                cols={2}
+                isDraggable={isEditMode}
+                isResizable={isEditMode}
+                margin={[20, 20]}
+                // onLayoutChange={e => console.log(e)}
+              >
+                <div
+                  key={index}
+                  className={cn(
+                    'relative bg-secondary-500',
+                    isEditMode && 'cursor-grab',
+                  )}
+                  data-iseditmode={isEditMode}
+                >
+                  <p className="absolute ml-2 mt-2">
+                    {allWidgetData?.[widgetId]?.title ?? ''}
+                  </p>
+                  {allWidgetData?.[widgetId]?.type === 'LINE' ? (
+                    <LineChart data={realtimeValues} />
+                  ) : null}
+                </div>
+              </ReactGridLayout>
+            ) : (
+              <div className="flex grow items-center justify-center">
+                <Spinner showSpinner={showSpinner} size="xl" />
+              </div>
+            )
+          })}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
@@ -172,7 +246,10 @@ export function DashboardDetail() {
               className="ml-2 rounded border-none p-3"
               variant="secondary"
               size="square"
-              onClick={() => setIsEditMode(false)}
+              onClick={() => {
+                setIsEditMode(false)
+                detailDashboardRefetch()
+              }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
               }
@@ -188,174 +265,29 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
 
-                const widgetId = uuidv4()
-                const attrData = widgetData?.attributeConfig.map(item => ({
-                  type: 'TIME_SERIES',
-                  key: item.attribute_key,
-                }))
-                const initMessage = {
-                  entityDataCmds: [
-                    {
-                      query: {
-                        entityFilter: {
-                          type: 'entityList',
-                          entityType: 'DEVICE',
-                          entityIds: widgetData?.device ?? [],
-                        },
-                        pageLink: {
-                          pageSize: 1,
-                          page: 0,
-                          sortOrder: {
-                            key: {
-                              type: 'ENTITY_FIELD',
-                              key: 'ts',
-                            },
-                            direction: 'DESC',
-                          },
-                        },
-                        entityFields: [
-                          {
-                            type: 'ENTITY_FIELD',
-                            key: 'name',
-                          },
-                        ],
-                        latestValues: attrData,
-                      },
-                      id: widgetId,
-                    },
-                  ],
-                }
-
-                const lastestMessage = {
-                  entityDataCmds: [
-                    {
-                      latestCmd: {
-                        keys: [
-                          {
-                            type: 'TIME_SERIES',
-                            key: 'test',
-                          },
-                          {
-                            type: 'TIME_SERIES',
-                            key: 'test1',
-                          },
-                        ],
-                      },
-                      id: widgetId,
-                    },
-                  ],
-                }
-
-                const realtimeMessage = {
-                  entityDataCmds: [
-                    {
-                      tsCmd: {
-                        keys: widgetData?.attributeConfig.map(
-                          item => item.attribute_key,
-                        ),
-                        startTs: parseStartDate,
-                        interval: widgetData?.widgetSetting?.interval,
-                        limit: 10,
-                        offset: 0,
-                        agg: widgetData?.widgetSetting?.agg,
-                      },
-                      id: widgetId,
-                    },
-                  ],
-                }
-
-                const historyMessage = {
-                  entityDataCmds: [
-                    {
-                      historyCmd: {
-                        keys: [],
-                        startTs: null,
-                        endTs: null,
-                        interval: 10000,
-                        limit: 100,
-                        offset: 0,
-                        agg: '',
-                      },
-                      id: widgetId,
-                    },
-                  ],
-                }
-
-                mutateUpdateDashboard({
-                  data: {
-                    title: detailDashboard?.title ?? '',
-                    configuration: {
-                      description:
-                        detailDashboard?.configuration?.description ?? '',
-                      widgets: {
-                        [widgetId]: {
-                          title: widgetData?.title ?? '',
-                          datasources: {
-                            init_message: initMessage,
-                            lastest_message: lastestMessage ?? null,
-                            realtime_message: realtimeMessage ?? null,
-                            history_message: historyMessage ?? null,
-                          },
-                          attribute_config: [
-                            {
-                              attribute_key:
-                                widgetData?.attributeConfig?.[0]?.attribute_key,
-                              color: widgetData?.attributeConfig?.[0]?.color,
-                              decimal:
-                                widgetData?.attributeConfig?.[0]?.decimal,
-                              label: widgetData?.attributeConfig?.[0]?.label,
-                              unit: widgetData?.attributeConfig?.[0]?.unit,
-                            },
-                          ],
-                          config: {
-                            aggregation:
-                              widgetData?.widgetSetting?.agg ?? 'NONE',
-                            timewindow: {
-                              interval:
-                                widgetData?.widgetSetting?.interval ?? 1000,
-                            },
-                            chartsetting: {
-                              start_date:
-                                new Date(
-                                  widgetData?.widgetSetting
-                                    ?.startDate as unknown as number,
-                                ).getTime() ?? 0,
-                              end_date:
-                                new Date(
-                                  widgetData?.widgetSetting
-                                    ?.endDate as unknown as number,
-                                ).getTime() ?? 0,
-                              widget_type:
-                                widgetData?.widgetSetting?.widgetType ??
-                                'TIMESERIES',
-                              data_type:
-                                widgetData?.widgetSetting?.dataType ??
-                                'realtime',
-                            },
-                          },
+                if (detailDashboard != null) {
+                  if (Object.keys(widgetListRef.current).length !== 0) {
+                    mutateUpdateDashboard({
+                      data: {
+                        title: detailDashboard?.title,
+                        configuration: {
+                          description:
+                            detailDashboard?.configuration?.description,
+                          widgets: widgetListRef.current,
                         },
                       },
-                    },
-                  },
-                  dashboardId,
-                })
-                // const widgetInitId = Object.keys(
-                //   detailDashboard?.configuration?.widgets as unknown as Widget,
-                // )[0].toString()
-                // const setInitMessage = {
-                //   id: widgetInitId,
-                //   data: widgetData?.device.map((deviceId: string) => {
-                //     return {
-                //       entityId: {
-                //         entityType: 'DEVICE',
-                //         id: deviceId,
-                //       },
-                //       latest: {},
-                //     }
-                //   }),
-                // }
-                // handleInit(JSON.stringify(setInitMessage))
-                // handleRealtime()
+                      dashboardId,
+                    })
+                  } else {
+                    mutateUpdateDashboard({
+                      data: {
+                        title: detailDashboard?.title,
+                        configuration: detailDashboard?.configuration,
+                      },
+                      dashboardId,
+                    })
+                  }
+                }
               }}
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
@@ -383,13 +315,12 @@ export function DashboardDetail() {
               <div>
                 <CreateWidget
                   widgetType={widgetType}
+                  widgetCategory={widgetCategory}
+                  isMultipleAttr={isMultipleAttr}
                   isOpen={isShowCreateWidget}
                   close={() => setIsShowCreateWidget(false)}
-                  handleSubmitWidget={values => {
-                    console.log('values chart: ', values)
-                    setIsShowCreateWidget(false)
-                    setWidgetData(values)
-                  }}
+                  widgetListRef={widgetListRef}
+                  setWidgetList={setWidgetList}
                 />
               </div>
             ) : (
@@ -426,9 +357,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
-                          setWidgetType('TIMESERIES')
-                          setIsShowCreateWidget(true)
                           close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('TIMESERIES')
+                          setWidgetCategory('LINE')
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -443,9 +376,11 @@ export function DashboardDetail() {
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
-                          setWidgetType('TIMESERIES')
-                          setIsShowCreateWidget(true)
                           close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('BAR')
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
@@ -459,32 +394,97 @@ export function DashboardDetail() {
                       <Button
                         type="button"
                         size="square"
-                        className="w-full bg-secondary-400 active:bg-primary-300"
+                        className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
-                          setWidgetType('LASTEST')
-                          setIsShowCreateWidget(true)
                           close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('PIE')
+                          setIsMultipleAttr(true)
                         }}
                       >
                         <span>
-                          {t('cloud:dashboard.detail_dashboard.add_widget.map')}
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                          )}
                         </span>
                       </Button>
+                      <Button
+                        type="button"
+                        size="square"
+                        className="w-full bg-secondary-400 active:bg-primary-300"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('GAUGE')
+                          setIsMultipleAttr(false)
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.gauge',
+                          )}
+                        </span>
+                      </Button>
+                    </div>
+                    <div className="w-full space-y-3">
                       <Button
                         type="button"
                         size="square"
                         className="w-full bg-secondary-400"
                         variant="secondaryLight"
                         onClick={() => {
-                          setWidgetType('LASTEST')
-                          setIsShowCreateWidget(true)
                           close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('RTDATA')
+                          setIsMultipleAttr(false)
                         }}
                       >
                         <span>
                           {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                            'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                          )}
+                        </span>
+                      </Button>
+                      <Button
+                        type="button"
+                        size="square"
+                        className="w-full bg-secondary-400 active:bg-primary-300"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('MAP')
+                          setIsMultipleAttr(true)
+                        }}
+                      >
+                        <span>
+                          {t('cloud:dashboard.detail_dashboard.add_widget.map')}
+                        </span>
+                      </Button>
+                    </div>
+                    <div className="w-full space-y-3">
+                      <Button
+                        type="button"
+                        size="square"
+                        className="w-full bg-secondary-400"
+                        variant="secondaryLight"
+                        onClick={() => {
+                          close()
+                          setIsShowCreateWidget(true)
+                          setWidgetType('LASTEST')
+                          setWidgetCategory('TABLE')
+                          setIsMultipleAttr(true)
+                        }}
+                      >
+                        <span>
+                          {t(
+                            'cloud:dashboard.detail_dashboard.add_widget.data_table',
                           )}
                         </span>
                       </Button>

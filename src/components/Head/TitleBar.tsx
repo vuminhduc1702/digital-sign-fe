@@ -11,7 +11,7 @@ function TitleBar({
   return (
     <h2
       className={cn(
-        'flex h-9 items-center rounded-tr-md bg-primary-400 px-10 text-h2 uppercase text-white',
+        'flex h-9 items-center rounded-tr-md bg-primary-400 px-10 text-h2 text-white',
         className,
       )}
     >

@@ -1,4 +1,4 @@
-import { type HTMLProps, forwardRef } from 'react'
+import { forwardRef } from 'react'
 import { type UseFormRegisterReturn } from 'react-hook-form'
 import { cn } from '~/utils/misc'
 
@@ -12,11 +12,13 @@ type IconProps =
 type InputFieldProps = FieldWrapperPassThroughProps & {
   type?: 'text' | 'email' | 'password' | 'number' | 'file'
   className?: string
-  classNameFieldWrapper?: string
+  classnamefieldwrapper?: string
   registration?: Partial<UseFormRegisterReturn>
   classNameError?: string
+  classlabel?: string
+  classchild?: string
 } & IconProps &
-  HTMLProps<HTMLInputElement>
+  React.InputHTMLAttributes<HTMLInputElement>
 
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   function InputField(
@@ -24,13 +26,15 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       type = 'text',
       label,
       className,
-      classNameFieldWrapper,
+      classnamefieldwrapper,
       registration,
       error,
       startIcon,
       endIcon,
       require,
       classNameError,
+      classlabel,
+      classchild,
       ...props
     }: InputFieldProps,
     ref,
@@ -41,11 +45,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         error={error}
         require={require}
         classNameError={classNameError}
+        classlabel={classlabel}
+        classchild={classchild}
         className={cn(
           type === 'file'
             ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'
             : '',
-          classNameFieldWrapper,
+          classnamefieldwrapper,
         )}
       >
         {startIcon}

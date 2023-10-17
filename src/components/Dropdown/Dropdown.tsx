@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, LegacyRef, type ReactNode } from 'react'
+import { Fragment, type LegacyRef, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 type IconProps =
@@ -10,7 +10,6 @@ type MenuItemProps = {
   children: ReactNode
   className?: string
   icon?: React.ReactElement
-  ref?: LegacyRef<HTMLButtonElement>
   onClick: () => Promise<void> | void
 }
 
@@ -22,24 +21,28 @@ type DropdownProps = {
 export function Dropdown({ title, icon, children, menuClass }: DropdownProps) {
   return (
     <Menu as="div" className={clsx('relative flex text-left', menuClass)}>
-      <Menu.Button
-        className={clsx(
-          'flex w-full items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
-        )}
-      >
-        {title ?? icon}
-      </Menu.Button>
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
-      >
-        {children}
-      </Transition>
+      {({ open, close }) => (
+        <>
+          <Menu.Button
+            className={clsx(
+              'flex w-full items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75',
+            )}
+          >
+            {title ?? icon}
+          </Menu.Button>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-100"
+            enterFrom="transform opacity-0 scale-95"
+            enterTo="transform opacity-100 scale-100"
+            leave="transition ease-in duration-75"
+            leaveFrom="transform opacity-100 scale-100"
+            leaveTo="transform opacity-0 scale-95"
+          >
+            {children}
+          </Transition>
+        </>
+      )}
     </Menu>
   )
 }
@@ -54,7 +57,7 @@ export function MenuItem({
     <Menu.Item>
       <button
         className={clsx(
-          'group flex w-full items-center rounded-md px-2 py-2 text-body-sm hover:text-primary-300',
+          'group flex w-full items-center rounded-md p-2 text-body-sm hover:text-primary-300',
           { className },
         )}
         {...props}

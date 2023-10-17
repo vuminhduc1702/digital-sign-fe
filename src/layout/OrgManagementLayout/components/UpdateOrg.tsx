@@ -1,3 +1,5 @@
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 
@@ -10,27 +12,35 @@ import {
   TextAreaField,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { type UpdateOrgDTO, useUpdateOrg, useUploadImage, UploadImageDTO } from '../api'
-import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, orgSchema, uploadImageSchema } from './CreateOrg'
+import {
+  type UpdateOrgDTO,
+  useUpdateOrg,
+  useUploadImage,
+  type UploadImageDTO,
+} from '../api'
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  orgSchema,
+  uploadImageSchema,
+} from './CreateOrg'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
+import FileField from '~/components/Form/FileField'
+import { API_URL } from '~/config'
+import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 
 import { type OrgMapType } from './OrgManageSidebar'
+import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { type OrgList } from '~/layout/MainLayout/types'
-import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import FileField from '~/components/Form/FileField'
-import { API_URL } from '~/config'
 
 export type UpdateOrg = {
-  name: string,
-  description: string,
-  org_id?: string,
+  name: string
+  description: string
+  org_id?: string
   image?: string
 }
 
@@ -55,22 +65,37 @@ export function UpdateOrg({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const { acc: selectedUpdateOrgChildren } = flattenData(
+    selectedUpdateOrg.children,
+    ['id'],
+    'children',
+  )
+
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+    .filter(
+      org =>
+        org.value !== selectedUpdateOrg.id &&
+        !selectedUpdateOrgChildren.some(child => child.id === org.value),
+    )
 
   useEffect(() => {
     if (selectedUpdateOrg.id) {
-      setOptionOrg({
-        label: selectedUpdateOrg?.parent_name,
-        value: selectedUpdateOrg?.id,
-      })
+      if (selectedUpdateOrg.parent_name) {
+        setOptionOrg({
+          label: selectedUpdateOrg.parent_name,
+          value: selectedUpdateOrg.id,
+        })
+      }
     }
   }, [selectedUpdateOrg])
 
-  const { mutate: mutate, isLoading, isSuccess } = useUpdateOrg()
-  const {
-    data: dataUploadImage,
-    mutate: mutateUploadImage,
-    isSuccess: isSuccessUploadImage,
-  } = useUploadImage()
+  const { mutate, isLoading, isSuccess } = useUpdateOrg()
+  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
 
   const { mutate: mutateUpdateOrgForOrg } = useUpdateOrgForOrg()
 
@@ -85,12 +110,15 @@ export function UpdateOrg({
   })
 
   function handleResetDefaultImage() {
-    if (avatarRef.current != null) {
-      avatarRef.current.src = defaultOrgImage
-      fetch(avatarRef.current.src)
+    setUploadImageErr('')
+    if (getValueUploadImage('file') != null) {
+      if (avatarRef.current != null) {
+        avatarRef.current.src = defaultOrgImage
+      }
+      fetch(defaultOrgImage)
         .then(res => res.blob())
         .then(blob => {
-          const defaultFile = new File([blob], 'default-org.png', blob)
+          const defaultFile = new File([blob], 'default-project.png', blob)
           const formData = new FormData()
           formData.append('file', defaultFile)
           setValueUploadImage(
@@ -100,6 +128,7 @@ export function UpdateOrg({
         })
     }
   }
+
   const [uploadImageErr, setUploadImageErr] = useState('')
 
   useEffect(() => {
@@ -108,29 +137,9 @@ export function UpdateOrg({
     }
   }, [isSuccess, close])
 
-  const [updateDataForm, setUpdateDataForm] = useState<UpdateOrg>({
-    name: '',
-    description: '',
-    org_id: '',
-    image: ''
-  })
-
-  function handleSubmitUpdate(updateData: UpdateOrg) {
-    mutate({
-      data: {
-        name: updateData.name,
-        description: updateData.description,
-        org_id: optionOrg?.value,
-        image: dataUploadImage?.data?.link
-      },
-      org_id: selectedUpdateOrg?.id,
-    })
-  }
   useEffect(() => {
-    if (isSuccessUploadImage && dataUploadImage != null) {
-      handleSubmitUpdate(updateDataForm)
-    }
-  }, [dataUploadImage])
+    setUploadImageErr('')
+  }, [isOpen])
 
   return (
     <Drawer
@@ -163,15 +172,41 @@ export function UpdateOrg({
     >
       <Form<UpdateOrgDTO['data'], typeof orgSchema>
         id="update-org"
-        onSubmit={values => {
-          mutateUploadImage({
-            data: {
-              project_id: selectedUpdateOrg.id,
-              file: getValueUploadImage('file'),
-            },
-          })
-          handleResetDefaultImage()
-          setUpdateDataForm(values)
+        onSubmit={async values => {
+          const defaultFileName = avatarRef.current?.src.split('/')
+          if (getValueUploadImage('file') != null) {
+            const dataUploadImage = await mutateAsyncUploadImage({
+              data: {
+                project_id: selectedUpdateOrg.id,
+                file: getValueUploadImage('file'),
+              },
+            })
+            mutate({
+              data: {
+                name: values.name,
+                description: values.description,
+                org_id: optionOrg?.value,
+                image: dataUploadImage?.data?.link,
+              },
+              org_id: selectedUpdateOrg?.id,
+            })
+          }
+
+          if (
+            getValueUploadImage('file') == null ||
+            (getValueUploadImage('file') != null &&
+              defaultFileName?.[defaultFileName?.length - 1] ===
+                'default-project.png')
+          ) {
+            mutate({
+              data: {
+                name: values.name,
+                description: values.description,
+                org_id: optionOrg?.value,
+              },
+              org_id: selectedUpdateOrg?.id,
+            })
+          }
         }}
         options={{
           defaultValues: {
@@ -200,17 +235,14 @@ export function UpdateOrg({
                   name="org_id"
                   control={control}
                   options={
-                    orgFlattenData?.map(org => ({
-                      label: org?.name,
-                      value: org?.id,
-                    })) || [{ label: t('loading:org'), value: '' }]
+                    orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
-                  onChange={e => {
+                  onChange={(e: SelectOptionString) => {
                     setOptionOrg(e)
                     mutateUpdateOrgForOrg({
                       data: {
-                        ids: [e?.value],
-                        org_id: selectedUpdateOrg?.id,
+                        ids: [selectedUpdateOrg.id],
+                        org_id: e.value,
                       },
                     })
                     setValue('org_id', e?.value)
@@ -237,6 +269,7 @@ export function UpdateOrg({
                   name="upload-image"
                   ref={fileInputRef}
                   onChange={event => {
+                    setUploadImageErr('')
                     const file = event.target.files[0]
                     const formData = new FormData()
                     formData.append('file', event.target.files[0])

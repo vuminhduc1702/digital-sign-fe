@@ -35,7 +35,7 @@ export function ComboBoxSelectDevice({
       'org_id',
       'org_name',
       'group_id',
-      'template_id'
+      'template_id',
     ],
   )
 
@@ -43,7 +43,7 @@ export function ComboBoxSelectDevice({
     query,
     deviceFlattenData,
     extractedPropertyKeys,
-  ) as Device[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

@@ -10,9 +10,8 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { UpdateUser } from './UpdateUser'
 import { STATUS } from '../Attributes'
-import { useDeleteUser } from '../../api/userAPI'
+import { type UserInfo, useDeleteUser } from '../../api/userAPI'
 
-import { type UserInfo } from '~/features/auth'
 import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
@@ -60,7 +59,7 @@ function UserTableContextMenu({
         }
       >
         <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-1 py-1">
+          <div className="p-1">
             <MenuItem
               icon={
                 <img src={btnEditIcon} alt="Edit user" className="h-5 w-5" />

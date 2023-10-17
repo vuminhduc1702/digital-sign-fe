@@ -1,6 +1,6 @@
 import { configureAuth } from 'react-query-auth'
 
-import { getUser, type UserResponse } from '~/features/auth'
+import { type UserResponse } from '~/features/auth'
 import {
   type LoginCredentialsDTO,
   loginWithEmailAndPassword,
@@ -13,24 +13,19 @@ import { PATHS } from '~/routes/PATHS'
 
 import storage from '~/utils/storage'
 
-// TODO: [TS] fix userFn to accept type User
-
 async function handleUserResponse(data: UserResponse) {
   const user = data
   storage.setToken({
     token: user.token,
     system_role: user.system_role,
     timestamp: new Date(),
+    device_token: user.device_token,
   })
   return user
 }
 
 async function userFn() {
-  if (storage.getToken()) {
-    const data = await getUser()
-    return data
-  }
-  return null
+  return (storage.getToken() as UserResponse) || null
 }
 
 async function loginFn(data: LoginCredentialsDTO) {

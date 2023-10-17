@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint/no-duplicate-imports': 'warn',
     'no-unused-vars': 'off',
     'tailwindcss/migration-from-tailwind-2': 'off',
+    'tailwindcss/no-custom-classname': 'off',
   },
   settings: {
     tailwindcss: {

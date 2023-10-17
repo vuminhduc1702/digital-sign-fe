@@ -5,10 +5,8 @@ import { useParams } from 'react-router-dom'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
-import { useGetUsers } from '../api/userAPI'
+import { type UserInfo, useGetUsers } from '../api/userAPI'
 import { ComboBoxSelectUser, CreateUser, UserTable } from '../components/User'
-
-import { type UserInfo } from '~/features/auth'
 
 export function UserManage() {
   const { t } = useTranslation()

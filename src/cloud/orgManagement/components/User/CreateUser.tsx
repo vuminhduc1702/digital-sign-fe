@@ -71,8 +71,6 @@ export function CreateUser() {
   const [option, setOption] = useState<SelectOptionString>()
   const [role, setRole] = useState<SelectOptionString>()
 
-  // TODO: Create Role SelectDropdown
-
   return (
     <FormDrawer
       isDone={isSuccess}

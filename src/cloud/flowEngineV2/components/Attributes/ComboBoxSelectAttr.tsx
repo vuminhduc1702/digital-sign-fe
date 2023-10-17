@@ -41,7 +41,7 @@ export function ComboBoxSelectThing({
     query,
     thingFlattenData,
     extractedPropertyKeys,
-  ) as EntityThing[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

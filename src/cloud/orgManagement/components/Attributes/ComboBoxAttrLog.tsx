@@ -34,7 +34,7 @@ export function ComboBoxAttrLog({
     query,
     attrLogFlattenData,
     extractedPropertyKeys,
-  ) as DeviceAttrLog[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

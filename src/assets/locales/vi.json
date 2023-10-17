@@ -48,7 +48,8 @@
     "hello": "Chào",
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
-    "support": "Hỗ trợ"
+    "support": "Hỗ trợ",
+    "manual": "Hướng dẫn sử dụng"
   },
   "cloud": {
     "project_manager": {
@@ -119,7 +120,8 @@
           "success_update": "Sửa tổ chức thành công",
           "success_delete": "Xoá tổ chức thành công",
           "choose_org": "Vui lòng chọn tổ chức",
-          "choose_avatar": "Vui lòng chọn ảnh đại diện"
+          "choose_avatar": "Vui lòng chọn ảnh đại diện",
+          "no_org": "Không trực thuộc tổ chức"
         },
         "add_attr": {
           "title": "Tạo mới thuộc tính",
@@ -155,7 +157,8 @@
           "parent": "Trực thuộc tổ chức",
           "success_create": "Tạo nhóm thành công",
           "success_update": "Sửa nhóm thành công",
-          "success_delete": "Xoá nhóm thành công"
+          "success_delete": "Xoá nhóm thành công",
+          "success_update_org": "Chuyển nhóm sang tổ chức khác thành công"
         }
       },
       "user_manage": {
@@ -356,7 +359,7 @@
         },
         "title": "Nghiệp vụ",
         "info": "Thông tin",
-        "tab_2": "Tab 2",
+        "tab_2": "Lịch sử bản tin",
         "create": "Tạo nghiệp vụ",
         "list_service": "Danh sách nghiệp vụ",
         "success_create": "Tạo nghiệp vụ thành công",
@@ -386,7 +389,12 @@
         "note": "Ghi chú",
         "status": "Trạng thái",
         "run": "Run",
-        "debug": "Debug mode"
+        "debug": "Debug mode",
+        "maximize_result": "Phóng to editor",
+        "minimize_result": "Thu nhỏ editor",
+        "default_result": "Mặc định",
+        "hide_console": "Ẩn console",
+        "view_console": "Hiện console"
       },
       "thing": {
         "title": "Thing",
@@ -503,11 +511,11 @@
           "create": "Tạo biểu đồ cho dashboard",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
-          "pie_chart": "Biểu đồ máy đo",
+          "pie_chart": "Biểu đồ tròn",
+          "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
-          "data_table": "Bảng dữ liệu",
-          "switch": "Công tắc",
-          "data_chart": "Dữ liệu"
+          "data_chart": "Dữ liệu",
+          "data_table": "Bảng dữ liệu"
         }
       }
     },
@@ -546,6 +554,47 @@
       }
     }
   },
+  "billing": {
+    "package_manage": {
+      "list_package": "Danh sách gói cước",
+      "title": "Thông tin gói cước",
+      "create": "Tạo gói cước",
+      "delete_plan": "Xoá gói cước",
+      "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
+      "id": "ID",
+      "description": "Mô tả",
+      "popup": {
+        "name": "Tên gói",
+        "type": "Loại gói",
+        "description": "Mô tả gói",
+        "status": "Trạng thái",
+        "payment_type": "Loại thanh toán",
+        "type_period": "Loại chu kỳ tính tiền",
+        "period": "Chu kỳ tính tiền",
+        "fix_cost": "Chi phí cố định hàng kỳ",
+        "charging_unit": "Đơn vị tính",
+        "estimate": "Phương pháp định giá",
+        "estimated_payment": "Ước tính số tiền thanh toán",
+        "unit_price": "Đơn giá",
+        "max": "Tối đa",
+        "data_plan": "Dữ liệu gói cước",
+        "price": "Số tiền",
+        "quantity_free": "Miễn phí",
+        "level": "Từ {{NUMBER}} đến",
+        "free": "Miễn phí",
+        "tax": "Thuế GTGT(%)",
+        "expiry": "Thời gian gia hạn",
+        "choose_period": "Vui lòng nhập chu kỳ tính tiền",
+        "choose_expiry": "Thời gian gia hạn phải nhỏ hơn chu kỳ tính tiền",
+        "choose_plan_price": "Vui lòng nhập số tiền",
+        "expected_number": "Số lượng dự kiến",
+        "expected_payment": "Dự kiến thanh toán",
+        "success_create": "Tạo gói cước thành công",
+        "success_update": "Cập nhật gói cước thành công",
+        "success_delete": "Xoá gói cước thành công"
+      }
+    }
+  },
   "table": {
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
@@ -580,7 +629,11 @@
     "back": "Quay lại",
     "next": "Tiếp theo",
     "close": "Đóng",
-    "confirm": "Xác nhận"
+    "confirm": "Xác nhận",
+    "delete": "Xóa",
+    "update": "Sửa",
+    "save": "Lưu",
+    "cancel": "Hủy"
   },
   "error": {
     "no_data": "Không có dữ liệu",
@@ -626,7 +679,8 @@
     "change_email": "Đổi email",
     "change_phone": "Đổi số điện thoại",
     "change_address": "Đổi địa chỉ",
-    "create_user": "Đăng ký tài khoản thành công"
+    "create_user": "Đăng ký tài khoản thành công",
+    "copy_device_token": "Copy token thiết bị"
   },
   "flow_engine": {
     "title": "Flow Engine"

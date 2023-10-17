@@ -13,6 +13,8 @@ type FieldWrapperProps = {
   disabled?: boolean
   require?: boolean
   classNameError?: string
+  classlabel?: string
+  classchild?: string
 }
 
 export type FieldWrapperPassThroughProps = Omit<
@@ -21,7 +23,7 @@ export type FieldWrapperPassThroughProps = Omit<
 >
 
 export const FieldWrapper = (props: FieldWrapperProps) => {
-  const { label, className, error, children, require, classNameError } = props
+  const { label, className, error, children, require, classNameError, classlabel, classchild } = props
   return (
     <div className="relative w-full">
       <label
@@ -32,9 +34,9 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
             {label} <span className="text-primary-400">*</span>
           </p>
         ) : (
-          <p>{label}</p>
+          <p className={cn('', classlabel)}>{label}</p>
         )}
-        <div>{children}</div>
+        <div className={cn('', classchild)}>{children}</div>
       </label>
       {error?.message && (
         <div

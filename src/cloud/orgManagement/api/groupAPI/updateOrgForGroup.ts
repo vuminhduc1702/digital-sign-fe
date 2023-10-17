@@ -1,13 +1,13 @@
-import { useMutation } from "@tanstack/react-query"
-import { useTranslation } from "react-i18next"
-import { axios } from "~/lib/axios"
-import { MutationConfig, queryClient } from "~/lib/react-query"
-import { useNotificationStore } from "~/stores/notifications"
+import { useMutation } from '@tanstack/react-query'
+import { useTranslation } from 'react-i18next'
+import { axios } from '~/lib/axios'
+import { type MutationConfig, queryClient } from '~/lib/react-query'
+import { useNotificationStore } from '~/stores/notifications'
 
 export type UpdateOrgForGroupDTO = {
   data: {
-    ids?: string[],
-    org_id?: string
+    ids: string[]
+    org_id: string
   }
 }
 
@@ -19,7 +19,9 @@ type UseUpdateOrgForGroupOptions = {
   config?: MutationConfig<typeof updateOrgForGroup>
 }
 
-export const useUpdateOrgForGroup = ({ config }: UseUpdateOrgForGroupOptions = {}) => {
+export const useUpdateOrgForGroup = ({
+  config,
+}: UseUpdateOrgForGroupOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -27,12 +29,12 @@ export const useUpdateOrgForGroup = ({ config }: UseUpdateOrgForGroupOptions = {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['orgs'],
+        queryKey: ['groups'],
       })
-      // addNotification({
-      //   type: 'success',
-      //   title: t('cloud:org_manage.org_manage.add_org.success_update'),
-      // })
+      addNotification({
+        type: 'success',
+        title: t('cloud:org_manage.group_manage.add_group.success_update_org'),
+      })
     },
     ...config,
     mutationFn: updateOrgForGroup,

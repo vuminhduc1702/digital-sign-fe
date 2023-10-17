@@ -422,7 +422,7 @@ export function UpdateRole({
                     startIcon={
                       <img
                         src={btnDeleteIcon}
-                        alt="Delete condition"
+                        alt="Delete policy"
                         className="h-10 w-10"
                       />
                     }

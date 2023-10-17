@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 
-import { type UserInfo, type UserList } from '~/features/auth'
+import { type UserInfo, type UserList } from '../../api/userAPI'
 
 import { SearchIcon } from '~/components/SVGIcons'
 
@@ -21,14 +21,24 @@ export function ComboBoxSelectUser({
 
   const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
     data?.users,
-    ['user_id', 'name', 'email', 'role_name', 'activate', 'org_id', 'org_name', 'role_name', 'role_id'],
+    [
+      'user_id',
+      'name',
+      'email',
+      'role_name',
+      'activate',
+      'org_id',
+      'org_name',
+      'role_name',
+      'role_id',
+    ],
   )
 
   const filteredData = filteredComboboxData(
     query,
     userFlattenData,
     extractedPropertyKeys,
-  ) as UserInfo[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

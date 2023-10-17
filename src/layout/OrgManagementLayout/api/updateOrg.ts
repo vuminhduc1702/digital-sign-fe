@@ -19,9 +19,13 @@ export const updateOrg = ({ data, org_id }: UpdateOrgDTO) => {
 
 type UseUpdateOrgOptions = {
   config?: MutationConfig<typeof updateOrg>
+  isOnCreateOrg?: boolean
 }
 
-export const useUpdateOrg = ({ config }: UseUpdateOrgOptions = {}) => {
+export const useUpdateOrg = ({
+  config,
+  isOnCreateOrg,
+}: UseUpdateOrgOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -31,10 +35,11 @@ export const useUpdateOrg = ({ config }: UseUpdateOrgOptions = {}) => {
       await queryClient.invalidateQueries({
         queryKey: ['orgs'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.org_manage.add_org.success_update'),
-      })
+      !isOnCreateOrg &&
+        addNotification({
+          type: 'success',
+          title: t('cloud:org_manage.org_manage.add_org.success_update'),
+        })
     },
     ...config,
     mutationFn: updateOrg,

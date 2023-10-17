@@ -4,7 +4,12 @@ import { axios } from '~/lib/axios'
 import { limitPagination } from '~/utils/const'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type UserList } from '~/features/auth'
+import { type UserInfo } from './getUserInfo'
+import { type BasePagination } from '~/types'
+
+export type UserList = {
+  users: UserInfo[]
+} & BasePagination
 
 type GetUsers = {
   projectId: string

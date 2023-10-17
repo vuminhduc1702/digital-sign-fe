@@ -1,15 +1,10 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
-import * as z from 'zod'
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
-import { type widgetConfigSchema } from '../components/DashboardTable'
-
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type Widget } from '../components/Widget'
 
-type WidgetConfig = z.infer<typeof widgetConfigSchema>
-
-type DashboardByIdRes = {
+export type DashboardByIdRes = {
   id: string
   name: string
   created_time: number
@@ -17,10 +12,10 @@ type DashboardByIdRes = {
   tenant_id: string
   configuration: {
     description: string
-    widgets: WidgetConfig &
+    widgets: Widget &
       Partial<
         Record<
-          keyof WidgetConfig,
+          keyof Widget,
           {
             id: string
           }

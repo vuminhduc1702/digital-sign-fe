@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -39,14 +39,11 @@ export function CreateProject() {
   const { t } = useTranslation()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const {
-    data: dataUploadImage,
-    mutate: mutateUploadImage,
-    isLoading: isLoadingUploadImage,
-    isSuccess: isSuccessUploadImage,
-  } = useUploadImage()
+  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
 
-  const { mutate: mutateUpdateProject } = useUpdateProject()
+  const { mutate: mutateUpdateProject } = useUpdateProject({
+    isOnCreateProject: true,
+  })
 
   const avatarRef = useRef<HTMLImageElement>(null)
   const {
@@ -58,45 +55,18 @@ export function CreateProject() {
   })
 
   const {
-    data: dataCreateProject,
-    mutate: mutateCreateProject,
+    mutateAsync: mutateAsyncCreateProject,
     isLoading: isLoadingCreateProject,
     isSuccess: isSuccessCreateProject,
   } = useCreateProject()
 
-  useEffect(() => {
-    if (isSuccessCreateProject && dataCreateProject != null) {
-      mutateUploadImage({
-        data: {
-          project_id: dataCreateProject.id,
-          file: getValueUploadImage('file'),
-        },
-      })
-      handleResetDefaultImage()
-    }
-  }, [dataCreateProject])
-
-  useEffect(() => {
-    if (
-      isSuccessUploadImage &&
-      dataUploadImage != null &&
-      dataCreateProject != null
-    ) {
-      mutateUpdateProject({
-        data: {
-          name: dataCreateProject.name,
-          description: dataCreateProject.description,
-          image: dataUploadImage.link,
-        },
-        projectId: dataCreateProject.id,
-      })
-    }
-  }, [dataUploadImage])
-
   function handleResetDefaultImage() {
-    if (avatarRef.current != null) {
-      avatarRef.current.src = defaultProjectImage
-      fetch(avatarRef.current.src)
+    setUploadImageErr('')
+    if (getValueUploadImage('file') != null) {
+      if (avatarRef.current != null) {
+        avatarRef.current.src = defaultProjectImage
+      }
+      fetch(defaultProjectImage)
         .then(res => res.blob())
         .then(blob => {
           const defaultFile = new File([blob], 'default-project.png', blob)
@@ -116,20 +86,35 @@ export function CreateProject() {
     <FormDialog
       size="md"
       title={t('cloud:project_manager.add_project.title')}
-      id="create-project"
       isDone={isSuccessCreateProject}
-      setCustomState={() => setUploadImageErr('')}
+      resetData={handleResetDefaultImage}
       body={
         <Form<CreateProjectDTO['data'], typeof CreateProjectSchema>
           id="create-project"
           className="flex flex-col justify-between"
-          onSubmit={values => {
-            mutateCreateProject({
+          onSubmit={async values => {
+            const dataCreateProject = await mutateAsyncCreateProject({
               data: {
                 name: values.name,
                 description: values.description,
               },
             })
+            if (getValueUploadImage('file') != null) {
+              const dataUploadImage = await mutateAsyncUploadImage({
+                data: {
+                  project_id: dataCreateProject.id,
+                  file: getValueUploadImage('file'),
+                },
+              })
+              mutateUpdateProject({
+                data: {
+                  name: dataCreateProject.name,
+                  description: dataCreateProject.description,
+                  image: dataUploadImage.data.link,
+                },
+                projectId: dataCreateProject.id,
+              })
+            }
           }}
           schema={CreateProjectSchema}
         >
@@ -160,6 +145,7 @@ export function CreateProject() {
                       name="upload-image"
                       ref={fileInputRef}
                       onChange={event => {
+                        setUploadImageErr('')
                         const file = event.target.files[0]
                         const formData = new FormData()
                         formData.append('file', event.target.files[0])
@@ -228,7 +214,7 @@ export function CreateProject() {
       }
       confirmButton={
         <Button
-          isLoading={isLoadingCreateProject || isLoadingUploadImage}
+          isLoading={isLoadingCreateProject}
           form="create-project"
           type="submit"
           size="md"

@@ -61,7 +61,6 @@ export const FormDialog = ({
     onClick: () => {
       open()
       resetData?.()
-      setCustomState?.()
     },
   })
 

@@ -19,16 +19,18 @@ export function ComboBoxSelectRole({
 }) {
   const [query, setQuery] = useState('')
 
-  const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
-    data,
-    ['id', 'name', 'policies', 'role_type'],
-  )
+  const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(data, [
+    'id',
+    'name',
+    'policies',
+    'role_type',
+  ])
 
   const filteredData = filteredComboboxData(
     query,
     roleFlattenData,
     extractedPropertyKeys,
-  ) as Role[]
+  )
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)

@@ -89,6 +89,9 @@
   right: 0;
   cursor: se-resize;
 }
+.react-grid-item[data-iseditmode='false'] > .react-resizable-handle {
+  cursor: default;
+}
 
 .react-grid-item > .react-resizable-handle::after {
   content: '';

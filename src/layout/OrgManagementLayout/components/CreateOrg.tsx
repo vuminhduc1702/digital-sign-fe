@@ -78,8 +78,17 @@ export function CreateOrg() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+
   const clearData = () => {
     setOptionOrg(null)
+    setUploadImageErr('')
+    handleResetDefaultImage()
   }
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -91,55 +100,22 @@ export function CreateOrg() {
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
-  const { mutate: mutateUpdateOrg } = useUpdateOrg()
+  const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
 
   const {
-    data: dataCreateOrg,
-    mutate: mutateCreateOrg,
+    mutateAsync: mutateAsyncCreateOrg,
     isLoading: isLoadingCreateOrg,
     isSuccess: isSuccessCreateOrg,
   } = useCreateOrg()
 
-  const {
-    data: dataUploadImage,
-    mutate: mutateUploadImage,
-    isSuccess: isSuccessUploadImage,
-  } = useUploadImage()
-
-  useEffect(() => {
-    if (isSuccessCreateOrg && dataCreateOrg != null) {
-      mutateUploadImage({
-        data: {
-          project_id: projectId,
-          file: getValueUploadImage('file'),
-        },
-      })
-      handleResetDefaultImage()
-    }
-  }, [dataCreateOrg])
-
-  useEffect(() => {
-    if (
-      isSuccessUploadImage &&
-      dataUploadImage != null &&
-      dataCreateOrg != null
-    ) {
-      mutateUpdateOrg({
-        data: {
-          name: dataCreateOrg.name,
-          description: dataCreateOrg.description,
-          org_id: dataCreateOrg.org_id,
-          image: dataUploadImage.data.link,
-        },
-        org_id: dataCreateOrg.id,
-      })
-    }
-  }, [dataUploadImage])
+  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
 
   function handleResetDefaultImage() {
-    if (avatarRef.current != null) {
-      avatarRef.current.src = defaultOrgImage
-      fetch(avatarRef.current.src)
+    if (getValueUploadImage('file') != null) {
+      if (avatarRef.current != null) {
+        avatarRef.current.src = defaultOrgImage
+      }
+      fetch(defaultOrgImage)
         .then(res => res.blob())
         .then(blob => {
           const defaultFile = new File([blob], 'default-project.png', blob)
@@ -183,8 +159,8 @@ export function CreateOrg() {
     >
       <Form<CreateOrgDTO['data'], typeof orgSchema>
         id="create-org"
-        onSubmit={values => {
-          mutateCreateOrg({
+        onSubmit={async values => {
+          const dataCreateOrg = await mutateAsyncCreateOrg({
             data: {
               project_id: projectId,
               org_id: optionOrg?.value,
@@ -192,6 +168,23 @@ export function CreateOrg() {
               description: values.description,
             },
           })
+          if (getValueUploadImage('file') != null) {
+            const dataUploadImage = await mutateAsyncUploadImage({
+              data: {
+                project_id: projectId,
+                file: getValueUploadImage('file'),
+              },
+            })
+            mutateUpdateOrg({
+              data: {
+                name: dataCreateOrg.name,
+                description: dataCreateOrg.description,
+                org_id: dataCreateOrg.org_id,
+                image: dataUploadImage.data.link,
+              },
+              org_id: dataCreateOrg.id,
+            })
+          }
         }}
         schema={orgSchema}
       >
@@ -210,10 +203,7 @@ export function CreateOrg() {
                   name="org_id"
                   control={control}
                   options={
-                    orgFlattenData?.map(org => ({
-                      label: org?.name,
-                      value: org?.id,
-                    })) || [{ label: t('loading:org'), value: '' }]
+                    orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
                   onChange={e => {
                     setOptionOrg(e)
@@ -239,6 +229,7 @@ export function CreateOrg() {
                   name="upload-image"
                   ref={fileInputRef}
                   onChange={event => {
+                    setUploadImageErr('')
                     const file = event.target.files[0]
                     const formData = new FormData()
                     formData.append('file', event.target.files[0])

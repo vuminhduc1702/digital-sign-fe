@@ -94,7 +94,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               <InputField
                 type="email"
                 className="mt-5 bg-stone-300"
-                classNameFieldWrapper="relative"
+                classnamefieldwrapper="relative"
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
@@ -113,7 +113,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               <InputField
                 type="password"
                 className="bg-stone-300"
-                classNameFieldWrapper="relative"
+                classnamefieldwrapper="relative"
                 placeholder={t('auth:require_password')}
                 error={formState.errors['password']}
                 registration={register('password')}
@@ -129,7 +129,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
               <InputField
                 type="password"
                 className="bg-stone-300"
-                classNameFieldWrapper="relative"
+                classnamefieldwrapper="relative"
                 error={formState.errors['confirmPassword']}
                 registration={register('confirmPassword')}
                 placeholder={t('auth:confirm_password')}
