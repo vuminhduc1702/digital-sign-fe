@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
+import type ReactGridLayout from 'react-grid-layout'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type Widget } from '../components/Widget'
 
@@ -21,6 +22,9 @@ export type DashboardByIdRes = {
           }
         >
       >
+  }
+  dashboard_setting: {
+    layout: ReactGridLayout.Layout[]
   }
 }
 

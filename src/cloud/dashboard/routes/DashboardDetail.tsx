@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
-import RGL, { WidthProvider } from 'react-grid-layout'
+import type RGL from 'react-grid-layout'
+import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
@@ -80,14 +81,8 @@ export function DashboardDetail() {
     useState<WidgetCategoryType>('LINE')
   const [isMultipleAttr, setIsMultipleAttr] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
-
-  const ReactGridLayout = useMemo(() => WidthProvider(RGL), [])
-  const layout: RGL.Layout[] = [
-    { i: '0', x: 0, y: 0, w: 5, h: 5 },
-    { i: '1', x: 5, y: 0, w: 5, h: 5 },
-    { i: '2', x: 0, y: 5, w: 5, h: 5 },
-    { i: '3', x: 5, y: 5, w: 5, h: 5 },
-  ]
+  const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
+  console.log('layoutDashboard', layoutDashboard)
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -99,41 +94,36 @@ export function DashboardDetail() {
         staleTime: 0,
       },
     })
+  const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const widgetListRef = useRef<Widget>({})
   // console.log('widgetListRef', widgetListRef.current)
   const [widgetList, setWidgetList] = useState<Widget>({})
-  console.log('widgetList', widgetList)
+  // console.log('widgetList', widgetList)
+
+  const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
 
   useEffect(() => {
-    if (detailDashboard?.configuration?.widgets != null) {
-      widgetListRef.current = detailDashboard?.configuration?.widgets
+    if (widgetDetailDB != null) {
+      widgetListRef.current = widgetDetailDB
 
-      const widgetIdList = Object.keys(detailDashboard?.configuration?.widgets)
+      const widgetIdList = Object.keys(widgetDetailDB)
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
+          handleSendMessage(widgetDetailDB?.[widgetId]?.datasource.init_message)
           handleSendMessage(
-            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
-              .init_message,
-          )
-          handleSendMessage(
-            detailDashboard?.configuration?.widgets?.[widgetId]?.datasource
-              .realtime_message,
+            widgetDetailDB?.[widgetId]?.datasource.realtime_message,
           )
         })
       }
-    } else if (
-      detailDashboard?.configuration?.widgets == null &&
-      Object.keys(widgetList).length > 0
-    ) {
+    } else if (widgetDetailDB == null && Object.keys(widgetList).length > 0) {
       widgetListRef.current = widgetList
 
       const widgetIdList = Object.keys(widgetList)
@@ -144,7 +134,7 @@ export function DashboardDetail() {
         })
       }
     }
-  }, [detailDashboard?.configuration?.widgets, handleSendMessage, widgetList])
+  }, [widgetDetailDB, handleSendMessage, widgetList])
 
   function combinedObject(data: Array<TimeSeries>) {
     let combinedObject: TimeSeries = {}
@@ -165,80 +155,94 @@ export function DashboardDetail() {
     return combinedObject
   }
 
-  const showSpinner = useSpinDelay(connectionStatus !== 'Open', {
+  const showSpinner = useSpinDelay(connectionStatus === 'Connecting', {
     delay: 150,
     minDuration: 300,
-  })
-  console.log('wtf: ', {
-    ...detailDashboard?.configuration?.widgets,
-    ...widgetList,
   })
 
   return (
     <div className="flex grow flex-col">
       <TitleBar title={`${t('cloud:dashboard.title')}: ${dashboardName}`} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {detailDashboard?.configuration?.widgets == null &&
-        Object.keys(widgetList).length === 0 ? (
+        {widgetDetailDB == null &&
+        Object.keys(widgetList).length === 0 &&
+        connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
         ) : null}
 
-        {(detailDashboard?.configuration?.widgets != null ||
-          Object.keys(widgetList).length > 0) &&
-          Object.keys(
-            Object.keys(widgetList).length === 0
-              ? detailDashboard?.configuration?.widgets
-              : { ...detailDashboard?.configuration?.widgets, ...widgetList },
-          ).map((widgetId, index) => {
-            const allWidgetData =
-              Object.keys(widgetList).length === 0
-                ? detailDashboard?.configuration?.widgets
-                : {
-                    ...detailDashboard?.configuration?.widgets,
-                    ...widgetList,
-                  }
+        {connectionStatus === 'Open' ? (
+          <ReactGridLayout
+            // cols={{ xxs: 1, xs: 1, sm: 2, md: 2, lg: 3 }}
+            margin={[20, 20]}
+            isDraggable={isEditMode}
+            isResizable={isEditMode}
+            onLayoutChange={e => setLayoutDashboard(e)}
+          >
+            {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
+              Object.keys(
+                Object.keys(widgetList).length === 0
+                  ? widgetDetailDB
+                  : {
+                      ...widgetDetailDB,
+                      ...widgetList,
+                    },
+              ).map((widgetId, index) => {
+                const allWidgetData =
+                  Object.keys(widgetList).length === 0
+                    ? widgetDetailDB
+                    : {
+                        ...widgetDetailDB,
+                        ...widgetList,
+                      }
 
-            const realtimeValues: TimeSeries =
-              lastJsonMessage?.id === widgetId
-                ? combinedObject(
-                    lastJsonMessage?.data?.map(device => device.timeseries),
-                  )
-                : {}
+                const realtimeValues: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => device.timeseries),
+                      )
+                    : {}
+                console.log('realtimeValues', realtimeValues)
 
-            return connectionStatus === 'Open' ? (
-              <ReactGridLayout
-                // layout={layout}
-                rowHeight={500}
-                cols={2}
-                isDraggable={isEditMode}
-                isResizable={isEditMode}
-                margin={[20, 20]}
-                // onLayoutChange={e => console.log(e)}
-              >
-                <div
-                  key={index}
-                  className={cn(
-                    'relative bg-secondary-500',
-                    isEditMode && 'cursor-grab',
-                  )}
-                  data-iseditmode={isEditMode}
-                >
-                  <p className="absolute ml-2 mt-2">
-                    {allWidgetData?.[widgetId]?.title ?? ''}
-                  </p>
-                  {allWidgetData?.[widgetId]?.type === 'LINE' ? (
-                    <LineChart data={realtimeValues} />
-                  ) : null}
-                </div>
-              </ReactGridLayout>
-            ) : (
-              <div className="flex grow items-center justify-center">
-                <Spinner showSpinner={showSpinner} size="xl" />
-              </div>
-            )
-          })}
+                return (
+                  <div
+                    key={widgetId}
+                    data-grid={
+                      detailDashboard?.dashboard_setting?.layout?.length > 0
+                        ? detailDashboard?.dashboard_setting?.layout?.find(
+                            layout => layout.i === widgetId,
+                          )
+                        : {
+                            // x: index % 2 === 0 ? 0 : 4,
+                            x: index % 2 === 0 ? 0 : 6,
+                            y: 0,
+                            // w: 4,
+                            w: 6,
+                            h: 3,
+                          }
+                    }
+                    className={cn(
+                      'relative bg-secondary-500',
+                      isEditMode && 'cursor-grab',
+                    )}
+                    data-iseditmode={isEditMode}
+                  >
+                    <p className="absolute ml-2 mt-2">
+                      {allWidgetData?.[widgetId]?.title ?? ''}
+                    </p>
+                    {allWidgetData?.[widgetId]?.type === 'LINE' ? (
+                      <LineChart data={realtimeValues} />
+                    ) : null}
+                  </div>
+                )
+              })}
+          </ReactGridLayout>
+        ) : (
+          <div className="flex grow items-center justify-center">
+            <Spinner showSpinner={showSpinner} size="xl" />
+          </div>
+        )}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
@@ -248,7 +252,8 @@ export function DashboardDetail() {
               size="square"
               onClick={() => {
                 setIsEditMode(false)
-                detailDashboardRefetch()
+                setWidgetList({})
+                // detailDashboardRefetch()
               }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
@@ -275,6 +280,9 @@ export function DashboardDetail() {
                             detailDashboard?.configuration?.description,
                           widgets: widgetListRef.current,
                         },
+                        dashboard_setting: {
+                          layout: layoutDashboard,
+                        },
                       },
                       dashboardId,
                     })
@@ -283,6 +291,7 @@ export function DashboardDetail() {
                       data: {
                         title: detailDashboard?.title,
                         configuration: detailDashboard?.configuration,
+                        dashboard_setting: detailDashboard?.dashboard_setting,
                       },
                       dashboardId,
                     })

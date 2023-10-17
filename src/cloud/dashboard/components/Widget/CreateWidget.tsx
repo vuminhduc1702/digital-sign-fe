@@ -121,9 +121,11 @@ export const widgetCreateSchema = z.object({
     startDate: z.date({
       required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
     }),
-    endDate: z.date({
-      required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
-    }),
+    endDate: z
+      .date({
+        required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
+      })
+      .optional(),
     dataType: widgetDataTypeSchema,
     widgetType: widgetTypeSchema,
   }),
@@ -211,7 +213,7 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  console.log('zod errors', formState.errors)
+  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -827,7 +829,9 @@ export function CreateWidget({
                             <FieldWrapper
                               label={t('cloud:dashboard.config_chart.endDate')}
                               error={
-                                formState?.errors?.widgetSetting?.startDate
+                                watch('widgetSetting.dataType') === 'REALTIME'
+                                  ? ''
+                                  : formState?.errors?.widgetSetting?.startDate
                               }
                             >
                               <Controller
@@ -847,6 +851,10 @@ export function CreateWidget({
                                             'relative w-full !justify-start rounded-md text-left font-normal',
                                             !value && 'text-secondary-700',
                                           )}
+                                          disabled={
+                                            watch('widgetSetting.dataType') ===
+                                            'REALTIME'
+                                          }
                                         >
                                           <CalendarIcon className="mr-2 h-4 w-4" />
                                           {value ? (

@@ -19,6 +19,11 @@ export const dashboardSchema = z.object({
     description: z.string(),
     widgets: widgetListSchema.nullish(),
   }),
+  dashboard_setting: z
+    .object({
+      layout: z.array(z.any()),
+    })
+    .nullish(),
   project_id: z.string().optional(),
 })
 
@@ -69,6 +74,7 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
                 description: values.configuration.description,
                 widgets: null,
               },
+              dashboard_setting: null,
             },
           })
         }}

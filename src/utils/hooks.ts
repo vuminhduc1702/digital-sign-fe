@@ -67,13 +67,20 @@ export const useWS = <T extends JsonValue | null>(url: string) => {
       Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
   })
 
-  const connectionStatus = {
+  type ConnectionStatus =
+    | 'Connecting'
+    | 'Open'
+    | 'Closing'
+    | 'Closed'
+    | 'Uninstantiated'
+  const status: { [key: number]: ConnectionStatus } = {
     [ReadyState.CONNECTING]: 'Connecting',
     [ReadyState.OPEN]: 'Open',
     [ReadyState.CLOSING]: 'Closing',
     [ReadyState.CLOSED]: 'Closed',
     [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState]
+  }
+  const connectionStatus: ConnectionStatus = status[readyState]
 
   return [
     { sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState },

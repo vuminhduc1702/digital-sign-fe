@@ -7,8 +7,8 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 import { type TimeSeries, type WSWidgetData } from '../../types'
 
-export function LineChart({ data }: { data?: TimeSeries }) {
-  // console.log('new', data)
+export function LineChart({ data }: { data: TimeSeries }) {
+  console.log('new', data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -30,11 +30,16 @@ export function LineChart({ data }: { data?: TimeSeries }) {
       if (newValuesRef.current != null) {
         for (const key in data) {
           if (
-            JSON.stringify(prevValuesRef.current[key]) !==
+            prevValuesRef.current[key] != null &&
+            (JSON.stringify(prevValuesRef.current[key]) !==
               JSON.stringify(newValuesRef.current[key]) ||
-            JSON.stringify(prevValuesRef.current[key]) !==
-              JSON.stringify(data[key])
+              JSON.stringify(prevValuesRef.current[key]) !==
+                JSON.stringify(data[key]))
           ) {
+            console.log(
+              'prevValuesRef.current[key]',
+              prevValuesRef.current[key],
+            )
             newValuesRef.current[key] = [
               ...prevValuesRef.current[key],
               ...data[key],
@@ -93,7 +98,7 @@ export function LineChart({ data }: { data?: TimeSeries }) {
     },
   )
 
-  // console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
+  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
 
   return (
     <>

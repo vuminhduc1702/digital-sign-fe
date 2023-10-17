@@ -75,6 +75,7 @@ export function UpdateDashboard({
                 description: values.configuration.description,
                 widgets: null,
               },
+              dashboard_setting: null,
             },
             dashboardId: id,
           })
@@ -86,6 +87,7 @@ export function UpdateDashboard({
               description,
               widgets: null,
             },
+            dashboard_setting: null,
           },
         }}
         schema={dashboardSchema}
