@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
-import { useUser } from '~/lib/auth'
-
+import { useUser, logoutFn } from '~/lib/auth'
+import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 
 import { SectionIntro } from '../components/section-introduction'
 import { SectionSolution } from '../components/section-solution'
@@ -12,17 +11,22 @@ import { SectionClient } from '../components/section-client'
 import { QandA } from '../components/section-Q&A'
 import { SectionNews } from '../components/section-news'
 import { SectionFooter } from '../components/footer'
-import { useEffect, useRef, useState, RefObject } from 'react'
-import { Button } from '~/components/Button'
+
+import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop } from '~/components/SVGIcons'
+import { Button } from '~/components/Button'
+
+import { useEffect, useRef, useState, RefObject } from 'react'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
+
 export function LandingPage() {
   const navigate = useNavigate()
 
   const user = useUser()
+  // const user = useUserInfo()
+  // console.log(user.data)
 
-  const [reLoadPage, setReLoadPage] = useState(false)
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
   const PackOfDataRef: RefObject<HTMLDivElement> = useRef(null)
@@ -123,11 +127,27 @@ export function LandingPage() {
                       <div
                         className="flex min-w-fit items-center justify-center text-white"
                         onClick={() => {
-                          storage.clearToken()
-                          setReLoadPage(true)
+                          // logoutFn()
+                          console.log(user.data)
                         }}
                       >
-                        <button>Đăng xuất</button>
+                        <div className="">
+                          <a href="#" className="">
+                            <img
+                              className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+                              src="https://cdn.24h.com.vn/upload/3-2020/images/2020-08-05/hot-girl-bi-boc-me-nhan-sac-2-1596620332-726-width660height672.jpg"
+                              alt="avatar"
+                            />
+                          </a>
+                        </div>
+                        <div
+                          className="mx-4 text-base font-bold text-white"
+                          onClick={() => {
+                            logoutFn()
+                          }}
+                        >
+                          <button>Đăng Xuất</button>
+                        </div>
                       </div>
                     </div>
                   ) : (
