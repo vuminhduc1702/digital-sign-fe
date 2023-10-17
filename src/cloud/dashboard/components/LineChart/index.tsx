@@ -36,10 +36,6 @@ export function LineChart({ data }: { data: TimeSeries }) {
               JSON.stringify(prevValuesRef.current[key]) !==
                 JSON.stringify(data[key]))
           ) {
-            console.log(
-              'prevValuesRef.current[key]',
-              prevValuesRef.current[key],
-            )
             newValuesRef.current[key] = [
               ...prevValuesRef.current[key],
               ...data[key],
@@ -97,8 +93,6 @@ export function LineChart({ data }: { data: TimeSeries }) {
       minDuration: 300,
     },
   )
-
-  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
 
   return (
     <>

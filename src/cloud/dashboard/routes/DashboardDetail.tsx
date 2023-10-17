@@ -67,7 +67,6 @@ const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURICompo
 
 export function DashboardDetail() {
   const { t } = useTranslation()
-  // console.log('rerender parent')
 
   const dashboardName = useDashboardNameStore(state => state.dashboardName)
 
@@ -82,7 +81,6 @@ export function DashboardDetail() {
   const [isMultipleAttr, setIsMultipleAttr] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
-  console.log('layoutDashboard', layoutDashboard)
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -97,9 +95,7 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const widgetListRef = useRef<Widget>({})
-  // console.log('widgetListRef', widgetListRef.current)
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -109,7 +105,6 @@ export function DashboardDetail() {
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
-
   useEffect(() => {
     if (widgetDetailDB != null) {
       widgetListRef.current = widgetDetailDB
@@ -134,7 +129,12 @@ export function DashboardDetail() {
         })
       }
     }
-  }, [widgetDetailDB, handleSendMessage, widgetList])
+  }, [
+    widgetDetailDB,
+    handleSendMessage,
+    widgetList,
+    Object.keys(widgetList).length,
+  ])
 
   function combinedObject(data: Array<TimeSeries>) {
     let combinedObject: TimeSeries = {}
@@ -203,7 +203,6 @@ export function DashboardDetail() {
                         lastJsonMessage?.data?.map(device => device.timeseries),
                       )
                     : {}
-                console.log('realtimeValues', realtimeValues)
 
                 return (
                   <div
