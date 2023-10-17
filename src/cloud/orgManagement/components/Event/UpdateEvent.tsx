@@ -312,7 +312,7 @@ export function UpdateEvent({
       start_time: startTime,
       end_time: endTime,
     }
-     return interval
+    return interval
   }
 
   return (
@@ -630,11 +630,7 @@ export function UpdateEvent({
               {onClickValue === 'false' && typeEvent === 'event'
                 ? conditionFields.map((field, index) => {
                     return (
-                      <section
-                        className="space-y-2"
-                        style={{ marginTop: '10px' }}
-                        key={field.id}
-                      >
+                      <section className="!mt-3 space-y-2" key={field.id}>
                         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
                           <div className="space-y-1">
                             <SelectDropdown
@@ -779,11 +775,7 @@ export function UpdateEvent({
               </div>
               {actionFields.map((field, index) => {
                 return (
-                  <section
-                    className="space-y-2"
-                    style={{ marginTop: '10px' }}
-                    key={field.id}
-                  >
+                  <section className="!mt-3 space-y-2" key={field.id}>
                     <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                       <div className="space-y-1">
                         <SelectDropdown

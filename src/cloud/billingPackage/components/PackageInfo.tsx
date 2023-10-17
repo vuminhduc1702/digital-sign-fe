@@ -76,16 +76,16 @@ export function PackageInfo() {
     switch (type) {
       case 'day':
         result = parseNumber(value)
-        break;
+        break
       case 'week':
         result = parseNumber(value) * 7
-        break;
+        break
       case 'month':
         result = parseNumber(value) * 30
-        break;
+        break
       case 'year':
         result = parseNumber(value) * 365
-        break;
+        break
       default:
         break
     }
@@ -106,7 +106,7 @@ export function PackageInfo() {
     } else if (estimates === 'unit') {
       result =
         (parseNumber(expected_number) - parseNumber(quantity_free)) *
-        parseNumber(price) +
+          parseNumber(price) +
         parseNumber(fix_cost)
     } else if (estimates === 'mass') {
       plan_lv?.length &&
@@ -114,11 +114,11 @@ export function PackageInfo() {
           if (
             parseNumber(item.level) > parseNumber(expected_number) &&
             (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
-            parseNumber(expected_number)
+              parseNumber(expected_number)
           ) {
             result =
               (parseNumber(expected_number) - parseNumber(item.free)) *
-              parseNumber(item.price) +
+                parseNumber(item.price) +
               parseNumber(fix_cost)
           }
         })
@@ -133,32 +133,32 @@ export function PackageInfo() {
       result =
         (arr.length ? parseNumber(arr[0].price) : 0) + parseNumber(fix_cost)
     } else if (estimates === 'accumulated') {
-      let start = 0;
-      let end = 0;
-      let original = parseNumber(expected_number);
-      let temp = original;
-      let index = 0;
-      let tempPrice = 0;
+      let start = 0
+      let end = 0
+      let original = parseNumber(expected_number)
+      let temp = original
+      let index = 0
+      let tempPrice = 0
 
       while (temp > 0) {
         end = parseNumber(plan_lv?.[index]?.level)
         if (original > end) {
-          tempPrice += (end - start) * parseNumber(plan_lv?.[index]?.price);
+          tempPrice += (end - start) * parseNumber(plan_lv?.[index]?.price)
           temp = original - end
         } else {
-          tempPrice += temp * parseNumber(plan_lv?.[index]?.price);
+          tempPrice += temp * parseNumber(plan_lv?.[index]?.price)
           temp = 0
         }
         start = end
-        index++;
+        index++
         if (index === plan_lv?.length) {
-          tempPrice += temp * parseNumber(plan_lv?.[index - 1]?.price);
-          break;
+          tempPrice += temp * parseNumber(plan_lv?.[index - 1]?.price)
+          break
         }
       }
       result = tempPrice + parseNumber(fix_cost)
     }
-    
+
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
     setExpectedPayment(result)
   }
@@ -238,8 +238,8 @@ export function PackageInfo() {
                   registration={register('name')}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <SelectField
                   label={t('billing:package_manage.popup.type')}
@@ -255,8 +255,8 @@ export function PackageInfo() {
                   }}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <TextAreaField
                   label={t('billing:package_manage.popup.description')}
@@ -264,8 +264,8 @@ export function PackageInfo() {
                   registration={register('description')}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <SelectField
                   label={t('billing:package_manage.popup.status')}
@@ -277,8 +277,8 @@ export function PackageInfo() {
                   ]}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
               </div>
               <p className="!mt-1.5">
@@ -298,14 +298,14 @@ export function PackageInfo() {
                     type === 'trial'
                       ? [{ label: 'Trả trước', value: 'PREPAY' }]
                       : [
-                        { label: 'Trả trước', value: 'PREPAY' },
-                        { label: 'Trả sau', value: 'POSTPAID' },
-                      ]
+                          { label: 'Trả trước', value: 'PREPAY' },
+                          { label: 'Trả sau', value: 'POSTPAID' },
+                        ]
                   }
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <div className="flex items-center">
                   {paymentType === 'POSTPAID' && (
@@ -315,11 +315,21 @@ export function PackageInfo() {
                       registration={register('expiry')}
                       type="number"
                       classnamefieldwrapper="flex items-center gap-x-3"
-                      classlabel='w-2/12'
-                      classchild='w-10/12'
+                      classlabel="w-2/12"
+                      classchild="w-10/12"
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        if (parseNumber(e.target.value) > parseNumberCalUnit(getValues('period'), getValues('cal_unit'))) {
-                          setError('expiry', { message: t('billing:package_manage.popup.choose_expiry') })
+                        if (
+                          parseNumber(e.target.value) >
+                          parseNumberCalUnit(
+                            getValues('period'),
+                            getValues('cal_unit'),
+                          )
+                        ) {
+                          setError('expiry', {
+                            message: t(
+                              'billing:package_manage.popup.choose_expiry',
+                            ),
+                          })
                         } else setError('expiry', { message: '' })
                       }}
                     />
@@ -332,54 +342,58 @@ export function PackageInfo() {
                   options={
                     type === 'official' && paymentType === 'PREPAY'
                       ? [
-                        { label: 'Định kỳ', value: 'PERIODIC' },
-                        { label: 'Một lần', value: 'ONCE' },
-                      ]
+                          { label: 'Định kỳ', value: 'PERIODIC' },
+                          { label: 'Một lần', value: 'ONCE' },
+                        ]
                       : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                   }
                   onChange={e => setPeriodType(e.target.value)}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
-                {periodType === 'PERIODIC' ? <div className={cn('',
-                  { 'flex items-center': !formState?.errors?.period?.message },
-                )}>
-                  <div className="grid grow	grid-cols-1 gap-x-4 md:grid-cols-4">
-                    <div className="flex flex-col gap-2 md:col-span-3">
-                      <InputField
-                        label={t('billing:package_manage.popup.period')}
-                        error={formState.errors['period']}
-                        registration={register('period')}
-                        classlabel='w-2/12'
-                        classchild='w-10/12'
-                        type="number"
-                        classnamefieldwrapper="flex items-center gap-x-9"
-                        disabled={isDisabled}
-                      />
+                {periodType === 'PERIODIC' ? (
+                  <div
+                    className={cn('', {
+                      'flex items-center': !formState?.errors?.period?.message,
+                    })}
+                  >
+                    <div className="grid grow	grid-cols-1 gap-x-4 md:grid-cols-4">
+                      <div className="flex flex-col gap-2 md:col-span-3">
+                        <InputField
+                          label={t('billing:package_manage.popup.period')}
+                          error={formState.errors['period']}
+                          registration={register('period')}
+                          classlabel="w-2/12"
+                          classchild="w-10/12"
+                          type="number"
+                          classnamefieldwrapper="flex items-center gap-x-9"
+                          disabled={isDisabled}
+                        />
+                      </div>
+                      <div className="flex items-start">
+                        <SelectField
+                          error={formState.errors['cal_unit']}
+                          registration={register('cal_unit')}
+                          options={[
+                            { label: 'Ngày', value: 'day' },
+                            { label: 'Tuần', value: 'week' },
+                            { label: 'Tháng', value: 'month' },
+                            { label: 'Năm', value: 'year' },
+                          ]}
+                          className="px-2"
+                          disabled={isDisabled}
+                        />
+                      </div>
                     </div>
-                    <div className="flex items-start">
-                      <SelectField
-                        error={formState.errors['cal_unit']}
-                        registration={register('cal_unit')}
-                        options={[
-                          { label: 'Ngày', value: 'day' },
-                          { label: 'Tuần', value: 'week' },
-                          { label: 'Tháng', value: 'month' },
-                          { label: 'Năm', value: 'year' },
-                        ]}
-                        className="px-2"
-                        disabled={isDisabled}
-                      />
-                    </div>
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.period?.message}
+                    </p>
                   </div>
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.period?.message}
-                  </p>
-                </div> :
+                ) : (
                   <div></div>
-                }
+                )}
                 <InputField
                   label={t('billing:package_manage.popup.fix_cost')}
                   error={formState.errors['fix_cost']}
@@ -387,8 +401,8 @@ export function PackageInfo() {
                   type="number"
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <SelectField
                   label={t('billing:package_manage.popup.charging_unit')}
@@ -402,8 +416,8 @@ export function PackageInfo() {
                   className="!mt-0"
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
               </div>
               <p className="!mt-1.5">
@@ -418,19 +432,19 @@ export function PackageInfo() {
                     disabled={isDisabled}
                     options={
                       type === 'official' &&
-                        paymentType === 'POSTPAID' &&
-                        periodType === 'PERIODIC'
+                      paymentType === 'POSTPAID' &&
+                      periodType === 'PERIODIC'
                         ? [
-                          { label: 'Theo khối lượng', value: 'mass' },
-                          { label: 'Cố định', value: 'fix' },
-                          { label: 'Theo đơn vị', value: 'unit' },
-                          { label: 'Theo lũy kế', value: 'accumulated' },
-                          { label: 'Theo bậc thang', value: 'step' },
-                        ]
+                            { label: 'Theo khối lượng', value: 'mass' },
+                            { label: 'Cố định', value: 'fix' },
+                            { label: 'Theo đơn vị', value: 'unit' },
+                            { label: 'Theo lũy kế', value: 'accumulated' },
+                            { label: 'Theo bậc thang', value: 'step' },
+                          ]
                         : [
-                          { label: 'Cố định', value: 'fix' },
-                          { label: 'Theo đơn vị', value: 'unit' },
-                        ]
+                            { label: 'Cố định', value: 'fix' },
+                            { label: 'Theo đơn vị', value: 'unit' },
+                          ]
                     }
                     onChange={e => {
                       setEstimates(e.target.value)
@@ -445,125 +459,129 @@ export function PackageInfo() {
                       setValue('price', '')
                     }}
                     classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel='w-2/12'
-                    classchild='w-10/12'
+                    classlabel="w-2/12"
+                    classchild="w-10/12"
                   />
                   {(estimates === 'mass' ||
                     estimates === 'accumulated' ||
                     estimates === 'step') && (
-                      <div className="flex items-center">
-                        <img
-                          onClick={() => {
-                            let arrPlan = getValues('plan_lv')
-                            const index = getValues('plan_lv')?.length - 1
-                            if (arrPlan[index].level) {
-                              planlvAppend({
-                                level: '',
-                                price: '',
-                                free: '',
-                              })
-                            }
-                          }}
-                          src={btnAddIcon}
-                          alt="add-icon"
-                          className="h-5 w-5 cursor-pointer"
-                        />
-                      </div>
-                    )}
+                    <div className="flex items-center">
+                      <img
+                        onClick={() => {
+                          let arrPlan = getValues('plan_lv')
+                          const index = getValues('plan_lv')?.length - 1
+                          if (arrPlan[index].level) {
+                            planlvAppend({
+                              level: '',
+                              price: '',
+                              free: '',
+                            })
+                          }
+                        }}
+                        src={btnAddIcon}
+                        alt="add-icon"
+                        className="h-5 w-5 cursor-pointer"
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="max-h-[122px] overflow-auto">
                   {estimates === 'mass' ||
-                    estimates === 'accumulated' ||
-                    estimates === 'step'
+                  estimates === 'accumulated' ||
+                  estimates === 'step'
                     ? planlvFields.map((field, index) => {
-                      return (
-                        <section className="flex w-full" key={field.id}>
-                          <div className={cn(
-                            'grid w-full grid-cols-1 gap-x-4',
-                            {
-                              'md:grid-cols-2':
-                                estimates === 'accumulated' ||
-                                estimates === 'step',
-                              'md:grid-cols-3': estimates === 'mass',
-                            },
-                          )}>
-                            <InputField
-                              label={
-                                estimates === 'step'
-                                  ? t('billing:package_manage.popup.max')
-                                  : t(
-                                    'billing:package_manage.popup.level',
-                                  ).replace(
-                                    '{{NUMBER}}',
-                                    index >= 1
-                                      ? getValues('plan_lv')?.[
-                                        index - 1
-                                      ].level?.toString()
-                                      : '1',
-                                  )
-                              }
-                              registration={register(
-                                `plan_lv.${index}.level`,
-                              )}
-                              type="number"
-                              classnamefieldwrapper="flex items-center gap-x-3"
-                              disabled={isDisabled}
-                              classlabel='w-2/12'
-                              classchild='w-10/12'
-                            />
-                            <div>
+                        return (
+                          <section className="flex w-full" key={field.id}>
+                            <div
+                              className={cn('grid w-full grid-cols-1 gap-x-4', {
+                                'md:grid-cols-2':
+                                  estimates === 'accumulated' ||
+                                  estimates === 'step',
+                                'md:grid-cols-3': estimates === 'mass',
+                              })}
+                            >
                               <InputField
                                 label={
                                   estimates === 'step'
-                                    ? t('billing:package_manage.popup.price')
+                                    ? t('billing:package_manage.popup.max')
                                     : t(
-                                      'billing:package_manage.popup.unit_price',
-                                    )
+                                        'billing:package_manage.popup.level',
+                                      ).replace(
+                                        '{{NUMBER}}',
+                                        index >= 1
+                                          ? getValues('plan_lv')?.[
+                                              index - 1
+                                            ].level?.toString()
+                                          : '1',
+                                      )
                                 }
                                 registration={register(
-                                  `plan_lv.${index}.price`,
+                                  `plan_lv.${index}.level`,
                                 )}
-                                min="1"
                                 type="number"
-                                disabled={isDisabled}
                                 classnamefieldwrapper="flex items-center gap-x-3"
-                                classlabel='w-2/12'
-                                classchild='w-10/12'
+                                disabled={isDisabled}
+                                classlabel="w-2/12"
+                                classchild="w-10/12"
                               />
-                              <p className="text-body-sm text-primary-400">
-                                {formState?.errors?.plan_lv?.[index]?.price?.message}
-                              </p>
+                              <div>
+                                <InputField
+                                  label={
+                                    estimates === 'step'
+                                      ? t('billing:package_manage.popup.price')
+                                      : t(
+                                          'billing:package_manage.popup.unit_price',
+                                        )
+                                  }
+                                  registration={register(
+                                    `plan_lv.${index}.price`,
+                                  )}
+                                  min="1"
+                                  type="number"
+                                  disabled={isDisabled}
+                                  classnamefieldwrapper="flex items-center gap-x-3"
+                                  classlabel="w-2/12"
+                                  classchild="w-10/12"
+                                />
+                                <p className="text-body-sm text-primary-400">
+                                  {
+                                    formState?.errors?.plan_lv?.[index]?.price
+                                      ?.message
+                                  }
+                                </p>
+                              </div>
+                              {estimates === 'mass' && (
+                                <InputField
+                                  label={t('billing:package_manage.popup.free')}
+                                  registration={register(
+                                    `plan_lv.${index}.free`,
+                                  )}
+                                  type="number"
+                                  classnamefieldwrapper="flex items-center gap-x-3"
+                                  disabled={isDisabled}
+                                  classlabel="w-2/12"
+                                  classchild="w-10/12"
+                                />
+                              )}
                             </div>
-                            {estimates === 'mass' && (
-                              <InputField
-                                label={t('billing:package_manage.popup.free')}
-                                registration={register(`plan_lv.${index}.free`)}
-                                type="number"
-                                classnamefieldwrapper="flex items-center gap-x-3"
-                                disabled={isDisabled}
-                                classlabel='w-2/12'
-                                classchild='w-10/12'
-                              />
-                            )}
-                          </div>
-                          <Button
-                            type="button"
-                            size="square"
-                            variant="trans"
-                            disabled={isDisabled}
-                            className="mt-1 border-none shadow-none"
-                            onClick={() => planlvRemove(index)}
-                            startIcon={
-                              <img
-                                src={btnDeleteIcon}
-                                alt="Delete condition"
-                                className="h-6 w-6"
-                              />
-                            }
-                          />
-                        </section>
-                      )
-                    })
+                            <Button
+                              type="button"
+                              size="square"
+                              variant="trans"
+                              disabled={isDisabled}
+                              className="mt-1 border-none shadow-none"
+                              onClick={() => planlvRemove(index)}
+                              startIcon={
+                                <img
+                                  src={btnDeleteIcon}
+                                  alt="Delete condition"
+                                  className="h-6 w-6"
+                                />
+                              }
+                            />
+                          </section>
+                        )
+                      })
                     : null}
                 </div>
                 {(estimates === 'fix' || estimates === 'unit') && (
@@ -586,8 +604,8 @@ export function PackageInfo() {
                         )
                       }
                       disabled={isDisabled}
-                      classlabel='w-2/12'
-                      classchild='w-10/12'
+                      classlabel="w-2/12"
+                      classchild="w-10/12"
                     />
                     {estimates === 'unit' && (
                       <InputField
@@ -597,8 +615,8 @@ export function PackageInfo() {
                         classnamefieldwrapper="flex items-center gap-x-3"
                         type="number"
                         disabled={isDisabled}
-                        classlabel='w-2/12'
-                        classchild='w-10/12'
+                        classlabel="w-2/12"
+                        classchild="w-10/12"
                       />
                     )}
                   </div>
@@ -614,11 +632,11 @@ export function PackageInfo() {
                   registration={register('tax')}
                   disabled={isDisabled}
                   classnamefieldwrapper="flex items-center gap-x-3"
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
                 <div className="flex items-center">(mặc định 10%)</div>
-                {estimates !== 'fix' &&
+                {estimates !== 'fix' && (
                   <InputField
                     label={t('billing:package_manage.popup.expected_number')}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -632,16 +650,17 @@ export function PackageInfo() {
                       )
                     }
                     classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel='w-2/12'
-                    classchild='w-10/12'
-                  />}
+                    classlabel="w-2/12"
+                    classchild="w-10/12"
+                  />
+                )}
                 <InputField
                   label={t('billing:package_manage.popup.expected_payment')}
                   disabled
                   value={expectedPayment}
                   classnamefieldwrapper="flex items-center gap-x-3"
-                  classlabel='w-2/12'
-                  classchild='w-10/12'
+                  classlabel="w-2/12"
+                  classchild="w-10/12"
                 />
               </div>
               {!isDisabled && (
@@ -709,8 +728,7 @@ export function PackageInfo() {
               }
               triggerButton={
                 <Button
-                  className="w-full border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={

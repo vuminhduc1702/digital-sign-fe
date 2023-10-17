@@ -114,8 +114,7 @@ function GroupTableContextMenu({
               }
               triggerButton={
                 <Button
-                  className="w-full border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={

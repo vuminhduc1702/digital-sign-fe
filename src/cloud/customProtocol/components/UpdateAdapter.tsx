@@ -788,13 +788,9 @@ export function UpdateAdapter({
                   </Tab.Panels>
                 </div>
               </Tab.Group>
-              <div
-                className="flex justify-between"
-                style={{ marginTop: '10px' }}
-              >
+              <div className="!mt-3 flex justify-between">
                 <Button
-                  className="border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   onClick={() =>
@@ -807,8 +803,7 @@ export function UpdateAdapter({
                   {t('btn:back')}
                 </Button>
                 <Button
-                  className="border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   onClick={() =>

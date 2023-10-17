@@ -77,7 +77,7 @@ function DeviceTableContextMenu({
         }
       >
         <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="px-1 py-1">
+          <div className="p-1">
             <MenuItem
               icon={
                 <img
@@ -141,8 +141,7 @@ function DeviceTableContextMenu({
               }
               triggerButton={
                 <Button
-                  className="w-full border-none hover:text-primary-400"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -280,14 +279,29 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id, key, org_id, group_id, group_name, template_id, template_name } =
-            info.row.original
+          const {
+            name,
+            id,
+            key,
+            org_id,
+            group_id,
+            group_name,
+            template_id,
+            template_name,
+          } = info.row.original
           const group = {
             label: group_name,
             value: group_id,
           }
-          return DeviceTableContextMenu({ name, id, key, org_id, group,  template_name,
-            template_id })
+          return DeviceTableContextMenu({
+            name,
+            id,
+            key,
+            org_id,
+            group,
+            template_name,
+            template_id,
+          })
         },
         header: () => null,
         footer: info => info.column.id,

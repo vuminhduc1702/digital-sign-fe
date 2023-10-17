@@ -466,7 +466,9 @@ export function CreateEvent() {
                             ? { ...todo, selected: !todo.selected }
                             : todo,
                         )
-                        const dataFilter = todoInterval.filter(item => item.selected)
+                        const dataFilter = todoInterval.filter(
+                          item => item.selected,
+                        )
                         let repeat = ''
                         dataFilter.map(item => {
                           repeat = repeat + item.value + ','
@@ -541,11 +543,7 @@ export function CreateEvent() {
               {onClickValue === 'false' && typeEvent === 'event'
                 ? conditionFields.map((field, index) => {
                     return (
-                      <section
-                        className="space-y-2"
-                        style={{ marginTop: '10px' }}
-                        key={field.id}
-                      >
+                      <section className="!mt-3 space-y-2" key={field.id}>
                         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
                           <div className="space-y-1">
                             <SelectDropdown
@@ -754,11 +752,7 @@ export function CreateEvent() {
               </div>
               {actionFields.map((field, index) => {
                 return (
-                  <section
-                    className="space-y-2"
-                    style={{ marginTop: '10px' }}
-                    key={field.id}
-                  >
+                  <section className="!mt-3 space-y-2" key={field.id}>
                     <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                       <div className="space-y-1">
                         <SelectDropdown

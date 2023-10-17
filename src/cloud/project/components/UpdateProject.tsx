@@ -148,7 +148,7 @@ export function UpdateProject({
             {({ register, formState }) => {
               return (
                 <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
-                  <div style={{ height: '250px' }}>
+                  <div>
                     <InputField
                       label={t('cloud:project_manager.add_project.name')}
                       error={formState.errors['name']}
@@ -216,8 +216,7 @@ export function UpdateProject({
                       ref={avatarRef}
                     />
                     <Button
-                      className="mb-3 border-none"
-                      style={{ justifyContent: 'flex-start' }}
+                      className="mb-3 justify-start border-none"
                       variant="secondaryLight"
                       size="square"
                       onClick={handleResetDefaultImage}
@@ -226,7 +225,7 @@ export function UpdateProject({
                         'cloud:project_manager.add_project.upload_ava_default',
                       )}
                     </Button>
-                    <div style={{ fontSize: '12px' }}>
+                    <div className="text-body-xs">
                       {t(
                         'cloud:project_manager.add_project.upload_instruction',
                       )}

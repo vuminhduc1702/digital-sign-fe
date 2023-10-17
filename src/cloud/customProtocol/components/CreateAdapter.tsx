@@ -899,13 +899,9 @@ export function CreateAdapter() {
                   </Tab.Panels>
                 </div>
               </Tab.Group>
-              <div
-                className="flex justify-between"
-                style={{ marginTop: '10px' }}
-              >
+              <div className="flex justify-between">
                 <Button
-                  className="rounded-sm border-none"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="justify-start rounded-sm border-none"
                   variant="secondary"
                   size="square"
                   onClick={() =>
@@ -918,8 +914,7 @@ export function CreateAdapter() {
                   {t('btn:back')}
                 </Button>
                 <Button
-                  className="rounded-sm border-none"
-                  style={{ justifyContent: 'flex-start' }}
+                  className="justify-start rounded-sm border-none"
                   variant="secondary"
                   size="square"
                   onClick={() =>

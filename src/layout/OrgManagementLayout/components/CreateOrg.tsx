@@ -272,14 +272,13 @@ export function CreateOrg() {
               />
               <Button
                 className="mb-3 border-none"
-                style={{ justifyContent: 'flex-start' }}
                 variant="secondaryLight"
                 size="square"
                 onClick={handleResetDefaultImage}
               >
                 {t('cloud:project_manager.add_project.upload_ava_default')}
               </Button>
-              <div style={{ fontSize: '12px' }}>
+              <div className="text-body-xs">
                 {t('cloud:project_manager.add_project.upload_instruction')}
               </div>
             </>
