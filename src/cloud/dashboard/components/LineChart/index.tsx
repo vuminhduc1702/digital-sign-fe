@@ -27,7 +27,10 @@ export function LineChart({ data }: { data: TimeSeries }) {
   useEffect(() => {
     if (data != null && Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
-      if (newValuesRef.current != null && Object.keys(data).length > 1) {
+      if (
+        newValuesRef.current != null &&
+        data[Object.keys(data)[0]].length === 1
+      ) {
         for (const key in data) {
           if (
             prevValuesRef.current[key] != null &&
