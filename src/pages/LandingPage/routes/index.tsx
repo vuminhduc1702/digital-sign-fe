@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
-import { logoutFn, useUser } from '~/lib/auth'
+import { useLogout, useUser } from '~/lib/auth'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 import { SectionIntro } from '../components/section-introduction'
 import { SectionSolution } from '../components/section-solution'
@@ -15,11 +16,14 @@ import { SectionFooter } from '../components/footer'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { Link } from '~/components/Link'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
-import { GroupSlideTop } from '~/components/SVGIcons'
+import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 
 import defaultUserIcon from '~/assets/icons/default-user.svg'
+import storage from '~/utils/storage'
 
 export function LandingPage() {
   const navigate = useNavigate()
@@ -30,6 +34,7 @@ export function LandingPage() {
       useErrorBoundary: false,
     },
   })
+  const logout = useLogout()
 
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
@@ -42,7 +47,7 @@ export function LandingPage() {
   const scrollToIntro = (Ref: RefObject<HTMLDivElement>) => {
     Ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
-
+  const { t } = useTranslation()
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -58,13 +63,16 @@ export function LandingPage() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
-
+  // useEffect(() => {
+  //   console.log(userInfoData?.email?.split('@')[0])
+  // }, [userInfoData?.email?.split('@')[0]])
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     })
   }
+
   return (
     <>
       <div className="h-[500px]">
@@ -125,32 +133,67 @@ export function LandingPage() {
                 </div>
               </div>
               {userDataFromStorage != null ? (
-                <div className="ml-auto flex">
-                  <div className="flex min-w-fit items-center justify-center text-white">
-                    <img
-                      src={`${
-                        userInfoData?.profile?.profile_image !== ''
-                          ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
-                          : defaultUserIcon
-                      }`}
-                      alt="User's avatar"
-                      className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-                      onError={e => {
-                        const target = e.target as HTMLImageElement
-                        target.onerror = null
-                        target.src = defaultUserIcon
-                      }}
-                    />
-                    <div
-                      className="mx-4 text-base font-bold text-white"
-                      onClick={() => {
-                        logoutFn()
-                      }}
-                    >
-                      <button>Đăng Xuất</button>
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger
+                    asChild
+                    className="flex items-center gap-x-2"
+                  >
+                    <div className="ml-auto flex">
+                      <div className="flex min-w-fit ">
+                        <img
+                          src={`${
+                            userInfoData?.profile?.profile_image !== ''
+                              ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
+                              : defaultUserIcon
+                          }`}
+                          alt="User's avatar"
+                          className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+                          onError={e => {
+                            const target = e.target as HTMLImageElement
+                            target.onerror = null
+                            target.src = defaultUserIcon
+                          }}
+                        />
+
+                        <div className="mx-4 flex cursor-pointer items-center justify-center">
+                          <p className="mr-2 text-white">
+                            {t('nav:hello')}{' '}
+                            {userInfoData?.name ||
+                              userInfoData?.email?.split('@')[0]}
+                          </p>
+                          <SidebarDropDownIcon
+                            width={12}
+                            height={7}
+                            viewBox="0 0 12 7"
+                            className="text-white"
+                          />
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.Content
+                      className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                      sideOffset={5}
+                    >
+                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        {userDataFromStorage ? (
+                          <p className="cursor-pointer" onClick={() => {}}>
+                            Đổi mật khẩu
+                          </p>
+                        ) : null}
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        <p
+                          className="cursor-pointer"
+                          onClick={() => logout.mutate({})}
+                        >
+                          {t('user:logout')}
+                        </p>
+                      </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Root>
               ) : (
                 <div className="ml-auto flex">
                   <div className="flex min-w-fit items-center justify-center text-white">
@@ -209,6 +252,7 @@ export function LandingPage() {
             <div className="mt-3 flex max-w-full items-center justify-center gap-4">
               <div className="mx-1 flex min-w-fit items-center justify-center text-white">
                 <Button
+                  onClick={() => scrollToIntro(ProductRef)}
                   type="button"
                   className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
                   variant="primary"
@@ -221,6 +265,7 @@ export function LandingPage() {
                   type="button"
                   className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left font-bold text-white  hover:bg-white hover:text-slate-950 "
                   variant="primary"
+                  onClick={() => scrollToIntro(OrderRef)}
                 >
                   Platform IoT
                 </Button>
@@ -254,9 +299,9 @@ export function LandingPage() {
       <div ref={FAQRef}>
         <QandA></QandA>
       </div>
-      {/* <div>
+      <div>
         <SectionNews></SectionNews>
-      </div> */}
+      </div>
       <div>
         <SectionFooter></SectionFooter>
       </div>

@@ -65,7 +65,7 @@ export function SectionNews() {
         <div className="flex justify-center">
           <Carousel
             className=""
-            containerClass="carousel-container w-[1040px]"
+            containerClass="carousel-container w-[1200px]"
             responsive={responsive}
             transitionDuration={300}
             infinite
