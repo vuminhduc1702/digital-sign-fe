@@ -16,7 +16,7 @@ import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.pn
 import { GroupSlideTop } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 
-import { useEffect, useRef, useState, RefObject } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 
@@ -65,166 +65,162 @@ export function LandingPage() {
     <>
       <div className="h-[500px]">
         <div
-          className="h-full max-w-full"
+          className="h-full"
           style={{
             backgroundImage: `url(${bannerLandingPage})`,
           }}
         >
-          <div className="">
-            <div className="h-full max-w-full px-4 py-2">
-              <div className="min-w-fit">
-                <div className="mx-[12rem] flex h-20 min-w-max justify-start">
-                  <div className="flex h-full w-1/6 items-center justify-center">
-                    <a href="/" className="text-5xl font-bold text-white">
-                      viettel
-                    </a>
+          <div className="px-4 py-2">
+            <div className="flex h-20 px-48">
+              <div className="flex items-center">
+                <a href="/" className="text-5xl font-bold text-white">
+                  viettel
+                </a>
+              </div>
+              <div className="ml-auto flex">
+                <div className="flex justify-start">
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(introRef)}
+                  >
+                    <button>Giới thiệu</button>
                   </div>
-                  <div className="flex h-full w-4/6">
-                    <div className="flex justify-start">
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(introRef)}
-                      >
-                        <button>Giới thiệu</button>
-                      </div>
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(PackOfDataRef)}
-                      >
-                        <button>Gói cước</button>
-                      </div>
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(ProductRef)}
-                      >
-                        <button>Sản phẩm</button>
-                      </div>
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(OrderRef)}
-                      >
-                        <button>Platform IoT</button>
-                      </div>
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(Order1Ref)}
-                      >
-                        <button>Hệ thống CMP</button>
-                      </div>
-                      <div
-                        className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
-                        onClick={() => scrollToIntro(FAQRef)}
-                      >
-                        <button>FAQ</button>
-                      </div>
-                      <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
-                        Tài khoản
-                      </div>
-                    </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(PackOfDataRef)}
+                  >
+                    <button>Gói cước</button>
                   </div>
-                  {user.data ? (
-                    <div className="flex h-full w-1/6 justify-start">
-                      <div
-                        className="flex min-w-fit items-center justify-center text-white"
-                        onClick={() => {
-                          // logoutFn()
-                          console.log(user.data)
-                        }}
-                      >
-                        <div className="">
-                          <a href="#" className="">
-                            <img
-                              className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-                              src="https://cdn.24h.com.vn/upload/3-2020/images/2020-08-05/hot-girl-bi-boc-me-nhan-sac-2-1596620332-726-width660height672.jpg"
-                              alt="avatar"
-                            />
-                          </a>
-                        </div>
-                        <div
-                          className="mx-4 text-base font-bold text-white"
-                          onClick={() => {
-                            logoutFn()
-                          }}
-                        >
-                          <button>Đăng Xuất</button>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex h-full w-1/6 justify-start ">
-                      <div className="flex min-w-fit items-center justify-center text-white">
-                        <Button
-                          type="button"
-                          className="w-full border-none bg-transparent px-1 font-bold text-white"
-                          variant="primary"
-                          onClick={() => navigate(PATHS.LOGIN)}
-                        >
-                          Đăng nhập
-                        </Button>
-                      </div>
-                      <div className="mx-1 flex min-w-fit items-center justify-center text-white">
-                        <Button
-                          type="button"
-                          className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-5 text-left font-bold  text-white"
-                          variant="primary"
-                          onClick={() => navigate(PATHS.REGISTER)}
-                        >
-                          Đăng ký ngay
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(ProductRef)}
+                  >
+                    <button>Sản phẩm</button>
+                  </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(OrderRef)}
+                  >
+                    <button>Platform IoT</button>
+                  </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(Order1Ref)}
+                  >
+                    <button>Hệ thống CMP</button>
+                  </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => scrollToIntro(FAQRef)}
+                  >
+                    <button>FAQ</button>
+                  </div>
+                  <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
+                    Tài khoản
+                  </div>
                 </div>
               </div>
+              {user.data ? (
+                <div className="ml-auto flex">
+                  <div
+                    className="flex min-w-fit items-center justify-center text-white"
+                    onClick={() => {
+                      // logoutFn()
+                      console.log(user.data)
+                    }}
+                  >
+                    <div className="">
+                      <a href="#" className="">
+                        <img
+                          className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+                          src="https://cdn.24h.com.vn/upload/3-2020/images/2020-08-05/hot-girl-bi-boc-me-nhan-sac-2-1596620332-726-width660height672.jpg"
+                          alt="avatar"
+                        />
+                      </a>
+                    </div>
+                    <div
+                      className="mx-4 text-base font-bold text-white"
+                      onClick={() => {
+                        logoutFn()
+                      }}
+                    >
+                      <button>Đăng Xuất</button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="ml-auto flex">
+                  <div className="flex min-w-fit items-center justify-center text-white">
+                    <Button
+                      type="button"
+                      className="w-full border-none bg-transparent px-1 font-bold text-white"
+                      variant="primary"
+                      onClick={() => navigate(PATHS.LOGIN)}
+                    >
+                      Đăng nhập
+                    </Button>
+                  </div>
+                  <div className="mx-1 flex min-w-fit items-center justify-center text-white">
+                    <Button
+                      type="button"
+                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-5 text-left font-bold text-white"
+                      variant="primary"
+                      onClick={() => navigate(PATHS.REGISTER)}
+                    >
+                      Đăng ký ngay
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
 
-              <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center">
-                <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2">
-                  <a
-                    href="http://www.vietteliot2023.com"
-                    className="flex text-center text-2xl font-bold text-[#DBFF00]"
-                    target="_blank"
-                  >
-                    Viettel M2M IoT 2023{' '}
-                    <i className="mt-1 pl-4 text-base text-[(219,255,0,1)]">
-                      {'>>'}
-                    </i>
-                  </a>
-                </div>
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center">
+              <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2">
+                <a
+                  href="http://www.vietteliot2023.com"
+                  className="flex text-center text-2xl font-bold text-[#DBFF00]"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Viettel M2M IoT 2023{' '}
+                  <i className="mt-1 pl-4 text-base text-[(219,255,0,1)]">
+                    {'>>'}
+                  </i>
+                </a>
               </div>
-              <div className="mt-[4.5rem] flex max-w-full items-center justify-center text-white">
-                <h2 className="text-[56px] font-bold">
-                  Dịch vụ Sim Data truyền tải dữ liệu
-                </h2>
+            </div>
+            <div className="mt-[4.5rem] flex max-w-full items-center justify-center text-white">
+              <h2 className="text-[56px] font-bold">
+                Dịch vụ Sim Data truyền tải dữ liệu
+              </h2>
+            </div>
+            <div className="flex max-w-full items-center justify-center">
+              <div className="mt-[3.5rem] flex w-1/2 items-center justify-center pl-20 text-white">
+                <p className="text-base">
+                  M2M là công nghệ cho phép các thiết bị có thể trao đổi với các
+                  hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là dịch vụ
+                  trong đó sim data được sử dụng để truyền tải dữ liệu.
+                </p>
               </div>
-              <div className="flex max-w-full items-center justify-center">
-                <div className="mt-[3.5rem] flex w-1/2 items-center justify-center pl-20 text-white">
-                  <p className="text-base">
-                    M2M là công nghệ cho phép các thiết bị có thể trao đổi với
-                    các hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là
-                    dịch vụ trong đó sim data được sử dụng để truyền tải dữ
-                    liệu.
-                  </p>
-                </div>
+            </div>
+            <div className="mt-3 flex max-w-full items-center justify-center gap-4">
+              <div className="mx-1 flex min-w-fit items-center justify-center text-white">
+                <Button
+                  type="button"
+                  className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
+                  variant="primary"
+                >
+                  Sản phẩm
+                </Button>
               </div>
-              <div className="mt-3 flex max-w-full items-center justify-center gap-4">
-                <div className="mx-1 flex min-w-fit items-center justify-center text-white">
-                  <Button
-                    type="button"
-                    className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
-                    variant="primary"
-                  >
-                    Sản phẩm
-                  </Button>
-                </div>
-                <div className="mx-1 flex min-w-fit items-center justify-center text-white">
-                  <Button
-                    type="button"
-                    className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left font-bold text-white  hover:bg-white hover:text-slate-950 "
-                    variant="primary"
-                  >
-                    Platform IoT
-                  </Button>
-                </div>
+              <div className="mx-1 flex min-w-fit items-center justify-center text-white">
+                <Button
+                  type="button"
+                  className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left font-bold text-white  hover:bg-white hover:text-slate-950 "
+                  variant="primary"
+                >
+                  Platform IoT
+                </Button>
               </div>
             </div>
           </div>

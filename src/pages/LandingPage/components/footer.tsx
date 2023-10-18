@@ -80,7 +80,7 @@ export function SectionFooter() {
                   autoComplete="off"
                   className="h-[102px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60"
                 ></textarea>
-                <p className="text-xs text-white">
+                <p className="text-body-xs text-white">
                   {text.length}/{maxLength}
                 </p>
               </div>
@@ -156,7 +156,11 @@ export function SectionFooter() {
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 Follow us:
               </div>
-              <a href="https://www.facebook.com/innoway.vn/" target="_blank">
+              <a
+                href="https://www.facebook.com/innoway.vn/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FacebookIcon
                   width={25}
                   height={25}
@@ -164,7 +168,11 @@ export function SectionFooter() {
                   className="ml-2 mr-1"
                 />
               </a>
-              <a href="https://twitter.com/VInnoway" target="_blank">
+              <a
+                href="https://twitter.com/VInnoway"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <LinkedinIcon
                   width={25}
                   height={25}
@@ -172,7 +180,11 @@ export function SectionFooter() {
                   className="mx-1"
                 />
               </a>
-              <a href="https://www.instagram.com/innoway.vn/" target="_blank">
+              <a
+                href="https://www.instagram.com/innoway.vn/"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <InstagramIcon
                   width={25}
                   height={25}

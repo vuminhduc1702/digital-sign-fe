@@ -115,7 +115,7 @@ export function SectionProduct() {
                   <div className="h-fit w-[200px]">
                     <img src={item.src} alt={item.alt} />
                   </div>
-                  <div className="pb-[10px] pt-[20px] text-center text-lg font-bold">
+                  <div className="text-body-h2 pb-[10px] pt-[20px] text-center font-bold">
                     {item.title_h1}
                   </div>
                   <div className="text-center text-base">{item.title_h2}</div>
