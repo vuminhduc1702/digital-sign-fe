@@ -118,9 +118,9 @@ export function LandingPage() {
                   >
                     <button>FAQ</button>
                   </div>
-                  <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
+                  {/* <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
                     Tài khoản
-                  </div>
+                  </div> */}
                 </div>
               </div>
               {userInfoData != null ? (
