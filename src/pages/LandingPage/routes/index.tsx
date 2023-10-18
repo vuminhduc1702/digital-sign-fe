@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { logoutFn } from '~/lib/auth'
+import { logoutFn, useUser } from '~/lib/auth'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 import { SectionIntro } from '../components/section-introduction'
 import { SectionSolution } from '../components/section-solution'
@@ -24,6 +24,7 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 export function LandingPage() {
   const navigate = useNavigate()
 
+  const { data: userDataFromStorage } = useUser()
   const { data: userInfoData } = useUserInfo({
     config: {
       useErrorBoundary: false,
@@ -123,14 +124,9 @@ export function LandingPage() {
                   </div> */}
                 </div>
               </div>
-              {userInfoData != null ? (
+              {userDataFromStorage != null ? (
                 <div className="ml-auto flex">
-                  <div
-                    className="flex min-w-fit items-center justify-center text-white"
-                    onClick={() => {
-                      console.log(userInfoData)
-                    }}
-                  >
+                  <div className="flex min-w-fit items-center justify-center text-white">
                     <img
                       src={`${
                         userInfoData?.profile?.profile_image !== ''
