@@ -20,7 +20,6 @@ import {
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 import { cn } from '~/utils/misc'
-import { useDashboardNameStore } from '~/stores/dashboard'
 
 import {
   aggSchema,
@@ -67,8 +66,6 @@ const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURICompo
 
 export function DashboardDetail() {
   const { t } = useTranslation()
-
-  const dashboardName = useDashboardNameStore(state => state.dashboardName)
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -196,7 +193,9 @@ export function DashboardDetail() {
 
   return (
     <div className="flex grow flex-col">
-      <TitleBar title={`${t('cloud:dashboard.title')}: ${dashboardName}`} />
+      <TitleBar
+        title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
+      />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {widgetDetailDB == null &&
         Object.keys(widgetList).length === 0 &&
@@ -288,6 +287,7 @@ export function DashboardDetail() {
               size="square"
               onClick={() => {
                 setWidgetList({})
+                setIsLayoutChange(false)
                 detailDashboardRefetch()
                 setIsEditMode(false)
               }}
