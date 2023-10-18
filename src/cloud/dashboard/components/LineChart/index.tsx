@@ -17,7 +17,6 @@ export function LineChart({ data }: { data: TimeSeries }) {
   >([
     {
       id: '',
-      color: 'hsl(106, 70%, 50%)',
       data: [],
     },
   ])
@@ -60,7 +59,6 @@ export function LineChart({ data }: { data: TimeSeries }) {
       newValuesRef.current as TimeSeries,
     ).map(([id, item], index) => ({
       id,
-      color: 'hsl(106, 70%, 50%)',
       data: dataTransformation(item),
     }))
     setDataTransformedFeedToChart(

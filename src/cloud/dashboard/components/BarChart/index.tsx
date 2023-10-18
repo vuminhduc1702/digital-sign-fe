@@ -28,52 +28,65 @@ export const BarChart = ({ data }: { data: DashboardWS['data'] }) => {
       ...entityValue,
     }
   })
-  console.log('lastestMultiValue', lastestMultiValue)
+  // console.log('lastestMultiValue', lastestMultiValue)
+
+  const dataTest = [
+    {
+      ts: 1697618777,
+      attr1: 165,
+      attr2: 34,
+    },
+    {
+      ts: 1697618783,
+      attr3: 165,
+    },
+  ]
 
   return (
     <ResponsiveBar
-      data={lastestMultiValue}
-      keys={['test', 'test1']}
-      indexBy="device"
+      data={dataTest}
+      keys={['attr1', 'attr2', 'attr3']}
+      indexBy="ts"
+      colors={['hsl(308, 70%, 50%)', 'hsl(80, 70%, 50%)', 'hsl(12, 70%, 50%)']}
+      // colors={{ scheme: 'nivo' }}
       margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
       padding={0.3}
       valueScale={{ type: 'linear' }}
       indexScale={{ type: 'band', round: true }}
-      colors={{ scheme: 'nivo' }}
-      defs={[
-        {
-          id: 'dots',
-          type: 'patternDots',
-          background: 'inherit',
-          color: '#38bcb2',
-          size: 4,
-          padding: 1,
-          stagger: true,
-        },
-        {
-          id: 'lines',
-          type: 'patternLines',
-          background: 'inherit',
-          color: '#eed312',
-          rotation: -45,
-          lineWidth: 6,
-          spacing: 10,
-        },
-      ]}
-      fill={[
-        {
-          match: {
-            id: 'fries',
-          },
-          id: 'dots',
-        },
-        {
-          match: {
-            id: 'sandwich',
-          },
-          id: 'lines',
-        },
-      ]}
+      // defs={[
+      //   {
+      //     id: 'dots',
+      //     type: 'patternDots',
+      //     background: 'inherit',
+      //     color: '#38bcb2',
+      //     size: 4,
+      //     padding: 1,
+      //     stagger: true,
+      //   },
+      //   {
+      //     id: 'lines',
+      //     type: 'patternLines',
+      //     background: 'inherit',
+      //     color: '#eed312',
+      //     rotation: -45,
+      //     lineWidth: 6,
+      //     spacing: 10,
+      //   },
+      // ]}
+      // fill={[
+      //   {
+      //     match: {
+      //       id: 'fries',
+      //     },
+      //     id: 'dots',
+      //   },
+      //   {
+      //     match: {
+      //       id: 'sandwich',
+      //     },
+      //     id: 'lines',
+      //   },
+      // ]}
       borderColor={{
         from: 'color',
         modifiers: [['darker', 1.6]],
@@ -84,7 +97,7 @@ export const BarChart = ({ data }: { data: DashboardWS['data'] }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'device',
+        legend: 'Thời gian',
         legendPosition: 'middle',
         legendOffset: 32,
       }}
@@ -92,7 +105,7 @@ export const BarChart = ({ data }: { data: DashboardWS['data'] }) => {
         tickSize: 5,
         tickPadding: 5,
         tickRotation: 0,
-        legend: 'value',
+        legend: 'Giá trị',
         legendPosition: 'middle',
         legendOffset: -40,
       }}

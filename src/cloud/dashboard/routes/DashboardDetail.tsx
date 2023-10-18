@@ -11,7 +11,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
-import { LineChart } from '../components'
+import { BarChart, LineChart } from '../components'
 import {
   CreateWidget,
   type Widget,
@@ -276,6 +276,8 @@ export function DashboardDetail() {
             <Spinner showSpinner={showSpinner} size="xl" />
           </div>
         )}
+
+        {/* <BarChart /> */}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">

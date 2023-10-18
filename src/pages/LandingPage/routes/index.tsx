@@ -148,6 +148,7 @@ export function LandingPage() {
                       }}
                     >
                       <button>Đăng Xuất</button>
+                      <p>{userInfoData?.email}</p>
                     </div>
                   </div>
                 </div>
