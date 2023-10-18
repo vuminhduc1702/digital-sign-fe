@@ -102,7 +102,7 @@ export function SectionProduct() {
           <div className="w-[1200px] pt-[50px]">
             <Carousel
               className=""
-              containerClass="carousel-container p-[2px]"
+              containerClass="carousel-container p-[0px]"
               responsive={responsive}
               transitionDuration={300}
               infinite

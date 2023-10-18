@@ -299,9 +299,9 @@ export function LandingPage() {
       <div ref={FAQRef}>
         <QandA></QandA>
       </div>
-      <div>
+      {/* <div>
         <SectionNews></SectionNews>
-      </div>
+      </div> */}
       <div>
         <SectionFooter></SectionFooter>
       </div>

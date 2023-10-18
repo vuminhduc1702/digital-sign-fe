@@ -116,8 +116,8 @@
   z-index: 100 !important;
   border: solid 1px red !important;
   background: white !important;
-  min-width: 23px !important;
-  min-height: 23px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
   opacity: 1 !important;
   cursor: pointer !important;
 }
@@ -128,16 +128,21 @@
   font-size: 16px !important;
 }
 .react-multiple-carousel__arrow--left {
-  left: calc(4% - 40px) !important;
-}
-.react-multiple-carousel__arrow:hover {
-  background: rgba(0, 0, 0, 0.5) !important;
+  left: calc(3% - 30px) !important;
 }
 .react-multiple-carousel__arrow--right {
-  right: calc(4% - 40px) !important;
+  right: calc(3% - 30px) !important;
 }
 .react-multiple-carousel__arrow--right::before {
   content: '\e825' !important;
   color: red !important;
   font-size: 16px !important;
+}
+
+.react-multiple-carousel__arrow:hover {
+  background: red !important;
+}
+
+.react-multiple-carousel__arrow:hover::before {
+  color: aliceblue !important;
 }
