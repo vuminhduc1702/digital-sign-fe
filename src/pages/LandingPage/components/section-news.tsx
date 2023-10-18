@@ -74,7 +74,7 @@ export function SectionNews() {
             autoPlaySpeed={3000}
           >
             {slides.map((item, idx) => (
-              <div className="">
+              <div key={idx}>
                 <div
                   className="h-fit w-[202.5px] rounded-xl py-[1px] pl-[1.5px] pr-[1px]"
                   style={{

@@ -242,7 +242,8 @@ export function DashboardDetail() {
                   <div
                     key={widgetId}
                     data-grid={
-                      detailDashboard?.dashboard_setting?.layout?.length > 0
+                      detailDashboard?.dashboard_setting?.layout?.length > 0 &&
+                      widgetList == null
                         ? detailDashboard?.dashboard_setting?.layout?.find(
                             layout => layout.i === widgetId,
                           )
@@ -286,9 +287,9 @@ export function DashboardDetail() {
               variant="secondary"
               size="square"
               onClick={() => {
-                setIsEditMode(false)
                 setWidgetList({})
-                // detailDashboardRefetch()
+                detailDashboardRefetch()
+                setIsEditMode(false)
               }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

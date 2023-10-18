@@ -61,7 +61,7 @@ export function QandA() {
             <div className="w-1/2 pr-[30px]">
               <Accordion type="single" collapsible ref={accordionRef_1}>
                 {items.map((item, idx) => (
-                  <AccordionItem value={item.value}>
+                  <AccordionItem value={item.value} key={idx}>
                     <AccordionTrigger
                       onClick={() => {
                         setIsAccordionChange(prevState => !prevState)
@@ -90,7 +90,7 @@ export function QandA() {
             <div className="w-1/2 pl-[30px]">
               <Accordion type="single" collapsible ref={accordionRef_2}>
                 {items.map((item, idx) => (
-                  <AccordionItem value={item.value}>
+                  <AccordionItem value={item.value} key={idx}>
                     <AccordionTrigger
                       onClick={() => {
                         setIsAccordionChange(prevState => !prevState)

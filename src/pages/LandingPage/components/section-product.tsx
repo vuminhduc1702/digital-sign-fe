@@ -111,7 +111,7 @@ export function SectionProduct() {
               autoPlaySpeed={3000}
             >
               {slides.map((item, idx) => (
-                <div className="rounded-lg shadow-md">
+                <div className="rounded-lg shadow-md" key={idx}>
                   <div className="h-fit w-[200px]">
                     <img src={item.src} alt={item.alt} />
                   </div>
@@ -120,7 +120,7 @@ export function SectionProduct() {
                   </div>
                   <div className="text-center text-base">{item.title_h2}</div>
                   <div className="flex justify-center pb-[30px] pt-[40px]">
-                    <a href={item.href} target="_blank">
+                    <a href={item.href} target="_blank" rel="noreferrer">
                       <Button
                         type="button"
                         className="rounded-r-lg rounded-tl-lg border-[#EA0033] bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"

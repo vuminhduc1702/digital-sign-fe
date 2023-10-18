@@ -78,7 +78,7 @@ export function SectionClient() {
             autoPlaySpeed={3000}
           >
             {slides.map((item, idx) => (
-              <div className="">
+              <div key={idx}>
                 <div className="h-fit w-[200px]">
                   <img src={item.src} alt={item.alt} />
                 </div>
