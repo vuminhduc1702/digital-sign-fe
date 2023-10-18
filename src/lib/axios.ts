@@ -7,6 +7,7 @@ import { API_URL } from '~/config'
 import { useNotificationStore } from '~/stores/notifications'
 import storage from '~/utils/storage'
 import { logoutFn } from './auth'
+import { PATHS } from '~/routes/PATHS'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const userStorage = storage.getToken()
@@ -74,6 +75,9 @@ axios.interceptors.response.use(
         message = errMessage || 'Dữ liệu truyền lên không hợp lệ'
         break
       case 401:
+        if (window.location.pathname === PATHS.HOME) {
+          break
+        }
         return logoutFn()
       case 403:
         message = errMessage || 'Bạn không có quyền truy cập vào trang này'
@@ -83,6 +87,10 @@ axios.interceptors.response.use(
         break
       default:
         message = errMessage || error.message
+    }
+
+    if (window.location.pathname === PATHS.HOME) {
+      return
     }
 
     useNotificationStore.getState().addNotification({

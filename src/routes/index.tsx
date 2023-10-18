@@ -47,7 +47,7 @@ export const AppRoutes = () => {
     if (
       !user &&
       window.location.pathname !== PATHS.REGISTER &&
-      !commonRoutes.some(Item => Item.path === window.location.pathname)
+      !commonRoutes.some(item => item.path === window.location.pathname)
     ) {
       navigate(PATHS.LOGIN)
     }
