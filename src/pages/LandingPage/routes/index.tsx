@@ -1,7 +1,8 @@
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useUser, logoutFn } from '~/lib/auth'
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 
+import { logoutFn } from '~/lib/auth'
+import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 import { SectionIntro } from '../components/section-introduction'
 import { SectionSolution } from '../components/section-solution'
 import { SectionProduct } from '../components/section-product'
@@ -11,21 +12,23 @@ import { SectionClient } from '../components/section-client'
 import { QandA } from '../components/section-Q&A'
 import { SectionNews } from '../components/section-news'
 import { SectionFooter } from '../components/footer'
+import { PATHS } from '~/routes/PATHS'
+import { Button } from '~/components/Button'
+import { API_URL } from '~/config'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop } from '~/components/SVGIcons'
-import { Button } from '~/components/Button'
 
-import { useEffect, useRef, useState, type RefObject } from 'react'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
+import defaultUserIcon from '~/assets/icons/default-user.svg'
 
 export function LandingPage() {
   const navigate = useNavigate()
 
-  const user = useUser()
-  // const user = useUserInfo()
-  // console.log(user.data)
+  const { data: userInfoData } = useUserInfo({
+    config: {
+      useErrorBoundary: false,
+    },
+  })
 
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
@@ -120,24 +123,28 @@ export function LandingPage() {
                   </div>
                 </div>
               </div>
-              {user.data ? (
+              {userInfoData != null ? (
                 <div className="ml-auto flex">
                   <div
                     className="flex min-w-fit items-center justify-center text-white"
                     onClick={() => {
-                      // logoutFn()
-                      console.log(user.data)
+                      console.log(userInfoData)
                     }}
                   >
-                    <div className="">
-                      <a href="#" className="">
-                        <img
-                          className="h-10 w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
-                          src="https://cdn.24h.com.vn/upload/3-2020/images/2020-08-05/hot-girl-bi-boc-me-nhan-sac-2-1596620332-726-width660height672.jpg"
-                          alt="avatar"
-                        />
-                      </a>
-                    </div>
+                    <img
+                      src={`${
+                        userInfoData?.profile?.profile_image !== ''
+                          ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
+                          : defaultUserIcon
+                      }`}
+                      alt="User's avatar"
+                      className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+                      onError={e => {
+                        const target = e.target as HTMLImageElement
+                        target.onerror = null
+                        target.src = defaultUserIcon
+                      }}
+                    />
                     <div
                       className="mx-4 text-base font-bold text-white"
                       onClick={() => {
