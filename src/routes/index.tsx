@@ -41,7 +41,7 @@ export const AppRoutes = () => {
       element: <NotFoundPage />,
     },
   ]
-
+  
   useEffect(() => {
     const user = storage.getToken()
     if (
