@@ -8,7 +8,7 @@ import {
   CheckboxCircleLineWhite,
 } from '~/components/SVGIcons'
 
-export function SectionOrder({}: {}) {
+export function SectionOrder() {
   const navigate = useNavigate()
   return (
     <>

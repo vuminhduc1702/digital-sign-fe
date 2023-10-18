@@ -1,6 +1,6 @@
 import Carousel from 'react-multi-carousel'
 
-export function SectionClient({}: {}) {
+export function SectionClient() {
   const slides = [
     {
       src: 'https://innoway.vn/assets/images/landingPageTelco/partner_1.svg',

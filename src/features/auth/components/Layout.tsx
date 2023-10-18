@@ -5,7 +5,7 @@ import { Head } from '~/components/Head'
 
 import textureLogin from '~/assets/images/texture-auth-layout.svg'
 import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import logoAuth from '~/assets/images/logo.svg'
+import logo from '~/assets/images/logo.svg'
 
 type LayoutProps = {
   children: ReactNode
@@ -26,7 +26,7 @@ export const Layout = ({ children, title }: LayoutProps) => {
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
             <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10">
               <a href="/">
-                <img src={logoAuth} alt="" />
+                <img src={logo} alt="" />
               </a>
             </div>
             <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">

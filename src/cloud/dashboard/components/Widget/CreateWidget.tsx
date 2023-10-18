@@ -327,12 +327,14 @@ export function CreateWidget({
                 entityDataCmds: [
                   {
                     historyCmd: {
-                      keys: [],
+                      keys: values.attributeConfig.map(
+                        item => item.attribute_key,
+                      ),
                       startTs: Date.parse(
                         values.widgetSetting?.startDate?.toISOString(),
                       ),
                       endTs: Date.parse(
-                        values.widgetSetting?.endDate?.toISOString(),
+                        values.widgetSetting?.endDate?.toISOString() as string,
                       ),
                       interval: values.widgetSetting?.interval,
                       limit: 100,
@@ -349,9 +351,18 @@ export function CreateWidget({
                 type: widgetCategory,
                 datasource: {
                   init_message: JSON.stringify(initMessage),
-                  lastest_message: JSON.stringify(lastestMessage),
-                  realtime_message: JSON.stringify(realtimeMessage),
-                  history_message: JSON.stringify(historyMessage),
+                  lastest_message:
+                    widgetType === 'LASTEST'
+                      ? JSON.stringify(lastestMessage)
+                      : '',
+                  realtime_message:
+                    values.widgetSetting?.dataType === 'REALTIME'
+                      ? JSON.stringify(realtimeMessage)
+                      : '',
+                  history_message:
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? JSON.stringify(historyMessage)
+                      : '',
                 },
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
@@ -377,6 +388,7 @@ export function CreateWidget({
                   },
                 },
               }
+              console.log('11111111111111111111', widget)
 
               widgetListRef.current[widgetId] = widget
               setWidgetList(widgetListRef.current)

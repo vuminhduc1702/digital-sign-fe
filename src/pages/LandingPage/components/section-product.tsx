@@ -5,7 +5,7 @@ import { StateCallBack } from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { Button } from '~/components/Button'
 
-export function SectionProduct({}: {}) {
+export function SectionProduct() {
   const slides = [
     {
       src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_9.jpg',

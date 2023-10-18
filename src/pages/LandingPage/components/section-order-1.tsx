@@ -3,7 +3,7 @@ import Group148 from '~/assets/images/landingpage/Group_148.png'
 import { ArrowRightUpLine, CheckboxCircleLine } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 
-export function SectionOrder1({}: {}) {
+export function SectionOrder1() {
   return (
     <>
       <div className="h-[100px]"></div>
@@ -69,7 +69,10 @@ export function SectionOrder1({}: {}) {
               </div>
             </div>
             <div className="pt-8">
-              <a href="https://innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70" target="_blank">
+              <a
+                href="https://innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
+                target="_blank"
+              >
                 <Button
                   type="button"
                   className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 text-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl"

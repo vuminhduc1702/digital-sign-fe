@@ -6,7 +6,7 @@ import {
   Review1,
   ArrowRightUpLine,
 } from '~/components/SVGIcons'
-export function SectionSolution({}: {}) {
+export function SectionSolution() {
   const slides = [{}]
   return (
     <>

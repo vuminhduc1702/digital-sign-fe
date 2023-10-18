@@ -25,7 +25,11 @@ function Navbar() {
   const { t } = useTranslation()
 
   const { data: projectsData } = useProjects()
-  const { data: userInfoData } = useUserInfo()
+  const { data: userInfoData } = useUserInfo({
+    config: {
+      useErrorBoundary: false,
+    },
+  })
   const { data: userData } = useUser()
 
   const setProjectId = useProjectIdStore(state => state.setProjectId)

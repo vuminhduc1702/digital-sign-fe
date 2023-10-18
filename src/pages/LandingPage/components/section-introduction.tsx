@@ -2,7 +2,7 @@ import Group45 from '~/assets/images/landingpage/Group_45.png'
 import { Button } from '~/components/Button'
 import { CheckboxCircleLine, ArrowRightUpLine } from '~/components/SVGIcons'
 
-export function SectionIntro({}: {}) {
+export function SectionIntro() {
   return (
     <>
       <div className="flex h-[620px] justify-center">

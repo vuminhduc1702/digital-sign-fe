@@ -101,10 +101,12 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
+
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
+
   useEffect(() => {
     if (widgetDetailDB != null) {
       widgetListRef.current = widgetDetailDB
@@ -112,10 +114,26 @@ export function DashboardDetail() {
       const widgetIdList = Object.keys(widgetDetailDB)
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
-          handleSendMessage(widgetDetailDB?.[widgetId]?.datasource.init_message)
-          handleSendMessage(
-            widgetDetailDB?.[widgetId]?.datasource.realtime_message,
-          )
+          if (widgetDetailDB?.[widgetId]?.datasource.init_message !== '') {
+            handleSendMessage(
+              widgetDetailDB?.[widgetId]?.datasource.init_message,
+            )
+          }
+          if (widgetDetailDB?.[widgetId]?.datasource.realtime_message !== '') {
+            handleSendMessage(
+              widgetDetailDB?.[widgetId]?.datasource.realtime_message,
+            )
+          }
+          if (widgetDetailDB?.[widgetId]?.datasource.history_message !== '') {
+            handleSendMessage(
+              widgetDetailDB?.[widgetId]?.datasource.history_message,
+            )
+          }
+          if (widgetDetailDB?.[widgetId]?.datasource.lastest_message !== '') {
+            handleSendMessage(
+              widgetDetailDB?.[widgetId]?.datasource.lastest_message,
+            )
+          }
         })
       }
     } else if (widgetDetailDB == null && Object.keys(widgetList).length > 0) {
@@ -124,8 +142,24 @@ export function DashboardDetail() {
       const widgetIdList = Object.keys(widgetList)
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
-          handleSendMessage(widgetList?.[widgetId]?.datasource.init_message)
-          handleSendMessage(widgetList?.[widgetId]?.datasource.realtime_message)
+          if (widgetList?.[widgetId]?.datasource.init_message !== '') {
+            handleSendMessage(widgetList?.[widgetId]?.datasource.init_message)
+          }
+          if (widgetList?.[widgetId]?.datasource.realtime_message !== '') {
+            handleSendMessage(
+              widgetList?.[widgetId]?.datasource.realtime_message,
+            )
+          }
+          if (widgetList?.[widgetId]?.datasource.history_message !== '') {
+            handleSendMessage(
+              widgetList?.[widgetId]?.datasource.history_message,
+            )
+          }
+          if (widgetList?.[widgetId]?.datasource.lastest_message !== '') {
+            handleSendMessage(
+              widgetList?.[widgetId]?.datasource.lastest_message,
+            )
+          }
         })
       }
     }

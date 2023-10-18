@@ -44,12 +44,6 @@ export const AppRoutes = () => {
 
   useEffect(() => {
     const user = storage.getToken()
-
-    // console.log(window.location.pathname)
-    // console.log(commonRoutes)
-    // console.log(
-    //   !commonRoutes.some(Item => Item.path === window.location.pathname),
-    // )
     if (
       !user &&
       window.location.pathname !== PATHS.REGISTER &&
