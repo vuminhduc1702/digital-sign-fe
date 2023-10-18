@@ -266,6 +266,8 @@ export function DashboardDetail() {
                     </p>
                     {allWidgetData?.[widgetId]?.type === 'LINE' ? (
                       <LineChart data={realtimeValues} />
+                    ) : allWidgetData?.[widgetId]?.type === 'BAR' ? (
+                      <BarChart data={realtimeValues} />
                     ) : null}
                   </div>
                 )
@@ -276,8 +278,6 @@ export function DashboardDetail() {
             <Spinner showSpinner={showSpinner} size="xl" />
           </div>
         )}
-
-        {/* <BarChart /> */}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
@@ -423,7 +423,7 @@ export function DashboardDetail() {
                         onClick={() => {
                           close()
                           setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
+                          setWidgetType('TIMESERIES')
                           setWidgetCategory('BAR')
                           setIsMultipleAttr(true)
                         }}
