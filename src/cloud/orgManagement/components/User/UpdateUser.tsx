@@ -38,6 +38,7 @@ type UpdateUserProps = {
   org_name: string
   role_id: string
   role_name: string
+  phone: string
 }
 
 // FIXME: password can not validate passwordSchema if add .or(z.string().optional())
@@ -45,6 +46,7 @@ export const updatedUserSchema = z
   .object({
     name: nameSchema,
     email: emailSchema,
+    phone: z.string(),
     password: passwordSchema.or(z.string().optional()),
     confirmPassword: passwordSchema.or(z.string().optional()),
     project_id: z.string().optional(),
@@ -71,6 +73,7 @@ export function UpdateUser({
   org_name,
   role_id,
   role_name,
+  phone
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -147,13 +150,14 @@ export function UpdateUser({
               password: values.password,
               org_id: option?.value || '',
               role_id: role?.value || '',
+              phone: values.phone
             },
             userId,
           })
         }
         schema={updatedUserSchema}
         options={{
-          defaultValues: { name, email },
+          defaultValues: { name, email, phone: phone !== 'undefined' ? phone : '' },
         }}
       >
         {({ register, formState, control, setValue }) => (
@@ -165,6 +169,13 @@ export function UpdateUser({
               error={formState.errors['name']}
               registration={register('name')}
             />
+            <InputField
+                label={
+                  t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
+                }
+                error={formState.errors['phone']}
+                registration={register('phone')}
+              />
             <InputField
               label={
                 t('cloud:org_manage.user_manage.add_user.email') ??

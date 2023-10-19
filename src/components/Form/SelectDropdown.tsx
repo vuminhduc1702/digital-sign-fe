@@ -9,6 +9,7 @@ import {
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { type SelectOption } from './SelectField'
+import { cn } from '~/utils/misc'
 
 export type ControllerPassThroughProps<TFormValues extends FieldValues> = {
   name: Path<TFormValues>
@@ -30,6 +31,9 @@ type SelectProps<TFormValues extends FieldValues> = {
   inputId?: string
   isClearable: boolean
   maxMenuHeight?: number
+  classlabel?: string
+  classchild?: string
+  classnamefieldwrapper?: string
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 
@@ -41,12 +45,21 @@ export function SelectDropdown<TFormValues extends FieldValues>({
   error,
   inputId,
   isClearable,
+  classlabel,
+  classchild,
+  classnamefieldwrapper,
   ...props
 }: SelectProps<TFormValues>) {
   const { t } = useTranslation()
 
   return (
-    <FieldWrapper label={label} error={error}>
+    <FieldWrapper
+      classlabel={classlabel}
+      classchild={classchild}
+      className={cn('', classnamefieldwrapper)}
+      label={label}
+      error={error}
+    >
       <Controller
         control={control}
         name={name}

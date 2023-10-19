@@ -11,6 +11,7 @@ import { FirmWareRoutes } from '~/cloud/firmware'
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
+import { SubcriptionRoutes } from '~/cloud/subcription/routes'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -39,6 +40,7 @@ export const protectedRoutes = [
       ...ProjectManagementRoutes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
+      ...SubcriptionRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (
