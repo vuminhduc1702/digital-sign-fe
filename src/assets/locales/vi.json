@@ -655,7 +655,8 @@
     "no_dashboard": "Không có dashboard",
     "no_in_org": "Không thuộc TC",
     "no_widget": "Không có biểu đồ",
-    "no_role": "Không có vai trò"
+    "no_role": "Không có vai trò",
+    "no_subcription": "Không có dịch vụ"
   },
   "btn": {
     "create": "Tạo mới",

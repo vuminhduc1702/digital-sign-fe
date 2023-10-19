@@ -218,7 +218,7 @@ export function SubcriptionTable({ data, ...props }: SubcriptionTableProps) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_firmware')}
+      {t('table:no_subcription')}
     </div>
   )
 }
