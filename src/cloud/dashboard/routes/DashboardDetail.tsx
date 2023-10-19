@@ -98,7 +98,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-
+  // console.log('lastJsonMessage', lastJsonMessage)
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
@@ -233,9 +233,12 @@ export function DashboardDetail() {
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                        lastJsonMessage?.data?.map(device => device.timeseries),
+                        lastJsonMessage?.data?.map(
+                          device => device.timeseries as TimeSeries,
+                        ),
                       )
                     : {}
+                // console.log('realtimeValues', realtimeValues)
 
                 return (
                   <div
@@ -287,7 +290,6 @@ export function DashboardDetail() {
               size="square"
               onClick={() => {
                 setWidgetList({})
-                setIsLayoutChange(false)
                 detailDashboardRefetch()
                 setIsEditMode(false)
               }}

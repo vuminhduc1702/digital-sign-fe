@@ -9,7 +9,6 @@ import { publicRoutes } from './public'
 import { useEffect } from 'react'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 import storage from '~/utils/storage'
-import { Item } from '@radix-ui/react-accordion'
 
 const { LandingPage } = lazyImport(
   () => import('~/pages/LandingPage'),

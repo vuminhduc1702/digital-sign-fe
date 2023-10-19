@@ -21,10 +21,9 @@ export function LineChart({ data }: { data: TimeSeries }) {
     },
   ])
 
-  // Handle real time value
   const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (data != null && Object.keys(data).length !== 0) {
+    if (Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
@@ -72,6 +71,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
   function dataTransformation(data: WSWidgetData[]): Datum[] {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
+
     return data
       ?.toSorted((a, b) => a.ts - b.ts)
       ?.map(({ ts, value }: WSWidgetData) => ({
@@ -80,6 +80,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
           config: {
             ...dateTimeOptionsWithoutYearMonthDay,
             second: '2-digit',
+            fractionalSecondDigits: 3,
           },
         }),
         y: parseFloat(value),
@@ -102,6 +103,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
       {dataTransformedFeedToChart[0].data.length > 0 ? (
         <ResponsiveLine
           data={dataTransformedFeedToChart}
+          colors={{ scheme: 'nivo' }}
           margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
           xScale={{ type: 'point' }}
           yScale={{

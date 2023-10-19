@@ -8,7 +8,7 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type TimeSeries } from '../../types'
 
 export const BarChart = ({ data }: { data: TimeSeries }) => {
-  console.log('new bar: ', data)
+  // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -20,10 +20,9 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
     },
   ])
 
-  // Handle real time value
   const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (data != null && Object.keys(data).length !== 0) {
+    if (Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
@@ -54,36 +53,45 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
   }, [newDataValue])
 
   function dataManipulation() {
-    const barWidgetDataType = Object.entries(newValuesRef.current as TimeSeries)
-      .reduce((result: BarDatum[], [key, items]) => {
-        items
-          .toSorted((a, b) => a.ts - b.ts)
-          .forEach(item => {
-            const time = dateTransformation(item.ts)
-            const value = parseInt(item.value)
-            const existingIndex = result.findIndex(obj => obj.time === time)
-            if (existingIndex === -1) {
-              result.push({ time, [key]: value })
-            } else {
-              result[existingIndex][key] = value
-            }
-          })
+    const barWidgetDataType = Object.entries(
+      newValuesRef.current as TimeSeries,
+    ).reduce((result: BarDatum[], [key, items]) => {
+      items.forEach(item => {
+        const time = item.ts
+        const value = parseInt(item.value)
+        const existingIndex = result.findIndex(obj => obj.time === time)
+        if (existingIndex === -1) {
+          result.push({ time, [key]: value })
+        } else {
+          result[existingIndex][key] = value
+        }
+      })
 
-        return result
-      }, [])
-      .slice(-10)
+      return result
+        .sort((a, b) => (a.time as number) - (b.time as number))
+        .slice(-10)
+    }, [])
 
-    setDataTransformedFeedToChart(barWidgetDataType)
+    setDataTransformedFeedToChart(
+      barWidgetDataType.map(item => {
+        return {
+          ...item,
+          time: dateTransformation(item.time as number),
+        }
+      }),
+    )
   }
 
   function dateTransformation(date: number) {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
+
     return getVNDateFormat({
-      date: date,
+      date,
       config: {
         ...dateTimeOptionsWithoutYearMonthDay,
         second: '2-digit',
+        fractionalSecondDigits: 3,
       },
     })
   }
@@ -97,16 +105,12 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
 
   return (
     <>
-      {dataTransformedFeedToChart.length > 0 ? (
+      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
         <ResponsiveBar
           data={dataTransformedFeedToChart}
-          keys={Object.keys(data)}
+          keys={Object.keys(newValuesRef.current)}
           indexBy="time"
-          colors={[
-            'hsl(308, 70%, 50%)',
-            'hsl(80, 70%, 50%)',
-            'hsl(12, 70%, 50%)',
-          ]}
+          colors={{ scheme: 'nivo' }}
           margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
           padding={0.3}
           valueScale={{ type: 'linear' }}

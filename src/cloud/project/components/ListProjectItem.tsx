@@ -60,14 +60,14 @@ export function ListProjectItem({
                 borderRadius: '10px 10px 10px 0',
               }}
             >
-              <div className="absolute right-3 top-3">
+              <div className="absolute right-2 top-2 h-7 w-7 rounded-full bg-secondary-600 bg-opacity-80 hover:bg-primary-400">
                 <Dropdown
                   icon={
                     <BtnContextMenuIcon
                       height={20}
                       width={10}
                       viewBox="0 0 1 20"
-                      className="hover:text-primary-400"
+                      className="pt-[3px] text-white"
                     />
                   }
                 >
