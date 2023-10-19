@@ -37,6 +37,8 @@ export type UserInfo = {
   profile: Profile
   org_id: string
   org_name: string
+  customer_code: string
+  phone: string
 }
 
 export const getUserInfo = (): Promise<UserInfo> => {

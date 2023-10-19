@@ -5,7 +5,7 @@ import storage from '~/utils/storage'
 import { type EntityThing } from '~/cloud/customProtocol'
 import {
   ComboBoxSelectFirmWare,
-  CreateThing,
+  CreateFirmWare,
   FirmWareTable,
 } from '../components/Firmware'
 import TitleBar from '~/components/Head/TitleBar'
@@ -36,7 +36,7 @@ export function FirmwareTemplate() {
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
-            <CreateThing />
+            <CreateFirmWare />
             {isSuccess ? (
               <ComboBoxSelectFirmWare
                 data={firmwareData}

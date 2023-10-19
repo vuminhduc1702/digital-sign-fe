@@ -31,7 +31,7 @@ export const entityFirmWareSchema = z.object({
   description: z.string(),
 })
 
-export function CreateThing() {
+export function CreateFirmWare() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()

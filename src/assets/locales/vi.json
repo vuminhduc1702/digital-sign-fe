@@ -27,7 +27,7 @@
       "title": "Thanh toán",
       "plgc": "Quản lý gói cước",
       "plkh": "Quản lý khách hàng",
-      "pldk": "Quản lý đăng ký",
+      "pldk": "Quản lý đăng ký dịch vụ",
       "plhd": "Quản lý hoá đơn",
       "client": {
         "title": "Khách hàng",
@@ -179,6 +179,7 @@
           "edit": "Sửa người dùng",
           "name": "Tên",
           "email": "Email",
+          "phone": "Số điện thoại",
           "password": "Mật khẩu",
           "confirm_password": "Nhập lại mật khẩu",
           "role": "Vai trò",
@@ -593,6 +594,38 @@
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
       }
+    },
+    "subcription": {
+      "title": "Thông tin đăng ký dịch vụ",
+      "create": "Đăng ký dịch vụ",
+      "edit": "Sửa thông tin đăng ký dịch vụ",
+      "delete": "Hủy đăng ký",
+      "delete_sub_confirm": "Bạn có chắc chắn muốn hủy đăng ký {{SUBCRIPTION}}?",
+      "popup": {
+        "customer_info": "Thông tin khách hàng",
+        "service_info": "Thông tin dịch vụ",
+        "billing_info": "Thông tin thanh toán",
+        "search_customer_with": "Tìm kiếm khách hàng theo: ",
+        "customer_name": "Tên khách hàng",
+        "customer_code": "Mã khách hàng",
+        "package": "Gói cước",
+        "price_method": "Cách định giá",
+        "quantity": "Số lượng",
+        "payment_type": "Loại thanh toán",
+        "estimated_payment": "Số tiền thanh toán",
+        "period": "Chu kỳ tính tiền",
+        "choose_user": "Vui lòng chọn thông tin khách hàng",
+        "choose_plan": "Vui lòng gói cước",
+        "success_create": "Đăng ký dịch vụ thành công",
+        "success_update": "Cập nhật dịch vụ thành công",
+        "success_delete": "Hủy đăng ký dịch vụ thành công"
+      },
+      "table": {
+        "sub_code": "Mã đăng ký",
+        "start_date": "Ngày bắt đầu đăng ký",
+        "cycle_now": "Chu kỳ hiện tại",
+        "status": "Trạng thái"
+      }
     }
   },
   "table": {
@@ -622,7 +655,8 @@
     "no_dashboard": "Không có dashboard",
     "no_in_org": "Không thuộc TC",
     "no_widget": "Không có biểu đồ",
-    "no_role": "Không có vai trò"
+    "no_role": "Không có vai trò",
+    "no_subcription": "Không có dịch vụ"
   },
   "btn": {
     "create": "Tạo mới",

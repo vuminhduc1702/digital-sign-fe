@@ -32,6 +32,7 @@ export const userSchema = z
   .object({
     name: nameSchema,
     email: emailSchema,
+    phone: z.string(),
     password: passwordSchema,
     confirmPassword: passwordSchema.optional(),
     project_id: z.string().optional(),
@@ -107,6 +108,7 @@ export function CreateUser() {
               email: values.email,
               password: values.password,
               role_id: role?.value || '',
+              phone: values.phone
             },
           })
         }}
@@ -121,6 +123,13 @@ export function CreateUser() {
                 }
                 error={formState.errors['name']}
                 registration={register('name')}
+              />
+              <InputField
+                label={
+                  t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
+                }
+                error={formState.errors['phone']}
+                registration={register('phone')}
               />
               <InputField
                 label={

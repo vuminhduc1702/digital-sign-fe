@@ -25,6 +25,7 @@ export const PATHS: { [key: string]: string } = {
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
   BILLING_PACKAGE: `${BASE_PATH_PAYMENT}billing-package`,
+  BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subcription`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,

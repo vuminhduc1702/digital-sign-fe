@@ -31,6 +31,7 @@ export function ComboBoxSelectUser({
       'org_name',
       'role_name',
       'role_id',
+      'phone'
     ],
   )
 
