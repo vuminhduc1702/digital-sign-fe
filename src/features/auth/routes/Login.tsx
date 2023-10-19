@@ -11,7 +11,11 @@ export const Login = () => {
 
   return (
     <Layout title={t('user:login')}>
-      <LoginForm onSuccess={() => navigate(PATHS.HOME)} />
+      <LoginForm
+        onSuccess={() => {
+          window.location.href = PATHS.HOME
+        }}
+      />
     </Layout>
   )
 }

@@ -99,10 +99,10 @@ export function SectionProduct() {
           </div>
         </div>
         <div className="flex w-full justify-center">
-          <div className="w-[1040px] pt-[50px]">
+          <div className="w-[1200px] pt-[50px]">
             <Carousel
               className=""
-              containerClass="carousel-container p-[2px]"
+              containerClass="carousel-container p-[0px]"
               responsive={responsive}
               transitionDuration={300}
               infinite
