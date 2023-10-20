@@ -146,6 +146,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['password']}
                 registration={register('password')}
+                type='password'
               />
               <InputField
                 label={
@@ -154,6 +155,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['confirmPassword']}
                 registration={register('confirmPassword')}
+                type='password'
               />
               <div className="space-y-1">
                 <SelectDropdown
