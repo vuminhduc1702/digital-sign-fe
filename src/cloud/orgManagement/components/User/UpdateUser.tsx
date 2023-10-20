@@ -173,6 +173,7 @@ export function UpdateUser({
                 label={
                   t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
                 }
+                type='number'
                 error={formState.errors['phone']}
                 registration={register('phone')}
               />
