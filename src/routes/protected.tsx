@@ -12,6 +12,7 @@ import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
 import { SubcriptionRoutes } from '~/cloud/subcription/routes'
+import { BillingRoutes } from '~/cloud/billing/routes'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -41,6 +42,7 @@ export const protectedRoutes = [
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
       ...SubcriptionRoutes,
+      ...BillingRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (

@@ -1,0 +1,47 @@
+import { useQuery } from '@tanstack/react-query'
+import { axios } from '~/lib/axios'
+
+import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
+import { type BasePagination, type BaseAPIRes } from '~/types'
+import { type Billing } from '../../types'
+
+export interface searchFilter {
+  [key: string]: string
+}
+
+type GetBillings = {
+  projectId: string
+}
+
+export type GetBillingtonRes = {
+  data: {
+    data: Billing[]
+  } & BasePagination
+} & BaseAPIRes
+
+export const getBillings = ({
+  projectId
+}: GetBillings): Promise<GetBillingtonRes> => {
+  return axios.get(`/api/priceplan/bill`, {
+    params: {
+      project_id: projectId
+    },
+  })
+}
+
+type QueryFnType = typeof getBillings
+
+type UseEntityBillingtonOptions = {
+  config?: QueryConfig<QueryFnType>
+} & GetBillings
+
+export const useGetBillings = ({
+  projectId,
+  config,
+}: UseEntityBillingtonOptions) => {
+  return useQuery<ExtractFnReturnType<QueryFnType>>({
+    queryKey: ['billings', projectId],
+    queryFn: () => getBillings({ projectId }),
+    ...config,
+  })
+}
