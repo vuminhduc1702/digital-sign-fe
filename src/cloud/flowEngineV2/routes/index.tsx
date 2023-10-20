@@ -29,7 +29,7 @@ const { TemplateFlow } = lazyImport(
   () => import('./TemplateFlow'),
   'TemplateFlow',
 )
-const { id: projectId } = storage.getProject()
+const { id: projectId } = storage.getProject() || {}
 
 export const FlowEngineV2Routes = [
   {
