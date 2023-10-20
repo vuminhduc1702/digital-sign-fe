@@ -121,7 +121,7 @@ function SideNavigation() {
               {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.THING_TEMPLATE}/${projectId}`}>
+          <NavLink to={`${PATHS.BUSINESS}`}>
             <AccordionContent>
               {t('sidebar:cloud.flow_engine_v2')}
             </AccordionContent>

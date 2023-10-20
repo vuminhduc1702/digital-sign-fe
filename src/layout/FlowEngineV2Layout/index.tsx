@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet,  useLocation  } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import FlowEngineV2Navbar from './components/Navbar'
@@ -8,7 +8,8 @@ import { Spinner } from '~/components/Spinner'
 
 export function FlowEngineV2Layout() {
   const { t } = useTranslation()
-  const { projectId } = useParams()
+  const {pathname} = useLocation();
+  const projectId = pathname.split('/').pop();
 
   return (
     <ContentLayout title={t('sidebar:cloud.flow_engine_v2')}>
