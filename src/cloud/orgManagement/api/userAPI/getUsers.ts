@@ -50,7 +50,7 @@ export const useGetUsers = ({
   projectId,
   orgId,
   name,
-  expand = false,
+  expand,
   offset = 0,
   limit = limitPagination,
   config,

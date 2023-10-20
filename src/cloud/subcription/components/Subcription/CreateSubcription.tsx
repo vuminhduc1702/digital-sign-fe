@@ -43,7 +43,7 @@ export function CreateSubcription() {
   const [customerCode, setCustomerCode] = useState('')
   const [registerValue, setRegisterValue] = useState('')
 
-  const { data: UserData } = useGetUsers({ projectId })
+  const { data: UserData } = useGetUsers({ projectId, expand: true })
 
   const { data: PlanData } = useGetPlans({ projectId })
 
@@ -181,10 +181,13 @@ export function CreateSubcription() {
                     control={control}
                     value={userValue}
                     onChange={e => {
-                      const arrLabel = e.label.split(' - ')
                       const arrValue = e.value.split(' - ')
                       setValue('user_id', e.value)
-                      setCustomerName(arrLabel[2])
+                      setCustomerName(
+                        arrValue[2] !== 'undefined'
+                          ? arrValue[2]
+                          : 'Tên khách hàng',
+                      )
                       setCustomerCode(arrValue[0])
                       setUserId(arrValue[1])
                       setUserValue(e)
@@ -193,8 +196,8 @@ export function CreateSubcription() {
                       UserData?.users?.map(user => ({
                         label: `${user.phone ? user.phone : '(SĐT)'} - ${
                           user.email
-                        } - ${user.name}`,
-                        value: `${user.customer_code} - ${user.user_id}`,
+                        }`,
+                        value: `${user.customer_code} - ${user.user_id} - ${user.name}`,
                       })) || [{ label: '', value: '' }]
                     }
                   />
