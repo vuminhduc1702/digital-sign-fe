@@ -15,7 +15,7 @@ export const PATHS: { [key: string]: string } = {
   DEVICE_MANAGE: `${BASE_PATH_CLOUD}org-management/device`,
   EVENT_MANAGE: `${BASE_PATH_CLOUD}org-management/event`,
 
-  BUSINESS: `${BASE_PATH_CLOUD}flow-engine-v2`,
+  FLOW_ENGINE_V2: `${BASE_PATH_CLOUD}flow-engine-v2`,
   THING_TEMPLATE: `${BASE_PATH_CLOUD}flow-engine-v2/thing`,
   THING_SERVICE: `${BASE_PATH_CLOUD}flow-engine-v2/thing-service`,
   TEMPLATE_FLOW: `${BASE_PATH_CLOUD}flow-engine-v2/template`,

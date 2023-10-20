@@ -11,7 +11,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
-import { BarChart, LineChart } from '../components'
+import { BarChart, LineChart, PieChart } from '../components'
 import {
   CreateWidget,
   type Widget,
@@ -26,6 +26,7 @@ import {
   type DashboardWS,
   type WidgetType,
   type TimeSeries,
+  type LatestData,
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
@@ -93,6 +94,7 @@ export function DashboardDetail() {
 
   const widgetListRef = useRef<Widget>({})
   const [widgetList, setWidgetList] = useState<Widget>({})
+  console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -240,6 +242,15 @@ export function DashboardDetail() {
                     : {}
                 // console.log('realtimeValues', realtimeValues)
 
+                const lastestValues: LatestData =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(
+                          device => device.latest.TIME_SERIES as LatestData,
+                        ),
+                      )
+                    : {}
+
                 return (
                   <div
                     key={widgetId}
@@ -267,10 +278,12 @@ export function DashboardDetail() {
                     <p className="absolute ml-2 mt-2">
                       {allWidgetData?.[widgetId]?.title ?? ''}
                     </p>
-                    {allWidgetData?.[widgetId]?.type === 'LINE' ? (
+                    {allWidgetData?.[widgetId]?.description === 'LINE' ? (
                       <LineChart data={realtimeValues} />
-                    ) : allWidgetData?.[widgetId]?.type === 'BAR' ? (
+                    ) : allWidgetData?.[widgetId]?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} />
+                    ) : allWidgetData?.[widgetId]?.description === 'PIE' ? (
+                      <PieChart data={lastestValues} />
                     ) : null}
                   </div>
                 )
@@ -290,6 +303,7 @@ export function DashboardDetail() {
               size="square"
               onClick={() => {
                 setWidgetList({})
+                widgetListRef.current = {}
                 detailDashboardRefetch()
                 setIsEditMode(false)
               }}

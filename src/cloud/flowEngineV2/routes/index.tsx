@@ -34,15 +34,12 @@ const { id: projectId } = storage.getProject() || {}
 export const FlowEngineV2Routes = [
   {
     element: <FlowEngineV2Layout />,
-    path: `${PATHS.BUSINESS}`,
+    path: `${PATHS.FLOW_ENGINE_V2}`,
     children: [
       {
         index: true,
         element: (
-          <Navigate
-            to={`${PATHS.THING_TEMPLATE}/${projectId}`}
-            replace
-          />
+          <Navigate to={`${PATHS.THING_TEMPLATE}/${projectId}`} replace />
         ),
       },
       {
