@@ -178,7 +178,12 @@ export function LandingPage() {
                     >
                       <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {userDataFromStorage ? (
-                          <p className="cursor-pointer" onClick={() => {}}>
+                          <p
+                            className="cursor-pointer"
+                            onClick={() => {
+                              navigate(PATHS.CHANGEPASSWORD)
+                            }}
+                          >
                             Đổi mật khẩu
                           </p>
                         ) : null}

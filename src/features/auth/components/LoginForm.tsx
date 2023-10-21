@@ -9,7 +9,15 @@ import { PATHS } from '~/routes/PATHS'
 import { emailSchema, passwordSchema } from '~/utils/schemaValidation'
 import { Checkbox } from '~/components/Checkbox'
 
-import { BtnPasswordLoginIcon, BtnUserLoginIcon } from '~/components/SVGIcons'
+import {
+  BtnPasswordLoginIcon,
+  BtnUserLoginIcon,
+  EyeHide,
+  EyeShow,
+} from '~/components/SVGIcons'
+import { useState } from 'react'
+import { content } from 'html2canvas/dist/types/css/property-descriptors/content'
+import { divIcon } from 'leaflet'
 
 const schema = z.object({
   identifier: emailSchema,
@@ -27,8 +35,11 @@ type LoginFormProps = {
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { t } = useTranslation()
-
+  const [showPassword, setShowPassword] = useState(false)
   const login = useLogin()
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev)
+  }
 
   return (
     <div>
@@ -58,7 +69,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               registration={register('identifier')}
             />
             <InputField
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               placeholder={t('user:password')}
               className="bg-stone-300"
               classnamefieldwrapper="relative"
@@ -69,6 +80,25 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                   viewBox="0 0 20 20"
                   className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                 />
+              }
+              endIcon={
+                showPassword ? (
+                  <EyeShow
+                    height={24}
+                    width={24}
+                    viewBox="0 0 24 24"
+                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                    onClick={togglePasswordVisibility}
+                  />
+                ) : (
+                  <EyeHide
+                    height={24}
+                    width={24}
+                    viewBox="0 0 24 24"
+                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                    onClick={togglePasswordVisibility}
+                  />
+                )
               }
               error={formState.errors['password']}
               registration={register('password')}
@@ -105,7 +135,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
             </li>
             <li>
               {t('auth:forgot_password')}{' '}
-              <Link to={PATHS.REGISTER} className="font-bold text-black">
+              <Link to={PATHS.FORGETPASSWORD} className="font-bold text-black">
                 {t('auth:change_password')}
               </Link>
             </li>

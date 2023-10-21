@@ -33,6 +33,9 @@ export const PATHS: { [key: string]: string } = {
   // Public routes
   LOGIN: `${BASE_PATH}auth/login`,
   REGISTER: `${BASE_PATH}auth/register`,
+  FORGETPASSWORD: `${BASE_PATH}auth/forgetpassword`,
+  // Auth routes not public
+  CHANGEPASSWORD: `${BASE_PATH}auth/changepassword`,
 
   // Common routes
   HOME: `${BASE_PATH}`,

@@ -13,6 +13,8 @@ import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
 import { SubcriptionRoutes } from '~/cloud/subcription/routes'
 
+import { ChangePassword } from '~/features/auth/routes/ChangePassword'
+
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
@@ -87,5 +89,9 @@ export const protectedRoutes = [
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
     ],
+  },
+  {
+    path: PATHS.CHANGEPASSWORD,
+    element: <ChangePassword />,
   },
 ]
