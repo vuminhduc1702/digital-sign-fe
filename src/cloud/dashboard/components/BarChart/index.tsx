@@ -58,7 +58,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
     ).reduce((result: BarDatum[], [key, items]) => {
       items.forEach(item => {
         const time = item.ts
-        const value = parseInt(item.value)
+        const value = parseFloat(item.value)
         const existingIndex = result.findIndex(obj => obj.time === time)
         if (existingIndex === -1) {
           result.push({ time, [key]: value })
@@ -101,7 +101,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
     minDuration: 300,
   })
 
-  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
+  console.log('transform bar', dataTransformedFeedToChart)
 
   return (
     <>

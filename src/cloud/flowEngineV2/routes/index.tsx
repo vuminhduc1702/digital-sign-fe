@@ -2,6 +2,8 @@ import { ErrorBoundary } from 'react-error-boundary'
 
 import { lazyImport } from '~/utils/lazyImport'
 import { PATHS } from '~/routes/PATHS'
+import { Navigate } from 'react-router-dom'
+import storage from '~/utils/storage'
 
 const { ErrorFallback } = lazyImport(
   () => import('~/pages/ErrorPage'),
@@ -21,20 +23,25 @@ const { ThingServices } = lazyImport(
   'ThingServices',
 )
 
-const { ShapeFlow } = lazyImport(
-  () => import('./ShapeFlow'),
-  'ShapeFlow',
-)
+const { ShapeFlow } = lazyImport(() => import('./ShapeFlow'), 'ShapeFlow')
 
 const { TemplateFlow } = lazyImport(
   () => import('./TemplateFlow'),
   'TemplateFlow',
 )
+const { id: projectId } = storage.getProject() || {}
 
 export const FlowEngineV2Routes = [
   {
     element: <FlowEngineV2Layout />,
+    path: `${PATHS.FLOW_ENGINE_V2}`,
     children: [
+      {
+        index: true,
+        element: (
+          <Navigate to={`${PATHS.THING_TEMPLATE}/${projectId}`} replace />
+        ),
+      },
       {
         path: PATHS.THING_TEMPLATE,
         children: [
