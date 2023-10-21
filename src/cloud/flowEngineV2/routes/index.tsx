@@ -30,7 +30,7 @@ const { TemplateFlow } = lazyImport(
   'TemplateFlow',
 )
 
-const { id: projectId } = storage.getProject()
+const projectData = storage.getProject()
 
 export const FlowEngineV2Routes = [
   {
@@ -40,7 +40,14 @@ export const FlowEngineV2Routes = [
       {
         index: true,
         element: (
-          <Navigate to={`${PATHS.THING_TEMPLATE}/${projectId}`} replace />
+          <Navigate
+            to={`${
+              projectData != null
+                ? PATHS.THING_TEMPLATE + '/' + projectData?.id
+                : PATHS.THING_TEMPLATE
+            }`}
+            replace
+          />
         ),
       },
       {

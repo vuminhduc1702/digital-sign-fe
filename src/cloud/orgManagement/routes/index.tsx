@@ -29,7 +29,7 @@ const { GroupManage } = lazyImport(() => import('./GroupManage'), 'GroupManage')
 const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
 const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
 
-const { id: projectId } = storage.getProject()
+const projectData = storage.getProject()
 
 export const OrgManagementRoutes = [
   {
@@ -38,7 +38,16 @@ export const OrgManagementRoutes = [
     children: [
       {
         index: true,
-        element: <Navigate to={`${PATHS.ORG_MANAGE}/${projectId}`} replace />,
+        element: (
+          <Navigate
+            to={`${
+              projectData != null
+                ? PATHS.ORG_MANAGE + '/' + projectData?.id
+                : PATHS.ORG_MANAGE
+            }`}
+            replace
+          />
+        ),
       },
       {
         path: PATHS.ORG_MANAGE,
