@@ -77,6 +77,7 @@ export function DashboardDetail() {
   const [widgetCategory, setWidgetCategory] =
     useState<WidgetCategoryType>('LINE')
   const [isMultipleAttr, setIsMultipleAttr] = useState(true)
+  const [isMultipleDevice, setIsMultipleDevice] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
@@ -391,6 +392,7 @@ export function DashboardDetail() {
                   widgetType={widgetType}
                   widgetCategory={widgetCategory}
                   isMultipleAttr={isMultipleAttr}
+                  isMultipleDevice={isMultipleDevice}
                   isOpen={isShowCreateWidget}
                   close={() => setIsShowCreateWidget(false)}
                   widgetListRef={widgetListRef}
@@ -436,6 +438,7 @@ export function DashboardDetail() {
                           setWidgetType('TIMESERIES')
                           setWidgetCategory('LINE')
                           setIsMultipleAttr(true)
+                          setIsMultipleDevice(true)
                         }}
                       >
                         <span>
@@ -455,6 +458,7 @@ export function DashboardDetail() {
                           setWidgetType('TIMESERIES')
                           setWidgetCategory('BAR')
                           setIsMultipleAttr(true)
+                          setIsMultipleDevice(true)
                         }}
                       >
                         <span>
@@ -476,6 +480,7 @@ export function DashboardDetail() {
                           setWidgetType('LASTEST')
                           setWidgetCategory('PIE')
                           setIsMultipleAttr(true)
+                          setIsMultipleDevice(true)
                         }}
                       >
                         <span>
@@ -495,6 +500,7 @@ export function DashboardDetail() {
                           setWidgetType('LASTEST')
                           setWidgetCategory('GAUGE')
                           setIsMultipleAttr(false)
+                          setIsMultipleDevice(false)
                         }}
                       >
                         <span>
@@ -516,6 +522,7 @@ export function DashboardDetail() {
                           setWidgetType('LASTEST')
                           setWidgetCategory('RTDATA')
                           setIsMultipleAttr(false)
+                          setIsMultipleDevice(false)
                         }}
                       >
                         <span>
@@ -535,6 +542,7 @@ export function DashboardDetail() {
                           setWidgetType('LASTEST')
                           setWidgetCategory('MAP')
                           setIsMultipleAttr(true)
+                          setIsMultipleDevice(true)
                         }}
                       >
                         <span>
@@ -554,6 +562,7 @@ export function DashboardDetail() {
                           setWidgetType('LASTEST')
                           setWidgetCategory('TABLE')
                           setIsMultipleAttr(true)
+                          setIsMultipleDevice(true)
                         }}
                       >
                         <span>
