@@ -11,7 +11,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
-import { BarChart, LineChart, PieChart } from '../components'
+import { BarChart, GaugeChart, LineChart, Map, PieChart } from '../components'
 import {
   CreateWidget,
   type Widget,
@@ -94,7 +94,7 @@ export function DashboardDetail() {
 
   const widgetListRef = useRef<Widget>({})
   const [widgetList, setWidgetList] = useState<Widget>({})
-  console.log('widgetList', widgetList)
+  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -242,7 +242,7 @@ export function DashboardDetail() {
                     : {}
                 // console.log('realtimeValues', realtimeValues)
 
-                const lastestValues: LatestData =
+                const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(
@@ -251,12 +251,18 @@ export function DashboardDetail() {
                       )
                     : {}
 
+                const lastestValueOneDevice: LatestData =
+                  lastJsonMessage?.id === widgetId
+                    ? (lastJsonMessage?.data?.[0]?.latest
+                        ?.TIME_SERIES as LatestData)
+                    : {}
+
                 return (
                   <div
                     key={widgetId}
                     data-grid={
                       detailDashboard?.dashboard_setting?.layout?.length > 0 &&
-                      widgetList == null
+                      Object.keys(widgetList).length === 0
                         ? detailDashboard?.dashboard_setting?.layout?.find(
                             layout => layout.i === widgetId,
                           )
@@ -284,6 +290,10 @@ export function DashboardDetail() {
                       <BarChart data={realtimeValues} />
                     ) : allWidgetData?.[widgetId]?.description === 'PIE' ? (
                       <PieChart data={lastestValues} />
+                    ) : allWidgetData?.[widgetId]?.description === 'MAP' ? (
+                      <Map data={lastestValues} isEditMode={isEditMode} />
+                    ) : allWidgetData?.[widgetId]?.description === 'GAUGE' ? (
+                      <GaugeChart data={lastestValueOneDevice} />
                     ) : null}
                   </div>
                 )
@@ -305,6 +315,9 @@ export function DashboardDetail() {
                 setWidgetList({})
                 widgetListRef.current = {}
                 detailDashboardRefetch()
+                setLayoutDashboard(
+                  detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
+                )
                 setIsEditMode(false)
               }}
               startIcon={

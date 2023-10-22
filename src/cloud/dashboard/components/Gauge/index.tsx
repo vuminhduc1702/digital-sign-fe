@@ -1,31 +1,39 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useGauge } from 'use-gauge'
 import { motion, MotionConfig, useAnimationFrame } from 'framer-motion'
 import clsx from 'clsx'
+import { useSpinDelay } from 'spin-delay'
+
+import { Spinner } from '~/components/Spinner'
+
+import { type LatestData } from '../../types'
+
+const SCALE = 10
 
 const useGaugeChart = (data: number) => {
   const [value, setValue] = useState(0)
 
   useAnimationFrame(t => {
-    if (value >= 1000) return
+    if (value >= 100 * SCALE) return
     setValue(data)
   })
 
   return {
-    value: Math.min(value, 1000),
+    value: Math.min(value, 100 * SCALE),
   }
 }
 
 type GaugeProps = {
   value: number
+  attrKey: string
 }
 
-const START_ANGLE = 45
-const END_ANGLE = 315
+const START_ANGLE = 90
+const END_ANGLE = 270
 
-function Gauge({ value }: GaugeProps) {
+function Gauge({ value, attrKey }: GaugeProps) {
   const gauge = useGauge({
-    domain: [0, 1000],
+    domain: [0, 100 * SCALE],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 21,
@@ -37,13 +45,12 @@ function Gauge({ value }: GaugeProps) {
     baseRadius: 8,
     tipRadius: 2,
   })
-  console.log('needle', needle.tip.cx, needle.tip.cy)
 
   const arcStroke = useMemo(() => {
     let color = ''
-    if (value <= 250) {
+    if (value <= 40 * SCALE) {
       color = `green`
-    } else if (value <= 500) {
+    } else if (value <= 80 * SCALE) {
       color = 'yellow'
     } else {
       color = 'red'
@@ -53,7 +60,7 @@ function Gauge({ value }: GaugeProps) {
   }, [value])
 
   return (
-    <div>
+    <div className="relative">
       <svg className="w-full overflow-visible p-4" {...gauge.getSVGProps()}>
         <defs>
           <linearGradient
@@ -106,7 +113,7 @@ function Gauge({ value }: GaugeProps) {
         <g id="ticks">
           {gauge.ticks.map(angle => {
             const asValue = gauge.angleToValue(angle)
-            const showText = asValue % 200 === 0
+            const showText = asValue % (20 * SCALE) === 0
 
             return (
               <React.Fragment key={`tick-group-${angle}`}>
@@ -114,9 +121,10 @@ function Gauge({ value }: GaugeProps) {
                   className={clsx([
                     'stroke-gray-300',
                     {
-                      'stroke-green-300': asValue <= 200,
-                      'stroke-yellow-300': asValue >= 600 && asValue <= 800,
-                      'stroke-red-400': asValue >= 800,
+                      'stroke-green-500': asValue <= 20 * SCALE,
+                      'stroke-yellow-500':
+                        asValue >= 60 * SCALE && asValue <= 80 * SCALE,
+                      'stroke-red-400': asValue >= 80 * SCALE,
                     },
                   ])}
                   strokeWidth={2}
@@ -167,16 +175,48 @@ function Gauge({ value }: GaugeProps) {
           />
         </g>
       </svg>
+      <p className="absolute left-1/2 top-1/2 -translate-x-1/2">{attrKey}</p>
     </div>
   )
 }
 
-export function GaugeChart({ data }: { data: number }) {
-  const { value } = useGaugeChart(data)
+export function GaugeChart({ data }: { data: LatestData }) {
+  // console.log(`new gauge: `, data)
+
+  const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
+    key: '',
+    value: 0,
+  })
+
+  const newDataValue = Object.values(data)?.[0]?.value ?? ''
+  useEffect(() => {
+    if (Object.keys(data).length !== 0) {
+      const gaugeDataType = {
+        key: Object.keys(data)[0],
+        value: parseFloat(newDataValue),
+      }
+      setDataTransformedFeedToChart(gaugeDataType)
+    }
+  }, [newDataValue])
+
+  const { value } = useGaugeChart(dataTransformedFeedToChart.value)
+
+  const showSpinner = useSpinDelay(Object.keys(data).length === 0, {
+    delay: 150,
+    minDuration: 300,
+  })
 
   return (
-    <MotionConfig transition={{ type: 'tween', ease: 'linear' }}>
-      <Gauge value={value} />
-    </MotionConfig>
+    <>
+      {Object.keys(data).length !== 0 ? (
+        <MotionConfig transition={{ type: 'tween', ease: 'linear' }}>
+          <Gauge value={value} attrKey={dataTransformedFeedToChart.key} />
+        </MotionConfig>
+      ) : (
+        <div className="flex h-full items-center justify-center">
+          <Spinner showSpinner={showSpinner} size="xl" />
+        </div>
+      )}
+    </>
   )
 }
