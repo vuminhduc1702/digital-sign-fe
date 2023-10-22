@@ -5,12 +5,15 @@ import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type BasePagination, type BaseAPIRes } from '~/types'
 import { type Billing } from '../../types'
 
-export interface searchFilter {
+export interface SearchFilter {
   [key: string]: string
 }
 
 type GetBillings = {
   projectId: string
+  searchFilter?: SearchFilter
+  start_time?: number
+  end_time?: number
 }
 
 export type GetBillingtonRes = {
@@ -20,11 +23,17 @@ export type GetBillingtonRes = {
 } & BaseAPIRes
 
 export const getBillings = ({
-  projectId
+  projectId,
+  searchFilter,
+  start_time,
+  end_time
 }: GetBillings): Promise<GetBillingtonRes> => {
   return axios.get(`/api/priceplan/bill`, {
     params: {
-      project_id: projectId
+      project_id: projectId,
+      start_time,
+      end_time,
+      ...searchFilter,
     },
   })
 }
@@ -37,11 +46,15 @@ type UseEntityBillingtonOptions = {
 
 export const useGetBillings = ({
   projectId,
+  searchFilter,
+  start_time,
+  end_time,
   config,
 }: UseEntityBillingtonOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['billings', projectId],
-    queryFn: () => getBillings({ projectId }),
+    queryKey: ['billings', projectId, searchFilter, start_time, end_time],
+    queryFn: () =>
+      getBillings({ projectId, searchFilter, start_time, end_time }),
     ...config,
   })
 }

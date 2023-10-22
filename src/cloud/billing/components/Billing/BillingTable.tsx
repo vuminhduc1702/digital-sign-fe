@@ -13,13 +13,13 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { getVNDateFormat } from '~/utils/misc'
 import { type Billing } from '../../types'
-import { UpdateSubcription } from './UpdateSubcription'
+import { ViewBilling } from './ViewBilling'
+import { EyeOpenIcon } from '@radix-ui/react-icons'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
-  const [type, setType] = useState('')
 
   return (
     <>
@@ -36,21 +36,18 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
         <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              }
+              icon={<EyeOpenIcon className="h-5 w-5" />}
               onClick={() => {
                 open()
-                setType('create-firmware')
               }}
             >
-              {t('billing:subcription.title')}
+              {t('billing:manage_bill.preview_bill')}
             </MenuItem>
           </div>
         </Menu.Items>
       </Dropdown>
       {isOpen ? (
-        <UpdateSubcription id={id} close={close} isOpen={true} />
+        <ViewBilling id={id} close={close} isOpen={true} />
       ) : null}
     </>
   )
@@ -77,76 +74,99 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
       }),
       columnHelper.accessor('id', {
         header: () => (
-          <span>{t('billing:subcription.popup.customer_code')}</span>
+          <span>{t('billing:manage_bill.table.id')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('c_name', {
         header: () => (
-          <span>{t('billing:subcription.popup.customer_code')}</span>
+          <span>{t('billing:manage_bill.table.c_name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('id', {
+      columnHelper.accessor('plan_name', {
         header: () => (
-          <span>{t('billing:subcription.popup.customer_code')}</span>
+          <span>{t('billing:manage_bill.table.plan_name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('id', {
+      columnHelper.accessor('cost', {
         header: () => (
-          <span>{t('billing:subcription.popup.customer_code')}</span>
+          <span>{t('billing:manage_bill.table.cost')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('s_status', {
-      //   header: () => <span>{t('billing:subcription.table.status')}</span>,
-      //   cell: info => {
-      //     const { s_status } = info.row.original
-      //     const valueStatus = () => {
-      //       let result = ''
-      //       if (s_status) {
-      //         switch (s_status) {
-      //           case 'Active':
-      //             result = 'Hoạt động'
-      //             break
-      //           case 'Pending Cancel':
-      //             result = 'Chờ hủy'
-      //             break
-      //           case 'Cancelled':
-      //             result = 'Đã hủy'
-      //             break
-      //           case 'Pending Active':
-      //             result = 'Chờ kích hoạt'
-      //             break
-      //           case 'Finished':
-      //             result = 'Đã kết thúc'
-      //             break
-      //           default:
-      //             break
-      //         }
-      //       }
-      //       return result
-      //     }
-      //     return valueStatus()
-      //   },
-      //   footer: info => info.column.id,
-      // }),
-      // columnHelper.display({
-      //   id: 'contextMenu',
-      //   cell: info => {
-      //     const { s_id } = info.row.original
-      //     return SubcriptionTableContextMenu({
-      //       id: s_id,
-      //     })
-      //   },
-      //   header: () => null,
-      //   footer: info => info.column.id,
-      // }),
+      columnHelper.accessor('date_request', {
+        header: () => (
+          <span>{t('billing:manage_bill.table.date_request')}</span>
+        ),
+        cell: info =>
+          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('date_expiry', {
+        header: () => (
+          <span>{t('billing:manage_bill.table.date_expiry')}</span>
+        ),
+        cell: info =>
+          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('date_payment', {
+        header: () => (
+          <span>{t('billing:manage_bill.table.date_payment')}</span>
+        ),
+        cell: info =>
+          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('status', {
+        header: () => (
+          <span>{t('billing:manage_bill.table.status')}</span>
+        ),
+        cell: info => {
+          const { status } = info.row.original
+          const valueStatus = () => {
+            let result = ''
+            if (status) {
+              switch (status) {
+                case 'Wait':
+                  result = 'Đang chờ thanh toán'
+                  break
+                case 'Paid':
+                  result = 'Đã thanh toán'
+                  break
+                case 'Expired':
+                  result = 'Hết hạn thanh toán'
+                  break
+                case 'Init':
+                  result = 'Khởi tạo'
+                  break
+                default:
+                  break
+              }
+            }
+            return result
+          }
+          return valueStatus()
+        },
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id } = info.row.original
+          return SubcriptionTableContextMenu({
+            id: id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
     ],
     [],
   )
@@ -155,7 +175,7 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_subcription')}
+      {t('table:no_bill')}
     </div>
   )
 }

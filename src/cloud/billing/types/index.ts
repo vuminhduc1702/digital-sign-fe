@@ -26,6 +26,11 @@ export type Billing = {
   date_payment: number
   status: string
   action: number
+  plan_name: string
+  s_service_type: string
+  pre_tax_cost: number
+  p_tax: number
+  tax_cost: number
 }
 
 export type BillingList = {

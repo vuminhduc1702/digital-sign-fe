@@ -1,1 +1,1 @@
-export * from './SubcriptionTable'
+export * from './BillingTable'
