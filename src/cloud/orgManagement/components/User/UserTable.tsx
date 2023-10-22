@@ -179,7 +179,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.user_manage.table.role_name')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => info.getValue() === 'undefined' ? '' : info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('activate', {

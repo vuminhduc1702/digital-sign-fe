@@ -96,7 +96,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
     },
   )
 
-  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
+  console.log('transform line', dataTransformedFeedToChart)
 
   return (
     <>

@@ -9,18 +9,8 @@ type EntityId = {
   id: string
 }
 
-type LatestData = {
-  TIME_SERIES: {
-    [key: string]: WSWidgetData
-  } | null
-  ENTITY_FIELD: {
-    name: WSWidgetData
-  } | null
-}
-
-type AggLatestData = {
-  TIME_SERIES: null
-  ENTITY_FIELD: null
+export type LatestData = {
+  [key: string]: WSWidgetData
 }
 
 export type TimeSeries = {
@@ -29,9 +19,17 @@ export type TimeSeries = {
 
 export type DataItem = {
   entityId: EntityId
-  latest: LatestData
+  latest: {
+    TIME_SERIES: LatestData | null
+    ENTITY_FIELD: {
+      name: WSWidgetData
+    } | null
+  }
   timeseries: TimeSeries | null
-  aggLatest: AggLatestData
+  aggLatest: {
+    TIME_SERIES: null
+    ENTITY_FIELD: null
+  }
 }
 
 export type DashboardWS = {

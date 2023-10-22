@@ -15,8 +15,8 @@ export const PATHS: { [key: string]: string } = {
   DEVICE_MANAGE: `${BASE_PATH_CLOUD}org-management/device`,
   EVENT_MANAGE: `${BASE_PATH_CLOUD}org-management/event`,
 
+  FLOW_ENGINE_V2: `${BASE_PATH_CLOUD}flow-engine-v2`,
   THING_TEMPLATE: `${BASE_PATH_CLOUD}flow-engine-v2/thing`,
-  THING_SERVICE: `${BASE_PATH_CLOUD}flow-engine-v2/thing-service`,
   TEMPLATE_FLOW: `${BASE_PATH_CLOUD}flow-engine-v2/template`,
   SHAPE_FLOW: `${BASE_PATH_CLOUD}flow-engine-v2/shape`,
 
@@ -26,7 +26,7 @@ export const PATHS: { [key: string]: string } = {
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
   BILLING: `${BASE_PATH_PAYMENT}billing`,
   BILLING_PACKAGE: `${BASE_PATH_PAYMENT}billing-package`,
-  BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subcription`,
+  BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subscription`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,

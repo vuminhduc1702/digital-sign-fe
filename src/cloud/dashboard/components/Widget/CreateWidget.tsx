@@ -78,7 +78,8 @@ export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
 
 export const widgetSchema = z.object({
   title: z.string(),
-  type: widgetCategorySchema,
+  description: widgetCategorySchema,
+  type: widgetTypeSchema,
   datasource: z.object({
     init_message: z.string(),
     lastest_message: z.string(),
@@ -86,26 +87,48 @@ export const widgetSchema = z.object({
     history_message: z.string(),
   }),
   attribute_config: attrWidgetSchema,
-  config: z.object({
-    chartsetting: z.object({
-      start_date: z.number(),
-      end_date: z.number(),
-      data_type: widgetDataTypeSchema,
-      widget_type: widgetTypeSchema,
-    }),
-    timewindow: z.object({
-      interval: z.number(),
-    }),
-    aggregation: aggSchema,
-  }),
+  config: z
+    .object({
+      chartsetting: z.object({
+        start_date: z.number(),
+        end_date: z.number(),
+        data_type: widgetDataTypeSchema,
+      }),
+      timewindow: z.object({
+        interval: z.number(),
+      }),
+      aggregation: aggSchema,
+    })
+    .nullable(),
 })
+// .and(
+//   z.discriminatedUnion('type', [
+//     z.object({
+//       type: z.literal('TIMESERIES'),
+//       config: z.object({
+//         chartsetting: z.object({
+//           start_date: z.number(),
+//           end_date: z.number(),
+//           data_type: widgetDataTypeSchema,
+//         }),
+//         timewindow: z.object({
+//           interval: z.number(),
+//         }),
+//         aggregation: aggSchema,
+//       }),
+//     }),
+//     z.object({
+//       type: z.literal('LASTEST'),
+//     }),
+//   ]),
+// )
 
 export const widgetListSchema = z.record(widgetSchema)
 export type Widget = z.infer<typeof widgetListSchema>
 
 export const widgetCreateSchema = z.object({
   title: nameSchema,
-  type: widgetCategorySchema.optional(),
+  type: widgetTypeSchema,
   org_id: z.string(),
   device: z.array(
     z.string().min(1, {
@@ -115,22 +138,56 @@ export const widgetCreateSchema = z.object({
     }),
   ),
   attributeConfig: attrWidgetSchema,
-  widgetSetting: z.object({
-    agg: aggSchema,
-    interval: z.coerce.number(),
-    startDate: z.date({
-      required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
-    }),
-    endDate: z
-      .date({
-        required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
-      })
-      .optional(),
-    dataType: widgetDataTypeSchema,
-    widgetType: widgetTypeSchema,
-  }),
+  widgetSetting: z
+    .object({
+      agg: aggSchema.optional(),
+      interval: z.coerce.number().optional(),
+      startDate: z
+        .date({
+          required_error: i18n.t(
+            'cloud:dashboard.config_chart.pick_date_alert',
+          ),
+        })
+        .optional(),
+      endDate: z
+        .date({
+          required_error: i18n.t(
+            'cloud:dashboard.config_chart.pick_date_alert',
+          ),
+        })
+        .optional(),
+      dataType: widgetDataTypeSchema.optional(),
+    })
+    .optional(),
   id: z.string().optional(),
 })
+// .and(
+//   z.discriminatedUnion('type', [
+//     z.object({
+//       type: z.literal('TIMESERIES'),
+//       widgetSetting: z.object({
+//         agg: aggSchema,
+//         interval: z.coerce.number(),
+//         startDate: z.date({
+//           required_error: i18n.t(
+//             'cloud:dashboard.config_chart.pick_date_alert',
+//           ),
+//         }),
+//         endDate: z
+//           .date({
+//             required_error: i18n.t(
+//               'cloud:dashboard.config_chart.pick_date_alert',
+//             ),
+//           })
+//           .optional(),
+//         dataType: widgetDataTypeSchema,
+//       }),
+//     }),
+//     z.object({
+//       type: z.literal('LASTEST'),
+//     }),
+//   ]),
+// )
 
 type WidgetCreateDTO = {
   data: z.infer<typeof widgetCreateSchema> & { id: string }
@@ -213,7 +270,7 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  // console.log('zod errors', formState.errors)
+  console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -348,7 +405,8 @@ export function CreateWidget({
 
               const widget: z.infer<typeof widgetSchema> = {
                 title: values.title,
-                type: widgetCategory,
+                description: widgetCategory,
+                type: widgetType,
                 datasource: {
                   init_message: JSON.stringify(initMessage),
                   lastest_message:
@@ -371,24 +429,26 @@ export function CreateWidget({
                   label: item.label,
                   unit: item.unit,
                 })),
-                config: {
-                  aggregation: values.widgetSetting?.agg,
-                  timewindow: {
-                    interval: values.widgetSetting?.interval,
-                  },
-                  chartsetting: {
-                    start_date: new Date(
-                      values.widgetSetting?.startDate as unknown as number,
-                    ).getTime(),
-                    end_date: new Date(
-                      values.widgetSetting?.endDate as unknown as number,
-                    ).getTime(),
-                    widget_type: widgetType,
-                    data_type: values.widgetSetting?.dataType,
-                  },
-                },
+                config:
+                  widgetType === 'TIMESERIES'
+                    ? {
+                        aggregation: values.widgetSetting?.agg,
+                        timewindow: {
+                          interval: values.widgetSetting?.interval,
+                        },
+                        chartsetting: {
+                          start_date: new Date(
+                            values.widgetSetting
+                              ?.startDate as unknown as number,
+                          ).getTime(),
+                          end_date: new Date(
+                            values.widgetSetting?.endDate as unknown as number,
+                          ).getTime(),
+                          data_type: values.widgetSetting?.dataType,
+                        },
+                      }
+                    : null,
               }
-              console.log('11111111111111111111', widget)
 
               widgetListRef.current[widgetId] = widget
               setWidgetList(widgetListRef.current)

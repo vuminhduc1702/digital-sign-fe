@@ -128,6 +128,7 @@ export function CreateUser() {
                 label={
                   t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
                 }
+                type='number'
                 error={formState.errors['phone']}
                 registration={register('phone')}
               />
@@ -145,6 +146,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['password']}
                 registration={register('password')}
+                type='password'
               />
               <InputField
                 label={
@@ -153,6 +155,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['confirmPassword']}
                 registration={register('confirmPassword')}
+                type='password'
               />
               <div className="space-y-1">
                 <SelectDropdown

@@ -1,7 +1,9 @@
 import { ErrorBoundary } from 'react-error-boundary'
+import { Navigate } from 'react-router-dom'
 
 import { lazyImport } from '~/utils/lazyImport'
 import { PATHS } from '~/routes/PATHS'
+import storage from '~/utils/storage'
 
 const { ErrorFallback } = lazyImport(
   () => import('~/pages/ErrorPage'),
@@ -27,25 +29,25 @@ const { GroupManage } = lazyImport(() => import('./GroupManage'), 'GroupManage')
 const { UserManage } = lazyImport(() => import('./UserManage'), 'UserManage')
 const { EventManage } = lazyImport(() => import('./EventManage'), 'EventManage')
 
-const idURL = window.location.pathname.split('/')[5]
+const projectData = storage.getProject()
 
 export const OrgManagementRoutes = [
   {
     element: <OrgManagementLayout />,
+    path: PATHS.ORG,
     children: [
       {
-        path: PATHS.ORG,
-        children: [
-          {
-            path: ':projectId',
-            element: (
-              <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <OrgManage />
-              </ErrorBoundary>
-            ),
-            children: [{ path: ':orgId' }],
-          },
-        ],
+        index: true,
+        element: (
+          <Navigate
+            to={`${
+              projectData != null
+                ? PATHS.ORG_MANAGE + '/' + projectData?.id
+                : PATHS.ORG_MANAGE
+            }`}
+            replace
+          />
+        ),
       },
       {
         path: PATHS.ORG_MANAGE,
