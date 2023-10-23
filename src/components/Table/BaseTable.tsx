@@ -14,11 +14,7 @@ import Pagination from './components/Pagination'
 import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 import { Spinner } from '../Spinner'
-<<<<<<< HEAD
-import { InputField } from '../Form'
-=======
 import { cn } from '~/utils/misc'
->>>>>>> 13b5ba5195233d64b003324ab5338929c4819686
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -40,7 +36,6 @@ export function BaseTable<T extends Record<string, any>>({
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
-  const [value, setValue] = useState('')
 
   const defaultData = useMemo(() => [], [])
 
