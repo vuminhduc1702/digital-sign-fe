@@ -23,6 +23,9 @@ export function ComboBoxAttrLog({
   const { data: deviceAttrData } = useAttrLog({
     entityId: deviceId,
     entityType: 'DEVICE',
+    config: {
+      suspense: false,
+    },
   })
 
   const { acc: attrLogFlattenData, extractedPropertyKeys } = flattenData(

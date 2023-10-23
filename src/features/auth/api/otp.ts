@@ -5,8 +5,8 @@ type verifyCode = {
   email: string
 }
 
-export const sentOTP  = async ({ email, phone }: verifyCode): Promise<void> => {
-  return await axios.get(`/api/verifycode`, {
+export const sentOTP = ({ email, phone }: verifyCode): Promise<void> => {
+  return axios.get(`/api/verifycode`, {
     params: {
       email: email,
     },

@@ -5,7 +5,7 @@ import {
   type ColumnDef,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
+  type SortingState,
 } from '@tanstack/react-table'
 import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -13,9 +13,12 @@ import { useTranslation } from 'react-i18next'
 import Pagination from './components/Pagination'
 import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
-
 import { Spinner } from '../Spinner'
+<<<<<<< HEAD
 import { InputField } from '../Form'
+=======
+import { cn } from '~/utils/misc'
+>>>>>>> 13b5ba5195233d64b003324ab5338929c4819686
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -24,6 +27,7 @@ export function BaseTable<T extends Record<string, any>>({
   setOffset,
   total,
   isPreviousData,
+  className,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -31,6 +35,7 @@ export function BaseTable<T extends Record<string, any>>({
   setOffset?: React.Dispatch<React.SetStateAction<number>>
   total?: number
   isPreviousData?: boolean
+  className?: string
 }) {
   const { t } = useTranslation()
 
@@ -65,7 +70,7 @@ export function BaseTable<T extends Record<string, any>>({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <div className="mt-2 flex grow flex-col justify-between">
+    <div className={cn('mt-2 flex grow flex-col justify-between', className)}>
       {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />
@@ -83,27 +88,25 @@ export function BaseTable<T extends Record<string, any>>({
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <>
-                          <div
-                            className={`flex items-center justify-between text-table-header ${
-                              header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
-                                : ''
-                            }`}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            <div className="w-2 pr-5 text-xl text-black">
-                              {{
-                                asc: '↑',
-                                desc: '↓',
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
+                        <div
+                          className={`flex items-center justify-between text-table-header ${
+                            header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : ''
+                          }`}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          <div className="w-2 pr-5 text-xl text-black">
+                            {{
+                              asc: '↑',
+                              desc: '↓',
+                            }[header.column.getIsSorted() as string] ?? null}
                           </div>
-                        </>
+                        </div>
                       )}
                     </th>
                   )

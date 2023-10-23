@@ -103,8 +103,12 @@ function SideNavigation() {
             />
             <div>{t('sidebar:device.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar:device.devkit')}</AccordionContent>
-          <AccordionContent>{t('sidebar:device.module')}</AccordionContent>
+          <NavLink to={`${PATHS.DEVKIT}`}>
+            <AccordionContent>{t('sidebar:device.devkit')}</AccordionContent>
+          </NavLink>
+          <NavLink to={`${PATHS.MODULE}`}>
+            <AccordionContent>{t('sidebar:device.module')}</AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="cloud">
