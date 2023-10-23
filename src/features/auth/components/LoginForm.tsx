@@ -40,7 +40,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-
   return (
     <div>
       <Form<LoginValues>

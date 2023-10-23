@@ -88,8 +88,8 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           shouldUnregister: true,
         }}
       >
-        {({ register, formState }) => {
-          //   console.log('formState', formState.errors)
+        {({ register, formState,  }) => {
+          console.log('formState', formState.errors)
           return (
             <>
               <InputField

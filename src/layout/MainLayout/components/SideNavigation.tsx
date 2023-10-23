@@ -167,10 +167,16 @@ function SideNavigation() {
             />
             <div>{t('sidebar:application.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar:application.appsdk')}</AccordionContent>
-          <AccordionContent>
-            {t('sidebar:application.vsmart_debug')}
-          </AccordionContent>
+          <NavLink to={`${PATHS.APPSDK}`}>
+            <AccordionContent>
+              {t('sidebar:application.appsdk')}
+            </AccordionContent>
+          </NavLink>
+          <NavLink to={`${PATHS.APPDEBUG}`}>
+            <AccordionContent>
+              {t('sidebar:application.vsmart_debug')}
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="payment">

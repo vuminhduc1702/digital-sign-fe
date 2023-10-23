@@ -42,6 +42,9 @@ export const PATHS: { [key: string]: string } = {
   DEVKIT: `${BASE_PATH}devkit`,
   MODULE: `${BASE_PATH}module`,
 
+  //Application routes
+  APPSDK: `${BASE_PATH}appSdk`,
+  APPDEBUG: `${BASE_PATH}appDebug`,
 
   // Common routes
   HOME: `${BASE_PATH}`,

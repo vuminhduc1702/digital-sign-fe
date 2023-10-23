@@ -16,6 +16,7 @@ import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
 import { DeviceRoutes } from '~/device/routes'
+import { ApplicationRoutes } from '~/applicationPages'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -47,6 +48,7 @@ export const protectedRoutes = [
       ...SubcriptionRoutes,
       ...DeviceRoutes,
       ...BillingRoutes,
+      ...ApplicationRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (
