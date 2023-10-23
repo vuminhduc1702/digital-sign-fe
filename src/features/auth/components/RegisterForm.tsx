@@ -46,21 +46,17 @@ type RegisterFormProps = {
   onSuccess: () => void
 }
 
-export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-  const { t } = useTranslation()
-
-  const registerMutation = useRegister()
-  const [email, setEmail] = useState('')
+export function useCountDownTimerOTP() {
   const [countdown, setCountdown] = useState<number>(180)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
   useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
+    const timerId: ReturnType<typeof setTimeout> = setInterval(() => {
       setCountdown(prevState => {
         if (prevState > 0) return prevState - 1
         else {
-          clearInterval(timerId!)
+          clearInterval(timerId)
           setCheckCountdown(false)
           setBtnOtpDisable(false)
           return 0
@@ -73,7 +69,31 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         clearInterval(timerId)
       }
     }
-  }, [checkCountdown])
+  }, [])
+
+  return {
+    countdown,
+    btnOtpDisable,
+    checkCountdown,
+    setBtnOtpDisable,
+    setCountdown,
+    setCheckCountdown,
+  }
+}
+
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const { t } = useTranslation()
+
+  const registerMutation = useRegister()
+
+  const {
+    countdown,
+    btnOtpDisable,
+    checkCountdown,
+    setBtnOtpDisable,
+    setCountdown,
+    setCheckCountdown,
+  } = useCountDownTimerOTP()
 
   return (
     <div>
@@ -87,7 +107,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           shouldUnregister: true,
         }}
       >
-        {({ register, formState }) => {
+        {({ register, formState, getValues }) => {
           console.log('formState', formState.errors)
           return (
             <>
@@ -98,9 +118,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setEmail(e.target.value)
-                }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
@@ -149,7 +166,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 onClick={() => {
                   setBtnOtpDisable(true)
                   sentOTP({
-                    email: email,
+                    email: getValues('email'),
                     phone: '0337463520',
                   })
                     .then(() => {
