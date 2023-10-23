@@ -38,6 +38,11 @@ export const PATHS: { [key: string]: string } = {
   // Auth routes not public
   CHANGEPASSWORD: `${BASE_PATH}auth/changepassword`,
 
+  // Device routes
+  DEVKIT: `${BASE_PATH}devkit`,
+  MODULE: `${BASE_PATH}module`,
+
+
   // Common routes
   HOME: `${BASE_PATH}`,
   MAINTAIN: `${BASE_PATH}maintain`,
