@@ -1,6 +1,6 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Link } from '~/components/Link'
 import { useRegister } from '~/lib/auth'
@@ -51,7 +51,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
 
   const registerMutation = useRegister()
   const [email, setEmail] = useState('')
-  const [countdown, setCountdown] = useState<number>(180)
+  const timeCountdown = 5
+  const [countdown, setCountdown] = useState<number>(timeCountdown)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
@@ -61,7 +62,9 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
         if (prevState > 0) return prevState - 1
         else {
           clearInterval(timerId!)
-          setCheckCountdown(false)
+          if (checkCountdown === true) {
+            setCheckCountdown(false)
+          }
           setBtnOtpDisable(false)
           return 0
         }
@@ -153,7 +156,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     phone: '0337463520',
                   })
                     .then(() => {
-                      setCountdown(countdown)
+                      setCountdown(timeCountdown)
                       setCheckCountdown(true)
                     })
                     .catch(error => {

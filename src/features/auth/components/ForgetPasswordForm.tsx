@@ -52,7 +52,8 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
 
   const forgetMutation = useChangePassWithEmailAndPassword()
   const [email, setEmail] = useState('')
-  const [countdown, setCountdown] = useState<number>(180)
+  const timeCountdown = 5
+  const [countdown, setCountdown] = useState<number>(timeCountdown)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
@@ -62,7 +63,9 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
         if (prevState > 0) return prevState - 1
         else {
           clearInterval(timerId!)
-          setCheckCountdown(false)
+          if (checkCountdown === true) {
+            setCheckCountdown(false)
+          }
           setBtnOtpDisable(false)
           return 0
         }
@@ -88,7 +91,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           shouldUnregister: true,
         }}
       >
-        {({ register, formState,  }) => {
+        {({ register, formState }) => {
           console.log('formState', formState.errors)
           return (
             <>
@@ -154,7 +157,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                     phone: '0337463520',
                   })
                     .then(() => {
-                      setCountdown(countdown)
+                      setCountdown(timeCountdown)
                       setCheckCountdown(true)
                     })
                     .catch(error => {
