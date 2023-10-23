@@ -24,6 +24,7 @@ export const PATHS: { [key: string]: string } = {
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
+  BILLING: `${BASE_PATH_PAYMENT}billing`,
   BILLING_PACKAGE: `${BASE_PATH_PAYMENT}billing-package`,
   BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subscription`,
 
