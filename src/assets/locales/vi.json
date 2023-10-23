@@ -630,6 +630,7 @@
     "manage_bill": {
       "preview_bill": "Xem trước hóa đơn",
       "service_bill": "Hóa đơn dịch vụ",
+      "export_PDF": "Xuất hóa đơn PDF",
       "table": {
         "id": "Số hóa đơn",
         "c_name": "Khách hàng",

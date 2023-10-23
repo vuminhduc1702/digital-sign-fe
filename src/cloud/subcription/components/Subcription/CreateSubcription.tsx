@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
@@ -21,6 +21,7 @@ import {
   useCreateSubcription,
   type CreateSubcriptionDTO,
 } from '../../api/subcriptionAPI/createSubcription'
+import { Plan, PlanlvList } from '~/cloud/billingPackage'
 
 export const entitySubcriptionSchema = z.object({
   plan_id: z
@@ -66,24 +67,80 @@ export function CreateSubcription() {
     return value ? parseInt(value) : 0
   }
 
+  useEffect(() => {
+    setTimeout(() => handleOnChange(''), 500)
+  }, [PlanDataById, planValue])
+
   const handleOnChange = (expected_number?: string) => {
-    let result: any
-    if (PlanDataById?.data?.payment_type === 'PREPAY') {
-      if (PlanDataById?.data?.estimate === 'fix') {
+    if (PlanDataById?.data) {
+      let result: any
+      const estimates = PlanDataById?.data?.estimate
+      const price = PlanDataById?.data?.price
+      const fix_cost = PlanDataById?.data?.fix_cost
+      const quantity_free = PlanDataById?.data?.quantity_free
+      const plan_lv = PlanDataById?.data?.plan_lv
+      const tax = PlanDataById?.data?.tax
+      if (estimates === 'fix') {
+        result = parseNumber(price) + parseNumber(fix_cost)
+      } else if (estimates === 'unit') {
         result =
-          parseNumber(PlanDataById?.data?.price) +
-          parseNumber(PlanDataById?.data?.fix_cost)
-      } else if (PlanDataById?.data?.estimate === 'unit') {
+          (parseNumber(expected_number) - parseNumber(quantity_free)) *
+            parseNumber(price) +
+          parseNumber(fix_cost)
+      } else if (estimates === 'mass') {
+        plan_lv?.length &&
+          plan_lv.forEach((item: PlanlvList, i: number) => {
+            if (
+              parseNumber(item.level) > parseNumber(expected_number) &&
+              (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
+                parseNumber(expected_number)
+            ) {
+              result =
+                (parseNumber(expected_number) - parseNumber(item.free)) *
+                  parseNumber(item.price) +
+                parseNumber(fix_cost)
+            }
+          })
+      } else if (estimates === 'step') {
+        let arr: PlanlvList[] = []
+        plan_lv?.length &&
+          plan_lv.forEach((item: PlanlvList, i: number) => {
+            if (parseNumber(item.level) > parseNumber(expected_number)) {
+              arr.length < 1 && arr.push(item)
+            }
+          })
         result =
-          (parseNumber(expected_number) -
-            parseNumber(PlanDataById?.data?.quantity_free)) *
-            parseNumber(PlanDataById?.data?.price) +
-          parseNumber(PlanDataById?.data?.fix_cost)
+          (arr.length ? parseNumber(arr[0].price) : 0) + parseNumber(fix_cost)
+      } else if (estimates === 'accumulated') {
+        let start = 0
+        let end = 0
+        let original = parseNumber(expected_number)
+        let temp = original
+        let index = 0
+        let tempPrice = 0
+
+        while (temp > 0) {
+          end = parseNumber(plan_lv?.[index]?.level)
+          if (original > end) {
+            tempPrice += (end - start) * parseNumber(plan_lv?.[index]?.price)
+            temp = original - end
+          } else {
+            tempPrice += temp * parseNumber(plan_lv?.[index]?.price)
+            temp = 0
+          }
+          start = end
+          index++
+          if (index === plan_lv?.length) {
+            tempPrice += temp * parseNumber(plan_lv?.[index - 1]?.price)
+            break
+          }
+        }
+        result = tempPrice + parseNumber(fix_cost)
       }
-    } else if (PlanDataById?.data?.payment_type === 'PREPAY') {
-      result = parseNumber(PlanDataById?.data?.fix_cost)
+
+      result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
+      setRegisterValue(result)
     }
-    setRegisterValue(result.toString() || '')
   }
 
   const valuePriceMethod = () => {
@@ -231,8 +288,6 @@ export function CreateSubcription() {
                     onChange={e => {
                       setValue('plan_id', e.value)
                       setPlanValue(e)
-                      PlanDataById?.data?.estimate !== 'unit' &&
-                        handleOnChange()
                     }}
                     options={
                       PlanData?.data?.map(plan => ({

@@ -15,6 +15,7 @@ import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 
 import { Spinner } from '../Spinner'
+import { InputField } from '../Form'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -34,6 +35,7 @@ export function BaseTable<T extends Record<string, any>>({
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
+  const [value, setValue] = useState('')
 
   const defaultData = useMemo(() => [], [])
 
@@ -69,7 +71,7 @@ export function BaseTable<T extends Record<string, any>>({
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
-        <table className="w-full border-collapse" id='table-ref'>
+        <table className="w-full border-collapse" id="table-ref">
           <thead className="border-b-2 border-secondary-700">
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
@@ -81,25 +83,27 @@ export function BaseTable<T extends Record<string, any>>({
                       colSpan={header.colSpan}
                     >
                       {header.isPlaceholder ? null : (
-                        <div
-                            className={`text-table-header flex justify-between items-center ${header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''}`}
-                            onClick={header.column.getToggleSortingHandler()} 
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          <div className='text-black w-2 text-xl pr-5'>
-                            {
-                              {
+                        <>
+                          <div
+                            className={`flex items-center justify-between text-table-header ${
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                            <div className="w-2 pr-5 text-xl text-black">
+                              {{
                                 asc: '↑',
                                 desc: '↓',
-                              }[header.column.getIsSorted() as string] ?? null
-                            }
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
                           </div>
-                        </div>
+                        </>
                       )}
                     </th>
                   )

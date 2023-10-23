@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -9,17 +9,25 @@ import { useDisclosure } from '~/utils/hooks'
 
 import { type BaseTablePagination } from '~/types'
 
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import { EyeOpenIcon, DownloadIcon } from '@radix-ui/react-icons'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { getVNDateFormat } from '~/utils/misc'
 import { type Billing } from '../../types'
 import { ViewBilling } from './ViewBilling'
-import { EyeOpenIcon } from '@radix-ui/react-icons'
+import { useBillingById } from '../../api/billingAPI'
+import { PDFDownloadLink } from '@react-pdf/renderer'
+import { BillingPDF } from './BillingPDF'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const { data } = useBillingById({
+    id,
+    config: { suspense: false },
+  })
+
+  console.log(data, 'daataatatatt')
 
   return (
     <>
@@ -43,12 +51,21 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
             >
               {t('billing:manage_bill.preview_bill')}
             </MenuItem>
+            <PDFDownloadLink
+              document={<BillingPDF dataPdf={data?.data} />}
+              fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
+            >
+              <MenuItem
+                icon={<DownloadIcon className="h-5 w-5" />}
+                onClick={() => { }}
+              >
+                {t('billing:manage_bill.export_PDF')}
+              </MenuItem>
+            </PDFDownloadLink>
           </div>
         </Menu.Items>
       </Dropdown>
-      {isOpen ? (
-        <ViewBilling id={id} close={close} isOpen={true} />
-      ) : null}
+      {isOpen ? <ViewBilling id={id} close={close} isOpen={true} /> : null}
     </>
   )
 }
@@ -73,30 +90,22 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('id', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.id')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.id')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('c_name', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.c_name')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.c_name')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('plan_name', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.plan_name')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.plan_name')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('cost', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.cost')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.cost')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -105,15 +114,17 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
           <span>{t('billing:manage_bill.table.date_request')}</span>
         ),
         cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+          info.getValue()
+            ? getVNDateFormat({ date: parseInt(info.getValue()) * 1000 })
+            : '',
         footer: info => info.column.id,
       }),
       columnHelper.accessor('date_expiry', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.date_expiry')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.date_expiry')}</span>,
         cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+          info.getValue()
+            ? getVNDateFormat({ date: parseInt(info.getValue()) * 1000 })
+            : '',
         footer: info => info.column.id,
       }),
       columnHelper.accessor('date_payment', {
@@ -121,13 +132,13 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
           <span>{t('billing:manage_bill.table.date_payment')}</span>
         ),
         cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+          info.getValue()
+            ? getVNDateFormat({ date: parseInt(info.getValue()) * 1000 })
+            : '',
         footer: info => info.column.id,
       }),
       columnHelper.accessor('status', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.status')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.status')}</span>,
         cell: info => {
           const { status } = info.row.original
           const valueStatus = () => {

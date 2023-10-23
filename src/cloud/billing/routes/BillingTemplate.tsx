@@ -9,12 +9,13 @@ import TitleBar from '~/components/Head/TitleBar'
 import { SearchIcon } from '~/components/SVGIcons'
 import { type SearchFilter, useGetBillings } from '../api/billingAPI'
 import { BillingTable } from '../components/Billing'
-import { Calendar as CalendarIcon } from "lucide-react"
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { cn } from '~/utils/misc'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Calendar } from '~/components/Calendar'
 import { type DateRange } from 'react-day-picker'
-import { format } from "date-fns"
+import { format } from 'date-fns'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 export function BillingTemplate() {
   const { t } = useTranslation()
@@ -65,29 +66,40 @@ export function BillingTemplate() {
               value={value}
               onChange={e => setValue(e.target.value)}
             />
-            <div className={cn("grid gap-2")}>
+            <div className={cn('grid gap-2')}>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     id="date"
                     variant="trans"
                     className={cn(
-                      "w-[300px] justify-start rounded-md text-left font-normal ",
-                      !date && "text-muted-foreground"
+                      'relative w-[300px] justify-start rounded-md text-left font-normal ',
+                      !date && 'text-muted-foreground',
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {date?.from ? (
                       date.to ? (
                         <>
-                          {format(date.from, "dd MM, y")} -{" "}
-                          {format(date.to, "dd MM, y")}
+                          {format(date.from, 'dd MM, y')} -{' '}
+                          {format(date.to, 'dd MM, y')}
                         </>
                       ) : (
-                        format(date.from, "dd MM, y")
+                        format(date.from, 'dd MM, y')
                       )
                     ) : (
                       <span>Pick a date</span>
+                    )}
+                    {date?.from && (
+                      <XMarkIcon
+                        onClick={() =>
+                          setDate({
+                            from: undefined,
+                            to: undefined,
+                          })
+                        }
+                        className="absolute right-3 top-2.5 h-4 w-4 "
+                      />
                     )}
                   </Button>
                 </PopoverTrigger>
