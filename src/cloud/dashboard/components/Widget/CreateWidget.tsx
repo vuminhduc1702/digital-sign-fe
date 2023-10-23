@@ -199,6 +199,7 @@ type CreateWidgetProps = {
   widgetType: WidgetType
   widgetCategory: WidgetCategoryType
   isMultipleAttr: boolean
+  isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
   widgetListRef: React.MutableRefObject<Widget>
@@ -214,6 +215,7 @@ export function CreateWidget({
   widgetType,
   widgetCategory,
   isMultipleAttr,
+  isMultipleDevice,
   isOpen,
   close,
   widgetListRef,
@@ -223,6 +225,7 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
   const [selectedIndex, setSelectedIndex] = useState(0)
+  console.log('isMultipleDevice', isMultipleDevice)
 
   const { id: projectId } = storage.getProject()
   const [optionOrg, setOptionOrg] = useState({
@@ -557,7 +560,8 @@ export function CreateWidget({
                                 option.label === t('loading:device') ||
                                 option.label === t('table:no_device')
                               }
-                              isMulti
+                              isMulti={isMultipleDevice}
+                              closeMenuOnSelect={!isMultipleDevice}
                               value={deviceValue}
                               onChange={(e: SelectOptionString[]) => {
                                 const entityIdsArr =

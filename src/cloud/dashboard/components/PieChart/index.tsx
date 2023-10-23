@@ -18,13 +18,7 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
-  >([
-    {
-      id: '',
-      label: '',
-      value: 1,
-    },
-  ])
+  >([])
 
   const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
   useEffect(() => {

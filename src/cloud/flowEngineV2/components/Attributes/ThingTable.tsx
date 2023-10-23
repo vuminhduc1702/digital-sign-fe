@@ -144,7 +144,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
           const thingId = info.row.original.id
           return (
             <NavLink
-              to={`${PATHS.THING_SERVICE}/${projectId}/${thingId}`}
+              to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}
               className="flex cursor-pointer gap-2"
             >
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">

@@ -626,6 +626,42 @@
         "cycle_now": "Chu kỳ hiện tại",
         "status": "Trạng thái"
       }
+    },
+    "manage_bill": {
+      "preview_bill": "Xem trước hóa đơn",
+      "service_bill": "Hóa đơn dịch vụ",
+      "table": {
+        "id": "Số hóa đơn",
+        "c_name": "Khách hàng",
+        "plan_name": "Gói cước",
+        "cost": "Số tiền",
+        "date_request": "Ngày yêu cầu thanh toán",
+        "date_expiry": "Ngày hết hạn thanh toán",
+        "date_payment": "Ngày thanh toán thực tế",
+        "status": "Trạng thái"
+      },
+      "view_PDF": {
+        "sign": "Ký hiệu",
+        "number": "Số",
+        "founding_date": "Ngày lập",
+        "address": "Địa chỉ: ",
+        "tax_code": "Mã số thuế: ",
+        "customer_name": "Họ tên người mua hàng: ",
+        "buying_name": "Tên đơn vị mua: ",
+        "payment_form": "Hình thức thanh toán: Chuyển khoản/Tiền mặt",
+        "total_payment": "Tổng cộng tiền thanh toán",
+        "money_to_text": "Số tiền viết bằng chữ",
+        "sign_by": "Ký bởi: ",
+        "sign_date": "Ngày ký: ",
+        "one": "01",
+        "order": "STT",
+        "s_service_type": "Tên dịch vụ",
+        "quantity": "Số lượng",
+        "pre_tax_cost": "Tiền dịch vụ",
+        "p_tax": "Thuế suất",
+        "tax_cost": "Tiền thuế",
+        "cost":  "Cộng"
+      }
     }
   },
   "table": {
@@ -644,6 +680,7 @@
     "no_device": "Không có thiết bị. Vui lòng tạo.",
     "no_group": "Không có nhóm. Vui lòng tạo.",
     "no_log_attr": "Không có bản tin thuộc tính",
+    "no_bill": "Không có hóa đơn",
     "no_user": "Không có người dùng. Vui lòng tạo.",
     "no_policy": "Không có chính sách. Vui lòng tạo.",
     "no_event": "Không có sự kiện. Vui lòng tạo.",

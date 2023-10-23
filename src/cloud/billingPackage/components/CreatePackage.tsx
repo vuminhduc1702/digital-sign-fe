@@ -146,7 +146,7 @@ export function CreatePackage() {
       plan_lv?.length &&
         plan_lv.forEach((item: PlanlvList, i: number) => {
           if (
-            parseNumber(item.level) > parseNumber(expected_number) &&
+            (parseNumber(item.level) >= parseNumber(expected_number) || parseNumber(item.level) === 0) &&
             (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
             parseNumber(expected_number)
           ) {
@@ -160,7 +160,7 @@ export function CreatePackage() {
       let arr: PlanlvList[] = []
       plan_lv?.length &&
         plan_lv.forEach((item: PlanlvList, i: number) => {
-          if (parseNumber(item.level) > parseNumber(expected_number)) {
+          if (parseNumber(item.level) >= parseNumber(expected_number) || parseNumber(item.level) === 0) {
             arr.length < 1 && arr.push(item)
           }
         })
@@ -175,7 +175,10 @@ export function CreatePackage() {
       let tempPrice = 0;
 
       while (temp > 0) {
-        end = parseNumber(plan_lv?.[index]?.level)
+        end = parseNumber(plan_lv?.[index]?.level);
+        if (end === 0) {
+          end = parseNumber(plan_lv?.[index - 1]?.level)
+        }
         if (original > end) {
           tempPrice += (end - start) * parseNumber(plan_lv?.[index]?.price);
           temp = original - end
@@ -527,6 +530,15 @@ export function CreatePackage() {
                                 registration={register(
                                   `plan_lv.${index}.level`,
                                 )}
+                                onBlur={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                  if ((index === getValues('plan_lv').length - 1) && e.target.value) {
+                                    planlvAppend({
+                                      level: '',
+                                      price: '',
+                                      free: '',
+                                    })
+                                  }
+                                }}
                                 classlabel='w-2/12'
                                 classchild='w-10/12'
                                 type="number"

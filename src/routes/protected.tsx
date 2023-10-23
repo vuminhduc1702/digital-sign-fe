@@ -12,6 +12,7 @@ import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
 import { SubcriptionRoutes } from '~/cloud/subcription/routes'
+import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
 import { DeviceRoutes } from '~/device/routes'
@@ -45,6 +46,7 @@ export const protectedRoutes = [
       ...FirmWareRoutes,
       ...SubcriptionRoutes,
       ...DeviceRoutes,
+      ...BillingRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (

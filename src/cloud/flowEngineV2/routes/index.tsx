@@ -1,8 +1,8 @@
 import { ErrorBoundary } from 'react-error-boundary'
+import { Navigate } from 'react-router-dom'
 
 import { lazyImport } from '~/utils/lazyImport'
 import { PATHS } from '~/routes/PATHS'
-import { Navigate } from 'react-router-dom'
 import storage from '~/utils/storage'
 
 const { ErrorFallback } = lazyImport(
@@ -29,7 +29,8 @@ const { TemplateFlow } = lazyImport(
   () => import('./TemplateFlow'),
   'TemplateFlow',
 )
-const { id: projectId } = storage.getProject() || {}
+
+const projectData = storage.getProject()
 
 export const FlowEngineV2Routes = [
   {
@@ -39,7 +40,14 @@ export const FlowEngineV2Routes = [
       {
         index: true,
         element: (
-          <Navigate to={`${PATHS.THING_TEMPLATE}/${projectId}`} replace />
+          <Navigate
+            to={`${
+              projectData != null
+                ? PATHS.THING_TEMPLATE + '/' + projectData?.id
+                : PATHS.THING_TEMPLATE
+            }`}
+            replace
+          />
         ),
       },
       {
@@ -52,7 +60,14 @@ export const FlowEngineV2Routes = [
                 <ThingTemplate />
               </ErrorBoundary>
             ),
-            children: [{ path: ':orgId' }],
+          },
+          {
+            path: ':projectId/:thingId',
+            element: (
+              <ErrorBoundary FallbackComponent={ErrorFallback}>
+                <ThingServices />
+              </ErrorBoundary>
+            ),
           },
         ],
       },
@@ -81,19 +96,6 @@ export const FlowEngineV2Routes = [
               </ErrorBoundary>
             ),
             children: [{ path: ':orgId' }],
-          },
-        ],
-      },
-      {
-        path: PATHS.THING_SERVICE,
-        children: [
-          {
-            path: ':projectId/:thingId',
-            element: (
-              <ErrorBoundary FallbackComponent={ErrorFallback}>
-                <ThingServices />
-              </ErrorBoundary>
-            ),
           },
         ],
       },

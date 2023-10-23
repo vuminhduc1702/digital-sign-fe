@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { useLogout, useUser } from '~/lib/auth'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
@@ -16,14 +17,12 @@ import { SectionFooter } from '../components/footer'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { Link } from '~/components/Link'
+import storage from '~/utils/storage'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import storage from '~/utils/storage'
 
 export function LandingPage() {
   const navigate = useNavigate()
@@ -32,9 +31,11 @@ export function LandingPage() {
   const { data: userInfoData } = useUserInfo({
     config: {
       useErrorBoundary: false,
+      enabled: !!storage.getToken(),
     },
   })
   const logout = useLogout()
+  console.log('!!storage.getProject()', storage.getProject())
 
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
