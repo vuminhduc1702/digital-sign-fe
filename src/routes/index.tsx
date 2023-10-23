@@ -40,11 +40,12 @@ export const AppRoutes = () => {
       element: <NotFoundPage />,
     },
   ]
-  
+
   useEffect(() => {
     const user = storage.getToken()
     if (
       !user &&
+      window.location.pathname !== PATHS.FORGETPASSWORD &&
       window.location.pathname !== PATHS.REGISTER &&
       !commonRoutes.some(item => item.path === window.location.pathname)
     ) {

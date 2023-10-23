@@ -9,6 +9,7 @@ import {
   type RegisterCredentialsDTO,
   registerWithEmailAndPassword,
 } from '~/features/auth/api/register'
+
 import { PATHS } from '~/routes/PATHS'
 
 import storage from '~/utils/storage'

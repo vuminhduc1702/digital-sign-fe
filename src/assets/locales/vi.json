@@ -784,7 +784,11 @@
     "require_otp": "Nhập OTP kích hoạt email",
     "require_email": "Nhập email",
     "require_password": "Nhập mật khẩu ",
+    "require_password_old": "Nhập mật khẩu cũ",
+    "require_password_new": "Nhập mật khẩu mới",
+    "success_password" : "Cập nhật mật khẩu thành công",
     "confirm_password": "Nhập lại mật khẩu",
-    "pass_invalid": "Mật khẩu nhập lại không đúng"
+    "pass_invalid": "Mật khẩu nhập lại không đúng",
+    "back_to_home": "Trở về trang chủ"
   }
 }
