@@ -8,7 +8,7 @@ import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
 import { type TimeSeries, type WSWidgetData } from '../../types'
 
 export function LineChart({ data }: { data: TimeSeries }) {
-  console.log('new line: ', data)
+  // console.log('new line: ', data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 

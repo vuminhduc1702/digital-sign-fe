@@ -11,7 +11,14 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
-import { BarChart, GaugeChart, LineChart, Map, PieChart } from '../components'
+import {
+  BarChart,
+  GaugeChart,
+  LineChart,
+  Map,
+  PieChart,
+  TableChart,
+} from '../components'
 import {
   CreateWidget,
   type Widget,
@@ -295,6 +302,8 @@ export function DashboardDetail() {
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : allWidgetData?.[widgetId]?.description === 'GAUGE' ? (
                       <GaugeChart data={lastestValueOneDevice} />
+                    ) : allWidgetData?.[widgetId]?.description === 'TABLE' ? (
+                      <TableChart data={realtimeValues} className="p-5" />
                     ) : null}
                   </div>
                 )
@@ -559,7 +568,7 @@ export function DashboardDetail() {
                         onClick={() => {
                           close()
                           setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
+                          setWidgetType('TIMESERIES')
                           setWidgetCategory('TABLE')
                           setIsMultipleAttr(true)
                           setIsMultipleDevice(true)

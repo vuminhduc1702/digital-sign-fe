@@ -5,7 +5,7 @@ import { type TimeSeries } from '../../types'
 
 export function Map({
   data,
-  isEditMode,
+  isEditMode = false,
 }: {
   data: TimeSeries
   isEditMode: boolean
