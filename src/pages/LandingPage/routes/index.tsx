@@ -35,7 +35,6 @@ export function LandingPage() {
     },
   })
   const logout = useLogout()
-  console.log('!!storage.getProject()', storage.getProject())
 
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
