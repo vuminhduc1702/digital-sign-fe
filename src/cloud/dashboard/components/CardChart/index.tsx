@@ -32,7 +32,7 @@ export function CardChart({ data }: { data: LatestData }) {
   return (
     <>
       {Object.keys(dataTransformedFeedToChart).length > 0 ? (
-        <div className="flex h-full max-w-sm flex-col items-center justify-center border border-secondary-400 bg-white shadow hover:bg-gray-100">
+        <div className="flex h-full flex-col items-center justify-center border border-secondary-400 bg-white shadow hover:bg-gray-100">
           <p className="mb-2 text-body-sm opacity-70">
             {dataTransformedFeedToChart.key}
           </p>
