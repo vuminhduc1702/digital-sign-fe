@@ -120,7 +120,7 @@ export function Module() {
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 CÁC SẢN PHẨM
               </div>
-              <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-sm shadow-lg">
+              <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-body-sm shadow-lg">
                 Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng
                 dẫn tích hợp.
               </div>
@@ -148,7 +148,7 @@ export function Module() {
                                 ([key]) => key !== 'name' && key !== 'image',
                               )
                               .map(([key, value]: [string, any]) => (
-                                <li key={key} className="mb-4 text-sm">
+                                <li key={key} className="mb-4 text-body-sm">
                                   {'• '}
                                   {capitalizeFirstLetter(key)} {' : '} {value}
                                 </li>
@@ -157,7 +157,7 @@ export function Module() {
 
                           <a
                             href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
-                            className="float-right text-sm font-medium"
+                            className="float-right text-body-sm font-medium"
                           >
                             Tải xuống
                           </a>
