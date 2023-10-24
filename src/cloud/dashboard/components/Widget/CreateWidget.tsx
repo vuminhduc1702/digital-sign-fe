@@ -68,7 +68,7 @@ export const widgetCategorySchema = z.enum([
   'BAR',
   'PIE',
   'GAUGE',
-  'RTDATA',
+  'CARD',
   'MAP',
   'TABLE',
 ] as const)
