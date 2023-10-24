@@ -90,7 +90,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           shouldUnregister: true,
         }}
       >
-        {({ register, formState }) => {
+        {({ register, formState, getValues }) => {
           console.log('formState', formState.errors)
           return (
             <>

@@ -1,9 +1,11 @@
 import { Fragment, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { InputField } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
 
 export function Devkit() {
   const devkits = ['Espressif Systems', 'Simcom']
+  const { t } = useTranslation()
   const devkitsDevice_Espressif = [
     {
       type: 'Espressif Systems',
@@ -73,7 +75,7 @@ export function Devkit() {
         <div className="ml-3 w-3/4">
           <div>
             <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
-              HƯỚNG DẪN TÍCH HỢP THIẾT BỊ
+              {t('device:guide_device')}
             </div>
             <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-sm shadow-lg">
               Khu vực này bao gồm thông tin các bộ DevKit đi kèm code mẫu, tài
@@ -84,7 +86,7 @@ export function Devkit() {
 
           <div>
             <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
-              Espressif System
+              {t('device:Espressif')}
             </div>
             <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-[#eceff1] pb-8">
               {devkitsDevice_Espressif.map((item, idx) => (
@@ -98,21 +100,27 @@ export function Devkit() {
                         <img src={item.image} alt="" />
                       </div>
                       <div className="w-2/3 p-4">
-                        <h5 className="mb-2 text-xl font-medium">Mô tả</h5>
+                        <h5 className="mb-2 text-xl font-medium">
+                          {' '}
+                          {t('device:describe')}
+                        </h5>
                         <p className="mb-4 text-sm">
-                          - Cách thức truyền thông: {item.communicationMethods}
+                          {t('device:communication_methods')}{' '}
+                          {item.communicationMethods}
                         </p>
                         <p className="mb-4 text-sm">
-                          - Giao thức truyền thông: {item.communicationProtocol}
+                          {t('device:communication_protocol')}{' '}
+                          {item.communicationProtocol}
                         </p>
                         <p className="mb-4 text-sm">
-                          - Giao thức giao tiếp: {item.communicateProtocol}
+                          {t('device:communicate_protocol')}{' '}
+                          {item.communicateProtocol}
                         </p>
                         <a
                           href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
                           className="float-right text-sm font-medium"
                         >
-                          Tải tài liệu
+                          {t('device:download_doc')}
                         </a>
                       </div>
                     </div>
@@ -124,7 +132,7 @@ export function Devkit() {
 
           <div>
             <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
-              Simcom
+              {t('device:simcom')}
             </div>
             <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-[#eceff1] pb-8 ">
               {devkitsDevice_Simcom.map((item, idx) => (
@@ -138,21 +146,26 @@ export function Devkit() {
                         <img src={item.image} alt="" />
                       </div>
                       <div className="w-2/3 p-4">
-                        <h5 className="mb-2 text-xl font-medium">Mô tả</h5>
+                        <h5 className="mb-2 text-xl font-medium">
+                          {t('device:describe')}
+                        </h5>
                         <p className="mb-4 text-sm">
-                          - Cách thức truyền thông: {item.communicationMethods}
+                          {t('device:communication_methods')}{' '}
+                          {item.communicationMethods}
                         </p>
                         <p className="mb-4 text-sm">
-                          - Giao thức truyền thông: {item.communicationProtocol}
+                          {t('device:communication_protocol')}{' '}
+                          {item.communicationProtocol}
                         </p>
                         <p className="mb-4 text-sm">
-                          - Giao thức giao tiếp: {item.communicateProtocol}
+                          {t('device:communicate_protocol')}{' '}
+                          {item.communicateProtocol}
                         </p>
                         <a
                           href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
                           className="float-right text-sm font-medium"
                         >
-                          Tải tài liệu
+                          {t('device:download_doc')}
                         </a>
                       </div>
                     </div>

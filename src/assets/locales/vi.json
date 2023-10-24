@@ -630,6 +630,7 @@
     "manage_bill": {
       "preview_bill": "Xem trước hóa đơn",
       "service_bill": "Hóa đơn dịch vụ",
+      "export_PDF": "Xuất hóa đơn PDF",
       "table": {
         "id": "Số hóa đơn",
         "c_name": "Khách hàng",
@@ -660,7 +661,7 @@
         "pre_tax_cost": "Tiền dịch vụ",
         "p_tax": "Thuế suất",
         "tax_cost": "Tiền thuế",
-        "cost":  "Cộng"
+        "cost": "Cộng"
       }
     }
   },
@@ -786,9 +787,98 @@
     "require_password": "Nhập mật khẩu ",
     "require_password_old": "Nhập mật khẩu cũ",
     "require_password_new": "Nhập mật khẩu mới",
-    "success_password" : "Cập nhật mật khẩu thành công",
+    "success_password": "Cập nhật mật khẩu thành công",
     "confirm_password": "Nhập lại mật khẩu",
     "pass_invalid": "Mật khẩu nhập lại không đúng",
     "back_to_home": "Trở về trang chủ"
+  },
+  "landingpage": {
+    "logo": "viettel",
+    "introduction": "Giới thiệu",
+    "pack_of_data": "Gói cước",
+    "product": "Sản phẩm",
+    "Platform_IoT": "Platform IoT",
+    "CMP_system": "Hệ thống CMP",
+    "FAQ": "FAQ",
+    "register_now": "Đăng ký ngay",
+    "service_transmit_data": "Dịch vụ Sim Data truyền tải dữ liệu",
+    "viettel_M2M": "Viettel M2M IoT ",
+    "experience_now": "Trải nghiệm ngay",
+    "footer": {
+      "client_support": "Hỗ trợ khách hàng",
+      "full_name": "Họ tên*:",
+      "email": "Email*:",
+      "phone_number": "Số điện thoại:",
+      "support_content": "Nội dung cần hỗ trợ*:",
+      "send": "Gửi",
+      "company": "Tổng Công ty Viễn thông Viettel (Viettel Telecom)",
+      "responsible_person": "Chịu trách nhiệm nội dung: Ông Cao Anh Sơn",
+      "cskh": "cskh@viettel.com.vn",
+      "follow": "Follow us:",
+      "phone_used": "0123 456 789",
+      "cre": "Copyright Viettel Telecom 2022"
+    },
+    "client": {
+      "partner": "Đối tác của chúng tôi"
+    },
+    "introduction_section": {
+      "view_product": "Xem sản phẩm",
+      "service_transmit_data_accurate": "Dịch vụ Sim Data truyền tải dữ liệu chính xác, tiết kiệm"
+    },
+    "news": {
+      "view_detail": "Xem chi tiết",
+      "news_": "Tin tức"
+    },
+    "order1": {
+      "M2M_manage_solution": "Giải pháp quản lý kết nối M2M",
+      "subscription_management": "Quản lý thuê bao",
+      "contract_management": "Quản lý hợp đồng",
+      "order_management": "Quản lý đơn hàng",
+      "payment_management": "Quản lý thanh toán"
+    },
+    "order": {
+      "manage_platform": "Nền tảng quản lý, tự động hóa và thu thập dữ liệu",
+      "manage_device": "Quản lý trạng thái thiết bị",
+      "business_model": "Triển khai mô hình nghiệp vụ no code - low code",
+      "data_security": "Bảo mật dữ liệu người dùng",
+      "support_protocol": "Hỗ trợ nhiều loại giao thức"
+    },
+    "section_product": {
+      "iot": "Sản phẩm IoT",
+      "variety": "Đa dạng sản phẩm phù hợp nhu cầu khách hàng"
+    },
+    "Q_A": {
+      "question": "Câu hỏi thường gặp"
+    },
+    "solution": {
+      "value": "Giá trị đem lại của Giải pháp M2M/IoT",
+      "accuracy": "Tiết kiệm, chính xác và mang lại nhiều giá trị cho khách hàng"
+    }
+  },
+  "device": {
+    "guide_device": "HƯỚNG DẪN TÍCH HỢP THIẾT BỊ",
+    "Espressif": "Espressif System",
+    "describe": "Mô tả",
+    "communication_methods": "- Cách thức truyền thông: ",
+    "communication_protocol": "- Giao thức truyền thông: ",
+    "communicate_protocol": "- Giao thức giao tiếp: ",
+    "download_doc": "Tải tài liệu",
+    "simcom": "Simcom",
+    "download": "Tải xuống",
+    "products": "CÁC SẢN PHẨM",
+    "information": "Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng dẫn tích hợp.",
+    "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG"
+  },
+  "application": {
+    "android": "ANDROID",
+    "ios": "IOS",
+    "access_link": "Hoặc truy cập vào đường link: ",
+    "debug": "Vsmart debug",
+    "setup": "Để cài đặt ứng dụng, vui lòng thực hiện theo hướng dẫn sau:",
+    "download_doc": "Tải tài liệu",
+    "download_sdk": "Tải SDK",
+    "qr_by_phone": "Quét mã QR bằng điện thoại",
+    "setup_deploygate": "Cài đặt ứng dụng Deploygate",
+    "qr_by_deploygate": "Quét mã QR bằng ứng dụng Deploygate"
   }
 }

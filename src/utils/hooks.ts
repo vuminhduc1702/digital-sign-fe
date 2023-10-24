@@ -4,7 +4,6 @@ import useWebSocket, { ReadyState } from 'react-use-websocket'
 import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 
 import { useNotificationStore } from '~/stores/notifications'
-import storage, { type UserStorage } from './storage'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 

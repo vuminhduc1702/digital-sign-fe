@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react'
 import Q_A from '~/assets/images/landingpage/Frame_427319126.png'
 import PlusIconGroup5412 from '~/assets/images/landingpage/Group_5412.png'
 import MinusIconGroup5411 from '~/assets/images/landingpage/Group_5411.png'
+import { useTranslation } from 'react-i18next'
 import {
   Accordion,
   AccordionContent,
@@ -43,7 +44,7 @@ export function QandA() {
         'Hệ thống Telco của Viettel hỗ trợ các doanh nghiệp đã đăng ký sử dụng thuê bao của Viettel quản lý thông tin thuê bao một cách miễn phí. Khách hàng chỉ cần tạo tài khoản và cung cấp thông tin GPKD để thực hiện quản lý.',
     },
   ]
-
+  const { t } = useTranslation()
   useEffect(() => {
     setIsReRender(!isReRender)
   }, [isAccordionChange])
@@ -55,7 +56,7 @@ export function QandA() {
       >
         <div className="w-[1040px]">
           <div className="pb-[40px] pt-[60px] text-center text-[16px] leading-[18.91px] text-primary-400">
-            Câu hỏi thường gặp
+            {t('landingpage:Q_A.question')}
           </div>
           <div className="flex w-full">
             <div className="w-1/2 pr-[30px]">

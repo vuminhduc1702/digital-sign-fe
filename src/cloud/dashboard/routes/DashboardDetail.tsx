@@ -13,6 +13,7 @@ import { useDisclosure, useWS } from '~/utils/hooks'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
+  CardChart,
   GaugeChart,
   LineChart,
   Map,
@@ -279,8 +280,14 @@ export function DashboardDetail() {
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
                             // w: 4,
-                            w: 6,
-                            h: 3,
+                            w:
+                              allWidgetData?.[widgetId]?.description === 'CARD'
+                                ? 3
+                                : 6,
+                            h:
+                              allWidgetData?.[widgetId]?.description === 'CARD'
+                                ? 1
+                                : 3,
                           }
                     }
                     className={cn(
@@ -304,6 +311,8 @@ export function DashboardDetail() {
                       <GaugeChart data={lastestValueOneDevice} />
                     ) : allWidgetData?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart data={realtimeValues} className="p-5" />
+                    ) : allWidgetData?.[widgetId]?.description === 'CARD' ? (
+                      <CardChart data={lastestValueOneDevice} />
                     ) : null}
                   </div>
                 )
@@ -529,7 +538,7 @@ export function DashboardDetail() {
                           close()
                           setIsShowCreateWidget(true)
                           setWidgetType('LASTEST')
-                          setWidgetCategory('RTDATA')
+                          setWidgetCategory('CARD')
                           setIsMultipleAttr(false)
                           setIsMultipleDevice(false)
                         }}

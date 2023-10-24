@@ -2,8 +2,10 @@ import Group150 from '~/assets/images/landingpage/Group_150.png'
 import Group148 from '~/assets/images/landingpage/Group_148.png'
 import { ArrowRightUpLine, CheckboxCircleLine } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
+import { useTranslation } from 'react-i18next'
 
 export function SectionOrder1() {
+  const { t } = useTranslation()
   return (
     <>
       <div className="h-[100px]"></div>
@@ -11,7 +13,7 @@ export function SectionOrder1() {
         <div className="flex h-full w-[1040px]">
           <div className="w-1/2">
             <div className="w-[320px] text-[35px] leading-[43px] text-black">
-              Giải pháp quản lý kết nối M2M
+              {t('landingpage:order1.M2M_manage_solution')}
             </div>
             <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
               Hệ thống quản lý thuê bao Innoway của Viettel cho phép doanh
@@ -28,7 +30,7 @@ export function SectionOrder1() {
                     className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                    Quản lý thuê bao
+                    {t('landingpage:order1.subscription_management')}
                   </p>
                 </div>
                 <div className="mb-[-8px] border-t border-[#E2E2E2] pt-2">
@@ -39,7 +41,7 @@ export function SectionOrder1() {
                     className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                    Quản lý hợp đồng
+                    {t('landingpage:order1.contract_management')}
                   </p>
                 </div>
               </div>
@@ -52,7 +54,7 @@ export function SectionOrder1() {
                     className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                    Quản lý đơn hàng
+                    {t('landingpage:order1.order_management')}
                   </p>
                 </div>
                 <div className="mb-[-8px] border-t border-[#E2E2E2] pt-2">
@@ -63,7 +65,7 @@ export function SectionOrder1() {
                     className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                    Quản lý thanh toán
+                    {t('landingpage:order1.payment_management')}
                   </p>
                 </div>
               </div>
@@ -86,7 +88,7 @@ export function SectionOrder1() {
                     ></ArrowRightUpLine>
                   }
                 >
-                  Trải nghiệm ngay
+                  {t('landingpage:experience_now')}
                 </Button>
               </a>
             </div>

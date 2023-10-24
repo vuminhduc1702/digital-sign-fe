@@ -1,5 +1,5 @@
-import { Target } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link } from '~/components/Link'
 import { DownloadSdk } from '~/components/SVGIcons'
 
@@ -37,7 +37,7 @@ export function AppSdk() {
   const afterIOS = `after:content-[""] after:block after:absolute after:right-full after:top-0 after:border-solid 
   after:border-t-[transparent] after:border-r-[red] after:border-b-[transparent] after:border-l-[transparent] 
   after:border-b-[0] after:border-r-[30px] after:border-t-[39.9px] after:border-l-[0]`
- 
+
   const initialState = Sdks.map(sdk => ({ chooseAndroid: true }))
   const [sdkStates, setSdkStates] = useState(initialState)
   const toggleChooseAndroid = (index: number) => {
@@ -50,7 +50,7 @@ export function AppSdk() {
     updatedStates[index].chooseAndroid = false
     setSdkStates(updatedStates)
   }
-
+  const { t } = useTranslation()
   return (
     <>
       <div className="grid grid-cols-2 px-3 py-3">
@@ -68,7 +68,7 @@ export function AppSdk() {
                 }`}
                 onClick={() => toggleChooseAndroid(idx)}
               >
-                ANDROID
+                {t('application:android')}
               </div>
               <div
                 className={`relative flex w-1/4 items-center justify-center text-xl font-medium ${
@@ -78,7 +78,7 @@ export function AppSdk() {
                 }`}
                 onClick={() => toggleChooseIOS(idx)}
               >
-                IOS
+                {t('application:ios')}
               </div>
             </h5>
             {item.exist === 'true' ? (
@@ -100,7 +100,9 @@ export function AppSdk() {
                           height={24}
                           viewBox="0 0 24 24"
                         />
-                        <div className="pl-4">Tải tài liệu</div>
+                        <div className="pl-4">
+                          {t('application:download_doc')}
+                        </div>
                       </Link>
                     </div>
                     <div>
@@ -114,7 +116,9 @@ export function AppSdk() {
                           height={24}
                           viewBox="0 0 24 24"
                         />
-                        <div className="pl-4">Tải SDK</div>
+                        <div className="pl-4">
+                          {t('application:download_sdk')}
+                        </div>
                       </Link>
                     </div>
                   </div>

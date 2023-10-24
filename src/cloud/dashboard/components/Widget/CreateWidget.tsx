@@ -68,7 +68,7 @@ export const widgetCategorySchema = z.enum([
   'BAR',
   'PIE',
   'GAUGE',
-  'RTDATA',
+  'CARD',
   'MAP',
   'TABLE',
 ] as const)
@@ -532,7 +532,7 @@ export function CreateWidget({
                                   return item.value
                                 })
                               : [(e as unknown as SelectOptionString).value]
-                          // console.log('entityIdsArr', entityIdsArr)
+                          setDeviceValue(e)
                           setValue('device', entityIdsArr)
                           attrChartMutate({
                             data: {

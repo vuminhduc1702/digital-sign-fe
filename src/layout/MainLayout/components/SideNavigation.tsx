@@ -198,7 +198,7 @@ function SideNavigation() {
           <NavLink to={`${PATHS.BILLING}/${projectId}`}>
             <AccordionContent>{t('sidebar:payment.plhd')}</AccordionContent>
           </NavLink>
-          <AccordionContent>
+          {/* <AccordionContent>
             <AccordionItem value="payment">
               <AccordionTrigger>
                 <img
@@ -215,7 +215,7 @@ function SideNavigation() {
                 {t('sidebar:payment.client.cuoc')}
               </AccordionContent>
             </AccordionItem>
-          </AccordionContent>
+          </AccordionContent> */}
         </AccordionItem>
 
         <AccordionItem value="intergration">

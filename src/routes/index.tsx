@@ -22,6 +22,10 @@ const { NotFoundPage } = lazyImport(
   () => import('~/pages/NotFoundPage'),
   'NotFoundPage',
 )
+const { VersionPage } = lazyImport(
+  () => import('~/pages/VersionPage'),
+  'VersionPage',
+)
 
 export const AppRoutes = () => {
   const navigate = useNavigate()
@@ -38,6 +42,10 @@ export const AppRoutes = () => {
     {
       path: PATHS.NOTFOUND,
       element: <NotFoundPage />,
+    },
+    {
+      path: PATHS.VERSION,
+      element: <VersionPage />,
     },
   ]
 

@@ -1,17 +1,17 @@
-import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
 
 import { Link } from '~/components/Link'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
-import { sentOTP } from '../api/otp'
 
 import { BtnPasswordLoginIcon } from '~/components/SVGIcons'
 import { useChangePassword } from '../api/changepassword'
 
-import { ChangePaswordSchema, changePasswordDTO } from '../api/changepassword'
+import {
+  ChangePaswordSchema,
+  type changePasswordDTO,
+} from '../api/changepassword'
 
 type ChangePaswordFormProps = {
   onSuccess: () => void
@@ -21,34 +21,12 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
   const { t } = useTranslation()
 
   const changePasswordMutation = useChangePassword()
-  const [countdown, setCountdown] = useState<number>(180)
-  const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
-  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
-
-  useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
-      setCountdown(prevState => {
-        if (prevState > 0) return prevState - 1
-        else {
-          clearInterval(timerId!)
-          setCheckCountdown(false)
-          setBtnOtpDisable(false)
-          return 0
-        }
-      })
-    }, 1000)
-
-    return () => {
-      if (timerId) {
-        clearInterval(timerId)
-      }
-    }
-  }, [checkCountdown])
 
   return (
     <div>
-      <Form<changePasswordDTO, typeof ChangePaswordSchema>
+      <Form<changePasswordDTO['data'], typeof ChangePaswordSchema>
         onSubmit={async values => {
+          console.log('values', values)
           await changePasswordMutation.mutateAsync(values)
           onSuccess()
         }}
@@ -58,7 +36,6 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
         }}
       >
         {({ register, formState }) => {
-          
           return (
             <>
               <InputField

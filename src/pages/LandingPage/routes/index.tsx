@@ -48,6 +48,7 @@ export function LandingPage() {
     Ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
   const { t } = useTranslation()
+  const currentYear = new Date().getFullYear()
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 100) {
@@ -86,7 +87,7 @@ export function LandingPage() {
             <div className="flex h-20 px-48">
               <div className="flex items-center">
                 <a href="/" className="text-5xl font-bold text-white">
-                  viettel
+                  {t('landingpage:logo')}
                 </a>
               </div>
               <div className="ml-auto flex">
@@ -95,37 +96,37 @@ export function LandingPage() {
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(introRef)}
                   >
-                    <button>Giới thiệu</button>
+                    <button>{t('landingpage:introduction')}</button>
                   </div>
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(PackOfDataRef)}
                   >
-                    <button>Gói cước</button>
+                    <button>{t('landingpage:pack_of_data')}</button>
                   </div>
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(ProductRef)}
                   >
-                    <button>Sản phẩm</button>
+                    <button>{t('landingpage:product')}</button>
                   </div>
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(OrderRef)}
                   >
-                    <button>Platform IoT</button>
+                    <button>{t('landingpage:Platform_IoT')}</button>
                   </div>
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(Order1Ref)}
                   >
-                    <button>Hệ thống CMP</button>
+                    <button>{t('landingpage:CMP_system')}</button>
                   </div>
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
                     onClick={() => scrollToIntro(FAQRef)}
                   >
-                    <button>FAQ</button>
+                    <button>{t('landingpage:FAQ')}</button>
                   </div>
                   {/* <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
                     Tài khoản
@@ -184,7 +185,7 @@ export function LandingPage() {
                               navigate(PATHS.CHANGEPASSWORD)
                             }}
                           >
-                            Đổi mật khẩu
+                            {t('user:change_password')}
                           </p>
                         ) : null}
                       </DropdownMenu.Item>
@@ -208,7 +209,7 @@ export function LandingPage() {
                       variant="primary"
                       onClick={() => navigate(PATHS.LOGIN)}
                     >
-                      Đăng nhập
+                      {t('user:login')}
                     </Button>
                   </div>
                   <div className="mx-1 flex min-w-fit items-center justify-center text-white">
@@ -218,7 +219,7 @@ export function LandingPage() {
                       variant="primary"
                       onClick={() => navigate(PATHS.REGISTER)}
                     >
-                      Đăng ký ngay
+                      {t('landingpage:register_now')}
                     </Button>
                   </div>
                 </div>
@@ -233,7 +234,8 @@ export function LandingPage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Viettel M2M IoT 2023{' '}
+                  {t('landingpage:viettel_M2M')}
+                  {currentYear}{' '}
                   <i className="mt-1 pl-4 text-base text-[(219,255,0,1)]">
                     {'>>'}
                   </i>
@@ -242,7 +244,7 @@ export function LandingPage() {
             </div>
             <div className="mt-[4.5rem] flex max-w-full items-center justify-center text-white">
               <h2 className="text-[56px] font-bold">
-                Dịch vụ Sim Data truyền tải dữ liệu
+                {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
@@ -262,7 +264,7 @@ export function LandingPage() {
                   className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
                   variant="primary"
                 >
-                  Sản phẩm
+                  {t('landingpage:product')}
                 </Button>
               </div>
               <div className="mx-1 flex min-w-fit items-center justify-center text-white">
@@ -272,7 +274,7 @@ export function LandingPage() {
                   variant="primary"
                   onClick={() => scrollToIntro(OrderRef)}
                 >
-                  Platform IoT
+                  {t('landingpage:Platform_IoT')}
                 </Button>
               </div>
             </div>

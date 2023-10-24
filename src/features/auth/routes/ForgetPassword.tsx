@@ -1,4 +1,3 @@
-import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { Layout } from '../components/Layout'
@@ -8,7 +7,6 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export const ForgetPassword = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { addNotification } = useNotificationStore()
 
   return (

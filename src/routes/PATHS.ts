@@ -46,6 +46,9 @@ export const PATHS: { [key: string]: string } = {
   APPSDK: `${BASE_PATH}appSdk`,
   APPDEBUG: `${BASE_PATH}appDebug`,
 
+  //Version routes
+  VERSION:`${BASE_PATH}version`,
+  
   // Common routes
   HOME: `${BASE_PATH}`,
   MAINTAIN: `${BASE_PATH}maintain`,

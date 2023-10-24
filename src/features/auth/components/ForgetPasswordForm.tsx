@@ -1,14 +1,13 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
 
 import { Link } from '~/components/Link'
-import { useRegister } from '~/lib/auth'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '~/i18n'
+import { useEffect, useState } from 'react'
 
 import {
   emailSchema,
@@ -91,7 +90,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           shouldUnregister: true,
         }}
       >
-        {({ register, formState }) => {
+        {({ register, formState, getValues }) => {
           console.log('formState', formState.errors)
           return (
             <>
@@ -102,9 +101,6 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setEmail(e.target.value)
-                }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
