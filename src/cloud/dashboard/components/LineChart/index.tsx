@@ -1,11 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
+import {
+  LineChart as LineWidget,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts'
 
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type Datum, ResponsiveLine, type Serie } from '@nivo/line'
-import { type TimeSeries, type WSWidgetData } from '../../types'
+import { type TimeSeries } from '../../types'
 
 export function LineChart({ data }: { data: TimeSeries }) {
   // console.log('new line: ', data)
@@ -13,11 +22,10 @@ export function LineChart({ data }: { data: TimeSeries }) {
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
-    Serie[]
+    Array<{ ts: string; [key: string]: string | number }>
   >([
     {
-      id: '',
-      data: [],
+      ts: '',
     },
   ])
 
@@ -54,114 +62,98 @@ export function LineChart({ data }: { data: TimeSeries }) {
   }, [newDataValue])
 
   function dataManipulation() {
-    const lineWidgetDataType: Serie[] = Object.entries(
+    const lineWidgetDataType = Object.entries(
       newValuesRef.current as TimeSeries,
-    ).map(([id, item], index) => ({
-      id,
-      data: dataTransformation(item),
-    }))
-    setDataTransformedFeedToChart(
-      lineWidgetDataType.map(item => ({
-        ...item,
-        data: item.data.filter(subItem => subItem.y !== null),
-      })),
+    ).reduce(
+      (
+        result: Array<{ ts: number; [key: string]: string | number }>,
+        [key, items],
+      ) => {
+        items.forEach(item => {
+          const time = item.ts
+          const value = parseFloat(item.value)
+          const existingIndex = result.findIndex(obj => obj.time === time)
+          if (existingIndex === -1) {
+            result.push({ ts: time, [key]: value })
+          } else {
+            result[existingIndex][key] = value
+          }
+        })
+
+        return result.sort((a, b) => a.ts - b.ts).slice(-10)
+      },
+      [],
     )
+
+    const lineWidgetDataTypeToChart: Array<{
+      ts: string
+      [key: string]: string | number
+    }> = lineWidgetDataType.map(item => {
+      return {
+        ...item,
+        ts: dateTransformation(item.ts),
+      }
+    })
+    setDataTransformedFeedToChart(lineWidgetDataTypeToChart)
   }
 
-  function dataTransformation(data: WSWidgetData[]): Datum[] {
+  function dateTransformation(date: number) {
     const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
       defaultDateConfig
 
-    return data
-      ?.toSorted((a, b) => a.ts - b.ts)
-      ?.map(({ ts, value }: WSWidgetData) => ({
-        x: getVNDateFormat({
-          date: ts,
-          config: {
-            ...dateTimeOptionsWithoutYearMonthDay,
-            second: '2-digit',
-            fractionalSecondDigits: 3,
-          },
-        }),
-        y: parseFloat(value),
-      }))
-      .slice(-10)
+    return getVNDateFormat({
+      date,
+      config: {
+        ...dateTimeOptionsWithoutYearMonthDay,
+        second: '2-digit',
+        fractionalSecondDigits: 3,
+      },
+    })
   }
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
+    delay: 150,
+    minDuration: 300,
+  })
 
-  const showSpinner = useSpinDelay(
-    dataTransformedFeedToChart[0].data.length === 0,
-    {
-      delay: 150,
-      minDuration: 300,
-    },
-  )
-
-  console.log('transform line', dataTransformedFeedToChart)
+  // console.log('transform line', dataTransformedFeedToChart)
 
   return (
     <>
-      {dataTransformedFeedToChart[0].data.length > 0 ? (
-        <ResponsiveLine
-          data={dataTransformedFeedToChart}
-          colors={{ scheme: 'nivo' }}
-          margin={{ top: 50, right: 30, bottom: 50, left: 60 }}
-          xScale={{ type: 'point' }}
-          yScale={{
-            type: 'linear',
-            min: 'auto',
-            max: 'auto',
-            stacked: false,
-            reverse: false,
-          }}
-          yFormat=" >-.2f"
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Thời gian',
-            legendOffset: 36,
-            legendPosition: 'middle',
-          }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Giá trị',
-            legendOffset: -40,
-            legendPosition: 'middle',
-          }}
-          pointSize={10}
-          useMesh={true}
-          enableSlices="x"
-          legends={[
-            {
-              anchor: 'top',
-              direction: 'row',
-              justify: false,
-              translateX: 0,
-              translateY: -30,
-              itemsSpacing: 50,
-              itemDirection: 'left-to-right',
-              itemWidth: 80,
-              itemHeight: 20,
-              itemOpacity: 0.75,
-              symbolSize: 12,
-              symbolShape: 'circle',
-              symbolBorderColor: 'rgba(0, 0, 0, .5)',
-              effects: [
-                {
-                  on: 'hover',
-                  style: {
-                    itemBackground: 'rgba(0, 0, 0, .03)',
-                    itemOpacity: 1,
-                  },
-                },
-              ],
-            },
-          ]}
-        />
+      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
+        <ResponsiveContainer width="98%" height="90%" className="pt-8">
+          <LineWidget data={dataTransformedFeedToChart}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="ts" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {Object.keys(newValuesRef.current).map((key, index) => {
+              return (
+                <Line
+                  key={index.toString()}
+                  connectNulls
+                  type="monotone"
+                  dataKey={key}
+                  animationDuration={250}
+                  stroke={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                  fill={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                />
+              )
+            })}
+          </LineWidget>
+        </ResponsiveContainer>
       ) : (
         <div className="flex h-full items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
