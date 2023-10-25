@@ -12,6 +12,7 @@ export interface SearchFilter {
 type GetBillings = {
   projectId: string
   searchFilter?: SearchFilter
+  searchData?: SearchFilter
   start_time?: number
   end_time?: number
 }
@@ -25,6 +26,7 @@ export type GetBillingtonRes = {
 export const getBillings = ({
   projectId,
   searchFilter,
+  searchData,
   start_time,
   end_time
 }: GetBillings): Promise<GetBillingtonRes> => {
@@ -34,6 +36,7 @@ export const getBillings = ({
       start_time,
       end_time,
       ...searchFilter,
+      ...searchData
     },
   })
 }
@@ -47,14 +50,15 @@ type UseEntityBillingtonOptions = {
 export const useGetBillings = ({
   projectId,
   searchFilter,
+  searchData,
   start_time,
   end_time,
   config,
 }: UseEntityBillingtonOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['billings', projectId, searchFilter, start_time, end_time],
+    queryKey: ['billings', projectId, searchFilter, start_time, end_time, searchData],
     queryFn: () =>
-      getBillings({ projectId, searchFilter, start_time, end_time }),
+      getBillings({ projectId, searchFilter, start_time, end_time, searchData }),
     ...config,
   })
 }

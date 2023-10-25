@@ -22,6 +22,7 @@ export function BillingTemplate() {
   const [offset, setOffset] = useState(0)
   const [key, setKey] = useState('id')
   const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
+  const [searchData, setsearchData] = useState<SearchFilter>({})
   const [value, setValue] = useState('')
   const [startTime, setStartTime] = useState<number | undefined>()
   const [endTime, setEndTime] = useState<number | undefined>()
@@ -34,6 +35,7 @@ export function BillingTemplate() {
     projectId,
     searchFilter: searchFilter,
     start_time: startTime,
+    searchData: searchData,
     end_time: endTime,
     config: { keepPreviousData: true },
   })
@@ -44,6 +46,12 @@ export function BillingTemplate() {
     setStartTime(date?.from?.getTime() && date?.from?.getTime() / 1000)
     setEndTime(date?.to?.getTime() && date?.to?.getTime() / 1000)
     setSearchFilter(newObj)
+  }
+
+  const handleField = (field: string, value: any) => {
+    const newObj: SearchFilter = {}
+    newObj[field] = value
+    setsearchData(newObj)
   }
 
   return (
@@ -130,6 +138,7 @@ export function BillingTemplate() {
           data={data?.data?.data}
           offset={offset}
           setOffset={setOffset}
+          handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
         />
