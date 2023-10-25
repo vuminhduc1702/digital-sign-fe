@@ -764,7 +764,8 @@
       "date": "Ngày",
       "interval": "Khoảng thời gian",
       "data_aggregation": "Tổng hợp dữ liệu",
-      "dataType": "Loại biểu đồ"
+      "dataType": "Loại biểu đồ",
+      "sma_window": "Số data point"
     }
   },
   "validate": {
