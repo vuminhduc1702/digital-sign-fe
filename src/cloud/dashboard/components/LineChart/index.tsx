@@ -115,7 +115,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
     minDuration: 300,
   })
 
-  // console.log('transform line', dataTransformedFeedToChart)
+  console.log('transform line', dataTransformedFeedToChart)
 
   return (
     <>
@@ -136,6 +136,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
                   dataKey={key}
                   animationDuration={250}
                   stroke={
+                    key.includes('SMA') || key.includes('FFT') ? '#2c2c2c' :
                     index === 0
                       ? '#e8c1a0'
                       : index === 1
@@ -143,6 +144,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
                       : '#f1e15b'
                   }
                   fill={
+                    key.includes('SMA') || key.includes('FFT') ? '#2c2c2c' :
                     index === 0
                       ? '#e8c1a0'
                       : index === 1

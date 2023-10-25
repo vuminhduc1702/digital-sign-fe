@@ -47,4 +47,6 @@ export const aggSchema = z.enum([
   'MAX',
   'SUM',
   'COUNT',
+  'SMA',
+  'FFT'
 ] as const)
