@@ -131,7 +131,7 @@ export function Module() {
               </div>
               <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-white">
                 {filteredModuleDevices.map((item: any, idx) => (
-                  <div className="p-4">
+                  <div className="p-4" key={idx}>
                     <div className="shadow-md">
                       <div className="flex h-[60px] items-center justify-center rounded-t-md bg-[#858687] text-xl font-medium text-slate-900">
                         {item.name}

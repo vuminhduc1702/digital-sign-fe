@@ -776,10 +776,10 @@
     "footer_text_1": "© 2021 Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
     "checkbox": "Ghi nhớ",
-    "from_login_to_register": "Đăng ký tại đây",
+    "from_login_to_register": "Đăng ký ",
     "forgot_password": "Bạn quên mật khẩu?",
     "no_account": "Bạn chưa có tài khoản?",
-    "change_password": "Thay đổi mật khẩu tại đây",
+    "change_password": "Thay đổi mật khẩu",
     "have_an_account": "Bạn đã có tài khoản?",
     "sent_otp": "Gửi OTP",
     "require_otp": "Nhập OTP kích hoạt email",
@@ -793,6 +793,7 @@
     "back_to_home": "Trở về trang chủ"
   },
   "landingpage": {
+    "title" : "Trang chủ | IoT Platform",
     "logo": "viettel",
     "introduction": "Giới thiệu",
     "pack_of_data": "Gói cước",

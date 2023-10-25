@@ -71,6 +71,7 @@ export function SectionSolution() {
           <div className="grid grid-cols-4 gap-4 pt-8">
             {slides.map((item, idx) => (
               <div
+                key={idx}
                 className="h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px]"
                 style={{
                   backgroundImage:
