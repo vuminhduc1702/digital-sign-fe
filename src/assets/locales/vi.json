@@ -792,5 +792,14 @@
     "confirm_password": "Nhập lại mật khẩu",
     "pass_invalid": "Mật khẩu nhập lại không đúng",
     "back_to_home": "Trở về trang chủ"
+  },
+  "form": {
+    "enter_name": "Nhập họ tên",
+    "enter_tax": "Nhập mã số thuế",
+    "enter_phone_num": "Nhập số điện thoại",
+    "enter_address": "Nhập địa chỉ chi tiết",
+    "province_city": "Tỉnh/TP",
+    "district": "Huyện/Quận",
+    "village": "Phường/Xã"
   }
 }

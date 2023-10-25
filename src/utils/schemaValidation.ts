@@ -61,3 +61,18 @@ export const BasePaginationSchema = z.object({
   offset: z.number(),
   limit: z.number(),
 })
+
+export const phoneSchemaRegex = z
+  .string()
+  .min(1, { message: 'Vui lòng không bỏ trống mục này' })
+  .regex(new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g), {
+    message: 'Số điện thoại chưa đúng định dạng',
+  })
+
+export const emptyInputSchema = z
+  .string()
+  .min(1, { message: 'Vui lòng không bỏ trống mục này' })
+
+  export const emptySelectSchema = z
+  .string()
+  .min(1, { message: 'Vui lòng chọn mục này' })
