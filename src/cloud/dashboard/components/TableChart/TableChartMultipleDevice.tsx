@@ -16,15 +16,24 @@ export function TableChart({
   data,
   ...props
 }: {
-  data: TimeSeries
+  data: {
+    timeseries: TimeSeries
+    entityName: string
+  }
   className?: string
 }) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<TableChartDataType>()
 
-  const newValuesRef = useRef<TimeSeries | null>(null)
-  const prevValuesRef = useRef<TimeSeries | null>(null)
+  const newValuesRef = useRef<{
+    timeseries: TimeSeries
+    entityName: string
+  } | null>(null)
+  const prevValuesRef = useRef<{
+    timeseries: TimeSeries
+    entityName: string
+  } | null>(null)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<
@@ -38,40 +47,44 @@ export function TableChart({
       entity_name: '',
     },
   ])
+  console.log('dataTransformedFeedToChart', dataTransformedFeedToChart)
 
-  const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
+  const timeSeriesData = data?.timeseries ?? {}
+  console.log('timeSeriesData', timeSeriesData)
+  const newDataValue = JSON.stringify(timeSeriesData)
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
-      prevValuesRef.current = newValuesRef.current || data
+    if (Object.keys(timeSeriesData).length !== 0) {
+      prevValuesRef.current = newValuesRef.current || timeSeriesData
       if (
         newValuesRef.current != null &&
-        data[Object.keys(data)[0]].length === 1
+        Object.values(timeSeriesData)[0].length === 1
       ) {
-        for (const key in data) {
+        for (const key in timeSeriesData) {
           if (
             prevValuesRef.current[key] != null &&
             (JSON.stringify(prevValuesRef.current[key]) !==
               JSON.stringify(newValuesRef.current[key]) ||
               JSON.stringify(prevValuesRef.current[key]) !==
-                JSON.stringify(data[key]))
+                JSON.stringify(timeSeriesData[key]))
           ) {
             newValuesRef.current[key] = [
               ...prevValuesRef.current[key],
-              ...data[key],
+              ...timeSeriesData[key],
             ]
           } else {
-            prevValuesRef.current = data
+            prevValuesRef.current = timeSeriesData
           }
           dataManipulation()
         }
       } else {
-        newValuesRef.current = data
+        newValuesRef.current = timeSeriesData
         dataManipulation()
       }
     }
   }, [newDataValue])
 
   function dataManipulation() {
+    console.log('newValuesRef.current', newValuesRef.current)
     const tableWidgetDataType = Object.entries(
       newValuesRef.current as TimeSeries,
     )
@@ -83,6 +96,7 @@ export function TableChart({
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
+    console.log('tableWidgetDataType', tableWidgetDataType)
 
     setDataTransformedFeedToChart(tableWidgetDataType)
   }
