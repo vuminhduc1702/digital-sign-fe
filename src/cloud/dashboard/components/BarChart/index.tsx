@@ -8,7 +8,7 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type TimeSeries } from '../../types'
 
 export const BarChart = ({ data }: { data: TimeSeries }) => {
-  // console.log(`new bar: `, data)
+  console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -101,7 +101,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
     minDuration: 300,
   })
 
-  console.log('transform bar', dataTransformedFeedToChart)
+  // console.log('transform bar', dataTransformedFeedToChart)
 
   return (
     <>

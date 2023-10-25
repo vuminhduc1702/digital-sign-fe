@@ -208,7 +208,7 @@ export function GaugeChart({ data }: { data: LatestData }) {
 
   return (
     <>
-      {Object.keys(data).length !== 0 ? (
+      {Object.keys(dataTransformedFeedToChart).length > 0 ? (
         <MotionConfig transition={{ type: 'tween', ease: 'linear' }}>
           <Gauge value={value} attrKey={dataTransformedFeedToChart.key} />
         </MotionConfig>
