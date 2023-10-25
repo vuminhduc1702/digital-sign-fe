@@ -93,8 +93,8 @@ export function Module() {
     <>
       <div className="">
         <div className="flex px-1 py-1">
-          <div className="mr-3 h-[90vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
-            <div className="h-[85vh] overflow-auto">
+          <div className="mr-3 h-[84vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
+            <div className="h-[80vh] overflow-auto">
               <div className="flex items-center bg-[#858687] px-6 pb-6 pt-3 text-center text-xl font-medium text-white">
                 {t('device:method_communication')}
               </div>
@@ -129,11 +129,11 @@ export function Module() {
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {Module[selectedItem]}
               </div>
-              <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-white">
+              <div className="border-opacity-15 mb-4 grid h-[55vh] grid-cols-2 overflow-auto rounded-md border-x border-solid border-white bg-white">
                 {filteredModuleDevices.map((item: any, idx) => (
                   <div className="p-4" key={idx}>
                     <div className="shadow-md">
-                      <div className="flex h-[60px] items-center justify-center rounded-t-md bg-[#858687] text-xl font-medium text-slate-900">
+                      <div className="flex h-[60px] items-center justify-center rounded-t-md bg-secondary-600 text-xl font-medium text-slate-900">
                         {item.name}
                       </div>
                       <div className="flex bg-black/[.03] px-4 py-2">

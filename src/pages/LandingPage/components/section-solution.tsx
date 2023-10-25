@@ -56,7 +56,7 @@ export function SectionSolution() {
   const { t } = useTranslation()
   return (
     <>
-      <div className="flex h-[403px] justify-center">
+      <div className="mb-20 flex justify-center">
         <div className="w-[1040px]">
           <div className="">
             <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">

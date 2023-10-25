@@ -14,6 +14,7 @@ import { SectionClient } from '../components/section-client'
 import { QandA } from '../components/section-Q&A'
 import { SectionNews } from '../components/section-news'
 import { SectionFooter } from '../components/footer'
+import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
@@ -36,7 +37,7 @@ export function LandingPage() {
     },
   })
   const logout = useLogout()
-  
+
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
   const PackOfDataRef: RefObject<HTMLDivElement> = useRef(null)
@@ -290,7 +291,9 @@ export function LandingPage() {
         <div>
           <SectionSolution></SectionSolution>
         </div>
-        <div className="h-[150px]" ref={PackOfDataRef}></div>
+        <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
+          <SectionPackageData></SectionPackageData>
+        </div>
         {/* h-[823px] bg-slate-200*/}
         <div ref={ProductRef}>
           <SectionProduct></SectionProduct>

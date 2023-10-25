@@ -46,7 +46,7 @@ export function Devkit() {
   return (
     <>
       <ContentLayout title={t('sidebar:device.devkit')}>
-        <div className="flex h-[85vh] px-1 py-1 ">
+        <div className="flex h-[84vh] px-1 py-1">
           <div className="mr-3 w-1/4 rounded-md bg-[#eceff1] shadow-md">
             <div className="p-[10px]">
               <InputField
@@ -63,8 +63,7 @@ export function Devkit() {
                 }
               />
             </div>
-
-            <div className="mt-[15px] h-[85vh]">
+            <div className="mt-[15px]">
               {devkits.map((item, idx) => (
                 <div className="p-[10px]" key={idx}>
                   <div className="flex h-[37.6px] items-center justify-center rounded-md bg-[#B5B6B7] text-base font-medium text-white shadow-md">
@@ -74,7 +73,7 @@ export function Devkit() {
               ))}
             </div>
           </div>
-          <div className="ml-3 w-3/4 overflow-auto">
+          <div className="ml-3 h-[85vh] w-3/4 overflow-auto">
             <div>
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {t('device:guide_device')}
