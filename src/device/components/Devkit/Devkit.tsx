@@ -77,7 +77,7 @@ export function Devkit() {
             <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
               {t('device:guide_device')}
             </div>
-            <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-sm shadow-lg">
+            <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-body-sm shadow-lg">
               Khu vực này bao gồm thông tin các bộ DevKit đi kèm code mẫu, tài
               liệu hướng dẫn tích hợp và bộ SDK để kết nối thiết bị của bạn với
               InnoWay.
@@ -104,21 +104,21 @@ export function Devkit() {
                           {' '}
                           {t('device:describe')}
                         </h5>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communication_methods')}{' '}
                           {item.communicationMethods}
                         </p>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communication_protocol')}{' '}
                           {item.communicationProtocol}
                         </p>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communicate_protocol')}{' '}
                           {item.communicateProtocol}
                         </p>
                         <a
                           href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
-                          className="float-right text-sm font-medium"
+                          className="float-right text-body-sm font-medium"
                         >
                           {t('device:download_doc')}
                         </a>
@@ -149,21 +149,21 @@ export function Devkit() {
                         <h5 className="mb-2 text-xl font-medium">
                           {t('device:describe')}
                         </h5>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communication_methods')}{' '}
                           {item.communicationMethods}
                         </p>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communication_protocol')}{' '}
                           {item.communicationProtocol}
                         </p>
-                        <p className="mb-4 text-sm">
+                        <p className="mb-4 text-body-sm">
                           {t('device:communicate_protocol')}{' '}
                           {item.communicateProtocol}
                         </p>
                         <a
                           href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
-                          className="float-right text-sm font-medium"
+                          className="float-right text-body-sm font-medium"
                         >
                           {t('device:download_doc')}
                         </a>
