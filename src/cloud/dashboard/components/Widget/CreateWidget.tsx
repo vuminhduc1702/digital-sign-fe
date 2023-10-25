@@ -151,6 +151,7 @@ export const widgetCreateSchema = z.object({
         })
         .optional(),
       dataType: widgetDataTypeSchema,
+      window: z.coerce.number().optional()
     })
     .optional(),
   id: z.string().optional(),
@@ -271,6 +272,8 @@ export function CreateWidget({
     name: 'attributeConfig',
     control: control,
   })
+  const [aggValue, setAggValue] = useState('')
+  const [widgetDataTypeValue, setWidgetDataTypeValue] = useState('')
 
   useEffect(() => {
     append({
@@ -375,7 +378,29 @@ export function CreateWidget({
                 ],
               }
 
-              const historyMessage = {
+              const historyMessage = values.widgetSetting?.agg === 'SMA' ? {
+                entityDataCmds: [
+                  {
+                    historyCmd: {
+                      keys: values.attributeConfig.map(
+                        item => item.attribute_key,
+                      ),
+                      startTs: Date.parse(
+                        values.widgetSetting?.startDate?.toISOString(),
+                      ),
+                      endTs: Date.parse(
+                        values.widgetSetting?.endDate?.toISOString() as string,
+                      ),
+                      interval: values.widgetSetting?.interval,
+                      limit: 100,
+                      offset: 0,
+                      agg: values.widgetSetting?.agg,
+                      window: values.widgetSetting?.window
+                    },
+                    id: widgetId,
+                  },
+                ],
+              } : {
                 entityDataCmds: [
                   {
                     historyCmd: {
@@ -779,7 +804,7 @@ export function CreateWidget({
                         title={t('cloud:dashboard.config_chart.widget_config')}
                         className="w-full rounded-md bg-secondary-700 pl-3"
                       />
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5 ">
+                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-4 ">
                         <SelectField
                           label={t('ws:filter.dataType')}
                           error={formState?.errors?.widgetSetting?.dataType}
@@ -790,6 +815,9 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
+                          onChange={(e) => {
+                            setWidgetDataTypeValue(e.target.value)
+                          }}
                         />
 
                         <div className="space-y-1">
@@ -936,11 +964,32 @@ export function CreateWidget({
                           label={t('ws:filter.data_aggregation')}
                           error={formState?.errors?.widgetSetting?.agg}
                           registration={register(`widgetSetting.agg` as const)}
-                          options={widgetAgg.map(agg => ({
-                            label: agg.label,
-                            value: agg.value,
-                          }))}
+                          options={
+                            widgetDataTypeValue === 'HISTORY' ? 
+                              widgetAgg.map(agg => ({
+                                label: agg.label,
+                                value: agg.value,
+                              })).concat([{ label: "SMA", value: "SMA"}, {label: "FFT", value: "FFT"}]) : 
+                              widgetAgg.map(agg => ({
+                                label: agg.label,
+                                value: agg.value,
+                              }))
+                          }
+                          onChange={(e) => {
+                            setAggValue(e.target.value)
+                          }}
                         />
+                        {
+                          aggValue === 'SMA' ? (
+                            <InputField
+                              label={t('ws:filter.sma_window')}
+                              error={formState?.errors?.widgetSetting?.window}
+                              registration={register(`widgetSetting.window` as const)}
+                            />
+                          ) : (
+                            <></>
+                          )
+                        }
                       </div>
                     </>
                   ) : null}
