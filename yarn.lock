@@ -2901,6 +2901,11 @@
   resolved "https://registry.yarnpkg.com/@types/d3-path/-/d3-path-3.0.1.tgz#6171c9e388904014764661a37613e3c4ab8df22d"
   integrity sha512-blRhp7ki7pVznM8k6lk5iUU9paDbVRVq+/xpf0RRgSJn5gr6SE7RcFtxooYGMBOc1RZiGyqRpVdu5AD0z0ooMA==
 
+"@types/d3-path@^1":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@types/d3-path/-/d3-path-1.0.10.tgz#31417db5f6acfd02b73c33f4a9d341a41b2c8f74"
+  integrity sha512-19YfheAnvYgDezl00WQTGHPqYAT6DDzmzSLoT9MUl+d/EQmHC3WEoiY/bZ4OpBVMHieVg9C/Jj/yn329RiGqrg==
+
 "@types/d3-path@^2":
   version "2.0.2"
   resolved "https://registry.npmjs.org/@types/d3-path/-/d3-path-2.0.2.tgz"
@@ -2924,6 +2929,13 @@
   integrity sha512-lo3oMLSiqsQUovv8j15X4BNEDOsnHuGjeVg7GRbAuB2PUa1prK5BNSOu6xixgNf3nqxPl4I1BqJWrPvFGlQoGQ==
   dependencies:
     "@types/d3-time" "*"
+
+"@types/d3-shape@^1":
+  version "1.3.10"
+  resolved "https://registry.yarnpkg.com/@types/d3-shape/-/d3-shape-1.3.10.tgz#1d6962479460c97f1c810f130f5c4e90c77b99ff"
+  integrity sha512-Nu+/Hyo/owxYH61aBSV9qOM9szEw81BIebdaRgm8VBedyRIW/V2H9AJVp+gwrS+1BMiW7HkoDF9eUtmLOHzTgQ==
+  dependencies:
+    "@types/d3-path" "^1"
 
 "@types/d3-shape@^2.0.0":
   version "2.1.3"
@@ -3092,6 +3104,14 @@
     "@types/prop-types" "*"
     "@types/scheduler" "*"
     csstype "^3.0.2"
+
+"@types/recharts@^1.8.26":
+  version "1.8.26"
+  resolved "https://registry.yarnpkg.com/@types/recharts/-/recharts-1.8.26.tgz#9ae5bb732b7bf5701da1a0522eebc9cbf6e5294d"
+  integrity sha512-aQj6sPwcklOtLl/tpbs1i33YaIQnmIZjxm5yzvV0BnzgDAp039AfuGDZOT5kochG6MyIdyIMzoSu49aBSJAqow==
+  dependencies:
+    "@types/d3-shape" "^1"
+    "@types/react" "*"
 
 "@types/scheduler@*":
   version "0.16.2"

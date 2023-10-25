@@ -6,7 +6,7 @@ import { Spinner } from '~/components/Spinner'
 import { type LatestData } from '../../types'
 
 export function CardChart({ data }: { data: LatestData }) {
-  console.log('new card: ', data)
+  // console.log('new card: ', data)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
