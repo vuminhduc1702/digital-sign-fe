@@ -72,7 +72,7 @@ export function BillingTemplate() {
             />
             <InputField
               value={value}
-              className='mt-1 h-[39px]'
+              className='mt-1 h-[37px]'
               onChange={e => setValue(e.target.value)}
             />
             <div className={cn('grid gap-2')}>
@@ -82,7 +82,7 @@ export function BillingTemplate() {
                     id="date"
                     variant="trans"
                     className={cn(
-                      'relative mt-1 h-[39px] w-[300px] justify-start rounded-md text-left font-normal ',
+                      'relative mt-1 h-[37px] w-[300px] justify-start rounded-md text-left font-normal ',
                       !date && 'text-muted-foreground',
                     )}
                   >

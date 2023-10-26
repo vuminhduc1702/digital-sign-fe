@@ -5,7 +5,7 @@ export type ThingService = {
   name: string
   create_ts: string
   description: string
-}
+} & BodyEventService
 
 export type ThingServiceList = {
   data: ThingService[]
@@ -23,6 +23,11 @@ export type EventService = {
   status: string
   ts: number
   body: BodyEventService
+}
+
+export type InputService = {
+  name: string
+  type: string
 }
 
 export type EventServiceList = {

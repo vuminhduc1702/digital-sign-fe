@@ -61,7 +61,7 @@ export function SubcriptionTemplate() {
             />
             <InputField
               value={value}
-              className='mt-1 h-[39px]'
+              className='mt-1 h-[37px]'
               onChange={e => setValue(e.target.value)}
             />
             <Button

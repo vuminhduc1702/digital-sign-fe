@@ -39,10 +39,16 @@ import { Switch } from '~/components/Switch'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { cn } from '~/utils/misc'
-import { type ThingService } from '../../types'
+import { InputService, type ThingService } from '../../types'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import { Dropdown } from '~/components/Dropdown'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -171,6 +177,8 @@ export function UpdateThingService({
       window.removeEventListener('keydown', handleEsc)
     }
   }, [])
+
+  console.log(thingServiceDataProps, 'thingServiceDataProps')
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -430,9 +438,77 @@ export function UpdateThingService({
                                     })}
                                   >
                                     {thingServiceDataProps?.map(item => {
+                                      const typeOutput = outputList.filter(
+                                        data => data.value === item.output,
+                                      )
+                                      const inputData =
+                                        typeof item.input === 'string' &&
+                                        JSON.parse(item.input)
                                       return (
-                                        <div className="mt-1.5 cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
-                                          {item.name}
+                                        <div className="mt-1.5">
+                                          <TooltipProvider>
+                                            <Tooltip>
+                                              <TooltipTrigger className="w-full cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
+                                                <div>{item.name}</div>
+                                              </TooltipTrigger>
+                                              <TooltipContent side="right">
+                                                <div>
+                                                  <div className="mb-4 text-table-header">
+                                                    {item.name}
+                                                  </div>
+                                                  <div>
+                                                    <div>
+                                                      <div>
+                                                        {t(
+                                                          'cloud:custom_protocol.service.input',
+                                                        )}
+                                                        :
+                                                      </div>
+                                                      <ul>
+                                                        {inputData?.map(
+                                                          (
+                                                            data: InputService,
+                                                          ) => {
+                                                            const type =
+                                                              outputList.filter(
+                                                                item =>
+                                                                  item.value ===
+                                                                  data.type,
+                                                              )
+                                                            return (
+                                                              <li className="mt-1.5 pl-2">
+                                                                <span className="text-primary-400">
+                                                                  {data.name}
+                                                                </span>
+                                                                <span>
+                                                                  :{' '}
+                                                                  {
+                                                                    type[0]
+                                                                      .label
+                                                                  }
+                                                                </span>
+                                                              </li>
+                                                            )
+                                                          },
+                                                        )}
+                                                      </ul>
+                                                    </div>
+                                                    <div className="mt-1.5">
+                                                      <span>
+                                                        {t(
+                                                          'cloud:custom_protocol.service.output',
+                                                        )}
+                                                        :{' '}
+                                                      </span>
+                                                      <span>
+                                                        {typeOutput[0]?.label}
+                                                      </span>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </TooltipContent>
+                                            </Tooltip>
+                                          </TooltipProvider>
                                         </div>
                                       )
                                     })}
