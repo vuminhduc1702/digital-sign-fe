@@ -291,10 +291,10 @@ export function LandingPage() {
         <div>
           <SectionSolution></SectionSolution>
         </div>
-        <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
+        {/* <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
           <SectionPackageData></SectionPackageData>
-        </div>
-        {/* h-[823px] bg-slate-200*/}
+        </div> */}
+
         <div ref={ProductRef}>
           <SectionProduct></SectionProduct>
         </div>
