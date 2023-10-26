@@ -32,7 +32,8 @@ module.exports = {
         current: 'currentColor',
       },
       fontFamily: {
-        sans: ['FS PFBeauSansPro', ...defaultTheme.fontFamily.sans],
+        sans: ['FS PFBeauSansPro', 'Roboto', ...defaultTheme.fontFamily.sans],
+        pdf: ['Roboto'],
       },
       fontSize: {
         // 1rem = 16px
