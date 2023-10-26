@@ -13,6 +13,7 @@ type GetSubcriptons = {
   projectId: string
   search_field: string
   search_str: string
+  searchData?: searchFilter
 }
 
 export type GetSubcriptonRes = {
@@ -25,12 +26,14 @@ export const getSubcriptons = ({
   projectId,
   search_field,
   search_str,
+  searchData
 }: GetSubcriptons): Promise<GetSubcriptonRes> => {
   return axios.get(`/api/priceplan/subscriptions`, {
     params: {
       project_id: projectId,
       search_field,
-      search_str
+      search_str,
+      ...searchData
     },
   })
 }
@@ -45,11 +48,12 @@ export const useGetSubcriptons = ({
   projectId,
   search_field,
   search_str,
+  searchData,
   config,
 }: UseEntitySubcriptonOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['subcriptions', projectId, search_field, search_str],
-    queryFn: () => getSubcriptons({ projectId, search_field, search_str }),
+    queryKey: ['subcriptions', projectId, search_field, search_str, searchData],
+    queryFn: () => getSubcriptons({ projectId, search_field, search_str, searchData }),
     ...config,
   })
 }
