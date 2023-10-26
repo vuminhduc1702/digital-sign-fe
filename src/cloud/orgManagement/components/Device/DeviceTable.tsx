@@ -65,7 +65,6 @@ function DeviceTableContextMenu({
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
 
   const handleCopyId = useCopyId()
-  console.log(token, 'undefinedundefinedundefinedundefinedundefined')
 
   return (
     <>

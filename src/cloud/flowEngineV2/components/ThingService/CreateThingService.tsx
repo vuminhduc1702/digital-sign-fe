@@ -121,11 +121,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     }
   }, [isSuccessExecute, isError])
 
-  console.log(
-    thingServiceData,
-    'thingServiceDatathingServiceDatathingServiceDatathingServiceDatathingServiceDatathingServiceData',
-  )
-
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
     setViewMode('default')

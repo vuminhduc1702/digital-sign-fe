@@ -178,8 +178,6 @@ export function UpdateThingService({
     }
   }, [])
 
-  console.log(thingServiceDataProps, 'thingServiceDataProps')
-
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
       <div
