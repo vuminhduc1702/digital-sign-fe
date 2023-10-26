@@ -311,20 +311,20 @@ export function UpdateThingService({
                                           'grid w-full grid-cols-1 gap-x-4 gap-y-2 pr-2',
                                         )}
                                       >
-                                        <InputField
-                                          label={t(
-                                            'cloud:custom_protocol.service.service_input.name',
-                                          )}
-                                          require={true}
-                                          error={
-                                            formState.errors[`input`]?.[index]
-                                              ?.name
-                                          }
-                                          registration={register(
-                                            `input.${index}.name` as const,
-                                          )}
-                                        />
                                         <div className="flex gap-x-2">
+                                          <InputField
+                                            label={t(
+                                              'cloud:custom_protocol.service.service_input.name',
+                                            )}
+                                            require={true}
+                                            error={
+                                              formState.errors[`input`]?.[index]
+                                                ?.name
+                                            }
+                                            registration={register(
+                                              `input.${index}.name` as const,
+                                            )}
+                                          />
                                           <SelectField
                                             label={t(
                                               'cloud:custom_protocol.service.service_input.type',
@@ -340,19 +340,19 @@ export function UpdateThingService({
                                             options={outputList}
                                             className="h-9"
                                           />
-                                          <InputField
-                                            label={t(
-                                              'cloud:custom_protocol.service.service_input.value',
-                                            )}
-                                            error={
-                                              formState.errors[`input`]?.[index]
-                                                ?.value
-                                            }
-                                            registration={register(
-                                              `input.${index}.value` as const,
-                                            )}
-                                          />
                                         </div>
+                                        <InputField
+                                          label={t(
+                                            'cloud:custom_protocol.service.service_input.value',
+                                          )}
+                                          error={
+                                            formState.errors[`input`]?.[index]
+                                              ?.value
+                                          }
+                                          registration={register(
+                                            `input.${index}.value` as const,
+                                          )}
+                                        />
                                       </div>
                                       <Button
                                         type="button"
