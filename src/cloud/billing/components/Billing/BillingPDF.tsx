@@ -7,12 +7,12 @@ import {
   Text,
   View,
 } from '@react-pdf/renderer'
-import robotoLight from '~/assets/fonts/Roboto-Light.ttf'
-import robotoLightItalic from '~/assets/fonts/Roboto-LightItalic.ttf'
+import robotoLight from '/fonts/FontRoboto/Roboto-Light.ttf'
+import robotoLightItalic from '/fonts/FontRoboto/Roboto-LightItalic.ttf'
 import LogoViettel from '~/assets/images/landingpage/Logo_Viettel.png'
 
 import { t } from 'i18next'
-import robotoBold from '~/assets/fonts/Roboto-Bold.ttf'
+import robotoBold from '/fonts/FontRoboto/Roboto-Bold.ttf'
 import { getVNDateFormat } from '~/utils/misc'
 import { type Billing } from '../../types'
 
@@ -293,7 +293,7 @@ export function BillingPDF({ dataPdf }: { dataPdf?: Billing }) {
                 <Text style={styles.textNormal}>{dataPdf?.c_name}</Text>
               </View>
             </View>
-            <View style={styles.flexRow}>
+            {/* <View style={styles.flexRow}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.textNormal}>
                   {t('billing:manage_bill.view_PDF.buying_name')}
@@ -308,7 +308,7 @@ export function BillingPDF({ dataPdf }: { dataPdf?: Billing }) {
                 </Text>
                 <Text style={styles.textNormal}>{''}</Text>
               </View>
-            </View>
+            </View> */}
             <View style={styles.flexRow}>
               <View style={{ flexDirection: 'row' }}>
                 <Text style={styles.textNormal}>

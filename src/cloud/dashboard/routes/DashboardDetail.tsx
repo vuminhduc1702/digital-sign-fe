@@ -109,7 +109,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-  // console.log('lastJsonMessage', lastJsonMessage)
+  console.log('lastJsonMessage', lastJsonMessage)
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
@@ -250,6 +250,19 @@ export function DashboardDetail() {
                     : {}
                 // console.log('realtimeValues', realtimeValues)
 
+                const realtimeWithDeviceValues: {
+                  timeseries: TimeSeries
+                  entityName: string
+                } =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => ({
+                          timeseries: device.timeseries as TimeSeries,
+                          entityName: device.entityId.entityName,
+                        })),
+                      )
+                    : {}
+
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -275,14 +288,14 @@ export function DashboardDetail() {
                             layout => layout.i === widgetId,
                           )
                         : {
-                            // x: index % 2 === 0 ? 0 : 4,
-                            x: index % 2 === 0 ? 0 : 6,
+                            x: index % 2 === 0 ? 0 : 4,
+                            // x: index % 2 === 0 ? 0 : 6,
                             y: 0,
-                            // w: 4,
+                            // w: 6,
                             w:
                               allWidgetData?.[widgetId]?.description === 'CARD'
                                 ? 3
-                                : 6,
+                                : 4,
                             h:
                               allWidgetData?.[widgetId]?.description === 'CARD'
                                 ? 1
@@ -309,7 +322,10 @@ export function DashboardDetail() {
                     ) : allWidgetData?.[widgetId]?.description === 'GAUGE' ? (
                       <GaugeChart data={lastestValueOneDevice} />
                     ) : allWidgetData?.[widgetId]?.description === 'TABLE' ? (
-                      <TableChart data={realtimeValues} className="p-5" />
+                      <TableChart
+                        data={realtimeValues}
+                        className="h-full p-5"
+                      />
                     ) : allWidgetData?.[widgetId]?.description === 'CARD' ? (
                       <CardChart data={lastestValueOneDevice} />
                     ) : null}

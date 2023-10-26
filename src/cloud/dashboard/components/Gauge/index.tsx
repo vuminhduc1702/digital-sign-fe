@@ -60,8 +60,11 @@ function Gauge({ value, attrKey }: GaugeProps) {
   }, [value])
 
   return (
-    <div className="relative">
-      <svg className="w-full overflow-visible p-4" {...gauge.getSVGProps()}>
+    <div className="relative flex h-full">
+      <svg
+        className="h-full w-full overflow-visible p-20"
+        {...gauge.getSVGProps()}
+      >
         <defs>
           <linearGradient
             id="greenGradient"

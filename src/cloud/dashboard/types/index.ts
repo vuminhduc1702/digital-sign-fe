@@ -6,6 +6,7 @@ export type WidgetType = 'TIMESERIES' | 'LASTEST'
 
 type EntityId = {
   entityType: 'DEVICE'
+  entityName: string
   id: string
 }
 
@@ -48,5 +49,5 @@ export const aggSchema = z.enum([
   'SUM',
   'COUNT',
   'SMA',
-  'FFT'
+  'FFT',
 ] as const)

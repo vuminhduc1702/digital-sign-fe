@@ -7,7 +7,7 @@ import { Button } from '~/components/Button'
 import { InputField, SelectField } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { SearchIcon } from '~/components/SVGIcons'
-import { useGetSubcriptons } from '../api/subcriptionAPI'
+import { type searchFilter, useGetSubcriptons } from '../api/subcriptionAPI'
 import { CreateSubcription, SubcriptionTable } from '../components/Subcription'
 
 export function SubcriptionTemplate() {
@@ -18,12 +18,14 @@ export function SubcriptionTemplate() {
     search_field: '',
     search_str: '',
   })
+  const [searchData, setsearchData] = useState<searchFilter>({})
   const [value, setValue] = useState('')
   const { id: projectId } = storage.getProject()
   const { data, isPreviousData } = useGetSubcriptons({
     projectId,
     search_field: searchFilter.search_field,
     search_str: searchFilter.search_str,
+    searchData: searchData,
     config: { keepPreviousData: true },
   })
 
@@ -32,6 +34,12 @@ export function SubcriptionTemplate() {
       search_field: key,
       search_str: value,
     })
+  }
+
+  const handleField = (field: string, value: any) => {
+    const newObj: searchFilter = {}
+    newObj[field] = value
+    setsearchData(newObj)
   }
 
   return (
@@ -73,6 +81,7 @@ export function SubcriptionTemplate() {
           data={data?.data?.data}
           offset={offset}
           setOffset={setOffset}
+          handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
         />
