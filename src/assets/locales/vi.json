@@ -79,6 +79,7 @@
         "edit": "Sửa tổ chức",
         "delete": "Xóa tổ chức",
         "copy_success": "Sao chép ID thành công",
+        "copy_token_success": "Sao chép TOKEN thành công",
         "delete_org_confirm": "Bạn có chắc chắn muốn xóa tổ chức {{ORGNAME}}?"
       },
       "org_manage": {
@@ -676,6 +677,7 @@
     "view_detail": "Xem chi tiết",
     "edit": "Chỉnh sửa",
     "copy_id": "Sao chép ID",
+    "copy_token": "Sao chép TOKEN",
     "delete": "Xoá",
     "no_attr": "Không có thuộc tính. Vui lòng tạo.",
     "no_device": "Không có thiết bị. Vui lòng tạo.",

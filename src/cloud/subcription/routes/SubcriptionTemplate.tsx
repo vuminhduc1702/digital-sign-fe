@@ -26,7 +26,7 @@ export function SubcriptionTemplate() {
     search_field: searchFilter.search_field,
     search_str: searchFilter.search_str,
     searchData: searchData,
-    config: { keepPreviousData: true },
+    config: { keepPreviousData: true, staleTime: 0 },
   })
 
   const handleSearch = () => {
@@ -61,6 +61,7 @@ export function SubcriptionTemplate() {
             />
             <InputField
               value={value}
+              className='mt-1 h-[37px]'
               onChange={e => setValue(e.target.value)}
             />
             <Button

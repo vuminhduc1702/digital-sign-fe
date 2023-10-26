@@ -91,7 +91,8 @@ export function BillingTable({
     setPlan('')
   }, [status, plan])
 
-  const handleSearch = (field: string, value: any, id: string) => {
+  const handleSearch = (e: React.MouseEvent<HTMLInputElement>,field: string, value: any, id: string) => {
+    e.stopPropagation()
     setPlan(id)
     setStatus(id)
     if (!id) {
@@ -128,7 +129,7 @@ export function BillingTable({
           <>
             <span>{t('billing:manage_bill.table.plan_name')}</span>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -136,6 +137,7 @@ export function BillingTable({
                   startIcon={
                     <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
+                  
                 />
               </PopoverTrigger>
               <PopoverContent className="w-40" align="start">
@@ -143,7 +145,7 @@ export function BillingTable({
                   className={cn(
                     'cursor-pointer p-2 hover:bg-red-300',
                   )}
-                  onClick={() => handleSearch('plan_id', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e,'plan_id', '', '')}
                 >
                   All
                 </div>
@@ -152,8 +154,8 @@ export function BillingTable({
                     <div
                       key={item.id}
                       className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={() =>
-                        handleSearch('plan_id', item.plan_id, item.id)
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                        handleSearch(e,'plan_id', item.plan_id, item.id)
                       }
                     >
                       {item.plan_name}
@@ -205,7 +207,7 @@ export function BillingTable({
           <>
             <span>{t('billing:manage_bill.table.status')}</span>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -218,7 +220,7 @@ export function BillingTable({
               <PopoverContent className="w-40" align="start">
                 <div
                   className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={() => handleSearch('status', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'status', '', '')}
                 >
                   All
                 </div>
@@ -251,8 +253,8 @@ export function BillingTable({
                       className={cn(
                         'cursor-pointer p-2 hover:bg-red-300',
                       )}
-                      onClick={() =>
-                        handleSearch('status', item.status, item.id)
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                        handleSearch(e, 'status', item.status, item.id)
                       }
                     >
                       {valueStatus()}

@@ -36,6 +36,7 @@ export function ComboBoxSelectDevice({
       'org_name',
       'group_id',
       'template_id',
+      'token'
     ],
   )
 
