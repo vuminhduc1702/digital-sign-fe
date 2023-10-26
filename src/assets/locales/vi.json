@@ -881,5 +881,14 @@
     "qr_by_phone": "Quét mã QR bằng điện thoại",
     "setup_deploygate": "Cài đặt ứng dụng Deploygate",
     "qr_by_deploygate": "Quét mã QR bằng ứng dụng Deploygate"
+  },
+  "form": {
+    "enter_name": "Nhập họ tên",
+    "enter_tax": "Nhập mã số thuế",
+    "enter_phone_num": "Nhập số điện thoại",
+    "enter_address": "Nhập địa chỉ chi tiết",
+    "province_city": "Tỉnh/TP",
+    "district": "Huyện/Quận",
+    "village": "Phường/Xã"
   }
 }
