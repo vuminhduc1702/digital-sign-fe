@@ -81,7 +81,8 @@ export function SubcriptionTable({
     setCalUnit('')
   }, [estimate, plan, calUnit])
 
-  const handleSearch = (field: string, value: any, id: string) => {
+  const handleSearch = (e: React.MouseEvent<HTMLInputElement>, field: string, value: any, id: string) => {
+    e.stopPropagation()
     setPlan(id)
     setEstimate(id)
     setCalUnit('')
@@ -119,7 +120,7 @@ export function SubcriptionTable({
           <>
             <span>{t('billing:subcription.popup.package')}</span>{' '}
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -132,7 +133,7 @@ export function SubcriptionTable({
               <PopoverContent className="w-40" align="start">
                 <div
                   className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={() => handleSearch('plan_id', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'plan_id', '', '')}
                 >
                   All
                 </div>
@@ -141,8 +142,8 @@ export function SubcriptionTable({
                     <div
                       key={item.p_id}
                       className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={() =>
-                        handleSearch('plan_id', item.p_id, item.p_id)
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                        handleSearch(e, 'plan_id', item.p_id, item.p_id)
                       }
                     >
                       {item.p_name}
@@ -161,7 +162,7 @@ export function SubcriptionTable({
           <>
             <span>{t('billing:subcription.popup.period')}</span>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -174,7 +175,7 @@ export function SubcriptionTable({
               <PopoverContent className="w-40" align="start">
                 <div
                   className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={() => handleSearch('cal_unit', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'cal_unit', '', '')}
                 >
                   All
                 </div>
@@ -205,8 +206,9 @@ export function SubcriptionTable({
                     <div
                       key={item.s_id}
                       className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={() =>
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                         handleSearch(
+                          e,
                           'cal_unit',
                           item.p_cal_unit,
                           item.p_cal_unit,
@@ -254,7 +256,7 @@ export function SubcriptionTable({
           <>
             <span>{t('billing:subcription.popup.price_method')}</span>
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -267,7 +269,7 @@ export function SubcriptionTable({
               <PopoverContent className="w-40" align="start">
                 <div
                   className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={() => handleSearch('estimate', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'estimate', '', '')}
                 >
                   All
                 </div>
@@ -301,8 +303,9 @@ export function SubcriptionTable({
                     <div
                       key={item.s_id}
                       className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={() =>
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                         handleSearch(
+                          e,
                           'estimate',
                           item.p_estimate,
                           item.p_estimate,
