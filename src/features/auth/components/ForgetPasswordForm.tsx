@@ -7,7 +7,7 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '~/i18n'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 
 import {
   emailSchema,
@@ -101,6 +101,13 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
+                onChange={e => {
+                  if (getValues('email') === '') {
+                    setBtnOtpDisable(false)
+                  } else {
+                    setBtnOtpDisable(true)
+                  }
+                }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
@@ -144,22 +151,24 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
               />
               <Button
                 variant="none"
-                className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
+                className={`!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline`}
                 disabled={btnOtpDisable}
                 onClick={() => {
-                  setBtnOtpDisable(true)
-                  sentOTP({
-                    email: email,
-                    phone: '0337463520',
-                  })
-                    .then(() => {
-                      setCountdown(timeCountdown)
-                      setCheckCountdown(true)
+                  if (getValues('email') !== '') {
+                    setBtnOtpDisable(true)
+                    sentOTP({
+                      email: getValues('email'),
+                      phone: '0337463520',
                     })
-                    .catch(error => {
-                      setBtnOtpDisable(false)
-                      console.log(error)
-                    })
+                      .then(() => {
+                        setCountdown(timeCountdown)
+                        setCheckCountdown(true)
+                      })
+                      .catch(error => {
+                        setBtnOtpDisable(false)
+                        console.log(error)
+                      })
+                  }
                 }}
               >
                 {checkCountdown === true && (

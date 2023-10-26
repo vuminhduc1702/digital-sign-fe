@@ -55,13 +55,13 @@ export function AppSdk() {
     <>
       <div className="grid grid-cols-2 px-3 py-3">
         {Sdks.map((item, idx) => (
-          <div className="m-4 h-fit rounded bg-[#eceff1] shadow-lg">
+          <div className="m-4 h-fit rounded bg-[#eceff1] shadow-lg" key={idx}>
             <h5 className="flex h-[40px] border-b border-solid border-[#ccc]">
               <div className="flex w-1/2 items-center justify-center p-[10px] text-xl font-medium">
                 {item.name}
               </div>
               <div
-                className={`relative flex w-1/4 items-center justify-center text-xl font-medium  ${
+                className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
                   sdkStates[idx].chooseAndroid
                     ? textWhite + ' ' + afterAndroid
                     : textBlack
@@ -71,7 +71,7 @@ export function AppSdk() {
                 {t('application:android')}
               </div>
               <div
-                className={`relative flex w-1/4 items-center justify-center text-xl font-medium ${
+                className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
                   !sdkStates[idx].chooseAndroid
                     ? textWhite + ' ' + afterIOS
                     : textBlack

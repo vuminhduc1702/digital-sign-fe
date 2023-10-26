@@ -56,7 +56,7 @@ export function SectionSolution() {
   const { t } = useTranslation()
   return (
     <>
-      <div className="flex h-[403px] justify-center">
+      <div className="mb-20 flex justify-center">
         <div className="w-[1040px]">
           <div className="">
             <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
@@ -71,6 +71,7 @@ export function SectionSolution() {
           <div className="grid grid-cols-4 gap-4 pt-8">
             {slides.map((item, idx) => (
               <div
+                key={idx}
                 className="h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px]"
                 style={{
                   backgroundImage:
