@@ -102,10 +102,12 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 error={formState.errors['email']}
                 registration={register('email')}
                 onChange={e => {
-                  if (getValues('email') === '') {
-                    setBtnOtpDisable(false)
-                  } else {
+                  const emailValue = e.target.value
+                  console.log(emailValue)
+                  if (emailValue === '') {
                     setBtnOtpDisable(true)
+                  } else {
+                    setBtnOtpDisable(false)
                   }
                 }}
                 startIcon={

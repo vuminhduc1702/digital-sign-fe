@@ -75,8 +75,10 @@ function SideNavigation() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
+  const currentPathname = window.location.pathname
 
-  const [value, setValue] = useState('cloud')
+  // const [value, setValue] = useState('cloud')
+  const [value, setValue] = useState(currentPathname.split('/')[1])
 
   return (
     <div className="px-8 py-7">

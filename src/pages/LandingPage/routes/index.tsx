@@ -136,7 +136,7 @@ export function LandingPage() {
                   </div> */}
                   </div>
                 </div>
-                {userDataFromStorage != null ? (
+                {userInfoData != null ? (
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger
                       asChild
@@ -291,9 +291,9 @@ export function LandingPage() {
         <div>
           <SectionSolution></SectionSolution>
         </div>
-        {/* <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
+        <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
           <SectionPackageData></SectionPackageData>
-        </div> */}
+        </div>
 
         <div ref={ProductRef}>
           <SectionProduct></SectionProduct>
@@ -313,8 +313,8 @@ export function LandingPage() {
           <QandA></QandA>
         </div>
         {/* <div>
-        <SectionNews></SectionNews>
-      </div> */}
+          <SectionNews></SectionNews>
+        </div> */}
         <div>
           <SectionFooter></SectionFooter>
         </div>
