@@ -1,6 +1,7 @@
 export const BASE_PATH = '/'
 export const BASE_PATH_CLOUD = '/cloud/'
 export const BASE_PATH_PAYMENT = '/payment/'
+export const BASE_PATH_INTEGRATION = '/integration/'
 
 export const PATHS: { [key: string]: string } = {
   // Protected routes
@@ -32,6 +33,10 @@ export const PATHS: { [key: string]: string } = {
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,
 
+  AI: `${BASE_PATH_INTEGRATION}ai`,
+  DDOS: `${BASE_PATH_INTEGRATION}ai/ddos`,
+  FUEL: `${BASE_PATH_INTEGRATION}ai/fuel`,
+  
   // Public routes
   LOGIN: `${BASE_PATH}auth/login`,
   REGISTER: `${BASE_PATH}auth/register`,
