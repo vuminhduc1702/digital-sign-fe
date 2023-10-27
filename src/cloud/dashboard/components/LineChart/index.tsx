@@ -17,7 +17,6 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type TimeSeries } from '../../types'
 
 export function LineChart({ data }: { data: TimeSeries }) {
-  // console.log('new line: ', data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -115,7 +114,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
     minDuration: 300,
   })
 
-  console.log('transform line', dataTransformedFeedToChart)
+  // console.log('transform line', dataTransformedFeedToChart)
 
   return (
     <>
@@ -123,7 +122,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
         <ResponsiveContainer width="98%" height="90%" className="pt-8">
           <LineWidget data={dataTransformedFeedToChart}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="ts" />
+            <XAxis dataKey="ts" allowDuplicatedCategory={false} />
             <YAxis />
             <Tooltip />
             <Legend />
