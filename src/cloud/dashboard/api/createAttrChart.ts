@@ -9,7 +9,7 @@ export type CreateAttrDTO = {
   data: {
     entity_ids: string[]
     entity_type: EntityType
-    time_series: boolean
+    time_series?: boolean
   }
 }
 
