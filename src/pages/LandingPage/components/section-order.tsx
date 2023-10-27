@@ -8,6 +8,7 @@ import {
   CheckboxCircleLineWhite,
 } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
+import storage from '~/utils/storage'
 
 export function SectionOrder() {
   const navigate = useNavigate()
@@ -91,7 +92,10 @@ export function SectionOrder() {
                   type="button"
                   className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
-                  onClick={() => navigate(PATHS.PROJECT_MANAGE)}
+                  onClick={() => {
+                    storage.setHistoryPath(PATHS.PROJECT_MANAGE)
+                    navigate(PATHS.PROJECT_MANAGE)
+                  }}
                   endIcon={
                     <ArrowRightUpLine
                       width={23}

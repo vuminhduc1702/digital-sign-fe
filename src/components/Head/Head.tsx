@@ -12,6 +12,7 @@ export const Head = ({ title = '', description = '' }: HeadProps = {}) => {
       defaultTitle="IoT Platform"
     >
       <meta name="description" content={description} />
+      <link rel="icon" href="public/favicon.ico" sizes="16x20" />
     </Helmet>
   )
 }

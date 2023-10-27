@@ -44,6 +44,7 @@ async function registerFn(data: RegisterCredentialsDTO) {
 export async function logoutFn() {
   storage.clearProject()
   storage.clearToken()
+  storage.clearHistoryPath()
   window.location.assign(PATHS.LOGIN)
 }
 

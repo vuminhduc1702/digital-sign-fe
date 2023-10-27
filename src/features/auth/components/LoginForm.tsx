@@ -16,8 +16,9 @@ import {
   EyeShow,
 } from '~/components/SVGIcons'
 import { useState } from 'react'
-import { content } from 'html2canvas/dist/types/css/property-descriptors/content'
-import { divIcon } from 'leaflet'
+
+// import { content } from 'html2canvas/dist/types/css/property-descriptors/content'
+// import { divIcon } from 'leaflet'
 
 const schema = z.object({
   identifier: emailSchema,
