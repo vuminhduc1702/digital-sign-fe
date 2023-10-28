@@ -19,6 +19,7 @@ import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
 import storage from '~/utils/storage'
+import { scrollToIntro } from '~/utils/misc'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
@@ -41,14 +42,12 @@ export function LandingPage() {
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
   const PackOfDataRef: RefObject<HTMLDivElement> = useRef(null)
+  const solutionRef: RefObject<HTMLDivElement> = useRef(null)
   const ProductRef: RefObject<HTMLDivElement> = useRef(null)
   const OrderRef: RefObject<HTMLDivElement> = useRef(null)
   const FAQRef: RefObject<HTMLDivElement> = useRef(null)
   const Order1Ref: RefObject<HTMLDivElement> = useRef(null)
 
-  const scrollToIntro = (Ref: RefObject<HTMLDivElement>) => {
-    Ref.current?.scrollIntoView({ behavior: 'smooth' })
-  }
   const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
   useEffect(() => {
@@ -286,37 +285,37 @@ export function LandingPage() {
           </div>
         </div>
         <div className="relative top-[-74px] z-50" ref={introRef}>
-          <SectionIntro></SectionIntro>
+          <SectionIntro solutionRef={solutionRef} />
         </div>
-        <div>
-          <SectionSolution></SectionSolution>
+        <div ref={solutionRef}>
+          <SectionSolution />
         </div>
         {/* <div className="h-[823px] bg-slate-200" ref={PackOfDataRef}>
           <SectionPackageData></SectionPackageData>
         </div> */}
 
         <div ref={ProductRef}>
-          <SectionProduct></SectionProduct>
+          <SectionProduct />
         </div>
 
         <div ref={OrderRef}>
-          <SectionOrder></SectionOrder>
+          <SectionOrder />
         </div>
 
         <div ref={Order1Ref}>
-          <SectionOrder1></SectionOrder1>
+          <SectionOrder1 />
         </div>
         <div>
-          <SectionClient></SectionClient>
+          <SectionClient />
         </div>
         <div ref={FAQRef}>
-          <QandA></QandA>
+          <QandA />
         </div>
         {/* <div>
         <SectionNews></SectionNews>
       </div> */}
         <div>
-          <SectionFooter></SectionFooter>
+          <SectionFooter />
         </div>
         <div>
           {showScrollButton && (
@@ -329,7 +328,7 @@ export function LandingPage() {
                 height={49}
                 viewBox="0 0 49 49"
                 className=""
-              ></GroupSlideTop>
+              />
             </button>
           )}
         </div>

@@ -1,9 +1,15 @@
+import { type RefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import Group45 from '~/assets/images/landingpage/Group_45.png'
 import { Button } from '~/components/Button'
 import { CheckboxCircleLine, ArrowRightUpLine } from '~/components/SVGIcons'
+import { scrollToIntro } from '~/utils/misc'
 
-export function SectionIntro() {
+export function SectionIntro({
+  solutionRef,
+}: {
+  solutionRef: RefObject<HTMLDivElement>
+}) {
   const { t } = useTranslation()
   return (
     <>
@@ -77,6 +83,7 @@ export function SectionIntro() {
                       className=""
                     ></ArrowRightUpLine>
                   }
+                  onClick={() => scrollToIntro(solutionRef)}
                 >
                   {t('landingpage:introduction_section.view_product')}
                 </Button>

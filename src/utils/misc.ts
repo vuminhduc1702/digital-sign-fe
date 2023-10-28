@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from 'clsx'
+import { type RefObject } from 'react'
 import { twMerge } from 'tailwind-merge'
 
 type DateFormat = {
@@ -62,4 +63,8 @@ export function flattenData<T>(
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
+}
+
+export const scrollToIntro = (Ref: RefObject<HTMLDivElement>) => {
+  Ref.current?.scrollIntoView({ behavior: 'smooth' })
 }

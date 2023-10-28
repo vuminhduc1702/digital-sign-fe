@@ -122,8 +122,7 @@ export function SectionFooter() {
             <div className="pl-[20px]">
               <a
                 className="flex pb-[15px] pt-[10px]"
-                href="cskh@viettel.com.vn"
-                target="_blank"
+                href="mailto:cskh@viettel.com.vn"
               >
                 <MailSendFill
                   width={33}
