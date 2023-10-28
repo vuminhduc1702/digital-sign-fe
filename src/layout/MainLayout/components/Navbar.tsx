@@ -173,6 +173,15 @@ function Navbar() {
                 ) : null}
               </DropdownMenu.Item>
               <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                {userData ? (
+                  <div className="cursor-pointer">
+                    <Link to={PATHS.USER_ACCOUNT}>
+                      {t('cloud:custom_protocol.adapter.username')}
+                    </Link>
+                  </div>
+                ) : null}
+              </DropdownMenu.Item>
+              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                   {t('user:logout')}
                 </p>

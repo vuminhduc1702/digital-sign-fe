@@ -27,7 +27,8 @@ export const PATHS: { [key: string]: string } = {
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
   BILLING: `${BASE_PATH_PAYMENT}billing`,
   BILLING_PACKAGE: `${BASE_PATH_PAYMENT}billing-package`,
-  BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subscription`,
+  BILLING_SUBCRIPTION: `${BASE_PATH_PAYMENT}billing-subcription`,
+  USER_ACCOUNT : `${BASE_PATH_CLOUD}user_account`,
 
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,

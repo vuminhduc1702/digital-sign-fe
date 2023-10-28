@@ -30,7 +30,7 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { UpdateIcon } from '@radix-ui/react-icons'
+import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 
 function DeviceTableContextMenu({
@@ -41,6 +41,7 @@ function DeviceTableContextMenu({
   group,
   template_name,
   template_id,
+  token
 }: {
   id: string
   name: string
@@ -49,6 +50,7 @@ function DeviceTableContextMenu({
   group: { label: string; value: string }
   template_name: string
   template_id: string
+  token: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -88,8 +90,7 @@ function DeviceTableContextMenu({
               }
               onClick={() =>
                 navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : ` /${id}`
+                  `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
@@ -127,6 +128,12 @@ function DeviceTableContextMenu({
               onClick={() => handleCopyId(id)}
             >
               {t('table:copy_id')}
+            </MenuItem>
+            <MenuItem
+              icon={<CopyIcon className="h-5 w-5" />}
+              onClick={() => handleCopyId(token, 'token')}
+            >
+              {t('table:copy_token')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
@@ -288,6 +295,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group_name,
             template_id,
             template_name,
+            token
           } = info.row.original
           const group = {
             label: group_name,
@@ -301,6 +309,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group,
             template_name,
             template_id,
+            token
           })
         },
         header: () => null,

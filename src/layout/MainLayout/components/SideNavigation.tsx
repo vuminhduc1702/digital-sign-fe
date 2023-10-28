@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
-import { forwardRef, useState, type ReactNode } from 'react'
+import { forwardRef, useState, type ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
 
 import { PATHS } from '~/routes/PATHS'
@@ -14,6 +14,7 @@ import tichhopIcon from '~/assets/icons/sb-tichhop.svg'
 import ungdungIcon from '~/assets/icons/sb-ungdung.svg'
 import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
+import { useLocation } from 'react-router-dom'
 
 type AccordionItemProps = {
   children: ReactNode
@@ -75,10 +76,15 @@ function SideNavigation() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
-  const currentPathname = window.location.pathname
+  const location = useLocation()
 
-  // const [value, setValue] = useState('cloud')
-  const [value, setValue] = useState(currentPathname.split('/')[1])
+  const routerLink = location.pathname?.split('/')
+
+  const [value, setValue] = useState('cloud')
+
+  useEffect(() => {
+    setValue(routerLink[1])
+  }, [location])
 
   return (
     <div className="px-8 py-7">
