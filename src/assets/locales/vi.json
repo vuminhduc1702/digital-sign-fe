@@ -810,7 +810,17 @@
     "experience_now": "Trải nghiệm ngay",
     "pack_of_data_M2M": {
       "title": "Sản phẩm gói cước M2M",
-      "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng"
+      "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng",
+      "monthlyFee": "Miễn phí cước thuê báo tháng",
+      "offerCode": "Mã đăng ký: ",
+      "submit_now": "Đăng ký ngay",
+      "compare": "So Sánh gói cước",
+      "plan": "Gói cước : ",
+      "subscription": "Thuê bao : ",
+      "4G": "4G/5G",
+      "NB_IoT": "Nb-IoT",
+      "prepaid": "Trả trước",
+      "postpaid": "Trả sau"
     },
     "footer": {
       "client_support": "Hỗ trợ khách hàng",

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '~/components/Link'
 import { DownloadSdk } from '~/components/SVGIcons'
+import { ContentLayout } from '~/layout/ContentLayout'
 
 export function AppSdk() {
   const Sdks = [
@@ -53,87 +54,89 @@ export function AppSdk() {
   const { t } = useTranslation()
   return (
     <>
-      <div className="grid grid-cols-2 px-3 py-3">
-        {Sdks.map((item, idx) => (
-          <div className="m-4 h-fit rounded bg-[#eceff1] shadow-lg" key={idx}>
-            <h5 className="flex h-[40px] border-b border-solid border-[#ccc]">
-              <div className="flex w-1/2 items-center justify-center p-[10px] text-xl font-medium">
-                {item.name}
-              </div>
-              <div
-                className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
-                  sdkStates[idx].chooseAndroid
-                    ? textWhite + ' ' + afterAndroid
-                    : textBlack
-                }`}
-                onClick={() => toggleChooseAndroid(idx)}
-              >
-                {t('application:android')}
-              </div>
-              <div
-                className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
-                  !sdkStates[idx].chooseAndroid
-                    ? textWhite + ' ' + afterIOS
-                    : textBlack
-                }`}
-                onClick={() => toggleChooseIOS(idx)}
-              >
-                {t('application:ios')}
-              </div>
-            </h5>
-            {item.exist === 'true' ? (
-              <div className="mt-2 flex">
-                <div className="w-3/5">
-                  <img className="" src={item.image} alt="" />
+      <ContentLayout title={t('sidebar:application.appsdk')}>
+        <div className="grid grid-cols-2 px-3 py-3">
+          {Sdks.map((item, idx) => (
+            <div className="m-4 h-fit rounded bg-[#eceff1] shadow-lg" key={idx}>
+              <h5 className="flex h-[40px] border-b border-solid border-[#ccc]">
+                <div className="flex w-1/2 items-center justify-center p-[10px] text-xl font-medium">
+                  {item.name}
                 </div>
-                <div className="px-3">
-                  <p className="mb-1 text-sm tracking-[.5px]">{item.info}</p>
-                  <div>
+                <div
+                  className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
+                    sdkStates[idx].chooseAndroid
+                      ? textWhite + ' ' + afterAndroid
+                      : textBlack
+                  }`}
+                  onClick={() => toggleChooseAndroid(idx)}
+                >
+                  {t('application:android')}
+                </div>
+                <div
+                  className={`relative flex w-1/4 cursor-pointer items-center justify-center text-xl font-medium ${
+                    !sdkStates[idx].chooseAndroid
+                      ? textWhite + ' ' + afterIOS
+                      : textBlack
+                  }`}
+                  onClick={() => toggleChooseIOS(idx)}
+                >
+                  {t('application:ios')}
+                </div>
+              </h5>
+              {item.exist === 'true' ? (
+                <div className="mt-2 flex">
+                  <div className="w-3/5">
+                    <img className="" src={item.image} alt="" />
+                  </div>
+                  <div className="px-3">
+                    <p className="mb-1 text-sm tracking-[.5px]">{item.info}</p>
                     <div>
-                      <Link
-                        className="flex border-b border-solid border-[#ccc] py-4"
-                        to={item.link as string}
-                        target="_blank"
-                      >
-                        <DownloadSdk
-                          width={24}
-                          height={24}
-                          viewBox="0 0 24 24"
-                        />
-                        <div className="pl-4">
-                          {t('application:download_doc')}
-                        </div>
-                      </Link>
-                    </div>
-                    <div>
-                      <Link
-                        className="flex border-b border-solid border-[#ccc] py-4"
-                        to={item.link as string}
-                        target="_blank"
-                      >
-                        <DownloadSdk
-                          width={24}
-                          height={24}
-                          viewBox="0 0 24 24"
-                        />
-                        <div className="pl-4">
-                          {t('application:download_sdk')}
-                        </div>
-                      </Link>
+                      <div>
+                        <Link
+                          className="flex border-b border-solid border-[#ccc] py-4"
+                          to={item.link as string}
+                          target="_blank"
+                        >
+                          <DownloadSdk
+                            width={24}
+                            height={24}
+                            viewBox="0 0 24 24"
+                          />
+                          <div className="pl-4">
+                            {t('application:download_doc')}
+                          </div>
+                        </Link>
+                      </div>
+                      <div>
+                        <Link
+                          className="flex border-b border-solid border-[#ccc] py-4"
+                          to={item.link as string}
+                          target="_blank"
+                        >
+                          <DownloadSdk
+                            width={24}
+                            height={24}
+                            viewBox="0 0 24 24"
+                          />
+                          <div className="pl-4">
+                            {t('application:download_sdk')}
+                          </div>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div>
-                <p className="mb-1 flex h-[50px] max-h-[100px] items-center pl-10 text-sm tracking-[.5px]">
-                  {item.info}
-                </p>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+              ) : (
+                <div>
+                  <p className="mb-1 flex h-[50px] max-h-[100px] items-center pl-10 text-sm tracking-[.5px]">
+                    {item.info}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </ContentLayout>
     </>
   )
 }
