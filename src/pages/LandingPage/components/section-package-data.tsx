@@ -6,6 +6,8 @@ import { ArrowRightUpLine, CheckboxCircleLine } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 import { Switch } from '~/components/Switch'
 import { useState } from 'react'
+import { FieldWrapper } from '~/components/Form'
+import { Checkbox } from '~/components/Checkbox'
 
 export function SectionPackageData() {
   const { t } = useTranslation()
@@ -141,7 +143,6 @@ export function SectionPackageData() {
                 containerClass="carousel-container p-[0px]"
                 responsive={responsive}
                 transitionDuration={300}
-                // infinite
                 itemClass="w-fit flex justify-center"
                 autoPlay
                 autoPlaySpeed={3000}
@@ -158,7 +159,8 @@ export function SectionPackageData() {
                     )
                     .map((item, idx) => (
                       <div className="w-60 rounded-lg shadow-md" key={idx}>
-                        <div className="rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
+                        <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
+                          <Checkbox className="mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400" />
                           {item.name}
                         </div>
                         <div className="rounded-b-lg bg-white">
