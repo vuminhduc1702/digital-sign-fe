@@ -46,7 +46,7 @@ export const useMutationSelfAccountInfo = ({
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['update-self-info'],
+        queryKey: ['user-info'],
       })
       addNotification({
         type: 'success',

@@ -442,6 +442,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       </div>
                     </div>
                   </div>
+
                   <div
                     className={cn(
                       'flex flex-col gap-2 ',
@@ -639,6 +640,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       />
                     </div>
                   </div>
+                  
                 </div>
                 <div className="absolute bottom-6 right-6 flex gap-3">
                   <img

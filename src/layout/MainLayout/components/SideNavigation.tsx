@@ -241,6 +241,11 @@ function SideNavigation() {
           <AccordionContent>
             {t('sidebar:intergration.smarthome')}
           </AccordionContent>
+          <NavLink to={`${PATHS.AI}`}>
+            <AccordionContent>
+              AI
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
       </Accordion.Root>
     </div>
