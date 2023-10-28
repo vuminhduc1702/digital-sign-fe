@@ -1,6 +1,7 @@
 export const BASE_PATH = '/'
 export const BASE_PATH_CLOUD = '/cloud/'
 export const BASE_PATH_PAYMENT = '/payment/'
+// export const BASE_DEVICE = '/device/'
 
 export const PATHS: { [key: string]: string } = {
   // Protected routes
