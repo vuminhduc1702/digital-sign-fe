@@ -7,10 +7,10 @@ import { Spinner } from '~/components/Spinner'
 import AiNavbar from './components/AiNavbar'
 
 export function AiLayout() {
+  const { t } = useTranslation()
 
   return (
-    <ContentLayout title='Ai'>
-  
+    <ContentLayout title={t('sidebar:intergration.ai')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
         <div className="flex flex-col gap-2 md:col-span-2">
           <AiNavbar />
@@ -25,7 +25,6 @@ export function AiLayout() {
           </Suspense>
         </div>
       </div>
-
-  </ContentLayout>
+    </ContentLayout>
   )
 }

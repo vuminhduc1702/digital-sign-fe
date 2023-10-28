@@ -235,16 +235,14 @@ function SideNavigation() {
             />
             <div>{t('sidebar:intergration.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>
+          {/* <AccordionContent>
             {t('sidebar:intergration.tracking')}
           </AccordionContent>
           <AccordionContent>
             {t('sidebar:intergration.smarthome')}
-          </AccordionContent>
+          </AccordionContent> */}
           <NavLink to={`${PATHS.AI}`}>
-            <AccordionContent>
-              AI
-            </AccordionContent>
+            <AccordionContent>{t('sidebar:intergration.ai')}</AccordionContent>
           </NavLink>
         </AccordionItem>
       </Accordion.Root>
