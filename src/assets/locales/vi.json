@@ -800,6 +800,9 @@
     "enter_address": "Nhập địa chỉ chi tiết",
     "province_city": "Tỉnh/TP",
     "district": "Huyện/Quận",
-    "village": "Phường/Xã"
+    "village": "Phường/Xã",
+    "user": {
+      "success_update": "Cập nhật tài khoản thành công"
+    }
   }
 }

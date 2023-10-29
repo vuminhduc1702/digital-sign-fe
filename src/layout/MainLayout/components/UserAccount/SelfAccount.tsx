@@ -16,6 +16,7 @@ import {
   useMutationSelfAccountInfo,
   type UpdateSelfAccountInfoDTO,
 } from './api/updateSelfAccountInfo'
+import TitleBar from '~/components/Head/TitleBar'
 
 export const selfInfoSchema = z.object({
   name: emptyInputSchema,
@@ -134,9 +135,10 @@ const SelfAccount = () => {
         <div className="text-base font-bold">Cập nhật thông tin tài khoản</div>
       </div>
 
-      <div className="mb-2 mt-28 font-semibold" style={{ color: '#44494D' }}>
-        Thông tin khách hàng
-      </div>
+      <TitleBar
+        title={t('billing:subcription.popup.customer_info')}
+        className="mb-4 mt-12 w-full rounded-md bg-gray-500 pl-3"
+      />
 
       <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema>
         id="update-self-account-info"
