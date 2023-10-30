@@ -165,9 +165,9 @@ const SelfAccount = () => {
             tax_code: userInfoData?.profile?.tax_code,
             phone: userInfoData?.phone,
             email: userInfoData?.email,
-            // province: userInfoData?.profile?.province,
-            // district: userInfoData?.profile?.district,
-            // ward: userInfoData?.profile?.ward,
+            province: userInfoData?.profile?.province,
+            district: userInfoData?.profile?.district,
+            ward: userInfoData?.profile?.ward,
             address: userInfoData?.profile?.full_address,
           },
         }}
@@ -190,6 +190,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-4">
               <InputField
+                type='number'
                 classchild="w-full"
                 classnamefieldwrapper="flex items-center"
                 error={formState.errors['tax_code']}
@@ -202,6 +203,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-2">
               <InputField
+                type='number'
                 classchild="w-full"
                 classnamefieldwrapper="flex flex justify-end items-center"
                 error={formState.errors['phone']}
@@ -264,14 +266,6 @@ const SelfAccount = () => {
         className="absolute bottom-8 flex justify-center"
         style={{ left: '43%' }}
       >
-        <Button
-          className="mr-5 cursor-pointer rounded-r-lg rounded-t-lg border-black px-7 py-2"
-          variant="muted"
-          onClick={() => navigate(-1)}
-        >
-          Huỷ
-        </Button>
-
         <Button
           className="mr-5 cursor-pointer rounded-r-lg rounded-t-lg border-0 bg-neutral-500 px-7 py-2"
           form="update-self-account-info"

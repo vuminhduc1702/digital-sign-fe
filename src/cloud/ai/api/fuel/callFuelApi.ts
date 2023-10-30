@@ -1,16 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-
-type GetFuelDTO = {
-    distance: number
-    speed: number
-    temp_inside: number
-    gas_type: number
-    AC: number
-    rain: number
-    sun: number
-}
+import {type  GetFuelDTO } from '../../types'
 
 export const getFuel = (data: GetFuelDTO) => {
   return axios.post('/ai/fuel', {

@@ -1,19 +1,19 @@
-import { useState } from 'react'
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { cn } from '~/utils/misc'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
-import { Dropdown } from '~/components/Dropdown'
-import { useFuel } from '../api/fuel/callFuelApi'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { Dropdown } from '~/components/Dropdown'
+import { cn } from '~/utils/misc'
+import { useFuel } from '../api/fuel/callFuelApi'
+import { useMutationFuelAi } from '../api/fuel/updateFuelApi'
 
 export default function FuelTemplate() {
   const [fullScreen, setFullScreen] = useState(false)
   const [viewMode, setViewMode] = useState('default')
-  const [codeInput, setCodeInput] = useState(
-    `{
+  const codeInputRef = useRef(`{
 "distance": 10,
 "speed": 30,
 "temp_inside": 21,
@@ -21,21 +21,34 @@ export default function FuelTemplate() {
 "AC": 1,
 "rain": 0,
 "sun": 1
-}`,
-  )
-  const [isOpen, setIsOpen] = useState(false)
-  const [codeOutput, setCodeOutput] = useState('')
+}`)
 
+  const [isOpen, setIsOpen] = useState(false)
+  const { mutate, isLoading, isSuccess } = useMutationFuelAi()
   const { t } = useTranslation()
 
-  //   const {data} = useFuel({
-  //     data: JSON.parse(codeInput)
-  //   })
+  const { data } = useFuel({
+    data: JSON.parse(codeInputRef.current),
+  })
 
   const callApiFuel = () => {
-    const transformStr = codeInput.replaceAll(`'`, `"`)
-    console.log(transformStr)
-    setCodeInput(transformStr)
+    const parseStr = JSON.parse(codeInputRef.current)
+    mutate({
+      distance: parseStr.distance,
+      speed: parseStr.speed,
+      temp_inside: parseStr.temp_inside,
+      gas_type: parseStr.gas_type,
+      AC: parseStr.AC,
+      rain: parseStr.rain,
+      sun: parseStr.sun,
+    })
+  }
+
+  const formatForm = (data: any) => {
+    return `{
+  "DT": ${data.DT},
+  "RF": ${data.RF}
+}`
   }
 
   return (
@@ -115,7 +128,7 @@ export default function FuelTemplate() {
                   </div>
                 </div>
               </Dropdown>
-              <button onClick={() => callApiFuel()}>
+              <button onClick={callApiFuel}>
                 <img
                   src={btnRunCode}
                   alt="Submit"
@@ -127,9 +140,9 @@ export default function FuelTemplate() {
           <CodeSandboxEditor
             showRunButton={false}
             isShowLog={false}
-            value={codeInput}
+            value={codeInputRef.current}
             className={`${fullScreen ? '' : '!block'}`}
-            setCodeInput={setCodeInput}
+            setCodeInput={value => (codeInputRef.current = value)}
             isFullScreen={fullScreen}
             viewMode={viewMode}
             editorName={'code'}
@@ -197,10 +210,10 @@ export default function FuelTemplate() {
             </div>
           </div>
           <CodeSandboxEditor
-            value={codeOutput}
+            value={formatForm(data)}
             readOnly={true}
             showRunButton={false}
-            setCodeInput={setCodeOutput}
+            setCodeInput={() => ''}
             isFullScreen={fullScreen}
             viewMode={viewMode}
             editorName={'result'}
@@ -227,27 +240,27 @@ export default function FuelTemplate() {
             </div>
           </div>
           <div className="mt-4">
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>distance</div>
               <div># độ dài quãng đường đi được (km)</div>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>speed</div>
               <div># tốc độ trung bình trên cả quãng đường (km/h)</div>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>temp_inside</div>
               <div># nhiệt độ trong xe (độ C)</div>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>gas_type</div>
               <div># loại nhiên liệu 0 là xăng E10, 1 là xăng SP98</div>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>AC</div>
               <div># trạng thái của điều hòa</div>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="mb-2 flex justify-between">
               <div>rain</div>
               <div># trạng thái thời tiết</div>
             </div>

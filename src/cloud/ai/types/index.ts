@@ -23,7 +23,6 @@ export type GetDdosDTO = {
   }
 
   export type GetFuelDTO = {
-    data:{
         distance: number
         speed: number
         temp_inside: number
@@ -31,5 +30,4 @@ export type GetDdosDTO = {
         AC: number
         rain: number
         sun: number
-    }
-  }
+  } 

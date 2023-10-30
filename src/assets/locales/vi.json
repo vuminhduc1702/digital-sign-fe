@@ -909,7 +909,9 @@
     "district": "Huyện/Quận",
     "village": "Phường/Xã",
     "user": {
-      "success_update": "Cập nhật tài khoản thành công"
+      "success_update": "Cập nhật tài khoản thành công",
+      "fuel": "Cập nhật fuel thành công",
+      "ddos": "Cập nhật ddos thành công"
     }
   }
 }
