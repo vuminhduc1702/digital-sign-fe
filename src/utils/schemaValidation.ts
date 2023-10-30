@@ -72,7 +72,7 @@ export const phoneSchemaRegex = z
 export const emptyInputSchema = z
   .string()
   .min(1, { message: 'Vui lòng không bỏ trống mục này' })
-
-  export const emptySelectSchema = z
+  
+export const emptySelectSchema = z
   .string()
   .min(1, { message: 'Vui lòng chọn mục này' })
