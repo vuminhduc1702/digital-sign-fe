@@ -71,7 +71,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
         items.forEach(item => {
           const time = item.ts
           const value = parseFloat(item.value)
-          const existingIndex = result.findIndex(obj => obj.time === time)
+          const existingIndex = result.findIndex(obj => obj.ts === time)
           if (existingIndex === -1) {
             result.push({ ts: time, [key]: value })
           } else {
