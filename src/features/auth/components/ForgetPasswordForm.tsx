@@ -51,7 +51,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
 
   const forgetMutation = useChangePassWithEmailAndPassword()
   // const [email, setEmail] = useState('')
-  const timeCountdown = 5
+  const timeCountdown = 180
   const [countdown, setCountdown] = useState<number>(timeCountdown)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
@@ -103,7 +103,6 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 registration={register('email')}
                 onChange={e => {
                   const emailValue = e.target.value
-                  console.log(emailValue)
                   if (emailValue === '') {
                     setBtnOtpDisable(true)
                   } else {

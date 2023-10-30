@@ -25,6 +25,7 @@ import {
   outputList,
   protocolList,
   serviceThingSchema,
+  thingTypeList,
 } from './CreateAdapter'
 import storage from '~/utils/storage'
 import {
@@ -547,27 +548,7 @@ export function UpdateAdapter({
                                       )}
                                       error={formState.errors['type']}
                                       registration={register('type')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.thing',
-                                          ),
-                                          value: 'thing',
-                                          selected: true,
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.template',
-                                          ),
-                                          value: 'template',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.shape',
-                                          ),
-                                          value: 'shape',
-                                        },
-                                      ]}
+                                      options={thingTypeList}
                                       onChange={event =>
                                         setThingType(
                                           String(
