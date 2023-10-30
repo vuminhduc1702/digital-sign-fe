@@ -7,7 +7,7 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '~/i18n'
-import { useCountDownTimerOTP } from './RegisterForm'
+import { ChangeEvent, useEffect, useRef, useState } from 'react'
 
 import {
   emailSchema,
@@ -50,15 +50,33 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
   const { t } = useTranslation()
 
   const forgetMutation = useChangePassWithEmailAndPassword()
+  // const [email, setEmail] = useState('')
+  const timeCountdown = 5
+  const [countdown, setCountdown] = useState<number>(timeCountdown)
+  const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
+  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
-  const {
-    countdown,
-    btnOtpDisable,
-    checkCountdown,
-    setBtnOtpDisable,
-    setCountdown,
-    setCheckCountdown,
-  } = useCountDownTimerOTP()
+  useEffect(() => {
+    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
+      setCountdown(prevState => {
+        if (prevState > 0) return prevState - 1
+        else {
+          clearInterval(timerId!)
+          if (checkCountdown === true) {
+            setCheckCountdown(false)
+          }
+          setBtnOtpDisable(false)
+          return 0
+        }
+      })
+    }, 1000)
+
+    return () => {
+      if (timerId) {
+        clearInterval(timerId)
+      }
+    }
+  }, [checkCountdown])
 
   return (
     <div>
@@ -83,6 +101,15 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
+                onChange={e => {
+                  const emailValue = e.target.value
+                  console.log(emailValue)
+                  if (emailValue === '') {
+                    setBtnOtpDisable(true)
+                  } else {
+                    setBtnOtpDisable(false)
+                  }
+                }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
@@ -126,22 +153,24 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
               />
               <Button
                 variant="none"
-                className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
+                className={`!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline`}
                 disabled={btnOtpDisable}
                 onClick={() => {
-                  setBtnOtpDisable(true)
-                  sentOTP({
-                    email: getValues('email'),
-                    phone: '0337463520',
-                  })
-                    .then(() => {
-                      setCountdown(countdown)
-                      setCheckCountdown(true)
+                  if (getValues('email') !== '') {
+                    setBtnOtpDisable(true)
+                    sentOTP({
+                      email: getValues('email'),
+                      phone: '0337463520',
                     })
-                    .catch(error => {
-                      setBtnOtpDisable(false)
-                      console.log(error)
-                    })
+                      .then(() => {
+                        setCountdown(timeCountdown)
+                        setCheckCountdown(true)
+                      })
+                      .catch(error => {
+                        setBtnOtpDisable(false)
+                        console.log(error)
+                      })
+                  }
                 }}
               >
                 {checkCountdown === true && (

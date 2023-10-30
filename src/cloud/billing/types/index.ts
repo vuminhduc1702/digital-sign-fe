@@ -31,6 +31,7 @@ export type Billing = {
   pre_tax_cost: number
   p_tax: number
   tax_cost: number
+  plan_id: string
 }
 
 export type BillingList = {

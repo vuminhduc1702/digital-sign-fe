@@ -16,6 +16,7 @@ import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
 import { DeviceRoutes } from '~/device/routes'
+import { ApplicationRoutes } from '~/applicationPages'
 import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 
@@ -49,6 +50,7 @@ export const protectedRoutes = [
       ...SubcriptionRoutes,
       ...DeviceRoutes,
       ...BillingRoutes,
+      ...ApplicationRoutes,
       ...AiRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
@@ -101,7 +103,7 @@ export const protectedRoutes = [
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <SelfAccount />
           </ErrorBoundary>
-        )
+        ),
       },
     ],
   },

@@ -31,7 +31,7 @@ export function CustomProtocolManage() {
     offset,
     config: { keepPreviousData: true },
   })
-
+ 
   return (
     <ContentLayout title={t('cloud:custom_protocol.title')}>
       <TitleBar title={t('cloud:custom_protocol.adapter.header')} />

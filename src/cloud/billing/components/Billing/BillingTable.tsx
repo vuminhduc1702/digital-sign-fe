@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -9,14 +9,17 @@ import { useDisclosure } from '~/utils/hooks'
 
 import { type BaseTablePagination } from '~/types'
 
-import { EyeOpenIcon, DownloadIcon } from '@radix-ui/react-icons'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { getVNDateFormat } from '~/utils/misc'
-import { type Billing } from '../../types'
-import { ViewBilling } from './ViewBilling'
-import { useBillingById } from '../../api/billingAPI'
+import { DownloadIcon, EyeOpenIcon } from '@radix-ui/react-icons'
 import { PDFDownloadLink } from '@react-pdf/renderer'
+import btnFilterIcon from '~/assets/icons/btn-filter.svg'
+import { Button } from '~/components/Button'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { cn, getVNDateFormat } from '~/utils/misc'
+import { useBillingById } from '../../api/billingAPI'
+import { type Billing } from '../../types'
 import { BillingPDF } from './BillingPDF'
+import { ViewBilling } from './ViewBilling'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -26,8 +29,6 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
     id,
     config: { suspense: false },
   })
-
-  console.log(data, 'daataatatatt')
 
   return (
     <>
@@ -57,7 +58,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
             >
               <MenuItem
                 icon={<DownloadIcon className="h-5 w-5" />}
-                onClick={() => { }}
+                onClick={() => {}}
               >
                 {t('billing:manage_bill.export_PDF')}
               </MenuItem>
@@ -72,10 +73,34 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
 type BillingTableProps = {
   data?: Billing[]
+  handleField?: (field: string, value: any) => void
 } & BaseTablePagination
 
-export function BillingTable({ data, ...props }: BillingTableProps) {
+export function BillingTable({
+  data,
+  handleField,
+  ...props
+}: BillingTableProps) {
   const { t } = useTranslation()
+
+  const [plan, setPlan] = useState('')
+  const [status, setStatus] = useState('')
+
+  useEffect(() => {
+    setStatus('')
+    setPlan('')
+  }, [status, plan])
+
+  const handleSearch = (e: React.MouseEvent<HTMLInputElement>,field: string, value: any, id: string) => {
+    e.stopPropagation()
+    setPlan(id)
+    setStatus(id)
+    if (!id) {
+      handleField?.('', '')
+    } else {
+      handleField?.(field, value)
+    }
+  }
 
   const columnHelper = createColumnHelper<Billing>()
   const columns = useMemo<ColumnDef<Billing, any>[]>(
@@ -100,7 +125,47 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('plan_name', {
-        header: () => <span>{t('billing:manage_bill.table.plan_name')}</span>,
+        header: () => (
+          <>
+            <span>{t('billing:manage_bill.table.plan_name')}</span>
+            <Popover>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
+                <Button
+                  className="border-none shadow-none"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                  }
+                  
+                />
+              </PopoverTrigger>
+              <PopoverContent className="w-40" align="start">
+                <div
+                  className={cn(
+                    'cursor-pointer p-2 hover:bg-red-300',
+                  )}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e,'plan_id', '', '')}
+                >
+                  All
+                </div>
+                {data?.map(item => {
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                        handleSearch(e,'plan_id', item.plan_id, item.id)
+                      }
+                    >
+                      {item.plan_name}
+                    </div>
+                  )
+                })}
+              </PopoverContent>
+            </Popover>
+          </>
+        ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -138,7 +203,68 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('status', {
-        header: () => <span>{t('billing:manage_bill.table.status')}</span>,
+        header: () => (
+          <>
+            <span>{t('billing:manage_bill.table.status')}</span>
+            <Popover>
+              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
+                <Button
+                  className="border-none shadow-none"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                  }
+                />
+              </PopoverTrigger>
+              <PopoverContent className="w-40" align="start">
+                <div
+                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'status', '', '')}
+                >
+                  All
+                </div>
+                {data?.map(item => {
+                  const valueStatus = () => {
+                    let result = ''
+                    if (item.status) {
+                      switch (item.status) {
+                        case 'Wait':
+                          result = 'Đang chờ thanh toán'
+                          break
+                        case 'Paid':
+                          result = 'Đã thanh toán'
+                          break
+                        case 'Expired':
+                          result = 'Hết hạn thanh toán'
+                          break
+                        case 'Init':
+                          result = 'Khởi tạo'
+                          break
+                        default:
+                          break
+                      }
+                    }
+                    return result
+                  }
+                  return (
+                    <div
+                      key={item.id}
+                      className={cn(
+                        'cursor-pointer p-2 hover:bg-red-300',
+                      )}
+                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                        handleSearch(e, 'status', item.status, item.id)
+                      }
+                    >
+                      {valueStatus()}
+                    </div>
+                  )
+                })}
+              </PopoverContent>
+            </Popover>
+          </>
+        ),
         cell: info => {
           const { status } = info.row.original
           const valueStatus = () => {
@@ -179,7 +305,7 @@ export function BillingTable({ data, ...props }: BillingTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [plan, status, data],
   )
 
   return data != null && data?.length !== 0 ? (

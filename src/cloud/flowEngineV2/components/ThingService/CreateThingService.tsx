@@ -31,9 +31,15 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
-import { type ThingService } from '../../types'
+import { InputService, type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -261,17 +267,19 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 'grid w-full grid-cols-1 gap-x-4 gap-y-2 pr-2',
                               )}
                             >
-                              <InputField
-                                require={true}
-                                label={t(
-                                  'cloud:custom_protocol.service.service_input.name',
-                                )}
-                                error={formState.errors[`input`]?.[index]?.name}
-                                registration={register(
-                                  `input.${index}.name` as const,
-                                )}
-                              />
                               <div className="flex gap-x-2">
+                                <InputField
+                                  require={true}
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.name',
+                                  )}
+                                  error={
+                                    formState.errors[`input`]?.[index]?.name
+                                  }
+                                  registration={register(
+                                    `input.${index}.name` as const,
+                                  )}
+                                />
                                 <SelectField
                                   label={t(
                                     'cloud:custom_protocol.service.service_input.type',
@@ -286,18 +294,18 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   options={outputList}
                                   className="h-9"
                                 />
-                                <InputField
-                                  label={t(
-                                    'cloud:custom_protocol.service.service_input.value',
-                                  )}
-                                  error={
-                                    formState.errors[`input`]?.[index]?.value
-                                  }
-                                  registration={register(
-                                    `input.${index}.value` as const,
-                                  )}
-                                />
                               </div>
+                              <InputField
+                                label={t(
+                                  'cloud:custom_protocol.service.service_input.value',
+                                )}
+                                error={
+                                  formState.errors[`input`]?.[index]?.value
+                                }
+                                registration={register(
+                                  `input.${index}.value` as const,
+                                )}
+                              />
                             </div>
                             <Button
                               type="button"
@@ -355,8 +363,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         <p>{t('cloud:custom_protocol.service.debug')}</p>
                       </div>
                     </div>
-                    <div className="mt-1.5 flex flex-col gap-y-3">
-                      <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                    <div className="mt-1.5 flex flex-col">
+                      <div className="mb-1.5 flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3 ">
                           <p className="text-table-header">
                             {t('cloud:custom_protocol.service.list_service')}
@@ -370,9 +378,64 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         })}
                       >
                         {thingServiceData?.map(item => {
+                          const typeOutput = outputList.filter(
+                            data => data.value === item.output,
+                          )
                           return (
-                            <div className="mt-1.5 cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
-                              {item.name}
+                            <div className="mt-1.5">
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger className="w-full cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
+                                    <div>{item.name}</div>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="right">
+                                    <div>
+                                      <div className="mb-4 text-table-header">
+                                        {item.name}
+                                      </div>
+                                      <div>
+                                        <div>
+                                          <div>
+                                            {t(
+                                              'cloud:custom_protocol.service.input',
+                                            )}
+                                            :
+                                          </div>
+                                          <ul>
+                                            {item.input.map(
+                                              (data: InputService) => {
+                                                const type = outputList.filter(
+                                                  item =>
+                                                    item.value === data.type,
+                                                )
+                                                return (
+                                                  <li className="mt-1.5 pl-2">
+                                                    <span className="text-primary-400">
+                                                      {data.name}
+                                                    </span>
+                                                    <span>
+                                                      : {type[0].label}
+                                                    </span>
+                                                  </li>
+                                                )
+                                              },
+                                            )}
+                                          </ul>
+                                        </div>
+                                        <div className="mt-1.5">
+                                          <span>
+                                            {t(
+                                              'cloud:custom_protocol.service.output',
+                                            )}
+                                            :{' '}
+                                          </span>
+                                          <span>{typeOutput[0].label}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                             </div>
                           )
                         })}

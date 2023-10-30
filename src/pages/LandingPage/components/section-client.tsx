@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import Carousel from 'react-multi-carousel'
 
 export function SectionClient() {
@@ -39,7 +40,7 @@ export function SectionClient() {
       alt: '13',
     },
   ]
-
+  const { t } = useTranslation()
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -64,7 +65,7 @@ export function SectionClient() {
       <div className="h-[100px]"></div>
       <div className="">
         <div className="pb-[50px] text-center text-[35px] leading-[43px]">
-          Đối tác của chúng tôi
+          {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center">
           <Carousel

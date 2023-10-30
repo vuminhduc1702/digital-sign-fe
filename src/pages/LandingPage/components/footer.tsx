@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import BgFooter from '~/assets/images/landingpage/bg_footer.png'
 import LogoViettel from '~/assets/images/landingpage/Logo_Viettel.png'
 import { Button } from '~/components/Button'
@@ -12,7 +13,7 @@ import {
 export function SectionFooter() {
   const [text, setText] = useState('')
   const maxLength = 500
-
+  const { t } = useTranslation()
   const handleTextChange = (e: { target: { value: any } }) => {
     const inputValue = e.target.value
     if (inputValue.length <= maxLength) {
@@ -27,12 +28,12 @@ export function SectionFooter() {
       >
         <div className="flex h-fit w-[1040px]">
           <div className="ml-[40px] w-[250px] pt-[60px] text-[48px] leading-[56.74px] text-white">
-            Hỗ trợ khách hàng
+            {t('landingpage:footer.client_support')}
           </div>
           <div className="w-[750px] pl-[150px] pt-[20px]">
             <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] font-normal leading-[20.8px] text-white">
-                Họ tên*:
+                {t('landingpage:footer.full_name')}
               </div>
               <div>
                 <input
@@ -44,7 +45,7 @@ export function SectionFooter() {
             </div>
             <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
-                Email*:
+                {t('landingpage:footer.email')}
               </div>
               <div>
                 <input
@@ -56,7 +57,7 @@ export function SectionFooter() {
             </div>
             <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
-                Số điện thoại:
+                {t('landingpage:footer.phone_number')}
               </div>
               <div>
                 <input
@@ -68,7 +69,7 @@ export function SectionFooter() {
             </div>
             <div className="flex pt-2">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
-                Nội dung cần hỗ trợ*:
+                {t('landingpage:footer.support_content')}
               </div>
               <div>
                 <textarea
@@ -92,7 +93,7 @@ export function SectionFooter() {
                   type="button"
                   className="rounded-r-lg rounded-tl-lg border-[#EA0033] bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                 >
-                  Gửi
+                  {t('landingpage:footer.send')}
                 </Button>
               </div>
             </div>
@@ -107,7 +108,7 @@ export function SectionFooter() {
             </div>
             <div>
               <div className="w-[491px] pb-[10px] text-[20px] leading-[23.64px] text-white">
-                Tổng Công ty Viễn thông Viettel (Viettel Telecom)
+                {t('landingpage:footer.company')}
               </div>
               <div className="w-[600px] text-[16px] leading-[20.8px] text-white">
                 Mã số doanh nghiệp: 0100109106-011 do Sở Kế hoạch và Đầu tư
@@ -115,14 +116,13 @@ export function SectionFooter() {
                 ngày 18/12/2018
               </div>
               <div className="w-[588px] text-[16px] leading-[20.8px] text-white">
-                Chịu trách nhiệm nội dung: Ông Cao Anh Sơn
+                {t('landingpage:footer.responsible_person')}
               </div>
             </div>
             <div className="pl-[20px]">
               <a
                 className="flex pb-[15px] pt-[10px]"
-                href="cskh@viettel.com.vn"
-                target="_blank"
+                href="mailto:cskh@viettel.com.vn"
               >
                 <MailSendFill
                   width={33}
@@ -131,7 +131,7 @@ export function SectionFooter() {
                   className=""
                 />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
-                  cskh@viettel.com.vn
+                  {t('landingpage:footer.cskh')}
                 </div>
               </a>
               <a className="flex pb-[15px]" href="tel:0123456789">
@@ -142,7 +142,7 @@ export function SectionFooter() {
                   className=""
                 />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
-                  0123 456 789
+                  {t('landingpage:footer.phone_used')}
                 </div>
               </a>
             </div>
@@ -150,11 +150,11 @@ export function SectionFooter() {
 
           <div className="relative flex h-[50px] items-center">
             <div className="text-[16px] leading-[20.8px] text-[#B1B1B1]">
-              Copyright Viettel Telecom 2022
+              {t('landingpage:footer.cre')}
             </div>
             <div className="absolute right-0 flex">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
-                Follow us:
+                {t('landingpage:footer.follow')}
               </div>
               <a
                 href="https://www.facebook.com/innoway.vn/"

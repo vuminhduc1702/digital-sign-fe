@@ -4,7 +4,9 @@ import Pict_7 from '~/assets/images/landingpage/Pict_7.png'
 import Pict_8 from '~/assets/images/landingpage/Pict_8.png'
 import Pict_9 from '~/assets/images/landingpage/Pict_9.png'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 export function SectionNews() {
+  const { t } =  useTranslation()
   const slides = [
     {
       src: Pict_6,
@@ -60,7 +62,7 @@ export function SectionNews() {
       <div className="h-[100px]"></div>
       <div className="">
         <div className="pb-[50px] text-center text-[35px] leading-[43px]">
-          Tin tức
+        {t('landingpage:news.news_')}
         </div>
         <div className="flex justify-center">
           <Carousel
@@ -103,7 +105,7 @@ export function SectionNews() {
                           to={item.link}
                           className="text-[13px] font-bold leading-[15.23px] text-[#EA0033]"
                         >
-                          Xem chi tiết
+                          {t('landingpage:news.view_detail')}
                         </Link>
                       </div>
                     </div>

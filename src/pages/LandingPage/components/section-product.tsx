@@ -1,5 +1,6 @@
 import React from 'react'
 import { ReactElement } from 'react'
+import { useTranslation } from 'react-i18next'
 import Carousel from 'react-multi-carousel'
 import { StateCallBack } from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
@@ -65,6 +66,7 @@ export function SectionProduct() {
     },
   ]
 
+  const { t } = useTranslation()
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
@@ -90,11 +92,11 @@ export function SectionProduct() {
       <div className="">
         <div className="">
           <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
-            Sản phẩm IoT
+            {t('landingpage:section_product.iot')}
           </p>
           <div className="flex justify-center">
             <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px]">
-              Đa dạng sản phẩm phù hợp nhu cầu khách hàng
+              {t('landingpage:section_product.variety')}
             </h3>
           </div>
         </div>

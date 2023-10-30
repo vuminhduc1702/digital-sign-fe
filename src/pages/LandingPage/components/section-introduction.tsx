@@ -1,19 +1,31 @@
+import { type RefObject } from 'react'
+import { useTranslation } from 'react-i18next'
 import Group45 from '~/assets/images/landingpage/Group_45.png'
 import { Button } from '~/components/Button'
 import { CheckboxCircleLine, ArrowRightUpLine } from '~/components/SVGIcons'
+import { scrollToIntro } from '~/utils/misc'
 
-export function SectionIntro() {
+export function SectionIntro({
+  solutionRef,
+}: {
+  solutionRef: RefObject<HTMLDivElement>
+}) {
+  const { t } = useTranslation()
   return (
     <>
       <div className="flex h-[620px] justify-center">
         <div className="flex w-[1040px] flex-row rounded-2xl bg-white shadow-md">
           <div className="basis-1/2 pl-4">
             <div className="pl-[40px] pt-[50px]">
-              <p className="text-xl font-bold text-red-500">Giới thiệu</p>
+              <p className="text-xl font-bold text-red-500">
+                {t('landingpage:introduction')}
+              </p>
             </div>
             <div>
               <div className="pl-[40px] pt-[13px] text-3xl leading-tight text-black">
-                Dịch vụ Sim Data truyền tải dữ liệu chính xác, tiết kiệm
+                {t(
+                  'landingpage:introduction_section.service_transmit_data_accurate',
+                )}
               </div>
               <div className="pl-[40px] pt-[20px]">
                 <div className="mb-[-8px]">
@@ -71,8 +83,9 @@ export function SectionIntro() {
                       className=""
                     ></ArrowRightUpLine>
                   }
+                  onClick={() => scrollToIntro(solutionRef)}
                 >
-                  Xem sản phẩm
+                  {t('landingpage:introduction_section.view_product')}
                 </Button>
               </div>
             </div>

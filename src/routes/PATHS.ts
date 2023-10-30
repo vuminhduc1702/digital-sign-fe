@@ -1,6 +1,7 @@
 export const BASE_PATH = '/'
 export const BASE_PATH_CLOUD = '/cloud/'
 export const BASE_PATH_PAYMENT = '/payment/'
+// export const BASE_DEVICE = '/device/'
 export const BASE_PATH_INTEGRATION = '/integration/'
 
 export const PATHS: { [key: string]: string } = {
@@ -36,7 +37,7 @@ export const PATHS: { [key: string]: string } = {
   AI: `${BASE_PATH_INTEGRATION}ai`,
   DDOS: `${BASE_PATH_INTEGRATION}ai/ddos`,
   FUEL: `${BASE_PATH_INTEGRATION}ai/fuel`,
-  
+
   // Public routes
   LOGIN: `${BASE_PATH}auth/login`,
   REGISTER: `${BASE_PATH}auth/register`,
@@ -45,9 +46,15 @@ export const PATHS: { [key: string]: string } = {
   CHANGEPASSWORD: `${BASE_PATH}auth/changepassword`,
 
   // Device routes
-  DEVKIT: `${BASE_PATH}devkit`,
-  MODULE: `${BASE_PATH}module`,
+  DEVKIT: `${BASE_PATH}device/devkit`,
+  MODULE: `${BASE_PATH}device/module`,
 
+  //Application routes
+  APPSDK: `${BASE_PATH}application/appSdk`,
+  APPDEBUG: `${BASE_PATH}application/appDebug`,
+
+  //Version routes
+  VERSION: `${BASE_PATH}version`,
 
   // Common routes
   HOME: `${BASE_PATH}`,

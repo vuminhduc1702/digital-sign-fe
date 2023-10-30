@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { getVNDateFormat } from '~/utils/misc'
+import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { BaseTable } from '~/components/Table'
 
 import { type DeviceAttrLog } from '~/cloud/orgManagement/api/attrAPI'
@@ -23,6 +23,9 @@ export function TableChart({
 
   const columnHelper = createColumnHelper<TableChartDataType>()
 
+  const newValuesRef = useRef<TimeSeries | null>(null)
+  const prevValuesRef = useRef<TimeSeries | null>(null)
+
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<
       Pick<TableChartDataType, 'ts' | 'value' | 'attribute_key' | 'entity_name'>
@@ -39,19 +42,50 @@ export function TableChart({
   const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
-      const output = Object.entries(data)
-        .flatMap(([attribute_key, values]) =>
-          values.map(({ ts, value }) => ({
-            ts: ts,
-            attribute_key,
-            value: parseFloat(value),
-          })),
-        )
-        .toSorted((a, b) => b.ts - a.ts)
-
-      setDataTransformedFeedToChart(output)
+      prevValuesRef.current = newValuesRef.current || data
+      if (
+        newValuesRef.current != null &&
+        data[Object.keys(data)[0]].length === 1
+      ) {
+        for (const key in data) {
+          if (
+            prevValuesRef.current[key] != null &&
+            (JSON.stringify(prevValuesRef.current[key]) !==
+              JSON.stringify(newValuesRef.current[key]) ||
+              JSON.stringify(prevValuesRef.current[key]) !==
+                JSON.stringify(data[key]))
+          ) {
+            newValuesRef.current[key] = [
+              ...prevValuesRef.current[key],
+              ...data[key],
+            ]
+          } else {
+            prevValuesRef.current = data
+          }
+          dataManipulation()
+        }
+      } else {
+        newValuesRef.current = data
+        dataManipulation()
+      }
     }
   }, [newDataValue])
+
+  function dataManipulation() {
+    const tableWidgetDataType = Object.entries(
+      newValuesRef.current as TimeSeries,
+    )
+      .flatMap(([attribute_key, values]) =>
+        values.map(({ ts, value }) => ({
+          ts: ts,
+          attribute_key,
+          value: parseFloat(value),
+        })),
+      )
+      .toSorted((a, b) => b.ts - a.ts)
+
+    setDataTransformedFeedToChart(tableWidgetDataType)
+  }
 
   const columns = useMemo<ColumnDef<TableChartDataType, any>[]>(
     () => [
@@ -68,7 +102,14 @@ export function TableChart({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
         ),
-        cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+        cell: info =>
+          getVNDateFormat({
+            date: parseInt(info.getValue()),
+            config: {
+              ...defaultDateConfig,
+              second: '2-digit',
+            },
+          }),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('attribute_key', {

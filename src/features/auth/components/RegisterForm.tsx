@@ -1,6 +1,6 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Link } from '~/components/Link'
 import { useRegister } from '~/lib/auth'
@@ -46,18 +46,25 @@ type RegisterFormProps = {
   onSuccess: () => void
 }
 
-export function useCountDownTimerOTP() {
-  const [countdown, setCountdown] = useState<number>(180)
+export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
+  const { t } = useTranslation()
+
+  const registerMutation = useRegister()
+  // const [email, setEmail] = useState('')
+  const timeCountdown = 180
+  const [countdown, setCountdown] = useState<number>(1)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
 
   useEffect(() => {
-    const timerId: ReturnType<typeof setTimeout> = setInterval(() => {
+    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
       setCountdown(prevState => {
         if (prevState > 0) return prevState - 1
         else {
-          clearInterval(timerId)
-          setCheckCountdown(false)
+          clearInterval(timerId!)
+          if (checkCountdown === true) {
+            setCheckCountdown(false)
+          }
           setBtnOtpDisable(false)
           return 0
         }
@@ -69,31 +76,7 @@ export function useCountDownTimerOTP() {
         clearInterval(timerId)
       }
     }
-  }, [])
-
-  return {
-    countdown,
-    btnOtpDisable,
-    checkCountdown,
-    setBtnOtpDisable,
-    setCountdown,
-    setCheckCountdown,
-  }
-}
-
-export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
-  const { t } = useTranslation()
-
-  const registerMutation = useRegister()
-
-  const {
-    countdown,
-    btnOtpDisable,
-    checkCountdown,
-    setBtnOtpDisable,
-    setCountdown,
-    setCheckCountdown,
-  } = useCountDownTimerOTP()
+  }, [checkCountdown])
 
   return (
     <div>
@@ -118,6 +101,15 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
                 registration={register('email')}
+                onChange={e => {
+                  const emailValue = e.target.value
+                  console.log(emailValue)
+                  if (emailValue === '') {
+                    setBtnOtpDisable(true)
+                  } else {
+                    setBtnOtpDisable(false)
+                  }
+                }}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
@@ -164,19 +156,21 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
                 disabled={btnOtpDisable}
                 onClick={() => {
-                  setBtnOtpDisable(true)
-                  sentOTP({
-                    email: getValues('email'),
-                    phone: '0337463520',
-                  })
-                    .then(() => {
-                      setCountdown(countdown)
-                      setCheckCountdown(true)
+                  if (getValues('email') !== '') {
+                    setBtnOtpDisable(true)
+                    sentOTP({
+                      email: getValues('email'),
+                      phone: '0337463520',
                     })
-                    .catch(error => {
-                      setBtnOtpDisable(false)
-                      console.log(error)
-                    })
+                      .then(() => {
+                        setCountdown(timeCountdown)
+                        setCheckCountdown(true)
+                      })
+                      .catch(error => {
+                        setBtnOtpDisable(false)
+                        console.log(error)
+                      })
+                  }
                 }}
               >
                 {checkCountdown === true && (

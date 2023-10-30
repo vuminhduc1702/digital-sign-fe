@@ -563,7 +563,7 @@ export function CreateWidget({
                             data: {
                               entity_ids: entityIdsArr,
                               entity_type: 'DEVICE',
-                              time_series: true,
+                              // time_series: true,
                             },
                           })
                         }}

@@ -7,9 +7,12 @@ import {
   ArrowRightUpLine,
   CheckboxCircleLineWhite,
 } from '~/components/SVGIcons'
+import { useTranslation } from 'react-i18next'
+import storage from '~/utils/storage'
 
 export function SectionOrder() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   return (
     <>
       <div className="h-[100px]"></div>
@@ -27,7 +30,7 @@ export function SectionOrder() {
             </div>
             <div className="ml-10">
               <div className="w-[373px] text-[35px] leading-[43px] text-white">
-                Nền tảng quản lý, tự động hóa và thu thập dữ liệu
+                {t('landingpage:order.manage_platform')}
               </div>
               <div className="pt-5 text-[16px] leading-[20.8px] text-white">
                 Hệ thống Cloud Innoway của Viettel cho phép các nhà tích hợp hệ
@@ -44,7 +47,7 @@ export function SectionOrder() {
                       className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
-                      Quản lý trạng thái thiết bị
+                      {t('landingpage:order.manage_device')}
                     </p>
                   </div>
                   <div className="mb-[-8px] h-[55px] pt-4">
@@ -55,7 +58,7 @@ export function SectionOrder() {
                       className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
-                      Triển khai mô hình nghiệp vụ no code - low code
+                      {t('landingpage:order.business_model')}
                     </p>
                   </div>
                 </div>
@@ -68,7 +71,7 @@ export function SectionOrder() {
                       className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
-                      Bảo mật dữ liệu người dùng
+                      {t('landingpage:order.data_security')}
                     </p>
                   </div>
                   <div className="mb-[-8px] h-[55px] pt-4">
@@ -79,7 +82,7 @@ export function SectionOrder() {
                       className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
-                      Hỗ trợ nhiều loại giao thức
+                      {t('landingpage:order.support_protocol')}
                     </p>
                   </div>
                 </div>
@@ -89,7 +92,10 @@ export function SectionOrder() {
                   type="button"
                   className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
-                  onClick={() => navigate(PATHS.PROJECT_MANAGE)}
+                  onClick={() => {
+                    storage.setHistoryPath(PATHS.PROJECT_MANAGE)
+                    navigate(PATHS.PROJECT_MANAGE)
+                  }}
                   endIcon={
                     <ArrowRightUpLine
                       width={23}
@@ -99,7 +105,7 @@ export function SectionOrder() {
                     ></ArrowRightUpLine>
                   }
                 >
-                  Trải nghiệm ngay
+                  {t('landingpage:experience_now')}
                 </Button>
               </div>
             </div>

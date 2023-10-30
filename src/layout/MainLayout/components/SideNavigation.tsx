@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import * as Accordion from '@radix-ui/react-accordion'
-import { forwardRef, useState, type ReactNode } from 'react'
+import { forwardRef, useState, type ReactNode, useEffect } from 'react'
 import clsx from 'clsx'
 
 import { PATHS } from '~/routes/PATHS'
@@ -14,6 +14,7 @@ import tichhopIcon from '~/assets/icons/sb-tichhop.svg'
 import ungdungIcon from '~/assets/icons/sb-ungdung.svg'
 import thanhtoanIcon from '~/assets/icons/sb-thanhtoan.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
+import { useLocation } from 'react-router-dom'
 
 type AccordionItemProps = {
   children: ReactNode
@@ -75,8 +76,15 @@ function SideNavigation() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
+  const location = useLocation()
+
+  const routerLink = location.pathname?.split('/')
 
   const [value, setValue] = useState('cloud')
+
+  useEffect(() => {
+    setValue(routerLink[1])
+  }, [location])
 
   return (
     <div className="px-8 py-7">
@@ -167,10 +175,16 @@ function SideNavigation() {
             />
             <div>{t('sidebar:application.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>{t('sidebar:application.appsdk')}</AccordionContent>
-          <AccordionContent>
-            {t('sidebar:application.vsmart_debug')}
-          </AccordionContent>
+          <NavLink to={`${PATHS.APPSDK}`}>
+            <AccordionContent>
+              {t('sidebar:application.appsdk')}
+            </AccordionContent>
+          </NavLink>
+          <NavLink to={`${PATHS.APPDEBUG}`}>
+            <AccordionContent>
+              {t('sidebar:application.vsmart_debug')}
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="payment">
@@ -221,16 +235,14 @@ function SideNavigation() {
             />
             <div>{t('sidebar:intergration.title')}</div>
           </AccordionTrigger>
-          <AccordionContent>
+          {/* <AccordionContent>
             {t('sidebar:intergration.tracking')}
           </AccordionContent>
           <AccordionContent>
             {t('sidebar:intergration.smarthome')}
-          </AccordionContent>
+          </AccordionContent> */}
           <NavLink to={`${PATHS.AI}`}>
-            <AccordionContent>
-              AI
-            </AccordionContent>
+            <AccordionContent>{t('sidebar:intergration.ai')}</AccordionContent>
           </NavLink>
         </AccordionItem>
       </Accordion.Root>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Checkbox } from '~/components/Checkbox'
 import { FieldWrapper } from '~/components/Form'
 
@@ -68,7 +69,7 @@ export function Module() {
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
-
+  const { t } = useTranslation()
   const [selectedItem, setSelectedItem] = useState<number>(1)
   const [filteredModuleDevices, setFilteredModuleDevices] =
     useState<Array<Object>>(ModuleDevices)
@@ -92,10 +93,10 @@ export function Module() {
     <>
       <div className="">
         <div className="flex px-1 py-1">
-          <div className="mr-3 h-[90vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
-            <div className="h-[85vh] overflow-auto">
+          <div className="mr-3 h-[84vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
+            <div className="h-[80vh] overflow-auto">
               <div className="flex items-center bg-[#858687] px-6 pb-6 pt-3 text-center text-xl font-medium text-white">
-                CHỌN PHƯƠNG THỨC TRUYỀN THÔNG
+                {t('device:method_communication')}
               </div>
               <div className="p-8">
                 {Module.map((item, idx) => (
@@ -118,22 +119,21 @@ export function Module() {
           <div className="ml-3 w-3/4">
             <div>
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
-                CÁC SẢN PHẨM
+                {t('device:products')}
               </div>
               <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-body-sm shadow-lg">
-                Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng
-                dẫn tích hợp.
+                {t('device:information')}
               </div>
             </div>
             <div>
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {Module[selectedItem]}
               </div>
-              <div className="border-opacity-15 mb-4 grid grid-cols-2 rounded-md border-x border-solid border-white bg-white">
+              <div className="border-opacity-15 mb-4 grid h-[55vh] grid-cols-2 overflow-auto rounded-md border-x border-solid border-white bg-white">
                 {filteredModuleDevices.map((item: any, idx) => (
-                  <div className="p-4">
+                  <div className="p-4" key={idx}>
                     <div className="shadow-md">
-                      <div className="flex h-[60px] items-center justify-center rounded-t-md bg-[#858687] text-xl font-medium text-slate-900">
+                      <div className="flex h-[60px] items-center justify-center rounded-t-md bg-secondary-600 text-xl font-medium text-slate-900">
                         {item.name}
                       </div>
                       <div className="flex bg-black/[.03] px-4 py-2">
@@ -141,7 +141,10 @@ export function Module() {
                           <img src={item.image} alt="" />
                         </div>
                         <div className="w-2/3 overflow-auto p-4">
-                          <h5 className="mb-2 text-xl font-medium">Mô tả</h5>
+                          <h5 className="mb-2 text-xl font-medium">
+                            {' '}
+                            {t('device:describe')}
+                          </h5>
                           <ul>
                             {Object.entries(item)
                               .filter(
@@ -159,7 +162,7 @@ export function Module() {
                             href="http://203.113.138.18:4447/s/KgQ7GzSirnD26Wx/download"
                             className="float-right text-body-sm font-medium"
                           >
-                            Tải xuống
+                            {t('device:download')}
                           </a>
                         </div>
                       </div>
