@@ -26,7 +26,7 @@ export const selfInfoSchema = z.object({
   province: emptySelectSchema,
   district: emptySelectSchema,
   ward: emptySelectSchema,
-  address: z.string().optional(),
+  full_address: z.string().optional(),
 })
 
 const SelfAccount = () => {
@@ -152,7 +152,7 @@ const SelfAccount = () => {
                 province: values.province,
                 district: values.district,
                 ward: values.ward,
-                address: values.address,
+                full_address: values.full_address,
               },
             },
             tenant_id: userInfoData?.user_id,
@@ -168,7 +168,7 @@ const SelfAccount = () => {
             province: userInfoData?.profile?.province,
             district: userInfoData?.profile?.district,
             ward: userInfoData?.profile?.ward,
-            address: userInfoData?.profile?.full_address,
+            full_address: userInfoData?.profile?.full_address,
           },
         }}
       >
@@ -256,6 +256,7 @@ const SelfAccount = () => {
               <InputField
                 classchild="w-full"
                 classnamefieldwrapper="flex items-center"
+                registration={register('full_address')}
               />
             </div>
           </div>
