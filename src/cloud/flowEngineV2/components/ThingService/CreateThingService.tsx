@@ -31,7 +31,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
-import { InputService, type ThingService } from '../../types'
+import { type InputService, type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
 import {
@@ -48,8 +48,8 @@ export const serviceThingSchema = z.object({
     z.object({
       name: z
         .string()
-        .min(1, { message: 'Tên thuộc tính quá ngắn' })
-        .max(30, { message: 'Tên thuộc tính quá dài' }),
+        .min(1, { message: 'Tên biến quá ngắn' })
+        .max(30, { message: 'Tên biến quá dài' }),
       type: z.string().optional(),
       value: z.string(),
     }),
@@ -640,7 +640,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       />
                     </div>
                   </div>
-                  
                 </div>
                 <div className="absolute bottom-6 right-6 flex gap-3">
                   <img

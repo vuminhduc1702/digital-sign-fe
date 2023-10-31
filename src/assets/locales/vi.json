@@ -66,7 +66,7 @@
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
-        "restore_project": "Restore project", 
+        "restore_project": "Restore project",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
@@ -522,7 +522,14 @@
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
           "data_chart": "Dữ liệu",
-          "data_table": "Bảng dữ liệu"
+          "data_table": "Bảng dữ liệu",
+          "controller": {
+            "title": "Điều khiển",
+            "input_list": "Danh sách biến input",
+            "input": "Nhập tên biến",
+            "value": "Giá trị",
+            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công"
+          }
         }
       }
     },

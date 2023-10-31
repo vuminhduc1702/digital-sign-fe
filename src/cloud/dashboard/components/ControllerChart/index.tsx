@@ -1,9 +1,11 @@
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useWS } from '~/utils/hooks'
 import { WEBSOCKET_URL } from '../../routes/DashboardDetail'
 import storage from '~/utils/storage'
+import { useNotificationStore } from '~/stores/notifications'
 
 type ControllerWSRes = {
   data: {
@@ -14,17 +16,44 @@ type ControllerWSRes = {
   errorMsg: string
 }
 
-export function ControllerButton() {
+export function ControllerButton(data: string) {
+  // console.log('data controller btn: ', data)
+  const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
+
   const { id: projectId } = storage.getProject()
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<ControllerWSRes>(WEBSOCKET_URL)
-  console.log('lastJsonMessage controller', lastJsonMessage)
+  // console.log('lastJsonMessage controller', lastJsonMessage)
 
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
+
+  const { input, service_name, thing_id } = JSON.parse(
+    Object.values(data) as unknown as string,
+  ).executorCmds[0]
+
+  useEffect(() => {
+    if (lastJsonMessage != null) {
+      if (lastJsonMessage?.errorCode === 0) {
+        addNotification({
+          type: 'success',
+          title: t(
+            'cloud:dashboard.detail_dashboard.add_widget.controller.success',
+          ).replace('{{SERVICE_NAME}}', service_name),
+        })
+      }
+      if (lastJsonMessage?.errorCode !== 0) {
+        addNotification({
+          type: 'error',
+          title: lastJsonMessage?.errorMsg,
+        })
+      }
+    }
+  }, [lastJsonMessage])
 
   return (
     <div className="relative h-full">
@@ -36,17 +65,19 @@ export function ControllerButton() {
               executorCmds: [
                 {
                   project_id: projectId,
-                  thing_id: '346495d3-e22c-4888-a113-6dddc9ba67b4',
-                  service_name: 'wsService',
-                  input: {
-                    temp2: 34,
-                  },
+                  thing_id,
+                  service_name,
+                  input,
                 },
               ],
             }),
           )
         }
-      ></div>
+      >
+        <p className="absolute left-1/2 top-1/2 -translate-x-1/2 text-body-xs text-white">
+          {service_name}
+        </p>
+      </div>
       <div className="absolute left-1/2 top-1/2 mt-[65px] h-[120px] w-[150px] -translate-x-1/2 -translate-y-1/2 rounded-[100px] border-b-[20px] border-solid border-gray-500 bg-gray-300 p-0 transition-all"></div>
     </div>
   )

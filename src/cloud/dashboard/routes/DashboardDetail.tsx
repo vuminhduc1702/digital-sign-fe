@@ -22,9 +22,11 @@ import {
   TableChart,
 } from '../components'
 import {
+  type ControllerBtn,
   CreateWidget,
   type Widget,
   type WidgetCategoryType,
+  CreateControllerButton,
 } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
@@ -88,6 +90,8 @@ export function DashboardDetail() {
   const [isMultipleAttr, setIsMultipleAttr] = useState(true)
   const [isMultipleDevice, setIsMultipleDevice] = useState(true)
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
+  const [isShowCreateControllerBtn, setIsShowCreateControllerBtn] =
+    useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
@@ -102,8 +106,8 @@ export function DashboardDetail() {
     })
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
-  const widgetListRef = useRef<Widget>({})
-  const [widgetList, setWidgetList] = useState<Widget>({})
+  const widgetListRef = useRef<Widget | ControllerBtn>({})
+  const [widgetList, setWidgetList] = useState<Widget | ControllerBtn>({})
   // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
@@ -123,25 +127,30 @@ export function DashboardDetail() {
       const widgetIdList = Object.keys(widgetDetailDB)
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
-          if (widgetDetailDB?.[widgetId]?.datasource.init_message !== '') {
-            handleSendMessage(
-              widgetDetailDB?.[widgetId]?.datasource.init_message,
-            )
+          const dataSource = widgetDetailDB?.[widgetId]?.datasource
+          if (
+            dataSource.init_message !== '' &&
+            dataSource.init_message != null
+          ) {
+            handleSendMessage(dataSource.init_message)
           }
-          if (widgetDetailDB?.[widgetId]?.datasource.realtime_message !== '') {
-            handleSendMessage(
-              widgetDetailDB?.[widgetId]?.datasource.realtime_message,
-            )
+          if (
+            dataSource.realtime_message !== '' &&
+            dataSource.realtime_message != null
+          ) {
+            handleSendMessage(dataSource.realtime_message)
           }
-          if (widgetDetailDB?.[widgetId]?.datasource.history_message !== '') {
-            handleSendMessage(
-              widgetDetailDB?.[widgetId]?.datasource.history_message,
-            )
+          if (
+            dataSource.history_message !== '' &&
+            dataSource.history_message != null
+          ) {
+            handleSendMessage(dataSource.history_message)
           }
-          if (widgetDetailDB?.[widgetId]?.datasource.lastest_message !== '') {
-            handleSendMessage(
-              widgetDetailDB?.[widgetId]?.datasource.lastest_message,
-            )
+          if (
+            dataSource.lastest_message !== '' &&
+            dataSource.lastest_message != null
+          ) {
+            handleSendMessage(dataSource.lastest_message)
           }
         })
       }
@@ -151,23 +160,30 @@ export function DashboardDetail() {
       const widgetIdList = Object.keys(widgetList)
       if (widgetIdList.length > 0) {
         widgetIdList.map(widgetId => {
-          if (widgetList?.[widgetId]?.datasource.init_message !== '') {
-            handleSendMessage(widgetList?.[widgetId]?.datasource.init_message)
+          const dataSource = widgetList?.[widgetId]?.datasource
+          if (
+            dataSource.init_message !== '' &&
+            dataSource.init_message != null
+          ) {
+            handleSendMessage(dataSource.init_message)
           }
-          if (widgetList?.[widgetId]?.datasource.realtime_message !== '') {
-            handleSendMessage(
-              widgetList?.[widgetId]?.datasource.realtime_message,
-            )
+          if (
+            dataSource.realtime_message !== '' &&
+            dataSource.realtime_message != null
+          ) {
+            handleSendMessage(dataSource.realtime_message)
           }
-          if (widgetList?.[widgetId]?.datasource.history_message !== '') {
-            handleSendMessage(
-              widgetList?.[widgetId]?.datasource.history_message,
-            )
+          if (
+            dataSource.history_message !== '' &&
+            dataSource.history_message != null
+          ) {
+            handleSendMessage(dataSource.history_message)
           }
-          if (widgetList?.[widgetId]?.datasource.lastest_message !== '') {
-            handleSendMessage(
-              widgetList?.[widgetId]?.datasource.lastest_message,
-            )
+          if (
+            dataSource.lastest_message !== '' &&
+            dataSource.lastest_message != null
+          ) {
+            handleSendMessage(dataSource.lastest_message)
           }
         })
       }
@@ -209,7 +225,7 @@ export function DashboardDetail() {
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {/* {widgetDetailDB == null &&
+        {widgetDetailDB == null &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
@@ -329,6 +345,14 @@ export function DashboardDetail() {
                       />
                     ) : allWidgetData?.[widgetId]?.description === 'CARD' ? (
                       <CardChart data={lastestValueOneDevice} />
+                    ) : allWidgetData?.[widgetId]?.description ===
+                      'CONTROLLER' ? (
+                      <ControllerButton
+                        data={
+                          allWidgetData?.[widgetId]?.datasource
+                            ?.controller_message
+                        }
+                      />
                     ) : null}
                   </div>
                 )
@@ -338,9 +362,7 @@ export function DashboardDetail() {
           <div className="flex grow items-center justify-center">
             <Spinner showSpinner={showSpinner} size="xl" />
           </div>
-        )} */}
-
-        <ControllerButton />
+        )}
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
@@ -430,6 +452,14 @@ export function DashboardDetail() {
                 isMultipleDevice={isMultipleDevice}
                 isOpen={isShowCreateWidget}
                 close={() => setIsShowCreateWidget(false)}
+                widgetListRef={widgetListRef}
+                setWidgetList={setWidgetList}
+              />
+            ) : isShowCreateControllerBtn ? (
+              <CreateControllerButton
+                widgetCategory={widgetCategory}
+                isOpen={isShowCreateControllerBtn}
+                close={() => setIsShowCreateControllerBtn(false)}
                 widgetListRef={widgetListRef}
                 setWidgetList={setWidgetList}
               />
@@ -597,6 +627,23 @@ export function DashboardDetail() {
                       <span>
                         {t(
                           'cloud:dashboard.detail_dashboard.add_widget.data_table',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateControllerBtn(true)
+                        setWidgetCategory('CONTROLLER')
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.controller.title',
                         )}
                       </span>
                     </Button>
