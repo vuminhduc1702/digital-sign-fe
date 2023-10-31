@@ -199,7 +199,9 @@ function SideNavigation() {
           <NavLink to={`${PATHS.BILLING_PACKAGE}/${projectId}`}>
             <AccordionContent>{t('sidebar:payment.plgc')}</AccordionContent>
           </NavLink>
-          <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
+          <NavLink to={`${PATHS.CUSTOMER_MANAGE}/${projectId}`}>
+            <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
+          </NavLink>
           <NavLink to={`${PATHS.BILLING_SUBCRIPTION}/${projectId}`}>
             <AccordionContent>{t('sidebar:payment.pldk')}</AccordionContent>
           </NavLink>

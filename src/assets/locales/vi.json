@@ -665,6 +665,17 @@
         "tax_cost": "Tiền thuế",
         "cost": "Cộng"
       }
+    },
+    "customer_manage": {
+      "info": "Thông tin khách hàng",
+      "table": {
+        "customer_code": "Mã khách hàng",
+        "customer_name": "Tên khách hàng",
+        "phone": "Số điện thoại",
+        "email": "Email",
+        "role": "Vai trò",
+        "parent": "Đơn vị trực thuộc"
+      }
     }
   },
   "table": {
@@ -697,7 +708,8 @@
     "no_in_org": "Không thuộc TC. Vui lòng tạo.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
-    "no_subcription": "Không có dịch vụ. Vui lòng tạo."
+    "no_subcription": "Không có dịch vụ. Vui lòng tạo.",
+    "no_customer": "Không có thông tin khách hàng"
   },
   "btn": {
     "create": "Tạo mới",
