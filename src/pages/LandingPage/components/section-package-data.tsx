@@ -5,9 +5,12 @@ import Carousel from 'react-multi-carousel'
 import { ArrowRightUpLine, CheckboxCircleLine } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 import { Switch } from '~/components/Switch'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FieldWrapper } from '~/components/Form'
 import { Checkbox } from '~/components/Checkbox'
+import { useDisclosure } from '~/utils/hooks'
+import { ComparePackOfData } from './compare-packofdata'
+import { string } from 'zod'
 
 export function SectionPackageData() {
   const { t } = useTranslation()
@@ -16,6 +19,7 @@ export function SectionPackageData() {
   const [category, setCategory] = useState('Tất cả')
   let offerType = offerTypePostPaid ? 'NB' : '4G'
   let payType = payTypeNB ? 'POST_PAID' : 'PRE_PAID'
+  const { close, open, isOpen } = useDisclosure()
   const {
     data: PackofData,
     isPreviousData,
@@ -35,9 +39,23 @@ export function SectionPackageData() {
     'Thiết bị bán hàng',
     'Tất cả',
   ]
-  // console.log(offerType)
-  // console.log(payType)
-  // console.log(category)
+  const PackofDataRef = useRef(
+    Array.isArray(PackofData?.data)
+      ? PackofData?.data.map(item => ({ key_name: item.name, state: 'false' }))
+      : [],
+  )
+
+  const updateItemStateByName = (key_name: string, state: string) => {
+    if (PackofDataRef.current !== undefined) {
+      const itemToUpdate = PackofDataRef.current.find(
+        item => item.key_name === key_name,
+      )
+      if (itemToUpdate) {
+        itemToUpdate.state = state
+      }
+    }
+  }
+  
 
   const responsive = {
     superLargeDesktop: {
@@ -112,6 +130,7 @@ export function SectionPackageData() {
                 type="button"
                 className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                 variant="primary"
+                onClick={open}
               >
                 {t('landingpage:pack_of_data_M2M.compare')}
               </Button>
@@ -146,6 +165,7 @@ export function SectionPackageData() {
                 itemClass="w-fit flex justify-center"
                 autoPlay
                 autoPlaySpeed={3000}
+                // ref={carouselRef}
               >
                 {Array.isArray(PackofData?.data) &&
                   PackofData?.data
@@ -160,7 +180,31 @@ export function SectionPackageData() {
                     .map((item, idx) => (
                       <div className="w-60 rounded-lg shadow-md" key={idx}>
                         <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
-                          <Checkbox className="mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400" />
+                          <Checkbox
+                            defaultChecked={
+                              PackofDataRef.current?.find(
+                                item_ => item_.key_name === item.name,
+                              )?.state === 'true'
+                                ? true
+                                : false
+                            }
+                            key={item.name}
+                            onClick={event => {
+                              const ariaCheckedPrevValue =
+                                event.currentTarget.getAttribute('aria-checked')
+                              const ariaCheckedCurrentValue =
+                                ariaCheckedPrevValue === 'true'
+                                  ? 'false'
+                                  : 'true'
+                              if (ariaCheckedPrevValue !== null) {
+                                updateItemStateByName(
+                                  item.name,
+                                  ariaCheckedCurrentValue,
+                                )
+                              }
+                            }}
+                            className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
+                          />
                           {item.name}
                         </div>
                         <div className="rounded-b-lg bg-white">
@@ -227,6 +271,7 @@ export function SectionPackageData() {
             </div>
           </div>
         </div>
+        {isOpen ? <ComparePackOfData close={close} isOpen={true} /> : null}
         <div className="h-5"></div>
       </div>
     </>
