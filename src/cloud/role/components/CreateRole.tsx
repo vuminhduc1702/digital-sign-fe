@@ -72,16 +72,16 @@ export const roleSchema = z
               .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
             devices: z
               .array(selectOptionSchema())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 thiết bị' }),
+              .optional(),
             events: z
               .array(selectOptionSchema())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 sự kiện' }),
+              .optional(),
             users: z
               .array(selectOptionSchema())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 người dùng' }),
+              .optional(),
             orgs: z
               .array(selectOptionSchema())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 tổ chức' }),
+              .optional(),
           }),
         ),
       }),
