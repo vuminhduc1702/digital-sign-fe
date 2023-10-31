@@ -9,6 +9,7 @@ import { Dropdown } from '~/components/Dropdown'
 import { cn } from '~/utils/misc'
 import { useFuel } from '../api/fuel/callFuelApi'
 import { useMutationFuelAi } from '../api/fuel/updateFuelApi'
+import { InfoIcon } from '~/components/SVGIcons'
 
 export default function FuelTemplate() {
   const [fullScreen, setFullScreen] = useState(false)
@@ -29,6 +30,9 @@ export default function FuelTemplate() {
 
   const { data } = useFuel({
     data: JSON.parse(codeInputRef.current),
+    config: {
+      suspense: false,
+    },
   })
 
   const callApiFuel = () => {
@@ -45,6 +49,9 @@ export default function FuelTemplate() {
   }
 
   const formatForm = (data: any) => {
+    if (!data) {
+      return ''
+    }
     return `{
   "DT": ${data.DT},
   "RF": ${data.RF}
@@ -53,14 +60,6 @@ export default function FuelTemplate() {
 
   return (
     <>
-      <div
-        className="my-2 w-fit cursor-pointer rounded-xl p-2"
-        style={{ backgroundColor: '#F4F5F6' }}
-        onClick={() => setIsOpen(true)}
-      >
-        Thông tin
-      </div>
-
       <div
         className={cn(
           'flex flex-col gap-2 ',
@@ -128,6 +127,13 @@ export default function FuelTemplate() {
                   </div>
                 </div>
               </Dropdown>
+              <InfoIcon
+                width={20}
+                height={20}
+                viewBox="0 0 50 50"
+                className="cursor-pointer hover:text-primary-400"
+                onClick={() => setIsOpen(true)}
+              />
               <button onClick={callApiFuel}>
                 <img
                   src={btnRunCode}
@@ -142,7 +148,7 @@ export default function FuelTemplate() {
             isShowLog={false}
             value={codeInputRef.current}
             className={`${fullScreen ? '' : '!block'}`}
-            setCodeInput={value => (codeInputRef.current = value)}
+            setCodeInput={value => codeInputRef.current = value}
             isFullScreen={fullScreen}
             viewMode={viewMode}
             editorName={'code'}
