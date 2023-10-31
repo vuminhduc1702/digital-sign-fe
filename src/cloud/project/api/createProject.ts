@@ -1,4 +1,5 @@
 import type * as z from 'zod'
+import * as zs from 'zod'
 import { axios } from '~/lib/axios'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
@@ -8,6 +9,7 @@ import { useNotificationStore } from '~/stores/notifications'
 
 import { type BaseAPIRes } from '~/types'
 import { ProjectSchema } from '../routes/ProjectManage'
+import i18n from '~/i18n'
 
 type CreateProjectRes = {
   id: string
@@ -27,6 +29,18 @@ export const CreateProjectSchema = ProjectSchema.pick({
     image: true,
   }).partial(),
 )
+
+export const ACCEPTED_RESTORE_FILE = ['application/json', 'text/plain']
+export const restoreProjectSchema = zs.object({
+  file: zs
+    .instanceof(File, {
+      message: i18n.t('cloud:project_manager.add_project.choose_file'),
+    })
+    .refine(
+      file => ACCEPTED_RESTORE_FILE.includes(file.type),
+      i18n.t('validate:json_type'),
+    ),
+})
 
 export type CreateProjectDTO = {
   data: z.infer<typeof CreateProjectSchema>
