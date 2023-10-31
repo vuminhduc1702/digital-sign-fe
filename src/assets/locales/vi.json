@@ -58,17 +58,21 @@
       "project": "Dự án",
       "no_data": "Bạn chưa có dự án nào, hãy tạo mới dự án",
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
+      "backup": "Export project",
+      "restore": "Import project",
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
+        "restore_project": "Restore project", 
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
         "delete_project": "Xoá dự án",
         "confirm_delete": "Bạn có chắc chắn muốn xóa dự án {{PROJECT}}",
+        "choose_file": "Vui lòng chọn file tải lên",
         "success_add": "Tạo mới dự án thành công",
         "success_update": "Sửa dự án thành công",
         "success_delete": "Xóa dự án thành công"
@@ -774,7 +778,8 @@
   "validate": {
     "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự",
     "image_max_size": "Ảnh cho phép dung lượng tối đa 5MB",
-    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png"
+    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png",
+    "json_type": "Chỉ cho phép tải file định dạng .json, .txt"
   },
   "auth": {
     "footer_text_1": "© 2021 Developed by Technical Technology Center - TCT CNC VHT",
@@ -835,7 +840,7 @@
       "cskh": "cskh@viettel.com.vn",
       "follow": "Follow us:",
       "phone_used": "0123 456 789",
-      "cre": "Copyright Viettel Telecom 2022"
+      "cre": "Copyright Viettel Telecom"
     },
     "client": {
       "partner": "Đối tác của chúng tôi"
@@ -907,6 +912,11 @@
     "enter_address": "Nhập địa chỉ chi tiết",
     "province_city": "Tỉnh/TP",
     "district": "Huyện/Quận",
-    "village": "Phường/Xã"
+    "village": "Phường/Xã",
+    "user": {
+      "success_update": "Cập nhật tài khoản thành công",
+      "fuel": "Cập nhật fuel thành công",
+      "ddos": "Cập nhật ddos thành công"
+    }
   }
 }

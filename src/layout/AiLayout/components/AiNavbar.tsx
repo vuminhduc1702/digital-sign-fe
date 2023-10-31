@@ -1,13 +1,9 @@
-import { useTranslation } from "react-i18next"
 import { NavLink } from "~/components/Link"
-
-import { OrgGroupIcon, OrgInfoIcon, OrgUserIcon } from '~/components/SVGIcons'
+import { OrgGroupIcon, OrgInfoIcon } from '~/components/SVGIcons'
 import { PATHS } from "~/routes/PATHS"
 
 export default function AiNavbar() {
-    const { t } = useTranslation()
-  
-  
+    
     return (
       <div className="flex h-[60px] items-center justify-around bg-secondary-400 px-10">
         <NavLink

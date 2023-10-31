@@ -150,7 +150,7 @@ export function SectionFooter() {
 
           <div className="relative flex h-[50px] items-center">
             <div className="text-[16px] leading-[20.8px] text-[#B1B1B1]">
-              {t('landingpage:footer.cre')}
+              {t('landingpage:footer.cre')} {new Date().getFullYear()}
             </div>
             <div className="absolute right-0 flex">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">

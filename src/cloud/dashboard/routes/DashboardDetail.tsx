@@ -14,6 +14,7 @@ import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
   CardChart,
+  ControllerButton,
   GaugeChart,
   LineChart,
   Map,
@@ -69,7 +70,7 @@ export const widgetAgg: WidgetAgg[] = [
 ]
 
 const { token } = storage.getToken() as UserStorage
-const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
+export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
   `Bearer ${token}`,
 )}`
 
@@ -109,7 +110,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-  console.log('lastJsonMessage', lastJsonMessage)
+  // console.log('lastJsonMessage', lastJsonMessage)
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
@@ -208,7 +209,7 @@ export function DashboardDetail() {
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {widgetDetailDB == null &&
+        {/* {widgetDetailDB == null &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
@@ -337,7 +338,9 @@ export function DashboardDetail() {
           <div className="flex grow items-center justify-center">
             <Spinner showSpinner={showSpinner} size="xl" />
           </div>
-        )}
+        )} */}
+
+        <ControllerButton />
 
         {isEditMode ? (
           <div className="flex justify-end p-3">
@@ -420,194 +423,186 @@ export function DashboardDetail() {
               {t('cloud:dashboard.config_chart.title')}
             </Button>
             {isShowCreateWidget ? (
-              <div>
-                <CreateWidget
-                  widgetType={widgetType}
-                  widgetCategory={widgetCategory}
-                  isMultipleAttr={isMultipleAttr}
-                  isMultipleDevice={isMultipleDevice}
-                  isOpen={isShowCreateWidget}
-                  close={() => setIsShowCreateWidget(false)}
-                  widgetListRef={widgetListRef}
-                  setWidgetList={setWidgetList}
-                />
-              </div>
+              <CreateWidget
+                widgetType={widgetType}
+                widgetCategory={widgetCategory}
+                isMultipleAttr={isMultipleAttr}
+                isMultipleDevice={isMultipleDevice}
+                isOpen={isShowCreateWidget}
+                close={() => setIsShowCreateWidget(false)}
+                widgetListRef={widgetListRef}
+                setWidgetList={setWidgetList}
+              />
             ) : (
-              <div>
-                <Drawer
-                  isOpen={isOpen}
-                  onClose={close}
-                  title={t(
-                    'cloud:dashboard.detail_dashboard.add_widget.create',
-                  )}
-                  renderFooter={() => (
-                    <>
-                      <Button
-                        className="rounded border-none"
-                        variant="secondary"
-                        size="lg"
-                        onClick={close}
-                        startIcon={
-                          <img
-                            src={btnCancelIcon}
-                            alt="Submit"
-                            className="h-5 w-5"
-                          />
-                        }
-                      />
-                    </>
-                  )}
-                >
-                  <div className="flex w-full gap-x-4">
-                    <div className="w-full space-y-3">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('TIMESERIES')
-                          setWidgetCategory('LINE')
-                          setIsMultipleAttr(true)
-                          setIsMultipleDevice(true)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.line_chart',
-                          )}
-                        </span>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('TIMESERIES')
-                          setWidgetCategory('BAR')
-                          setIsMultipleAttr(true)
-                          setIsMultipleDevice(true)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
-                          )}
-                        </span>
-                      </Button>
-                    </div>
-                    <div className="w-full space-y-3">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
-                          setWidgetCategory('PIE')
-                          setIsMultipleAttr(true)
-                          setIsMultipleDevice(true)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
-                          )}
-                        </span>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400 active:bg-primary-300"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
-                          setWidgetCategory('GAUGE')
-                          setIsMultipleAttr(false)
-                          setIsMultipleDevice(false)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.gauge',
-                          )}
-                        </span>
-                      </Button>
-                    </div>
-                    <div className="w-full space-y-3">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
-                          setWidgetCategory('CARD')
-                          setIsMultipleAttr(false)
-                          setIsMultipleDevice(false)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.data_chart',
-                          )}
-                        </span>
-                      </Button>
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400 active:bg-primary-300"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('LASTEST')
-                          setWidgetCategory('MAP')
-                          setIsMultipleAttr(true)
-                          setIsMultipleDevice(true)
-                        }}
-                      >
-                        <span>
-                          {t('cloud:dashboard.detail_dashboard.add_widget.map')}
-                        </span>
-                      </Button>
-                    </div>
-                    <div className="w-full space-y-3">
-                      <Button
-                        type="button"
-                        size="square"
-                        className="w-full bg-secondary-400"
-                        variant="secondaryLight"
-                        onClick={() => {
-                          close()
-                          setIsShowCreateWidget(true)
-                          setWidgetType('TIMESERIES')
-                          setWidgetCategory('TABLE')
-                          setIsMultipleAttr(true)
-                          setIsMultipleDevice(true)
-                        }}
-                      >
-                        <span>
-                          {t(
-                            'cloud:dashboard.detail_dashboard.add_widget.data_table',
-                          )}
-                        </span>
-                      </Button>
-                    </div>
+              <Drawer
+                isOpen={isOpen}
+                onClose={close}
+                title={t('cloud:dashboard.detail_dashboard.add_widget.create')}
+                renderFooter={() => (
+                  <>
+                    <Button
+                      className="rounded border-none"
+                      variant="secondary"
+                      size="lg"
+                      onClick={close}
+                      startIcon={
+                        <img
+                          src={btnCancelIcon}
+                          alt="Submit"
+                          className="h-5 w-5"
+                        />
+                      }
+                    />
+                  </>
+                )}
+              >
+                <div className="flex w-full gap-x-4">
+                  <div className="w-full space-y-3">
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('TIMESERIES')
+                        setWidgetCategory('LINE')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.line_chart',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('TIMESERIES')
+                        setWidgetCategory('BAR')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
+                        )}
+                      </span>
+                    </Button>
                   </div>
-                </Drawer>
-              </div>
+                  <div className="w-full space-y-3">
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('PIE')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400 active:bg-primary-300"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('GAUGE')
+                        setIsMultipleAttr(false)
+                        setIsMultipleDevice(false)
+                      }}
+                    >
+                      <span>
+                        {t('cloud:dashboard.detail_dashboard.add_widget.gauge')}
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="w-full space-y-3">
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('CARD')
+                        setIsMultipleAttr(false)
+                        setIsMultipleDevice(false)
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400 active:bg-primary-300"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('MAP')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <span>
+                        {t('cloud:dashboard.detail_dashboard.add_widget.map')}
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="w-full space-y-3">
+                    <Button
+                      type="button"
+                      size="square"
+                      className="w-full bg-secondary-400"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('TIMESERIES')
+                        setWidgetCategory('TABLE')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <span>
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.data_table',
+                        )}
+                      </span>
+                    </Button>
+                  </div>
+                </div>
+              </Drawer>
             )}
           </div>
         ) : (

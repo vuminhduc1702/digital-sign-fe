@@ -39,7 +39,7 @@ import { Switch } from '~/components/Switch'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { cn } from '~/utils/misc'
-import { InputService, type ThingService } from '../../types'
+import { type InputService, type ThingService } from '../../types'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import { Dropdown } from '~/components/Dropdown'
@@ -212,7 +212,7 @@ export function UpdateThingService({
             options={{
               defaultValues: {
                 ...thingServiceData?.data,
-                description: thingServiceData?.data.description || '',
+                description: thingServiceData?.data?.description || '',
               },
             }}
             name={['input']}

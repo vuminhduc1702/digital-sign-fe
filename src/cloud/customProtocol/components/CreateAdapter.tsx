@@ -183,6 +183,22 @@ export const outputList = [
   },
 ]
 
+export const thingTypeList = [
+  {
+    label: i18n.t('cloud:custom_protocol.thing.thing'),
+    value: 'thing',
+    selected: true,
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.thing.template'),
+    value: 'template',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.thing.shape'),
+    value: 'shape',
+  },
+]
+
 export function CreateAdapter() {
   const { t } = useTranslation()
 
@@ -656,27 +672,7 @@ export function CreateAdapter() {
                                       )}
                                       error={formState.errors['type']}
                                       registration={register('type')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.thing',
-                                          ),
-                                          value: 'thing',
-                                          selected: true,
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.template',
-                                          ),
-                                          value: 'template',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.shape',
-                                          ),
-                                          value: 'shape',
-                                        },
-                                      ]}
+                                      options={thingTypeList}
                                       onChange={event =>
                                         setThingType(
                                           String(
