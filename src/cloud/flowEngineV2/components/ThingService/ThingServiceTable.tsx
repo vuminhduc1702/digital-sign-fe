@@ -144,7 +144,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         header: () => (
           <span>{t('cloud:custom_protocol.thing.description')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => (info.getValue() === 'null' ? '' : info.getValue()),
         footer: info => info.column.id,
       }),
       columnHelper.display({
