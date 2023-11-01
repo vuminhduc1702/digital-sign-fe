@@ -245,7 +245,7 @@ export function SectionPackageData() {
                                 {item.offerCode}
                               </p>
                             </div>
-                            <div className="absolute bottom-2 px-6">
+                            {/* <div className="absolute bottom-2 px-6">
                               <Button
                                 type="button"
                                 className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
@@ -261,7 +261,7 @@ export function SectionPackageData() {
                               >
                                 {t('landingpage:pack_of_data_M2M.submit_now')}
                               </Button>
-                            </div>
+                            </div> */}
                           </div>
                         </div>
                       </div>
