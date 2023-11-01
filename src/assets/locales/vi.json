@@ -374,7 +374,7 @@
         "success_delete": "Xoá nghiệp vụ thành công",
         "name": "Tên nghiệp vụ",
         "output": "Kết quả",
-        "input": "Đầu vào",
+        "input": "Biến đầu vào",
         "add_other": "Thêm biến khác",
         "json": "JSON",
         "str": "String",
@@ -401,7 +401,8 @@
         "minimize_result": "Thu nhỏ editor",
         "default_result": "Mặc định",
         "hide_console": "Ẩn console",
-        "view_console": "Hiện console"
+        "view_console": "Hiện console",
+        "choose_input": "Vui lòng chọn biến đầu vào"
       },
       "thing": {
         "title": "Thing",
@@ -525,7 +526,7 @@
           "data_table": "Bảng dữ liệu",
           "controller": {
             "title": "Điều khiển",
-            "input_list": "Danh sách biến input",
+            "input_list": "Danh sách biến đầu vào",
             "input": "Nhập tên biến",
             "value": "Giá trị",
             "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công"
@@ -535,8 +536,8 @@
     },
     "firmware": {
       "title": "Quản lý Firmware",
-      "fota": "Fota",
-      "choose_fota": "Vui lòng chọn ít nhất 1 Fota",
+      "fota": "FOTA",
+      "choose_fota": "Vui lòng chọn ít nhất 1 FOTA",
       "choose_template": "Vui lòng chọn ít nhất 1 thiết bị mẫu",
       "choose_file": "Vui lòng chọn file tải lên",
       "table": {
@@ -564,7 +565,7 @@
         "success_update": "Cập nhật Firmware thành công",
         "success_delete": "Xoá Firmware thành công",
         "success_upload": "Upload File thành công",
-        "success_update_version": "Upload Version thành công"
+        "success_update_version": "Gửi lệnh FOTA thành công"
       }
     }
   },
@@ -702,7 +703,8 @@
     "no_adapter": "Không có Adapter. Vui lòng tạo.",
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
-    "no_service": "Không có nghiệp vụ. Vui lòng tạo.",
+    "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn Service trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có dashboard. Vui lòng tạo.",
     "no_in_org": "Không thuộc TC. Vui lòng tạo.",
@@ -742,7 +744,8 @@
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
     "entity_thing": "Đang tải danh sách Entity thing...",
-    "service_thing": "Vui lòng chọn Entity thing trước"
+    "service_thing": "Vui lòng chọn Entity thing trước",
+    "input": "Vui lòng chọn service trước"
   },
   "placeholder": {
     "general": "Vui lòng chọn",
