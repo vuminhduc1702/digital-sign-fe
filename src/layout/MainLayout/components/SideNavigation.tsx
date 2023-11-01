@@ -133,7 +133,7 @@ function SideNavigation() {
               {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.FLOW_ENGINE_V2}`}>
+          <NavLink to={`${PATHS.THING_TEMPLATE}/${projectId}`}>
             <AccordionContent>
               {t('sidebar:cloud.flow_engine_v2')}
             </AccordionContent>

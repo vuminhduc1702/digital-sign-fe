@@ -44,7 +44,7 @@ export const userSchema = z
     province: emptySelectSchema,
     district: emptySelectSchema,
     ward: emptySelectSchema,
-    address: z.string().optional(),
+    full_address: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -190,7 +190,7 @@ const { data: wardList } = useAreaList({
               province: values.province,
               district: values.district,
               ward: values.ward,
-              address: values.address,
+              full_address: values.full_address,
             },
           })
         }}
@@ -304,6 +304,7 @@ const { data: wardList } = useAreaList({
 
               <InputField
                 label={t('form:enter_address')}
+                registration={register('full_address')}
               />
             </>
           )

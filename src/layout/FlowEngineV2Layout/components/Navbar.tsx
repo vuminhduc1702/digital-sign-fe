@@ -32,7 +32,7 @@ function FlowEngineV2Navbar() {
           {t('cloud:custom_protocol.thing.thing')}
         </p>
       </NavLink>
-      <NavLink
+      {/* <NavLink
         to={`${PATHS.TEMPLATE_FLOW}/${projectId}${
           orgId === '' ? '' : `/${orgId}`
         }`}
@@ -63,7 +63,7 @@ function FlowEngineV2Navbar() {
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
           {t('cloud:custom_protocol.thing.shape')}
         </p>
-      </NavLink>
+      </NavLink> */}
     </div>
   )
 }
