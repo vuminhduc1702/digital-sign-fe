@@ -50,11 +50,11 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const { t } = useTranslation()
 
   const registerMutation = useRegister()
-  // const [email, setEmail] = useState('')
+
   const timeCountdown = 180
   const [countdown, setCountdown] = useState<number>(1)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
-  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
+  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(true)
 
   useEffect(() => {
     let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
@@ -104,7 +104,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 onChange={e => {
                   const emailValue = e.target.value
                   console.log(emailValue)
-                  if (emailValue === '') {
+                  if (emailSchema.safeParse(emailValue).success === false) {
                     setBtnOtpDisable(true)
                   } else {
                     setBtnOtpDisable(false)

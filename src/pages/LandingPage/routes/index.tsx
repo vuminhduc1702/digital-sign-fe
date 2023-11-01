@@ -289,9 +289,9 @@ export function LandingPage() {
       <div ref={solutionRef}>
         <SectionSolution />
       </div>
-      {/* <div className="h-fit bg-white" ref={PackOfDataRef}>
-          <SectionPackageData />
-        </div> */}
+      <div className="h-fit bg-white" ref={PackOfDataRef}>
+        <SectionPackageData />
+      </div>
       <div ref={ProductRef}>
         <SectionProduct />
       </div>

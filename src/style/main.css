@@ -110,20 +110,20 @@
 
 .react-multiple-carousel__arrow {
   position: absolute !important;
-  outline: 0 !important;
+  outline: 0;
   transition: all 0.5s !important;
   border-radius: 35px !important;
-  z-index: 100 !important;
+  /* z-index: 100; */
   border: solid 1px red !important;
   background: white !important;
   min-width: 36px !important;
   min-height: 36px !important;
-  opacity: 1 !important;
+  opacity: 1;
   cursor: pointer !important;
 }
 
 .react-multiple-carousel__arrow--left::before {
-  content: '\e824' !important;
+  content: '\e824';
   color: red !important;
   font-size: 16px !important;
 }
@@ -134,7 +134,7 @@
   right: calc(3% - 30px) !important;
 }
 .react-multiple-carousel__arrow--right::before {
-  content: '\e825' !important;
+  content: '\e825';
   color: red !important;
   font-size: 16px !important;
 }
@@ -146,4 +146,3 @@
 .react-multiple-carousel__arrow:hover::before {
   color: aliceblue !important;
 }
-
