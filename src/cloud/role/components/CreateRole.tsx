@@ -70,18 +70,10 @@ export const roleSchema = z
             actions: z
               .array(selectOptionSchema())
               .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
-            devices: z
-              .array(selectOptionSchema())
-              .optional(),
-            events: z
-              .array(selectOptionSchema())
-              .optional(),
-            users: z
-              .array(selectOptionSchema())
-              .optional(),
-            orgs: z
-              .array(selectOptionSchema())
-              .optional(),
+            devices: z.array(selectOptionSchema()).optional(),
+            events: z.array(selectOptionSchema()).optional(),
+            users: z.array(selectOptionSchema()).optional(),
+            orgs: z.array(selectOptionSchema()).optional(),
           }),
         ),
       }),
@@ -258,7 +250,7 @@ export function CreateRole() {
               <div className="flex justify-between space-x-3">
                 <TitleBar
                   title={t('cloud:role_manage.add_policy.title')}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"

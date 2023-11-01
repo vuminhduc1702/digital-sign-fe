@@ -137,7 +137,7 @@ const SelfAccount = () => {
 
       <TitleBar
         title={t('billing:subcription.popup.customer_info')}
-        className="mb-4 mt-12 w-full rounded-md bg-gray-500 pl-3"
+        className="mb-4 mt-12 w-full rounded-md bg-secondary-700 pl-3"
       />
 
       <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema>
@@ -190,7 +190,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-4">
               <InputField
-                type='number'
+                type="number"
                 classchild="w-full"
                 classnamefieldwrapper="flex items-center"
                 error={formState.errors['tax_code']}
@@ -203,7 +203,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-2">
               <InputField
-                type='number'
+                type="number"
                 classchild="w-full"
                 classnamefieldwrapper="flex flex justify-end items-center"
                 error={formState.errors['phone']}

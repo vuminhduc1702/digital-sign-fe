@@ -8,13 +8,13 @@
       "module": "Module"
     },
     "cloud": {
-      "title": "Cloud",
+      "title": "Đám mây",
       "org_management": "Quản lý tổ chức",
       "flow_engine_v2": "Quản lý nghiệp vụ",
       "firm_ware": "Quản lý Firmware",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
-      "dashboard": "Dashboard",
+      "dashboard": "Bảng điều khiển",
       "role_manage": "Vai trò",
       "custom_protocol": "Adapter"
     },
@@ -470,10 +470,10 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Bảng điều khiển",
       "table": {
         "id": "ID",
-        "name": "Tên Dashboard",
+        "name": "Tên bảng điều khiển",
         "create_time": "Ngày tạo",
         "title": "Tiêu đề",
         "tenant_id": "Tenant ID",
@@ -482,19 +482,19 @@
           "widgets": "Biểu đồ"
         },
         "delete_dashboard": "Xoá DB",
-        "delete_dashboard_full": "Xoá Dashboard",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa Dashboard {{DBNAME}}?"
+        "delete_dashboard_full": "Xoá bảng điều khiển",
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
       },
       "add_dashboard": {
-        "title": "Thêm mới Dashboard",
-        "name": "Tên Dashboard",
+        "title": "Thêm mới bảng điều khiển",
+        "name": "Tên bảng điều khiển",
         "description": "Mô tả",
         "edit": "Sửa DB",
-        "edit_full": "Sửa Dashboard",
-        "success_create": "Tạo Dashboard thành công",
-        "success_update": "Cập nhật Dashboard thành công",
-        "success_delete": "Xoá Dashboard thành công",
-        "note": "Nhấn vào nút Sửa Dashboard để tạo biểu đồ"
+        "edit_full": "Sửa bảng điều khiển",
+        "success_create": "Tạo bảng điều khiển thành công",
+        "success_update": "Cập nhật bảng điều khiển thành công",
+        "success_delete": "Xoá bảng điều khiển thành công",
+        "note": "Nhấn vào nút Sửa bảng điều khiển để tạo biểu đồ"
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
@@ -516,7 +516,7 @@
       },
       "detail_dashboard": {
         "add_widget": {
-          "create": "Tạo biểu đồ cho dashboard",
+          "create": "Tạo biểu đồ cho bảng điều khiển",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ tròn",
@@ -704,9 +704,9 @@
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
     "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
-    "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn Service trước.",
+    "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
-    "no_dashboard": "Không có dashboard. Vui lòng tạo.",
+    "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
     "no_in_org": "Không thuộc TC. Vui lòng tạo.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
@@ -745,7 +745,7 @@
     "group": "Đang tải danh sách nhóm...",
     "entity_thing": "Đang tải danh sách Entity thing...",
     "service_thing": "Vui lòng chọn Entity thing trước",
-    "input": "Vui lòng chọn service trước"
+    "input": "Vui lòng chọn nghiệp vụ trước"
   },
   "placeholder": {
     "general": "Vui lòng chọn",

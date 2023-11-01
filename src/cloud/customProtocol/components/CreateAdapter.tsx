@@ -489,7 +489,7 @@ export function CreateAdapter() {
                                 title={t(
                                   'cloud:custom_protocol.adapter.topic_list',
                                 )}
-                                className="w-full rounded-md bg-gray-500 pl-3"
+                                className="w-full rounded-md bg-secondary-700 pl-3"
                               />
                               <Button
                                 className="rounded-md"

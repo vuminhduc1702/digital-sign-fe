@@ -329,7 +329,7 @@ export function CreateControllerButton({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.controller.input_list',
                       )}
-                      className="w-full rounded-md bg-gray-500 pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <Button
                       className="rounded-md"
@@ -351,10 +351,10 @@ export function CreateControllerButton({
                   </div>
                   {fields.map((field, index) => (
                     <section
-                      className="mt-3 flex justify-between gap-x-2"
+                      className="mt-3 flex justify-between px-2"
                       key={field.id}
                     >
-                      <div className="flex w-2/3 gap-x-3">
+                      <div className="flex w-2/3 gap-x-2">
                         <div className="w-full space-y-1">
                           <SelectDropdown
                             isClearable={true}
