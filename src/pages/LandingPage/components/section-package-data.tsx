@@ -41,21 +41,21 @@ export function SectionPackageData() {
   ]
   const PackofDataRef = useRef(
     Array.isArray(PackofData?.data)
-      ? PackofData?.data.map(item => ({ key_name: item.name, state: 'false' }))
+      ? PackofData?.data.map(item => ({ ...item, state: 'false' }))
       : [],
   )
 
-  const updateItemStateByName = (key_name: string, state: string) => {
+  const updateItemStateByName = (name: string, state: string) => {
     if (PackofDataRef.current !== undefined) {
       const itemToUpdate = PackofDataRef.current.find(
-        item => item.key_name === key_name,
+        item => item.name === name,
       )
       if (itemToUpdate) {
         itemToUpdate.state = state
       }
     }
   }
-  
+  console.log(PackofDataRef.current?.filter(item => item.state === 'true'))
 
   const responsive = {
     superLargeDesktop: {
@@ -143,7 +143,7 @@ export function SectionPackageData() {
                 <button
                   key={idx}
                   onClick={() => setCategory(categories[idx])}
-                  className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:border hover:border-solid hover:text-blue-600 active:border ${
+                  className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 active:border ${
                     category === categories[idx]
                       ? 'bg-white text-primary-400'
                       : ''
@@ -165,7 +165,6 @@ export function SectionPackageData() {
                 itemClass="w-fit flex justify-center"
                 autoPlay
                 autoPlaySpeed={3000}
-                // ref={carouselRef}
               >
                 {Array.isArray(PackofData?.data) &&
                   PackofData?.data
@@ -183,7 +182,7 @@ export function SectionPackageData() {
                           <Checkbox
                             defaultChecked={
                               PackofDataRef.current?.find(
-                                item_ => item_.key_name === item.name,
+                                item_ => item_.name === item.name,
                               )?.state === 'true'
                                 ? true
                                 : false
@@ -271,7 +270,15 @@ export function SectionPackageData() {
             </div>
           </div>
         </div>
-        {isOpen ? <ComparePackOfData close={close} isOpen={true} /> : null}
+        {isOpen ? (
+          <ComparePackOfData
+            listPackofData={PackofDataRef.current?.filter(
+              item => item.state === 'true',
+            )}
+            close={close}
+            isOpen={true}
+          />
+        ) : null}
         <div className="h-5"></div>
       </div>
     </>

@@ -3,13 +3,19 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { divIcon } from 'leaflet'
 
 type ComparePackOfDataProps = {
+  listPackofData: any[] | undefined
   close: () => void
   isOpen: boolean
 }
 
-export function ComparePackOfData({ close, isOpen }: ComparePackOfDataProps) {
+export function ComparePackOfData({
+  close,
+  isOpen,
+  listPackofData,
+}: ComparePackOfDataProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
   return (
@@ -18,8 +24,9 @@ export function ComparePackOfData({ close, isOpen }: ComparePackOfDataProps) {
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('billing:manage_bill.service_bill')}
+              {t('landingpage:pack_of_data_M2M.compare')}
             </DialogTitle>
+
             <div className="ml-3 flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
@@ -30,9 +37,50 @@ export function ComparePackOfData({ close, isOpen }: ComparePackOfDataProps) {
               </button>
             </div>
           </div>
-          {/* <PDFViewer className='mt-4' height={700} width={"100%"}>
-            <BillingPDF dataPdf={data?.data} />
-          </PDFViewer> */}
+          <div className="h-fit max-h-[70vh] overflow-auto">
+            <div className="grid grid-flow-col grid-rows-6">
+              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+                Tên gói
+              </div>
+              <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
+                Phí cước
+              </div>
+              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+                Mã đăng ký
+              </div>
+              <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
+                Gói cước
+              </div>
+              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+                Ưu đãi data/tháng
+              </div>
+              <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
+                Cước thuê bao tháng
+              </div>
+              {listPackofData?.map((item, idx) => (
+                <>
+                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                    {item.name}
+                  </div>
+                  <div className="border border-solid px-6 py-3 text-left text-base">
+                    {item.fee}
+                  </div>
+                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                    {item.offerCode}
+                  </div>
+                  <div className="border border-solid px-6 py-3 text-left text-base">
+                    {item.offerType}
+                  </div>
+                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                    {item.discountPromotionData}
+                  </div>
+                  <div className="border border-solid px-6 py-3 text-left text-base">
+                    {item.monthlyFee}
+                  </div>
+                </>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="mt-4 flex justify-center space-x-2">
