@@ -36,8 +36,9 @@ import {
   CommandItem,
 } from '~/components/Command'
 
-import { aggSchema, type WidgetType } from '../../types'
+import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
+import { type ControllerBtn } from './CreateControllerButton'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -63,15 +64,6 @@ export const widgetTypeSchema = z
   .enum(['TIMESERIES', 'LASTEST'] as const)
   .optional()
 
-export const widgetCategorySchema = z.enum([
-  'LINE',
-  'BAR',
-  'PIE',
-  'GAUGE',
-  'CARD',
-  'MAP',
-  'TABLE',
-] as const)
 export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
 
 export const widgetSchema = z.object({
@@ -151,7 +143,7 @@ export const widgetCreateSchema = z.object({
         })
         .optional(),
       dataType: widgetDataTypeSchema,
-      window: z.coerce.number().optional()
+      window: z.coerce.number().optional(),
     })
     .optional(),
   id: z.string().optional(),
@@ -197,8 +189,8 @@ type CreateWidgetProps = {
   isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget>
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
+  widgetListRef: React.MutableRefObject<Widget | ControllerBtn>
+  setWidgetList: React.Dispatch<React.SetStateAction<Widget | ControllerBtn>>
 }
 
 const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
@@ -378,50 +370,53 @@ export function CreateWidget({
                 ],
               }
 
-              const historyMessage = values.widgetSetting?.agg === 'SMA' ? {
-                entityDataCmds: [
-                  {
-                    historyCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
-                      ),
-                      endTs: Date.parse(
-                        values.widgetSetting?.endDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 100,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                      window: values.widgetSetting?.window
-                    },
-                    id: widgetId,
-                  },
-                ],
-              } : {
-                entityDataCmds: [
-                  {
-                    historyCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
-                      ),
-                      endTs: Date.parse(
-                        values.widgetSetting?.endDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 100,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                    },
-                    id: widgetId,
-                  },
-                ],
-              }
+              const historyMessage =
+                values.widgetSetting?.agg === 'SMA'
+                  ? {
+                      entityDataCmds: [
+                        {
+                          historyCmd: {
+                            keys: values.attributeConfig.map(
+                              item => item.attribute_key,
+                            ),
+                            startTs: Date.parse(
+                              values.widgetSetting?.startDate?.toISOString(),
+                            ),
+                            endTs: Date.parse(
+                              values.widgetSetting?.endDate?.toISOString() as string,
+                            ),
+                            interval: values.widgetSetting?.interval,
+                            limit: 100,
+                            offset: 0,
+                            agg: values.widgetSetting?.agg,
+                            window: values.widgetSetting?.window,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
+                  : {
+                      entityDataCmds: [
+                        {
+                          historyCmd: {
+                            keys: values.attributeConfig.map(
+                              item => item.attribute_key,
+                            ),
+                            startTs: Date.parse(
+                              values.widgetSetting?.startDate?.toISOString(),
+                            ),
+                            endTs: Date.parse(
+                              values.widgetSetting?.endDate?.toISOString() as string,
+                            ),
+                            interval: values.widgetSetting?.interval,
+                            limit: 100,
+                            offset: 0,
+                            agg: values.widgetSetting?.agg,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
 
               const widget: z.infer<typeof widgetSchema> = {
                 title: values.title,
@@ -815,7 +810,7 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          onChange={(e) => {
+                          onChange={e => {
                             setWidgetDataTypeValue(e.target.value)
                           }}
                         />
@@ -965,31 +960,36 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.agg}
                           registration={register(`widgetSetting.agg` as const)}
                           options={
-                            widgetDataTypeValue === 'HISTORY' ? 
-                              widgetAgg.map(agg => ({
-                                label: agg.label,
-                                value: agg.value,
-                              })).concat([{ label: "SMA", value: "SMA"}, {label: "FFT", value: "FFT"}]) : 
-                              widgetAgg.map(agg => ({
-                                label: agg.label,
-                                value: agg.value,
-                              }))
+                            widgetDataTypeValue === 'HISTORY'
+                              ? widgetAgg
+                                  .map(agg => ({
+                                    label: agg.label,
+                                    value: agg.value,
+                                  }))
+                                  .concat([
+                                    { label: 'SMA', value: 'SMA' },
+                                    { label: 'FFT', value: 'FFT' },
+                                  ])
+                              : widgetAgg.map(agg => ({
+                                  label: agg.label,
+                                  value: agg.value,
+                                }))
                           }
-                          onChange={(e) => {
+                          onChange={e => {
                             setAggValue(e.target.value)
                           }}
                         />
-                        {
-                          aggValue === 'SMA' ? (
-                            <InputField
-                              label={t('ws:filter.sma_window')}
-                              error={formState?.errors?.widgetSetting?.window}
-                              registration={register(`widgetSetting.window` as const)}
-                            />
-                          ) : (
-                            <></>
-                          )
-                        }
+                        {aggValue === 'SMA' ? (
+                          <InputField
+                            label={t('ws:filter.sma_window')}
+                            error={formState?.errors?.widgetSetting?.window}
+                            registration={register(
+                              `widgetSetting.window` as const,
+                            )}
+                          />
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </>
                   ) : null}

@@ -146,6 +146,7 @@ export function UpdateProject({
             }}
           >
             {({ register, formState }) => {
+              console.log('formState.errors', formState.errors)
               return (
                 <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
                   <div>

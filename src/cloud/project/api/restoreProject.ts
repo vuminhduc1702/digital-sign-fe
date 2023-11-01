@@ -9,7 +9,7 @@ export type RestoreProjectRes = {
 
 export type RestoreProjectDTO = {
   projectId: string
-  backup: string | null
+  backup: any
 }
 
 export const restoreProject = ({

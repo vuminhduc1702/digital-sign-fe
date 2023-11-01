@@ -84,6 +84,18 @@ export function CreateProject() {
         })
     }
   }
+
+  function handleResetRestoreProject() {
+    setValueUploadRestoreProject('backup', null)
+    setRestoreProjectFileName('')
+    setUploadRestoreProjectErr('')
+  }
+
+  function handleResetForm() {
+    handleResetDefaultImage()
+    handleResetRestoreProject()
+  }
+  
   const [uploadImageErr, setUploadImageErr] = useState('')
 
   const {
@@ -101,7 +113,7 @@ export function CreateProject() {
       size="md"
       title={t('cloud:project_manager.add_project.title')}
       isDone={isSuccessCreateProject}
-      resetData={handleResetDefaultImage}
+      resetData={handleResetForm}
       body={
         <Form<CreateProjectDTO['data'], typeof CreateProjectSchema>
           id="create-project"
@@ -130,16 +142,12 @@ export function CreateProject() {
               })
             }
             if (getValueUploadRestoreProject('backup') != null) {
+              const dataBackup = JSON.parse(getValueUploadRestoreProject('backup'))
               await mutateAsyncUploadProjectFile({
                 projectId: dataCreateProject.id,
-                backup: getValueUploadRestoreProject('backup')
-              })
-              mutateUpdateProject({
-                data: {
-                  name: dataCreateProject.name,
-                  description: dataCreateProject.description
-                },
-                projectId: dataCreateProject.id,
+                backup: {
+                  backup: dataBackup
+                }
               })
             }
           }}
@@ -262,8 +270,7 @@ export function CreateProject() {
                               src={btnRemoveIcon}
                               className="text-secondary-700 hover:text-primary-400 cursor-pointer"
                               onClick={() => {
-                                setValueUploadRestoreProject('backup', null)
-                                setRestoreProjectFileName('')
+                                handleResetRestoreProject
                               }}
                             />
                           </div>

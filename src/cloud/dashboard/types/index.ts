@@ -51,3 +51,14 @@ export const aggSchema = z.enum([
   'SMA',
   'FFT',
 ] as const)
+
+export const widgetCategorySchema = z.enum([
+  'LINE',
+  'BAR',
+  'PIE',
+  'GAUGE',
+  'CARD',
+  'MAP',
+  'TABLE',
+  'CONTROLLER',
+] as const)
