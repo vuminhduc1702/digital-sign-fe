@@ -17,9 +17,6 @@ import {
 } from '~/components/SVGIcons'
 import { useState } from 'react'
 
-// import { content } from 'html2canvas/dist/types/css/property-descriptors/content'
-// import { divIcon } from 'leaflet'
-
 const schema = z.object({
   identifier: emailSchema,
   password: passwordSchema,
@@ -36,11 +33,13 @@ type LoginFormProps = {
 
 export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { t } = useTranslation()
+
   const [showPassword, setShowPassword] = useState(false)
   const login = useLogin()
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
+
   return (
     <div>
       <Form<LoginValues>

@@ -55,7 +55,6 @@ export function SectionPackageData() {
       }
     }
   }
-  console.log(PackofDataRef.current?.filter(item => item.state === 'true'))
 
   const responsive = {
     superLargeDesktop: {

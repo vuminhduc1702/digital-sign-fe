@@ -84,7 +84,7 @@ function SideNavigation() {
 
   useEffect(() => {
     setValue(routerLink[1])
-  }, [location])
+  }, [location.pathname])
 
   return (
     <div className="px-8 py-7">
@@ -226,7 +226,7 @@ function SideNavigation() {
           </AccordionContent> */}
         </AccordionItem>
 
-        <AccordionItem value="intergration">
+        <AccordionItem value="integration">
           <AccordionTrigger>
             <img
               src={tichhopIcon}
