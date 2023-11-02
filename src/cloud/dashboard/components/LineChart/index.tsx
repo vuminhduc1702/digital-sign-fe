@@ -79,7 +79,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
           }
         })
 
-        return result.sort((a, b) => a.ts - b.ts).slice(-10)
+        return result.sort((a, b) => a.ts - b.ts)
       },
       [],
     )
@@ -127,6 +127,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
             <Tooltip />
             <Legend />
             {Object.keys(newValuesRef.current).map((key, index) => {
+              console.log('key', key)
               return (
                 <Line
                   key={index.toString()}
@@ -135,16 +136,18 @@ export function LineChart({ data }: { data: TimeSeries }) {
                   dataKey={key}
                   animationDuration={250}
                   stroke={
-                    key.includes('SMA') || key.includes('FFT') ? '#2c2c2c' :
-                    index === 0
+                    key.includes('SMA') || key.includes('FFT')
+                      ? '#2c2c2c'
+                      : index === 0
                       ? '#e8c1a0'
                       : index === 1
                       ? '#f47560'
                       : '#f1e15b'
                   }
                   fill={
-                    key.includes('SMA') || key.includes('FFT') ? '#2c2c2c' :
-                    index === 0
+                    key.includes('SMA') || key.includes('FFT')
+                      ? '#2c2c2c'
+                      : index === 0
                       ? '#e8c1a0'
                       : index === 1
                       ? '#f47560'

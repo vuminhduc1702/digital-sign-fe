@@ -21,7 +21,7 @@ import {
   useCreateSubcription,
   type CreateSubcriptionDTO,
 } from '../../api/subcriptionAPI/createSubcription'
-import { Plan, PlanlvList } from '~/cloud/billingPackage'
+import { Plan, type PlanlvList } from '~/cloud/billingPackage'
 
 export const entitySubcriptionSchema = z.object({
   plan_id: z
@@ -307,9 +307,7 @@ export function CreateSubcription() {
                       <InputField
                         label={t('billing:subcription.popup.quantity')}
                         error={formState.errors['register']}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                          handleOnChange(e.target.value)
-                        }
+                        onChange={e => handleOnChange(e.target.value)}
                         registration={register('register')}
                       />
                     )}
