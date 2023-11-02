@@ -193,7 +193,7 @@ type CreateWidgetProps = {
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
+const widgetDataTypeOptions: SelectOptionGeneric<WidgetDataType>[] = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -265,7 +265,8 @@ export function CreateWidget({
     control: control,
   })
   const [aggValue, setAggValue] = useState('')
-  const [widgetDataTypeValue, setWidgetDataTypeValue] = useState('')
+  const [widgetDataTypeValue, setWidgetDataTypeValue] =
+    useState<WidgetDataType>('REALTIME')
 
   useEffect(() => {
     append({
@@ -806,12 +807,14 @@ export function CreateWidget({
                           registration={register(
                             `widgetSetting.dataType` as const,
                           )}
-                          options={widgetDataType.map(dataType => ({
+                          options={widgetDataTypeOptions.map(dataType => ({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
                           onChange={e => {
-                            setWidgetDataTypeValue(e.target.value)
+                            setWidgetDataTypeValue(
+                              e.target.value as WidgetDataType,
+                            )
                           }}
                         />
 

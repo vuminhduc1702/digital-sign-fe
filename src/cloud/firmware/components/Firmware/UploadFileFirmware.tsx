@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { Form } from '~/components/Form'
+import { Form, InputField } from '~/components/Form'
 import { type UpdateFirmwareDTO } from '../../api/firmwareAPI'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -11,7 +11,10 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn } from '~/utils/misc'
-import { type UploadFileFirmWareDTO, useUploadFileFireWare } from '../../api/firmwareAPI/uploadFileFirmware'
+import {
+  type UploadFileFirmWareDTO,
+  useUploadFileFireWare,
+} from '../../api/firmwareAPI/uploadFileFirmware'
 import * as z from 'zod'
 import i18n from '~/i18n'
 
@@ -22,8 +25,7 @@ type UploadFileFirmWareProps = {
 }
 
 export const uploadFileSchema = z.object({
-  file: z
-    .instanceof(File, { message: i18n.t('cloud:firmware.choose_file') })
+  file: z.instanceof(File, { message: i18n.t('cloud:firmware.choose_file') }),
 })
 export function UploadFileFirmWare({
   firmwareId,
@@ -106,13 +108,17 @@ export function UploadFileFirmWare({
                         <XMarkIcon className="h-5 w-5" aria-hidden="true" />
                       </button>
                     )}
-                    <input id="file" type="file" onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                      if (e.target.files) {
-                        setFile(e.target.files[0])
-                        setValue('file', e.target.files[0])
-                        setError('file', { message: '' })
-                      }
-                    }} />
+                    <InputField
+                      id="file"
+                      type="file"
+                      onChange={e => {
+                        if (e.target.files) {
+                          setFile(e.target.files[0])
+                          setValue('file', e.target.files[0])
+                          setError('file', { message: '' })
+                        }
+                      }}
+                    />
                   </div>
                   <p className="text-body-sm text-primary-400">
                     {formState?.errors?.file?.message}

@@ -317,7 +317,7 @@ export function PackageInfo() {
                       classnamefieldwrapper="flex items-center gap-x-3"
                       classlabel="w-2/12"
                       classchild="w-10/12"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      onChange={e => {
                         if (
                           parseNumber(e.target.value) >
                           parseNumberCalUnit(
@@ -592,7 +592,7 @@ export function PackageInfo() {
                       registration={register('price')}
                       classnamefieldwrapper="flex items-center gap-x-3"
                       type="number"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      onChange={e =>
                         estimates === 'fix' &&
                         handleOnChange(
                           '',
@@ -639,7 +639,7 @@ export function PackageInfo() {
                 {estimates !== 'fix' && (
                   <InputField
                     label={t('billing:package_manage.popup.expected_number')}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    onChange={e =>
                       handleOnChange(
                         e.target.value,
                         getValues('tax'),

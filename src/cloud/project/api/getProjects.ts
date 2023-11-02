@@ -27,7 +27,7 @@ export const useProjects = ({ config }: UseProjectsOptions = {}) => {
 
   const result = ProjectListSchema.safeParse(projectQuery.data)
   if (!result.success) {
-    console.error('error api: ', result.error.issues)
+    console.error('error getProjects api: ', result.error.issues)
   }
 
   return projectQuery
