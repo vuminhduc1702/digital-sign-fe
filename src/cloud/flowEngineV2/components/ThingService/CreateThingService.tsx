@@ -34,12 +34,7 @@ import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '~/components/Tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/Tooltip'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -83,6 +78,9 @@ type CreateServiceProps = {
   thingServiceData?: ThingService[]
 }
 
+export const numberInput = ['i32', 'i64', 'f32', 'f64']
+export const defaultJSType = ['string', 'number', 'bigint', 'boolean', 'undefined', 'null', 'symbol', 'object']
+
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { t } = useTranslation()
   const { id: projectId } = storage.getProject()
@@ -92,6 +90,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
+  const [, setInputTypeValue] = useState('')
   const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
   const thingId = params.thingId as string
@@ -140,6 +139,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
+      value: item.value
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
@@ -216,7 +216,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           }}
           name={['input']}
         >
-          {({ register, formState, getValues }, { fields, append, remove }) => {
+          {({ register, formState, setError }, { fields, append, remove }) => {
             return (
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -279,6 +279,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   registration={register(
                                     `input.${index}.name` as const,
                                   )}
+                                  onChange={(e) => {
+                                    if (defaultJSType.includes(e.target.value)) {
+                                      setError(`input.${index}.name`, {message: t('cloud:custom_protocol.service.service_input.name_error')})
+                                    } else {
+                                      setError(`input.${index}.name`, {message: ''})
+                                    }
+                                  }}
                                 />
                                 <SelectField
                                   label={t(
@@ -292,7 +299,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                     `input.${index}.type` as const,
                                   )}
                                   options={outputList}
-                                  className="h-9"
+                                  className="h-9 pl-2 pr-2"
+                                  onChange={(e) => {
+                                    setInputTypeValue(e.target.value)
+                                    fields[index].type = e.target.value
+                                  }}
                                 />
                               </div>
                               <InputField
@@ -305,6 +316,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 registration={register(
                                   `input.${index}.value` as const,
                                 )}
+                                type={ numberInput.includes(fields[index].type as string) ? "number": "text" }
+                                pattern={ fields[index].type === 'bool' ? "[A-Za-z]" : ""}
                               />
                             </div>
                             <Button
