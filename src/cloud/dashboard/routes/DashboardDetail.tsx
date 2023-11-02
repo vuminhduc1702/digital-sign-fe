@@ -42,7 +42,7 @@ import {
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
 
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
+import { DeleteIcon, EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
@@ -107,8 +107,8 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const widgetListRef = useRef<Widget>({})
-  const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
+  const [widgetList, setWidgetList] = useState<Widget>(widgetDetailDB ?? {})
+  console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -122,7 +122,7 @@ export function DashboardDetail() {
 
   useEffect(() => {
     if (widgetDetailDB != null) {
-      widgetListRef.current = widgetDetailDB
+      // widgetListRef.current = widgetDetailDB
 
       const widgetIdList = Object.keys(widgetDetailDB)
       if (widgetIdList.length > 0) {
@@ -155,7 +155,7 @@ export function DashboardDetail() {
         })
       }
     } else if (widgetDetailDB == null && Object.keys(widgetList).length > 0) {
-      widgetListRef.current = widgetList
+      // widgetListRef.current = widgetList
 
       const widgetIdList = Object.keys(widgetList)
       if (widgetIdList.length > 0) {
@@ -249,13 +249,13 @@ export function DashboardDetail() {
                       ...widgetList,
                     },
               ).map((widgetId, index) => {
-                const allWidgetData =
-                  Object.keys(widgetList).length === 0
-                    ? widgetDetailDB
-                    : {
-                        ...widgetDetailDB,
-                        ...widgetList,
-                      }
+                // const allWidgetData =
+                //   Object.keys(widgetList).length === 0
+                //     ? widgetDetailDB
+                //     : {
+                //         ...widgetDetailDB,
+                //         ...widgetList,
+                //       }
 
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
@@ -305,16 +305,15 @@ export function DashboardDetail() {
                             layout => layout.i === widgetId,
                           )
                         : {
-                            x: index % 2 === 0 ? 0 : 4,
-                            // x: index % 2 === 0 ? 0 : 6,
+                            // x: index % 2 === 0 ? 0 : 4,
+                            x: index % 2 === 0 ? 0 : 6,
                             y: 0,
-                            // w: 6,
                             w:
-                              allWidgetData?.[widgetId]?.description === 'CARD'
+                              widgetList?.[widgetId]?.description === 'CARD'
                                 ? 3
-                                : 4,
+                                : 6,
                             h:
-                              allWidgetData?.[widgetId]?.description === 'CARD'
+                              widgetList?.[widgetId]?.description === 'CARD'
                                 ? 1
                                 : 3,
                           }
@@ -326,32 +325,46 @@ export function DashboardDetail() {
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
-                      {allWidgetData?.[widgetId]?.title ?? ''}
+                      {widgetList?.[widgetId]?.title ?? ''}
                     </p>
-                    {allWidgetData?.[widgetId]?.description === 'LINE' ? (
+                    {widgetList?.[widgetId]?.description === 'LINE' ? (
                       <LineChart data={realtimeValues} />
-                    ) : allWidgetData?.[widgetId]?.description === 'BAR' ? (
+                    ) : widgetList?.[widgetId]?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} />
-                    ) : allWidgetData?.[widgetId]?.description === 'PIE' ? (
+                    ) : widgetList?.[widgetId]?.description === 'PIE' ? (
                       <PieChart data={lastestValues} />
-                    ) : allWidgetData?.[widgetId]?.description === 'MAP' ? (
+                    ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
-                    ) : allWidgetData?.[widgetId]?.description === 'GAUGE' ? (
+                    ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
                       <GaugeChart data={lastestValueOneDevice} />
-                    ) : allWidgetData?.[widgetId]?.description === 'TABLE' ? (
+                    ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}
                         className="h-full p-5"
                       />
-                    ) : allWidgetData?.[widgetId]?.description === 'CARD' ? (
+                    ) : widgetList?.[widgetId]?.description === 'CARD' ? (
                       <CardChart data={lastestValueOneDevice} />
-                    ) : allWidgetData?.[widgetId]?.description ===
-                      'CONTROLLER' ? (
+                    ) : widgetList?.[widgetId]?.description === 'CONTROLLER' ? (
                       <ControllerButton
                         data={
-                          allWidgetData?.[widgetId]?.datasource
-                            ?.controller_message
+                          widgetList?.[widgetId]?.datasource?.controller_message
                         }
+                      />
+                    ) : null}
+                    {isEditMode ? (
+                      <DeleteIcon
+                        width={20}
+                        height={20}
+                        className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer text-secondary-700 hover:text-primary-400"
+                        viewBox="0 0 20 20"
+                        onClick={() => {
+                          if (widgetList?.hasOwnProperty(widgetId)) {
+                            const { [widgetId]: deletedKey, ...newObject } =
+                              widgetList
+                            console.log('newObject', newObject)
+                            setWidgetList(newObject)
+                          }
+                        }}
                       />
                     ) : null}
                   </div>
@@ -371,7 +384,7 @@ export function DashboardDetail() {
               variant="secondary"
               size="square"
               onClick={() => {
-                setWidgetList({})
+                setWidgetList(widgetDetailDB ?? {})
                 widgetListRef.current = {}
                 detailDashboardRefetch()
                 setLayoutDashboard(
@@ -395,14 +408,14 @@ export function DashboardDetail() {
                 setIsEditMode(false)
 
                 if (detailDashboard != null) {
-                  if (Object.keys(widgetListRef.current).length !== 0) {
+                  if (Object.keys(widgetList).length !== 0) {
                     mutateUpdateDashboard({
                       data: {
                         title: detailDashboard?.title,
                         configuration: {
                           description:
                             detailDashboard?.configuration?.description,
-                          widgets: widgetListRef.current,
+                          widgets: widgetList,
                         },
                         dashboard_setting: {
                           layout: layoutDashboard,

@@ -17,6 +17,7 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 import { type TimeSeries } from '../../types'
 
 export function LineChart({ data }: { data: TimeSeries }) {
+  // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -127,7 +128,6 @@ export function LineChart({ data }: { data: TimeSeries }) {
             <Tooltip />
             <Legend />
             {Object.keys(newValuesRef.current).map((key, index) => {
-              console.log('key', key)
               return (
                 <Line
                   key={index.toString()}

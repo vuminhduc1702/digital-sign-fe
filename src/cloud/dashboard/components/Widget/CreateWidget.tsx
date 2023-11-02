@@ -46,6 +46,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { preview } from 'vite'
 
 export const attrWidgetSchema = z.array(
   z.object({
@@ -467,7 +468,7 @@ export function CreateWidget({
               }
 
               widgetListRef.current[widgetId] = widget
-              setWidgetList(widgetListRef.current)
+              setWidgetList(prev => ({...prev, ...widgetListRef.current}))
 
               close()
             })}
@@ -880,7 +881,7 @@ export function CreateWidget({
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.endDate')}
                             error={
-                              watch('widgetSetting.dataType') === 'REALTIME'
+                              widgetDataTypeValue === 'REALTIME'
                                 ? ''
                                 : formState?.errors?.widgetSetting?.startDate
                             }
@@ -903,8 +904,7 @@ export function CreateWidget({
                                           !value && 'text-secondary-700',
                                         )}
                                         disabled={
-                                          watch('widgetSetting.dataType') ===
-                                          'REALTIME'
+                                          widgetDataTypeValue === 'REALTIME'
                                         }
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />

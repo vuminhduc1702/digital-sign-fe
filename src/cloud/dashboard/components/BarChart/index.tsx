@@ -1,5 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { type BarDatum, ResponsiveBar } from '@nivo/bar'
+import {
+  BarChart as BarReChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
@@ -13,10 +22,10 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
-    BarDatum[]
+    Array<{ time: string; [key: string]: string | number }>
   >([
     {
-      time: 0,
+      time: '',
     },
   ])
 
@@ -55,22 +64,26 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
   function dataManipulation() {
     const barWidgetDataType = Object.entries(
       newValuesRef.current as TimeSeries,
-    ).reduce((result: BarDatum[], [key, items]) => {
-      items.forEach(item => {
-        const time = item.ts
-        const value = parseFloat(item.value)
-        const existingIndex = result.findIndex(obj => obj.time === time)
-        if (existingIndex === -1) {
-          result.push({ time, [key]: value })
-        } else {
-          result[existingIndex][key] = value
-        }
-      })
+    ).reduce(
+      (
+        result: Array<{ time: number; [key: string]: string | number }>,
+        [key, items],
+      ) => {
+        items.forEach(item => {
+          const time = item.ts
+          const value = parseFloat(item.value)
+          const existingIndex = result.findIndex(obj => obj.time === time)
+          if (existingIndex === -1) {
+            result.push({ time, [key]: value })
+          } else {
+            result[existingIndex][key] = value
+          }
+        })
 
-      return result
-        .sort((a, b) => (a.time as number) - (b.time as number))
-        .slice(-10)
-    }, [])
+        return result.sort((a, b) => (a.time as number) - (b.time as number))
+      },
+      [],
+    )
 
     setDataTransformedFeedToChart(
       barWidgetDataType.map(item => {
@@ -106,73 +119,40 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
   return (
     <>
       {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
-        <ResponsiveBar
-          data={dataTransformedFeedToChart}
-          keys={Object.keys(newValuesRef.current)}
-          indexBy="time"
-          colors={{ scheme: 'nivo' }}
-          margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
-          padding={0.3}
-          valueScale={{ type: 'linear' }}
-          indexScale={{ type: 'band', round: true }}
-          borderColor={{
-            from: 'color',
-            modifiers: [['darker', 1.6]],
-          }}
-          axisTop={null}
-          axisRight={null}
-          axisBottom={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Thời gian',
-            legendPosition: 'middle',
-            legendOffset: 32,
-          }}
-          axisLeft={{
-            tickSize: 5,
-            tickPadding: 5,
-            tickRotation: 0,
-            legend: 'Giá trị',
-            legendPosition: 'middle',
-            legendOffset: -40,
-          }}
-          labelSkipWidth={12}
-          labelSkipHeight={12}
-          labelTextColor={{
-            from: 'color',
-            modifiers: [['darker', 1.6]],
-          }}
-          legends={[
-            {
-              dataFrom: 'keys',
-              anchor: 'bottom-right',
-              direction: 'column',
-              justify: false,
-              translateX: 120,
-              translateY: 0,
-              itemsSpacing: 2,
-              itemWidth: 100,
-              itemHeight: 20,
-              itemDirection: 'left-to-right',
-              itemOpacity: 0.85,
-              symbolSize: 20,
-              effects: [
-                {
-                  on: 'hover',
-                  style: {
-                    itemOpacity: 1,
-                  },
-                },
-              ],
-            },
-          ]}
-          role="application"
-          ariaLabel="Bar chart"
-          barAriaLabel={e =>
-            e.id + ': ' + e.formattedValue + ' in device: ' + e.indexValue
-          }
-        />
+        <ResponsiveContainer width="98%" height="90%" className="pt-8">
+          <BarReChart data={dataTransformedFeedToChart}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="time" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            {Object.keys(newValuesRef.current).map((key, index) => {
+              return (
+                <Bar
+                  key={index.toString()}
+                  dataKey={key}
+                  animationDuration={250}
+                  barSize={10}
+                  stroke={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                  fill={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                />
+              )
+            })}
+            {/* stackId="a" */}
+          </BarReChart>
+        </ResponsiveContainer>
       ) : (
         <div className="flex h-full items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
