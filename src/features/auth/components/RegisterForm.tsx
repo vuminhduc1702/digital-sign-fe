@@ -168,7 +168,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                       })
                       .catch(error => {
                         setBtnOtpDisable(false)
-                        console.log(error)
+                        // console.log(error)
                       })
                   }
                 }}
