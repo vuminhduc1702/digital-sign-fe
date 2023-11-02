@@ -106,8 +106,8 @@ export function DashboardDetail() {
     })
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
-  const widgetListRef = useRef<Widget | ControllerBtn>({})
-  const [widgetList, setWidgetList] = useState<Widget | ControllerBtn>({})
+  const widgetListRef = useRef<Widget>({})
+  const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
@@ -365,7 +365,7 @@ export function DashboardDetail() {
         )}
 
         {isEditMode ? (
-          <div className="flex justify-end p-3">
+          <div className="absolute bottom-0 right-0 flex p-3">
             <Button
               className="ml-2 rounded border-none p-3"
               variant="secondary"
@@ -653,7 +653,7 @@ export function DashboardDetail() {
             )}
           </div>
         ) : (
-          <div className="flex justify-end p-3">
+          <div className="absolute bottom-0 right-0 p-3">
             <Button
               className="rounded"
               form="update-dashboard"

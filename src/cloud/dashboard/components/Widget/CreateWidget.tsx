@@ -189,8 +189,8 @@ type CreateWidgetProps = {
   isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget | ControllerBtn>
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget | ControllerBtn>>
+  widgetListRef: React.MutableRefObject<Widget>
+  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
 const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
