@@ -4,7 +4,7 @@ import * as z from 'zod'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
@@ -106,9 +106,8 @@ export function DashboardDetail() {
     })
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
-  const widgetListRef = useRef<Widget>({})
-  const [widgetList, setWidgetList] = useState<Widget>(widgetDetailDB ?? {})
-  console.log('widgetList', widgetList)
+  const [widgetList, setWidgetList] = useState<Widget>({})
+  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -122,78 +121,36 @@ export function DashboardDetail() {
 
   useEffect(() => {
     if (widgetDetailDB != null) {
-      // widgetListRef.current = widgetDetailDB
-
-      const widgetIdList = Object.keys(widgetDetailDB)
-      if (widgetIdList.length > 0) {
-        widgetIdList.map(widgetId => {
-          const dataSource = widgetDetailDB?.[widgetId]?.datasource
-          if (
-            dataSource.init_message !== '' &&
-            dataSource.init_message != null
-          ) {
-            handleSendMessage(dataSource.init_message)
-          }
-          if (
-            dataSource.realtime_message !== '' &&
-            dataSource.realtime_message != null
-          ) {
-            handleSendMessage(dataSource.realtime_message)
-          }
-          if (
-            dataSource.history_message !== '' &&
-            dataSource.history_message != null
-          ) {
-            handleSendMessage(dataSource.history_message)
-          }
-          if (
-            dataSource.lastest_message !== '' &&
-            dataSource.lastest_message != null
-          ) {
-            handleSendMessage(dataSource.lastest_message)
-          }
-        })
-      }
-    } else if (widgetDetailDB == null && Object.keys(widgetList).length > 0) {
-      // widgetListRef.current = widgetList
-
-      const widgetIdList = Object.keys(widgetList)
-      if (widgetIdList.length > 0) {
-        widgetIdList.map(widgetId => {
-          const dataSource = widgetList?.[widgetId]?.datasource
-          if (
-            dataSource.init_message !== '' &&
-            dataSource.init_message != null
-          ) {
-            handleSendMessage(dataSource.init_message)
-          }
-          if (
-            dataSource.realtime_message !== '' &&
-            dataSource.realtime_message != null
-          ) {
-            handleSendMessage(dataSource.realtime_message)
-          }
-          if (
-            dataSource.history_message !== '' &&
-            dataSource.history_message != null
-          ) {
-            handleSendMessage(dataSource.history_message)
-          }
-          if (
-            dataSource.lastest_message !== '' &&
-            dataSource.lastest_message != null
-          ) {
-            handleSendMessage(dataSource.lastest_message)
-          }
-        })
-      }
+      setWidgetList(widgetDetailDB)
     }
-  }, [
-    widgetDetailDB,
-    handleSendMessage,
-    widgetList,
-    Object.keys(widgetList).length,
-  ])
+  }, [widgetDetailDB])
+
+  useEffect(() => {
+    Object.values(widgetList).forEach(widget => {
+      const dataSource = widget?.datasource
+      if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
+        handleSendMessage(dataSource.init_message)
+      }
+      if (
+        dataSource?.realtime_message !== '' &&
+        dataSource?.realtime_message != null
+      ) {
+        handleSendMessage(dataSource?.realtime_message)
+      }
+      if (
+        dataSource?.history_message !== '' &&
+        dataSource?.history_message != null
+      ) {
+        handleSendMessage(dataSource?.history_message)
+      }
+      if (
+        dataSource?.lastest_message !== '' &&
+        dataSource?.lastest_message != null
+      ) {
+        handleSendMessage(dataSource?.lastest_message)
+      }
+    })
+  }, [handleSendMessage, widgetList, Object.keys(widgetList).length])
 
   function combinedObject(data: Array<TimeSeries>) {
     let combinedObject: TimeSeries = {}
@@ -241,22 +198,7 @@ export function DashboardDetail() {
             onLayoutChange={e => setLayoutDashboard(e)}
           >
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
-              Object.keys(
-                Object.keys(widgetList).length === 0
-                  ? widgetDetailDB
-                  : {
-                      ...widgetDetailDB,
-                      ...widgetList,
-                    },
-              ).map((widgetId, index) => {
-                // const allWidgetData =
-                //   Object.keys(widgetList).length === 0
-                //     ? widgetDetailDB
-                //     : {
-                //         ...widgetDetailDB,
-                //         ...widgetList,
-                //       }
-
+              Object.keys(widgetList).map((widgetId, index) => {
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -361,7 +303,6 @@ export function DashboardDetail() {
                           if (widgetList?.hasOwnProperty(widgetId)) {
                             const { [widgetId]: deletedKey, ...newObject } =
                               widgetList
-                            console.log('newObject', newObject)
                             setWidgetList(newObject)
                           }
                         }}
@@ -385,7 +326,6 @@ export function DashboardDetail() {
               size="square"
               onClick={() => {
                 setWidgetList(widgetDetailDB ?? {})
-                widgetListRef.current = {}
                 detailDashboardRefetch()
                 setLayoutDashboard(
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
@@ -408,31 +348,20 @@ export function DashboardDetail() {
                 setIsEditMode(false)
 
                 if (detailDashboard != null) {
-                  if (Object.keys(widgetList).length !== 0) {
-                    mutateUpdateDashboard({
-                      data: {
-                        title: detailDashboard?.title,
-                        configuration: {
-                          description:
-                            detailDashboard?.configuration?.description,
-                          widgets: widgetList,
-                        },
-                        dashboard_setting: {
-                          layout: layoutDashboard,
-                        },
+                  mutateUpdateDashboard({
+                    data: {
+                      title: detailDashboard?.title,
+                      configuration: {
+                        description:
+                          detailDashboard?.configuration?.description,
+                        widgets: widgetList,
                       },
-                      dashboardId,
-                    })
-                  } else {
-                    mutateUpdateDashboard({
-                      data: {
-                        title: detailDashboard?.title,
-                        configuration: detailDashboard?.configuration,
-                        dashboard_setting: detailDashboard?.dashboard_setting,
+                      dashboard_setting: {
+                        layout: layoutDashboard,
                       },
-                      dashboardId,
-                    })
-                  }
+                    },
+                    dashboardId,
+                  })
                 }
               }}
               startIcon={
@@ -465,7 +394,6 @@ export function DashboardDetail() {
                 isMultipleDevice={isMultipleDevice}
                 isOpen={isShowCreateWidget}
                 close={() => setIsShowCreateWidget(false)}
-                widgetListRef={widgetListRef}
                 setWidgetList={setWidgetList}
               />
             ) : isShowCreateControllerBtn ? (
@@ -473,7 +401,6 @@ export function DashboardDetail() {
                 widgetCategory={widgetCategory}
                 isOpen={isShowCreateControllerBtn}
                 close={() => setIsShowCreateControllerBtn(false)}
-                widgetListRef={widgetListRef}
                 setWidgetList={setWidgetList}
               />
             ) : (

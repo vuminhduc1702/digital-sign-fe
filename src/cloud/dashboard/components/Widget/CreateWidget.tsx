@@ -46,7 +46,6 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { preview } from 'vite'
 
 export const attrWidgetSchema = z.array(
   z.object({
@@ -190,7 +189,6 @@ type CreateWidgetProps = {
   isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget>
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
@@ -206,7 +204,6 @@ export function CreateWidget({
   isMultipleDevice,
   isOpen,
   close,
-  widgetListRef,
   setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
@@ -259,7 +256,7 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  console.log('zod errors', formState.errors)
+  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -467,8 +464,7 @@ export function CreateWidget({
                     : null,
               }
 
-              widgetListRef.current[widgetId] = widget
-              setWidgetList(prev => ({...prev, ...widgetListRef.current}))
+              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
               close()
             })}
