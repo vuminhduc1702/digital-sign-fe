@@ -46,26 +46,18 @@ export const controllerBtnCreateSchema = z.object({
   title: z.string(),
   thing_id: z.string(),
   handle_service: z.string(),
-  input: z
-    .array(
-      z.object({
-        name: selectOptionSchema(),
-        value: z.string(),
-      }),
-    )
-    .refine(
-      values =>
-        values.forEach(val => {
-          console.log('val', val)
-          return val.name.label !== ''
-        }),
-      {
+  input: z.array(
+    z.object({
+      name: selectOptionSchema().refine(val => val.value !== '', {
         message: i18n.t('cloud:custom_protocol.service.choose_input'),
-      },
-    )
-    .refine(values => values.forEach(val => val.value !== ''), {
-      message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+      }),
+      value: z
+        .string()
+        .min(1, {
+          message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+        }),
     }),
+  ),
   id: z.string().optional(),
 })
 
@@ -407,7 +399,7 @@ export function CreateControllerButton({
                             value={watch(`input.${index}.name`)}
                           />
                           <p className="text-body-sm text-primary-400">
-                            {formState?.errors?.input?.message}
+                            {formState?.errors?.input?.[index]?.name?.message}
                           </p>
                         </div>
                         <InputField

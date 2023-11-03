@@ -50,7 +50,9 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: selectOptionSchema(),
+    attribute_key: selectOptionSchema().refine(val => val.value !== '', {
+      message: i18n.t('cloud:org_manage.org_manage.add_attr.choose_attr'),
+    }),
     label: z.string(),
     color: z.string(),
     unit: z.string(),
@@ -495,7 +497,6 @@ export function CreateWidget({
                     />
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t(
                           'cloud:org_manage.device_manage.add_device.parent',
                         )}
@@ -523,7 +524,6 @@ export function CreateWidget({
                       <SelectDropdown
                         label={t('cloud:dashboard.config_chart.device')}
                         name="device"
-                        isClearable
                         control={control}
                         options={
                           deviceData != null
