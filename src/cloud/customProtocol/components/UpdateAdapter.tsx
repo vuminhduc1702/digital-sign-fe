@@ -44,13 +44,15 @@ import { CodeEditor } from './CodeEditor'
 import TitleBar from '~/components/Head/TitleBar'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
-import { inputService, type EntityThingList } from '../types'
+import { inputService, type EntityThingList, FieldsType } from '../types'
 import { type BasePagination } from '~/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { cn } from '~/utils/misc'
 
 type UpdateDeviceProps = {
   close: () => void
@@ -73,6 +75,7 @@ export function UpdateAdapter({
   isOpen,
   thingData,
   refetchThingData,
+  schema,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
@@ -94,6 +97,8 @@ export function UpdateAdapter({
     label: handle_service,
     value: handle_service,
   })
+  const [contentType, setContentType] = useState(content_type)
+  const [isShow, setIsShow] = useState(true)
 
   const {
     mutate: mutateThing,
@@ -143,6 +148,19 @@ export function UpdateAdapter({
     useState(false)
   const protocolTypeRef = useRef(protocol)
 
+  const renderFields = () => {
+    const schemaParse = typeof schema === 'string' ? JSON.parse(schema) : null
+    const result =
+      (schemaParse.fields &&
+        schemaParse.fields.map((item: FieldsType) => ({
+          name: item.name,
+          start_byte: item.start_byte,
+          length_byte: item.end_byte - item.start_byte,
+        }))) ||
+      []
+    return result
+  }
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -181,6 +199,13 @@ export function UpdateAdapter({
         className="flex flex-col justify-between"
         onSubmit={values => {
           // console.log('adapter values', values)
+          const fields =
+            values.fields.length &&
+            values.fields.map(item => ({
+              name: item.name,
+              start_byte: parseInt(item.start_byte),
+              end_byte: parseInt(item.start_byte) + parseInt(item.length_byte),
+            }))
           if (protocolType === 'mqtt') {
             mutate({
               data: {
@@ -192,6 +217,9 @@ export function UpdateAdapter({
                 handle_service: values.handle_service,
                 host: values.host,
                 port: values.port,
+                schema: {
+                  fields,
+                },
                 configuration: {
                   credentials: {
                     username: values.configuration.credentials.username,
@@ -215,13 +243,16 @@ export function UpdateAdapter({
                 content_type: values.content_type,
                 thing_id: values.thing_id,
                 handle_service: values.handle_service,
+                schema: {
+                  fields,
+                },
               },
               id,
             })
           }
         }}
         schema={adapterSchema}
-        name={['configuration.topic_filters']}
+        name={['configuration.topic_filters', 'fields']}
         options={{
           defaultValues: {
             name,
@@ -233,12 +264,14 @@ export function UpdateAdapter({
             thing_id,
             configuration:
               configuration !== 'null' ? JSON.parse(configuration) : null,
+            fields: renderFields(),
           },
         }}
       >
         {(
           { register, formState, control, watch, setValue },
           { fields, append, remove },
+          { append: appendSchema, fields: fieldsSchema, remove: removeSchema },
         ) => {
           // console.log('zod adapter errors: ', formState.errors)
           setIsCreateAdapterFormUpdated(formState.isDirty)
@@ -319,7 +352,119 @@ export function UpdateAdapter({
                           error={formState.errors['content_type']}
                           registration={register('content_type')}
                           options={contentTypeList}
+                          onChange={event =>
+                            setContentType(
+                              String(event.target.value).toLowerCase(),
+                            )
+                          }
                         />
+                        {contentType !== 'json' ? (
+                          <div className="space-y-6">
+                            <div className="flex justify-between space-x-3">
+                              <TitleBar
+                                title={t(
+                                  'cloud:custom_protocol.adapter.new_template',
+                                )}
+                                className="w-full rounded-md bg-gray-500 pl-3"
+                              />
+                              <div
+                                className="flex cursor-pointer items-center"
+                                onClick={() => setIsShow(!isShow)}
+                              >
+                                {isShow ? (
+                                  <ChevronDownIcon className="h-5 w-5" />
+                                ) : (
+                                  <ChevronRightIcon className="h-5 w-5" />
+                                )}
+                              </div>
+                              <Button
+                                className="rounded-md"
+                                variant="trans"
+                                size="square"
+                                startIcon={
+                                  <PlusIcon
+                                    width={16}
+                                    height={16}
+                                    viewBox="0 0 16 16"
+                                  />
+                                }
+                                onClick={() =>
+                                  appendSchema({
+                                    name: '',
+                                    start_byte: '',
+                                    length_byte: '',
+                                  })
+                                }
+                              />
+                            </div>
+                            {fieldsSchema.map((field, index) => (
+                              <section
+                                className={cn(
+                                  'mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4',
+                                  {
+                                    hidden: !isShow,
+                                  },
+                                )}
+                                key={field.id}
+                              >
+                                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                                  <InputField
+                                    label={t(
+                                      'cloud:custom_protocol.adapter.schema.name',
+                                    )}
+                                    error={
+                                      formState.errors?.fields?.[index]?.name
+                                    }
+                                    registration={register(
+                                      `fields.${index}.name` as const,
+                                    )}
+                                  />
+                                  <InputField
+                                    label={t(
+                                      'cloud:custom_protocol.adapter.schema.start_byte',
+                                    )}
+                                    error={
+                                      formState.errors?.fields?.[index]
+                                        ?.start_byte
+                                    }
+                                    type="number"
+                                    registration={register(
+                                      `fields.${index}.start_byte` as const,
+                                    )}
+                                  />
+                                  <InputField
+                                    label={t(
+                                      'cloud:custom_protocol.adapter.schema.length_byte',
+                                    )}
+                                    error={
+                                      formState.errors?.fields?.[index]
+                                        ?.length_byte
+                                    }
+                                    type="number"
+                                    registration={register(
+                                      `fields.${index}.length_byte` as const,
+                                    )}
+                                    min="1"
+                                  />
+                                </div>
+                                <Button
+                                  type="button"
+                                  size="square"
+                                  variant="none"
+                                  className="mt-3 self-start !pr-0"
+                                  onClick={() => removeSchema(index)}
+                                  startIcon={
+                                    <img
+                                      src={btnDeleteIcon}
+                                      alt="Delete schema"
+                                      className="h-9 w-9"
+                                    />
+                                  }
+                                />
+                              </section>
+                            ))}
+                          </div>
+                        ) : null}
                         {protocolType === 'mqtt' ? (
                           <div className="space-y-6">
                             <InputField
@@ -656,7 +801,6 @@ export function UpdateAdapter({
                               'cloud:custom_protocol.service.choose',
                             )}
                             onChange={e => {
-                              console.log(e, 'hahaha')
                               setOptionService(e)
                               setValue('handle_service', e?.value)
                             }}
