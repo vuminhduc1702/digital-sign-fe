@@ -102,8 +102,9 @@ export function SectionSolution() {
           <div className="grid  justify-items-end pt-[40px]">
             <div className="h-fit w-fit ">
               <a
-                href="https://innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
+                href="https://cmp.innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
                 target="_blank"
+                rel="noreferrer"
               >
                 <Button
                   type="button"

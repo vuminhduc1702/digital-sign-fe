@@ -8,15 +8,15 @@ export function AppDebug() {
     <>
       <ContentLayout title={t('sidebar:application.vsmart_debug')}>
         <div className="">
-          <div className="grid grid-cols-2 rounded-lg px-1 py-1">
+          <div className="grid grid-cols-2 rounded-lg p-1">
             <div>
               <img
-                src="https://innoway.vn/assets/images/debug.png"
+                src="https://cmp.innoway.vn/assets/images/debug.png"
                 alt="..."
                 className="p-[15px]"
               />
             </div>
-            <div className="px-2 py-2">
+            <div className="p-2">
               <h5 className="mb-2 text-xl font-bold">
                 {t('application:debug')}
               </h5>
@@ -62,7 +62,7 @@ export function AppDebug() {
               </h5>
               <div className="flex items-center justify-center p-[15px]">
                 <img
-                  src="https://innoway.vn/assets/images/debugAdroid.png"
+                  src="https://cmp.innoway.vn/assets/images/debugAdroid.png"
                   alt=""
                 />
               </div>
@@ -83,7 +83,7 @@ export function AppDebug() {
               </h5>
               <div className="flex items-center justify-center p-[15px]">
                 <img
-                  src="https://innoway.vn/assets/images/debugIos.png"
+                  src="https://cmp.innoway.vn/assets/images/debugIos.png"
                   alt=""
                 />
               </div>

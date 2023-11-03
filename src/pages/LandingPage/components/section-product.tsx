@@ -1,15 +1,12 @@
-import React from 'react'
-import { ReactElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import Carousel from 'react-multi-carousel'
-import { StateCallBack } from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { Button } from '~/components/Button'
 
 export function SectionProduct() {
   const slides = [
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_9.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_9.jpg',
       alt: '9',
       title_h1: 'Đồng hồ thông minh',
       title_h2: 'MyKID',
@@ -17,7 +14,7 @@ export function SectionProduct() {
       href: 'https://viettel.vn/MyKID',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_7.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_7.jpg',
       alt: '17',
       title_h1: 'Quản lý tài sản',
       title_h2: 'IoT V-Tracking: Ô tô',
@@ -25,7 +22,7 @@ export function SectionProduct() {
       href: 'https://smartmotor.vn/',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_8.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_8.jpg',
       alt: '12',
       title_h1: 'Ô tô thông minh',
       title_h2: 'vTag',
@@ -33,7 +30,7 @@ export function SectionProduct() {
       href: 'https://viettel.vn/vcar',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_13.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_13.jpg',
       alt: '13',
       title_h1: 'Sức khỏe cá nhân',
       title_h2: 'VHealth',
@@ -41,7 +38,7 @@ export function SectionProduct() {
       href: '#',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_15.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_15.jpg',
       alt: '15',
       title_h1: 'Office thông minh',
       title_h2: 'Camera Al',
@@ -49,7 +46,7 @@ export function SectionProduct() {
       href: '#',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_11.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_11.jpg',
       alt: '14',
       title_h1: 'Căn hộ thông minh',
       title_h2: 'Home Camera',
@@ -57,7 +54,7 @@ export function SectionProduct() {
       href: '#',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/Pict_6.jpg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/Pict_6.jpg',
       alt: '16',
       title_h1: 'Định vị thông minh',
       title_h2: 'vTag',

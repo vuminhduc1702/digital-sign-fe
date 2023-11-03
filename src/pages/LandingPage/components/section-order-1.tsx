@@ -72,8 +72,9 @@ export function SectionOrder1() {
             </div>
             <div className="pt-8">
               <a
-                href="https://innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
+                href="https://cmp.innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
                 target="_blank"
+                rel="noreferrer"
               >
                 <Button
                   type="button"

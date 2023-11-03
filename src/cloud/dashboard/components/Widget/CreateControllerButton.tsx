@@ -18,7 +18,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { type Widget, type WidgetCategoryType } from './CreateWidget'
+import { type WidgetCategoryType } from './CreateWidget'
 import { widgetCategorySchema } from '../../types'
 import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
 import { selectOptionSchema } from '~/utils/schemaValidation'
@@ -61,15 +61,13 @@ type CreateControllerButtonProps = {
   widgetCategory: WidgetCategoryType
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget | ControllerBtn>
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget | ControllerBtn>>
+  setWidgetList: React.Dispatch<React.SetStateAction<ControllerBtn>>
 }
 
 export function CreateControllerButton({
   widgetCategory,
   isOpen,
   close,
-  widgetListRef,
   setWidgetList,
 }: CreateControllerButtonProps) {
   const { t } = useTranslation()
@@ -228,8 +226,10 @@ export function CreateControllerButton({
                 id: widgetId,
               }
 
-              widgetListRef.current[widgetId] = controllerBtn
-              setWidgetList(widgetListRef.current)
+              setWidgetList(prev => ({
+                ...prev,
+                ...{ [widgetId]: controllerBtn },
+              }))
 
               close()
             })}

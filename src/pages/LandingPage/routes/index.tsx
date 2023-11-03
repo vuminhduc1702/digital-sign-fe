@@ -27,6 +27,7 @@ import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { ControllerChart } from '~/cloud/dashboard/components'
+import { Link } from '~/components/Link'
 
 export function LandingPage() {
   const navigate = useNavigate()
@@ -179,6 +180,15 @@ export function LandingPage() {
                       className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                       sideOffset={5}
                     >
+                      <Link
+                        to="https://iot.viettel.vn/"
+                        target="_blank"
+                        className="cursor-pointer"
+                      >
+                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                          {t('user:cmp')}
+                        </DropdownMenu.Item>
+                      </Link>
                       <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {userDataFromStorage ? (
                           <p

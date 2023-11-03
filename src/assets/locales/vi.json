@@ -771,7 +771,8 @@
     "change_phone": "Đổi số điện thoại",
     "change_address": "Đổi địa chỉ",
     "create_user": "Đăng ký tài khoản thành công",
-    "copy_device_token": "Copy token thiết bị"
+    "copy_device_token": "Copy token thiết bị",
+    "cmp": "Hệ thống CMP"
   },
   "flow_engine": {
     "title": "Flow Engine"
@@ -794,7 +795,7 @@
     "json_type": "Chỉ cho phép tải file định dạng .json, .txt"
   },
   "auth": {
-    "footer_text_1": "© 2021 Developed by Technical Technology Center - TCT CNC VHT",
+    "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
     "checkbox": "Ghi nhớ",
     "from_login_to_register": "Đăng ký ",

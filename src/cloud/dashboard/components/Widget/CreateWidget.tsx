@@ -213,7 +213,7 @@ export function CreateWidget({
 
   const { id: projectId } = storage.getProject()
   const [optionOrg, setOptionOrg] = useState({
-    label: 'Không thuộc tổ chức nào',
+    label: t('search:no_org'),
     value: '',
   })
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
@@ -235,7 +235,6 @@ export function CreateWidget({
     orgId: optionOrg?.value,
     projectId,
     config: {
-      enabled: !!optionOrg?.value,
       suspense: false,
     },
   })
@@ -607,7 +606,7 @@ export function CreateWidget({
 
                   {fields.map((field, index) => (
                     <section
-                      className="mt-3 flex justify-between gap-x-2"
+                      className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
                       <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
@@ -800,7 +799,7 @@ export function CreateWidget({
                         title={t('cloud:dashboard.config_chart.widget_config')}
                         className="w-full rounded-md bg-secondary-700 pl-3"
                       />
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-4 ">
+                      <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
                           label={t('ws:filter.dataType')}
                           error={formState?.errors?.widgetSetting?.dataType}

@@ -233,6 +233,10 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
+                console.log(
+                  'realtimeWithDeviceValues',
+                  realtimeWithDeviceValues,
+                )
 
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
@@ -253,6 +257,7 @@ export function DashboardDetail() {
                   <div
                     key={widgetId}
                     data-grid={
+                      detailDashboard?.dashboard_setting?.layout != null &&
                       detailDashboard?.dashboard_setting?.layout?.length > 0 &&
                       Object.keys(widgetList).length === 0
                         ? detailDashboard?.dashboard_setting?.layout?.find(
