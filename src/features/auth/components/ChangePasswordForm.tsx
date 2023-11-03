@@ -26,7 +26,6 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
     <div>
       <Form<changePasswordDTO['data'], typeof ChangePaswordSchema>
         onSubmit={async values => {
-          console.log('values', values)
           await changePasswordMutation.mutateAsync(values)
           onSuccess()
         }}

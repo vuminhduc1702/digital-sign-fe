@@ -167,7 +167,6 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                       })
                       .catch(error => {
                         setBtnOtpDisable(false)
-                        console.log(error)
                       })
                   }
                 }}

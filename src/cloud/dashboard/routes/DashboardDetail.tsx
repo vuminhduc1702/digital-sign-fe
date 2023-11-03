@@ -42,7 +42,19 @@ import {
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
 
-import { DeleteIcon, EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
+import {
+  DeleteIcon,
+  ChartCircle,
+  ChartControl,
+  ChartData,
+  ChartGauses,
+  ChartGraph,
+  ChartLine,
+  ChartMap,
+  ChartTableData,
+  EditBtnIcon,
+  PlusIcon,
+} from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
@@ -426,12 +438,12 @@ export function DashboardDetail() {
                   </>
                 )}
               >
-                <div className="flex w-full gap-x-4">
-                  <div className="w-full space-y-3">
+                <div className="flex w-full gap-x-8">
+                  <div className="w-full space-y-6">
                     <Button
                       type="button"
                       size="square"
-                      className="w-full bg-secondary-400"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -442,7 +454,8 @@ export function DashboardDetail() {
                         setIsMultipleDevice(true)
                       }}
                     >
-                      <span>
+                      <ChartLine height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
                         {t(
                           'cloud:dashboard.detail_dashboard.add_widget.line_chart',
                         )}
@@ -451,7 +464,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="w-full bg-secondary-400"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -462,98 +475,17 @@ export function DashboardDetail() {
                         setIsMultipleDevice(true)
                       }}
                     >
-                      <span>
+                      <ChartGraph height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
                         {t(
                           'cloud:dashboard.detail_dashboard.add_widget.horizontal_bar_chart',
                         )}
                       </span>
                     </Button>
-                  </div>
-                  <div className="w-full space-y-3">
                     <Button
                       type="button"
                       size="square"
-                      className="w-full bg-secondary-400"
-                      variant="secondaryLight"
-                      onClick={() => {
-                        close()
-                        setIsShowCreateWidget(true)
-                        setWidgetType('LASTEST')
-                        setWidgetCategory('PIE')
-                        setIsMultipleAttr(true)
-                        setIsMultipleDevice(true)
-                      }}
-                    >
-                      <span>
-                        {t(
-                          'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
-                        )}
-                      </span>
-                    </Button>
-                    <Button
-                      type="button"
-                      size="square"
-                      className="w-full bg-secondary-400 active:bg-primary-300"
-                      variant="secondaryLight"
-                      onClick={() => {
-                        close()
-                        setIsShowCreateWidget(true)
-                        setWidgetType('LASTEST')
-                        setWidgetCategory('GAUGE')
-                        setIsMultipleAttr(false)
-                        setIsMultipleDevice(false)
-                      }}
-                    >
-                      <span>
-                        {t('cloud:dashboard.detail_dashboard.add_widget.gauge')}
-                      </span>
-                    </Button>
-                  </div>
-                  <div className="w-full space-y-3">
-                    <Button
-                      type="button"
-                      size="square"
-                      className="w-full bg-secondary-400"
-                      variant="secondaryLight"
-                      onClick={() => {
-                        close()
-                        setIsShowCreateWidget(true)
-                        setWidgetType('LASTEST')
-                        setWidgetCategory('CARD')
-                        setIsMultipleAttr(false)
-                        setIsMultipleDevice(false)
-                      }}
-                    >
-                      <span>
-                        {t(
-                          'cloud:dashboard.detail_dashboard.add_widget.data_chart',
-                        )}
-                      </span>
-                    </Button>
-                    <Button
-                      type="button"
-                      size="square"
-                      className="w-full bg-secondary-400 active:bg-primary-300"
-                      variant="secondaryLight"
-                      onClick={() => {
-                        close()
-                        setIsShowCreateWidget(true)
-                        setWidgetType('LASTEST')
-                        setWidgetCategory('MAP')
-                        setIsMultipleAttr(true)
-                        setIsMultipleDevice(true)
-                      }}
-                    >
-                      <span>
-                        {t('cloud:dashboard.detail_dashboard.add_widget.map')}
-                      </span>
-                    </Button>
-                  </div>
-                  <div className="w-full space-y-3">
-                    <Button
-                      type="button"
-                      size="square"
-                      className="w-full bg-secondary-400"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -564,7 +496,12 @@ export function DashboardDetail() {
                         setIsMultipleDevice(true)
                       }}
                     >
-                      <span>
+                      <ChartTableData
+                        height={58}
+                        width={58}
+                        viewBox="0 0 58 58"
+                      />
+                      <span className="flex items-center">
                         {t(
                           'cloud:dashboard.detail_dashboard.add_widget.data_table',
                         )}
@@ -573,7 +510,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="w-full bg-secondary-400"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -581,10 +518,97 @@ export function DashboardDetail() {
                         setWidgetCategory('CONTROLLER')
                       }}
                     >
-                      <span>
+                      <ChartControl
+                        height={58}
+                        width={58}
+                        viewBox="0 0 58 58"
+                      />
+                      <span className="flex items-center">
                         {t(
                           'cloud:dashboard.detail_dashboard.add_widget.controller.title',
                         )}
+                      </span>
+                    </Button>
+                  </div>
+                  <div className="w-full space-y-6">
+                    <Button
+                      type="button"
+                      size="square"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('PIE')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <ChartCircle height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.pie_chart',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('GAUGE')
+                        setIsMultipleAttr(false)
+                        setIsMultipleDevice(false)
+                      }}
+                    >
+                      <ChartGauses height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
+                        {t('cloud:dashboard.detail_dashboard.add_widget.gauge')}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('CARD')
+                        setIsMultipleAttr(false)
+                        setIsMultipleDevice(false)
+                      }}
+                    >
+                      <ChartData height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
+                        {t(
+                          'cloud:dashboard.detail_dashboard.add_widget.data_chart',
+                        )}
+                      </span>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="square"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      variant="secondaryLight"
+                      onClick={() => {
+                        close()
+                        setIsShowCreateWidget(true)
+                        setWidgetType('LASTEST')
+                        setWidgetCategory('MAP')
+                        setIsMultipleAttr(true)
+                        setIsMultipleDevice(true)
+                      }}
+                    >
+                      <ChartMap height={58} width={58} viewBox="0 0 58 58" />
+                      <span className="flex items-center">
+                        {t('cloud:dashboard.detail_dashboard.add_widget.map')}
                       </span>
                     </Button>
                   </div>
