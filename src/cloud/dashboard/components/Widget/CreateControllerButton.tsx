@@ -18,17 +18,19 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { type Widget, type WidgetCategoryType } from './CreateWidget'
-import { widgetCategorySchema } from '../../types'
 import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
+import i18n from '~/i18n'
+
+import { widgetCategorySchema } from '../../types'
 import { selectOptionSchema } from '~/utils/schemaValidation'
+import { type Widget, type WidgetCategoryType } from './CreateWidget'
+import { type OutputType } from '~/cloud/customProtocol'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { PlusIcon } from '~/components/SVGIcons'
-import { type OutputType } from '~/cloud/customProtocol'
 
 const controllerBtnSchema = z.object({
   title: z.string(),
@@ -44,12 +46,26 @@ export const controllerBtnCreateSchema = z.object({
   title: z.string(),
   thing_id: z.string(),
   handle_service: z.string(),
-  input: z.array(
-    z.object({
-      name: selectOptionSchema(),
-      value: z.string(),
+  input: z
+    .array(
+      z.object({
+        name: selectOptionSchema(),
+        value: z.string(),
+      }),
+    )
+    .refine(
+      values =>
+        values.forEach(val => {
+          console.log('val', val)
+          return val.name.label !== ''
+        }),
+      {
+        message: i18n.t('cloud:custom_protocol.service.choose_input'),
+      },
+    )
+    .refine(values => values.forEach(val => val.value !== ''), {
+      message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
     }),
-  ),
   id: z.string().optional(),
 })
 
@@ -121,7 +137,6 @@ export function CreateControllerButton({
     label: input.name,
     type: input.type,
   })) || [{ value: '', label: '', type: '' }]
-  console.log('inputSelectData', inputSelectData)
 
   useEffect(() => {
     setOptionThingId({
@@ -201,7 +216,6 @@ export function CreateControllerButton({
                             const itemType = inputSelectData?.find(
                               input => input.value === item.name.value,
                             )?.type as OutputType
-                            console.log('itemType', itemType)
                             if (itemType === 'json' || itemType === 'str') {
                               acc[item.name.value] = item.value
                             }
@@ -228,7 +242,7 @@ export function CreateControllerButton({
 
               setWidgetList(prev => ({
                 ...prev,
-                ...{ [widgetId]: controllerBtn },
+                ...({ [widgetId]: controllerBtn } as Widget),
               }))
 
               close()
@@ -254,7 +268,6 @@ export function CreateControllerButton({
                     />
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:custom_protocol.thing.id')}
                         name="thing_id"
                         control={control}
@@ -285,7 +298,6 @@ export function CreateControllerButton({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:custom_protocol.service.title')}
                         name="handle_service"
                         control={control}

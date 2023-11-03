@@ -105,10 +105,10 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 onChange={e => {
                   const emailValue = e.target.value
                   console.log(emailValue)
-                  if (emailSchema.safeParse(emailValue).success === false) {
-                    setBtnOtpDisable(true)
-                  } else {
+                  if (emailSchema.safeParse(emailValue).success) {
                     setBtnOtpDisable(false)
+                  } else {
+                    setBtnOtpDisable(true)
                   }
                 }}
                 startIcon={
@@ -161,7 +161,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                   if (getValues('email') !== '') {
                     sentOTP({
                       email: getValues('email'),
-                      phone: '0337463520',
                     })
                       .then(() => {
                         setCountdown(timeCountdown)

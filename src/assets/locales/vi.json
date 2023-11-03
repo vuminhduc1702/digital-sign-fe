@@ -404,7 +404,8 @@
         "default_result": "Mặc định",
         "hide_console": "Ẩn console",
         "view_console": "Hiện console",
-        "choose_input": "Vui lòng chọn biến đầu vào"
+        "choose_input": "Vui lòng chọn biến đầu vào",
+        "choose_inputValue": "Vui lòng nhập giá trị biến"
       },
       "thing": {
         "title": "Thing",
