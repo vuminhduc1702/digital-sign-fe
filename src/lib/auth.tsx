@@ -42,9 +42,11 @@ async function registerFn(data: RegisterCredentialsDTO) {
 }
 
 export async function logoutFn() {
+  storage.clearProject()
   storage.clearToken()
-  window.history.replaceState({ from: window.location.pathname }, PATHS.LOGIN)
-  window.location.reload()
+  window.location.assign(PATHS.LOGIN)
+  // window.history.replaceState({ from: window.location.pathname }, PATHS.LOGIN)
+  // window.location.reload()
 }
 
 const authConfig = {
