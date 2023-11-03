@@ -10,7 +10,7 @@ import { Button } from '~/components/Button'
 import {
   InputField,
   SelectDropdown,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import storage from '~/utils/storage'
@@ -20,12 +20,15 @@ import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 import { type Widget, type WidgetCategoryType } from './CreateWidget'
 import { widgetCategorySchema } from '../../types'
+import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
+import { selectOptionSchema } from '~/utils/schemaValidation'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { type OutputType } from '~/cloud/customProtocol'
 
 const controllerBtnSchema = z.object({
   title: z.string(),
@@ -43,17 +46,15 @@ export const controllerBtnCreateSchema = z.object({
   handle_service: z.string(),
   input: z.array(
     z.object({
-      name: z
-        .string()
-        .min(1, { message: 'Tên biến quá ngắn' })
-        .max(30, { message: 'Tên biến quá dài' }),
+      name: selectOptionSchema(),
       value: z.string(),
     }),
   ),
+  id: z.string().optional(),
 })
 
 type ControllerBtnCreateDTO = {
-  data: z.infer<typeof controllerBtnCreateSchema> & { id: string }
+  data: z.infer<typeof controllerBtnCreateSchema>
 }
 
 type CreateControllerButtonProps = {
@@ -76,6 +77,16 @@ export function CreateControllerButton({
 
   const { id: projectId } = storage.getProject()
 
+  const [optionThingId, setOptionThingId] = useState<SelectOptionString>({
+    label: '',
+    value: '',
+  })
+  const [optionThingService, setOptionThingService] =
+    useState<SelectOptionString>({
+      label: '',
+      value: '',
+    })
+
   const { data: thingData, isLoading: thingIsLoading } = useGetEntityThings({
     projectId,
     config: {
@@ -87,41 +98,49 @@ export function CreateControllerButton({
     label: thing.name,
   })) || [{ value: '', label: '' }]
 
-  const [selectedThingId, setSelectedThingId] = useState('')
   const { data: serviceData } = useGetServiceThings({
-    thingId: selectedThingId,
+    thingId: optionThingId?.value,
     config: {
-      enabled: !!selectedThingId,
+      enabled: !!optionThingId?.value,
       suspense: false,
     },
   })
-
-  useEffect(() => {
-    if (selectedThingId != '') {
-      setSelectedThingId('')
-    }
-  }, [])
-
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
   })) || [{ value: '', label: '' }]
 
-  const [optionThingId, setOptionThingId] = useState<SelectOption>({
-    label: '',
-    value: '',
+  const { data: thingServiceData } = useThingServiceById({
+    thingId: optionThingId?.value,
+    name: optionThingService.value,
+    config: {
+      suspense: false,
+      enabled: !!optionThingId?.value && !!optionThingService.value,
+    },
   })
-  const [optionThingService, setOptionService] = useState<SelectOption>({
-    label: '',
-    value: '',
-  })
+  const inputSelectData = thingServiceData?.data?.input?.map(input => ({
+    value: input.name,
+    label: input.name,
+    type: input.type,
+  })) || [{ value: '', label: '', type: '' }]
+  console.log('inputSelectData', inputSelectData)
 
-  const { register, formState, control, handleSubmit, setValue } = useForm<
-    ControllerBtnCreateDTO['data']
-  >({
-    resolver:
-      controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
-  })
+  useEffect(() => {
+    setOptionThingId({
+      label: '',
+      value: '',
+    })
+    setOptionThingService({
+      label: '',
+      value: '',
+    })
+  }, [])
+
+  const { register, formState, control, handleSubmit, setValue, watch } =
+    useForm<ControllerBtnCreateDTO['data']>({
+      resolver:
+        controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
+    })
   console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
@@ -131,7 +150,10 @@ export function CreateControllerButton({
 
   useEffect(() => {
     append({
-      name: '',
+      name: {
+        label: '',
+        value: '',
+      },
       value: '',
     })
   }, [])
@@ -166,7 +188,7 @@ export function CreateControllerButton({
             onSubmit={handleSubmit(values => {
               // console.log('values: ', values)
               const widgetId = uuidv4()
-              const controllerBtn: z.infer<typeof controllerBtnSchema> = {
+              const controllerBtn: ControllerBtn = {
                 title: values.title,
                 description: widgetCategory,
                 datasource: {
@@ -178,7 +200,23 @@ export function CreateControllerButton({
                         service_name: values.handle_service,
                         input: values.input.reduce(
                           (acc: { [key: string]: any }, item) => {
-                            acc[item.name] = item.value
+                            const itemType = inputSelectData?.find(
+                              input => input.value === item.name.value,
+                            )?.type as OutputType
+                            console.log('itemType', itemType)
+                            if (itemType === 'json' || itemType === 'str') {
+                              acc[item.name.value] = item.value
+                            }
+                            if (itemType === 'i32' || itemType === 'i64') {
+                              acc[item.name.value] = parseInt(item.value)
+                            }
+                            if (itemType === 'f32' || itemType === 'f64') {
+                              acc[item.name.value] = parseFloat(item.value)
+                            }
+                            if (itemType === 'bool') {
+                              acc[item.name.value] = item.value === 'true'
+                            }
+
                             return acc
                           },
                           {},
@@ -221,7 +259,7 @@ export function CreateControllerButton({
                         name="thing_id"
                         control={control}
                         options={
-                          thingData
+                          thingData?.data?.list
                             ? thingSelectData
                             : [
                                 {
@@ -236,7 +274,6 @@ export function CreateControllerButton({
                         noOptionsMessage={() => t('table:no_thing')}
                         placeholder={t('cloud:custom_protocol.thing.choose')}
                         onChange={e => {
-                          setSelectedThingId(e?.value)
                           setOptionThingId(e)
                           setValue('thing_id', e?.value)
                         }}
@@ -250,7 +287,6 @@ export function CreateControllerButton({
                       <SelectDropdown
                         isClearable={true}
                         label={t('cloud:custom_protocol.service.title')}
-                        inputId="handleServiceForm"
                         name="handle_service"
                         control={control}
                         options={
@@ -277,7 +313,7 @@ export function CreateControllerButton({
                         noOptionsMessage={() => t('table:no_service')}
                         placeholder={t('cloud:custom_protocol.service.choose')}
                         onChange={e => {
-                          setOptionService(e)
+                          setOptionThingService(e)
                           setValue('handle_service', e?.value)
                         }}
                         value={optionThingService}
@@ -293,7 +329,7 @@ export function CreateControllerButton({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.controller.input_list',
                       )}
-                      className="w-full rounded-md bg-gray-500 pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <Button
                       className="rounded-md"
@@ -302,24 +338,66 @@ export function CreateControllerButton({
                       startIcon={
                         <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                       }
-                      onClick={() => append({ input: '' })}
+                      onClick={() =>
+                        append({
+                          name: {
+                            label: '',
+                            value: '',
+                          },
+                          value: '',
+                        })
+                      }
                     />
                   </div>
                   {fields.map((field, index) => (
                     <section
-                      className="mt-3 flex justify-between gap-x-2"
+                      className="mt-3 flex justify-between px-2"
                       key={field.id}
                     >
-                      <div className="flex gap-x-3">
-                        <InputField
-                          label={`${t(
-                            'cloud:dashboard.detail_dashboard.add_widget.controller.input',
-                          )} ${index + 1}`}
-                          error={formState.errors?.input?.[index]?.name}
-                          registration={register(
-                            `input.${index}.name` as const,
-                          )}
-                        />
+                      <div className="flex w-2/3 gap-x-2">
+                        <div className="w-full space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={t('cloud:custom_protocol.service.input')}
+                            name={`input.${index}.name`}
+                            control={control}
+                            options={
+                              thingServiceData?.data != null
+                                ? inputSelectData
+                                : thingServiceData?.data == null
+                                ? [
+                                    {
+                                      label: t('table:no_input'),
+                                      value: '',
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      label: t('loading:input'),
+                                      value: '',
+                                    },
+                                  ]
+                            }
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_input')
+                            }
+                            noOptionsMessage={() => t('table:no_input')}
+                            placeholder={t(
+                              'cloud:custom_protocol.service.choose_input',
+                            )}
+                            onChange={e => {
+                              setValue(`input.${index}.name`, {
+                                label: e.label,
+                                value: e.value,
+                              })
+                            }}
+                            value={watch(`input.${index}.name`)}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {formState?.errors?.input?.message}
+                          </p>
+                        </div>
                         <InputField
                           label={t(
                             'cloud:dashboard.detail_dashboard.add_widget.controller.value',

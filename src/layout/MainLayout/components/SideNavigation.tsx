@@ -84,7 +84,7 @@ function SideNavigation() {
 
   useEffect(() => {
     setValue(routerLink[1])
-  }, [location])
+  }, [location.pathname])
 
   return (
     <div className="px-8 py-7">
@@ -133,7 +133,7 @@ function SideNavigation() {
               {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.FLOW_ENGINE_V2}`}>
+          <NavLink to={`${PATHS.THING_TEMPLATE}/${projectId}`}>
             <AccordionContent>
               {t('sidebar:cloud.flow_engine_v2')}
             </AccordionContent>
@@ -226,7 +226,7 @@ function SideNavigation() {
           </AccordionContent> */}
         </AccordionItem>
 
-        <AccordionItem value="intergration">
+        <AccordionItem value="integration">
           <AccordionTrigger>
             <img
               src={tichhopIcon}
@@ -241,7 +241,7 @@ function SideNavigation() {
           <AccordionContent>
             {t('sidebar:intergration.smarthome')}
           </AccordionContent> */}
-          <NavLink to={`${PATHS.AI}/ddos`}>
+          <NavLink to={`${PATHS.AI}`}>
             <AccordionContent>{t('sidebar:intergration.ai')}</AccordionContent>
           </NavLink>
         </AccordionItem>

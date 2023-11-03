@@ -5,12 +5,21 @@ import { MutationConfig, queryClient } from '~/lib/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNotificationStore } from '~/stores/notifications'
 import { useMutation } from '@tanstack/react-query'
+import { z } from 'zod'
+import { emailSchema, passwordSchema } from '~/utils/schemaValidation'
 
-export type ForgetPasswordCredentialsDTO = {
-  email: string
-  password: string
-  otp: string
-}
+// export type ForgetPasswordCredentialsDTO = {
+//   email: string
+//   password: string
+//   otp: string
+// }
+export const ForgetPasswordCredentialsSchema = z.object({
+  email : emailSchema,
+  password : passwordSchema,
+  otp : z.string()
+  
+})
+export type ForgetPasswordCredentialsDTO = { data: z.infer<typeof ForgetPasswordCredentialsSchema> }
 
 export const changePassWithEmailAndPassword = (
   data: ForgetPasswordCredentialsDTO,

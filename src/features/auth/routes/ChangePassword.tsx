@@ -8,7 +8,6 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export const ChangePassword = () => {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const { addNotification } = useNotificationStore()
 
   return (

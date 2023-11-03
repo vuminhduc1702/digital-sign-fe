@@ -35,6 +35,7 @@ import {
   CommandInput,
   CommandItem,
 } from '~/components/Command'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
@@ -189,11 +190,10 @@ type CreateWidgetProps = {
   isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget | ControllerBtn>
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget | ControllerBtn>>
+  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
+const widgetDataTypeOptions: SelectOptionGeneric<WidgetDataType>[] = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -205,7 +205,6 @@ export function CreateWidget({
   isMultipleDevice,
   isOpen,
   close,
-  widgetListRef,
   setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
@@ -228,11 +227,8 @@ export function CreateWidget({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgFlattenDataOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
-  orgFlattenDataOptions.push({label: 'Không thuộc tổ chức nào', value: ''})
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const [deviceValue, setDeviceValue] = useState<SelectOptionString[]>()
   const { data: deviceData } = useGetDevices({
@@ -263,14 +259,15 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  console.log('zod errors', formState.errors)
+  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,
   })
   const [aggValue, setAggValue] = useState('')
-  const [widgetDataTypeValue, setWidgetDataTypeValue] = useState('')
+  const [widgetDataTypeValue, setWidgetDataTypeValue] =
+    useState<WidgetDataType>('REALTIME')
 
   useEffect(() => {
     append({
@@ -470,8 +467,7 @@ export function CreateWidget({
                     : null,
               }
 
-              widgetListRef.current[widgetId] = widget
-              setWidgetList(widgetListRef.current)
+              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
               close()
             })}
@@ -503,7 +499,10 @@ export function CreateWidget({
                         name="org_id"
                         control={control}
                         options={
-                          orgFlattenDataOptions || [{ label: t('loading:org'), value: '' }]
+                          orgSelectOptions?.map(org => ({
+                            label: org?.name,
+                            value: org?.id,
+                          })) || [{ label: t('loading:org'), value: '' }]
                         }
                         onChange={e => {
                           setOptionOrg(e)
@@ -808,12 +807,14 @@ export function CreateWidget({
                           registration={register(
                             `widgetSetting.dataType` as const,
                           )}
-                          options={widgetDataType.map(dataType => ({
+                          options={widgetDataTypeOptions.map(dataType => ({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
                           onChange={e => {
-                            setWidgetDataTypeValue(e.target.value)
+                            setWidgetDataTypeValue(
+                              e.target.value as WidgetDataType,
+                            )
                           }}
                         />
 
@@ -879,7 +880,7 @@ export function CreateWidget({
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.endDate')}
                             error={
-                              watch('widgetSetting.dataType') === 'REALTIME'
+                              widgetDataTypeValue === 'REALTIME'
                                 ? ''
                                 : formState?.errors?.widgetSetting?.startDate
                             }
@@ -902,8 +903,7 @@ export function CreateWidget({
                                           !value && 'text-secondary-700',
                                         )}
                                         disabled={
-                                          watch('widgetSetting.dataType') ===
-                                          'REALTIME'
+                                          widgetDataTypeValue === 'REALTIME'
                                         }
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />

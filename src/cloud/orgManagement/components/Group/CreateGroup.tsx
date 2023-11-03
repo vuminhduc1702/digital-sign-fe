@@ -13,7 +13,6 @@ import {
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { flattenData } from '~/utils/misc'
 import { queryClient } from '~/lib/react-query'
 

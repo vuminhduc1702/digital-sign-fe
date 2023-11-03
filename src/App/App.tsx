@@ -35,10 +35,10 @@ function App() {
   }, [])
 
   useEffect(() => {
-    const user = storage.getToken()
+    const userStorage = storage.getToken()
     if (
-      user &&
-      new Date().getTime() - new Date(user?.timestamp).getTime() >
+      userStorage &&
+      new Date().getTime() - new Date(userStorage?.timestamp).getTime() >
         24 * 60 * 60 * 1000
     ) {
       logoutFn()

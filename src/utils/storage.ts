@@ -37,15 +37,6 @@ const storage = {
   clearProject: () => {
     window.localStorage.removeItem(`${storagePrefix}project`)
   },
-  getHistoryPath: () => {
-    return window.localStorage.getItem(`previousPath`) as string
-  },
-  setHistoryPath: (path : string) => {
-    localStorage.setItem('previousPath', path)
-  },
-  clearHistoryPath: () => {
-    window.localStorage.removeItem(`previousPath`)
-  },
 }
 
 export default storage

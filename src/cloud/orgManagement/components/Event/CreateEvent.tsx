@@ -12,7 +12,6 @@ import {
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
@@ -349,7 +348,7 @@ export function CreateEvent() {
               <div className="space-y-3">
                 <TitleBar
                   title={t('cloud:org_manage.event_manage.add_event.info')}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   <InputField
@@ -455,7 +454,7 @@ export function CreateEvent() {
                   title={t(
                     'cloud:org_manage.event_manage.add_event.test_condition_time',
                   )}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   {todos.map(todo => (
@@ -527,7 +526,7 @@ export function CreateEvent() {
                     title={t(
                       'cloud:org_manage.event_manage.add_event.condition.title',
                     )}
-                    className="w-full rounded-md bg-gray-500 pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
@@ -738,7 +737,7 @@ export function CreateEvent() {
                   title={t(
                     'cloud:org_manage.event_manage.add_event.action.title',
                   )}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"

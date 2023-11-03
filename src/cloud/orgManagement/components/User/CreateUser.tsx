@@ -9,7 +9,7 @@ import {
   InputField,
   SelectDropdown,
   type SelectOptionString,
-  SelectField
+  SelectField,
 } from '~/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
@@ -18,7 +18,6 @@ import {
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
-import { useDefaultCombobox } from '~/utils/hooks'
 import storage from '~/utils/storage'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
@@ -44,7 +43,7 @@ export const userSchema = z
     province: emptySelectSchema,
     district: emptySelectSchema,
     ward: emptySelectSchema,
-    address: z.string().optional(),
+    full_address: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -82,73 +81,73 @@ export function CreateUser() {
   const [districtCode, setDistrictCode] = useState('')
   const [wardCode, setWardCode] = useState('')
 
- //get province list
- const { data: provinceList } = useAreaList({
-  config: {
-    // suspense: false,
-    select: (data: any) => {
-      const transformArr = data.map((item: any) => {
-        if (item.areaCode === provinceCode) {
-          return { value: item.areaCode, label: item.name, selected: true }
-        }
-        return { value: item.areaCode, label: item.name }
-      })
-      transformArr.push({ value: '', label: 'Tỉnh/TP' })
-      return transformArr
+  //get province list
+  const { data: provinceList } = useAreaList({
+    config: {
+      // suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === provinceCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Tỉnh/TP' })
+        return transformArr
+      },
     },
-  },
-  param: {
-    parentCode: '',
-    type: 'PROVINCE',
-    queryKey: 'province-list',
-  },
-})
+    param: {
+      parentCode: '',
+      type: 'PROVINCE',
+      queryKey: 'province-list',
+    },
+  })
 
-// get district list
-const { data: districtList } = useAreaList({
-  config: {
-    suspense: false,
-    select: (data: any) => {
-      const transformArr = data.map((item: any) => {
-        if (item.areaCode === districtCode) {
-          return { value: item.areaCode, label: item.name, selected: true }
-        }
-        return { value: item.areaCode, label: item.name }
-      })
-      transformArr.push({ value: '', label: 'Huyện/Quận' })
-      return transformArr
+  // get district list
+  const { data: districtList } = useAreaList({
+    config: {
+      suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === districtCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Huyện/Quận' })
+        return transformArr
+      },
+      enabled: !!provinceCode,
     },
-    enabled: !!provinceCode,
-  },
-  param: {
-    parentCode: provinceCode,
-    type: 'DISTRICT',
-    queryKey: 'district-list',
-  },
-})
+    param: {
+      parentCode: provinceCode,
+      type: 'DISTRICT',
+      queryKey: 'district-list',
+    },
+  })
 
-// get ward list
-const { data: wardList } = useAreaList({
-  config: {
-    suspense: false,
-    select: (data: any) => {
-      const transformArr = data.map((item: any) => {
-        if (item.areaCode === wardCode) {
-          return { value: item.areaCode, label: item.name, selected: true }
-        }
-        return { value: item.areaCode, label: item.name }
-      })
-      transformArr.push({ value: '', label: 'Phường/Xã' })
-      return transformArr
+  // get ward list
+  const { data: wardList } = useAreaList({
+    config: {
+      suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === wardCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Phường/Xã' })
+        return transformArr
+      },
+      enabled: !!districtCode,
     },
-    enabled: !!districtCode,
-  },
-  param: {
-    parentCode: districtCode,
-    type: 'WARD',
-    queryKey: 'ward-list',
-  },
-})
+    param: {
+      parentCode: districtCode,
+      type: 'WARD',
+      queryKey: 'ward-list',
+    },
+  })
 
   return (
     <FormDrawer
@@ -190,7 +189,7 @@ const { data: wardList } = useAreaList({
               province: values.province,
               district: values.district,
               ward: values.ward,
-              address: values.address,
+              full_address: values.full_address,
             },
           })
         }}
@@ -279,7 +278,7 @@ const { data: wardList } = useAreaList({
                 </p>
               </div>
 
-              <div className='grid grid-cols-3 gap-x-2'>
+              <div className="grid grid-cols-3 gap-x-2">
                 <SelectField
                   error={formState.errors['province']}
                   registration={register('province')}
@@ -304,6 +303,7 @@ const { data: wardList } = useAreaList({
 
               <InputField
                 label={t('form:enter_address')}
+                registration={register('full_address')}
               />
             </>
           )
