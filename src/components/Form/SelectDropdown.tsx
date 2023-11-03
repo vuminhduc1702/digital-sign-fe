@@ -29,7 +29,7 @@ type SelectProps<TFormValues extends FieldValues> = {
   defaultValue?: PropsValue<SelectOption> | undefined
   placeholder?: string
   inputId?: string
-  isClearable: boolean
+  isClearable?: boolean
   maxMenuHeight?: number
   classlabel?: string
   classchild?: string

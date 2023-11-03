@@ -219,21 +219,6 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-                // console.log('realtimeValues', realtimeValues)
-
-                const realtimeWithDeviceValues =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(device => ({
-                          timeseries: device.timeseries as TimeSeries,
-                          entityName: device.entityId.entityName,
-                        })),
-                      )
-                    : {}
-                console.log(
-                  'realtimeWithDeviceValues',
-                  realtimeWithDeviceValues,
-                )
 
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId

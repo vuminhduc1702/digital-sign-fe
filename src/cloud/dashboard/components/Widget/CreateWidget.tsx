@@ -38,7 +38,7 @@ import {
 import { useDefaultCombobox } from '~/utils/hooks'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
-import { nameSchema } from '~/utils/schemaValidation'
+import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import { type ControllerBtn } from './CreateControllerButton'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
@@ -50,7 +50,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: z.string(),
+    attribute_key: selectOptionSchema(),
     label: z.string(),
     color: z.string(),
     unit: z.string(),
@@ -271,7 +271,10 @@ export function CreateWidget({
 
   useEffect(() => {
     append({
-      attribute_key: '',
+      attribute_key: {
+        label: '',
+        value: '',
+      },
       label: '',
       color: '',
       unit: '',
@@ -594,7 +597,10 @@ export function CreateWidget({
                         }
                         onClick={() =>
                           append({
-                            attribute_key: '',
+                            attribute_key: {
+                              label: '',
+                              value: '',
+                            },
                             label: '',
                             color: '',
                             unit: '',
@@ -611,7 +617,7 @@ export function CreateWidget({
                       key={field.id}
                     >
                       <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
-                        <div className="space-y-1">
+                        {/* <div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.attr')}
                             error={
@@ -673,6 +679,57 @@ export function CreateWidget({
                               }}
                             />
                           </FieldWrapper>
+                        </div> */}
+                        <div className="w-full space-y-1">
+                          <SelectDropdown
+                            isClearable={true}
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={
+                              attrChartData != null
+                                ? attrSelectData
+                                : attrChartData == null
+                                ? [
+                                    {
+                                      label: t('table:no_attr'),
+                                      value: '',
+                                    },
+                                  ]
+                                : [
+                                    {
+                                      label: t('loading:attr'),
+                                      value: '',
+                                    },
+                                  ]
+                            }
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                            onChange={e => {
+                              setValue(
+                                `attributeConfig.${index}.attribute_key`,
+                                {
+                                  label: e.label,
+                                  value: e.value,
+                                },
+                              )
+                            }}
+                            value={watch(
+                              `attributeConfig.${index}.attribute_key`,
+                            )}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key?.message
+                            }
+                          </p>
                         </div>
                         <InputField
                           label={t('cloud:dashboard.config_chart.label')}
