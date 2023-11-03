@@ -16,8 +16,7 @@ type ControllerWSRes = {
   errorMsg: string
 }
 
-export function ControllerButton(data: string) {
-  // console.log('data controller btn: ', data)
+export function ControllerButton(data: { data: string }) {
   const { t } = useTranslation()
   const { addNotification } = useNotificationStore()
 
@@ -32,9 +31,8 @@ export function ControllerButton(data: string) {
     [],
   )
 
-  const { input, service_name, thing_id } = JSON.parse(
-    Object.values(data) as unknown as string,
-  ).executorCmds[0]
+  const { input, service_name, thing_id } = JSON.parse(Object.values(data)[0])
+    .executorCmds[0]
 
   useEffect(() => {
     if (lastJsonMessage != null) {

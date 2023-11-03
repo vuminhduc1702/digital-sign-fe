@@ -76,6 +76,7 @@ export const widgetSchema = z.object({
     lastest_message: z.string(),
     realtime_message: z.string(),
     history_message: z.string(),
+    controller_message: z.string().optional(),
   }),
   attribute_config: attrWidgetSchema,
   config: z
@@ -359,7 +360,7 @@ export function CreateWidget({
                         item => item.attribute_key,
                       ),
                       startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
+                        values.widgetSetting?.startDate?.toISOString() as string,
                       ),
                       interval: values.widgetSetting?.interval,
                       limit: 10,
@@ -404,7 +405,7 @@ export function CreateWidget({
                               item => item.attribute_key,
                             ),
                             startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString(),
+                              values.widgetSetting?.startDate?.toISOString() as string,
                             ),
                             endTs: Date.parse(
                               values.widgetSetting?.endDate?.toISOString() as string,

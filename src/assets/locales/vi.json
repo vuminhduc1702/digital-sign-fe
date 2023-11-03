@@ -483,7 +483,7 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
-        "delete_dashboard": "Xoá DB",
+        "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
         "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
       },
@@ -491,7 +491,7 @@
         "title": "Thêm mới bảng điều khiển",
         "name": "Tên bảng điều khiển",
         "description": "Mô tả",
-        "edit": "Sửa DB",
+        "edit": "Sửa bảng ĐK",
         "edit_full": "Sửa bảng điều khiển",
         "success_create": "Tạo bảng điều khiển thành công",
         "success_update": "Cập nhật bảng điều khiển thành công",

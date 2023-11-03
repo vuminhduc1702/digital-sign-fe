@@ -164,7 +164,7 @@ export function DashboardDetail() {
     })
   }, [handleSendMessage, widgetList, Object.keys(widgetList).length])
 
-  function combinedObject(data: Array<TimeSeries>) {
+  function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
@@ -221,10 +221,7 @@ export function DashboardDetail() {
                     : {}
                 // console.log('realtimeValues', realtimeValues)
 
-                const realtimeWithDeviceValues: {
-                  timeseries: TimeSeries
-                  entityName: string
-                } =
+                const realtimeWithDeviceValues =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => ({
@@ -306,7 +303,8 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'CONTROLLER' ? (
                       <ControllerButton
                         data={
-                          widgetList?.[widgetId]?.datasource?.controller_message
+                          widgetList?.[widgetId]?.datasource
+                            ?.controller_message as string
                         }
                       />
                     ) : null}
