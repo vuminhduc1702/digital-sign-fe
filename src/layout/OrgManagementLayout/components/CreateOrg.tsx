@@ -26,7 +26,6 @@ import storage from '~/utils/storage'
 import { type OrgList } from '~/layout/MainLayout/types'
 import { queryClient } from '~/lib/react-query.ts'
 import { flattenData } from '~/utils/misc.ts'
-import { useDefaultCombobox } from '~/utils/hooks.ts'
 import i18n from '~/i18n'
 
 import { PlusIcon } from '~/components/SVGIcons'

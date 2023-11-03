@@ -35,6 +35,7 @@ import {
   CommandInput,
   CommandItem,
 } from '~/components/Command'
+import { useDefaultCombobox } from '~/utils/hooks'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
@@ -226,6 +227,8 @@ export function CreateWidget({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const [deviceValue, setDeviceValue] = useState<SelectOptionString[]>()
   const { data: deviceData } = useGetDevices({
@@ -496,7 +499,7 @@ export function CreateWidget({
                         name="org_id"
                         control={control}
                         options={
-                          orgFlattenData?.map(org => ({
+                          orgSelectOptions?.map(org => ({
                             label: org?.name,
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]

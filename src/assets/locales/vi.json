@@ -707,7 +707,7 @@
     "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
-    "no_in_org": "Không thuộc TC. Vui lòng tạo.",
+    "no_in_org": "Không trực thuộc tổ chức.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subcription": "Không có dịch vụ. Vui lòng tạo."

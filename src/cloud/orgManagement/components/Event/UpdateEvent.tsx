@@ -12,7 +12,6 @@ import {
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { queryClient } from '~/lib/react-query'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetAttrs } from '../../api/attrAPI'

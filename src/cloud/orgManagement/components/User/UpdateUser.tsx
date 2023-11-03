@@ -10,7 +10,6 @@ import {
   SelectDropdown,
   type SelectOptionString,
 } from '~/components/Form'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
 import i18n from '~/i18n'
 import { queryClient } from '~/lib/react-query'
@@ -73,7 +72,7 @@ export function UpdateUser({
   org_name,
   role_id,
   role_name,
-  phone
+  phone,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -150,14 +149,18 @@ export function UpdateUser({
               password: values.password,
               org_id: option?.value || '',
               role_id: role?.value || '',
-              phone: values.phone
+              phone: values.phone,
             },
             userId,
           })
         }
         schema={updatedUserSchema}
         options={{
-          defaultValues: { name, email, phone: phone !== 'undefined' ? phone : '' },
+          defaultValues: {
+            name,
+            email,
+            phone: phone !== 'undefined' ? phone : '',
+          },
         }}
       >
         {({ register, formState, control, setValue }) => (
@@ -170,13 +173,13 @@ export function UpdateUser({
               registration={register('name')}
             />
             <InputField
-                label={
-                  t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
-                }
-                type='number'
-                error={formState.errors['phone']}
-                registration={register('phone')}
-              />
+              label={
+                t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
+              }
+              type="number"
+              error={formState.errors['phone']}
+              registration={register('phone')}
+            />
             <InputField
               label={
                 t('cloud:org_manage.user_manage.add_user.email') ??

@@ -12,7 +12,6 @@ import {
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
