@@ -10,7 +10,7 @@ export function CardChart({ data }: { data: LatestData }) {
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
-    value: 0,
+    value: '',
   })
 
   const newDataValue = Object.values(data)?.[0]?.value ?? ''
@@ -18,7 +18,7 @@ export function CardChart({ data }: { data: LatestData }) {
     if (Object.keys(data).length !== 0) {
       const dataDataType = {
         key: Object.keys(data)[0],
-        value: parseFloat(newDataValue),
+        value: newDataValue,
       }
       setDataTransformedFeedToChart(dataDataType)
     }

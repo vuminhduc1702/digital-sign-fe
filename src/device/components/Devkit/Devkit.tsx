@@ -14,7 +14,7 @@ export function Devkit() {
       communicationMethods: 'Wifi',
       communicationProtocol: 'MQTT',
       communicateProtocol: 'UART',
-      image: 'https://innoway.vn/assets/images/ESP32.jpg',
+      image: 'https://cmp.innoway.vn/assets/images/ESP32.jpg',
     },
     {
       type: 'Espressif Systems',
@@ -22,7 +22,7 @@ export function Devkit() {
       communicationMethods: 'Wifi',
       communicationProtocol: 'MQTT',
       communicateProtocol: 'UART',
-      image: 'https://innoway.vn/assets/images/ESP32.jpg',
+      image: 'https://cmp.innoway.vn/assets/images/ESP32.jpg',
     },
     {
       type: 'Espressif Systems',
@@ -30,7 +30,7 @@ export function Devkit() {
       communicationMethods: 'Wifi',
       communicationProtocol: 'MQTT',
       communicateProtocol: 'UART',
-      image: 'https://innoway.vn/assets/images/ESP32.jpg',
+      image: 'https://cmp.innoway.vn/assets/images/ESP32.jpg',
     },
   ]
   const devkitsDevice_Simcom = [
@@ -40,13 +40,13 @@ export function Devkit() {
       communicationMethods: 'NB-IoT',
       communicationProtocol: 'MQTT',
       communicateProtocol: 'UART',
-      image: 'https://innoway.vn/assets/images/SIMCOM7020.png',
+      image: 'https://cmp.innoway.vn/assets/images/SIMCOM7020.png',
     },
   ]
   return (
     <>
       <ContentLayout title={t('sidebar:device.devkit')}>
-        <div className="flex h-[84vh] px-1 py-1">
+        <div className="flex h-[84vh] p-1">
           <div className="mr-3 w-1/4 rounded-md bg-[#eceff1] shadow-md">
             <div className="p-[10px]">
               <InputField

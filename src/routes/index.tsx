@@ -1,4 +1,4 @@
-import { useNavigate, useRoutes } from 'react-router-dom'
+import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
 
 import { BASE_PATH, PATHS } from './PATHS'
 import { useUser } from '~/lib/auth'
@@ -7,8 +7,6 @@ import { lazyImport } from '~/utils/lazyImport'
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
 import { useEffect } from 'react'
-import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
-import storage from '~/utils/storage'
 
 const { LandingPage } = lazyImport(
   () => import('~/pages/LandingPage'),
@@ -29,9 +27,9 @@ const { VersionPage } = lazyImport(
 
 export const AppRoutes = () => {
   const navigate = useNavigate()
+  const location = useLocation()
 
   const user = useUser()
-  // const user = useUserInfo()
 
   const commonRoutes = [
     { path: BASE_PATH, element: <LandingPage /> },
@@ -50,16 +48,16 @@ export const AppRoutes = () => {
   ]
 
   useEffect(() => {
-    const user = storage.getToken()
     if (
-      !user &&
+      user.data == null &&
       window.location.pathname !== PATHS.FORGETPASSWORD &&
       window.location.pathname !== PATHS.REGISTER &&
+      window.location.pathname !== PATHS.LOGIN &&
       !commonRoutes.some(item => item.path === window.location.pathname)
     ) {
-      navigate(PATHS.LOGIN)
+      navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
     }
-  }, [window.location.pathname])
+  }, [location.pathname, user.data])
 
   const routes = user.data ? protectedRoutes : publicRoutes
 

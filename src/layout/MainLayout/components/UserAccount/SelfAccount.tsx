@@ -16,6 +16,7 @@ import {
   useMutationSelfAccountInfo,
   type UpdateSelfAccountInfoDTO,
 } from './api/updateSelfAccountInfo'
+import TitleBar from '~/components/Head/TitleBar'
 
 export const selfInfoSchema = z.object({
   name: emptyInputSchema,
@@ -25,7 +26,7 @@ export const selfInfoSchema = z.object({
   province: emptySelectSchema,
   district: emptySelectSchema,
   ward: emptySelectSchema,
-  address: z.string().optional(),
+  full_address: z.string().optional(),
 })
 
 const SelfAccount = () => {
@@ -134,9 +135,10 @@ const SelfAccount = () => {
         <div className="text-base font-bold">Cập nhật thông tin tài khoản</div>
       </div>
 
-      <div className="mb-2 mt-28 font-semibold" style={{ color: '#44494D' }}>
-        Thông tin khách hàng
-      </div>
+      <TitleBar
+        title={t('billing:subcription.popup.customer_info')}
+        className="mb-4 mt-12 w-full rounded-md bg-secondary-700 pl-3"
+      />
 
       <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema>
         id="update-self-account-info"
@@ -150,7 +152,7 @@ const SelfAccount = () => {
                 province: values.province,
                 district: values.district,
                 ward: values.ward,
-                address: values.address,
+                full_address: values.full_address,
               },
             },
             tenant_id: userInfoData?.user_id,
@@ -163,10 +165,10 @@ const SelfAccount = () => {
             tax_code: userInfoData?.profile?.tax_code,
             phone: userInfoData?.phone,
             email: userInfoData?.email,
-            // province: userInfoData?.profile?.province,
-            // district: userInfoData?.profile?.district,
-            // ward: userInfoData?.profile?.ward,
-            address: userInfoData?.profile?.full_address,
+            province: userInfoData?.profile?.province,
+            district: userInfoData?.profile?.district,
+            ward: userInfoData?.profile?.ward,
+            full_address: userInfoData?.profile?.full_address,
           },
         }}
       >
@@ -188,6 +190,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-4">
               <InputField
+                type="number"
                 classchild="w-full"
                 classnamefieldwrapper="flex items-center"
                 error={formState.errors['tax_code']}
@@ -200,6 +203,7 @@ const SelfAccount = () => {
             </div>
             <div className="col-start-2">
               <InputField
+                type="number"
                 classchild="w-full"
                 classnamefieldwrapper="flex flex justify-end items-center"
                 error={formState.errors['phone']}
@@ -252,6 +256,7 @@ const SelfAccount = () => {
               <InputField
                 classchild="w-full"
                 classnamefieldwrapper="flex items-center"
+                registration={register('full_address')}
               />
             </div>
           </div>
@@ -262,14 +267,6 @@ const SelfAccount = () => {
         className="absolute bottom-8 flex justify-center"
         style={{ left: '43%' }}
       >
-        <Button
-          className="mr-5 cursor-pointer rounded-r-lg rounded-t-lg border-black px-7 py-2"
-          variant="muted"
-          onClick={() => navigate(-1)}
-        >
-          Huỷ
-        </Button>
-
         <Button
           className="mr-5 cursor-pointer rounded-r-lg rounded-t-lg border-0 bg-neutral-500 px-7 py-2"
           form="update-self-account-info"

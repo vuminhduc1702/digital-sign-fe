@@ -111,7 +111,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             <div className="flex justify-between space-x-3">
               <TitleBar
                 title={t('cloud:org_manage.org_manage.attr_list')}
-                className="w-full rounded-md bg-gray-500 pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <Button
                 className="rounded-md"

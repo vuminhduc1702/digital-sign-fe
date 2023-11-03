@@ -23,7 +23,7 @@ export function Module() {
       speed: '158.5Kbps (HL), 127Kbps (DL)',
       operaTemperature: '-40 → 85°C',
       size: '17.7x15.8x2.0mm',
-      image: 'https://innoway.vn/assets/images/module/bc660k.png',
+      image: 'https://cmp.innoway.vn/assets/images/module/bc660k.png',
     },
     {
       module: 'NB-IOT',
@@ -33,7 +33,7 @@ export function Module() {
       speed: '159Kbps (UL), 127Kbps (DL)',
       operaTemperature: '-40 → 85°C',
       size: '17.6x15.7x2.3mm',
-      image: 'https://innoway.vn/assets/images/module/sim7022.png',
+      image: 'https://cmp.innoway.vn/assets/images/module/sim7022.png',
     },
     {
       module: 'Wifi',
@@ -44,7 +44,7 @@ export function Module() {
       speed: '150Mbps',
       operaTemperature: '-40 → 85°C',
       size: '24x16x2.3mm',
-      image: 'https://innoway.vn/assets/images/module/wifi.jpg',
+      image: 'https://cmp.innoway.vn/assets/images/module/wifi.jpg',
     },
     {
       module: 'BLE 4.2 Bluetooth',
@@ -54,7 +54,7 @@ export function Module() {
       speed: '159Kbps (UL),127Kbps (DL)',
       operaTemperature: '-25 → 75°C',
       size: '18.5x9.1x2.0mm',
-      image: 'https://innoway.vn/assets/images/module/bluetooth.jpg',
+      image: 'https://cmp.innoway.vn/assets/images/module/bluetooth.jpg',
     },
     {
       module: 'Zigbee',
@@ -63,7 +63,7 @@ export function Module() {
       memory: '2Mbps, 512KB Flash',
       operaTemperature: '-40 → 85°C',
       size: '22x16x2.2mm',
-      image: 'https://innoway.vn/assets/images/module/smcz01p.png',
+      image: 'https://cmp.innoway.vn/assets/images/module/smcz01p.png',
     },
   ]
   function capitalizeFirstLetter(string: string) {
@@ -92,7 +92,7 @@ export function Module() {
   return (
     <>
       <div className="">
-        <div className="flex px-1 py-1">
+        <div className="flex p-1">
           <div className="mr-3 h-[84vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
             <div className="h-[80vh] overflow-auto">
               <div className="flex items-center bg-[#858687] px-6 pb-6 pt-3 text-center text-xl font-medium text-white">

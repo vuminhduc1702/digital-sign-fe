@@ -16,7 +16,7 @@ export function FlowEngineV2Layout() {
       {projectId ? (
         <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
           <div className="flex flex-col gap-2 md:col-span-2">
-            <FlowEngineV2Navbar />
+            {/* <FlowEngineV2Navbar /> */}
             <Suspense
               fallback={
                 <div className="flex grow items-center justify-center md:col-span-2">

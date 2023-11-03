@@ -32,6 +32,8 @@ import {
   serviceThingSchema,
   type CreateServiceForm,
   type dataRun,
+  numberInput,
+  defaultJSType,
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '~/components/Spinner'
@@ -39,7 +41,7 @@ import { Switch } from '~/components/Switch'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { cn } from '~/utils/misc'
-import { InputService, type ThingService } from '../../types'
+import { type InputService, type ThingService } from '../../types'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 import { Dropdown } from '~/components/Dropdown'
@@ -85,6 +87,7 @@ export function UpdateThingService({
   const [codeOutput, setCodeOutput] = useState('')
   const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
+  const [, setInputTypeValue] = useState('')
 
   const { id: projectId } = storage.getProject()
 
@@ -212,12 +215,12 @@ export function UpdateThingService({
             options={{
               defaultValues: {
                 ...thingServiceData?.data,
-                description: thingServiceData?.data.description || '',
+                description: thingServiceData?.data?.description || '',
               },
             }}
             name={['input']}
           >
-            {({ register, formState }, { fields, append, remove }) => {
+            {({ register, formState, setError }, { fields, append, remove }) => {
               return (
                 <>
                   <div className="my-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -324,6 +327,13 @@ export function UpdateThingService({
                                             registration={register(
                                               `input.${index}.name` as const,
                                             )}
+                                            onChange={(e) => {
+                                              if (defaultJSType.includes(e.target.value)) {
+                                                setError(`input.${index}.name`, {message: t('cloud:custom_protocol.service.service_input.name_error')})
+                                              } else {
+                                                setError(`input.${index}.name`, {message: ''})
+                                              }
+                                            }}
                                           />
                                           <SelectField
                                             label={t(
@@ -338,7 +348,11 @@ export function UpdateThingService({
                                               `input.${index}.type` as const,
                                             )}
                                             options={outputList}
-                                            className="h-9"
+                                            className="h-9 pl-2 pr-2"
+                                            onChange={(e) => {
+                                              setInputTypeValue(e.target.value)
+                                              fields[index].type = e.target.value
+                                            }}
                                           />
                                         </div>
                                         <InputField
@@ -352,6 +366,15 @@ export function UpdateThingService({
                                           registration={register(
                                             `input.${index}.value` as const,
                                           )}
+                                          type={ numberInput.includes(fields[index].type as string) ? 'number' : 'text' }
+                                          onChange={(e) => {
+                                            if (fields[index].type === 'bool') {
+                                              const result = e.target.value.replace(/[^A-Za-z]/, '')
+                                              fields[index].value = result
+                                            } else {
+                                              fields[index].value = e.target.value
+                                            }
+                                          }}
                                         />
                                       </div>
                                       <Button

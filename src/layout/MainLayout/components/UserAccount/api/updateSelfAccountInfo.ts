@@ -50,7 +50,7 @@ export const useMutationSelfAccountInfo = ({
       })
       addNotification({
         type: 'success',
-        title: t('cloud:custom_protocol.thing.success_update'),
+        title: t('form:user.success_update'),
       })
     },
     ...config,

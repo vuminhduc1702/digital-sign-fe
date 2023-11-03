@@ -17,8 +17,6 @@
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^3.0.0",
-    "@nivo/bar": "^0.83.0",
-    "@nivo/line": "^0.83.0",
     "@nivo/pie": "^0.83.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-checkbox": "^1.0.4",

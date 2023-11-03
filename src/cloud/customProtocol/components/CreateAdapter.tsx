@@ -209,6 +209,22 @@ export const outputList = [
   },
 ]
 
+export const thingTypeList = [
+  {
+    label: i18n.t('cloud:custom_protocol.thing.thing'),
+    value: 'thing',
+    selected: true,
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.thing.template'),
+    value: 'template',
+  },
+  {
+    label: i18n.t('cloud:custom_protocol.thing.shape'),
+    value: 'shape',
+  },
+]
+
 export function CreateAdapter() {
   const { t } = useTranslation()
 
@@ -632,7 +648,7 @@ export function CreateAdapter() {
                                 title={t(
                                   'cloud:custom_protocol.adapter.topic_list',
                                 )}
-                                className="w-full rounded-md bg-gray-500 pl-3"
+                                className="w-full rounded-md bg-secondary-700 pl-3"
                               />
                               <Button
                                 className="rounded-md"
@@ -815,27 +831,7 @@ export function CreateAdapter() {
                                       )}
                                       error={formState.errors['type']}
                                       registration={register('type')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.thing',
-                                          ),
-                                          value: 'thing',
-                                          selected: true,
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.template',
-                                          ),
-                                          value: 'template',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.shape',
-                                          ),
-                                          value: 'shape',
-                                        },
-                                      ]}
+                                      options={thingTypeList}
                                       onChange={event =>
                                         setThingType(
                                           String(

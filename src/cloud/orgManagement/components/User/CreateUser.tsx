@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
@@ -9,14 +9,15 @@ import {
   InputField,
   SelectDropdown,
   type SelectOptionString,
+  SelectField,
 } from '~/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
   emailSchema,
+  emptySelectSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
-import { useDefaultCombobox } from '~/utils/hooks'
 import storage from '~/utils/storage'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
@@ -27,6 +28,7 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetRoles } from '~/cloud/role/api'
+import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
 
 export const userSchema = z
   .object({
@@ -38,6 +40,10 @@ export const userSchema = z
     project_id: z.string().optional(),
     org_id: z.string().optional(),
     role_id: z.string().optional(),
+    province: emptySelectSchema,
+    district: emptySelectSchema,
+    ward: emptySelectSchema,
+    full_address: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -71,6 +77,77 @@ export function CreateUser() {
 
   const [option, setOption] = useState<SelectOptionString>()
   const [role, setRole] = useState<SelectOptionString>()
+  const [provinceCode, setProvinceCode] = useState('')
+  const [districtCode, setDistrictCode] = useState('')
+  const [wardCode, setWardCode] = useState('')
+
+  //get province list
+  const { data: provinceList } = useAreaList({
+    config: {
+      // suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === provinceCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Tỉnh/TP' })
+        return transformArr
+      },
+    },
+    param: {
+      parentCode: '',
+      type: 'PROVINCE',
+      queryKey: 'province-list',
+    },
+  })
+
+  // get district list
+  const { data: districtList } = useAreaList({
+    config: {
+      suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === districtCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Huyện/Quận' })
+        return transformArr
+      },
+      enabled: !!provinceCode,
+    },
+    param: {
+      parentCode: provinceCode,
+      type: 'DISTRICT',
+      queryKey: 'district-list',
+    },
+  })
+
+  // get ward list
+  const { data: wardList } = useAreaList({
+    config: {
+      suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          if (item.areaCode === wardCode) {
+            return { value: item.areaCode, label: item.name, selected: true }
+          }
+          return { value: item.areaCode, label: item.name }
+        })
+        transformArr.push({ value: '', label: 'Phường/Xã' })
+        return transformArr
+      },
+      enabled: !!districtCode,
+    },
+    param: {
+      parentCode: districtCode,
+      type: 'WARD',
+      queryKey: 'ward-list',
+    },
+  })
 
   return (
     <FormDrawer
@@ -108,7 +185,11 @@ export function CreateUser() {
               email: values.email,
               password: values.password,
               role_id: role?.value || '',
-              phone: values.phone
+              phone: values.phone,
+              province: values.province,
+              district: values.district,
+              ward: values.ward,
+              full_address: values.full_address,
             },
           })
         }}
@@ -128,7 +209,7 @@ export function CreateUser() {
                 label={
                   t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
                 }
-                type='number'
+                type="number"
                 error={formState.errors['phone']}
                 registration={register('phone')}
               />
@@ -146,7 +227,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['password']}
                 registration={register('password')}
-                type='password'
+                type="password"
               />
               <InputField
                 label={
@@ -155,7 +236,7 @@ export function CreateUser() {
                 }
                 error={formState.errors['confirmPassword']}
                 registration={register('confirmPassword')}
-                type='password'
+                type="password"
               />
               <div className="space-y-1">
                 <SelectDropdown
@@ -196,6 +277,34 @@ export function CreateUser() {
                   {formState?.errors?.role_id?.message}
                 </p>
               </div>
+
+              <div className="grid grid-cols-3 gap-x-2">
+                <SelectField
+                  error={formState.errors['province']}
+                  registration={register('province')}
+                  options={provinceList || [{ value: '', label: 'Tỉnh/TP' }]}
+                  classchild="w-full"
+                  onChange={e => setProvinceCode(e.target.value)}
+                />
+
+                <SelectField
+                  error={formState.errors['district']}
+                  registration={register('district')}
+                  options={districtList || [{ value: '', label: 'Huyện/Quận' }]}
+                  onChange={e => setDistrictCode(e.target.value)}
+                />
+
+                <SelectField
+                  error={formState.errors['ward']}
+                  registration={register('ward')}
+                  options={wardList || [{ value: '', label: 'Phường/Xã' }]}
+                />
+              </div>
+
+              <InputField
+                label={t('form:enter_address')}
+                registration={register('full_address')}
+              />
             </>
           )
         }}

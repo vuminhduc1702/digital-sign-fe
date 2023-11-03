@@ -1,8 +1,9 @@
 import { type UseFormRegisterReturn } from 'react-hook-form'
-import { type ChangeEvent } from 'react'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
+
+import { type EventFor } from '~/types'
 
 export type SelectOption = {
   label: string
@@ -28,11 +29,10 @@ type SelectFieldProps = FieldWrapperPassThroughProps & {
   placeholder?: string
   registration?: Partial<UseFormRegisterReturn>
   value?: string | number
-  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void
   classnamefieldwrapper?: string
   classlabel?: string
   classchild?: string
-}
+} & React.SelectHTMLAttributes<HTMLSelectElement>
 
 export const SelectField = ({
   label,
@@ -55,7 +55,8 @@ export const SelectField = ({
       className={cn('', classnamefieldwrapper)}
       require={require}
       label={label}
-      error={error}>
+      error={error}
+    >
       <select
         placeholder={placeholder}
         value={value}

@@ -8,13 +8,13 @@
       "module": "Module"
     },
     "cloud": {
-      "title": "Cloud",
+      "title": "Đám mây",
       "org_management": "Quản lý tổ chức",
       "flow_engine_v2": "Quản lý nghiệp vụ",
       "firm_ware": "Quản lý Firmware",
       "device_template": "Mẫu thiết bị",
       "flow_engine": "Flow Engine",
-      "dashboard": "Dashboard",
+      "dashboard": "Bảng điều khiển",
       "role_manage": "Vai trò",
       "custom_protocol": "Adapter"
     },
@@ -58,17 +58,21 @@
       "project": "Dự án",
       "no_data": "Bạn chưa có dự án nào, hãy tạo mới dự án",
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
+      "backup": "Export project",
+      "restore": "Import project",
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
+        "restore_project": "Restore project",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
         "delete_project": "Xoá dự án",
         "confirm_delete": "Bạn có chắc chắn muốn xóa dự án {{PROJECT}}",
+        "choose_file": "Vui lòng chọn file tải lên",
         "success_add": "Tạo mới dự án thành công",
         "success_update": "Sửa dự án thành công",
         "success_delete": "Xóa dự án thành công"
@@ -346,6 +350,7 @@
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
         "role_type": "Loại vai trò",
+        "actions": "Thao tác",
         "success_create": "Tạo vai trò thành công",
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"
@@ -358,7 +363,8 @@
         "service_input": {
           "name": "Nhập tên biến",
           "type": "Kiểu dữ liệu",
-          "value": "Giá trị"
+          "value": "Giá trị",
+          "name_error": "Tên biến không trùng với kiểu dữ liệu (string, boolean...)"
         },
         "title": "Nghiệp vụ",
         "info": "Thông tin",
@@ -370,7 +376,7 @@
         "success_delete": "Xoá nghiệp vụ thành công",
         "name": "Tên nghiệp vụ",
         "output": "Kết quả",
-        "input": "Đầu vào",
+        "input": "Biến đầu vào",
         "add_other": "Thêm biến khác",
         "json": "JSON",
         "str": "String",
@@ -397,7 +403,8 @@
         "minimize_result": "Thu nhỏ editor",
         "default_result": "Mặc định",
         "hide_console": "Ẩn console",
-        "view_console": "Hiện console"
+        "view_console": "Hiện console",
+        "choose_input": "Vui lòng chọn biến đầu vào"
       },
       "thing": {
         "title": "Thing",
@@ -471,10 +478,10 @@
       }
     },
     "dashboard": {
-      "title": "Dashboard",
+      "title": "Bảng điều khiển",
       "table": {
         "id": "ID",
-        "name": "Tên Dashboard",
+        "name": "Tên bảng điều khiển",
         "create_time": "Ngày tạo",
         "title": "Tiêu đề",
         "tenant_id": "Tenant ID",
@@ -482,20 +489,20 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
-        "delete_dashboard": "Xoá DB",
-        "delete_dashboard_full": "Xoá Dashboard",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa Dashboard {{DBNAME}}?"
+        "delete_dashboard": "Xoá bảng ĐK",
+        "delete_dashboard_full": "Xoá bảng điều khiển",
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
       },
       "add_dashboard": {
-        "title": "Thêm mới Dashboard",
-        "name": "Tên Dashboard",
+        "title": "Thêm mới bảng điều khiển",
+        "name": "Tên bảng điều khiển",
         "description": "Mô tả",
-        "edit": "Sửa DB",
-        "edit_full": "Sửa Dashboard",
-        "success_create": "Tạo Dashboard thành công",
-        "success_update": "Cập nhật Dashboard thành công",
-        "success_delete": "Xoá Dashboard thành công",
-        "note": "Nhấn vào nút Sửa Dashboard để tạo biểu đồ"
+        "edit": "Sửa bảng ĐK",
+        "edit_full": "Sửa bảng điều khiển",
+        "success_create": "Tạo bảng điều khiển thành công",
+        "success_update": "Cập nhật bảng điều khiển thành công",
+        "success_delete": "Xoá bảng điều khiển thành công",
+        "note": "Nhấn vào nút Sửa bảng điều khiển để tạo biểu đồ"
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
@@ -517,21 +524,28 @@
       },
       "detail_dashboard": {
         "add_widget": {
-          "create": "Tạo biểu đồ cho dashboard",
+          "create": "Tạo biểu đồ cho bảng điều khiển",
           "line_chart": "Biểu đồ đường",
           "horizontal_bar_chart": "Biểu đồ cột",
           "pie_chart": "Biểu đồ tròn",
           "gauge": "Đồng hồ đo",
           "map": "Bản đồ",
           "data_chart": "Dữ liệu",
-          "data_table": "Bảng dữ liệu"
+          "data_table": "Bảng dữ liệu",
+          "controller": {
+            "title": "Điều khiển",
+            "input_list": "Danh sách biến đầu vào",
+            "input": "Nhập tên biến",
+            "value": "Giá trị",
+            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công"
+          }
         }
       }
     },
     "firmware": {
       "title": "Quản lý Firmware",
-      "fota": "Fota",
-      "choose_fota": "Vui lòng chọn ít nhất 1 Fota",
+      "fota": "FOTA",
+      "choose_fota": "Vui lòng chọn ít nhất 1 FOTA",
       "choose_template": "Vui lòng chọn ít nhất 1 thiết bị mẫu",
       "choose_file": "Vui lòng chọn file tải lên",
       "table": {
@@ -559,7 +573,7 @@
         "success_update": "Cập nhật Firmware thành công",
         "success_delete": "Xoá Firmware thành công",
         "success_upload": "Upload File thành công",
-        "success_update_version": "Upload Version thành công"
+        "success_update_version": "Gửi lệnh FOTA thành công"
       }
     }
   },
@@ -732,10 +746,11 @@
     "no_adapter": "Không có Adapter. Vui lòng tạo.",
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
-    "no_service": "Không có nghiệp vụ. Vui lòng tạo.",
+    "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
-    "no_dashboard": "Không có dashboard. Vui lòng tạo.",
-    "no_in_org": "Không thuộc TC. Vui lòng tạo.",
+    "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
+    "no_in_org": "Không trực thuộc tổ chức.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subcription": "Không có dịch vụ. Vui lòng tạo.",
@@ -776,7 +791,8 @@
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
     "entity_thing": "Đang tải danh sách Entity thing...",
-    "service_thing": "Vui lòng chọn Entity thing trước"
+    "service_thing": "Vui lòng chọn Entity thing trước",
+    "input": "Vui lòng chọn nghiệp vụ trước"
   },
   "placeholder": {
     "general": "Vui lòng chọn",
@@ -800,7 +816,8 @@
     "change_phone": "Đổi số điện thoại",
     "change_address": "Đổi địa chỉ",
     "create_user": "Đăng ký tài khoản thành công",
-    "copy_device_token": "Copy token thiết bị"
+    "copy_device_token": "Copy token thiết bị",
+    "cmp": "Hệ thống CMP"
   },
   "flow_engine": {
     "title": "Flow Engine"
@@ -819,10 +836,11 @@
   "validate": {
     "name_max_length": "Vui lòng lựa chọn tên có độ dài tối đa 30 ký tự",
     "image_max_size": "Ảnh cho phép dung lượng tối đa 5MB",
-    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png"
+    "image_type": "Chỉ cho phép tải ảnh định dạng .jpg, .jpeg, .png",
+    "json_type": "Chỉ cho phép tải file định dạng .json, .txt"
   },
   "auth": {
-    "footer_text_1": "© 2021 Developed by Technical Technology Center - TCT CNC VHT",
+    "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
     "footer_text_2": "Copyright by VIETTEL GROUP",
     "checkbox": "Ghi nhớ",
     "from_login_to_register": "Đăng ký ",
@@ -880,7 +898,7 @@
       "cskh": "cskh@viettel.com.vn",
       "follow": "Follow us:",
       "phone_used": "0123 456 789",
-      "cre": "Copyright Viettel Telecom 2022"
+      "cre": "Copyright Viettel Telecom"
     },
     "client": {
       "partner": "Đối tác của chúng tôi"
@@ -952,6 +970,11 @@
     "enter_address": "Nhập địa chỉ chi tiết",
     "province_city": "Tỉnh/TP",
     "district": "Huyện/Quận",
-    "village": "Phường/Xã"
+    "village": "Phường/Xã",
+    "user": {
+      "success_update": "Cập nhật tài khoản thành công",
+      "fuel": "Cập nhật fuel thành công",
+      "ddos": "Cập nhật ddos thành công"
+    }
   }
 }

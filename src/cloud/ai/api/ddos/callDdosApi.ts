@@ -25,10 +25,8 @@ type GetDdosDTO = {
 }
 
 export const getDdos = (data: GetDdosDTO) => {
-  return axios.get('/api/ddos', {
-    params: {
+  return axios.post('/ai/ddos', {
       ...data
-    }
   })
 }
 

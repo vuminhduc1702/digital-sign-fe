@@ -35,9 +35,11 @@ import {
   CommandInput,
   CommandItem,
 } from '~/components/Command'
+import { useDefaultCombobox } from '~/utils/hooks'
 
-import { aggSchema, type WidgetType } from '../../types'
+import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
+import { type ControllerBtn } from './CreateControllerButton'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
@@ -63,15 +65,6 @@ export const widgetTypeSchema = z
   .enum(['TIMESERIES', 'LASTEST'] as const)
   .optional()
 
-export const widgetCategorySchema = z.enum([
-  'LINE',
-  'BAR',
-  'PIE',
-  'GAUGE',
-  'CARD',
-  'MAP',
-  'TABLE',
-] as const)
 export type WidgetCategoryType = z.infer<typeof widgetCategorySchema>
 
 export const widgetSchema = z.object({
@@ -83,6 +76,7 @@ export const widgetSchema = z.object({
     lastest_message: z.string(),
     realtime_message: z.string(),
     history_message: z.string(),
+    controller_message: z.string().optional(),
   }),
   attribute_config: attrWidgetSchema,
   config: z
@@ -151,7 +145,7 @@ export const widgetCreateSchema = z.object({
         })
         .optional(),
       dataType: widgetDataTypeSchema,
-      window: z.coerce.number().optional()
+      window: z.coerce.number().optional(),
     })
     .optional(),
   id: z.string().optional(),
@@ -197,11 +191,10 @@ type CreateWidgetProps = {
   isMultipleDevice: boolean
   isOpen: boolean
   close: () => void
-  widgetListRef: React.MutableRefObject<Widget>
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataType: SelectOptionGeneric<WidgetDataType>[] = [
+const widgetDataTypeOptions: SelectOptionGeneric<WidgetDataType>[] = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -213,7 +206,6 @@ export function CreateWidget({
   isMultipleDevice,
   isOpen,
   close,
-  widgetListRef,
   setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
@@ -222,7 +214,7 @@ export function CreateWidget({
 
   const { id: projectId } = storage.getProject()
   const [optionOrg, setOptionOrg] = useState({
-    label: '',
+    label: t('search:no_org'),
     value: '',
   })
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
@@ -236,13 +228,14 @@ export function CreateWidget({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const defaultComboboxOrgData = useDefaultCombobox('org')
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
   const [deviceValue, setDeviceValue] = useState<SelectOptionString[]>()
   const { data: deviceData } = useGetDevices({
     orgId: optionOrg?.value,
     projectId,
     config: {
-      enabled: !!optionOrg?.value,
       suspense: false,
     },
   })
@@ -266,14 +259,15 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  console.log('zod errors', formState.errors)
+  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,
   })
   const [aggValue, setAggValue] = useState('')
-  const [widgetDataTypeValue, setWidgetDataTypeValue] = useState('')
+  const [widgetDataTypeValue, setWidgetDataTypeValue] =
+    useState<WidgetDataType>('REALTIME')
 
   useEffect(() => {
     append({
@@ -366,7 +360,7 @@ export function CreateWidget({
                         item => item.attribute_key,
                       ),
                       startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
+                        values.widgetSetting?.startDate?.toISOString() as string,
                       ),
                       interval: values.widgetSetting?.interval,
                       limit: 10,
@@ -378,50 +372,53 @@ export function CreateWidget({
                 ],
               }
 
-              const historyMessage = values.widgetSetting?.agg === 'SMA' ? {
-                entityDataCmds: [
-                  {
-                    historyCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
-                      ),
-                      endTs: Date.parse(
-                        values.widgetSetting?.endDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 100,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                      window: values.widgetSetting?.window
-                    },
-                    id: widgetId,
-                  },
-                ],
-              } : {
-                entityDataCmds: [
-                  {
-                    historyCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString(),
-                      ),
-                      endTs: Date.parse(
-                        values.widgetSetting?.endDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 100,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                    },
-                    id: widgetId,
-                  },
-                ],
-              }
+              const historyMessage =
+                values.widgetSetting?.agg === 'SMA'
+                  ? {
+                      entityDataCmds: [
+                        {
+                          historyCmd: {
+                            keys: values.attributeConfig.map(
+                              item => item.attribute_key,
+                            ),
+                            startTs: Date.parse(
+                              values.widgetSetting?.startDate?.toISOString(),
+                            ),
+                            endTs: Date.parse(
+                              values.widgetSetting?.endDate?.toISOString() as string,
+                            ),
+                            interval: values.widgetSetting?.interval,
+                            limit: 100,
+                            offset: 0,
+                            agg: values.widgetSetting?.agg,
+                            window: values.widgetSetting?.window,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
+                  : {
+                      entityDataCmds: [
+                        {
+                          historyCmd: {
+                            keys: values.attributeConfig.map(
+                              item => item.attribute_key,
+                            ),
+                            startTs: Date.parse(
+                              values.widgetSetting?.startDate?.toISOString() as string,
+                            ),
+                            endTs: Date.parse(
+                              values.widgetSetting?.endDate?.toISOString() as string,
+                            ),
+                            interval: values.widgetSetting?.interval,
+                            limit: 100,
+                            offset: 0,
+                            agg: values.widgetSetting?.agg,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
 
               const widget: z.infer<typeof widgetSchema> = {
                 title: values.title,
@@ -470,8 +467,7 @@ export function CreateWidget({
                     : null,
               }
 
-              widgetListRef.current[widgetId] = widget
-              setWidgetList(widgetListRef.current)
+              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
               close()
             })}
@@ -487,7 +483,7 @@ export function CreateWidget({
                     title={t('cloud:dashboard.config_chart.show')}
                     className="w-full rounded-md bg-secondary-700 pl-3"
                   />
-                  <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
+                  <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
@@ -503,7 +499,7 @@ export function CreateWidget({
                         name="org_id"
                         control={control}
                         options={
-                          orgFlattenData?.map(org => ({
+                          orgSelectOptions?.map(org => ({
                             label: org?.name,
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
@@ -611,7 +607,7 @@ export function CreateWidget({
 
                   {fields.map((field, index) => (
                     <section
-                      className="mt-3 flex justify-between gap-x-2"
+                      className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
                       <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
@@ -804,19 +800,21 @@ export function CreateWidget({
                         title={t('cloud:dashboard.config_chart.widget_config')}
                         className="w-full rounded-md bg-secondary-700 pl-3"
                       />
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-4 ">
+                      <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
                           label={t('ws:filter.dataType')}
                           error={formState?.errors?.widgetSetting?.dataType}
                           registration={register(
                             `widgetSetting.dataType` as const,
                           )}
-                          options={widgetDataType.map(dataType => ({
+                          options={widgetDataTypeOptions.map(dataType => ({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          onChange={(e) => {
-                            setWidgetDataTypeValue(e.target.value)
+                          onChange={e => {
+                            setWidgetDataTypeValue(
+                              e.target.value as WidgetDataType,
+                            )
                           }}
                         />
 
@@ -882,7 +880,7 @@ export function CreateWidget({
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.endDate')}
                             error={
-                              watch('widgetSetting.dataType') === 'REALTIME'
+                              widgetDataTypeValue === 'REALTIME'
                                 ? ''
                                 : formState?.errors?.widgetSetting?.startDate
                             }
@@ -905,8 +903,7 @@ export function CreateWidget({
                                           !value && 'text-secondary-700',
                                         )}
                                         disabled={
-                                          watch('widgetSetting.dataType') ===
-                                          'REALTIME'
+                                          widgetDataTypeValue === 'REALTIME'
                                         }
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -965,31 +962,36 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.agg}
                           registration={register(`widgetSetting.agg` as const)}
                           options={
-                            widgetDataTypeValue === 'HISTORY' ? 
-                              widgetAgg.map(agg => ({
-                                label: agg.label,
-                                value: agg.value,
-                              })).concat([{ label: "SMA", value: "SMA"}, {label: "FFT", value: "FFT"}]) : 
-                              widgetAgg.map(agg => ({
-                                label: agg.label,
-                                value: agg.value,
-                              }))
+                            widgetDataTypeValue === 'HISTORY'
+                              ? widgetAgg
+                                  .map(agg => ({
+                                    label: agg.label,
+                                    value: agg.value,
+                                  }))
+                                  .concat([
+                                    { label: 'SMA', value: 'SMA' },
+                                    { label: 'FFT', value: 'FFT' },
+                                  ])
+                              : widgetAgg.map(agg => ({
+                                  label: agg.label,
+                                  value: agg.value,
+                                }))
                           }
-                          onChange={(e) => {
+                          onChange={e => {
                             setAggValue(e.target.value)
                           }}
                         />
-                        {
-                          aggValue === 'SMA' ? (
-                            <InputField
-                              label={t('ws:filter.sma_window')}
-                              error={formState?.errors?.widgetSetting?.window}
-                              registration={register(`widgetSetting.window` as const)}
-                            />
-                          ) : (
-                            <></>
-                          )
-                        }
+                        {aggValue === 'SMA' ? (
+                          <InputField
+                            label={t('ws:filter.sma_window')}
+                            error={formState?.errors?.widgetSetting?.window}
+                            registration={register(
+                              `widgetSetting.window` as const,
+                            )}
+                          />
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     </>
                   ) : null}

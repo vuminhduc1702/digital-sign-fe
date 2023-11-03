@@ -12,7 +12,6 @@ import {
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { queryClient } from '~/lib/react-query'
-import { useDefaultCombobox } from '~/utils/hooks'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetAttrs } from '../../api/attrAPI'
@@ -460,7 +459,7 @@ export function UpdateEvent({
               <div className="space-y-3">
                 <TitleBar
                   title={t('cloud:org_manage.event_manage.add_event.info')}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   <InputField
@@ -564,7 +563,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.test_condition_time',
                   )}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                   {todos.map(todo => (
@@ -614,7 +613,7 @@ export function UpdateEvent({
                     title={t(
                       'cloud:org_manage.event_manage.add_event.condition.title',
                     )}
-                    className="w-full rounded-md bg-gray-500 pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
@@ -761,7 +760,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.action.title',
                   )}
-                  className="w-full rounded-md bg-gray-500 pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"

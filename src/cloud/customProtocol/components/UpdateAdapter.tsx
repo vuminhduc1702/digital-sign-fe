@@ -25,6 +25,7 @@ import {
   outputList,
   protocolList,
   serviceThingSchema,
+  thingTypeList,
 } from './CreateAdapter'
 import storage from '~/utils/storage'
 import {
@@ -503,7 +504,7 @@ export function UpdateAdapter({
                                 title={t(
                                   'cloud:custom_protocol.adapter.topic_list',
                                 )}
-                                className="w-full rounded-md bg-gray-500 pl-3"
+                                className="w-full rounded-md bg-secondary-700 pl-3"
                               />
                               <Button
                                 className="rounded-md"
@@ -692,27 +693,7 @@ export function UpdateAdapter({
                                       )}
                                       error={formState.errors['type']}
                                       registration={register('type')}
-                                      options={[
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.thing',
-                                          ),
-                                          value: 'thing',
-                                          selected: true,
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.template',
-                                          ),
-                                          value: 'template',
-                                        },
-                                        {
-                                          label: t(
-                                            'cloud:custom_protocol.thing.shape',
-                                          ),
-                                          value: 'shape',
-                                        },
-                                      ]}
+                                      options={thingTypeList}
                                       onChange={event =>
                                         setThingType(
                                           String(

@@ -7,7 +7,7 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '~/i18n'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   emailSchema,
@@ -50,11 +50,11 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
   const { t } = useTranslation()
 
   const forgetMutation = useChangePassWithEmailAndPassword()
-  // const [email, setEmail] = useState('')
-  const timeCountdown = 5
-  const [countdown, setCountdown] = useState<number>(timeCountdown)
+
+  const timeCountdown = 180
+  const [countdown, setCountdown] = useState<number>(1)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
-  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(false)
+  const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(true)
 
   useEffect(() => {
     let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
@@ -103,8 +103,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 registration={register('email')}
                 onChange={e => {
                   const emailValue = e.target.value
-                  console.log(emailValue)
-                  if (emailValue === '') {
+                  if (emailSchema.safeParse(emailValue).success === false) {
                     setBtnOtpDisable(true)
                   } else {
                     setBtnOtpDisable(false)
@@ -168,7 +167,6 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                       })
                       .catch(error => {
                         setBtnOtpDisable(false)
-                        console.log(error)
                       })
                   }
                 }}

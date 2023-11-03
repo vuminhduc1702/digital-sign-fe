@@ -16,7 +16,7 @@ export const ForgetPassword = () => {
           logoutFn()
           addNotification({
             type: 'success',
-            title: t('user:create_user'),
+            title: t('auth:success_password'),
           })
         }}
       />

@@ -10,7 +10,7 @@ export function AppSdk() {
       name: 'Smarthome SDK',
       exist: 'true',
       info: 'Ứng dụng cho phép kết nối và quản lý các thiết bị thông minh trong nhà',
-      image: 'https://innoway.vn/assets/images/overview/appSdk.png',
+      image: 'https://cmp.innoway.vn/assets/images/overview/appSdk.png',
       link: 'http://203.113.138.18:4447/s/r2mdFKfdA28otJt/download',
     },
     {
@@ -55,7 +55,7 @@ export function AppSdk() {
   return (
     <>
       <ContentLayout title={t('sidebar:application.appsdk')}>
-        <div className="grid grid-cols-2 px-3 py-3">
+        <div className="grid grid-cols-2 p-3">
           {Sdks.map((item, idx) => (
             <div className="m-4 h-fit rounded bg-[#eceff1] shadow-lg" key={idx}>
               <h5 className="flex h-[40px] border-b border-solid border-[#ccc]">

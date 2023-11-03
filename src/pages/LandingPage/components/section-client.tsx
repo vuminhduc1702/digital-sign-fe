@@ -4,39 +4,39 @@ import Carousel from 'react-multi-carousel'
 export function SectionClient() {
   const slides = [
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_1.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_1.svg',
       alt: '1',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_8.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_8.svg',
       alt: '8',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_3.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_3.svg',
       alt: '3',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_7.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_7.svg',
       alt: '7',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_6.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_6.svg',
       alt: '6',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_9.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_9.svg',
       alt: '9',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_11.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_11.svg',
       alt: '11',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_12.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_12.svg',
       alt: '12',
     },
     {
-      src: 'https://innoway.vn/assets/images/landingPageTelco/partner_13.svg',
+      src: 'https://cmp.innoway.vn/assets/images/landingPageTelco/partner_13.svg',
       alt: '13',
     },
   ]

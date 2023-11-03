@@ -20,6 +20,7 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useDeleteRole } from '../api'
 import { type Role } from '../types'
 import { UpdateRole } from './UpdateRole'
+import { actionsList } from './CreateRole'
 
 function RoleTableContextMenu({
   id,
@@ -163,6 +164,23 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
         cell: info => {
           const { role_type } = info.row.original
           return <>{role_type ? role_type : 'Generic'}</>
+        },
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('policies', {
+        header: () => <span>{t('cloud:role_manage.add_role.actions')}</span>,
+        cell: info => {
+          const origin = JSON.parse(JSON.stringify(info.row.original))
+          const policiesData = JSON.parse(origin.policies)
+          const actionsParsed = policiesData[0].actions.map(
+            (policy: string) => {
+              const filterVal = actionsList.filter(
+                action => action.value === policy,
+              )
+              return ' ' + filterVal[0].label
+            },
+          )
+          return String(actionsParsed)
         },
         footer: info => info.column.id,
       }),

@@ -48,7 +48,12 @@ export const Layout = ({ children, title }: LayoutProps) => {
         <footer className="absolute bottom-5 left-1/2 -translate-x-1/2 py-0">
           <div className="container mx-auto text-center">
             <ul className="text-body-xs">
-              <li>{t('auth:footer_text_1')}</li>
+              <li>
+                {t('auth:footer_text_1').replace(
+                  '{{YEAR}}',
+                  String(new Date().getFullYear()),
+                )}
+              </li>
               <li>{t('auth:footer_text_2')}</li>
             </ul>
           </div>
