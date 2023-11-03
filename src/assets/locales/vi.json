@@ -350,6 +350,7 @@
         "edit": "Sửa vai trò",
         "name": "Tên vai trò",
         "role_type": "Loại vai trò",
+        "actions": "Thao tác",
         "success_create": "Tạo vai trò thành công",
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"
@@ -362,7 +363,8 @@
         "service_input": {
           "name": "Nhập tên biến",
           "type": "Kiểu dữ liệu",
-          "value": "Giá trị"
+          "value": "Giá trị",
+          "name_error": "Tên biến không trùng với kiểu dữ liệu (string, boolean...)"
         },
         "title": "Nghiệp vụ",
         "info": "Thông tin",

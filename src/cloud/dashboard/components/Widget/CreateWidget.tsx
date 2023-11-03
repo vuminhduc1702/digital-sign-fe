@@ -213,7 +213,7 @@ export function CreateWidget({
 
   const { id: projectId } = storage.getProject()
   const [optionOrg, setOptionOrg] = useState({
-    label: '',
+    label: 'Không thuộc tổ chức nào',
     value: '',
   })
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
@@ -483,7 +483,7 @@ export function CreateWidget({
                     title={t('cloud:dashboard.config_chart.show')}
                     className="w-full rounded-md bg-secondary-700 pl-3"
                   />
-                  <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
+                  <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
