@@ -1,5 +1,5 @@
 import { Menu } from '@headlessui/react'
-import { createColumnHelper, type ColumnDef, type Row } from '@tanstack/react-table'
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -14,7 +14,6 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { type Customer } from '../../types'
-import { InputField } from '~/components/Form'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -56,37 +55,12 @@ type CustomerTableProps = {
   data?: Customer[]
 } & BaseTablePagination
 
-const renderSubComponent = ({ row }: { row: Row<Customer> }) => {
-  return (
-    <>
-      <InputField value={row.getValue('email')} className="mt-1 h-[37px]" />
-      <InputField value={row.getValue('phone')} className="mt-1 h-[37px]" />
-    </>
-  )
-}
-
 export function CustomerTable({ data, ...props }: CustomerTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<Customer>()
   const columns = useMemo<ColumnDef<Customer, any>[]>(
     () => [
-      columnHelper.display({
-        id: 'expander',
-        header: () => null,
-        cell: ({ row }) => {
-          return (
-            <button
-              {...{
-                onClick: row.getToggleExpandedHandler(),
-                style: { cursor: 'pointer' },
-              }}
-            >
-              {row.getIsExpanded() ? '👇' : '👉'}
-            </button>
-          )
-        },
-      }),
       columnHelper.display({
         id: 'stt',
         cell: info => {
@@ -146,13 +120,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable
-      getRowCanExpand={() => true}
-      renderSubComponent={renderSubComponent}
-      data={data}
-      columns={columns}
-      {...props}
-    />
+    <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_customer')}

@@ -34,6 +34,7 @@ export function ComboBoxSelectAdapter({
       'port',
       'content_type',
       'configuration',
+      'schema'
     ],
   )
 

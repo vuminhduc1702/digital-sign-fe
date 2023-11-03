@@ -11,6 +11,16 @@ export type Configuration = {
     topic: string
   }[]
 }
+
+export type FieldsType = {
+    name: string
+    start_byte: number
+    end_byte: number
+}
+
+export type SchemaType = {
+  fields: FieldsType[]
+}
 export type Adapter = {
   id: string
   name: string
@@ -24,6 +34,7 @@ export type Adapter = {
   created_time: number
   thing_id: string
   handle_service: string
+  schema: SchemaType
 }
 
 export type AdapterList = {
@@ -47,6 +58,10 @@ export const inputService = [
   },
   {
     name: 'entityInfo',
+    type: 'str',
+  },
+  {
+    name: 'msg',
     type: 'str',
   },
 ]

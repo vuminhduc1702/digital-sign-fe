@@ -11,8 +11,8 @@ export interface searchFilter {
 
 type GetSubcriptons = {
   projectId: string
-  search_field: string
-  search_str: string
+  search_field?: string
+  search_str?: string
   searchData?: searchFilter
 }
 

@@ -456,6 +456,12 @@
         "username": "Tài khoản",
         "pass": "Mật khẩu",
         "topic_list": "Danh sách Topic",
+        "new_template": "Mẫu bản tin",
+        "schema": {
+          "name": "Tên trường",
+          "start_byte": "Byte bắt đầu",
+          "length_byte": "Độ dài"
+        },
         "topic": "Topic",
         "ping_MQTT": {
           "title": "Test MQTT connection",
@@ -641,6 +647,8 @@
         "date_request": "Ngày yêu cầu thanh toán",
         "date_expiry": "Ngày hết hạn thanh toán",
         "date_payment": "Ngày thanh toán thực tế",
+        "date_start": "Ngày bắt đầu sử dụng",
+        "date_end": "Ngày kết thúc sử dụng",
         "status": "Trạng thái"
       },
       "view_PDF": {
@@ -668,13 +676,35 @@
     },
     "customer_manage": {
       "info": "Thông tin khách hàng",
+      "payment_history": "Lịch sử thanh toán",
+      "sign_history": "Lịch sử đăng ký",
+      "plan_used": "Gói cước đang sử dụng",
+      "plan_detail": {
+        "title": "Chi tiết gói cước",
+        "name": "Tên gói cước",
+        "start_date": "Ngày bắt đầu",
+        "end_date": "Ngày kết thúc",
+        "payment_type": "Loại thanh toán",
+        "quantity_purchased": "Số lượng đã mua",
+        "used": "Đã dùng",
+        "result": "Còn lại"
+      },
       "table": {
+        "id_number": "Số giấy tờ",
         "customer_code": "Mã khách hàng",
         "customer_name": "Tên khách hàng",
         "phone": "Số điện thoại",
         "email": "Email",
         "role": "Vai trò",
-        "parent": "Đơn vị trực thuộc"
+        "parent": "Trực thuộc",
+        "address": "Địa chỉ",
+        "customer_id": "ID khách hàng"
+      },
+      "table_plan": {
+        "sub_id": "ID đăng ký",
+        "plan_id": "ID gói cước",
+        "plan_name": "Tên gói cước",
+        "cost": "Số tiền"
       }
     }
   },
@@ -709,7 +739,10 @@
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subcription": "Không có dịch vụ. Vui lòng tạo.",
-    "no_customer": "Không có thông tin khách hàng"
+    "no_customer": "Không có thông tin khách hàng",
+    "no_sign_history": "Không có lịch sử đăng ký",
+    "no_payment_history": "Không có lịch sử thanh toán",
+    "no_plan_used": "Không có gói cước đang sử dụng"
   },
   "btn": {
     "create": "Tạo mới",
