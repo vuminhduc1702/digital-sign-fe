@@ -55,28 +55,29 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const [countdown, setCountdown] = useState<number>(1)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(true)
+  const intervalRef: React.MutableRefObject<number | null> = useRef<
+    number | null
+  >(null)
 
-  useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
+  function updateCountdown() {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
+    intervalRef.current = setInterval(() => {
       setCountdown(prevState => {
-        if (prevState > 0) return prevState - 1
-        else {
-          clearInterval(timerId!)
-          if (checkCountdown === true) {
-            setCheckCountdown(false)
+        if (prevState > 0) {
+          return prevState - 1
+        } else {
+          setCheckCountdown(false)
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current)
           }
           setBtnOtpDisable(false)
           return 0
         }
       })
     }, 1000)
-
-    return () => {
-      if (timerId) {
-        clearInterval(timerId)
-      }
-    }
-  }, [checkCountdown])
+  }
 
   return (
     <div>
@@ -156,8 +157,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 className="!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline"
                 disabled={btnOtpDisable}
                 onClick={() => {
+                  setBtnOtpDisable(true)
                   if (getValues('email') !== '') {
-                    setBtnOtpDisable(true)
                     sentOTP({
                       email: getValues('email'),
                       phone: '0337463520',
@@ -165,10 +166,10 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                       .then(() => {
                         setCountdown(timeCountdown)
                         setCheckCountdown(true)
+                        updateCountdown()
                       })
                       .catch(error => {
                         setBtnOtpDisable(false)
-                        // console.log(error)
                       })
                   }
                 }}

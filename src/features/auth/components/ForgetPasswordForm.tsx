@@ -7,7 +7,7 @@ import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
 import i18n from '~/i18n'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
   emailSchema,
@@ -55,28 +55,29 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
   const [countdown, setCountdown] = useState<number>(1)
   const [checkCountdown, setCheckCountdown] = useState<boolean>(false)
   const [btnOtpDisable, setBtnOtpDisable] = useState<boolean>(true)
+  const intervalRef: React.MutableRefObject<number | null> = useRef<
+    number | null
+  >(null)
 
-  useEffect(() => {
-    let timerId: ReturnType<typeof setTimeout> = setInterval(() => {
+  function updateCountdown() {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+    }
+    intervalRef.current = setInterval(() => {
       setCountdown(prevState => {
-        if (prevState > 0) return prevState - 1
-        else {
-          clearInterval(timerId!)
-          if (checkCountdown === true) {
-            setCheckCountdown(false)
+        if (prevState > 0) {
+          return prevState - 1
+        } else {
+          setCheckCountdown(false)
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current)
           }
           setBtnOtpDisable(false)
           return 0
         }
       })
     }, 1000)
-
-    return () => {
-      if (timerId) {
-        clearInterval(timerId)
-      }
-    }
-  }, [checkCountdown])
+  }
 
   return (
     <div>
@@ -155,8 +156,8 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 className={`!mt-2 ml-auto h-[1rem] p-0 text-slate-800 underline`}
                 disabled={btnOtpDisable}
                 onClick={() => {
+                  setBtnOtpDisable(true)
                   if (getValues('email') !== '') {
-                    setBtnOtpDisable(true)
                     sentOTP({
                       email: getValues('email'),
                       phone: '0337463520',
@@ -164,6 +165,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                       .then(() => {
                         setCountdown(timeCountdown)
                         setCheckCountdown(true)
+                        updateCountdown()
                       })
                       .catch(error => {
                         setBtnOtpDisable(false)

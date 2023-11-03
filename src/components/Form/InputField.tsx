@@ -4,10 +4,10 @@ import { cn } from '~/utils/misc'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 
-type IconProps =
-  | { startIcon: React.ReactElement; endIcon?: never }
-  | { endIcon: React.ReactElement; startIcon?: never }
-  | { endIcon?: undefined; startIcon?: undefined }
+type IconProps = {
+  startIcon?: React.ReactElement
+  endIcon?: React.ReactElement
+}
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
   type?: 'text' | 'email' | 'password' | 'number' | 'file'
