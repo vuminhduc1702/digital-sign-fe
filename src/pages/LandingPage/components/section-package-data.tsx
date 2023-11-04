@@ -77,7 +77,7 @@ export function SectionPackageData() {
   return (
     <>
       <div
-        className="h-full bg-no-repeat"
+        className="h-full bg-cover bg-no-repeat"
         style={{ backgroundImage: `url(${bg_pack_of_data})` }}
       >
         <div className="h-5"></div>
@@ -141,7 +141,7 @@ export function SectionPackageData() {
                 <button
                   key={idx}
                   onClick={() => setCategory(categories[idx])}
-                  className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 active:border ${
+                  className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 ${
                     category === categories[idx]
                       ? 'bg-white text-primary-400'
                       : ''
