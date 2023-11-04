@@ -17,17 +17,19 @@ import {
   type UpdateSelfAccountInfoDTO,
 } from './api/updateSelfAccountInfo'
 import TitleBar from '~/components/Head/TitleBar'
+import { Spinner } from '~/components/Spinner'
+import { useSpinDelay } from 'spin-delay'
 
 export const selfInfoSchema = z.object({
   name: emptyInputSchema,
   phone: phoneSchemaRegex,
+  email: z.string().optional(),
   profile: z.object({
     district: emptySelectSchema,
     full_address: z.string().optional(),
     province: emptySelectSchema,
     tax_code: emptyInputSchema,
     ward: emptySelectSchema,
-    email: z.string().optional(),
   }),
 })
 
@@ -41,7 +43,7 @@ const SelfAccount = () => {
   const { mutate, isLoading } = useMutationSelfAccountInfo()
 
   //get user info
-  const { data: userInfoData } = useUserInfo({
+  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
       suspense: false,
     },
@@ -122,10 +124,14 @@ const SelfAccount = () => {
       queryKey: 'ward-list',
     },
   })
+  const showSpinner = useSpinDelay(userInfoIsLoading, {
+    delay: 150,
+    minDuration: 300,
+  })
 
   return (
-    <div className="relative h-full px-10 py-8">
-      <div className="relative flex items-center">
+    <div className="flex h-full flex-col px-10 py-8">
+      <div className="flex items-center">
         <div
           className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
           onClick={() => navigate(-1)}
@@ -141,131 +147,147 @@ const SelfAccount = () => {
         className="mb-4 mt-12 rounded-md bg-secondary-700 pl-3"
       />
 
-      <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema>
-        id="update-self-account-info"
-        onSubmit={values =>
-          mutate({ data: { ...values, tenant_id: userInfoData?.user_id } })
-        }
-        schema={selfInfoSchema}
-        options={{
-          defaultValues: {
-            name: userInfoData?.name,
-            phone: userInfoData?.phone,
-            profile: {
-              tax_code: userInfoData?.profile?.tax_code,
-              email: userInfoData?.email,
-              province: userInfoData?.profile?.province,
-              district: userInfoData?.profile?.district,
-              ward: userInfoData?.profile?.ward,
-              full_address: userInfoData?.profile?.full_address,
-            },
-          },
-        }}
-        className="pr-32"
-      >
-        {({ register, formState }) => (
-          <div className="grid grid-cols-4 gap-4">
-            <div className="col-start-1 flex items-center justify-end">
-              {t('form:enter_name')} <span className="text-primary-400">*</span>
-            </div>
-            <div className="col-start-2">
-              <InputField
-                classchild="w-full"
-                classnamefieldwrapper="flex justify-end items-center"
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-            </div>
-            <div className="col-start-3 flex items-center justify-end">
-              {t('form:enter_tax')} <span className="text-primary-400">*</span>
-            </div>
-            <div className="col-start-4">
-              <InputField
-                type="number"
-                classchild="w-full"
-                classnamefieldwrapper="flex items-center"
-                error={formState?.errors?.profile?.tax_code}
-                registration={register('profile.tax_code')}
-              />
-            </div>
-            <div className="col-start-1 flex items-center justify-end">
-              {t('form:enter_phone_num')}{' '}
-              <span className="text-primary-400">*</span>
-            </div>
-            <div className="col-start-2">
-              <InputField
-                type="number"
-                classchild="w-full"
-                classnamefieldwrapper="flex flex justify-end items-center"
-                error={formState.errors['phone']}
-                registration={register('phone')}
-              />
-            </div>
-            <div className="col-start-3 flex items-center justify-end">
-              {t('form:email')} <span className="text-primary-400">*</span>
-            </div>
-            <div className="col-start-4">
-              <InputField
-                disabled
-                classchild="w-full"
-                classnamefieldwrapper="flex items-center"
-              />
-            </div>
-            <div className="col-start-1 flex items-center justify-end">
-              {t('cloud:org_manage.event_manage.add_event.action.address')}
-              <span className="text-primary-400">*</span>
-            </div>
-            <div className="col-start-2">
-              <SelectField
-                error={formState?.errors?.profile?.province}
-                registration={register('profile.province')}
-                options={provinceList || [{ value: '', label: 'Tỉnh/TP' }]}
-                classchild="w-full"
-                onChange={e => setProvinceCode(e.target.value)}
-              />
-            </div>
-            <div>
-              <SelectField
-                error={formState?.errors?.profile?.district}
-                registration={register('profile.district')}
-                options={districtList || [{ value: '', label: 'Huyện/Quận' }]}
-                onChange={e => setDistrictCode(e.target.value)}
-              />
-            </div>
-            <div>
-              <SelectField
-                error={formState?.errors?.profile?.ward}
-                registration={register('profile.ward')}
-                options={wardList || [{ value: '', label: 'Phường/Xã' }]}
-              />
-            </div>
-            <div className="col-start-1 flex items-center justify-end">
-              {t('form:enter_address')}
-            </div>
-            <div className="col-start-2 col-end-5">
-              <InputField
-                error={formState?.errors?.profile?.full_address}
-                registration={register('profile.full_address')}
-                classchild="w-full"
-                classnamefieldwrapper="flex items-center"
-              />
-            </div>
-          </div>
-        )}
-      </Form>
+      {userInfoIsLoading ? (
+        <div className="flex grow items-center justify-center">
+          <Spinner showSpinner={showSpinner} size="xl" />
+        </div>
+      ) : (
+        <>
+          <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema>
+            id="update-self-account-info"
+            onSubmit={values =>
+              mutate({
+                data: { ...values },
+                tenant_id: userInfoData?.user_id as string,
+              })
+            }
+            schema={selfInfoSchema}
+            options={{
+              defaultValues: {
+                name: userInfoData?.name,
+                phone: userInfoData?.phone,
+                email: userInfoData?.email,
+                profile: {
+                  tax_code: userInfoData?.profile?.tax_code,
+                  province: userInfoData?.profile?.province,
+                  district: userInfoData?.profile?.district,
+                  ward: userInfoData?.profile?.ward,
+                  full_address: userInfoData?.profile?.full_address,
+                },
+              },
+            }}
+            className="pr-32"
+          >
+            {({ register, formState }) => (
+              <div className="grid grid-cols-4 gap-4">
+                <div className="col-start-1 flex items-center justify-end">
+                  {t('form:enter_name')}{' '}
+                  <span className="text-primary-400">*</span>
+                </div>
+                <div className="col-start-2">
+                  <InputField
+                    classchild="w-full"
+                    classnamefieldwrapper="flex justify-end items-center"
+                    error={formState.errors['name']}
+                    registration={register('name')}
+                  />
+                </div>
+                <div className="col-start-3 flex items-center justify-end">
+                  {t('form:enter_tax')}{' '}
+                  <span className="text-primary-400">*</span>
+                </div>
+                <div className="col-start-4">
+                  <InputField
+                    type="number"
+                    classchild="w-full"
+                    classnamefieldwrapper="flex items-center"
+                    error={formState?.errors?.profile?.tax_code}
+                    registration={register('profile.tax_code')}
+                  />
+                </div>
+                <div className="col-start-1 flex items-center justify-end">
+                  {t('form:enter_phone_num')}{' '}
+                  <span className="text-primary-400">*</span>
+                </div>
+                <div className="col-start-2">
+                  <InputField
+                    type="number"
+                    classchild="w-full"
+                    classnamefieldwrapper="flex flex justify-end items-center"
+                    error={formState.errors['phone']}
+                    registration={register('phone')}
+                  />
+                </div>
+                <div className="col-start-3 flex items-center justify-end">
+                  {t('form:email')} <span className="text-primary-400">*</span>
+                </div>
+                <div className="col-start-4">
+                  <InputField
+                    registration={register('email')}
+                    disabled
+                    classchild="w-full"
+                    classnamefieldwrapper="flex items-center"
+                  />
+                </div>
+                <div className="col-start-1 flex items-center justify-end">
+                  {t('cloud:org_manage.event_manage.add_event.action.address')}
+                  <span className="text-primary-400">*</span>
+                </div>
+                <div className="col-start-2">
+                  <SelectField
+                    error={formState?.errors?.profile?.province}
+                    registration={register('profile.province')}
+                    options={provinceList || [{ value: '', label: 'Tỉnh/TP' }]}
+                    classchild="w-full"
+                    onChange={e => setProvinceCode(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    error={formState?.errors?.profile?.district}
+                    registration={register('profile.district')}
+                    options={
+                      districtList || [{ value: '', label: 'Huyện/Quận' }]
+                    }
+                    onChange={e => setDistrictCode(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <SelectField
+                    error={formState?.errors?.profile?.ward}
+                    registration={register('profile.ward')}
+                    options={wardList || [{ value: '', label: 'Phường/Xã' }]}
+                  />
+                </div>
+                <div className="col-start-1 flex items-center justify-end">
+                  {t('form:enter_address')}
+                </div>
+                <div className="col-start-2 col-end-5">
+                  <InputField
+                    error={formState?.errors?.profile?.full_address}
+                    registration={register('profile.full_address')}
+                    classchild="w-full"
+                    classnamefieldwrapper="flex items-center"
+                  />
+                </div>
+              </div>
+            )}
+          </Form>
 
-      <div className="absolute bottom-8 left-[43%] flex justify-center">
-        <Button
-          variant="primary"
-          size="lg"
-          className="rounded-md"
-          form="update-self-account-info"
-          type="submit"
-          isLoading={isLoading}
-        >
-          {t('btn:save')}
-        </Button>
-      </div>
+          <div className="mt-auto flex justify-center">
+            <Button
+              variant="primary"
+              size="lg"
+              className="rounded-md"
+              form="update-self-account-info"
+              type="submit"
+              isLoading={isLoading}
+            >
+              {t('btn:save')}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   )
 }

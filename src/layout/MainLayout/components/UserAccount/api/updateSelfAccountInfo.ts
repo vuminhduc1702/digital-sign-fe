@@ -10,12 +10,13 @@ export type UpdateSelfAccountInfo = {
   data: {
     name: string
     phone: string
+    email?: string
     profile: {
       tax_code: string
       province: string
       district: string
       ward: string
-      full_address: string
+      full_address?: string
     }
   }
   tenant_id: string
