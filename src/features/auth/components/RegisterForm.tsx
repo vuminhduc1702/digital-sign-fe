@@ -135,6 +135,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                autoComplete="new-password"
               />
               <InputField
                 type="password"
@@ -151,6 +152,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                autoComplete="new-password"
               />
               <Button
                 variant="none"
@@ -187,6 +189,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 registration={register('otp')}
                 className="bg-stone-300"
                 placeholder={t('auth:require_otp')}
+                autoComplete="one-time-code"
               />
               <div className="container mx-auto text-center text-body-xs">
                 <Button

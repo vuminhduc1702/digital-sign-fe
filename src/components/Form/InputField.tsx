@@ -48,9 +48,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         classlabel={classlabel}
         classchild={classchild}
         className={cn(
-          type === 'file'
-            ? 'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white'
-            : '',
+          type === 'file' &&
+            'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white',
           classnamefieldwrapper,
         )}
       >

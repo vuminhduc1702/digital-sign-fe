@@ -66,6 +66,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               }
               error={formState.errors['identifier']}
               registration={register('identifier')}
+              autoComplete="off"
             />
             <InputField
               type={showPassword ? 'text' : 'password'}
@@ -101,6 +102,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               }
               error={formState.errors['password']}
               registration={register('password')}
+              autoComplete="nope"
             />
 
             <FieldWrapper

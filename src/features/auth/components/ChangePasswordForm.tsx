@@ -52,6 +52,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                autoComplete="off"
               />
 
               <InputField
@@ -69,6 +70,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                autoComplete="new-password"
               />
               <InputField
                 type="password"
@@ -85,6 +87,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                autoComplete="new-password"
               />
               <div className="container mx-auto text-center text-body-xs">
                 <Button
