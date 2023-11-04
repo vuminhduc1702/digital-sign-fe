@@ -965,6 +965,7 @@
     "qr_by_deploygate": "Quét mã QR bằng ứng dụng Deploygate"
   },
   "form": {
+    "title": "Cập nhật thông tin tài khoản",
     "enter_name": "Nhập họ tên",
     "enter_tax": "Nhập mã số thuế",
     "enter_phone_num": "Nhập số điện thoại",
@@ -976,6 +977,8 @@
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
       "ddos": "Cập nhật ddos thành công"
-    }
+    },
+    "email": "Email",
+    "back": "Trở lại"
   }
 }

@@ -104,7 +104,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
       </Form>
       <div className="mt-8 flex justify-end">
         <div className="text-body-sm text-black">
-          <Link to={PATHS.HOME} className="font-bold text-red-500">
+          <Link to={PATHS.HOME} className="font-bold text-primary-400">
             {t('auth:back_to_home')}
           </Link>
         </div>

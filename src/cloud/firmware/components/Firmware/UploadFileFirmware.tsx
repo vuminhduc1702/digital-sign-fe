@@ -85,7 +85,7 @@ export function UploadFileFirmWare({
                       htmlFor="file"
                       className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
                     >
-                      <UploadIcon className="h-6 w-6 text-red-600" />
+                      <UploadIcon className="h-6 w-6 text-primary-400" />
                       <div>
                         {file ? (
                           <div className="flex cursor-pointer items-center justify-center gap-1">

@@ -17,7 +17,7 @@ export function SectionIntro({
         <div className="flex w-[1040px] flex-row rounded-2xl bg-white shadow-md">
           <div className="basis-1/2 pl-4">
             <div className="pl-[40px] pt-[50px]">
-              <p className="text-xl font-bold text-red-500">
+              <p className="text-xl font-bold text-primary-400">
                 {t('landingpage:introduction')}
               </p>
             </div>

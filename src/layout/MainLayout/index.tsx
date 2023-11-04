@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { Suspense, useState } from 'react'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 
@@ -6,18 +6,18 @@ import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
 import { Spinner } from '~/components/Spinner'
 import MobileSidebar from './components/MobileSidebar'
-import storage from '~/utils/storage'
-import { useProjectIdStore } from '~/stores/project'
+import logo from '~/assets/images/logo.svg'
+import { cn } from '~/utils/misc'
+import { PATHS } from '~/routes/PATHS'
 
-function MainLayout() {
+function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
+  const navigate = useNavigate()
+
   const [sidebarOpen, setSidebarOpen] = useState(false)
-
-  const projectIdFromStore = useProjectIdStore(state => state.projectId)
-  const projectId = storage.getProject()?.id || projectIdFromStore
 
   return (
     <div className="flex min-h-screen overflow-hidden md:h-screen">
-      {projectId ? (
+      {hasSideBar ? (
         <>
           <MobileSidebar
             sidebarOpen={sidebarOpen}
@@ -28,7 +28,7 @@ function MainLayout() {
       ) : null}
       <div className="flex w-full flex-col">
         <div className="flex">
-          {projectId ? (
+          {hasSideBar ? (
             <button
               className="bg-secondary-900 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary-700 lg:hidden"
               onClick={() => setSidebarOpen(true)}
@@ -37,6 +37,16 @@ function MainLayout() {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           ) : null}
+          {hasSideBar ? null : (
+            <div className="flex h-20 w-80 items-center justify-center border-b-[2px] border-solid bg-white">
+              <img
+                src={logo}
+                alt="logo"
+                className="h-14 cursor-pointer"
+                onClick={() => navigate(PATHS.HOME)}
+              />
+            </div>
+          )}
           <Navbar />
         </div>
         <Suspense
@@ -46,7 +56,14 @@ function MainLayout() {
             </div>
           }
         >
-          <main className="flex grow flex-col overflow-y-auto px-3 py-3">
+          <main
+            className={cn(
+              'flex w-full grow flex-col self-center overflow-y-auto p-3',
+              {
+                'w-2/3': !hasSideBar,
+              },
+            )}
+          >
             <Outlet />
           </main>
         </Suspense>

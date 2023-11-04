@@ -45,7 +45,6 @@ export const protectedRoutes = [
     children: [
       ...OrgManagementRoutes,
       ...FlowEngineV2Routes,
-      ...ProjectManagementRoutes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
       ...SubcriptionRoutes,
@@ -99,6 +98,20 @@ export const protectedRoutes = [
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
+    ],
+  },
+  {
+    element: <MainLayout hasSideBar={false} />,
+    children: [
+      ...ProjectManagementRoutes,
+      {
+        path: PATHS.CHANGEPASSWORD,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <ChangePassword />
+          </ErrorBoundary>
+        ),
+      },
       {
         path: PATHS.USER_INFO,
         element: (
@@ -108,9 +121,5 @@ export const protectedRoutes = [
         ),
       },
     ],
-  },
-  {
-    path: PATHS.CHANGEPASSWORD,
-    element: <ChangePassword />,
   },
 ]

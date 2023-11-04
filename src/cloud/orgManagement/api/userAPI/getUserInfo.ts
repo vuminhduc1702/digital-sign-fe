@@ -6,21 +6,22 @@ import { axios } from '~/lib/axios'
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
 type Profile = {
-  identity_info?: {
-    identity?: string
-    front_image?: string
-    back_image?: string
+  identity_info: {
+    identity: string
+    front_image: string
+    back_image: string
   }
-  dob?: string | null
-  nationality?: string
-  province?: string
-  district?: string
-  ward?: string
-  full_address?: string
-  url?: string
-  company?: string
-  gender?: string
-  profile_image?: string
+  dob: string | null
+  nationality: string
+  province: string
+  district: string
+  ward: string
+  full_address: string
+  url: string
+  company: string
+  gender: string
+  profile_image: string
+  tax_code: string
 }
 
 export type UserInfo = {
@@ -32,8 +33,8 @@ export type UserInfo = {
   activate: boolean
   role_id: string
   role_name: string
-  group_id?: string
-  group_name?: string
+  group_id: string
+  group_name: string
   profile: Profile
   org_id: string
   org_name: string
