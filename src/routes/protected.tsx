@@ -100,7 +100,7 @@ export const protectedRoutes = [
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
       {
-        path: PATHS.USER_ACCOUNT,
+        path: PATHS.USER_INFO,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <SelfAccount />

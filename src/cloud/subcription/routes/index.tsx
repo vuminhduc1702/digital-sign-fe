@@ -22,7 +22,7 @@ export const SubcriptionRoutes = [
     element: <SubcriptionLayout />,
     children: [
       {
-        path: PATHS.BILLING_SUBCRIPTION,
+        path: PATHS.BILLING_SUBSCRIPTION,
         children: [
           {
             path: ':projectId',
