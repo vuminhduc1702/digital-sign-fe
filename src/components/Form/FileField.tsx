@@ -12,7 +12,8 @@ type FileFieldProps<TFormValues extends FieldValues> = {
   onChange?: (e: any) => void
   value?: PropsValue<any>
 } & FieldWrapperPassThroughProps &
-  ControllerPassThroughProps<TFormValues>
+  ControllerPassThroughProps<TFormValues> &
+  React.InputHTMLAttributes<HTMLInputElement>
 
 const FileField = forwardRef<HTMLInputElement, FileFieldProps<FieldValues>>(
   function FileField<TFormValues extends FieldValues>(

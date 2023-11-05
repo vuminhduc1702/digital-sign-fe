@@ -819,7 +819,8 @@
     "change_address": "Đổi địa chỉ",
     "create_user": "Đăng ký tài khoản thành công",
     "copy_device_token": "Copy token thiết bị",
-    "cmp": "Hệ thống CMP"
+    "cmp": "Hệ thống CMP",
+    "user_info": "Tài khoản"
   },
   "flow_engine": {
     "title": "Flow Engine"

@@ -155,9 +155,7 @@ export function UpdateGroup({
                 value={optionOrg}
               />
               <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message === 'Required'
-                  ? t('cloud:org_manage.org_manage.add_org.choose_org')
-                  : formState?.errors?.org_id?.message}
+                {formState?.errors?.org_id?.message}
               </p>
             </div>
           </>

@@ -43,8 +43,8 @@ export function ListProjectItem({
   const [selectedUpdateProject, setSelectedUpdateProject] = useState<Project>()
 
   async function handleBackupProject(project: Project) {
-    const data = await backupProject({projectId: project.id})
-    const blob = new Blob([JSON.stringify(data)], {type:'application/json'})
+    const data = await backupProject({ projectId: project.id })
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' })
     const href = await URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = href
@@ -117,9 +117,7 @@ export function ListProjectItem({
                           {t('cloud:project_manager.add_project.edit')}
                         </MenuItem>
                         <MenuItem
-                          icon={
-                            <DownloadIcon className="h-5 w-5" />
-                          }
+                          icon={<DownloadIcon className="h-5 w-5" />}
                           onClick={() => {
                             handleBackupProject(project)
                           }}
