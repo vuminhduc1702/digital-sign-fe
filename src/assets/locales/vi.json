@@ -517,7 +517,7 @@
         "decimal": "Hệ thập phân",
         "road": "Kiểu đường",
         "show": "Hiển thị",
-        "pick_date": "Chọn ngày",
+        "pick_date": "Vui lòng chọn ngày",
         "pick_date_alert": "Vui lòng chọn ngày",
         "org": "Tổ chức",
         "label": "Nhãn",
@@ -796,8 +796,9 @@
     "input": "Vui lòng chọn nghiệp vụ trước"
   },
   "placeholder": {
-    "general": "Vui lòng chọn",
-    "search": "Nhập để tìm kiếm"
+    "select": "Vui lòng chọn",
+    "search": "Nhập để tìm kiếm",
+    "input_text": "Vui lòng nhập"
   },
   "search": {
     "title": "Tìm kiếm",

@@ -68,7 +68,6 @@ const SelfAccount = () => {
           }
           return { value: item.areaCode, label: item.name }
         })
-        transformArr.push({ value: '', label: 'Tỉnh/TP' })
         return transformArr
       },
     },
@@ -90,7 +89,6 @@ const SelfAccount = () => {
           }
           return { value: item.areaCode, label: item.name }
         })
-        transformArr.push({ value: '', label: 'Huyện/Quận' })
         return transformArr
       },
       enabled: !!provinceCode,
@@ -113,7 +111,6 @@ const SelfAccount = () => {
           }
           return { value: item.areaCode, label: item.name }
         })
-        transformArr.push({ value: '', label: 'Phường/Xã' })
         return transformArr
       },
       enabled: !!districtCode,
@@ -237,26 +234,27 @@ const SelfAccount = () => {
                   <SelectField
                     error={formState?.errors?.profile?.province}
                     registration={register('profile.province')}
-                    options={provinceList || [{ value: '', label: 'Tỉnh/TP' }]}
+                    options={provinceList || [{ value: '', label: '' }]}
                     classchild="w-full"
                     onChange={e => setProvinceCode(e.target.value)}
+                    placeholder="Tỉnh/TP"
                   />
                 </div>
                 <div>
                   <SelectField
                     error={formState?.errors?.profile?.district}
                     registration={register('profile.district')}
-                    options={
-                      districtList || [{ value: '', label: 'Huyện/Quận' }]
-                    }
+                    options={districtList || [{ value: '', label: '' }]}
                     onChange={e => setDistrictCode(e.target.value)}
+                    placeholder="Huyện/Quận"
                   />
                 </div>
                 <div>
                   <SelectField
                     error={formState?.errors?.profile?.ward}
                     registration={register('profile.ward')}
-                    options={wardList || [{ value: '', label: 'Phường/Xã' }]}
+                    options={wardList || [{ value: '', label: '' }]}
+                    placeholder="Phường/Xã"
                   />
                 </div>
                 <div className="col-start-1 flex items-center justify-end">

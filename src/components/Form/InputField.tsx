@@ -3,6 +3,7 @@ import { type UseFormRegisterReturn } from 'react-hook-form'
 import { cn } from '~/utils/misc'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
+import { useTranslation } from 'react-i18next'
 
 type IconProps = {
   startIcon?: React.ReactElement
@@ -35,10 +36,13 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       classNameError,
       classlabel,
       classchild,
+      placeholder,
       ...props
     }: InputFieldProps,
     ref,
   ) {
+    const { t } = useTranslation()
+
     return (
       <FieldWrapper
         label={label}
@@ -55,15 +59,16 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       >
         {startIcon}
         <input
+          {...props}
           type={type}
           className={cn(
-            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 disabled:cursor-not-allowed disabled:bg-secondary-500 sm:text-body-sm',
+            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-2 focus:border-focus-400 focus:outline-none focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500 sm:text-body-sm',
             className,
             { 'pl-8': startIcon, 'pr-8': endIcon },
           )}
           ref={ref}
+          placeholder={placeholder ?? t('placeholder:input_text')}
           {...registration}
-          {...props}
         />
         {endIcon}
       </FieldWrapper>

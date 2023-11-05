@@ -546,7 +546,7 @@ export function CreateAdapter() {
                                 className={cn(
                                   'mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4',
                                   {
-                                    "hidden": !isShow,
+                                    hidden: !isShow,
                                   },
                                 )}
                                 key={field.id}
@@ -912,7 +912,6 @@ export function CreateAdapter() {
                           <SelectDropdown
                             isClearable={true}
                             label={t('cloud:custom_protocol.service.title')}
-                            inputId="handleServiceForm"
                             name="handle_service"
                             control={control}
                             options={

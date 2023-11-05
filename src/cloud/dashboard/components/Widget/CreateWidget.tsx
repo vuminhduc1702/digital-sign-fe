@@ -123,13 +123,20 @@ export type Widget = z.infer<typeof widgetListSchema>
 export const widgetCreateSchema = z.object({
   title: nameSchema,
   type: widgetTypeSchema,
-  org_id: z.string(),
+  org_id: z.string({
+    required_error: i18n.t('cloud:org_manage.org_manage.add_org.choose_org'),
+  }),
   device: z.array(
-    z.string().min(1, {
-      message: i18n.t(
+    z.string({
+      required_error: i18n.t(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
+    {
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+    },
   ),
   attributeConfig: attrWidgetSchema,
   widgetSetting: z
@@ -215,10 +222,7 @@ export function CreateWidget({
   const colorPickerRef = useRef()
 
   const { id: projectId } = storage.getProject()
-  const [optionOrg, setOptionOrg] = useState({
-    label: t('search:no_org'),
-    value: '',
-  })
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString[]>()
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
     config: {
@@ -261,7 +265,7 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  // console.log('zod errors', formState.errors)
+  console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -493,7 +497,6 @@ export function CreateWidget({
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
                       registration={register('title')}
-                      placeholder={t('cloud:dashboard.config_chart.name')}
                     />
                     <div className="space-y-1">
                       <SelectDropdown
@@ -515,9 +518,7 @@ export function CreateWidget({
                         value={optionOrg}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.org_id?.message === 'Required'
-                          ? t('cloud:org_manage.org_manage.add_org.choose_org')
-                          : formState?.errors?.org_id?.message}
+                        {formState?.errors?.org_id?.message}
                       </p>
                     </div>
                     <div className="space-y-1">
@@ -568,11 +569,8 @@ export function CreateWidget({
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.device?.message === 'Required'
-                          ? t(
-                              'cloud:org_manage.device_manage.add_device.choose_device',
-                            )
-                          : formState?.errors?.device?.[0]?.message}
+                        {formState?.errors?.device?.message ??
+                          formState?.errors?.device?.[0]?.message}
                       </p>
                     </div>
                   </div>
@@ -647,7 +645,7 @@ export function CreateWidget({
                                           ? attrSelectData.find(
                                               attr => attr.value === value,
                                             )?.label
-                                          : t('placeholder:general')}
+                                          : t('placeholder:select')}
                                       </Button>
                                     </PopoverTrigger>
                                     <PopoverContent>
@@ -682,7 +680,6 @@ export function CreateWidget({
                         </div> */}
                         <div className="w-full space-y-1">
                           <SelectDropdown
-                            isClearable={true}
                             label={t('cloud:dashboard.config_chart.attr')}
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}

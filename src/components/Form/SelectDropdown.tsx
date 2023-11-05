@@ -1,55 +1,42 @@
-import Select, { type PropsValue } from 'react-select'
+import Select, { type Props, type GroupBase } from 'react-select'
 import { useTranslation } from 'react-i18next'
-import {
-  Controller,
-  type Control,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
+import { Controller, type FieldValues } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
-import { type SelectOption } from './SelectField'
 import { cn } from '~/utils/misc'
 
-export type ControllerPassThroughProps<TFormValues extends FieldValues> = {
-  name: Path<TFormValues>
-  control?: Control<TFormValues, any>
-}
+import { type ControllerPassThroughProps } from '~/types'
 
-type SelectProps<TFormValues extends FieldValues> = {
-  options: SelectOption[]
-  onChange?: (e: any) => void
-  value?: PropsValue<SelectOption>
-  closeMenuOnSelect?: boolean
-  isMulti?: boolean
-  onMenuClose?: () => void
-  onMenuOpen?: () => void
-  isOptionDisabled?: (option: SelectOption) => boolean
-  noOptionsMessage?: () => string
-  defaultValue?: PropsValue<SelectOption> | undefined
+type SelectProps<
+  TFormValues extends FieldValues,
+  Option = unknown,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+> = {
   placeholder?: string
-  inputId?: string
-  isClearable?: boolean
-  maxMenuHeight?: number
   classlabel?: string
   classchild?: string
   classnamefieldwrapper?: string
 } & FieldWrapperPassThroughProps &
-  ControllerPassThroughProps<TFormValues>
+  ControllerPassThroughProps<TFormValues> &
+  Props<Option, IsMulti, Group>
 
-export function SelectDropdown<TFormValues extends FieldValues>({
-  options,
+export function SelectDropdown<
+  TFormValues extends FieldValues,
+  Option = unknown,
+  IsMulti extends boolean = false,
+  Group extends GroupBase<Option> = GroupBase<Option>,
+>({
   name,
   control,
   label,
   error,
-  inputId,
-  isClearable,
   classlabel,
   classchild,
   classnamefieldwrapper,
+  placeholder,
   ...props
-}: SelectProps<TFormValues>) {
+}: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
 
   return (
@@ -67,11 +54,9 @@ export function SelectDropdown<TFormValues extends FieldValues>({
           return (
             <Select
               {...field}
-              isSearchable
-              isClearable={isClearable}
-              placeholder={t('placeholder:general')}
-              options={options}
               {...props}
+              isSearchable
+              placeholder={placeholder ?? t('placeholder:select')}
             />
           )
         }}

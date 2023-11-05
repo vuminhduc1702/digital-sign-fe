@@ -23,9 +23,7 @@ type UploadFileFirmWareProps = {
 }
 
 export const updateVersionSchema = z.object({
-  version: z
-    .string()
-    .nonempty({ message: i18n.t('cloud:firmware.choose_fota') }),
+  version: z.string().min(1, { message: i18n.t('cloud:firmware.choose_fota') }),
 })
 
 export function UpdateVersionFirmWare({

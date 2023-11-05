@@ -3,7 +3,7 @@ import { type UseFormRegisterReturn } from 'react-hook-form'
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
 
-import { type EventFor } from '~/types'
+import { useTranslation } from 'react-i18next'
 
 export type SelectOption = {
   label: string
@@ -48,6 +48,8 @@ export const SelectField = ({
   classchild,
   ...props
 }: SelectFieldProps) => {
+  const { t } = useTranslation()
+
   return (
     <FieldWrapper
       classlabel={classlabel}
@@ -58,7 +60,6 @@ export const SelectField = ({
       error={error}
     >
       <select
-        placeholder={placeholder}
         value={value}
         className={cn(
           'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:border-secondary-600 focus:outline-none focus:ring-secondary-900 disabled:cursor-not-allowed disabled:bg-secondary-500',
@@ -67,9 +68,12 @@ export const SelectField = ({
         {...registration}
         {...props}
       >
+        <option value="" disabled selected hidden>
+          {placeholder ?? t('placeholder:select')}
+        </option>
         {options.map(({ label, value, selected }) => {
           return (
-            <option key={label?.toString()} value={value} selected={selected}>
+            <option key={label} value={value} selected={selected}>
               {label}
             </option>
           )

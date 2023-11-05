@@ -2,11 +2,11 @@ import { type ForwardedRef, forwardRef } from 'react'
 import { type PropsValue } from 'react-select'
 import { Controller, type FieldValues } from 'react-hook-form'
 
-import { type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { InputField } from './InputField'
-
-import { type ControllerPassThroughProps } from './SelectDropdown'
 import { cn } from '~/utils/misc'
+
+import { type FieldWrapperPassThroughProps } from './FieldWrapper'
+import { type ControllerPassThroughProps } from '~/types'
 
 type FileFieldProps<TFormValues extends FieldValues> = {
   onChange?: (e: any) => void
