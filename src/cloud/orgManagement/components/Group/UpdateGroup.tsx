@@ -1,10 +1,11 @@
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   InputField,
   SelectDropdown,
   SelectField,
@@ -15,16 +16,17 @@ import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
+import { entityTypeList } from './CreateGroup'
 
 import { type OrgList } from '~/layout/MainLayout/types'
+import { nameSchema } from '~/utils/schemaValidation'
+import { type EntityType } from '../../api/attrAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
-import { type EntityType } from '../../api/attrAPI'
-
 const groupSchema = z.object({
-  name: z.string(),
+  name: nameSchema,
 })
 
 type UpdateGroupProps = {
@@ -35,16 +37,6 @@ type UpdateGroupProps = {
   organization: string
   entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
 }
-type EntityTypeGroup = {
-  type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
-  name: string
-}
-export const entityTypeList: EntityTypeGroup[] = [
-  { type: 'ORGANIZATION', name: 'Tổ chức' },
-  { type: 'DEVICE', name: 'Thiết bị' },
-  { type: 'USER', name: 'Người dùng' },
-  { type: 'EVENT', name: 'Sự kiện' },
-]
 
 export function UpdateGroup({
   groupId,
@@ -93,6 +85,13 @@ export function UpdateGroup({
     }
   }, [organization])
 
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    UpdateGroupDTO['data']
+  >({
+    resolver: groupSchema && zodResolver(groupSchema),
+    defaultValues: { name: name, org_id: organization },
+  })
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -118,76 +117,72 @@ export function UpdateGroup({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
+            disabled={!formState.isDirty}
           />
         </>
       )}
     >
-      <Form<UpdateGroupDTO['data'], typeof groupSchema>
+      <form
+        className="w-full space-y-6"
         id="update-group"
-        onSubmit={values =>
+        onSubmit={handleSubmit(values =>
           mutate({
             data: {
               name: values.name,
               org_id: optionOrg?.value,
             },
             groupId,
-          })
-        }
-        schema={groupSchema}
-        options={{
-          defaultValues: { name: name, org_id: organization },
-        }}
-      >
-        {({ register, formState, control, setValue }) => (
-          <>
-            <InputField
-              label={
-                t('cloud:org_manage.group_manage.add_group.name') ??
-                "Group's name"
-              }
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <SelectField
-              disabled
-              label={
-                t('cloud:org_manage.group_manage.add_group.entity_type') ??
-                'Entity type'
-              }
-              value={entity_type.toString()}
-              options={entityTypeList.map(entityType => ({
-                label: entityType.name,
-                value: entityType.type,
-              }))}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
-                }
-                onChange={(e: SelectOptionString) => {
-                  setOptionOrg(e)
-                  mutateUpdateOrgForGroup({
-                    data: {
-                      ids: [groupId],
-                      org_id: e.value,
-                    },
-                  })
-                  setValue('org_id', e?.value)
-                }}
-                value={optionOrg}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-          </>
+          }),
         )}
-      </Form>
+      >
+        <>
+          <InputField
+            label={
+              t('cloud:org_manage.group_manage.add_group.name') ??
+              "Group's name"
+            }
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <SelectField
+            disabled
+            label={
+              t('cloud:org_manage.group_manage.add_group.entity_type') ??
+              'Entity type'
+            }
+            value={entity_type.toString()}
+            options={entityTypeList.map(entityType => ({
+              label: entityType.name,
+              value: entityType.type,
+            }))}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+              }
+              onChange={e => {
+                setOptionOrg(e)
+                mutateUpdateOrgForGroup({
+                  data: {
+                    ids: [groupId],
+                    org_id: e.value,
+                  },
+                })
+                setValue('org_id', e?.value)
+              }}
+              value={optionOrg}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+        </>
+      </form>
     </Drawer>
   )
 }
