@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   InputField,
   SelectDropdown,
   SelectField,
@@ -17,14 +16,14 @@ import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
+import { entityTypeList } from './CreateGroup'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 import { nameSchema } from '~/utils/schemaValidation'
+import { type EntityType } from '../../api/attrAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-
-import { type EntityType } from '../../api/attrAPI'
 
 const groupSchema = z.object({
   name: nameSchema,
@@ -38,16 +37,6 @@ type UpdateGroupProps = {
   organization: string
   entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
 }
-type EntityTypeGroup = {
-  type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
-  name: string
-}
-export const entityTypeList: EntityTypeGroup[] = [
-  { type: 'ORGANIZATION', name: 'Tổ chức' },
-  { type: 'DEVICE', name: 'Thiết bị' },
-  { type: 'USER', name: 'Người dùng' },
-  { type: 'EVENT', name: 'Sự kiện' },
-]
 
 export function UpdateGroup({
   groupId,
@@ -154,6 +143,18 @@ export function UpdateGroup({
             }
             error={formState.errors['name']}
             registration={register('name')}
+          />
+          <SelectField
+            disabled
+            label={
+              t('cloud:org_manage.group_manage.add_group.entity_type') ??
+              'Entity type'
+            }
+            value={entity_type.toString()}
+            options={entityTypeList.map(entityType => ({
+              label: entityType.name,
+              value: entityType.type,
+            }))}
           />
           <div className="space-y-1">
             <SelectDropdown

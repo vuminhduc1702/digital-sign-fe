@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
@@ -79,6 +81,12 @@ export function CreateDevice() {
     'sub_orgs',
   )
 
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    CreateDeviceDTO['data']
+  >({
+    resolver: deviceSchema && zodResolver(deviceSchema),
+  })
+
   return (
     <FormDrawer
       isDone={isSuccess}
@@ -102,12 +110,14 @@ export function CreateDevice() {
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
+          disabled={!formState.isDirty}
         />
       }
     >
-      <Form<CreateDeviceDTO['data'], typeof deviceSchema>
+      <form
+        className="w-full space-y-6"
         id="create-device"
-        onSubmit={values => {
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               project_id: projectId,
@@ -118,87 +128,80 @@ export function CreateDevice() {
               template_id: templateValue?.value || '',
             },
           })
-        }}
-        schema={deviceSchema}
+        })}
       >
-        {({ register, formState, control, setValue }) => {
-          return (
-            <>
-              <InputField
-                label={
-                  t('cloud:org_manage.device_manage.add_device.name') ?? 'Name'
-                }
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:org_manage.device_manage.add_device.parent')}
-                  name="org_id"
-                  isClearable={false}
-                  value={orgValue}
-                  onChange={e => setOrgValue(e)}
-                  control={control}
-                  options={
-                    orgFlattenData?.map(org => ({
-                      label: org?.name,
-                      value: org?.id,
-                    })) || [{ label: t('loading:org'), value: '' }]
-                  }
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.org_id?.message}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={false}
-                  label={t('cloud:org_manage.device_manage.add_device.group')}
-                  name="group_id"
-                  control={control}
-                  value={groupValue}
-                  onChange={e => setGroupValue(e)}
-                  options={
-                    groupData?.groups?.map(groups => ({
-                      label: groups?.name,
-                      value: groups?.id,
-                    })) || [{ label: t('loading:org'), value: '' }]
-                  }
-                />
-              </div>
-              <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={false}
-                  label={t('cloud:firmware.add_firmware.template')}
-                  name="template_id"
-                  control={control}
-                  value={templateValue}
-                  onChange={e => {
-                    setValue('template_id', e.value)
-                    setTemplateValue(e)
-                  }}
-                  options={
-                    data?.templates?.map(template => ({
-                      label: template?.name,
-                      value: template?.id,
-                    })) || [{ label: '', value: '' }]
-                  }
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.template_id?.message}
-                </p>
-              </div>
-              <InputField
-                label={
-                  t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'
-                }
-                error={formState.errors['key']}
-                registration={register('key')}
-              />
-            </>
-          )
-        }}
-      </Form>
+        <>
+          <InputField
+            label={
+              t('cloud:org_manage.device_manage.add_device.name') ?? 'Name'
+            }
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              isClearable={false}
+              value={orgValue}
+              onChange={e => setOrgValue(e)}
+              control={control}
+              options={
+                orgFlattenData?.map(org => ({
+                  label: org?.name,
+                  value: org?.id,
+                })) || [{ label: t('loading:org'), value: '' }]
+              }
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={false}
+              label={t('cloud:org_manage.device_manage.add_device.group')}
+              name="group_id"
+              control={control}
+              value={groupValue}
+              onChange={e => setGroupValue(e)}
+              options={
+                groupData?.groups?.map(groups => ({
+                  label: groups?.name,
+                  value: groups?.id,
+                })) || [{ label: t('loading:org'), value: '' }]
+              }
+            />
+          </div>
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={false}
+              label={t('cloud:firmware.add_firmware.template')}
+              name="template_id"
+              control={control}
+              value={templateValue}
+              onChange={e => {
+                setValue('template_id', e.value)
+                setTemplateValue(e)
+              }}
+              options={
+                data?.templates?.map(template => ({
+                  label: template?.name,
+                  value: template?.id,
+                })) || [{ label: '', value: '' }]
+              }
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.template_id?.message}
+            </p>
+          </div>
+          <InputField
+            label={t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'}
+            error={formState.errors['key']}
+            registration={register('key')}
+          />
+        </>
+      </form>
     </FormDrawer>
   )
 }
