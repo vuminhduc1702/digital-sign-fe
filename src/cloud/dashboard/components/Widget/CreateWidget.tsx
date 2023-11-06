@@ -50,7 +50,9 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: selectOptionSchema(),
+    attribute_key: selectOptionSchema().refine(val => val.value !== '', {
+      message: i18n.t('cloud:org_manage.org_manage.add_attr.choose_attr'),
+    }),
     label: z.string(),
     color: z.string(),
     unit: z.string(),
@@ -121,13 +123,20 @@ export type Widget = z.infer<typeof widgetListSchema>
 export const widgetCreateSchema = z.object({
   title: nameSchema,
   type: widgetTypeSchema,
-  org_id: z.string(),
+  org_id: z.string({
+    required_error: i18n.t('cloud:org_manage.org_manage.add_org.choose_org'),
+  }),
   device: z.array(
-    z.string().min(1, {
-      message: i18n.t(
+    z.string({
+      required_error: i18n.t(
         'cloud:org_manage.device_manage.add_device.choose_device',
       ),
     }),
+    {
+      required_error: i18n.t(
+        'cloud:org_manage.device_manage.add_device.choose_device',
+      ),
+    },
   ),
   attributeConfig: attrWidgetSchema,
   widgetSetting: z
@@ -213,10 +222,7 @@ export function CreateWidget({
   const colorPickerRef = useRef()
 
   const { id: projectId } = storage.getProject()
-  const [optionOrg, setOptionOrg] = useState({
-    label: t('search:no_org'),
-    value: '',
-  })
+  const [optionOrg, setOptionOrg] = useState<SelectOptionString[]>()
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
     config: {
@@ -259,7 +265,7 @@ export function CreateWidget({
     useForm<WidgetCreate>({
       resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     })
-  // console.log('zod errors', formState.errors)
+  console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -284,7 +290,7 @@ export function CreateWidget({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
+      <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -309,7 +315,7 @@ export function CreateWidget({
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
-                key: item.attribute_key,
+                key: item.attribute_key.value,
               }))
               const initMessage = {
                 entityDataCmds: [
@@ -360,7 +366,7 @@ export function CreateWidget({
                   {
                     tsCmd: {
                       keys: values.attributeConfig.map(
-                        item => item.attribute_key,
+                        item => item.attribute_key.value,
                       ),
                       startTs: Date.parse(
                         values.widgetSetting?.startDate?.toISOString() as string,
@@ -382,7 +388,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key,
+                              item => item.attribute_key.value,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString(),
@@ -405,7 +411,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key,
+                              item => item.attribute_key.value,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString() as string,
@@ -443,7 +449,7 @@ export function CreateWidget({
                       : '',
                 },
                 attribute_config: values.attributeConfig.map(item => ({
-                  attribute_key: item.attribute_key,
+                  attribute_key: item.attribute_key.value,
                   color: item.color,
                   decimal: item.decimal,
                   label: item.label,
@@ -491,11 +497,9 @@ export function CreateWidget({
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
                       registration={register('title')}
-                      placeholder={t('cloud:dashboard.config_chart.name')}
                     />
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t(
                           'cloud:org_manage.device_manage.add_device.parent',
                         )}
@@ -514,16 +518,13 @@ export function CreateWidget({
                         value={optionOrg}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.org_id?.message === 'Required'
-                          ? t('cloud:org_manage.org_manage.add_org.choose_org')
-                          : formState?.errors?.org_id?.message}
+                        {formState?.errors?.org_id?.message}
                       </p>
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
                         label={t('cloud:dashboard.config_chart.device')}
                         name="device"
-                        isClearable
                         control={control}
                         options={
                           deviceData != null
@@ -568,11 +569,8 @@ export function CreateWidget({
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.device?.message === 'Required'
-                          ? t(
-                              'cloud:org_manage.device_manage.add_device.choose_device',
-                            )
-                          : formState?.errors?.device?.[0]?.message}
+                        {formState?.errors?.device?.message ??
+                          formState?.errors?.device?.[0]?.message}
                       </p>
                     </div>
                   </div>
@@ -647,7 +645,7 @@ export function CreateWidget({
                                           ? attrSelectData.find(
                                               attr => attr.value === value,
                                             )?.label
-                                          : t('placeholder:general')}
+                                          : t('placeholder:select')}
                                       </Button>
                                     </PopoverTrigger>
                                     <PopoverContent>
@@ -682,7 +680,6 @@ export function CreateWidget({
                         </div> */}
                         <div className="w-full space-y-1">
                           <SelectDropdown
-                            isClearable={true}
                             label={t('cloud:dashboard.config_chart.attr')}
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}

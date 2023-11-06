@@ -25,7 +25,7 @@ export const entityFirmWareSchema = z.object({
   name: nameSchema,
   template_id: z
     .string()
-    .nonempty({ message: i18n.t('cloud:firmware.choose_template') }),
+    .min(1, { message: i18n.t('cloud:firmware.choose_template') }),
   tag: z.string(),
   version: versionSchema,
   description: z.string(),

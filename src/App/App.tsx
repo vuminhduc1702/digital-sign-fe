@@ -4,6 +4,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { lazy, Suspense, useState, useEffect } from 'react'
 import { HelmetProvider } from 'react-helmet-async'
+import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 
 import '~/style/main.css'
 import '~/i18n'
@@ -44,6 +45,10 @@ function App() {
       logoutFn()
     }
   }, [])
+
+  if (import.meta.env.NODE_ENV === 'production') {
+    disableReactDevTools()
+  }
 
   return (
     <Suspense

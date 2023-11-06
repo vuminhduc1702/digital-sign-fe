@@ -28,6 +28,9 @@ module.exports = {
           700: withOpacity('210, 1%, 53%'), // card header
           900: withOpacity('0, 1%, 34%'), // nav
         },
+        focus: {
+          400: withOpacity('214 ,100%, 57.5%'), // border input when validation error
+        },
         transparent: 'transparent',
         current: 'currentColor',
       },

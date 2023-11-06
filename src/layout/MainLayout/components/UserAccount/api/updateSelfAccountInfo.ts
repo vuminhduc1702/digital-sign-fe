@@ -9,14 +9,15 @@ import { type selfInfoSchema } from '../SelfAccount'
 export type UpdateSelfAccountInfo = {
   data: {
     name: string
-    phone: number
+    phone: string
+    email?: string
     profile: {
       tax_code: string
       province: string
       district: string
       ward: string
+      full_address?: string
     }
-    address: string
   }
   tenant_id: string
 }

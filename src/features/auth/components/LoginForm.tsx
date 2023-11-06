@@ -66,6 +66,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
               }
               error={formState.errors['identifier']}
               registration={register('identifier')}
+              autoComplete="off"
             />
             <InputField
               type={showPassword ? 'text' : 'password'}
@@ -86,7 +87,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                     height={24}
                     width={24}
                     viewBox="0 0 24 24"
-                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />
                 ) : (
@@ -94,13 +95,14 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
                     height={24}
                     width={24}
                     viewBox="0 0 24 24"
-                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                    className="absolute right-2 top-1/2 z-20 -translate-y-1/2 cursor-pointer"
                     onClick={togglePasswordVisibility}
                   />
                 )
               }
               error={formState.errors['password']}
               registration={register('password')}
+              autoComplete="nope"
             />
 
             <FieldWrapper

@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Reset CSS */
+
 @layer base {
   div,
   p,
@@ -29,12 +31,10 @@
     border-radius: 10px;
     background-color: transparent;
   }
-
   ::-webkit-scrollbar {
     width: 6px;
     background-color: transparent;
   }
-
   ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
@@ -46,7 +46,8 @@
   }
 }
 
-/* react-grid-layout css */
+/* react-grid-layout CSS */
+
 .react-grid-layout {
   position: relative;
   transition: height 200ms ease;
@@ -108,12 +109,13 @@
   background-color: white;
 }
 
+/* react-carousel CSS */
+
 .react-multiple-carousel__arrow {
   position: absolute !important;
   outline: 0;
   transition: all 0.5s !important;
   border-radius: 35px !important;
-  /* z-index: 100; */
   border: solid 1px red !important;
   background: white !important;
   min-width: 36px !important;

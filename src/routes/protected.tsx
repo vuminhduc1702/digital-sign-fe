@@ -7,6 +7,7 @@ import MainLayout from '~/layout/MainLayout'
 import { OrgManagementRoutes } from '~/cloud/orgManagement'
 import { FlowEngineV2Routes } from '~/cloud/flowEngineV2'
 import { FirmWareRoutes } from '~/cloud/firmware'
+import { CustomerManageRoutes } from '~/cloud/customerManage'
 
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
@@ -44,7 +45,6 @@ export const protectedRoutes = [
     children: [
       ...OrgManagementRoutes,
       ...FlowEngineV2Routes,
-      ...ProjectManagementRoutes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
       ...SubcriptionRoutes,
@@ -52,6 +52,7 @@ export const protectedRoutes = [
       ...BillingRoutes,
       ...ApplicationRoutes,
       ...AiRoutes,
+      ...CustomerManageRoutes,
       {
         path: PATHS.DEVICE_TEMPLATE,
         element: (
@@ -97,8 +98,22 @@ export const protectedRoutes = [
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
+    ],
+  },
+  {
+    element: <MainLayout hasSideBar={false} />,
+    children: [
+      ...ProjectManagementRoutes,
       {
-        path: PATHS.USER_ACCOUNT,
+        path: PATHS.CHANGEPASSWORD,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <ChangePassword />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: PATHS.USER_INFO,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <SelfAccount />
@@ -106,9 +121,5 @@ export const protectedRoutes = [
         ),
       },
     ],
-  },
-  {
-    path: PATHS.CHANGEPASSWORD,
-    element: <ChangePassword />,
   },
 ]

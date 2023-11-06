@@ -46,26 +46,16 @@ export const controllerBtnCreateSchema = z.object({
   title: z.string(),
   thing_id: z.string(),
   handle_service: z.string(),
-  input: z
-    .array(
-      z.object({
-        name: selectOptionSchema(),
-        value: z.string(),
-      }),
-    )
-    .refine(
-      values =>
-        values.forEach(val => {
-          console.log('val', val)
-          return val.name.label !== ''
-        }),
-      {
+  input: z.array(
+    z.object({
+      name: selectOptionSchema().refine(val => val.value !== '', {
         message: i18n.t('cloud:custom_protocol.service.choose_input'),
-      },
-    )
-    .refine(values => values.forEach(val => val.value !== ''), {
-      message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+      }),
+      value: z.string().min(1, {
+        message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+      }),
     }),
+  ),
   id: z.string().optional(),
 })
 
@@ -178,7 +168,7 @@ export function CreateControllerButton({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[48rem]">
+      <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[48rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
@@ -407,7 +397,7 @@ export function CreateControllerButton({
                             value={watch(`input.${index}.name`)}
                           />
                           <p className="text-body-sm text-primary-400">
-                            {formState?.errors?.input?.message}
+                            {formState?.errors?.input?.[index]?.name?.message}
                           </p>
                         </div>
                         <InputField

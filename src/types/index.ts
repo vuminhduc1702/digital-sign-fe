@@ -1,3 +1,4 @@
+import { type Control, type Path } from 'react-hook-form'
 import type * as z from 'zod'
 
 import { type BasePaginationSchema } from '~/utils/schemaValidation'
@@ -51,3 +52,8 @@ export type EventFor<
   | undefined
   ? TEvent
   : never
+
+export type ControllerPassThroughProps<TFormValues extends FieldValues> = {
+  name: Path<TFormValues>
+  control?: Control<TFormValues, any>
+}

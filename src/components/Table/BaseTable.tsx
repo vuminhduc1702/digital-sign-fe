@@ -6,6 +6,8 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   type SortingState,
+  type Row,
+  getExpandedRowModel,
 } from '@tanstack/react-table'
 import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,6 +26,8 @@ export function BaseTable<T extends Record<string, any>>({
   total,
   isPreviousData,
   className,
+  renderSubComponent,
+  getRowCanExpand,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -32,6 +36,8 @@ export function BaseTable<T extends Record<string, any>>({
   total?: number
   isPreviousData?: boolean
   className?: string
+  renderSubComponent?: (props: { row: Row<T> }) => React.ReactElement
+  getRowCanExpand?: (row: Row<T>) => boolean
 }) {
   const { t } = useTranslation()
 
@@ -50,6 +56,8 @@ export function BaseTable<T extends Record<string, any>>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
+    getRowCanExpand,
+    getExpandedRowModel: getExpandedRowModel(),
   })
 
   const totalAttrs = total || data?.length
@@ -112,6 +120,7 @@ export function BaseTable<T extends Record<string, any>>({
           <tbody>
             {table.getRowModel().rows.map(row => {
               return (
+                <Fragment key={row.id}>
                 <tr className="border-secondary-70 border-t-2" key={row.id}>
                   {row.getVisibleCells().map((cell, index) => {
                     if (index === row.getVisibleCells().length - 1) {
@@ -137,6 +146,15 @@ export function BaseTable<T extends Record<string, any>>({
                     }
                   })}
                 </tr>
+                {row.getIsExpanded() && (
+                  <tr>
+                    {/* 2nd row is a custom 1 cell row */}
+                    <td colSpan={row.getVisibleCells().length}>
+                      {renderSubComponent?.({ row })}
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
               )
             })}
           </tbody>

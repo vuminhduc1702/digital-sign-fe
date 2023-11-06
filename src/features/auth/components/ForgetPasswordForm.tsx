@@ -166,6 +166,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <InputField
                 type={showRePassword ? 'text' : 'password'}
@@ -201,6 +202,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <Button
                 variant="none"
@@ -237,6 +239,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
                 registration={register('otp')}
                 className="bg-stone-300"
                 placeholder={t('auth:require_otp')}
+                autoComplete="one-time-code"
               />
               <div className="container mx-auto text-center text-body-xs">
                 <Button

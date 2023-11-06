@@ -189,6 +189,11 @@ export function LandingPage() {
                           {t('user:cmp')}
                         </DropdownMenu.Item>
                       </Link>
+                      <Link to={PATHS.USER_INFO} className="cursor-pointer">
+                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                          {t('user:user_info')}
+                        </DropdownMenu.Item>
+                      </Link>
                       <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {userDataFromStorage ? (
                           <p

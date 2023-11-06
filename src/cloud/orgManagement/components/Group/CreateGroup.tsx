@@ -8,11 +8,11 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOption,
+  type SelectOptionString,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '~/utils/schemaValidation'
 import { flattenData } from '~/utils/misc'
 import { queryClient } from '~/lib/react-query'
 
@@ -43,7 +43,7 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
-  const [option, setOption] = useState<SelectOption>()
+  const [option, setOption] = useState<SelectOptionString>()
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
@@ -21,7 +21,6 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { cn } from '~/utils/misc'
 import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
-import { useParams } from 'react-router-dom'
 
 export const resourcesList: ResourcesType[] = [
   { value: 'users', label: 'Người dùng' },
@@ -65,16 +64,28 @@ export const roleSchema = z
       z.object({
         role_type: z.literal('Group'),
         policies: z.array(
-          z.object({
-            policy_name: nameSchema,
-            actions: z
-              .array(selectOptionSchema())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
-            devices: z.array(selectOptionSchema()).optional(),
-            events: z.array(selectOptionSchema()).optional(),
-            users: z.array(selectOptionSchema()).optional(),
-            orgs: z.array(selectOptionSchema()).optional(),
-          }),
+          z
+            .object({
+              policy_name: nameSchema,
+              actions: z
+                .array(selectOptionSchema())
+                .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
+              devices: z.array(selectOptionSchema()),
+              events: z.array(selectOptionSchema()),
+              users: z.array(selectOptionSchema()),
+              orgs: z.array(selectOptionSchema()),
+            })
+            .refine(
+              ({ devices, events, orgs, users }) => {
+                return (
+                  devices.length > 0 ||
+                  events.length > 0 ||
+                  orgs.length > 0 ||
+                  users.length > 0
+                )
+              },
+              { message: 'Vui lòng chọn ít nhất 1 nhóm' },
+            ),
         ),
       }),
     ]),
@@ -85,37 +96,28 @@ export function CreateRole() {
   const [type, setType] = useState('Generic')
 
   const roleType = ['Generic', 'Group']
-  const [offset, setOffset] = useState(0)
 
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
   const { data: groupDataDevice } = useGetGroups({
     projectId,
-    offset,
     entity_type: 'DEVICE',
-    config: { keepPreviousData: true },
   })
 
   const { data: groupDataEvent } = useGetGroups({
     projectId,
-    offset,
     entity_type: 'EVENT',
-    config: { keepPreviousData: true },
   })
 
   const { data: groupDataUser } = useGetGroups({
     projectId,
-    offset,
     entity_type: 'USER',
-    config: { keepPreviousData: true },
   })
 
   const { data: groupDataOrg } = useGetGroups({
     projectId,
-    offset,
     entity_type: 'ORGANIZATION',
-    config: { keepPreviousData: true },
   })
 
   const resourceArrRef = useRef<ResourcesType['value'][]>([])
@@ -221,6 +223,7 @@ export function CreateRole() {
           { register, formState, control, setValue },
           { fields, append, remove },
         ) => {
+          console.log('formState err: ', formState.errors)
           return (
             <>
               <div className="w-fit rounded-2xl bg-slate-200">
@@ -337,7 +340,7 @@ export function CreateRole() {
                           />
                           <p className="text-body-sm text-primary-400">
                             {
-                              formState?.errors?.policies?.[index]?.devices
+                              formState?.errors?.policies?.[index]?.root
                                 ?.message
                             }
                           </p>
@@ -359,7 +362,7 @@ export function CreateRole() {
                           />
                           <p className="text-body-sm text-primary-400">
                             {
-                              formState?.errors?.policies?.[index]?.events
+                              formState?.errors?.policies?.[index]?.root
                                 ?.message
                             }
                           </p>
@@ -381,7 +384,7 @@ export function CreateRole() {
                           />
                           <p className="text-body-sm text-primary-400">
                             {
-                              formState?.errors?.policies?.[index]?.users
+                              formState?.errors?.policies?.[index]?.root
                                 ?.message
                             }
                           </p>
@@ -403,7 +406,7 @@ export function CreateRole() {
                           />
                           <p className="text-body-sm text-primary-400">
                             {
-                              formState?.errors?.policies?.[index]?.orgs
+                              formState?.errors?.policies?.[index]?.root
                                 ?.message
                             }
                           </p>

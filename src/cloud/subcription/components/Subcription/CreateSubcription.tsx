@@ -26,10 +26,10 @@ import { Plan, type PlanlvList } from '~/cloud/billingPackage'
 export const entitySubcriptionSchema = z.object({
   plan_id: z
     .string()
-    .nonempty({ message: i18n.t('billing:subcription.popup.choose_plan') }),
+    .min(1, { message: i18n.t('billing:subcription.popup.choose_plan') }),
   user_id: z
     .string()
-    .nonempty({ message: i18n.t('billing:subcription.popup.choose_user') }),
+    .min(1, { message: i18n.t('billing:subcription.popup.choose_user') }),
   register: z.string().optional(),
 })
 

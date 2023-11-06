@@ -167,6 +167,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <InputField
                 type={showRePassword ? 'text' : 'password'}
@@ -202,6 +203,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <Button
                 variant="none"
@@ -238,6 +240,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 registration={register('otp')}
                 className="bg-stone-300"
                 placeholder={t('auth:require_otp')}
+                autoComplete="one-time-code"
               />
               <div className="container mx-auto text-center text-body-xs">
                 <Button

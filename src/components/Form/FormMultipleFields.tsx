@@ -60,6 +60,7 @@ export const FormMultipleFields = <
       className={cn('w-full space-y-5', className)}
       onSubmit={formMethods.handleSubmit(onSubmit)}
       id={id}
+      autoComplete="off"
     >
       {children(formMethods, fieldArrayOneMethods, fieldArrayTwoMethods)}
     </form>

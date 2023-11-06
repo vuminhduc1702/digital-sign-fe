@@ -84,6 +84,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     />
                   )
                 }
+                autoComplete="off"
               />
 
               <InputField
@@ -120,6 +121,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <InputField
                 type={showRePassword ? 'text' : 'password'}
@@ -155,6 +157,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     />
                   )
                 }
+                autoComplete="new-password"
               />
               <div className="container mx-auto text-center text-body-xs">
                 <Button
@@ -171,7 +174,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
       </Form>
       <div className="mt-8 flex justify-end">
         <div className="text-body-sm text-black">
-          <Link to={PATHS.HOME} className="font-bold text-red-500">
+          <Link to={PATHS.HOME} className="font-bold text-primary-400">
             {t('auth:back_to_home')}
           </Link>
         </div>

@@ -37,6 +37,7 @@ function AdapterTableContextMenu({
   host,
   port,
   configuration,
+  schema
 }: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
@@ -139,6 +140,7 @@ function AdapterTableContextMenu({
           configuration={configuration}
           close={close}
           isOpen={isOpen}
+          schema={schema}
           thingData={thingData}
           refetchThingData={refetchThingData}
         />
@@ -230,6 +232,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
+            schema
           } = info.row.original
           return AdapterTableContextMenu({
             id,
@@ -241,6 +244,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
+            schema
           })
         },
         header: () => null,
