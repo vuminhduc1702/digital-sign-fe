@@ -5,7 +5,7 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import { Form, InputField, TextAreaField } from '~/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
-import { type CreateProjectDTO, CreateProjectSchema } from '../api'
+import { type CreateProjectDTO, CreateProjectSchema, ACCEPTED_RESTORE_FILE, restoreProjectSchema } from '../api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { useEffect, useRef, useState } from 'react'
@@ -24,7 +24,9 @@ import {
 import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import { API_URL } from '~/config'
+import { RestoreProjectDTO } from '../api/restoreProject'
 
 export function UpdateProject({
   close,
@@ -65,9 +67,11 @@ export function UpdateProject({
 
   function handleResetDefaultImage() {
     setUploadImageErr('')
-    if (avatarRef.current != null) {
-      avatarRef.current.src = defaultProjectImage
-      fetch(avatarRef.current.src)
+    if (getValueUploadImage('file') != null) {
+      if (avatarRef.current != null) {
+        avatarRef.current.src = defaultProjectImage
+      }
+      fetch(defaultProjectImage)
         .then(res => res.blob())
         .then(blob => {
           const defaultFile = new File([blob], 'default-project.png', blob)
@@ -79,6 +83,22 @@ export function UpdateProject({
           )
         })
     }
+  }
+
+  const {
+    control: controlUploadRestoreProject,
+    setValue: setValueUploadRestoreProject,
+    getValues: getValueUploadRestoreProject,
+  } = useForm<RestoreProjectDTO>({
+    resolver: restoreProjectSchema && zodResolver(restoreProjectSchema),
+  })
+  const [uploadRestoreProjectErr, setUploadRestoreProjectErr] = useState('')
+  const [restoreProjectFileName, setRestoreProjectFileName] = useState('')
+
+  function handleResetRestoreProject() {
+    setValueUploadRestoreProject('backup', null)
+    setRestoreProjectFileName('')
+    setUploadRestoreProjectErr('')
   }
 
   return (
@@ -225,10 +245,64 @@ export function UpdateProject({
                         'cloud:project_manager.add_project.upload_ava_default',
                       )}
                     </Button>
-                    <div className="text-body-xs">
+                    <div className="mb-3 text-body-xs">
                       {t(
                         'cloud:project_manager.add_project.upload_instruction',
                       )}
+                    </div>
+                    <div className="mb-3 space-y-1">
+                      <FileField
+                        label={t('cloud:project_manager.add_project.restore_project')}
+                        control={controlUploadRestoreProject}
+                        name="restore-project"
+                        ref={fileInputRef}
+                        onChange={event => {
+                          setUploadRestoreProjectErr('')
+                          const file = event.target.files[0]
+                          setRestoreProjectFileName(file.name)
+                          const reader = new FileReader()
+                          reader.readAsText(file)
+                          reader.onload = e => {
+                            const formData = new FormData()
+                            formData.append(
+                              'backup',
+                              e.target?.result as unknown as string,
+                            )
+                            setValueUploadRestoreProject(
+                              'backup',
+                              formData.get('backup') as unknown as string,
+                            )
+
+                            if (!ACCEPTED_RESTORE_FILE.includes(file.type)) {
+                              setUploadRestoreProjectErr(
+                                t('validate:json_type'),
+                              )
+                              return false
+                            }
+                          }
+                        }}
+                      />
+                      <div className="flex items-center text-body-sm">
+                        {restoreProjectFileName}
+                        {restoreProjectFileName ? (
+                          <div className="pl-4">
+                            <img
+                              height={12}
+                              width={12}
+                              src={btnRemoveIcon}
+                              className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                              onClick={() => {
+                                handleResetRestoreProject
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+                      <p className="text-body-sm text-primary-400">
+                        {uploadRestoreProjectErr}
+                      </p>
                     </div>
                   </div>
                 </div>

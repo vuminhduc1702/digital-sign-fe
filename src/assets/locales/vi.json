@@ -66,7 +66,7 @@
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
-        "restore_project": "Restore project",
+        "restore_project": "Import project",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",

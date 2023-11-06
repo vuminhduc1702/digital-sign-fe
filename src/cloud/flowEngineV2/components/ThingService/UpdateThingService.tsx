@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
@@ -51,6 +52,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '~/components/Tooltip'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -124,11 +127,12 @@ export function UpdateThingService({
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
+      value: String(item.value)
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = item.value || ''
+        dataRun[item.name] = String(item.value) || ''
       })
       mutateExcuteService({
         data: dataRun,
@@ -220,7 +224,7 @@ export function UpdateThingService({
             }}
             name={['input']}
           >
-            {({ register, formState, setError }, { fields, append, remove }) => {
+            {({ register, formState, control }, { fields, append, remove }) => {
               return (
                 <>
                   <div className="my-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -327,13 +331,6 @@ export function UpdateThingService({
                                             registration={register(
                                               `input.${index}.name` as const,
                                             )}
-                                            onChange={(e) => {
-                                              if (defaultJSType.includes(e.target.value)) {
-                                                setError(`input.${index}.name`, {message: t('cloud:custom_protocol.service.service_input.name_error')})
-                                              } else {
-                                                setError(`input.${index}.name`, {message: ''})
-                                              }
-                                            }}
                                           />
                                           <SelectField
                                             label={t(
@@ -355,27 +352,43 @@ export function UpdateThingService({
                                             }}
                                           />
                                         </div>
-                                        <InputField
-                                          label={t(
-                                            'cloud:custom_protocol.service.service_input.value',
-                                          )}
-                                          error={
-                                            formState.errors[`input`]?.[index]
-                                              ?.value
-                                          }
-                                          registration={register(
-                                            `input.${index}.value` as const,
-                                          )}
-                                          type={ numberInput.includes(fields[index].type as string) ? 'number' : 'text' }
-                                          onChange={(e) => {
-                                            if (fields[index].type === 'bool') {
-                                              const result = e.target.value.replace(/[^A-Za-z]/, '')
-                                              fields[index].value = result
-                                            } else {
-                                              fields[index].value = e.target.value
-                                            }
-                                          }}
-                                        />
+                                        {
+                                          fields[index].type === 'bool' ? (
+                                            <FieldWrapper
+                                              label={t('cloud:custom_protocol.service.service_input.value')}
+                                              error={formState.errors[`input`]?.[index]?.value}
+                                            >
+                                              <Controller
+                                                control={control}
+                                                name={`input.${index}.value`}
+                                                render={({ field: { onChange, value, ...field } }) => {
+                                                  return (
+                                                    <Checkbox
+                                                      {...field}
+                                                      checked={(value+'').toLowerCase() === 'true'}
+                                                      onCheckedChange={onChange}
+                                                    />
+                                                  )
+                                                }}
+                                              />
+                                              <span className='pl-3'>True</span>
+                                            </FieldWrapper>
+                                          ) : (
+                                            <InputField
+                                              label={t(
+                                                'cloud:custom_protocol.service.service_input.value',
+                                              )}
+                                              error={
+                                                formState.errors[`input`]?.[index]
+                                                  ?.value
+                                              }
+                                              registration={register(
+                                                `input.${index}.value` as const,
+                                              )}
+                                              type={ numberInput.includes(fields[index].type as string) ? 'number' : 'text' }
+                                            />
+                                          )
+                                        }
                                       </div>
                                       <Button
                                         type="button"
@@ -402,11 +415,14 @@ export function UpdateThingService({
                                 <div
                                   className="flex w-fit items-center"
                                   onClick={() =>
-                                    append({
-                                      name: '',
-                                      type: 'json',
-                                      value: '',
-                                    })
+                                    {
+                                      append({
+                                        name: '',
+                                        type: 'json',
+                                        value: '',
+                                      })
+                                      setInputTypeValue('')
+                                    }
                                   }
                                 >
                                   <img

@@ -4,6 +4,7 @@ import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
@@ -35,6 +36,8 @@ import { type InputService, type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/Tooltip'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -46,7 +49,6 @@ export const serviceThingSchema = z.object({
         .min(1, { message: 'Tên biến quá ngắn' })
         .max(30, { message: 'Tên biến quá dài' }),
       type: z.string().optional(),
-      value: z.string(),
     }),
   ),
   output: z.enum([
@@ -56,9 +58,7 @@ export const serviceThingSchema = z.object({
     'i64',
     'f32',
     'f64',
-    'bool',
-    'time',
-    'bin',
+    'bool'
   ] as const),
 })
 
@@ -139,12 +139,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value: item.value
+      value: item.type === 'bool' && item.value === '' ? 'false' : String(item.value)
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = item.value || ''
+        dataRun[item.name] = String(item.value) || ''
       })
       mutateExecuteService({
         data: dataRun,
@@ -175,6 +175,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setCodeOutput('')
     setFullScreen(false)
     setIsShowConsole(false)
+    setInputTypeValue('')
   }
 
   useEffect(() => {
@@ -216,7 +217,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           }}
           name={['input']}
         >
-          {({ register, formState, setError }, { fields, append, remove }) => {
+          {({ register, formState, control, setError }, { fields, append, remove }) => {
+            console.log('error: ', formState.errors)
             return (
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -225,6 +227,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     label={t('cloud:custom_protocol.service.name')}
                     error={formState.errors['name']}
                     registration={register('name')}
+                    onChange={(e) => {
+                      if (defaultJSType.includes(e.target.value)) {
+                        setError('name', {message: t('cloud:custom_protocol.service.service_input.name_error')})
+                      } else {
+                        setError('name', {message: ''})
+                      }
+                    }}
                   />
                   <SelectField
                     label={t(
@@ -279,13 +288,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   registration={register(
                                     `input.${index}.name` as const,
                                   )}
-                                  onChange={(e) => {
-                                    if (defaultJSType.includes(e.target.value)) {
-                                      setError(`input.${index}.name`, {message: t('cloud:custom_protocol.service.service_input.name_error')})
-                                    } else {
-                                      setError(`input.${index}.name`, {message: ''})
-                                    }
-                                  }}
                                 />
                                 <SelectField
                                   label={t(
@@ -306,19 +308,42 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   }}
                                 />
                               </div>
-                              <InputField
-                                label={t(
-                                  'cloud:custom_protocol.service.service_input.value',
-                                )}
-                                error={
-                                  formState.errors[`input`]?.[index]?.value
-                                }
-                                registration={register(
-                                  `input.${index}.value` as const,
-                                )}
-                                type={ numberInput.includes(fields[index].type as string) ? "number": "text" }
-                                pattern={ fields[index].type === 'bool' ? "[A-Za-z]" : ""}
-                              />
+                              {
+                                fields[index].type === 'bool' ? (
+                                  <FieldWrapper
+                                    label={t('cloud:custom_protocol.service.service_input.value')}
+                                    error={formState.errors[`input`]?.[index]?.value}
+                                  >
+                                    <Controller
+                                      control={control}
+                                      name={`input.${index}.value`}
+                                      render={({ field: { onChange, value, ...field } }) => {
+                                        return (
+                                          <Checkbox
+                                            {...field}
+                                            checked={Boolean(value)}
+                                            onCheckedChange={onChange}
+                                          />
+                                        )
+                                      }}
+                                    />
+                                    <span className='pl-3'>True</span>
+                                  </FieldWrapper>
+                                ) : (
+                                  <InputField
+                                    label={t(
+                                      'cloud:custom_protocol.service.service_input.value',
+                                    )}
+                                    error={
+                                      formState.errors[`input`]?.[index]?.value
+                                    }
+                                    registration={register(
+                                      `input.${index}.value` as const,
+                                    )}
+                                    type={ numberInput.includes(fields[index].type as string) ? "number": "text" }
+                                  />
+                                )
+                              }
                             </div>
                             <Button
                               type="button"
@@ -343,11 +368,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div
                       className="flex w-fit items-center"
                       onClick={() =>
-                        append({
-                          name: '',
-                          type: 'json',
-                          value: '',
-                        })
+                        {
+                          append({
+                            name: '',
+                            type: 'json',
+                            value: '',
+                          })
+                          setInputTypeValue('')
+                        }
                       }
                     >
                       <img

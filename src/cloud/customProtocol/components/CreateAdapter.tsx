@@ -172,15 +172,7 @@ export const outputList = [
   {
     label: i18n.t('cloud:custom_protocol.service.bool'),
     value: 'bool',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.time'),
-    value: 'time',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.bin'),
-    value: 'bin',
-  },
+  }
 ]
 
 export const thingTypeList = [
