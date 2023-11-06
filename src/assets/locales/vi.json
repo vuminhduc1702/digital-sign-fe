@@ -836,7 +836,10 @@
       "interval": "Khoảng thời gian",
       "data_aggregation": "Tổng hợp dữ liệu",
       "dataType": "Loại biểu đồ",
-      "sma_window": "Số data point"
+      "sma_window": "Số data point",
+      "choose_interval": "Vui lòng chọn khoảng thời gian",
+      "choose_widgetType": "Vui lòng chọn loại biểu đồ",
+      "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu"
     }
   },
   "validate": {

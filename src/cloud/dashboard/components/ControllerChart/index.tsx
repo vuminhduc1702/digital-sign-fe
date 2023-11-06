@@ -44,12 +44,6 @@ export function ControllerButton(data: { data: string }) {
           ).replace('{{SERVICE_NAME}}', service_name),
         })
       }
-      if (lastJsonMessage?.errorCode !== 0) {
-        addNotification({
-          type: 'error',
-          title: lastJsonMessage?.errorMsg,
-        })
-      }
     }
   }, [lastJsonMessage])
 

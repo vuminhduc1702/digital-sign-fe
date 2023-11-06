@@ -1,5 +1,7 @@
 import * as z from 'zod'
 
+import i18n from '~/i18n'
+
 export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
@@ -41,16 +43,12 @@ export type DashboardWS = {
   update: any[]
 }
 
-export const aggSchema = z.enum([
-  'NONE',
-  'AVG',
-  'MIN',
-  'MAX',
-  'SUM',
-  'COUNT',
-  'SMA',
-  'FFT',
-] as const)
+export const aggSchema = z.enum(
+  ['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT', 'SMA', 'FFT'] as const,
+  {
+    errorMap: () => ({ message: i18n.t('ws:filter.choose_agg') }),
+  },
+)
 
 export const widgetCategorySchema = z.enum([
   'LINE',

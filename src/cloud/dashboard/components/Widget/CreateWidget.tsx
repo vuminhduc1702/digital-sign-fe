@@ -60,7 +60,9 @@ export const attrWidgetSchema = z.array(
   }),
 )
 
-export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const)
+export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const, {
+  errorMap: () => ({ message: i18n.t('ws:filter.choose_widgetType') }),
+})
 type WidgetDataType = z.infer<typeof widgetDataTypeSchema>
 
 export const widgetTypeSchema = z
@@ -142,7 +144,11 @@ export const widgetCreateSchema = z.object({
   widgetSetting: z
     .object({
       agg: aggSchema,
-      interval: z.coerce.number(),
+      interval: z.coerce
+        .number()
+        .refine(val => wsInterval.some(interval => val === interval.value), {
+          message: i18n.t('ws:filter.choose_interval'),
+        }),
       startDate: z.date({
         required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
       }),
@@ -311,7 +317,7 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
+              console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -705,9 +711,6 @@ export function CreateWidget({
                               option.label === t('table:no_attr')
                             }
                             noOptionsMessage={() => t('table:no_attr')}
-                            placeholder={t(
-                              'cloud:org_manage.org_manage.add_attr.choose_attr',
-                            )}
                             onChange={e => {
                               setValue(
                                 `attributeConfig.${index}.attribute_key`,
@@ -719,6 +722,9 @@ export function CreateWidget({
                             }}
                             value={watch(
                               `attributeConfig.${index}.attribute_key`,
+                            )}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
                             )}
                           />
                           <p className="text-body-sm text-primary-400">
@@ -1075,6 +1081,7 @@ export function CreateWidget({
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
+              disabled={!formState.isValid}
             />
           </div>
         </div>
