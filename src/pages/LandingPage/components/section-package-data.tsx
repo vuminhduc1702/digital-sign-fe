@@ -14,8 +14,8 @@ import { string } from 'zod'
 
 export function SectionPackageData() {
   const { t } = useTranslation()
-  const [offerTypePostPaid, setOfferTypePostPaid] = useState(true)
-  const [payTypeNB, setPayTypeNB] = useState(true)
+  const [offerTypePostPaid, setOfferTypePostPaid] = useState(false)
+  const [payTypeNB, setPayTypeNB] = useState(false)
   const [category, setCategory] = useState('Tất cả')
   let offerType = offerTypePostPaid ? 'NB' : '4G'
   let payType = payTypeNB ? 'POST_PAID' : 'PRE_PAID'
@@ -101,7 +101,7 @@ export function SectionPackageData() {
               <Switch
                 className="mx-3"
                 onCheckedChange={checked => setOfferTypePostPaid(checked)}
-                defaultChecked
+                // defaultChecked
               />
               <p className="text-lg font-medium">
                 {t('landingpage:pack_of_data_M2M.NB_IoT')}
@@ -117,7 +117,7 @@ export function SectionPackageData() {
               <Switch
                 className="mx-3"
                 onCheckedChange={checked => setPayTypeNB(checked)}
-                defaultChecked
+                // defaultChecked
               />
               <p className="text-lg font-medium">
                 {t('landingpage:pack_of_data_M2M.postpaid')}
