@@ -91,13 +91,6 @@ export const adapterSchema = z
           }),
         ),
       }),
-      z.object({
-        content_type: z.literal('json'),
-        fields: z.array(
-          z.object({
-          }).optional(),
-        ),
-      }),
     ]),
   )
 
@@ -362,12 +355,14 @@ export function CreateAdapter() {
         onSubmit={values => {
           console.log('adapter values', values)
           const fields =
-            values?.fields?.length &&
-            values?.fields?.map(item => ({
-              name: item.name,
-              start_byte: parseInt(item.start_byte),
-              end_byte: parseInt(item.start_byte) + parseInt(item.length_byte),
-            })) || []
+            (values?.fields?.length &&
+              values?.fields?.map(item => ({
+                name: item.name,
+                start_byte: parseInt(item.start_byte),
+                end_byte:
+                  parseInt(item.start_byte) + parseInt(item.length_byte),
+              }))) ||
+            []
           if (protocolType === 'mqtt') {
             mutateAdapter({
               data: {
