@@ -315,7 +315,7 @@ export function CreateWidget({
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
-                key: item.attribute_key,
+                key: item.attribute_key.value,
               }))
               const initMessage = {
                 entityDataCmds: [
@@ -366,7 +366,7 @@ export function CreateWidget({
                   {
                     tsCmd: {
                       keys: values.attributeConfig.map(
-                        item => item.attribute_key,
+                        item => item.attribute_key.value,
                       ),
                       startTs: Date.parse(
                         values.widgetSetting?.startDate?.toISOString() as string,
@@ -388,7 +388,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key,
+                              item => item.attribute_key.value,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString(),
@@ -411,7 +411,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key,
+                              item => item.attribute_key.value,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString() as string,
@@ -449,7 +449,7 @@ export function CreateWidget({
                       : '',
                 },
                 attribute_config: values.attributeConfig.map(item => ({
-                  attribute_key: item.attribute_key,
+                  attribute_key: item.attribute_key.value,
                   color: item.color,
                   decimal: item.decimal,
                   label: item.label,

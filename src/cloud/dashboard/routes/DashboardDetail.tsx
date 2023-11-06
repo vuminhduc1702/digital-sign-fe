@@ -41,6 +41,7 @@ import {
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
+import { useNotificationStore } from '~/stores/notifications'
 
 import {
   DeleteIcon,
@@ -90,6 +91,7 @@ export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeU
 
 export function DashboardDetail() {
   const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -136,6 +138,15 @@ export function DashboardDetail() {
       setWidgetList(widgetDetailDB)
     }
   }, [widgetDetailDB])
+
+  // useEffect(() => {
+  //   if (lastJsonMessage?.errorMsg !== '') {
+  //     addNotification({
+  //       type: 'error',
+  //       title: lastJsonMessage?.errorMsg,
+  //     })
+  //   }
+  // }, [lastJsonMessage])
 
   useEffect(() => {
     Object.values(widgetList).forEach(widget => {
