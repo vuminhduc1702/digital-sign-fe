@@ -79,73 +79,48 @@ export function CreateUser() {
   const [role, setRole] = useState<SelectOptionString>()
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
-  const [wardCode, setWardCode] = useState('')
 
-  //get province list
   const { data: provinceList } = useAreaList({
-    config: {
-      // suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === provinceCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        transformArr.push({ value: '', label: 'Tỉnh/TP' })
-        return transformArr
-      },
-    },
-    param: {
-      parentCode: '',
-      type: 'PROVINCE',
-      queryKey: 'province-list',
-    },
-  })
-
-  // get district list
-  const { data: districtList } = useAreaList({
+    parentCode: '',
+    type: 'PROVINCE',
     config: {
       suspense: false,
       select: (data: any) => {
         const transformArr = data.map((item: any) => {
-          if (item.areaCode === districtCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
           return { value: item.areaCode, label: item.name }
         })
-        transformArr.push({ value: '', label: 'Huyện/Quận' })
+        return transformArr
+      },
+    },
+  })
+
+  const { data: districtList } = useAreaList({
+    parentCode: provinceCode,
+    type: 'DISTRICT',
+    config: {
+      suspense: false,
+      select: (data: any) => {
+        const transformArr = data.map((item: any) => {
+          return { value: item.areaCode, label: item.name }
+        })
         return transformArr
       },
       enabled: !!provinceCode,
     },
-    param: {
-      parentCode: provinceCode,
-      type: 'DISTRICT',
-      queryKey: 'district-list',
-    },
   })
 
-  // get ward list
   const { data: wardList } = useAreaList({
+    parentCode: districtCode,
+    type: 'WARD',
     config: {
       suspense: false,
       select: (data: any) => {
         const transformArr = data.map((item: any) => {
-          if (item.areaCode === wardCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
           return { value: item.areaCode, label: item.name }
         })
-        transformArr.push({ value: '', label: 'Phường/Xã' })
         return transformArr
       },
       enabled: !!districtCode,
-    },
-    param: {
-      parentCode: districtCode,
-      type: 'WARD',
-      queryKey: 'ward-list',
     },
   })
 
@@ -282,22 +257,29 @@ export function CreateUser() {
                 <SelectField
                   error={formState.errors['province']}
                   registration={register('province')}
-                  options={provinceList || [{ value: '', label: 'Tỉnh/TP' }]}
+                  options={provinceList || [{ value: '', label: '' }]}
                   classchild="w-full"
                   onChange={e => setProvinceCode(e.target.value)}
+                  placeholder={t(
+                    'cloud:org_manage.user_manage.add_user.province',
+                  )}
                 />
 
                 <SelectField
                   error={formState.errors['district']}
                   registration={register('district')}
-                  options={districtList || [{ value: '', label: 'Huyện/Quận' }]}
+                  options={districtList || [{ value: '', label: '' }]}
                   onChange={e => setDistrictCode(e.target.value)}
+                  placeholder={t(
+                    'cloud:org_manage.user_manage.add_user.district',
+                  )}
                 />
 
                 <SelectField
                   error={formState.errors['ward']}
                   registration={register('ward')}
-                  options={wardList || [{ value: '', label: 'Phường/Xã' }]}
+                  options={wardList || [{ value: '', label: '' }]}
+                  placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
                 />
               </div>
 

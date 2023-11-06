@@ -112,6 +112,7 @@ const SelfAccount = () => {
       enabled: !!districtCode,
     },
   })
+
   const showSpinner = useSpinDelay(userInfoIsLoading || provinceListIsLoading, {
     delay: 150,
     minDuration: 300,
@@ -228,7 +229,9 @@ const SelfAccount = () => {
                     options={provinceList || [{ value: '', label: '' }]}
                     classchild="w-full"
                     onChange={e => setProvinceCode(e.target.value)}
-                    placeholder="Tỉnh/TP"
+                    placeholder={t(
+                      'cloud:org_manage.user_manage.add_user.province',
+                    )}
                   />
                 </div>
                 <div>
@@ -237,7 +240,9 @@ const SelfAccount = () => {
                     registration={register('profile.district')}
                     options={districtList || [{ value: '', label: '' }]}
                     onChange={e => setDistrictCode(e.target.value)}
-                    placeholder="Huyện/Quận"
+                    placeholder={t(
+                      'cloud:org_manage.user_manage.add_user.district',
+                    )}
                   />
                 </div>
                 <div>
@@ -245,7 +250,9 @@ const SelfAccount = () => {
                     error={formState?.errors?.profile?.ward}
                     registration={register('profile.ward')}
                     options={wardList || [{ value: '', label: '' }]}
-                    placeholder="Phường/Xã"
+                    placeholder={t(
+                      'cloud:org_manage.user_manage.add_user.ward',
+                    )}
                   />
                 </div>
                 <div className="col-start-1 flex items-center justify-end">

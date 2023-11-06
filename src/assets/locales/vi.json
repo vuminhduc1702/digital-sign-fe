@@ -193,7 +193,10 @@
           "parent": "Trực thuộc tổ chức",
           "success_create": "Tạo người dùng thành công",
           "success_update": "Sửa người dùng thành công",
-          "success_delete": "Xoá người dùng thành công"
+          "success_delete": "Xoá người dùng thành công",
+          "province": "Tỉnh/TP",
+          "district": "Huyện/Quận",
+          "ward": "Phường/Xã"
         }
       },
       "device_manage": {
