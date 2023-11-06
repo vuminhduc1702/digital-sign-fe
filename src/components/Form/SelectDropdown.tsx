@@ -17,6 +17,7 @@ type SelectProps<
   classlabel?: string
   classchild?: string
   classnamefieldwrapper?: string
+  onChange?: (e: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
