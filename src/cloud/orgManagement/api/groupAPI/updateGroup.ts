@@ -7,7 +7,7 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export type UpdateGroupDTO = {
   data: {
-    name: string,
+    name: string
     org_id?: string
   }
   groupId: string
@@ -29,11 +29,11 @@ export const useUpdateGroup = ({ config }: UseUpdateGroupOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['groups'],
+        queryKey: ['groups', 'groupById'],
       })
-      await queryClient.invalidateQueries({
-        queryKey: ['groupById'],
-      })
+      // await queryClient.invalidateQueries({
+      //   queryKey: ['groupById'],
+      // })
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.group_manage.add_group.success_update'),
