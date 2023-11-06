@@ -16,7 +16,12 @@ import {
   passwordSchema,
 } from '~/utils/schemaValidation'
 
-import { BtnPasswordLoginIcon, BtnUserLoginIcon } from '~/components/SVGIcons'
+import {
+  BtnPasswordLoginIcon,
+  BtnUserLoginIcon,
+  EyeHide,
+  EyeShow,
+} from '~/components/SVGIcons'
 
 const registerSchema = z
   .object({
@@ -58,6 +63,14 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const intervalRef: React.MutableRefObject<number | null> = useRef<
     number | null
   >(null)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showRePassword, setShowRePassword] = useState(false)
+  const toggleRePasswordVisibility = () => {
+    setShowRePassword(prev => !prev)
+  }
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev)
+  }
 
   function updateCountdown() {
     if (intervalRef.current) {
@@ -121,7 +134,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 }
               />
               <InputField
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className="bg-stone-300"
                 classnamefieldwrapper="relative"
                 placeholder={t('auth:require_password')}
@@ -135,10 +148,29 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                endIcon={
+                  showPassword ? (
+                    <EyeShow
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeHide
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )
+                }
                 autoComplete="new-password"
               />
               <InputField
-                type="password"
+                type={showRePassword ? 'text' : 'password'}
                 className="bg-stone-300"
                 classnamefieldwrapper="relative"
                 error={formState.errors['confirmPassword']}
@@ -151,6 +183,25 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     viewBox="0 0 20 20"
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
+                }
+                endIcon={
+                  showRePassword ? (
+                    <EyeShow
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleRePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeHide
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleRePasswordVisibility}
+                    />
+                  )
                 }
                 autoComplete="new-password"
               />

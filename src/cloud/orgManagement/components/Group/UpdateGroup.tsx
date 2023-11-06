@@ -7,6 +7,7 @@ import {
   Form,
   InputField,
   SelectDropdown,
+  SelectField,
   type SelectOptionString,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
@@ -20,6 +21,8 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
+import { type EntityType } from '../../api/attrAPI'
+
 const groupSchema = z.object({
   name: z.string(),
 })
@@ -30,7 +33,18 @@ type UpdateGroupProps = {
   close: () => void
   isOpen: boolean
   organization: string
+  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
 }
+type EntityTypeGroup = {
+  type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
+  name: string
+}
+export const entityTypeList: EntityTypeGroup[] = [
+  { type: 'ORGANIZATION', name: 'Tổ chức' },
+  { type: 'DEVICE', name: 'Thiết bị' },
+  { type: 'USER', name: 'Người dùng' },
+  { type: 'EVENT', name: 'Sự kiện' },
+]
 
 export function UpdateGroup({
   groupId,
@@ -38,6 +52,7 @@ export function UpdateGroup({
   close,
   isOpen,
   organization,
+  entity_type,
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
@@ -132,6 +147,18 @@ export function UpdateGroup({
               }
               error={formState.errors['name']}
               registration={register('name')}
+            />
+            <SelectField
+              disabled
+              label={
+                t('cloud:org_manage.group_manage.add_group.entity_type') ??
+                'Entity type'
+              }
+              value={entity_type.toString()}
+              options={entityTypeList.map(entityType => ({
+                label: entityType.name,
+                value: entityType.type,
+              }))}
             />
             <div className="space-y-1">
               <SelectDropdown

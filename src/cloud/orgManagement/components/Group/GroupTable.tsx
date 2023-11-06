@@ -17,6 +17,8 @@ import storage from '~/utils/storage'
 import { type Group } from '../../types'
 import { type BaseTablePagination } from '~/types'
 
+import { type EntityType } from '../../api/attrAPI'
+
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDetailIcon from '~/assets/icons/btn-detail.svg'
@@ -30,7 +32,6 @@ export type GroupType = {
   org_name: string
   organization: string
   project_id: string
-  entity_type: string
   attributes: string
 }
 
@@ -41,6 +42,7 @@ function GroupTableContextMenu({
 }: {
   id: string
   name: string
+  entity_type : Omit<EntityType, "GROUP" | "TEMPLATE">
   organization: string
 }) {
   const { t } = useTranslation()
@@ -205,8 +207,8 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id, organization } = info.row.original
-          return GroupTableContextMenu({ name, id, organization })
+          const { name, id, organization, entity_type } = info.row.original
+          return GroupTableContextMenu({ name, id, organization ,entity_type })
         },
         header: () => null,
         footer: info => info.column.id,

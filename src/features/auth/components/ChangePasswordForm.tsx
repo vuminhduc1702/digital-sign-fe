@@ -5,19 +5,32 @@ import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 
-import { BtnPasswordLoginIcon } from '~/components/SVGIcons'
+import { BtnPasswordLoginIcon, EyeHide, EyeShow } from '~/components/SVGIcons'
 import { useChangePassword } from '../api/changepassword'
 
 import {
   ChangePaswordSchema,
   type changePasswordDTO,
 } from '../api/changepassword'
+import { useState } from 'react'
 
 type ChangePaswordFormProps = {
   onSuccess: () => void
 }
 
 export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
+  const [showPassword, setShowPassword] = useState(false)
+  const [showRePassword, setShowRePassword] = useState(false)
+  const [showOldPassword, setShowOldPassword] = useState(false)
+  const toggleOldPasswordVisibility = () => {
+    setShowOldPassword(prev => !prev)
+  }
+  const toggleRePasswordVisibility = () => {
+    setShowRePassword(prev => !prev)
+  }
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev)
+  }
   const { t } = useTranslation()
 
   const changePasswordMutation = useChangePassword()
@@ -38,7 +51,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
           return (
             <>
               <InputField
-                type="password"
+                type={showOldPassword ? 'text' : 'password'}
                 className="bg-stone-300"
                 classnamefieldwrapper="relative"
                 placeholder={t('auth:require_password_old')}
@@ -52,11 +65,30 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                endIcon={
+                  showOldPassword ? (
+                    <EyeShow
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleOldPasswordVisibility}
+                    />
+                  ) : (
+                    <EyeHide
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleOldPasswordVisibility}
+                    />
+                  )
+                }
                 autoComplete="off"
               />
 
               <InputField
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 className="bg-stone-300"
                 classnamefieldwrapper="relative"
                 placeholder={t('auth:require_password_new')}
@@ -70,10 +102,29 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
                 }
+                endIcon={
+                  showPassword ? (
+                    <EyeShow
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeHide
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )
+                }
                 autoComplete="new-password"
               />
               <InputField
-                type="password"
+                type={showRePassword ? 'text' : 'password'}
                 className="bg-stone-300"
                 classnamefieldwrapper="relative"
                 error={formState.errors['new_password_confirm']}
@@ -86,6 +137,25 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                     viewBox="0 0 20 20"
                     className="absolute left-2 top-1/2 z-20 -translate-y-1/2"
                   />
+                }
+                endIcon={
+                  showRePassword ? (
+                    <EyeShow
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleRePasswordVisibility}
+                    />
+                  ) : (
+                    <EyeHide
+                      height={24}
+                      width={24}
+                      viewBox="0 0 24 24"
+                      className="absolute right-2 top-1/2 z-20 -translate-y-1/2"
+                      onClick={toggleRePasswordVisibility}
+                    />
+                  )
                 }
                 autoComplete="new-password"
               />
