@@ -58,9 +58,11 @@ const SelfAccount = () => {
   }, [])
 
   //get province list
-  const { data: provinceList } = useAreaList({
+  const { data: provinceList, isLoading: provinceListIsLoading } = useAreaList({
+    parentCode: '',
+    type: 'PROVINCE',
     config: {
-      // suspense: false,
+      suspense: false,
       select: (data: any) => {
         const transformArr = data.map((item: any) => {
           if (item.areaCode === provinceCode) {
@@ -71,15 +73,12 @@ const SelfAccount = () => {
         return transformArr
       },
     },
-    param: {
-      parentCode: '',
-      type: 'PROVINCE',
-      queryKey: 'province-list',
-    },
   })
 
   // get district list
   const { data: districtList } = useAreaList({
+    parentCode: provinceCode,
+    type: 'DISTRICT',
     config: {
       suspense: false,
       select: (data: any) => {
@@ -93,15 +92,12 @@ const SelfAccount = () => {
       },
       enabled: !!provinceCode,
     },
-    param: {
-      parentCode: provinceCode,
-      type: 'DISTRICT',
-      queryKey: 'district-list',
-    },
   })
 
   // get ward list
   const { data: wardList } = useAreaList({
+    parentCode: districtCode,
+    type: 'WARD',
     config: {
       suspense: false,
       select: (data: any) => {
@@ -115,13 +111,8 @@ const SelfAccount = () => {
       },
       enabled: !!districtCode,
     },
-    param: {
-      parentCode: districtCode,
-      type: 'WARD',
-      queryKey: 'ward-list',
-    },
   })
-  const showSpinner = useSpinDelay(userInfoIsLoading, {
+  const showSpinner = useSpinDelay(userInfoIsLoading || provinceListIsLoading, {
     delay: 150,
     minDuration: 300,
   })
@@ -144,7 +135,7 @@ const SelfAccount = () => {
         className="mb-4 mt-12 rounded-md bg-secondary-700 pl-3"
       />
 
-      {userInfoIsLoading ? (
+      {userInfoIsLoading || provinceListIsLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>

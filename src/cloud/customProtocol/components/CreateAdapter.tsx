@@ -50,7 +50,6 @@ export const adapterSchema = z
   .object({
     name: nameSchema,
     project_id: z.string().optional(),
-    content_type: z.enum(['json', 'hex', 'text'] as const),
     thing_id: z.string(),
     handle_service: z.string(),
   })
@@ -80,17 +79,10 @@ export const adapterSchema = z
   .and(
     z.discriminatedUnion('content_type', [
       z.object({
-        content_type: z.literal('hex'),
-        fields: z.array(
-          z.object({
-            name: z.string(),
-            start_byte: z.string(),
-            length_byte: z.string(),
-          }),
-        ),
+        content_type: z.literal('json'),
       }),
       z.object({
-        content_type: z.literal('text'),
+        content_type: z.enum(['hex', 'text'] as const),
         fields: z.array(
           z.object({
             name: z.string(),
