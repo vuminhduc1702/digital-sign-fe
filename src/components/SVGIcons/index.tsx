@@ -1285,7 +1285,7 @@ export function ChartTableData({ ...props }: SVGIconProps) {
   )
 }
 
-export function ChartGauses({ ...props }: SVGIconProps) {
+export function ChartGaugeIcon({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
       <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">

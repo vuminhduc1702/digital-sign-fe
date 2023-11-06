@@ -48,7 +48,7 @@ import {
   ChartCircle,
   ChartControl,
   ChartData,
-  ChartGauses,
+  ChartGaugeIcon,
   ChartGraph,
   ChartLine,
   ChartMap,
@@ -139,14 +139,14 @@ export function DashboardDetail() {
     }
   }, [widgetDetailDB])
 
-  // useEffect(() => {
-  //   if (lastJsonMessage?.errorMsg !== '') {
-  //     addNotification({
-  //       type: 'error',
-  //       title: lastJsonMessage?.errorMsg,
-  //     })
-  //   }
-  // }, [lastJsonMessage])
+  useEffect(() => {
+    if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
+      addNotification({
+        type: 'error',
+        title: lastJsonMessage.errorMsg,
+      })
+    }
+  }, [lastJsonMessage])
 
   useEffect(() => {
     Object.values(widgetList).forEach(widget => {
@@ -565,7 +565,11 @@ export function DashboardDetail() {
                         setIsMultipleDevice(false)
                       }}
                     >
-                      <ChartGauses height={58} width={58} viewBox="0 0 58 58" />
+                      <ChartGaugeIcon
+                        height={58}
+                        width={58}
+                        viewBox="0 0 58 58"
+                      />
                       <span className="flex items-center">
                         {t('cloud:dashboard.detail_dashboard.add_widget.gauge')}
                       </span>
