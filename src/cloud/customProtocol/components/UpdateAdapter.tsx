@@ -120,7 +120,6 @@ export function UpdateAdapter({
     isSuccess: isSuccessService,
   } = useCreateServiceThing()
 
-  const [selectedThing, setSelectedThing] = useState<SelectOption>()
   const [optionThingId, setOptionThingId] = useState<SelectOption>({
     label: '',
     value: '',
@@ -131,9 +130,8 @@ export function UpdateAdapter({
     config: { enabled: !!selectedThingId, suspense: false },
   })
   useEffect(() => {
-    if (selectedThing != null) {
-      setSelectedThing(undefined)
-    }
+    const thingFilter = thingSelectData.length && thingSelectData.filter(item => item.value === thing_id)
+    setOptionThingId(thingFilter[0] || [{ value: '', label: '' }])
   }, [])
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
@@ -154,8 +152,8 @@ export function UpdateAdapter({
       (schemaParse.fields &&
         schemaParse.fields.map((item: FieldsType) => ({
           name: item.name,
-          start_byte: item.start_byte,
-          length_byte: item.end_byte - item.start_byte,
+          start_byte: (item.start_byte).toString() || '',
+          length_byte: (item.end_byte - item.start_byte).toString() || '',
         }))) ||
       []
     return result
@@ -174,7 +172,7 @@ export function UpdateAdapter({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="cancel" className="h-5 w-5" />
             }
           />
           <Button
@@ -198,58 +196,62 @@ export function UpdateAdapter({
         id="update-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
-          // console.log('adapter values', values)
+          console.log('adapter values', values)
           const fields =
-            values.fields.length &&
-            values.fields.map(item => ({
-              name: item.name,
-              start_byte: parseInt(item.start_byte),
-              end_byte: parseInt(item.start_byte) + parseInt(item.length_byte),
+            values?.fields?.length &&
+            values?.fields?.map(item => ({
+              name: item?.name,
+              start_byte: parseInt(item?.start_byte),
+              end_byte: parseInt(item?.start_byte) + parseInt(item?.length_byte),
             }))
-          if (protocolType === 'mqtt') {
-            mutate({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'mqtt',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                host: values.host,
-                port: values.port,
-                schema: {
-                  fields,
-                },
-                configuration: {
-                  credentials: {
-                    username: values.configuration.credentials.username,
-                    password: values.configuration.credentials.password,
+          if (isCreateAdapterFormUpdated &&
+            protocolTypeRef.current !== protocolType) {
+            if (protocolType === 'mqtt') {
+              mutate({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'mqtt',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  host: values.host,
+                  port: values.port,
+                  schema: {
+                    fields,
                   },
-                  topic_filters: values.configuration.topic_filters.map(
-                    (topic: { topic: string }) => ({
-                      topic: topic.topic.trim(),
-                    }),
-                  ),
+                  configuration: {
+                    credentials: {
+                      username: values.configuration.credentials.username,
+                      password: values.configuration.credentials.password,
+                    },
+                    topic_filters: values.configuration.topic_filters.map(
+                      (topic: { topic: string }) => ({
+                        topic: topic.topic.trim(),
+                      }),
+                    ),
+                  },
                 },
-              },
-              id,
-            })
-          } else {
-            mutate({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'tcp' | 'udp',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                schema: {
-                  fields,
+                id,
+              })
+            } else {
+              mutate({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'tcp' | 'udp',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  schema: {
+                    fields,
+                  },
                 },
-              },
-              id,
-            })
+                id,
+              })
+            }
           }
+
         }}
         schema={adapterSchema}
         name={['configuration.topic_filters', 'fields']}
@@ -600,11 +602,11 @@ export function UpdateAdapter({
                               thingData
                                 ? thingSelectData
                                 : [
-                                    {
-                                      label: t('loading:entity_thing'),
-                                      value: '',
-                                    },
-                                  ]
+                                  {
+                                    label: t('loading:entity_thing'),
+                                    value: '',
+                                  },
+                                ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -630,7 +632,7 @@ export function UpdateAdapter({
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
-                            // defaultValue={defaultThingValues}
+                          // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -703,7 +705,7 @@ export function UpdateAdapter({
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                    thingType === 'template' ? (
+                                      thingType === 'template' ? (
                                       <InputField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -779,13 +781,13 @@ export function UpdateAdapter({
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                ? [
+                                  ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                : [
+                                  : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
@@ -821,7 +823,7 @@ export function UpdateAdapter({
                               id="create-serviceThing"
                               className="flex flex-col justify-between"
                               onSubmit={values => {
-                                // console.log('service values', values)
+                                console.log('service values', selectedThingId)
                                 mutateService({
                                   data: {
                                     name: values.name,
@@ -830,7 +832,7 @@ export function UpdateAdapter({
                                     input: inputService,
                                     code: codeInput,
                                   },
-                                  thingId: selectedThing?.value as string,
+                                  thingId: selectedThingId,
                                 })
                               }}
                               schema={serviceThingSchema}
