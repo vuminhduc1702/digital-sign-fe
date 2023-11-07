@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -28,8 +27,11 @@ import { useGetGroups } from '../../api/groupAPI'
 
 export const deviceSchema = z.object({
   name: nameSchema,
-  key: z.string(),
+  org_id: z.string().optional(),
+  project_id: z.string().optional(),
+  group_id: z.string().optional(),
   template_id: z.string().optional(),
+  key: z.string().optional(),
 })
 
 export function CreateDevice() {
@@ -121,11 +123,11 @@ export function CreateDevice() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: orgValue?.value,
+              org_id: values.org_id,
               name: values.name,
               key: values.key,
-              group_id: groupValue?.value,
-              template_id: templateValue?.value || '',
+              group_id: values.group_id,
+              template_id: values.template_id,
             },
           })
         })}
@@ -144,7 +146,10 @@ export function CreateDevice() {
               name="org_id"
               isClearable={false}
               value={orgValue}
-              onChange={e => setOrgValue(e)}
+              onChange={e => {
+                setOrgValue(e)
+                setValue('org_id', e.value)
+              }}
               control={control}
               options={
                 orgFlattenData?.map(org => ({
@@ -164,7 +169,10 @@ export function CreateDevice() {
               name="group_id"
               control={control}
               value={groupValue}
-              onChange={e => setGroupValue(e)}
+              onChange={e => {
+                setGroupValue(e)
+                setValue('group_id', e.value)
+              }}
               options={
                 groupData?.groups?.map(groups => ({
                   label: groups?.name,
