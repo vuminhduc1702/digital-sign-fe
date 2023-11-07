@@ -25,6 +25,8 @@ export type DashboardByIdRes = {
   }
   dashboard_setting: {
     layout: ReactGridLayout.Layout[]
+    starred: boolean
+    last_viewed: number
   }
 }
 

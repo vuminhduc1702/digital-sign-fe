@@ -22,6 +22,8 @@ export const dashboardSchema = z.object({
   dashboard_setting: z
     .object({
       layout: z.array(z.any()),
+      starred: z.boolean(),
+      last_viewed: z.date().optional(),
     })
     .nullish(),
   project_id: z.string().optional(),
