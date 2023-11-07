@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectDropdown,
@@ -38,6 +39,8 @@ import {
   type UpdateEventDTO,
 } from '../../api/eventAPI/updateEvent'
 import { createEventSchema, type IntervalData } from './CreateEvent'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 type UpdateEventProps = {
   eventId: string
@@ -66,6 +69,7 @@ export function UpdateEvent({
   close,
   isOpen,
 }: UpdateEventProps) {
+  console.log(data)
   const { t } = useTranslation()
 
   const [onClickValue, setOnclickValue] = useState(data.onClick)
@@ -348,11 +352,11 @@ export function UpdateEvent({
         id="update-event"
         options={{
           defaultValues: {
-            onClick: data.onClick,
+            onClick: (data.onClick+'').toLowerCase() === 'true',
             name,
             action: renderDataAction(),
             retry: data.retry.toString(),
-            status: data.status ? 'true' : 'false',
+            status: (data.status+'').toLowerCase() === 'true',
             condition: renderDataCondition(),
             interval: renderInterval(),
           },
@@ -430,10 +434,10 @@ export function UpdateEvent({
               group_id: groupValue?.value || '',
               name: values.name,
               onClick:
-                typeEvent === 'event' ? values.onClick === 'true' : false,
-              condition: values.onClick === 'false' ? conditionArr : [],
+                typeEvent === 'event' ? values.onClick === true : false,
+              condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
-              status: values.status === 'true',
+              status: Boolean(values.status),
               retry: values.retry ? parseInt(values.retry) : null,
               schedule: scheduleValue,
               interval,
@@ -454,6 +458,7 @@ export function UpdateEvent({
           },
           { append: actionAppend, fields: actionFields, remove: actionRemove },
         ) => {
+          console.log('control: ', control)
           return (
             <>
               <div className="space-y-3">
@@ -511,33 +516,43 @@ export function UpdateEvent({
                       {formState?.errors?.org_id?.message}
                     </p> */}
                   </div>
-                  <SelectField
+                  <FieldWrapper
                     label={t('cloud:org_manage.event_manage.add_event.status')}
-                    // error={formState.errors['type']}
-                    registration={register('status')}
-                    options={[
-                      { value: true, label: 'Kích hoạt' },
-                      {
-                        value: false,
-                        label: 'Không kích hoạt',
-                      },
-                    ]}
-                  />
-                  <SelectField
-                    label={t(
-                      'cloud:org_manage.event_manage.add_event.condition.onClick',
-                    )}
-                    error={formState.errors['onClick']}
-                    registration={register('onClick')}
-                    disabled={typeEvent === 'schedule'}
-                    options={[
-                      { value: true, label: 'Có' },
-                      { value: false, label: 'Không' },
-                    ]}
-                    onChange={event =>
-                      setOnclickValue(event.target.value as unknown as boolean)
-                    }
-                  />
+                    error={formState?.errors['status']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'status'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={Boolean(value)}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                  <FieldWrapper
+                    label={t('cloud:org_manage.event_manage.add_event.condition.onClick')}
+                    error={formState?.errors['onClick']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'onClick'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={Boolean(value)}
+                            onCheckedChange={onChange}
+                            disabled={typeEvent === 'schedule'}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
                   <SelectField
                     label={t(
                       'cloud:org_manage.event_manage.add_event.type_event',
@@ -607,7 +622,7 @@ export function UpdateEvent({
                   </div>
                 </div>
               </div>
-              {onClickValue === 'false' && typeEvent === 'event' ? (
+              {onClickValue === false && typeEvent === 'event' ? (
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t(
@@ -626,7 +641,7 @@ export function UpdateEvent({
                   />
                 </div>
               ) : null}
-              {onClickValue === 'false' && typeEvent === 'event'
+              {onClickValue === false && typeEvent === 'event'
                 ? conditionFields.map((field, index) => {
                     return (
                       <section className="!mt-3 space-y-2" key={field.id}>

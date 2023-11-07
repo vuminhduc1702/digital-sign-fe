@@ -96,6 +96,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
+  // Resize console window
+  const [isResizable, setIsResizable] = useState(false);
+  const consolePanelEle = document.getElementById('console-panel')
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
 
   const {
     mutate: mutateExecuteService,
@@ -176,6 +181,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setFullScreen(false)
     setIsShowConsole(false)
     setInputTypeValue('')
+    setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+    setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
   }
 
   useEffect(() => {
@@ -190,6 +197,37 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
       window.removeEventListener('keydown', handleEsc)
     }
   }, [])
+
+  function handleResize() {
+    setIsResizable(true)
+  }
+
+  function handleMouseMove(event: MouseEvent) {
+    if (isResizable) {
+      let offsetCode = event.clientX - 660
+      let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
+      let minWidthCode = 80
+      let minWidthResult = 116
+      if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
+        setCodeConsoleWidth(offsetCode)
+        setResultConsoleWidth(offsetResult)
+      }
+    }
+  }
+
+  function handleMouseUp() {
+    setIsResizable(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizable]);
 
   return (
     <FormDialog
@@ -218,7 +256,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           name={['input']}
         >
           {({ register, formState, control, setError }, { fields, append, remove }) => {
-            console.log('error: ', formState.errors)
             return (
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -486,25 +523,26 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
                   <div
                     className={cn(
-                      'flex flex-col gap-2 ',
-                      {
-                        'grid grow grid-cols-1 gap-x-4 md:col-span-3 md:grid-cols-2':
-                          !fullScreen,
-                        'md:col-span-3': fullScreen,
+                      'flex gap-1 md:col-span-3 w-[100%]',
+                      { 
+                        'flex-col gap-2': fullScreen,
+                        'md:grid-cols-6': viewMode !== 'default' 
                       },
-                      { 'md:grid-cols-6': viewMode !== 'default' },
                     )}
+                    id='console-panel'
                   >
                     <div
                       className={cn(
-                        'flex flex-col gap-2 md:col-span-1',
+                        'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
                           'md:col-span-5':
                             viewMode === 'maximize_code' ||
                             viewMode === 'minimize_result',
+                          'md:col-span-1': viewMode === 'minimize_code',
                         },
-                        { 'md:col-span-1': viewMode === 'minimize_code' },
                       )}
+                      style={!fullScreen ? {'width': codeConsoleWidth} : {}}
+                      id='code-console'
                     >
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
@@ -601,9 +639,10 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         editorName={'code'}
                       />
                     </div>
+                    <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
                     <div
                       className={cn(
-                        'flex flex-col gap-2 md:col-span-1',
+                        'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
                           'md:col-span-5':
                             viewMode == 'maximize_result' ||
@@ -615,6 +654,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             viewMode == 'maximize_code',
                         },
                       )}
+                      style={!fullScreen ? {'width': resultConsoleWidth} : {}}
+                      id='result-console'
                     >
                       <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
