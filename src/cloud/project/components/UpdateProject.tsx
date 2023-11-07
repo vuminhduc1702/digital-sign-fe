@@ -1,5 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { XMarkIcon } from '@heroicons/react/20/solid'
 
@@ -25,6 +23,8 @@ import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { API_URL } from '~/config'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 export function UpdateProject({
   close,
@@ -80,6 +80,16 @@ export function UpdateProject({
         })
     }
   }
+  const { register, formState,  handleSubmit } = useForm<
+    UpdateProjectDTO['data']
+  >({
+    resolver: CreateProjectSchema && zodResolver(CreateProjectSchema),
+    defaultValues: {
+      name: selectedUpdateProject?.name,
+      description: selectedUpdateProject?.description,
+      image: selectedUpdateProject?.image,
+    },
+  })
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -99,10 +109,11 @@ export function UpdateProject({
               </button>
             </div>
           </div>
-          <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema>
+          {/* <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema> */}
+          <form
             id="update-project"
             className="flex flex-col justify-between"
-            onSubmit={async values => {
+            onSubmit={handleSubmit(async values => {
               const defaultFileName = avatarRef.current?.src.split('/')
               if (getValueUploadImage('file') != null) {
                 const dataUploadImage = await mutateAsyncUploadImage({
@@ -135,107 +146,104 @@ export function UpdateProject({
                   projectId: selectedUpdateProject.id,
                 })
               }
-            }}
-            schema={CreateProjectSchema}
-            options={{
-              defaultValues: {
-                name: selectedUpdateProject?.name,
-                description: selectedUpdateProject?.description,
-                image: selectedUpdateProject?.image,
-              },
-            }}
+            })}
+            // schema={CreateProjectSchema}
+            // options={{
+            //   defaultValues: {
+            //     name: selectedUpdateProject?.name,
+            //     description: selectedUpdateProject?.description,
+            //     image: selectedUpdateProject?.image,
+            //   },
+            // }}
           >
-            {({ register, formState }) => {
+            {/* {({ register, formState }) => {
               console.log('formState.errors', formState.errors)
-              return (
-                <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
-                  <div>
-                    <InputField
-                      label={t('cloud:project_manager.add_project.name')}
-                      error={formState.errors['name']}
-                      registration={register('name')}
-                      className="mb-5"
-                    />
-                    <TextAreaField
-                      label={t('cloud:project_manager.add_project.description')}
-                      error={formState.errors['description']}
-                      registration={register('description')}
-                      rows={9}
-                    />
-                  </div>
-                  <div className="pl-5">
-                    <div className="mb-3 space-y-1">
-                      <FileField
-                        label={t('cloud:project_manager.add_project.avatar')}
-                        control={controlUploadImage}
-                        name="upload-image"
-                        ref={fileInputRef}
-                        onChange={event => {
-                          setUploadImageErr('')
-                          const file = event.target.files[0]
-                          const formData = new FormData()
-                          formData.append('file', event.target.files[0])
-                          setValueUploadImage(
-                            'file',
-                            formData.get('file') as unknown as { file: File },
-                          )
+              return ( */}
+            <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
+              <div>
+                <InputField
+                  label={t('cloud:project_manager.add_project.name')}
+                  error={formState.errors['name']}
+                  registration={register('name')}
+                  className="mb-5"
+                />
+                <TextAreaField
+                  label={t('cloud:project_manager.add_project.description')}
+                  error={formState.errors['description']}
+                  registration={register('description')}
+                  rows={9}
+                />
+              </div>
+              <div className="pl-5">
+                <div className="mb-3 space-y-1">
+                  <FileField
+                    label={t('cloud:project_manager.add_project.avatar')}
+                    control={controlUploadImage}
+                    name="upload-image"
+                    ref={fileInputRef}
+                    onChange={event => {
+                      setUploadImageErr('')
+                      const file = event.target.files[0]
+                      const formData = new FormData()
+                      formData.append('file', event.target.files[0])
+                      setValueUploadImage(
+                        'file',
+                        formData.get('file') as unknown as { file: File },
+                      )
 
-                          if (file.size > MAX_FILE_SIZE) {
-                            setUploadImageErr(t('validate:image_max_size'))
-                            return false
-                          }
-                          if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-                            setUploadImageErr(t('validate:image_type'))
-                            return false
-                          }
+                      if (file.size > MAX_FILE_SIZE) {
+                        setUploadImageErr(t('validate:image_max_size'))
+                        return false
+                      }
+                      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                        setUploadImageErr(t('validate:image_type'))
+                        return false
+                      }
 
-                          const reader = new FileReader()
-                          reader.readAsDataURL(file)
-                          reader.onload = e => {
-                            if (
-                              avatarRef.current != null &&
-                              e.target != null &&
-                              reader.readyState === 2
-                            ) {
-                              avatarRef.current.src = e.target.result as string
-                            }
-                          }
-                        }}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {uploadImageErr}
-                      </p>
-                    </div>
-                    <img
-                      src={`${
-                        selectedUpdateProject?.image !== ''
-                          ? `${API_URL}/file/${selectedUpdateProject?.image}`
-                          : defaultProjectImage
-                      }`}
-                      alt="Project"
-                      className="mb-3 h-36 w-32"
-                      ref={avatarRef}
-                    />
-                    <Button
-                      className="mb-3 justify-start border-none"
-                      variant="secondaryLight"
-                      size="square"
-                      onClick={handleResetDefaultImage}
-                    >
-                      {t(
-                        'cloud:project_manager.add_project.upload_ava_default',
-                      )}
-                    </Button>
-                    <div className="text-body-xs">
-                      {t(
-                        'cloud:project_manager.add_project.upload_instruction',
-                      )}
-                    </div>
-                  </div>
+                      const reader = new FileReader()
+                      reader.readAsDataURL(file)
+                      reader.onload = e => {
+                        if (
+                          avatarRef.current != null &&
+                          e.target != null &&
+                          reader.readyState === 2
+                        ) {
+                          avatarRef.current.src = e.target.result as string
+                        }
+                      }
+                    }}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {uploadImageErr}
+                  </p>
                 </div>
-              )
+                <img
+                  src={`${
+                    selectedUpdateProject?.image !== ''
+                      ? `${API_URL}/file/${selectedUpdateProject?.image}`
+                      : defaultProjectImage
+                  }`}
+                  alt="Project"
+                  className="mb-3 h-36 w-32"
+                  ref={avatarRef}
+                />
+                <Button
+                  className="mb-3 justify-start border-none"
+                  variant="secondaryLight"
+                  size="square"
+                  onClick={handleResetDefaultImage}
+                >
+                  {t('cloud:project_manager.add_project.upload_ava_default')}
+                </Button>
+                <div className="text-body-xs">
+                  {t('cloud:project_manager.add_project.upload_instruction')}
+                </div>
+              </div>
+            </div>
+          </form>
+          {/* )
             }}
-          </Form>
+          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

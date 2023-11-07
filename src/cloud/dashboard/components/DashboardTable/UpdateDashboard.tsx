@@ -10,7 +10,8 @@ import { dashboardSchema } from '.'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 type UpdateDashboardProps = {
   id: string
   close: () => void
@@ -29,6 +30,19 @@ export function UpdateDashboard({
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateDashboard()
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    UpdateDashboardDTO['data']
+  >({
+    resolver: dashboardSchema && zodResolver(dashboardSchema),
+    defaultValues: {
+      title,
+      configuration: {
+        description,
+        widgets: null,
+      },
+      dashboard_setting: null,
+    },
+  })
 
   useEffect(() => {
     if (isSuccess) {
@@ -65,9 +79,10 @@ export function UpdateDashboard({
         </>
       )}
     >
-      <Form<UpdateDashboardDTO['data'], typeof dashboardSchema>
+      {/* <Form<UpdateDashboardDTO['data'], typeof dashboardSchema> */}
+      <form
         id="update-dashboard"
-        onSubmit={values => {
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               title: values.title,
@@ -79,37 +94,39 @@ export function UpdateDashboard({
             },
             dashboardId: id,
           })
-        }}
-        options={{
-          defaultValues: {
-            title,
-            configuration: {
-              description,
-              widgets: null,
-            },
-            dashboard_setting: null,
-          },
-        }}
-        schema={dashboardSchema}
+        })}
+
+        // options={{
+        //   defaultValues: {
+        //     title,
+        //     configuration: {
+        //       description,
+        //       widgets: null,
+        //     },
+        //     dashboard_setting: null,
+        //   },
+        // }}
+        // schema={dashboardSchema}
       >
-        {({ register, formState }) => {
+        {/* {({ register, formState }) => {
           console.log('formState errors: ', formState.errors)
-          return (
-            <>
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.name')}
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.description')}
-                error={formState?.errors?.configuration?.description}
-                registration={register('configuration.description')}
-              />
-            </>
-          )
-        }}
-      </Form>
+          return ( */}
+        <>
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.name')}
+            error={formState.errors['title']}
+            registration={register('title')}
+          />
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.description')}
+            error={formState?.errors?.configuration?.description}
+            registration={register('configuration.description')}
+          />
+        </>
+      </form>
+      {/* )
+       }}
+      </Form> */}
     </Drawer>
   )
 }

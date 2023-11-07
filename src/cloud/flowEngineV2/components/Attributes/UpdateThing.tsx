@@ -11,7 +11,8 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { nameSchema } from '~/utils/schemaValidation'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 export const updateThingSchema = z.object({
   name: nameSchema,
   description: z.string(),
@@ -35,7 +36,12 @@ export function UpdateThing({
   const cancelButtonRef = useRef(null)
 
   const { mutate, isLoading, isSuccess } = useUpdateThing()
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    UpdateThingDTO['data']
+  >({
+    resolver: updateThingSchema && zodResolver(updateThingSchema),
+    defaultValues: { name, description },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -48,7 +54,7 @@ export function UpdateThing({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-            {t('cloud:custom_protocol.thing.edit')}
+              {t('cloud:custom_protocol.thing.edit')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -60,10 +66,11 @@ export function UpdateThing({
               </button>
             </div>
           </div>
-          <Form<UpdateThingDTO['data'], typeof updateThingSchema>
+          {/* <Form<UpdateThingDTO['data'], typeof updateThingSchema> */}
+          <form
             id="create-entityThing"
-            className="flex flex-col justify-between mt-2"
-            onSubmit={values => {
+            className="mt-2 flex flex-col justify-between"
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   name: values.name,
@@ -71,29 +78,30 @@ export function UpdateThing({
                 },
                 thingId,
               })
-            }}
-            schema={updateThingSchema}
-            options={{
-              defaultValues: { name, description },
-            }}
+            })}
+            // schema={updateThingSchema}
+            // options={{
+            //   defaultValues: { name, description },
+            // }}
           >
-            {({ register, formState }) => {
-              return (
-                <>
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                  />
-                </>
-              )
+            {/* {({ register, formState }) => {
+              return ( */}
+            <>
+              <InputField
+                label={t('cloud:custom_protocol.thing.name')}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <InputField
+                label={t('cloud:custom_protocol.thing.description')}
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          </form>
+          {/* )
             }}
-          </Form>
+          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

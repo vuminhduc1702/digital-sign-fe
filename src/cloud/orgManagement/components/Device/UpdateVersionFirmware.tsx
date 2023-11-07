@@ -15,7 +15,8 @@ import {
 import { Drawer } from '~/components/Drawer'
 import storage from '~/utils/storage'
 import i18n from '~/i18n'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 type UploadFileFirmWareProps = {
   deviceId: string
   close: () => void
@@ -41,7 +42,11 @@ export function UpdateVersionFirmWare({
   })
 
   const { mutate, isLoading, isSuccess } = useUpdateVersionFirmware()
-
+  const {  formState, setError, control, setValue, handleSubmit } =
+    useForm<UpdateVersionFirmwareDTO['data']>({
+      resolver: updateVersionSchema && zodResolver(updateVersionSchema),
+      defaultValues: { version: '' },
+    })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -77,10 +82,11 @@ export function UpdateVersionFirmWare({
         </>
       )}
     >
-      <Form<UpdateVersionFirmwareDTO['data'], typeof updateVersionSchema>
+      {/* <Form<UpdateVersionFirmwareDTO['data'], typeof updateVersionSchema> */}
+      <form
         id="update-version"
         className="mt-2 flex flex-col justify-between"
-        onSubmit={values => {
+        onSubmit={handleSubmit(values => {
           const fota = fotaValue?.value.split('(')
           const name = fota?.[0].slice(0, -1) || ''
           const version = fota?.[1].slice(0, -1) || ''
@@ -92,40 +98,41 @@ export function UpdateVersionFirmWare({
               name: name,
             },
           })
-        }}
-        options={{
-          defaultValues: { version: '' },
-        }}
-        schema={updateVersionSchema}
+        })}
+        // options={{
+        //   defaultValues: { version: '' },
+        // }}
+        // schema={updateVersionSchema}
       >
-        {({ register, formState, control, setValue, setError }) => {
-          return (
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={false}
-                label={t('cloud:firmware.fota')}
-                name="version"
-                control={control}
-                value={fotaValue}
-                onChange={e => {
-                  setValue('version', e.value)
-                  setError('version', { message: '' })
-                  setFotaValue(e)
-                }}
-                options={
-                  data?.data?.map(fota => ({
-                    label: `${fota.name} (${fota.version})`,
-                    value: `${fota.name} (${fota.version})`,
-                  })) || [{ label: '', value: '' }]
-                }
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.version?.message}
-              </p>
-            </div>
-          )
+        {/* {({ register, formState, control, setValue, setError }) => {
+          return ( */}
+        <div className="space-y-1">
+          <SelectDropdown
+            isClearable={false}
+            label={t('cloud:firmware.fota')}
+            name="version"
+            control={control}
+            value={fotaValue}
+            onChange={e => {
+              setValue('version', e.value)
+              setError('version', { message: '' })
+              setFotaValue(e)
+            }}
+            options={
+              data?.data?.map(fota => ({
+                label: `${fota.name} (${fota.version})`,
+                value: `${fota.name} (${fota.version})`,
+              })) || [{ label: '', value: '' }]
+            }
+          />
+          <p className="text-body-sm text-primary-400">
+            {formState?.errors?.version?.message}
+          </p>
+        </div>
+      </form>
+      {/* )
         }}
-      </Form>
+      </Form> */}
     </Drawer>
   )
 }

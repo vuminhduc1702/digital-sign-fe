@@ -22,7 +22,8 @@ import {
   type CreateSubcriptionDTO,
 } from '../../api/subcriptionAPI/createSubcription'
 import { Plan, type PlanlvList } from '~/cloud/billingPackage'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 export const entitySubcriptionSchema = z.object({
   plan_id: z
     .string()
@@ -191,7 +192,12 @@ export function CreateSubcription() {
     }
     return PlanDataById?.data?.period ? PlanDataById?.data?.period + result : ''
   }
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    CreateSubcriptionDTO['data']
+  >({
+    resolver: entitySubcriptionSchema && zodResolver(entitySubcriptionSchema),
+    defaultValues: { plan_id: '' },
+  })
   return (
     <FormDialog
       resetData={resetData}
@@ -199,10 +205,11 @@ export function CreateSubcription() {
       title={t('billing:subcription.create')}
       size="md"
       body={
-        <Form<CreateSubcriptionDTO['data'], typeof entitySubcriptionSchema>
+        // <Form<CreateSubcriptionDTO['data'], typeof entitySubcriptionSchema>
+        <form
           id="create-firm-ware"
           className="flex flex-col justify-between"
-          onSubmit={values => {
+          onSubmit={handleSubmit(values => {
             mutate({
               data: {
                 project_id: projectId,
@@ -211,141 +218,142 @@ export function CreateSubcription() {
                 register: parseInt(values?.register || ''),
               },
             })
-          }}
-          options={{
-            defaultValues: { plan_id: '' },
-          }}
-          schema={entitySubcriptionSchema}
+          })}
+          // options={{
+          //   defaultValues: { plan_id: '' },
+          // }}
+          // schema={entitySubcriptionSchema}
         >
-          {({ register, formState, control, setError, setValue }) => {
-            return (
-              <>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-                  <div className="flex gap-3">
-                    <p className="text-table-header">
-                      {t('billing:subcription.popup.customer_info')}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <SelectDropdown
-                    isClearable={false}
-                    label={t('billing:subcription.popup.search_customer_with')}
-                    name="user_id"
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel="w-3/12"
-                    classchild="w-9/12"
-                    control={control}
-                    value={userValue}
-                    onChange={e => {
-                      const arrValue = e.value.split(' - ')
-                      setValue('user_id', e.value)
-                      setCustomerName(
-                        arrValue[2] !== 'undefined'
-                          ? arrValue[2]
-                          : 'Tên khách hàng',
-                      )
-                      setCustomerCode(arrValue[0])
-                      setUserId(arrValue[1])
-                      setUserValue(e)
-                    }}
-                    options={
-                      UserData?.users?.map(user => ({
-                        label: `${user.phone ? user.phone : '(SĐT)'} - ${
-                          user.email
-                        }`,
-                        value: `${user.customer_code} - ${user.user_id} - ${user.name}`,
-                      })) || [{ label: '', value: '' }]
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+          {/* {({ register, formState, control, setError, setValue }) => {
+            return ( */}
+          <>
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+              <div className="flex gap-3">
+                <p className="text-table-header">
+                  {t('billing:subcription.popup.customer_info')}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <SelectDropdown
+                isClearable={false}
+                label={t('billing:subcription.popup.search_customer_with')}
+                name="user_id"
+                classnamefieldwrapper="flex items-center gap-x-3"
+                classlabel="w-3/12"
+                classchild="w-9/12"
+                control={control}
+                value={userValue}
+                onChange={e => {
+                  const arrValue = e.value.split(' - ')
+                  setValue('user_id', e.value)
+                  setCustomerName(
+                    arrValue[2] !== 'undefined'
+                      ? arrValue[2]
+                      : 'Tên khách hàng',
+                  )
+                  setCustomerCode(arrValue[0])
+                  setUserId(arrValue[1])
+                  setUserValue(e)
+                }}
+                options={
+                  UserData?.users?.map(user => ({
+                    label: `${user.phone ? user.phone : '(SĐT)'} - ${
+                      user.email
+                    }`,
+                    value: `${user.customer_code} - ${user.user_id} - ${user.name}`,
+                  })) || [{ label: '', value: '' }]
+                }
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+              <InputField
+                label={t('billing:subcription.popup.customer_name')}
+                value={customerName}
+                disabled
+              />
+              <InputField
+                label={t('billing:subcription.popup.customer_code')}
+                value={customerCode}
+                disabled
+              />
+            </div>
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+              <div className="flex gap-3">
+                <p className="text-table-header">
+                  {t('billing:subcription.popup.service_info')}
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <SelectDropdown
+                isClearable={false}
+                label={t('billing:subcription.popup.package')}
+                name="plan_id"
+                control={control}
+                value={planValue}
+                onChange={e => {
+                  setValue('plan_id', e.value)
+                  setPlanValue(e)
+                }}
+                options={
+                  PlanData?.data?.map(plan => ({
+                    label: plan?.name,
+                    value: plan?.id,
+                  })) || [{ label: '', value: '' }]
+                }
+              />
+              <InputField
+                label={t('billing:subcription.popup.price_method')}
+                value={valuePriceMethod()}
+                disabled
+              />
+              {PlanDataById?.data?.type === 'official' &&
+                PlanDataById?.data?.estimate === 'unit' &&
+                PlanDataById?.data?.payment_type === 'PREPAY' && (
                   <InputField
-                    label={t('billing:subcription.popup.customer_name')}
-                    value={customerName}
-                    disabled
+                    label={t('billing:subcription.popup.quantity')}
+                    error={formState.errors['register']}
+                    onChange={e => handleOnChange(e.target.value)}
+                    registration={register('register')}
                   />
-                  <InputField
-                    label={t('billing:subcription.popup.customer_code')}
-                    value={customerCode}
-                    disabled
-                  />
-                </div>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-                  <div className="flex gap-3">
-                    <p className="text-table-header">
-                      {t('billing:subcription.popup.service_info')}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <SelectDropdown
-                    isClearable={false}
-                    label={t('billing:subcription.popup.package')}
-                    name="plan_id"
-                    control={control}
-                    value={planValue}
-                    onChange={e => {
-                      setValue('plan_id', e.value)
-                      setPlanValue(e)
-                    }}
-                    options={
-                      PlanData?.data?.map(plan => ({
-                        label: plan?.name,
-                        value: plan?.id,
-                      })) || [{ label: '', value: '' }]
-                    }
-                  />
-                  <InputField
-                    label={t('billing:subcription.popup.price_method')}
-                    value={valuePriceMethod()}
-                    disabled
-                  />
-                  {PlanDataById?.data?.type === 'official' &&
-                    PlanDataById?.data?.estimate === 'unit' &&
-                    PlanDataById?.data?.payment_type === 'PREPAY' && (
-                      <InputField
-                        label={t('billing:subcription.popup.quantity')}
-                        error={formState.errors['register']}
-                        onChange={e => handleOnChange(e.target.value)}
-                        registration={register('register')}
-                      />
-                    )}
-                  <InputField
-                    label={t('billing:subcription.popup.payment_type')}
-                    value={
-                      PlanDataById?.data?.payment_type
-                        ? PlanDataById?.data?.payment_type === 'PREPAY'
-                          ? 'Trả trước'
-                          : 'Trả sau'
-                        : ''
-                    }
-                    disabled
-                  />
-                </div>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
-                  <div className="flex gap-3">
-                    <p className="text-table-header">
-                      {t('billing:subcription.popup.billing_info')}
-                    </p>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
-                  <InputField
-                    label={t('billing:subcription.popup.estimated_payment')}
-                    value={registerValue}
-                    disabled
-                  />
-                  <InputField
-                    label={t('billing:subcription.popup.period')}
-                    value={valuePeriod()}
-                    disabled
-                  />
-                </div>
-              </>
-            )
-          }}
-        </Form>
+                )}
+              <InputField
+                label={t('billing:subcription.popup.payment_type')}
+                value={
+                  PlanDataById?.data?.payment_type
+                    ? PlanDataById?.data?.payment_type === 'PREPAY'
+                      ? 'Trả trước'
+                      : 'Trả sau'
+                    : ''
+                }
+                disabled
+              />
+            </div>
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+              <div className="flex gap-3">
+                <p className="text-table-header">
+                  {t('billing:subcription.popup.billing_info')}
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2">
+              <InputField
+                label={t('billing:subcription.popup.estimated_payment')}
+                value={registerValue}
+                disabled
+              />
+              <InputField
+                label={t('billing:subcription.popup.period')}
+                value={valuePeriod()}
+                disabled
+              />
+            </div>
+          </>
+        </form>
+        //     )
+        //   }}
+        // </Form>
       }
       triggerButton={
         <Button

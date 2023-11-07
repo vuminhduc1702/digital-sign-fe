@@ -19,7 +19,8 @@ import { attrSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
@@ -45,7 +46,17 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+  UpdateAttrDTO['data']['attributes'][0]
+  >({
+    resolver: attrSchema && zodResolver(attrSchema),
+    defaultValues: {
+      attribute_key: attributeKey,
+      logged: String(logged) === 'true',
+      value: value.toString(),
+      value_t: value_type,
+    },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -81,9 +92,10 @@ export function UpdateAttr({
         </>
       )}
     >
-      <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
+      {/* <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema> */}
+      <form
         id="update-attr"
-        onSubmit={values => {
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               attributes: [
@@ -98,20 +110,20 @@ export function UpdateAttr({
             entityType,
             entityId,
           })
-        }}
-        options={{
-          defaultValues: {
-            attribute_key: attributeKey,
-            logged: String(logged) === 'true',
-            value: value.toString(),
-            value_t: value_type,
-          },
-        }}
-        schema={attrSchema}
+        })}
+        // options={{
+        //   defaultValues: {
+        //     attribute_key: attributeKey,
+        //     logged: String(logged) === 'true',
+        //     value: value.toString(),
+        //     value_t: value_type,
+        //   },
+        // }}
+        // schema={attrSchema}
       >
-        {({ register, formState, control }) => {
+        {/* {({ register, formState, control }) => {
           console.log('formState errors: ', formState.errors)
-          return (
+          return ( */}
             <>
               <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
                 <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
@@ -161,9 +173,10 @@ export function UpdateAttr({
                 </div>
               </section>
             </>
-          )
+            </form>
+          {/* )
         }}
-      </Form>
+      </Form> */}
     </Drawer>
   )
 }

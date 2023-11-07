@@ -20,7 +20,8 @@ import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import storage from '~/utils/storage'
 import { entityFirmWareSchema } from './CreateFirmware'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 type UpdateFirmWareProps = {
   firmwareId: string
   name: string
@@ -54,7 +55,12 @@ export function UpdateFirmWare({
   const { data } = useGetTemplates({ projectId })
 
   const { mutate, isLoading, isSuccess } = useUpdateFirmware()
-
+  const { register, formState, control, handleSubmit } = useForm<
+    UpdateFirmwareDTO['data']
+  >({
+    resolver: entityFirmWareSchema && zodResolver(entityFirmWareSchema),
+    defaultValues: { name, description, tag, version, template_id },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -79,10 +85,11 @@ export function UpdateFirmWare({
               </button>
             </div>
           </div>
-          <Form<UpdateFirmwareDTO['data'], typeof entityFirmWareSchema>
+          {/* <Form<UpdateFirmwareDTO['data'], typeof entityFirmWareSchema> */}
+          <form
             id="update-firm-ware"
             className="mt-2 flex flex-col justify-between"
-            onSubmit={values => {
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   name: values.name,
@@ -93,58 +100,59 @@ export function UpdateFirmWare({
                 },
                 firmwareId,
               })
-            }}
-            schema={entityFirmWareSchema}
-            options={{
-              defaultValues: { name, description, tag, version, template_id },
-            }}
+            })}
+            // schema={entityFirmWareSchema}
+            // options={{
+            //   defaultValues: { name, description, tag, version, template_id },
+            // }}
           >
-            {({ register, formState, control }) => {
-              return (
-                <>
-                  <div>
-                    <SelectDropdown
-                      isClearable={false}
-                      label={t('cloud:firmware.add_firmware.template')}
-                      name="template_id"
-                      control={control}
-                      value={templateValue}
-                      onChange={e => setTemplateValue(e)}
-                      options={
-                        data?.templates?.map(template => ({
-                          label: template?.name,
-                          value: template?.id,
-                        })) || [{ label: '', value: '' }]
-                      }
-                    />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.template_id?.message}
-                    </p>
-                  </div>
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.version')}
-                    error={formState.errors['version']}
-                    registration={register('version')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.tag')}
-                    error={formState.errors['tag']}
-                    registration={register('tag')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                  />
-                </>
-              )
+            {/* {({ register, formState, control }) => {
+              return ( */}
+            <>
+              <div>
+                <SelectDropdown
+                  isClearable={false}
+                  label={t('cloud:firmware.add_firmware.template')}
+                  name="template_id"
+                  control={control}
+                  value={templateValue}
+                  onChange={e => setTemplateValue(e)}
+                  options={
+                    data?.templates?.map(template => ({
+                      label: template?.name,
+                      value: template?.id,
+                    })) || [{ label: '', value: '' }]
+                  }
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.template_id?.message}
+                </p>
+              </div>
+              <InputField
+                label={t('cloud:firmware.add_firmware.name')}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.version')}
+                error={formState.errors['version']}
+                registration={register('version')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.tag')}
+                error={formState.errors['tag']}
+                registration={register('tag')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.description')}
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          </form>
+          {/* )
             }}
-          </Form>
+          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

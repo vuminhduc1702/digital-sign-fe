@@ -13,7 +13,8 @@ import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 export const deviceSchema = z.object({
   name: nameSchema,
   org_id: selectOptionSchema(),
@@ -48,16 +49,22 @@ export function CreateThing() {
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+  CreateEntityThingDTO['data']
+  >({
+    resolver: entityThingSchema && zodResolver(entityThingSchema),
+  })
 
   return (
     <FormDialog
       isDone={isSuccessThing}
       title={t('cloud:custom_protocol.thing.create')}
       body={
-        <Form<CreateEntityThingDTO['data'], typeof entityThingSchema>
+        // <Form<CreateEntityThingDTO['data'], typeof entityThingSchema>
+        <form
           id="create-entityThing"
           className="flex flex-col justify-between"
-          onSubmit={values => {
+          onSubmit={handleSubmit(values => {
             mutateThing({
               data: {
                 name: values.name,
@@ -67,11 +74,11 @@ export function CreateThing() {
                 type: 'thing',
               },
             })
-          }}
-          schema={entityThingSchema}
+          })}
+          // schema={entityThingSchema}
         >
-          {({ register, formState }) => {
-            return (
+          {/* {({ register, formState }) => {
+            return ( */}
               <>
                 <InputField
                   label={t('cloud:custom_protocol.thing.name')}
@@ -102,9 +109,10 @@ export function CreateThing() {
                   registration={register('description')}
                 />
               </>
-            )
-          }}
-        </Form>
+              </form>
+        //     )
+        //   }}
+        // </Form>
       }
       triggerButton={
         <Button

@@ -26,7 +26,8 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 type UpdateUserProps = {
   userId: string
   name: string
@@ -109,7 +110,16 @@ export function UpdateUser({
     label: role_name !== 'undefined' ? role_name : '',
     value: role_id !== 'undefined' ? role_id : '',
   })
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    UpdateUserDTO['data']
+  >({
+    resolver: updatedUserSchema && zodResolver(updatedUserSchema),
+    defaultValues: {
+      name,
+      email,
+      phone: phone !== 'undefined' ? phone : '',
+    },
+  })
   return (
     <Drawer
       isOpen={isOpen}
@@ -139,9 +149,10 @@ export function UpdateUser({
         </>
       )}
     >
-      <Form<UpdateUserDTO['data'], typeof updatedUserSchema>
+      {/* <Form<UpdateUserDTO['data'], typeof updatedUserSchema> */}
+      <form
         id="update-user"
-        onSubmit={values =>
+        onSubmit={handleSubmit(values =>
           mutate({
             data: {
               name: values.name,
@@ -152,100 +163,97 @@ export function UpdateUser({
               phone: values.phone,
             },
             userId,
-          })
-        }
-        schema={updatedUserSchema}
-        options={{
-          defaultValues: {
-            name,
-            email,
-            phone: phone !== 'undefined' ? phone : '',
-          },
-        }}
-      >
-        {({ register, formState, control, setValue }) => (
-          <>
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.name') ?? "User's name"
-              }
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
-              }
-              type="number"
-              error={formState.errors['phone']}
-              registration={register('phone')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.email') ??
-                "User's email"
-              }
-              error={formState.errors['email']}
-              registration={register('email')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.password') ??
-                'Password'
-              }
-              error={formState.errors['password']}
-              registration={register('password')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.confirm_password') ??
-                'Confirm password'
-              }
-              error={formState.errors['confirmPassword']}
-              registration={register('confirmPassword')}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgFlattenData?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
-                }
-                onChange={e => {
-                  setOption(e)
-                  setValue('org_id', e.value)
-                }}
-                value={option}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.user_manage.add_user.role')}
-                name="role_id"
-                control={control}
-                options={roleOptions}
-                onChange={e => {
-                  setRole(e)
-                  setValue('role_id', e.value)
-                }}
-                value={role}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.role_id?.message}
-              </p>
-            </div>
-          </>
+          }),
         )}
-      </Form>
+        // schema={updatedUserSchema}
+        // options={{
+        //   defaultValues: {
+        //     name,
+        //     email,
+        //     phone: phone !== 'undefined' ? phone : '',
+        //   },
+        // }}
+      >
+        {/*  {({ register, formState, control, setValue }) => ( */}
+        <>
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.name') ?? "User's name"
+            }
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <InputField
+            label={t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'}
+            type="number"
+            error={formState.errors['phone']}
+            registration={register('phone')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.email') ?? "User's email"
+            }
+            error={formState.errors['email']}
+            registration={register('email')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.password') ?? 'Password'
+            }
+            error={formState.errors['password']}
+            registration={register('password')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.confirm_password') ??
+              'Confirm password'
+            }
+            error={formState.errors['confirmPassword']}
+            registration={register('confirmPassword')}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgFlattenData?.map(org => ({
+                  label: org?.name,
+                  value: org?.id,
+                })) || [{ label: t('loading:org'), value: '' }]
+              }
+              onChange={e => {
+                setOption(e)
+                setValue('org_id', e.value)
+              }}
+              value={option}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.user_manage.add_user.role')}
+              name="role_id"
+              control={control}
+              options={roleOptions}
+              onChange={e => {
+                setRole(e)
+                setValue('role_id', e.value)
+              }}
+              value={role}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.role_id?.message}
+            </p>
+          </div>
+        </>
+      </form>
+      {/* )}
+       </Form> */}
     </Drawer>
   )
 }

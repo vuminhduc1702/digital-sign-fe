@@ -129,7 +129,11 @@ export function CreateOrg() {
   }
 
   const [uploadImageErr, setUploadImageErr] = useState('')
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    CreateOrgDTO['data']
+  >({
+    resolver: orgSchema && zodResolver(orgSchema),
+  })
   return (
     <FormDrawer
       isDone={isSuccessCreateOrg}
@@ -156,9 +160,10 @@ export function CreateOrg() {
         />
       }
     >
-      <Form<CreateOrgDTO['data'], typeof orgSchema>
+      {/* <Form<CreateOrgDTO['data'], typeof orgSchema> */}
+      <form
         id="create-org"
-        onSubmit={async values => {
+        onSubmit={handleSubmit(async values => {
           const dataCreateOrg = await mutateAsyncCreateOrg({
             data: {
               project_id: projectId,
@@ -184,104 +189,103 @@ export function CreateOrg() {
               org_id: dataCreateOrg.id,
             })
           }
-        }}
-        schema={orgSchema}
+        })}
+        // schema={orgSchema}
       >
-        {({ register, formState, control, setValue }) => {
-          return (
-            <>
-              <InputField
-                label={t('cloud:org_manage.org_manage.add_org.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={true}
-                  label={t('cloud:org_manage.device_manage.add_device.parent')}
-                  name="org_id"
-                  control={control}
-                  options={
-                    orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+        {/* {({ register, formState, control, setValue }) => {
+          return ( */}
+        <>
+          <InputField
+            label={t('cloud:org_manage.org_manage.add_org.name')}
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+              }
+              onChange={e => {
+                setOptionOrg(e)
+                setValue('org_id', e?.value)
+              }}
+              value={optionOrg}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+          <TextAreaField
+            label={t('cloud:org_manage.org_manage.add_org.desc')}
+            error={formState.errors['description']}
+            registration={register('description')}
+          />
+          <div className="mb-3 space-y-1">
+            <FileField
+              label={t('cloud:project_manager.add_project.avatar')}
+              control={controlUploadImage}
+              name="upload-image"
+              ref={fileInputRef}
+              onChange={event => {
+                setUploadImageErr('')
+                const file = event.target.files[0]
+                const formData = new FormData()
+                formData.append('file', event.target.files[0])
+                setValueUploadImage(
+                  'file',
+                  formData.get('file') as unknown as { file: File },
+                )
+
+                if (file.size > MAX_FILE_SIZE) {
+                  setUploadImageErr(t('validate:image_max_size'))
+                  return false
+                }
+                if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+                  setUploadImageErr(t('validate:image_type'))
+                  return false
+                }
+
+                const reader = new FileReader()
+                reader.readAsDataURL(file)
+                reader.onload = e => {
+                  if (
+                    avatarRef.current != null &&
+                    e.target != null &&
+                    reader.readyState === 2
+                  ) {
+                    avatarRef.current.src = e.target.result as string
                   }
-                  onChange={e => {
-                    setOptionOrg(e)
-                    setValue('org_id', e?.value)
-                  }}
-                  value={optionOrg}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.org_id?.message}
-                </p>
-              </div>
-              <TextAreaField
-                label={t('cloud:org_manage.org_manage.add_org.desc')}
-                error={formState.errors['description']}
-                registration={register('description')}
-              />
-              <div className="mb-3 space-y-1">
-                <FileField
-                  label={t('cloud:project_manager.add_project.avatar')}
-                  control={controlUploadImage}
-                  name="upload-image"
-                  ref={fileInputRef}
-                  onChange={event => {
-                    setUploadImageErr('')
-                    const file = event.target.files[0]
-                    const formData = new FormData()
-                    formData.append('file', event.target.files[0])
-                    setValueUploadImage(
-                      'file',
-                      formData.get('file') as unknown as { file: File },
-                    )
-
-                    if (file.size > MAX_FILE_SIZE) {
-                      setUploadImageErr(t('validate:image_max_size'))
-                      return false
-                    }
-                    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-                      setUploadImageErr(t('validate:image_type'))
-                      return false
-                    }
-
-                    const reader = new FileReader()
-                    reader.readAsDataURL(file)
-                    reader.onload = e => {
-                      if (
-                        avatarRef.current != null &&
-                        e.target != null &&
-                        reader.readyState === 2
-                      ) {
-                        avatarRef.current.src = e.target.result as string
-                      }
-                    }
-                  }}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {uploadImageErr}
-                </p>
-              </div>
-              <img
-                src={defaultOrgImage}
-                alt="Project"
-                className="mb-3 h-36 w-32"
-                ref={avatarRef}
-              />
-              <Button
-                className="mb-3 border-none"
-                variant="secondaryLight"
-                size="square"
-                onClick={handleResetDefaultImage}
-              >
-                {t('cloud:project_manager.add_project.upload_ava_default')}
-              </Button>
-              <div className="text-body-xs">
-                {t('cloud:project_manager.add_project.upload_instruction')}
-              </div>
-            </>
-          )
+                }
+              }}
+            />
+            <p className="text-body-sm text-primary-400">{uploadImageErr}</p>
+          </div>
+          <img
+            src={defaultOrgImage}
+            alt="Project"
+            className="mb-3 h-36 w-32"
+            ref={avatarRef}
+          />
+          <Button
+            className="mb-3 border-none"
+            variant="secondaryLight"
+            size="square"
+            onClick={handleResetDefaultImage}
+          >
+            {t('cloud:project_manager.add_project.upload_ava_default')}
+          </Button>
+          <div className="text-body-xs">
+            {t('cloud:project_manager.add_project.upload_instruction')}
+          </div>
+        </>
+      </form>
+      {/* )
         }}
-      </Form>
+      </Form> */}
     </FormDrawer>
   )
 }
