@@ -369,6 +369,8 @@ export function DashboardDetail() {
                       },
                       dashboard_setting: {
                         layout: layoutDashboard,
+                        starred: false,
+                        last_viewed: new Date(),
                       },
                     },
                     dashboardId,

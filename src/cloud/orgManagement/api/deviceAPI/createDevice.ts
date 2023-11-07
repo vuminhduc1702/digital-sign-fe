@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
+import { type z } from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+import { type deviceSchema } from '../../components/Device'
 
 import { type Device } from '../../types'
 import { type Attribute } from '~/types'
@@ -11,14 +13,7 @@ import { type Attribute } from '~/types'
 type CreateDeviceRes = Omit<Device, keyof Attribute[]>
 
 export type CreateDeviceDTO = {
-  data: {
-    project_id: string
-    name: string
-    org_id: string
-    key: string
-    group_id: string
-    template_id: string
-  }
+  data: z.infer<typeof deviceSchema>
 }
 
 export const createDevice = ({
