@@ -185,6 +185,7 @@ export function UpdateOrg({
       {/* <Form<UpdateOrgDTO['data'], typeof orgSchema> */}
       <form
         id="update-org"
+        className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           const defaultFileName = avatarRef.current?.src.split('/')
           if (getValueUploadImage('file') != null) {

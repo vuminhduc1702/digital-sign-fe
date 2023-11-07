@@ -185,7 +185,7 @@ const SelfAccount = () => {
             //     },
             //   },
             // }}
-            className="pr-32"
+            className="w-full space-y-6 pr-32"
           >
             {/* {({ register, formState }) => ( */}
             <div className="grid grid-cols-4 gap-4">

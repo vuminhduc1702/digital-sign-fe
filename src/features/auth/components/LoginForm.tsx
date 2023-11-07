@@ -47,6 +47,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
     <div>
       {/* <Form<LoginValues> */}
       <form
+        className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await login.mutateAsync(values)
           onSuccess()

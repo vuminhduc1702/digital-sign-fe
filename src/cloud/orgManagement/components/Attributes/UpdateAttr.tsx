@@ -47,7 +47,7 @@ export function UpdateAttr({
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
   const { register, formState, control, setValue, handleSubmit } = useForm<
-  UpdateAttrDTO['data']['attributes'][0]
+    UpdateAttrDTO['data']['attributes'][0]
   >({
     resolver: attrSchema && zodResolver(attrSchema),
     defaultValues: {
@@ -95,6 +95,7 @@ export function UpdateAttr({
       {/* <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema> */}
       <form
         id="update-attr"
+        className="w-full space-y-6"
         onSubmit={handleSubmit(values => {
           mutate({
             data: {
@@ -124,57 +125,57 @@ export function UpdateAttr({
         {/* {({ register, formState, control }) => {
           console.log('formState errors: ', formState.errors)
           return ( */}
-            <>
-              <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
-                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                  <SelectField
-                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
-                    error={formState.errors['value_t']}
-                    registration={register('value_t')}
-                    options={valueTypeList.map(valueType => ({
-                      label: valueType.name,
-                      value: valueType.type,
-                    }))}
-                  />
-                  <InputField
-                    label={t('cloud:org_manage.org_manage.add_attr.value')}
-                    error={formState.errors['value']}
-                    registration={register('value')}
-                  />
-                  <FieldWrapper
-                    className="mt-2 space-y-2"
-                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                    error={formState.errors['logged']}
-                  >
-                    <Controller
-                      control={control}
-                      name={'logged'}
-                      render={({ field: { onChange, value, ...field } }) => {
-                        return (
-                          <Checkbox
-                            {...field}
-                            checked={value}
-                            onCheckedChange={onChange}
-                            onClick={() => {
-                              mutateUpdateLogged({
-                                data: {
-                                  logged: !value,
-                                },
-                                device_id: entityId,
-                                attribute_key: attributeKey,
-                                entityType: entityType,
-                              })
-                            }}
-                          />
-                        )
-                      }}
-                    />
-                  </FieldWrapper>
-                </div>
-              </section>
-            </>
-            </form>
-          {/* )
+        <>
+          <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
+            <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+              <SelectField
+                label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                error={formState.errors['value_t']}
+                registration={register('value_t')}
+                options={valueTypeList.map(valueType => ({
+                  label: valueType.name,
+                  value: valueType.type,
+                }))}
+              />
+              <InputField
+                label={t('cloud:org_manage.org_manage.add_attr.value')}
+                error={formState.errors['value']}
+                registration={register('value')}
+              />
+              <FieldWrapper
+                className="mt-2 space-y-2"
+                label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                error={formState.errors['logged']}
+              >
+                <Controller
+                  control={control}
+                  name={'logged'}
+                  render={({ field: { onChange, value, ...field } }) => {
+                    return (
+                      <Checkbox
+                        {...field}
+                        checked={value}
+                        onCheckedChange={onChange}
+                        onClick={() => {
+                          mutateUpdateLogged({
+                            data: {
+                              logged: !value,
+                            },
+                            device_id: entityId,
+                            attribute_key: attributeKey,
+                            entityType: entityType,
+                          })
+                        }}
+                      />
+                    )
+                  }}
+                />
+              </FieldWrapper>
+            </div>
+          </section>
+        </>
+      </form>
+      {/* )
         }}
       </Form> */}
     </Drawer>

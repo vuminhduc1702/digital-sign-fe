@@ -152,6 +152,7 @@ export function UpdateUser({
       {/* <Form<UpdateUserDTO['data'], typeof updatedUserSchema> */}
       <form
         id="update-user"
+        className="w-full space-y-6"
         onSubmit={handleSubmit(values =>
           mutate({
             data: {

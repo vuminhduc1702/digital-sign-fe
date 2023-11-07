@@ -45,6 +45,7 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
     <div>
       {/* <Form<changePasswordDTO['data'], typeof ChangePaswordSchema> */}
       <form
+        className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await changePasswordMutation.mutateAsync(values)
           onSuccess()

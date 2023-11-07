@@ -50,7 +50,7 @@ export function CreateThing() {
     label: thing.name,
   })) || [{ value: '', label: '' }]
   const { register, formState, control, setValue, handleSubmit } = useForm<
-  CreateEntityThingDTO['data']
+    CreateEntityThingDTO['data']
   >({
     resolver: entityThingSchema && zodResolver(entityThingSchema),
   })
@@ -63,7 +63,7 @@ export function CreateThing() {
         // <Form<CreateEntityThingDTO['data'], typeof entityThingSchema>
         <form
           id="create-entityThing"
-          className="flex flex-col justify-between"
+          className="flex w-full flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
             mutateThing({
               data: {
@@ -79,37 +79,37 @@ export function CreateThing() {
         >
           {/* {({ register, formState }) => {
             return ( */}
-              <>
-                <InputField
-                  label={t('cloud:custom_protocol.thing.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                />
-                <div className="hidden">
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.name')}
-                    error={formState.errors['type']}
-                    registration={register('type')}
-                  />
-                </div>
-                {/* <InputField
+          <>
+            <InputField
+              label={t('cloud:custom_protocol.thing.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <div className="hidden">
+              <InputField
+                label={t('cloud:custom_protocol.thing.name')}
+                error={formState.errors['type']}
+                registration={register('type')}
+              />
+            </div>
+            {/* <InputField
                   label={t('cloud:custom_protocol.thing.base_template')}
                   error={formState.errors['base_template']}
                   registration={register('base_template')}
                 /> */}
-                <SelectField
-                  label={t('cloud:custom_protocol.thing.base_template')}
-                  error={formState.errors['base_template']}
-                  registration={register('base_template')}
-                  options={thingSelectData}
-                />
-                <InputField
-                  label={t('cloud:custom_protocol.thing.description')}
-                  error={formState.errors['description']}
-                  registration={register('description')}
-                />
-              </>
-              </form>
+            <SelectField
+              label={t('cloud:custom_protocol.thing.base_template')}
+              error={formState.errors['base_template']}
+              registration={register('base_template')}
+              options={thingSelectData}
+            />
+            <InputField
+              label={t('cloud:custom_protocol.thing.description')}
+              error={formState.errors['description']}
+              registration={register('description')}
+            />
+          </>
+        </form>
         //     )
         //   }}
         // </Form>

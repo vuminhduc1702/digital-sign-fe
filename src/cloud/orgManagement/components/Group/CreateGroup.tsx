@@ -96,6 +96,7 @@ export function CreateGroup() {
       {/* <Form<CreateGroupDTO['data'], typeof groupSchema> */}
       <form
         id="create-group"
+        className='w-full space-y-6'
         onSubmit={handleSubmit(values => {
           mutate({
             data: {

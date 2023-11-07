@@ -70,7 +70,7 @@ export function UploadFileFirmWare({
           {/* <Form<UploadFileFirmWareDTO, typeof uploadFileSchema> */}
           <form
             id="update-firm-ware"
-            className="mt-2 flex flex-col justify-between"
+            className="mt-2 flex w-full flex-col justify-between space-y-6"
             onSubmit={handleSubmit(values => {
               const formData = new FormData()
               formData.append('file', file)

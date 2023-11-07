@@ -162,6 +162,7 @@ export function CreateOrg() {
     >
       {/* <Form<CreateOrgDTO['data'], typeof orgSchema> */}
       <form
+        className="w-full space-y-6"
         id="create-org"
         onSubmit={handleSubmit(async values => {
           const dataCreateOrg = await mutateAsyncCreateOrg({

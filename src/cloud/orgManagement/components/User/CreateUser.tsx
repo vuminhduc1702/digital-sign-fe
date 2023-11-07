@@ -157,6 +157,7 @@ export function CreateUser() {
       {/* <Form<CreateUserDTO['data'], typeof userSchema> */}
       <form
         id="create-user"
+        className='w-full space-y-6'
         onSubmit={handleSubmit(values => {
           mutate({
             data: {

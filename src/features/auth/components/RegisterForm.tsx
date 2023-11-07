@@ -101,6 +101,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     <div>
       {/* <Form<RegisterValues, typeof registerSchema> */}
       <form
+        className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await registerMutation.mutateAsync(values)
           onSuccess()

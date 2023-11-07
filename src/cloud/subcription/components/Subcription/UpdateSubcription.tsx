@@ -167,7 +167,7 @@ export function UpdateSubcription({
           > */}
           <form
             id="update-subcription"
-            className="flex flex-col justify-between"
+            className="flex w-full flex-col justify-between space-y-6"
             onSubmit={handleSubmit(values => {
               mutate({
                 data: {

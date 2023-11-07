@@ -88,7 +88,7 @@ export function UpdateFirmWare({
           {/* <Form<UpdateFirmwareDTO['data'], typeof entityFirmWareSchema> */}
           <form
             id="update-firm-ware"
-            className="mt-2 flex flex-col justify-between"
+            className="mt-2 flex w-full flex-col justify-between space-y-6"
             onSubmit={handleSubmit(values => {
               mutate({
                 data: {

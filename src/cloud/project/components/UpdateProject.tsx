@@ -80,7 +80,7 @@ export function UpdateProject({
         })
     }
   }
-  const { register, formState,  handleSubmit } = useForm<
+  const { register, formState, handleSubmit } = useForm<
     UpdateProjectDTO['data']
   >({
     resolver: CreateProjectSchema && zodResolver(CreateProjectSchema),
@@ -112,7 +112,7 @@ export function UpdateProject({
           {/* <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema> */}
           <form
             id="update-project"
-            className="flex flex-col justify-between"
+            className="flex w-full flex-col justify-between space-y-6"
             onSubmit={handleSubmit(async values => {
               const defaultFileName = avatarRef.current?.src.split('/')
               if (getValueUploadImage('file') != null) {

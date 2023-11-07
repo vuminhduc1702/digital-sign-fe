@@ -101,6 +101,7 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
     <div>
       {/* <Form<ForgetPasswordValues, typeof ForgetPasswordSchema> */}
       <form
+        className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await forgetMutation.mutateAsync(values)
           onSuccess()

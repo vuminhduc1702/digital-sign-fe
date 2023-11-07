@@ -42,11 +42,12 @@ export function UpdateVersionFirmWare({
   })
 
   const { mutate, isLoading, isSuccess } = useUpdateVersionFirmware()
-  const {  formState, setError, control, setValue, handleSubmit } =
-    useForm<UpdateVersionFirmwareDTO['data']>({
-      resolver: updateVersionSchema && zodResolver(updateVersionSchema),
-      defaultValues: { version: '' },
-    })
+  const { formState, setError, control, setValue, handleSubmit } = useForm<
+    UpdateVersionFirmwareDTO['data']
+  >({
+    resolver: updateVersionSchema && zodResolver(updateVersionSchema),
+    defaultValues: { version: '' },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -85,7 +86,7 @@ export function UpdateVersionFirmWare({
       {/* <Form<UpdateVersionFirmwareDTO['data'], typeof updateVersionSchema> */}
       <form
         id="update-version"
-        className="mt-2 flex flex-col justify-between"
+        className="mt-2 flex w-full flex-col justify-between space-y-6"
         onSubmit={handleSubmit(values => {
           const fota = fotaValue?.value.split('(')
           const name = fota?.[0].slice(0, -1) || ''

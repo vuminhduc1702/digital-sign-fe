@@ -55,7 +55,7 @@ export function CreateFirmWare() {
         // <Form<CreateFirmWareDTO['data'], typeof entityFirmWareSchema>
         <form
           id="create-firm-ware"
-          className="flex flex-col justify-between"
+          className="flex w-full flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
             mutate({
               data: {

@@ -135,6 +135,7 @@ export function UpdateDevice({
       {/* <Form<UpdateDeviceDTO['data'], typeof deviceSchema> */}
       <form
         id="update-device"
+        className='w-full space-y-6'
         onSubmit={handleSubmit(values =>
           mutate({
             data: {
