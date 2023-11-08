@@ -635,13 +635,11 @@ export function UpdateThingService({
                                   className={cn(
                                     'flex w-[100%] flex-col gap-2 md:col-span-1',
                                     {
-                                      'md:col-span-5':
-                                        viewMode === 'maximize_code' ||
-                                        viewMode === 'minimize_result',
-                                    },
-                                    {
-                                      'md:col-span-1':
-                                        viewMode === 'minimize_code',
+                                      'w-[85%]':
+                                        (viewMode === 'maximize_code' ||
+                                        viewMode === 'minimize_result') && !fullScreen,
+                                      'w-[15%]': viewMode === 'minimize_code' && !fullScreen,
+                                      'w-[100%]': viewMode === 'default'
                                     },
                                   )}
                                   style={
@@ -761,14 +759,14 @@ export function UpdateThingService({
                                   className={cn(
                                     'flex w-[100%] flex-col gap-2 md:col-span-1',
                                     {
-                                      'md:col-span-5':
-                                        viewMode == 'maximize_result' ||
-                                        viewMode == 'minimize_code',
+                                      'w-[85%]':
+                                        (viewMode == 'maximize_result' ||
+                                        viewMode == 'minimize_code') && !fullScreen,
                                     },
                                     {
-                                      'md:col-span-1':
-                                        viewMode == 'minimize_result' ||
-                                        viewMode == 'maximize_code',
+                                      'w-[15%]':
+                                        (viewMode == 'minimize_result' ||
+                                        viewMode == 'maximize_code') && !fullScreen,
                                     },
                                   )}
                                   style={
