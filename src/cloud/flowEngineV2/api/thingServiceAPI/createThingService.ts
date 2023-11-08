@@ -14,7 +14,7 @@ type CreateServiceThingRes = {
 export type inputlist = {
   name: string
   type?: string
-  value?: string
+  value?: string | boolean
 }
 
 export type CreateServiceThingDTO = {
