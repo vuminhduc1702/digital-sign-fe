@@ -218,7 +218,7 @@ const SelfAccount = () => {
                     classnamefieldwrapper="flex items-center"
                   />
                 </div>
-                {/* <div className="col-start-1 flex items-center justify-end">
+                <div className="col-start-1 flex items-center justify-end">
                   {t('cloud:org_manage.event_manage.add_event.action.address')}
                   <span className="text-primary-400">*</span>
                 </div>
@@ -265,7 +265,7 @@ const SelfAccount = () => {
                     classchild="w-full"
                     classnamefieldwrapper="flex items-center"
                   />
-                </div> */}
+                </div>
               </div>
             )}
           </Form>

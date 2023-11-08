@@ -29,6 +29,10 @@ function UserTableContextMenu({
   role_id,
   role_name,
   phone,
+  province,
+  district,
+  ward,
+  full_address,
   ...props
 }: {
   user_id: string
@@ -39,6 +43,10 @@ function UserTableContextMenu({
   role_id: string
   role_name: string
   phone: string
+  province: string
+  district: string
+  ward: string
+  full_address: string
 }) {
   const { t } = useTranslation()
 
@@ -192,7 +200,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, email, user_id, org_id, org_name, role_id, role_name, phone } =
+          const { name, email, user_id, org_id, org_name, role_id, role_name, phone, province, district, ward, full_address } =
             info.row.original
           return UserTableContextMenu({
             name,
@@ -202,7 +210,11 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
             org_name,
             role_id,
             role_name,
-            phone
+            phone,
+            province,
+            district,
+            ward,
+            full_address
           })
         },
         header: () => null,
