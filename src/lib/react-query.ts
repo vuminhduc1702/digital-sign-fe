@@ -23,12 +23,14 @@ const queryConfig: DefaultOptions = {
 export const queryClient = new QueryClient({
   defaultOptions: queryConfig,
   queryCache: new QueryCache({
-    onError: error =>
+    onError: error => {
+      console.log('11111111111111111111')
       useNotificationStore.getState().addNotification({
         type: 'error',
         title: i18n.t('error:server_res.title'),
         message: (error as AxiosError).message,
-      }),
+      })
+    },
   }),
 })
 

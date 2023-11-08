@@ -757,7 +757,7 @@
     "no_in_org": "Không trực thuộc tổ chức.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
-    "no_subcription": "Không có dịch vụ. Vui lòng tạo.",
+    "no_subscription": "Không có dịch vụ. Vui lòng tạo.",
     "no_customer": "Không có thông tin khách hàng",
     "no_sign_history": "Không có lịch sử đăng ký",
     "no_payment_history": "Không có lịch sử thanh toán",
@@ -779,13 +779,14 @@
     "not_found": "Không tìm thấy",
     "no_user": "Không tồn tại người dùng",
     "error_page": {
-      "title": "Ooops, có lỗi rùi, bạn click nút Refresh để tải lại trang nhé :("
+      "title": "Bạn vui lòng click nút Refresh để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
     },
     "server_res": {
       "title": "Lỗi",
-      "malformed_data": "Dữ liệu truyền lên không hợp lệ",
-      "authorization": "Bạn không có quyền truy cập vào trang này",
-      "server_err": "Server đang bị lỗi, vui lòng thử lại"
+      "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ",
+      "authorization": "Lỗi 403: Bạn không có quyền truy cập vào trang này.",
+      "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
+      "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
     },
     "no_data_res": "Dữ liệu trả về không đúng: "
   },

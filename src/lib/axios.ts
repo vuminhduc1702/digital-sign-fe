@@ -8,6 +8,7 @@ import { API_URL } from '~/config'
 import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
+import i18n from '~/i18n'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const userStorage = storage.getToken()
@@ -36,32 +37,33 @@ export const axiosUploadFile = Axios.create({
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
-  response => {
-    let message = ''
-    const errCode = response?.data?.code
-    const errMessage = response?.data?.message
-    if (errMessage === 'malformed entity specification') {
-      console.log('first')
-      message = 'Dữ liệu truyền lên không hợp lệ'
-      const customError = { ...response?.data, message }
+  // response => {
+  //   let message = ''
+  //   const errCode = response?.data?.code
+  //   const errMessage = response?.data?.message
+  //   if (errMessage === 'malformed entity specification') {
+  //     console.log('first')
+  //     message = 'Dữ liệu truyền lên không hợp lệ'
+  //     const customError = { ...response?.data, message }
 
-      return Promise.reject(customError)
-    }
-    if (errCode != null && errCode !== 0) {
-      message = 'Lỗi! Vui lòng thử lại'
-      const customError = { ...response?.data, message }
+  //     return Promise.reject(customError)
+  //   }
+  //   if (errCode != null && errCode !== 0) {
+  //     message = 'Lỗi! Vui lòng thử lại'
+  //     const customError = { ...response?.data, message }
 
-      return Promise.reject(customError)
-    } else {
-      return response.data
-    }
-  },
+  //     return Promise.reject(customError)
+  //   } else {
+  //     return response.data
+  //   }
+  // },
+  response => response.data,
   (error: AxiosError) => {
     console.error('res error: ', error)
     let message = ''
     switch (error.response?.status) {
       case 400:
-        message = 'Lỗi 400: Dữ liệu truyền lên không hợp lệ'
+        message = i18n.t('error:server_res.malformed_data')
         break
       case 401:
         if (window.location.pathname === PATHS.HOME) {
@@ -69,20 +71,18 @@ axios.interceptors.response.use(
         }
         return logoutFn()
       case 403:
-        message = 'Lỗi 403: Bạn không có quyền truy cập vào trang này.'
+        message = i18n.t('error:server_res.authorization')
         break
       case 404:
-        message =
-          'Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này.'
+        message = i18n.t('error:server_res.notfound')
         break
       case 500:
-        message = 'Lỗi 500: Server đang bị lỗi, vui lòng thử lại.'
+        message = i18n.t('error:server_res.server')
         break
       default:
         message = error.message
     }
     const customError = { ...error, message }
-    console.log('customError', customError)
 
     if (window.location.pathname === PATHS.HOME) {
       return
