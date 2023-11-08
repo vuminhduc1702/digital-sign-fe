@@ -154,7 +154,6 @@ export function CreateUser() {
         />
       }
     >
-      {/* <Form<CreateUserDTO['data'], typeof userSchema> */}
       <form
         id="create-user"
         className='w-full space-y-6'
@@ -175,10 +174,7 @@ export function CreateUser() {
             },
           })
         })}
-        // schema={userSchema}
       >
-        {/* {({ register, formState, control, setValue }) => {
-          return ( */}
         <>
           <InputField
             label={t('cloud:org_manage.user_manage.add_user.name') ?? 'Name'}
@@ -285,9 +281,6 @@ export function CreateUser() {
           />
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </FormDrawer>
   )
 }

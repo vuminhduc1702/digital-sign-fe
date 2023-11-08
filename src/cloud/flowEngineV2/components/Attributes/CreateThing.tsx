@@ -60,7 +60,6 @@ export function CreateThing() {
       isDone={isSuccessThing}
       title={t('cloud:custom_protocol.thing.create')}
       body={
-        // <Form<CreateEntityThingDTO['data'], typeof entityThingSchema>
         <form
           id="create-entityThing"
           className="flex w-full flex-col justify-between space-y-6"
@@ -75,10 +74,7 @@ export function CreateThing() {
               },
             })
           })}
-          // schema={entityThingSchema}
         >
-          {/* {({ register, formState }) => {
-            return ( */}
           <>
             <InputField
               label={t('cloud:custom_protocol.thing.name')}
@@ -92,11 +88,6 @@ export function CreateThing() {
                 registration={register('type')}
               />
             </div>
-            {/* <InputField
-                  label={t('cloud:custom_protocol.thing.base_template')}
-                  error={formState.errors['base_template']}
-                  registration={register('base_template')}
-                /> */}
             <SelectField
               label={t('cloud:custom_protocol.thing.base_template')}
               error={formState.errors['base_template']}
@@ -110,9 +101,6 @@ export function CreateThing() {
             />
           </>
         </form>
-        //     )
-        //   }}
-        // </Form>
       }
       triggerButton={
         <Button

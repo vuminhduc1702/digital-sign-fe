@@ -149,7 +149,6 @@ export function UpdateUser({
         </>
       )}
     >
-      {/* <Form<UpdateUserDTO['data'], typeof updatedUserSchema> */}
       <form
         id="update-user"
         className="w-full space-y-6"
@@ -166,16 +165,7 @@ export function UpdateUser({
             userId,
           }),
         )}
-        // schema={updatedUserSchema}
-        // options={{
-        //   defaultValues: {
-        //     name,
-        //     email,
-        //     phone: phone !== 'undefined' ? phone : '',
-        //   },
-        // }}
       >
-        {/*  {({ register, formState, control, setValue }) => ( */}
         <>
           <InputField
             label={
@@ -253,8 +243,6 @@ export function UpdateUser({
           </div>
         </>
       </form>
-      {/* )}
-       </Form> */}
     </Drawer>
   )
 }

@@ -132,7 +132,6 @@ export function UpdateDevice({
         </>
       )}
     >
-      {/* <Form<UpdateDeviceDTO['data'], typeof deviceSchema> */}
       <form
         id="update-device"
         className='w-full space-y-6'
@@ -148,12 +147,7 @@ export function UpdateDevice({
             deviceId,
           }),
         )}
-        // schema={deviceSchema}
-        // options={{
-        //   defaultValues: { name, key: keyDevice },
-        // }}
       >
-        {/* {({ register, formState, control }) => ( */}
         <>
           <InputField
             label={
@@ -221,8 +215,6 @@ export function UpdateDevice({
           />
         </>
       </form>
-      {/* )}
-      </Form> */}
     </Drawer>
   )
 }

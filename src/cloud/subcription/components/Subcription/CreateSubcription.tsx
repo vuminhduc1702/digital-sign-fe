@@ -205,7 +205,6 @@ export function CreateSubcription() {
       title={t('billing:subcription.create')}
       size="md"
       body={
-        // <Form<CreateSubcriptionDTO['data'], typeof entitySubcriptionSchema>
         <form
           id="create-firm-ware"
           className="flex w-full flex-col justify-between space-y-6"
@@ -219,13 +218,7 @@ export function CreateSubcription() {
               },
             })
           })}
-          // options={{
-          //   defaultValues: { plan_id: '' },
-          // }}
-          // schema={entitySubcriptionSchema}
         >
-          {/* {({ register, formState, control, setError, setValue }) => {
-            return ( */}
           <>
             <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
@@ -351,9 +344,6 @@ export function CreateSubcription() {
             </div>
           </>
         </form>
-        //     )
-        //   }}
-        // </Form>
       }
       triggerButton={
         <Button

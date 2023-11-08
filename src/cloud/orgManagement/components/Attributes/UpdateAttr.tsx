@@ -92,7 +92,6 @@ export function UpdateAttr({
         </>
       )}
     >
-      {/* <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema> */}
       <form
         id="update-attr"
         className="w-full space-y-6"
@@ -112,19 +111,7 @@ export function UpdateAttr({
             entityId,
           })
         })}
-        // options={{
-        //   defaultValues: {
-        //     attribute_key: attributeKey,
-        //     logged: String(logged) === 'true',
-        //     value: value.toString(),
-        //     value_t: value_type,
-        //   },
-        // }}
-        // schema={attrSchema}
       >
-        {/* {({ register, formState, control }) => {
-          console.log('formState errors: ', formState.errors)
-          return ( */}
         <>
           <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
             <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
@@ -175,9 +162,6 @@ export function UpdateAttr({
           </section>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </Drawer>
   )
 }

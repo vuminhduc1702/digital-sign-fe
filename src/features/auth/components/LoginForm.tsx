@@ -45,16 +45,13 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   })
   return (
     <div>
-      {/* <Form<LoginValues> */}
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await login.mutateAsync(values)
           onSuccess()
         })}
-        // schema={schema}
       >
-        {/* {({ register, formState }) => ( */}
         <>
           <InputField
             type="email"
@@ -128,8 +125,6 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           </div>
         </>
       </form>
-      {/* )}
-      </Form> */}
 
       <div className="py-[13%]">
         <div className="container mx-auto text-center">

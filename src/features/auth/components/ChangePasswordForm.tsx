@@ -43,20 +43,13 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
   })
   return (
     <div>
-      {/* <Form<changePasswordDTO['data'], typeof ChangePaswordSchema> */}
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await changePasswordMutation.mutateAsync(values)
           onSuccess()
         })}
-        // schema={ChangePaswordSchema}
-        // options={{
-        //   shouldUnregister: true,
-        // }}
       >
-        {/* {({ register, formState }) => {
-          return ( */}
         <>
           <InputField
             type={showOldPassword ? 'text' : 'password'}
@@ -178,9 +171,6 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
           </div>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
       <div className="mt-8 flex justify-end">
         <div className="text-body-sm text-black">
           <Link to={PATHS.HOME} className="font-bold text-primary-400">

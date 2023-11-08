@@ -83,7 +83,6 @@ export function UpdateVersionFirmWare({
         </>
       )}
     >
-      {/* <Form<UpdateVersionFirmwareDTO['data'], typeof updateVersionSchema> */}
       <form
         id="update-version"
         className="mt-2 flex w-full flex-col justify-between space-y-6"
@@ -100,13 +99,7 @@ export function UpdateVersionFirmWare({
             },
           })
         })}
-        // options={{
-        //   defaultValues: { version: '' },
-        // }}
-        // schema={updateVersionSchema}
       >
-        {/* {({ register, formState, control, setValue, setError }) => {
-          return ( */}
         <div className="space-y-1">
           <SelectDropdown
             isClearable={false}
@@ -131,9 +124,6 @@ export function UpdateVersionFirmWare({
           </p>
         </div>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </Drawer>
   )
 }

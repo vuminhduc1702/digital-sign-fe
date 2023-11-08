@@ -79,7 +79,6 @@ export function UpdateDashboard({
         </>
       )}
     >
-      {/* <Form<UpdateDashboardDTO['data'], typeof dashboardSchema> */}
       <form
         id="update-dashboard"
         className='w-full space-y-6'
@@ -96,22 +95,7 @@ export function UpdateDashboard({
             dashboardId: id,
           })
         })}
-
-        // options={{
-        //   defaultValues: {
-        //     title,
-        //     configuration: {
-        //       description,
-        //       widgets: null,
-        //     },
-        //     dashboard_setting: null,
-        //   },
-        // }}
-        // schema={dashboardSchema}
       >
-        {/* {({ register, formState }) => {
-          console.log('formState errors: ', formState.errors)
-          return ( */}
         <>
           <InputField
             label={t('cloud:dashboard.add_dashboard.name')}
@@ -125,9 +109,6 @@ export function UpdateDashboard({
           />
         </>
       </form>
-      {/* )
-       }}
-      </Form> */}
     </Drawer>
   )
 }

@@ -70,10 +70,9 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
         />
       }
     >
-      {/* <Form<CreateDashboardDTO['data'], typeof dashboardSchema> */}
       <form
         id="create-dashboard"
-        className='w-full space-y-6'
+        className="w-full space-y-6"
         onSubmit={handleSubmit(values => {
           mutate({
             data: {
@@ -87,12 +86,7 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
             },
           })
         })}
-        // schema={dashboardSchema}
       >
-        {/* {
-        ({ register, formState }) => {
-          console.log('formState errors', formState.errors)
-          return ( */}
         <>
           <InputField
             label={t('cloud:dashboard.add_dashboard.name')}
@@ -106,9 +100,6 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
           />
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </FormDrawer>
   )
 }

@@ -109,7 +109,6 @@ export function UpdateProject({
               </button>
             </div>
           </div>
-          {/* <Form<UpdateProjectDTO['data'], typeof CreateProjectSchema> */}
           <form
             id="update-project"
             className="flex w-full flex-col justify-between space-y-6"
@@ -147,18 +146,7 @@ export function UpdateProject({
                 })
               }
             })}
-            // schema={CreateProjectSchema}
-            // options={{
-            //   defaultValues: {
-            //     name: selectedUpdateProject?.name,
-            //     description: selectedUpdateProject?.description,
-            //     image: selectedUpdateProject?.image,
-            //   },
-            // }}
           >
-            {/* {({ register, formState }) => {
-              console.log('formState.errors', formState.errors)
-              return ( */}
             <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
               <div>
                 <InputField
@@ -241,9 +229,6 @@ export function UpdateProject({
               </div>
             </div>
           </form>
-          {/* )
-            }}
-          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

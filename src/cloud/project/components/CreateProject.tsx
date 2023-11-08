@@ -120,7 +120,6 @@ export function CreateProject() {
       resetData={handleResetForm}
       body={
         <form
-          // <Form<CreateProjectDTO['data'], typeof CreateProjectSchema>
           id="create-project"
           className="flex w-full flex-col justify-between space-y-6"
           onSubmit={handleSubmit(async values => {
@@ -158,12 +157,7 @@ export function CreateProject() {
               })
             }
           })}
-          // schema={CreateProjectSchema}
         >
-          {/* {({ register, formState }) => {
-            console.log('formState errors: ', formState.errors)
-
-            return ( */}
           <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
             <div>
               <InputField
@@ -294,9 +288,6 @@ export function CreateProject() {
             </div>
           </div>
         </form>
-        //     )
-        //   }}
-        // </Form>
       }
       triggerButton={
         <Button

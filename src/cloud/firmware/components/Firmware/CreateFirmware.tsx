@@ -52,7 +52,6 @@ export function CreateFirmWare() {
       isDone={isSuccess}
       title={t('cloud:firmware.add_firmware.title')}
       body={
-        // <Form<CreateFirmWareDTO['data'], typeof entityFirmWareSchema>
         <form
           id="create-firm-ware"
           className="flex w-full flex-col justify-between space-y-6"
@@ -68,13 +67,7 @@ export function CreateFirmWare() {
               },
             })
           })}
-          // options={{
-          //   defaultValues: { template_id: '' },
-          // }}
-          // schema={entityFirmWareSchema}
         >
-          {/* {({ register, formState, control, setError, setValue }) => {
-            return ( */}
           <>
             <div className="space-y-1">
               <SelectDropdown
@@ -121,9 +114,6 @@ export function CreateFirmWare() {
             />
           </>
         </form>
-        //      )
-        //   }}
-        // </Form>
       }
       triggerButton={
         <Button

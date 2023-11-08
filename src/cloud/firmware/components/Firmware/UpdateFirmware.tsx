@@ -85,7 +85,6 @@ export function UpdateFirmWare({
               </button>
             </div>
           </div>
-          {/* <Form<UpdateFirmwareDTO['data'], typeof entityFirmWareSchema> */}
           <form
             id="update-firm-ware"
             className="mt-2 flex w-full flex-col justify-between space-y-6"
@@ -101,13 +100,7 @@ export function UpdateFirmWare({
                 firmwareId,
               })
             })}
-            // schema={entityFirmWareSchema}
-            // options={{
-            //   defaultValues: { name, description, tag, version, template_id },
-            // }}
           >
-            {/* {({ register, formState, control }) => {
-              return ( */}
             <>
               <div>
                 <SelectDropdown
@@ -150,9 +143,6 @@ export function UpdateFirmWare({
               />
             </>
           </form>
-          {/* )
-            }}
-          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

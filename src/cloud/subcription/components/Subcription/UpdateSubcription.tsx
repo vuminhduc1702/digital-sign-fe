@@ -161,10 +161,6 @@ export function UpdateSubcription({
               </button>
             </div>
           </div>
-          {/* <Form<
-            UpdateSubcriptionDTO['data'],
-            typeof entitySubcriptionUpdateSchema
-          > */}
           <form
             id="update-subcription"
             className="flex w-full flex-col justify-between space-y-6"
@@ -176,15 +172,7 @@ export function UpdateSubcription({
                 id: id || '',
               })
             })}
-            // options={{
-            //   defaultValues: {
-            //     register: data?.data?.s_register?.toString() || '',
-            //   },
-            // }}
-            // schema={entitySubcriptionUpdateSchema}
           >
-            {/* {({ register, formState, control, setError, setValue }) => {
-              return ( */}
             <>
               <div className="mt-2 flex justify-between gap-2 py-2 ">
                 <div className="flex items-center gap-3">
@@ -324,9 +312,6 @@ export function UpdateSubcription({
               </div>
             </>
           </form>
-          {/* )
-            }}
-          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           {!isUpdate ? (

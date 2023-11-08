@@ -161,7 +161,6 @@ const SelfAccount = () => {
         </div>
       ) : (
         <>
-          {/* <Form<UpdateSelfAccountInfoDTO['data'], typeof selfInfoSchema> */}
           <form
             id="update-self-account-info"
             onSubmit={handleSubmit(values =>
@@ -170,24 +169,8 @@ const SelfAccount = () => {
                 tenant_id: userInfoData?.user_id as string,
               }),
             )}
-            // schema={selfInfoSchema}
-            // options={{
-            //   defaultValues: {
-            //     name: userInfoData?.name,
-            //     phone: userInfoData?.phone,
-            //     email: userInfoData?.email,
-            //     profile: {
-            //       tax_code: userInfoData?.profile?.tax_code,
-            //       province: userInfoData?.profile?.province,
-            //       district: userInfoData?.profile?.district,
-            //       ward: userInfoData?.profile?.ward,
-            //       full_address: userInfoData?.profile?.full_address,
-            //     },
-            //   },
-            // }}
             className="w-full space-y-6 pr-32"
           >
-            {/* {({ register, formState }) => ( */}
             <div className="grid grid-cols-4 gap-4">
               <div className="col-start-1 flex items-center justify-end">
                 {t('form:enter_name')}{' '}
@@ -286,8 +269,6 @@ const SelfAccount = () => {
               </div>
             </div>
           </form>
-          {/* )}
-          </Form> */}
 
           <div className="mt-auto flex justify-center">
             <Button

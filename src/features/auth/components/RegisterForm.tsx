@@ -99,21 +99,13 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
     })
   return (
     <div>
-      {/* <Form<RegisterValues, typeof registerSchema> */}
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await registerMutation.mutateAsync(values)
           onSuccess()
         })}
-        // schema={registerSchema}
-        // options={{
-        //   shouldUnregister: true,
-        // }}
       >
-        {/* {({ register, formState, getValues }) => {
-          console.log('formState', formState.errors)
-          return ( */}
         <>
           <InputField
             type="email"
@@ -260,9 +252,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           </div>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
       <div className="mt-8 flex justify-center">
         <div className="text-body-sm text-black">
           {t('auth:have_an_account')}{' '}

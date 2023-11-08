@@ -67,7 +67,6 @@ export function UploadFileFirmWare({
               </button>
             </div>
           </div>
-          {/* <Form<UploadFileFirmWareDTO, typeof uploadFileSchema> */}
           <form
             id="update-firm-ware"
             className="mt-2 flex w-full flex-col justify-between space-y-6"
@@ -80,10 +79,7 @@ export function UploadFileFirmWare({
                   firmwareId,
                 })
             })}
-            // schema={uploadFileSchema}
           >
-            {/* {({ register, formState, control, setValue, setError }) => {
-              return ( */}
             <>
               <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
                 <label
@@ -130,9 +126,6 @@ export function UploadFileFirmWare({
               </p>
             </>
           </form>
-          {/* )
-            }}
-          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

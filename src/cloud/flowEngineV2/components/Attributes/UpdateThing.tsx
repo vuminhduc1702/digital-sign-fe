@@ -66,7 +66,6 @@ export function UpdateThing({
               </button>
             </div>
           </div>
-          {/* <Form<UpdateThingDTO['data'], typeof updateThingSchema> */}
           <form
             id="create-entityThing"
             className="mt-2 flex w-full flex-col justify-between space-y-6"
@@ -79,13 +78,7 @@ export function UpdateThing({
                 thingId,
               })
             })}
-            // schema={updateThingSchema}
-            // options={{
-            //   defaultValues: { name, description },
-            // }}
           >
-            {/* {({ register, formState }) => {
-              return ( */}
             <>
               <InputField
                 label={t('cloud:custom_protocol.thing.name')}
@@ -99,9 +92,6 @@ export function UpdateThing({
               />
             </>
           </form>
-          {/* )
-            }}
-          </Form> */}
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

@@ -182,7 +182,6 @@ export function UpdateOrg({
         </>
       )}
     >
-      {/* <Form<UpdateOrgDTO['data'], typeof orgSchema> */}
       <form
         id="update-org"
         className="w-full space-y-6"
@@ -222,20 +221,7 @@ export function UpdateOrg({
             })
           }
         })}
-        // options={{
-        //   defaultValues: {
-        //     name: selectedUpdateOrg.name,
-        //     description:
-        //       selectedUpdateOrg?.description !== 'undefined'
-        //         ? selectedUpdateOrg?.description
-        //         : '',
-        //     org_id: selectedUpdateOrg?.id,
-        //   },
-        // }}
-        // schema={orgSchema}
       >
-        {/* {({ register, formState, control, setValue }) => {
-          return ( */}
         <>
           <InputField
             label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
@@ -337,9 +323,6 @@ export function UpdateOrg({
           </div>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </Drawer>
   )
 }

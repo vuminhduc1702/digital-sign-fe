@@ -160,7 +160,6 @@ export function CreateOrg() {
         />
       }
     >
-      {/* <Form<CreateOrgDTO['data'], typeof orgSchema> */}
       <form
         className="w-full space-y-6"
         id="create-org"
@@ -191,10 +190,7 @@ export function CreateOrg() {
             })
           }
         })}
-        // schema={orgSchema}
       >
-        {/* {({ register, formState, control, setValue }) => {
-          return ( */}
         <>
           <InputField
             label={t('cloud:org_manage.org_manage.add_org.name')}
@@ -284,9 +280,6 @@ export function CreateOrg() {
           </div>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
     </FormDrawer>
   )
 }

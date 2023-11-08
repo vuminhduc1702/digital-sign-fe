@@ -93,10 +93,9 @@ export function CreateGroup() {
         />
       }
     >
-      {/* <Form<CreateGroupDTO['data'], typeof groupSchema> */}
       <form
         id="create-group"
-        className='w-full space-y-6'
+        className="w-full space-y-6"
         onSubmit={handleSubmit(values => {
           mutate({
             data: {
@@ -107,9 +106,7 @@ export function CreateGroup() {
             },
           })
         })}
-        // schema={groupSchema}
       >
-        {/* {({ register, formState, control, setValue }) => ( */}
         <>
           <InputField
             label={t('cloud:org_manage.group_manage.add_group.name') ?? 'Name'}
@@ -149,8 +146,6 @@ export function CreateGroup() {
           </div>
         </>
       </form>
-      {/* )}
-      </Form> */}
     </FormDrawer>
   )
 }

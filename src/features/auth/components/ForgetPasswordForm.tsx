@@ -99,21 +99,13 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
     })
   return (
     <div>
-      {/* <Form<ForgetPasswordValues, typeof ForgetPasswordSchema> */}
       <form
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
           await forgetMutation.mutateAsync(values)
           onSuccess()
         })}
-        // schema={ForgetPasswordSchema}
-        // options={{
-        //   shouldUnregister: true,
-        // }}
       >
-        {/* {({ register, formState, getValues }) => {
-          console.log('formState', formState.errors)
-          return ( */}
         <>
           <InputField
             type="email"
@@ -259,9 +251,6 @@ export const ForgetPasswordForm = ({ onSuccess }: ForgetPasswordFormProps) => {
           </div>
         </>
       </form>
-      {/* )
-        }}
-      </Form> */}
       <div className="mt-8 flex justify-center">
         <div className="text-body-sm text-black">
           {t('auth:have_an_account')}{' '}
