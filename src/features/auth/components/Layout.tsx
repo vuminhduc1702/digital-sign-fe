@@ -19,7 +19,7 @@ export const Layout = ({ children, title }: LayoutProps) => {
       <Head title={title} />
 
       <div
-        className="relative max-h-screen min-h-screen bg-neutral-600 "
+        className="relative min-h-screen bg-neutral-600"
         style={{ backgroundImage: `url(${textureLogin})` }}
       >
         <div className="flex h-[99.3vh] pb-20 pt-[7.5rem] sm:px-14 lg:px-60">

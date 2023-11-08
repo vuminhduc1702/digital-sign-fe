@@ -1,5 +1,5 @@
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, type LegacyRef, type ReactNode } from 'react'
+import { type ComponentProps, Fragment, type ReactNode } from 'react'
 import clsx from 'clsx'
 
 type IconProps =
@@ -16,7 +16,8 @@ type MenuItemProps = {
 type DropdownProps = {
   children: ReactNode
   menuClass?: string
-} & IconProps
+} & IconProps &
+  ComponentProps<typeof Menu>
 
 export function Dropdown({ title, icon, children, menuClass }: DropdownProps) {
   return (

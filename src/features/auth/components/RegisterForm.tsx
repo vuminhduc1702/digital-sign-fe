@@ -117,7 +117,6 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 registration={register('email', {
                   onChange: e => {
                     const emailValue = e.target.value
-                    console.log(emailValue)
                     if (emailSchema.safeParse(emailValue).success) {
                       setBtnOtpDisable(false)
                     } else {
