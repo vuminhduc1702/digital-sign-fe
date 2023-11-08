@@ -148,7 +148,11 @@ function Navbar() {
 
         {userInfoIsLoading ? (
           <div className="flex items-center justify-center">
-            <Spinner showSpinner={showSpinner} size="md" />
+            <Spinner
+              showSpinner={showSpinner}
+              size="md"
+              className="text-white"
+            />
           </div>
         ) : (
           <DropdownMenu.Root>

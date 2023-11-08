@@ -44,7 +44,7 @@ import { CodeEditor } from './CodeEditor'
 import TitleBar from '~/components/Head/TitleBar'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
-import { inputService, type EntityThingList, FieldsType } from '../types'
+import { inputService, type EntityThingList, type FieldsType } from '../types'
 import { type BasePagination } from '~/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -130,7 +130,9 @@ export function UpdateAdapter({
     config: { enabled: !!selectedThingId, suspense: false },
   })
   useEffect(() => {
-    const thingFilter = thingSelectData.length && thingSelectData.filter(item => item.value === thing_id)
+    const thingFilter =
+      thingSelectData.length &&
+      thingSelectData.filter(item => item.value === thing_id)
     setOptionThingId(thingFilter[0] || [{ value: '', label: '' }])
   }, [])
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -142,8 +144,8 @@ export function UpdateAdapter({
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
-  const [isCreateAdapterFormUpdated, setIsCreateAdapterFormUpdated] =
-    useState(false)
+  // const [isCreateAdapterFormUpdated, setIsCreateAdapterFormUpdated] =
+  //   useState(false)
   const protocolTypeRef = useRef(protocol)
 
   const renderFields = () => {
@@ -152,7 +154,7 @@ export function UpdateAdapter({
       (schemaParse.fields &&
         schemaParse.fields.map((item: FieldsType) => ({
           name: item.name,
-          start_byte: (item.start_byte).toString() || '',
+          start_byte: item.start_byte.toString() || '',
           length_byte: (item.end_byte - item.start_byte).toString() || '',
         }))) ||
       []
@@ -184,10 +186,10 @@ export function UpdateAdapter({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={
-              !isCreateAdapterFormUpdated &&
-              protocolTypeRef.current === protocolType
-            }
+            // disabled={
+            //   !isCreateAdapterFormUpdated &&
+            //   protocolTypeRef.current === protocolType
+            // }
           />
         </>
       )}
@@ -196,16 +198,16 @@ export function UpdateAdapter({
         id="update-adapter"
         className="flex flex-col justify-between"
         onSubmit={values => {
-          console.log('adapter values', values)
+          // console.log('adapter values', values)
           const fields =
             values?.fields?.length &&
             values?.fields?.map(item => ({
               name: item?.name,
               start_byte: parseInt(item?.start_byte),
-              end_byte: parseInt(item?.start_byte) + parseInt(item?.length_byte),
+              end_byte:
+                parseInt(item?.start_byte) + parseInt(item?.length_byte),
             }))
-          if (isCreateAdapterFormUpdated &&
-            protocolTypeRef.current !== protocolType) {
+          if (protocolTypeRef.current !== protocolType) {
             if (protocolType === 'mqtt') {
               mutate({
                 data: {
@@ -251,7 +253,6 @@ export function UpdateAdapter({
               })
             }
           }
-
         }}
         schema={adapterSchema}
         name={['configuration.topic_filters', 'fields']}
@@ -275,8 +276,8 @@ export function UpdateAdapter({
           { fields, append, remove },
           { append: appendSchema, fields: fieldsSchema, remove: removeSchema },
         ) => {
-          // console.log('zod adapter errors: ', formState.errors)
-          setIsCreateAdapterFormUpdated(formState.isDirty)
+          console.log('zod adapter errors: ', formState.errors)
+          // setIsCreateAdapterFormUpdated(formState.isDirty)
 
           return (
             <>
@@ -602,11 +603,11 @@ export function UpdateAdapter({
                               thingData
                                 ? thingSelectData
                                 : [
-                                  {
-                                    label: t('loading:entity_thing'),
-                                    value: '',
-                                  },
-                                ]
+                                    {
+                                      label: t('loading:entity_thing'),
+                                      value: '',
+                                    },
+                                  ]
                             }
                             isOptionDisabled={option =>
                               option.label === t('loading:entity_thing')
@@ -632,7 +633,7 @@ export function UpdateAdapter({
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
-                          // defaultValue={defaultThingValues}
+                            // defaultValue={defaultThingValues}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.thing_id?.message}
@@ -705,7 +706,7 @@ export function UpdateAdapter({
                                       }
                                     />
                                     {thingType === 'thing' ||
-                                      thingType === 'template' ? (
+                                    thingType === 'template' ? (
                                       <InputField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -781,13 +782,13 @@ export function UpdateAdapter({
                               serviceData?.data != null
                                 ? serviceSelectData
                                 : serviceData?.data == null
-                                  ? [
+                                ? [
                                     {
                                       label: t('table:no_service'),
                                       value: '',
                                     },
                                   ]
-                                  : [
+                                : [
                                     {
                                       label: t('loading:service_thing'),
                                       value: '',
