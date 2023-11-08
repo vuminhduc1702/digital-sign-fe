@@ -101,6 +101,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const consolePanelEle = document.getElementById('console-panel')
   const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
   const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [codeConsoleHeight, setCodeConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 4) / 2)
+  const [resultConsoleHeight, setResultConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 4) / 2)
+  const minWidthCode = 80
+  const minWidthResult = 116
+  const minHeightCode = 100
+  const minHeightResult = 100
 
   const {
     mutate: mutateExecuteService,
@@ -181,6 +187,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setFullScreen(false)
     setIsShowConsole(false)
     setInputTypeValue('')
+    setViewMode('default')
     setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
     setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
   }
@@ -203,14 +210,22 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   }
 
   function handleMouseMove(event: MouseEvent) {
-    if (isResizable) {
+    console.log(consolePanelEle?.offsetHeight)
+    if (isResizable && !fullScreen) {
       let offsetCode = event.clientX - 660
       let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
-      let minWidthCode = 80
-      let minWidthResult = 116
+      
       if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
         setCodeConsoleWidth(offsetCode)
         setResultConsoleWidth(offsetResult)
+      }
+    } else if (isResizable && fullScreen) {
+      let offsetCode = event.clientY - 200
+      let offsetResult = Number(consolePanelEle?.offsetHeight) - offsetCode
+
+      if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
+        setCodeConsoleHeight(offsetCode)
+        setResultConsoleHeight(offsetResult)
       }
     }
   }
@@ -535,10 +550,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       className={cn(
                         'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
-                          'md:col-span-5':
-                            viewMode === 'maximize_code' ||
-                            viewMode === 'minimize_result',
-                          'md:col-span-1': viewMode === 'minimize_code',
+                          'w-[85%]':
+                            (viewMode === 'maximize_code' ||
+                            viewMode === 'minimize_result') && !fullScreen,
+                          'w-[15%]': viewMode === 'minimize_code' && !fullScreen,
+                          'w-[100%]': viewMode === 'default'
                         },
                       )}
                       style={!fullScreen ? {'width': codeConsoleWidth} : {}}
@@ -639,19 +655,25 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         editorName={'code'}
                       />
                     </div>
-                    <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
+                    {
+                      !fullScreen ? (
+                        <div className="w-[4px] h-[100%] cursor-col-resize" onMouseDown={handleResize}></div>
+                      ) : (
+                        <div className="h-[4px] w-[100%] cursor-row-resize" onMouseDown={handleResize}></div>
+                      )
+                    }
                     <div
                       className={cn(
                         'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
-                          'md:col-span-5':
-                            viewMode == 'maximize_result' ||
-                            viewMode == 'minimize_code',
+                          'w-[85%]':
+                            (viewMode == 'maximize_result' ||
+                            viewMode == 'minimize_code') && !fullScreen,
                         },
                         {
-                          'md:col-span-1':
-                            viewMode == 'minimize_result' ||
-                            viewMode == 'maximize_code',
+                          'w-[15%]':
+                            (viewMode == 'minimize_result' ||
+                            viewMode == 'maximize_code') && !fullScreen,
                         },
                       )}
                       style={!fullScreen ? {'width': resultConsoleWidth} : {}}
