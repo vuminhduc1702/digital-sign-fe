@@ -1,3 +1,4 @@
+import { useSpinDelay } from 'spin-delay'
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -20,22 +21,23 @@ import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
 import storage from '~/utils/storage'
 import { scrollToIntro } from '~/utils/misc'
+import { ContentLayout } from '~/layout/ContentLayout'
+import { Link } from '~/components/Link'
+import { Spinner } from '~/components/Spinner'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
-
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import { ContentLayout } from '~/layout/ContentLayout'
-import { ControllerChart } from '~/cloud/dashboard/components'
-import { Link } from '~/components/Link'
 
 export function LandingPage() {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const { data: userDataFromStorage } = useUser()
-  const { data: userInfoData } = useUserInfo({
+  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
       useErrorBoundary: false,
+      suspense: false,
       enabled: !!storage.getToken(),
     },
   })
@@ -50,7 +52,6 @@ export function LandingPage() {
   const FAQRef: RefObject<HTMLDivElement> = useRef(null)
   const Order1Ref: RefObject<HTMLDivElement> = useRef(null)
 
-  const { t } = useTranslation()
   const currentYear = new Date().getFullYear()
   useEffect(() => {
     const handleScroll = () => {
@@ -67,15 +68,18 @@ export function LandingPage() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
-  // useEffect(() => {
-  //   console.log(userInfoData?.email?.split('@')[0])
-  // }, [userInfoData?.email?.split('@')[0]])
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: 'smooth',
     })
   }
+
+  const showSpinner = useSpinDelay(userInfoIsLoading, {
+    delay: 150,
+    minDuration: 300,
+  })
 
   return (
     <ContentLayout title={t('landingpage:title')}>
@@ -93,7 +97,7 @@ export function LandingPage() {
                   {t('landingpage:logo')}
                 </a>
               </div>
-              <div className="ml-auto flex">
+              <div className="mx-auto flex">
                 <div className="flex justify-start">
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
@@ -131,12 +135,13 @@ export function LandingPage() {
                   >
                     <button>{t('landingpage:FAQ')}</button>
                   </div>
-                  {/* <div className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white">
-                    Tài khoản
-                  </div> */}
                 </div>
               </div>
-              {userInfoData != null ? (
+              {userInfoIsLoading ? (
+                <div className="flex items-center justify-center">
+                  <Spinner showSpinner={showSpinner} size="md" />
+                </div>
+              ) : userInfoData != null ? (
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger
                     asChild
@@ -298,7 +303,7 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-      <div className="relative top-[-74px] z-50" ref={introRef}>
+      <div className="relative top-[-74px] z-40" ref={introRef}>
         <SectionIntro solutionRef={solutionRef} />
       </div>
       <div ref={solutionRef}>

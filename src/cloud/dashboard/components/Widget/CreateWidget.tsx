@@ -36,6 +36,7 @@ import {
   CommandItem,
 } from '~/components/Command'
 import { useDefaultCombobox } from '~/utils/hooks'
+import { TimePicker } from '~/components/TimePicker'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
@@ -928,6 +929,7 @@ export function CreateWidget({
                                         onSelect={onChange}
                                         numberOfMonths={1}
                                       />
+                                      <TimePicker />
                                     </PopoverContent>
                                   </Popover>
                                 )
