@@ -5,6 +5,7 @@ import {
   type UseMutationOptions,
   type DefaultOptions,
   QueryCache,
+  MutationCache,
 } from '@tanstack/react-query'
 
 import { useNotificationStore } from '~/stores/notifications'
@@ -24,7 +25,15 @@ export const queryClient = new QueryClient({
   defaultOptions: queryConfig,
   queryCache: new QueryCache({
     onError: error => {
-      console.log('11111111111111111111')
+      useNotificationStore.getState().addNotification({
+        type: 'error',
+        title: i18n.t('error:server_res.title'),
+        message: (error as AxiosError).message,
+      })
+    },
+  }),
+  mutationCache: new MutationCache({
+    onError: error => {
       useNotificationStore.getState().addNotification({
         type: 'error',
         title: i18n.t('error:server_res.title'),

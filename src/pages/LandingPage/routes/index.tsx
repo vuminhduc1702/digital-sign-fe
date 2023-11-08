@@ -137,7 +137,7 @@ export function LandingPage() {
                   </div>
                 </div>
               </div>
-              {userInfoIsLoading ? (
+              {userInfoIsLoading && userInfoData != null ? (
                 <div className="flex items-center justify-center">
                   <Spinner
                     showSpinner={showSpinner}
@@ -145,7 +145,30 @@ export function LandingPage() {
                     className="text-white"
                   />
                 </div>
-              ) : userInfoData != null ? (
+              ) : userInfoData == null ? (
+                <div className="ml-auto flex">
+                  <div className="flex min-w-fit items-center justify-center text-white">
+                    <Button
+                      type="button"
+                      className="w-full border-none bg-transparent px-1 font-bold text-white"
+                      variant="primary"
+                      onClick={() => navigate(PATHS.LOGIN)}
+                    >
+                      {t('user:login')}
+                    </Button>
+                  </div>
+                  <div className="mx-1 flex min-w-fit items-center justify-center text-white">
+                    <Button
+                      type="button"
+                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-5 text-left font-bold text-white"
+                      variant="primary"
+                      onClick={() => navigate(PATHS.REGISTER)}
+                    >
+                      {t('landingpage:register_now')}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger
                     asChild
@@ -226,29 +249,6 @@ export function LandingPage() {
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
-              ) : (
-                <div className="ml-auto flex">
-                  <div className="flex min-w-fit items-center justify-center text-white">
-                    <Button
-                      type="button"
-                      className="w-full border-none bg-transparent px-1 font-bold text-white"
-                      variant="primary"
-                      onClick={() => navigate(PATHS.LOGIN)}
-                    >
-                      {t('user:login')}
-                    </Button>
-                  </div>
-                  <div className="mx-1 flex min-w-fit items-center justify-center text-white">
-                    <Button
-                      type="button"
-                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-5 text-left font-bold text-white"
-                      variant="primary"
-                      onClick={() => navigate(PATHS.REGISTER)}
-                    >
-                      {t('landingpage:register_now')}
-                    </Button>
-                  </div>
-                </div>
               )}
             </div>
 

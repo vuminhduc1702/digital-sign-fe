@@ -783,12 +783,12 @@
     },
     "server_res": {
       "title": "Lỗi",
-      "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ",
+      "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",
       "authorization": "Lỗi 403: Bạn không có quyền truy cập vào trang này.",
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
       "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
     },
-    "no_data_res": "Dữ liệu trả về không đúng: "
+    "no_data_res": "Dữ liệu trả về không đúng."
   },
   "loading": {
     "org": "Đang tải danh sách tổ chức...",
