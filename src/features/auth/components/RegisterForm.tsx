@@ -114,16 +114,17 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                 classnamefieldwrapper="relative"
                 placeholder={t('auth:require_email')}
                 error={formState.errors['email']}
-                registration={register('email')}
-                onChange={e => {
-                  const emailValue = e.target.value
-                  console.log(emailValue)
-                  if (emailSchema.safeParse(emailValue).success) {
-                    setBtnOtpDisable(false)
-                  } else {
-                    setBtnOtpDisable(true)
-                  }
-                }}
+                registration={register('email', {
+                  onChange: e => {
+                    const emailValue = e.target.value
+                    console.log(emailValue)
+                    if (emailSchema.safeParse(emailValue).success) {
+                      setBtnOtpDisable(false)
+                    } else {
+                      setBtnOtpDisable(true)
+                    }
+                  },
+                })}
                 startIcon={
                   <BtnUserLoginIcon
                     height={20}
