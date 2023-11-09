@@ -268,10 +268,17 @@ export function CreateWidget({
     label: item,
   })) || [{ value: '', label: '' }]
 
-  const { register, formState, control, handleSubmit, setValue, watch } =
-    useForm<WidgetCreate>({
-      resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
-    })
+  const {
+    register,
+    formState,
+    control,
+    handleSubmit,
+    getValues,
+    setValue,
+    watch,
+  } = useForm<WidgetCreate>({
+    resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
+  })
   console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
@@ -318,174 +325,174 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              console.log('values: ', values)
-              const widgetId = uuidv4()
-              const attrData = values.attributeConfig.map(item => ({
-                type: 'TIME_SERIES',
-                key: item.attribute_key.value,
-              }))
-              const initMessage = {
-                entityDataCmds: [
-                  {
-                    query: {
-                      entityFilter: {
-                        type: 'entityList',
-                        entityType: 'DEVICE',
-                        entityIds: values.device,
-                      },
-                      pageLink: {
-                        pageSize: 1,
-                        page: 0,
-                        sortOrder: {
-                          key: {
-                            type: 'ENTITY_FIELD',
-                            key: 'ts',
-                          },
-                          direction: 'DESC',
-                        },
-                      },
-                      entityFields: [
-                        {
-                          type: 'ENTITY_FIELD',
-                          key: 'name',
-                        },
-                      ],
-                      latestValues: attrData,
-                    },
-                    id: widgetId,
-                  },
-                ],
-              }
+              console.log('values: ', values.widgetSetting?.startDate)
+              // const widgetId = uuidv4()
+              // const attrData = values.attributeConfig.map(item => ({
+              //   type: 'TIME_SERIES',
+              //   key: item.attribute_key.value,
+              // }))
+              // const initMessage = {
+              //   entityDataCmds: [
+              //     {
+              //       query: {
+              //         entityFilter: {
+              //           type: 'entityList',
+              //           entityType: 'DEVICE',
+              //           entityIds: values.device,
+              //         },
+              //         pageLink: {
+              //           pageSize: 1,
+              //           page: 0,
+              //           sortOrder: {
+              //             key: {
+              //               type: 'ENTITY_FIELD',
+              //               key: 'ts',
+              //             },
+              //             direction: 'DESC',
+              //           },
+              //         },
+              //         entityFields: [
+              //           {
+              //             type: 'ENTITY_FIELD',
+              //             key: 'name',
+              //           },
+              //         ],
+              //         latestValues: attrData,
+              //       },
+              //       id: widgetId,
+              //     },
+              //   ],
+              // }
 
-              const lastestMessage = {
-                entityDataCmds: [
-                  {
-                    latestCmd: {
-                      keys: attrData,
-                    },
-                    id: widgetId,
-                  },
-                ],
-              }
+              // const lastestMessage = {
+              //   entityDataCmds: [
+              //     {
+              //       latestCmd: {
+              //         keys: attrData,
+              //       },
+              //       id: widgetId,
+              //     },
+              //   ],
+              // }
 
-              const realtimeMessage = {
-                entityDataCmds: [
-                  {
-                    tsCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key.value,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 10,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                    },
-                    id: widgetId,
-                  },
-                ],
-              }
+              // const realtimeMessage = {
+              //   entityDataCmds: [
+              //     {
+              //       tsCmd: {
+              //         keys: values.attributeConfig.map(
+              //           item => item.attribute_key.value,
+              //         ),
+              //         startTs: Date.parse(
+              //           values.widgetSetting?.startDate?.toISOString() as string,
+              //         ),
+              //         interval: values.widgetSetting?.interval,
+              //         limit: 10,
+              //         offset: 0,
+              //         agg: values.widgetSetting?.agg,
+              //       },
+              //       id: widgetId,
+              //     },
+              //   ],
+              // }
 
-              const historyMessage =
-                values.widgetSetting?.agg === 'SMA'
-                  ? {
-                      entityDataCmds: [
-                        {
-                          historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key.value,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString(),
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
-                            window: values.widgetSetting?.window,
-                          },
-                          id: widgetId,
-                        },
-                      ],
-                    }
-                  : {
-                      entityDataCmds: [
-                        {
-                          historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key.value,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString() as string,
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
-                          },
-                          id: widgetId,
-                        },
-                      ],
-                    }
+              // const historyMessage =
+              //   values.widgetSetting?.agg === 'SMA'
+              //     ? {
+              //         entityDataCmds: [
+              //           {
+              //             historyCmd: {
+              //               keys: values.attributeConfig.map(
+              //                 item => item.attribute_key.value,
+              //               ),
+              //               startTs: Date.parse(
+              //                 values.widgetSetting?.startDate?.toISOString(),
+              //               ),
+              //               endTs: Date.parse(
+              //                 values.widgetSetting?.endDate?.toISOString() as string,
+              //               ),
+              //               interval: values.widgetSetting?.interval,
+              //               limit: 100,
+              //               offset: 0,
+              //               agg: values.widgetSetting?.agg,
+              //               window: values.widgetSetting?.window,
+              //             },
+              //             id: widgetId,
+              //           },
+              //         ],
+              //       }
+              //     : {
+              //         entityDataCmds: [
+              //           {
+              //             historyCmd: {
+              //               keys: values.attributeConfig.map(
+              //                 item => item.attribute_key.value,
+              //               ),
+              //               startTs: Date.parse(
+              //                 values.widgetSetting?.startDate?.toISOString() as string,
+              //               ),
+              //               endTs: Date.parse(
+              //                 values.widgetSetting?.endDate?.toISOString() as string,
+              //               ),
+              //               interval: values.widgetSetting?.interval,
+              //               limit: 100,
+              //               offset: 0,
+              //               agg: values.widgetSetting?.agg,
+              //             },
+              //             id: widgetId,
+              //           },
+              //         ],
+              //       }
 
-              const widget: z.infer<typeof widgetSchema> = {
-                title: values.title,
-                description: widgetCategory,
-                type: widgetType,
-                datasource: {
-                  init_message: JSON.stringify(initMessage),
-                  lastest_message:
-                    widgetType === 'LASTEST'
-                      ? JSON.stringify(lastestMessage)
-                      : '',
-                  realtime_message:
-                    values.widgetSetting?.dataType === 'REALTIME'
-                      ? JSON.stringify(realtimeMessage)
-                      : '',
-                  history_message:
-                    values.widgetSetting?.dataType === 'HISTORY'
-                      ? JSON.stringify(historyMessage)
-                      : '',
-                },
-                attribute_config: values.attributeConfig.map(item => ({
-                  attribute_key: item.attribute_key.value,
-                  color: item.color,
-                  decimal: item.decimal,
-                  label: item.label,
-                  unit: item.unit,
-                })),
-                config:
-                  widgetType === 'TIMESERIES'
-                    ? {
-                        aggregation: values.widgetSetting?.agg,
-                        timewindow: {
-                          interval: values.widgetSetting?.interval,
-                        },
-                        chartsetting: {
-                          start_date: new Date(
-                            values.widgetSetting
-                              ?.startDate as unknown as number,
-                          ).getTime(),
-                          end_date: new Date(
-                            values.widgetSetting?.endDate as unknown as number,
-                          ).getTime(),
-                          data_type: values.widgetSetting?.dataType,
-                        },
-                      }
-                    : null,
-              }
+              // const widget: z.infer<typeof widgetSchema> = {
+              //   title: values.title,
+              //   description: widgetCategory,
+              //   type: widgetType,
+              //   datasource: {
+              //     init_message: JSON.stringify(initMessage),
+              //     lastest_message:
+              //       widgetType === 'LASTEST'
+              //         ? JSON.stringify(lastestMessage)
+              //         : '',
+              //     realtime_message:
+              //       values.widgetSetting?.dataType === 'REALTIME'
+              //         ? JSON.stringify(realtimeMessage)
+              //         : '',
+              //     history_message:
+              //       values.widgetSetting?.dataType === 'HISTORY'
+              //         ? JSON.stringify(historyMessage)
+              //         : '',
+              //   },
+              //   attribute_config: values.attributeConfig.map(item => ({
+              //     attribute_key: item.attribute_key.value,
+              //     color: item.color,
+              //     decimal: item.decimal,
+              //     label: item.label,
+              //     unit: item.unit,
+              //   })),
+              //   config:
+              //     widgetType === 'TIMESERIES'
+              //       ? {
+              //           aggregation: values.widgetSetting?.agg,
+              //           timewindow: {
+              //             interval: values.widgetSetting?.interval,
+              //           },
+              //           chartsetting: {
+              //             start_date: new Date(
+              //               values.widgetSetting
+              //                 ?.startDate as unknown as number,
+              //             ).getTime(),
+              //             end_date: new Date(
+              //               values.widgetSetting?.endDate as unknown as number,
+              //             ).getTime(),
+              //             data_type: values.widgetSetting?.dataType,
+              //           },
+              //         }
+              //       : null,
+              // }
 
-              setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
+              // setWidgetList(prev => ({ ...prev, ...{ [widgetId]: widget } }))
 
-              close()
+              // close()
             })}
           >
             <>
@@ -905,7 +912,7 @@ export function CreateWidget({
                                         <CalendarIcon className="mr-2 h-4 w-4" />
                                         {value ? (
                                           <span>
-                                            {format(value, 'dd/MM/y')}
+                                            {format(value, 'dd/MM/y HH:mm:ss')}
                                           </span>
                                         ) : (
                                           <span>
@@ -929,7 +936,25 @@ export function CreateWidget({
                                         onSelect={onChange}
                                         numberOfMonths={1}
                                       />
-                                      <TimePicker />
+                                      <TimePicker
+                                        onChange={e =>
+                                          setValue(
+                                            'widgetSetting.startDate',
+                                            new Date(
+                                              new Date(
+                                                getValues(
+                                                  'widgetSetting.startDate',
+                                                ),
+                                              ).setHours(0, 0, 0, 0) +
+                                                e.hour * 60 * 60 * 1000 +
+                                                e.minute * 60 * 1000 +
+                                                e.second * 1000 +
+                                                e.millisecond,
+                                            ),
+                                          )
+                                        }
+                                        // value={value}
+                                      />
                                     </PopoverContent>
                                   </Popover>
                                 )

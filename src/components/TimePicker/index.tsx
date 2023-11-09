@@ -54,7 +54,6 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
     fieldProps: { ...fieldProps },
     labelProps,
   } = useTimeField(props, state, ref)
-  console.log('state', state)
 
   return (
     <div
