@@ -912,7 +912,8 @@ export function CreateWidget({
                                         <CalendarIcon className="mr-2 h-4 w-4" />
                                         {value ? (
                                           <span>
-                                            {format(value, 'dd/MM/y HH:mm:ss')}
+                                            {/* {format(value, 'dd/MM/y HH:mm:ss')} */}
+                                            {value}
                                           </span>
                                         ) : (
                                           <span>
@@ -953,7 +954,6 @@ export function CreateWidget({
                                             ),
                                           )
                                         }
-                                        // value={value}
                                       />
                                     </PopoverContent>
                                   </Popover>
@@ -996,7 +996,8 @@ export function CreateWidget({
                                         <CalendarIcon className="mr-2 h-4 w-4" />
                                         {value ? (
                                           <span>
-                                            {format(value, 'dd/MM/y')}
+                                            {/* {format(value, 'dd/MM/y HH:mm:ss')} */}
+                                            {value}
                                           </span>
                                         ) : (
                                           <span>

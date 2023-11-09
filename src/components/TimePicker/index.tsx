@@ -32,7 +32,7 @@ function DateSegment({ segment, state }: DateSegmentProps) {
       {...segmentProps}
       ref={ref}
       className={cn(
-        'focus:bg-accent focus:text-accent-foreground focus:rounded-[2px] focus:outline-none',
+        'focus:text-accent-foreground focus:rounded-[2px] focus:bg-primary-300 focus:bg-opacity-75 focus:outline-none',
         segment.type !== 'literal' ? 'px-[1px]' : '',
         segment.isPlaceholder ? 'text-muted-foreground' : '',
       )}
@@ -50,6 +50,7 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
     ...props,
     locale,
   })
+  console.log('state', state)
   const {
     fieldProps: { ...fieldProps },
     labelProps,
@@ -60,8 +61,7 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
       {...fieldProps}
       ref={ref}
       className={cn(
-        'inline-flex h-10 w-full flex-1 justify-center border-t bg-transparent px-3 py-2 text-body-sm focus-visible:outline-none',
-        // flex bg-white border border-gray-300 hover:border-gray-400 transition-colors rounded-md pr-8 focus-within:border-violet-600 focus-within:hover:border-violet-600 p-1
+        'mx-auto flex h-10 w-fit justify-center rounded-md border border-secondary-500 bg-transparent px-3 py-2 text-body-sm transition-colors focus-within:border-primary-300 hover:border-primary-300 focus-within:hover:border-primary-300 focus-visible:outline-none',
         props.isDisabled ? 'cursor-not-allowed opacity-50' : '',
       )}
     >
