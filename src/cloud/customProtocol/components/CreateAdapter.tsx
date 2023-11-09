@@ -356,46 +356,85 @@ export function CreateAdapter() {
               }))) ||
             []
           if (protocolType === 'mqtt') {
-            mutateAdapter({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'mqtt',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                host: values.host,
-                port: values.port,
-                schema: {
-                  fields,
-                },
-                configuration: {
-                  credentials: {
-                    username: values.configuration.credentials.username,
-                    password: values.configuration.credentials.password,
+            if (fields.length > 0) {
+              mutateAdapter({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'mqtt',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  host: values.host,
+                  port: values.port,
+                  schema: {
+                    fields,
                   },
-                  topic_filters: values.configuration.topic_filters.map(
-                    (topic: { topic: string }) => ({
-                      topic: topic.topic.trim(),
-                    }),
-                  ),
+                  configuration: {
+                    credentials: {
+                      username: values.configuration.credentials.username,
+                      password: values.configuration.credentials.password,
+                    },
+                    topic_filters: values.configuration.topic_filters.map(
+                      (topic: { topic: string }) => ({
+                        topic: topic.topic.trim(),
+                      }),
+                    ),
+                  },
                 },
-              },
-            })
+              })
+            } else {
+              mutateAdapter({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'mqtt',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  host: values.host,
+                  port: values.port,
+                  configuration: {
+                    credentials: {
+                      username: values.configuration.credentials.username,
+                      password: values.configuration.credentials.password,
+                    },
+                    topic_filters: values.configuration.topic_filters.map(
+                      (topic: { topic: string }) => ({
+                        topic: topic.topic.trim(),
+                      }),
+                    ),
+                  },
+                },
+              })
+            }
           } else {
-            mutateAdapter({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'tcp' | 'udp',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                schema: {
-                  fields,
+            if (fields.length > 0) {
+              mutateAdapter({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'tcp' | 'udp',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  schema: {
+                    fields,
+                  },
                 },
-              },
-            })
+              })
+            } else {
+              mutateAdapter({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'tcp' | 'udp',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service
+                },
+              })
+            }
           }
         }}
         schema={adapterSchema}
