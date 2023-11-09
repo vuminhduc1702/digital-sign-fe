@@ -94,8 +94,8 @@ export function UpdateThingService({
   // Resize console window
   const [isResizable, setIsResizable] = useState(false);
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
-  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
 
   const { id: projectId } = storage.getProject()
 
@@ -714,7 +714,7 @@ export function UpdateThingService({
                                     isUpdate={true}
                                   />
                                 </div>
-                                <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
+                                <div className="w-[8px] cursor-col-resize" onMouseDown={handleResize}></div>
                                 <div
                                   className={cn(
                                     'flex flex-col gap-2 md:col-span-1 w-[100%]',

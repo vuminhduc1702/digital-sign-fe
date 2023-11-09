@@ -99,10 +99,10 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   // Resize console window
   const [isResizable, setIsResizable] = useState(false);
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
-  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
-  const [codeConsoleHeight, setCodeConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 4) / 2)
-  const [resultConsoleHeight, setResultConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 4) / 2)
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+  const [codeConsoleHeight, setCodeConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 8) / 2)
+  const [resultConsoleHeight, setResultConsoleHeight] = useState((Number(consolePanelEle?.offsetHeight) - 8) / 2)
   const minWidthCode = 80
   const minWidthResult = 116
   const minHeightCode = 100
@@ -150,12 +150,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value: item.type === 'bool' && item.value === '' ? 'false' : String(item.value)
+      value: item.type === 'bool' && item.value === '' ? 'false' : item.value
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = String(item.value) || ''
+        dataRun[item.name] = item.value || ''
       })
       mutateExecuteService({
         data: dataRun,
@@ -188,8 +188,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setIsShowConsole(false)
     setInputTypeValue('')
     setViewMode('default')
-    setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
-    setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+    setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+    setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 8) / 2)
   }
 
   useEffect(() => {
@@ -209,8 +209,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setIsResizable(true)
   }
 
+  function handleMouseUp() {
+    setIsResizable(false);
+  }
+
   function handleMouseMove(event: MouseEvent) {
-    console.log(consolePanelEle?.offsetHeight)
     if (isResizable && !fullScreen) {
       let offsetCode = event.clientX - 660
       let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
@@ -228,10 +231,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
         setResultConsoleHeight(offsetResult)
       }
     }
-  }
-
-  function handleMouseUp() {
-    setIsResizable(false);
   }
 
   useEffect(() => {
@@ -538,7 +537,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
                   <div
                     className={cn(
-                      'flex gap-1 md:col-span-3 w-[100%]',
+                      'flex md:col-span-3 w-[100%]',
                       { 
                         'flex-col gap-2': fullScreen,
                         'md:grid-cols-6': viewMode !== 'default' 
@@ -657,9 +656,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     </div>
                     {
                       !fullScreen ? (
-                        <div className="w-[4px] h-[100%] cursor-col-resize" onMouseDown={handleResize}></div>
+                        <div className="w-[8px] h-[100%] cursor-col-resize" onMouseDown={handleResize}></div>
                       ) : (
-                        <div className="h-[4px] w-[100%] cursor-row-resize" onMouseDown={handleResize}></div>
+                        <div className="h-[8px] w-[100%] cursor-row-resize" onMouseDown={handleResize}></div>
                       )
                     }
                     <div
