@@ -73,8 +73,7 @@ export function EventServiceTable({ data, ...props }: EventServiceTableProps) {
       }),
       columnHelper.accessor('ts', {
         header: () => <span>{t('cloud:custom_protocol.service.time')}</span>,
-        cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
+        cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
       }),
       columnHelper.display({
