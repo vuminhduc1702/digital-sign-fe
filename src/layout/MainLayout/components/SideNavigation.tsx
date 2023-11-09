@@ -88,14 +88,23 @@ function SideNavigation() {
 
   return (
     <div className="px-8 py-7">
-      <div className="mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
-        <img
-          src={tongquanIcon}
-          alt="Cloud"
-          className="aspect-square w-[20px]"
-        />
-        <div>{t('sidebar:overview')}</div>
-      </div>
+      <NavLink to={`${PATHS.OVER_VIEW}/${projectId}`}>
+        <div
+          className={clsx(
+            'mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400',
+            {
+              'text-primary-400': value === 'overview',
+            },
+          )}
+        >
+          <img
+            src={tongquanIcon}
+            alt="Cloud"
+            className="aspect-square w-[20px]"
+          />
+          <div>{t('sidebar:overview')}</div>
+        </div>
+      </NavLink>
       <Accordion.Root
         type="single"
         collapsible
