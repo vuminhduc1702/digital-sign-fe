@@ -4,6 +4,7 @@ import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormMultipleFields,
   InputField,
   SelectField,
@@ -35,6 +36,8 @@ import { type InputService, type ThingService } from '../../types'
 import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/Tooltip'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -46,7 +49,6 @@ export const serviceThingSchema = z.object({
         .min(1, { message: 'Tên biến quá ngắn' })
         .max(30, { message: 'Tên biến quá dài' }),
       type: z.string().optional(),
-      value: z.string(),
     }),
   ),
   output: z.enum([
@@ -56,9 +58,7 @@ export const serviceThingSchema = z.object({
     'i64',
     'f32',
     'f64',
-    'bool',
-    'time',
-    'bin',
+    'bool'
   ] as const),
 })
 
@@ -96,6 +96,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
+  // Resize console window
+  const [isResizable, setIsResizable] = useState(false);
+  const consolePanelEle = document.getElementById('console-panel')
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
 
   const {
     mutate: mutateExecuteService,
@@ -139,12 +144,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value: item.value
+      value: item.type === 'bool' && item.value === '' ? 'false' : String(item.value)
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = item.value || ''
+        dataRun[item.name] = String(item.value) || ''
       })
       mutateExecuteService({
         data: dataRun,
@@ -175,6 +180,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setCodeOutput('')
     setFullScreen(false)
     setIsShowConsole(false)
+    setInputTypeValue('')
+    setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+    setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 4) / 2)
   }
 
   useEffect(() => {
@@ -189,6 +197,37 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
       window.removeEventListener('keydown', handleEsc)
     }
   }, [])
+
+  function handleResize() {
+    setIsResizable(true)
+  }
+
+  function handleMouseMove(event: MouseEvent) {
+    if (isResizable) {
+      let offsetCode = event.clientX - 660
+      let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
+      let minWidthCode = 80
+      let minWidthResult = 116
+      if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
+        setCodeConsoleWidth(offsetCode)
+        setResultConsoleWidth(offsetResult)
+      }
+    }
+  }
+
+  function handleMouseUp() {
+    setIsResizable(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizable]);
 
   return (
     <FormDialog
@@ -216,7 +255,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           }}
           name={['input']}
         >
-          {({ register, formState, setError }, { fields, append, remove }) => {
+          {({ register, formState, control, setError }, { fields, append, remove }) => {
             return (
               <div>
                 <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
@@ -225,6 +264,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     label={t('cloud:custom_protocol.service.name')}
                     error={formState.errors['name']}
                     registration={register('name')}
+                    onChange={(e) => {
+                      if (defaultJSType.includes(e.target.value)) {
+                        setError('name', {message: t('cloud:custom_protocol.service.service_input.name_error')})
+                      } else {
+                        setError('name', {message: ''})
+                      }
+                    }}
                   />
                   <SelectField
                     label={t(
@@ -279,13 +325,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   registration={register(
                                     `input.${index}.name` as const,
                                   )}
-                                  onChange={(e) => {
-                                    if (defaultJSType.includes(e.target.value)) {
-                                      setError(`input.${index}.name`, {message: t('cloud:custom_protocol.service.service_input.name_error')})
-                                    } else {
-                                      setError(`input.${index}.name`, {message: ''})
-                                    }
-                                  }}
                                 />
                                 <SelectField
                                   label={t(
@@ -306,19 +345,42 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   }}
                                 />
                               </div>
-                              <InputField
-                                label={t(
-                                  'cloud:custom_protocol.service.service_input.value',
-                                )}
-                                error={
-                                  formState.errors[`input`]?.[index]?.value
-                                }
-                                registration={register(
-                                  `input.${index}.value` as const,
-                                )}
-                                type={ numberInput.includes(fields[index].type as string) ? "number": "text" }
-                                pattern={ fields[index].type === 'bool' ? "[A-Za-z]" : ""}
-                              />
+                              {
+                                fields[index].type === 'bool' ? (
+                                  <FieldWrapper
+                                    label={t('cloud:custom_protocol.service.service_input.value')}
+                                    error={formState.errors[`input`]?.[index]?.value}
+                                  >
+                                    <Controller
+                                      control={control}
+                                      name={`input.${index}.value`}
+                                      render={({ field: { onChange, value, ...field } }) => {
+                                        return (
+                                          <Checkbox
+                                            {...field}
+                                            checked={Boolean(value)}
+                                            onCheckedChange={onChange}
+                                          />
+                                        )
+                                      }}
+                                    />
+                                    <span className='pl-3'>True</span>
+                                  </FieldWrapper>
+                                ) : (
+                                  <InputField
+                                    label={t(
+                                      'cloud:custom_protocol.service.service_input.value',
+                                    )}
+                                    error={
+                                      formState.errors[`input`]?.[index]?.value
+                                    }
+                                    registration={register(
+                                      `input.${index}.value` as const,
+                                    )}
+                                    type={ numberInput.includes(fields[index].type as string) ? "number": "text" }
+                                  />
+                                )
+                              }
                             </div>
                             <Button
                               type="button"
@@ -343,11 +405,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div
                       className="flex w-fit items-center"
                       onClick={() =>
-                        append({
-                          name: '',
-                          type: 'json',
-                          value: '',
-                        })
+                        {
+                          append({
+                            name: '',
+                            type: 'json',
+                            value: '',
+                          })
+                          setInputTypeValue('')
+                        }
                       }
                     >
                       <img
@@ -458,25 +523,26 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
                   <div
                     className={cn(
-                      'flex flex-col gap-2 ',
-                      {
-                        'grid grow grid-cols-1 gap-x-4 md:col-span-3 md:grid-cols-2':
-                          !fullScreen,
-                        'md:col-span-3': fullScreen,
+                      'flex gap-1 md:col-span-3 w-[100%]',
+                      { 
+                        'flex-col gap-2': fullScreen,
+                        'md:grid-cols-6': viewMode !== 'default' 
                       },
-                      { 'md:grid-cols-6': viewMode !== 'default' },
                     )}
+                    id='console-panel'
                   >
                     <div
                       className={cn(
-                        'flex flex-col gap-2 md:col-span-1',
+                        'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
                           'md:col-span-5':
                             viewMode === 'maximize_code' ||
                             viewMode === 'minimize_result',
+                          'md:col-span-1': viewMode === 'minimize_code',
                         },
-                        { 'md:col-span-1': viewMode === 'minimize_code' },
                       )}
+                      style={!fullScreen ? {'width': codeConsoleWidth} : {}}
+                      id='code-console'
                     >
                       <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">
@@ -573,9 +639,10 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         editorName={'code'}
                       />
                     </div>
+                    <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
                     <div
                       className={cn(
-                        'flex flex-col gap-2 md:col-span-1',
+                        'flex flex-col gap-2 md:col-span-1 w-[100%]',
                         {
                           'md:col-span-5':
                             viewMode == 'maximize_result' ||
@@ -587,6 +654,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             viewMode == 'maximize_code',
                         },
                       )}
+                      style={!fullScreen ? {'width': resultConsoleWidth} : {}}
+                      id='result-console'
                     >
                       <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                         <div className="flex gap-3">

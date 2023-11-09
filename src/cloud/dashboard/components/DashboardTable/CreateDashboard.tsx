@@ -9,12 +9,13 @@ import {
 } from '../../api/createDashboard'
 
 import { widgetListSchema } from '../Widget'
+import { nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const dashboardSchema = z.object({
-  title: z.string(),
+  title: nameSchema,
   configuration: z.object({
     description: z.string(),
     widgets: widgetListSchema.nullish(),

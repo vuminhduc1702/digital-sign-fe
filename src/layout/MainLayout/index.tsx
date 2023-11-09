@@ -38,7 +38,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
             </button>
           ) : null}
           {hasSideBar ? null : (
-            <div className="flex h-20 w-80 items-center justify-center border-b-[2px] border-solid bg-white">
+            <div className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white">
               <img
                 src={logo}
                 alt="logo"
@@ -59,9 +59,6 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <main
             className={cn(
               'flex w-full grow flex-col self-center overflow-y-auto p-3',
-              {
-                'w-2/3': !hasSideBar,
-              },
             )}
           >
             <Outlet />

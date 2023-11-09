@@ -11,6 +11,7 @@ import {
   SelectField,
   SelectDropdown,
   type SelectOption,
+  FieldWrapper,
 } from '~/components/Form'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -34,6 +35,8 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { Controller } from 'react-hook-form'
+import { Checkbox } from '~/components/Checkbox'
 
 export const eventConditionSchema = z.array(
   z.object({
@@ -90,18 +93,18 @@ export const createEventSchema = z
     name: nameSchema,
     action: eventActionSchema,
     interval: eventIntervalSchema,
-    status: z.string(),
+    status: z.boolean().optional(),
     retry: z.string(),
-    onClick: z.string(),
+    onClick: z.boolean(),
   })
   .and(
     z.discriminatedUnion('onClick', [
       z.object({
-        onClick: z.literal('true'),
+        onClick: z.literal(true),
         condition: z.tuple([]),
       }),
       z.object({
-        onClick: z.literal('false'),
+        onClick: z.literal(false),
         condition: eventConditionSchema,
       }),
     ]),
@@ -114,7 +117,7 @@ export interface IntervalData {
 export function CreateEvent() {
   const { t } = useTranslation()
 
-  const [onClickValue, setOnclickValue] = useState('false')
+  const [onClickValue, setOnclickValue] = useState(false)
   const [typeEvent, setTypeEvent] = useState('schedule')
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
@@ -201,6 +204,7 @@ export function CreateEvent() {
     ])
     setOrgValue(null)
     setGroupValue(null)
+    setTypeEvent('schedule')
   }
 
   const todoClicked = (e: any) => {
@@ -245,7 +249,7 @@ export function CreateEvent() {
       <FormMultipleFields<CreateEventDTO['data'], typeof createEventSchema>
         id="create-event"
         options={{
-          defaultValues: { onClick: 'false' },
+          defaultValues: { onClick: false },
         }}
         onSubmit={values => {
           const dataFilter = todos.filter(item => item.selected)
@@ -320,10 +324,10 @@ export function CreateEvent() {
               group_id: groupValue?.value || '',
               name: values.name,
               onClick:
-                typeEvent === 'event' ? values.onClick === 'true' : false,
-              condition: values.onClick === 'false' ? conditionArr : [],
+                typeEvent === 'event' ? values.onClick === true : false,
+              condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
-              status: values.status === 'true',
+              status: values.status === true,
               retry: values.retry ? parseInt(values.retry) : null,
               schedule: scheduleValue,
               interval,
@@ -405,31 +409,44 @@ export function CreateEvent() {
                       {formState?.errors?.org_id?.message}
                     </p> */}
                   </div>
-                  <SelectField
+                  <FieldWrapper
                     label={t('cloud:org_manage.event_manage.add_event.status')}
-                    // error={formState.errors['type']}
-                    registration={register('status')}
-                    options={[
-                      { value: true, label: 'Kích hoạt' },
-                      {
-                        value: false,
-                        label: 'Không kích hoạt',
-                      },
-                    ]}
-                  />
-                  <SelectField
-                    label={t(
-                      'cloud:org_manage.event_manage.add_event.condition.onClick',
-                    )}
-                    error={formState.errors['onClick']}
-                    registration={register('onClick')}
-                    disabled={typeEvent === 'schedule'}
-                    options={[
-                      { value: true, label: 'Có' },
-                      { value: false, label: 'Không' },
-                    ]}
-                    onChange={event => setOnclickValue(event.target.value)}
-                  />
+                    error={formState?.errors['status']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'status'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
+                  <FieldWrapper
+                    label={t('cloud:org_manage.event_manage.add_event.condition.onClick')}
+                    error={formState?.errors['onClick']}
+                  >
+                    <Controller
+                      control={control}
+                      name={'onClick'}
+                      render={({ field: { onChange, value, ...field } }) => {
+                        return (
+                          <Checkbox
+                            {...field}
+                            checked={value}
+                            onCheckedChange={onChange}
+                            disabled={typeEvent === 'schedule'}
+                            onChange={event => setOnclickValue(Boolean(event.currentTarget.value))}
+                          />
+                        )
+                      }}
+                    />
+                  </FieldWrapper>
                   <SelectField
                     label={t(
                       'cloud:org_manage.event_manage.add_event.type_event',
@@ -520,7 +537,7 @@ export function CreateEvent() {
                   </div>
                 </div>
               </div>
-              {onClickValue === 'false' && typeEvent === 'event' ? (
+              {onClickValue === false && typeEvent === 'event' ? (
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t(
@@ -539,7 +556,7 @@ export function CreateEvent() {
                   />
                 </div>
               ) : null}
-              {onClickValue === 'false' && typeEvent === 'event'
+              {onClickValue === false && typeEvent === 'event'
                 ? conditionFields.map((field, index) => {
                     return (
                       <section className="!mt-3 space-y-2" key={field.id}>

@@ -119,7 +119,7 @@ const SelfAccount = () => {
   })
 
   return (
-    <div className="flex h-full flex-col px-10 py-8">
+    <div className="flex h-full w-2/3 flex-col self-center py-8">
       <div className="flex items-center">
         <div
           className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"

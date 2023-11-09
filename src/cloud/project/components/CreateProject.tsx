@@ -240,7 +240,7 @@ export function CreateProject() {
                       ref={fileInputRef}
                       onChange={event => {
                         setUploadRestoreProjectErr('')
-                      const file = event.target.files[0]
+                        const file = event.target.files[0]
                         setRestoreProjectFileName(file.name)
                         const reader = new FileReader()
                         reader.readAsText(file)
@@ -261,21 +261,19 @@ export function CreateProject() {
                     />
                     <div className="flex items-center text-body-sm">
                       {restoreProjectFileName}
-                      {
-                        restoreProjectFileName ? (
-                          <div className="pl-4">
-                            <img
-                              height={12}
-                              width={12}
-                              src={btnRemoveIcon}
-                              className="text-secondary-700 hover:text-primary-400 cursor-pointer"
-                              onClick={() => {
-                                handleResetRestoreProject
-                              }}
-                            />
-                          </div>
-                        ) : (<></>)
-                      }
+                      {restoreProjectFileName ? (
+                        <div className="pl-4">
+                          <img
+                            height={12}
+                            width={12}
+                            src={btnRemoveIcon}
+                            className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                            onClick={handleResetRestoreProject}
+                          />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                     <p className="text-body-sm text-primary-400">
                       {uploadRestoreProjectErr}

@@ -10,6 +10,8 @@ import storage from '~/utils/storage'
 import { API_URL } from '~/config'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
 import { useCopyId } from '~/utils/hooks'
+import { Spinner } from '~/components/Spinner'
+import { useSpinDelay } from 'spin-delay'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -25,9 +27,10 @@ function Navbar() {
   const { t } = useTranslation()
 
   const { data: projectsData } = useProjects()
-  const { data: userInfoData } = useUserInfo({
+  const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
       useErrorBoundary: false,
+      suspense: false,
     },
   })
   const { data: userData } = useUser()
@@ -37,6 +40,11 @@ function Navbar() {
   const logout = useLogout()
 
   const handleCopyId = useCopyId()
+
+  const showSpinner = useSpinDelay(userInfoIsLoading, {
+    delay: 150,
+    minDuration: 300,
+  })
 
   return (
     <div className="flex w-full">
@@ -138,57 +146,70 @@ function Navbar() {
           <p className="text-white">{t('nav:support')}</p>
         </div>
 
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-            <div className="cursor-pointer">
-              <img
-                src={defaultUserIcon}
-                alt="User's avatar"
-                className="aspect-square w-[20px]"
-              />
-              <p className="text-white">
-                {t('nav:hello')}{' '}
-                {userInfoData?.name || userInfoData?.email?.split('@')[0]}
-              </p>
-              <SidebarDropDownIcon
-                width={12}
-                height={7}
-                viewBox="0 0 12 7"
-                className="text-white"
-              />
-            </div>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={5}
-            >
-              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                {userData ? (
+        {userInfoIsLoading ? (
+          <div className="flex items-center justify-center">
+            <Spinner
+              showSpinner={showSpinner}
+              size="md"
+              className="text-white"
+            />
+          </div>
+        ) : (
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+              <div className="cursor-pointer">
+                <img
+                  src={defaultUserIcon}
+                  alt="User's avatar"
+                  className="aspect-square w-[20px]"
+                />
+                <p className="text-white">
+                  {t('nav:hello')}{' '}
+                  {userInfoData?.name || userInfoData?.email?.split('@')[0]}
+                </p>
+                <SidebarDropDownIcon
+                  width={12}
+                  height={7}
+                  viewBox="0 0 12 7"
+                  className="text-white"
+                />
+              </div>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                sideOffset={5}
+              >
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                  {userData ? (
+                    <p
+                      className="cursor-pointer"
+                      onClick={() => handleCopyId(userData.device_token)}
+                    >
+                      {t('user:copy_device_token')}
+                    </p>
+                  ) : null}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.USER_INFO}>
+                    {t('cloud:custom_protocol.adapter.username')}
+                  </Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   <p
                     className="cursor-pointer"
-                    onClick={() => handleCopyId(userData.device_token)}
+                    onClick={() => logout.mutate({})}
                   >
-                    {t('user:copy_device_token')}
+                    {t('user:logout')}
                   </p>
-                ) : null}
-              </DropdownMenu.Item>
-              <DropdownMenu.Item
-                asChild
-                className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              >
-                <Link to={PATHS.USER_INFO}>
-                  {t('cloud:custom_protocol.adapter.username')}
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-                  {t('user:logout')}
-                </p>
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
+        )}
       </nav>
     </div>
   )

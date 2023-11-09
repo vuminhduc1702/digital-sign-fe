@@ -1,13 +1,14 @@
 import Axios, {
+  type AxiosError,
   type AxiosHeaders,
   type InternalAxiosRequestConfig,
 } from 'axios'
 
 import { API_URL } from '~/config'
-import { useNotificationStore } from '~/stores/notifications'
 import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
+import i18n from '~/i18n'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const userStorage = storage.getToken()
@@ -36,43 +37,13 @@ export const axiosUploadFile = Axios.create({
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
-  response => {
-    // console.log('response', response)
+  response => response.data,
+  (error: AxiosError) => {
+    console.error('res error: ', error)
     let message = ''
-    const errCode = response?.data?.code
-    const errMessage = response?.data?.message
-    if (errMessage === 'malformed entity specification') {
-      message = 'Dữ liệu truyền lên không hợp lệ'
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: 'Lỗi',
-        message,
-      })
-
-      return Promise.reject(response.data)
-    }
-    if (errCode != null && errCode !== 0) {
-      message = 'Lỗi! Vui lòng thử lại'
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: 'Lỗi',
-        message,
-      })
-
-      return Promise.reject(response.data)
-    } else {
-      return response.data
-    }
-  },
-  error => {
-    console.error('error', error)
-    let message = ''
-    const errMessage =
-      error.response?.data?.message || error.response?.data?.error
-
     switch (error.response?.status) {
       case 400:
-        message = errMessage || 'Dữ liệu truyền lên không hợp lệ'
+        message = i18n.t('error:server_res.malformed_data')
         break
       case 401:
         if (window.location.pathname === PATHS.HOME) {
@@ -80,25 +51,27 @@ axios.interceptors.response.use(
         }
         return logoutFn()
       case 403:
-        message = errMessage || 'Bạn không có quyền truy cập vào trang này'
+        message = i18n.t('error:server_res.authorization')
+        break
+      case 404:
+        message = i18n.t('error:server_res.notfound')
         break
       case 500:
-        message = errMessage || 'Server đang bị lỗi, vui lòng thử lại'
+        message = i18n.t('error:server_res.server')
         break
       default:
-        message = errMessage || error.message
+        message = error.message
     }
 
-    if (window.location.pathname === PATHS.HOME) {
-      return
+    if (
+      (error.response?.data as { error: string })?.error ===
+      'malformed entity specification'
+    ) {
+      message = i18n.t('error:server_res.malformed_data')
     }
 
-    useNotificationStore.getState().addNotification({
-      type: 'error',
-      title: 'Lỗi',
-      message,
-    })
+    const customError = { ...error, message }
 
-    return Promise.reject(error)
+    return Promise.reject(customError)
   },
 )

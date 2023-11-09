@@ -48,7 +48,7 @@ export function UpdateThing({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-            {t('cloud:custom_protocol.thing.edit')}
+              {t('cloud:custom_protocol.thing.edit')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -61,8 +61,8 @@ export function UpdateThing({
             </div>
           </div>
           <Form<UpdateThingDTO['data'], typeof updateThingSchema>
-            id="create-entityThing"
-            className="flex flex-col justify-between mt-2"
+            id="update-entityThing"
+            className="mt-2 flex flex-col justify-between"
             onSubmit={values => {
               mutate({
                 data: {
@@ -108,7 +108,7 @@ export function UpdateThing({
           />
           <Button
             isLoading={isLoading}
-            form="create-entityThing"
+            form="update-entityThing"
             type="submit"
             size="md"
             className="bg-primary-400"
