@@ -185,8 +185,8 @@ export function LayoutOverView() {
           </div>
         </div>
       </div>
-      <div className="flex justify-between rounded-md bg-secondary-500 px-2 py-4">
-        <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-4">
+      <div className="flex max-h-[50vh] justify-between overflow-auto rounded-md bg-secondary-500 px-4 py-6">
+        <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3"> 
           {arr?.map(item => {
             return (
               <div
@@ -230,8 +230,8 @@ export function LayoutOverView() {
           })}
         </div>
       </div>
-      <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-        <div className="rounded-md bg-secondary-500 px-2 py-4">
+      <div className="mt-4 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
+        <div className="max-h-[30vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -272,7 +272,7 @@ export function LayoutOverView() {
           </div>
           {type === 'Last viewed' ? <div>Hahahahaha</div> : <div>Heeee</div>}
         </div>
-        <div className="rounded-md bg-secondary-500 px-2 py-4">
+        <div className="max-h-[25vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">Quick Link</p>
           </div>
