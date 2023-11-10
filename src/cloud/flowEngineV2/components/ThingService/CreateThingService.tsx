@@ -244,7 +244,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     if (isResizable && !fullScreen) {
       let offsetCode = event.clientX - 660
       let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
-
       if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
         setCodeConsoleWidth(offsetCode)
         setResultConsoleWidth(offsetResult)

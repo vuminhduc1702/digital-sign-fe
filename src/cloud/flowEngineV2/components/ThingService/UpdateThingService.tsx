@@ -94,12 +94,8 @@ export function UpdateThingService({
   // Resize console window
   const [isResizable, setIsResizable] = useState(false)
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState(
-    (Number(consolePanelEle?.offsetWidth) - 4) / 2,
-  )
-  const [resultConsoleWidth, setResultConsoleWidth] = useState(
-    (Number(consolePanelEle?.offsetWidth) - 4) / 2,
-  )
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
 
   const { id: projectId } = storage.getProject()
 
