@@ -50,7 +50,6 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
     ...props,
     locale,
   })
-  console.log('state', state)
   const {
     fieldProps: { ...fieldProps },
     labelProps,

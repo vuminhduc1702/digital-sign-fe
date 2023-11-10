@@ -62,7 +62,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           {...props}
           type={type}
           className={cn(
-            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:border-2 focus:border-focus-400 focus:outline-none focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500 sm:text-body-sm',
+            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
             className,
             { 'pl-8': startIcon, 'pr-8': endIcon },
           )}
