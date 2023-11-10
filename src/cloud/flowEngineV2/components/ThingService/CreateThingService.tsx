@@ -49,6 +49,7 @@ export const serviceThingSchema = z.object({
         .min(1, { message: 'Tên biến quá ngắn' })
         .max(30, { message: 'Tên biến quá dài' }),
       type: z.string().optional(),
+      value: z.string().optional(),
     }),
   ),
   output: z.enum([
@@ -150,12 +151,22 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value: item.type === 'bool' && item.value === '' ? 'false' : item.value
+      value:
+        item.type === 'bool' && item.value === ''
+          ? 'false'
+          : numberInput.includes(item.type as string)
+          ? parseInt(item.value)
+          : item.value,
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = item.value || ''
+        dataRun[item.name] =
+          item.type === 'bool' && item.value === ''
+            ? 'false'
+            : numberInput.includes(item.type as string)
+            ? parseInt(item.value)
+            : item.value
       })
       mutateExecuteService({
         data: dataRun,

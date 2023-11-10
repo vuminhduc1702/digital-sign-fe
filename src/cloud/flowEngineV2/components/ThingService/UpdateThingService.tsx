@@ -92,10 +92,14 @@ export function UpdateThingService({
   const [isShowConsole, setIsShowConsole] = useState(false)
   const [, setInputTypeValue] = useState('')
   // Resize console window
-  const [isResizable, setIsResizable] = useState(false);
+  const [isResizable, setIsResizable] = useState(false)
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
-  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState(
+    (Number(consolePanelEle?.offsetWidth) - 4) / 2,
+  )
+  const [resultConsoleWidth, setResultConsoleWidth] = useState(
+    (Number(consolePanelEle?.offsetWidth) - 4) / 2,
+  )
 
   const { id: projectId } = storage.getProject()
 
@@ -116,9 +120,11 @@ export function UpdateThingService({
   useEffect(() => {
     if (isSuccessExecute) {
       if (typeof executeService?.data === 'string') {
-        setCodeOutput(executeService?.data  || executeService?.message)
+        setCodeOutput(executeService?.data || executeService?.message)
       } else {
-        const dataToString = JSON.stringify(executeService?.data  || executeService?.message)
+        const dataToString = JSON.stringify(
+          executeService?.data || executeService?.message,
+        )
         setCodeOutput(dataToString)
       }
     }
@@ -132,12 +138,22 @@ export function UpdateThingService({
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value: String(item.value)
+      value:
+        item.type === 'bool' && item.value === ''
+          ? 'false'
+          : numberInput.includes(item.type as string)
+          ? parseInt(item.value)
+          : item.value,
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
       data.input.map(item => {
-        dataRun[item.name] = String(item.value) || ''
+        dataRun[item.name] =
+          item.type === 'bool' && item.value === ''
+            ? 'false'
+            : numberInput.includes(item.type as string)
+            ? parseInt(item.value)
+            : item.value
       })
       mutateExcuteService({
         data: dataRun,
@@ -208,18 +224,18 @@ export function UpdateThingService({
   }
 
   function handleMouseUp() {
-    setIsResizable(false);
+    setIsResizable(false)
   }
 
   useEffect(() => {
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
 
     return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isResizable]);
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
+  }, [isResizable])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -234,7 +250,7 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -282,11 +298,11 @@ export function UpdateThingService({
                     />
                   </div>
                   <Tab.Group>
-                    <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
+                    <Tab.List className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
                       <Tab
                         className={({ selected }) =>
                           clsx(
-                            'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                            'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
                             { 'text-primary-400': selected },
                           )
                         }
@@ -298,7 +314,7 @@ export function UpdateThingService({
                       <Tab
                         className={({ selected }) =>
                           clsx(
-                            'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                            'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
                             { 'text-primary-400': selected },
                           )
                         }
@@ -326,7 +342,7 @@ export function UpdateThingService({
                               )}
                             >
                               <div className="relative flex flex-col gap-2 md:col-span-1">
-                                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
                                   <div className="flex gap-3">
                                     <p className="text-table-header">
                                       {t('cloud:custom_protocol.service.input')}
@@ -382,56 +398,76 @@ export function UpdateThingService({
                                             )}
                                             options={outputList}
                                             className="h-9 pl-2 pr-2"
-                                            onChange={(e) => {
+                                            onChange={e => {
                                               setInputTypeValue(e.target.value)
-                                              fields[index].type = e.target.value
+                                              fields[index].type =
+                                                e.target.value
                                             }}
                                           />
                                         </div>
-                                        {
-                                          fields[index].type === 'bool' ? (
-                                            <FieldWrapper
-                                              label={t('cloud:custom_protocol.service.service_input.value')}
-                                              error={formState.errors[`input`]?.[index]?.value}
-                                            >
-                                              <Controller
-                                                control={control}
-                                                name={`input.${index}.value`}
-                                                render={({ field: { onChange, value, ...field } }) => {
-                                                  return (
-                                                    <Checkbox
-                                                      {...field}
-                                                      checked={(value+'').toLowerCase() === 'true'}
-                                                      onCheckedChange={onChange}
-                                                    />
-                                                  )
-                                                }}
-                                              />
-                                              <span className='pl-3'>True</span>
-                                            </FieldWrapper>
-                                          ) : (
-                                            <InputField
-                                              label={t(
-                                                'cloud:custom_protocol.service.service_input.value',
-                                              )}
-                                              error={
-                                                formState.errors[`input`]?.[index]
-                                                  ?.value
-                                              }
-                                              registration={register(
-                                                `input.${index}.value` as const,
-                                              )}
-                                              type={ numberInput.includes(fields[index].type as string) ? 'number' : 'text' }
+                                        {fields[index].type === 'bool' ? (
+                                          <FieldWrapper
+                                            label={t(
+                                              'cloud:custom_protocol.service.service_input.value',
+                                            )}
+                                            error={
+                                              formState.errors[`input`]?.[index]
+                                                ?.value
+                                            }
+                                          >
+                                            <Controller
+                                              control={control}
+                                              name={`input.${index}.value`}
+                                              render={({
+                                                field: {
+                                                  onChange,
+                                                  value,
+                                                  ...field
+                                                },
+                                              }) => {
+                                                return (
+                                                  <Checkbox
+                                                    {...field}
+                                                    checked={
+                                                      (
+                                                        value + ''
+                                                      ).toLowerCase() === 'true'
+                                                    }
+                                                    onCheckedChange={onChange}
+                                                  />
+                                                )
+                                              }}
                                             />
-                                          )
-                                        }
+                                            <span className="pl-3">True</span>
+                                          </FieldWrapper>
+                                        ) : (
+                                          <InputField
+                                            label={t(
+                                              'cloud:custom_protocol.service.service_input.value',
+                                            )}
+                                            error={
+                                              formState.errors[`input`]?.[index]
+                                                ?.value
+                                            }
+                                            registration={register(
+                                              `input.${index}.value` as const,
+                                            )}
+                                            type={
+                                              numberInput.includes(
+                                                fields[index].type as string,
+                                              )
+                                                ? 'number'
+                                                : 'text'
+                                            }
+                                          />
+                                        )}
                                       </div>
                                       <Button
                                         type="button"
                                         size="square"
                                         variant="none"
                                         className={cn(
-                                          'h-9 hover:bg-secondary-500',
+                                          'hover:bg-secondary-500 h-9',
                                           {
                                             '!justify-center': fullScreen,
                                           },
@@ -450,16 +486,14 @@ export function UpdateThingService({
                                 </div>
                                 <div
                                   className="flex w-fit items-center"
-                                  onClick={() =>
-                                    {
-                                      append({
-                                        name: '',
-                                        type: 'json',
-                                        value: '',
-                                      })
-                                      setInputTypeValue('')
-                                    }
-                                  }
+                                  onClick={() => {
+                                    append({
+                                      name: '',
+                                      type: 'json',
+                                      value: '',
+                                    })
+                                    setInputTypeValue('')
+                                  }}
                                 >
                                   <img
                                     src={btnAddIcon}
@@ -495,7 +529,7 @@ export function UpdateThingService({
                                   </div>
                                 </div>
                                 <div className="mt-1.5 flex flex-col gap-y-3">
-                                  <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                                  <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
                                     <div className="flex gap-3 ">
                                       <p className="text-table-header">
                                         {t(
@@ -526,7 +560,7 @@ export function UpdateThingService({
                                               </TooltipTrigger>
                                               <TooltipContent side="right">
                                                 <div>
-                                                  <div className="mb-4 text-table-header">
+                                                  <div className="text-table-header mb-4">
                                                     {item.name}
                                                   </div>
                                                   <div>
@@ -590,17 +624,17 @@ export function UpdateThingService({
                               </div>
                               <div
                                 className={cn(
-                                  'flex gap-1 md:col-span-3 w-[100%]',
-                                  { 
+                                  'flex w-[100%] gap-1 md:col-span-3',
+                                  {
                                     'flex-col gap-2': fullScreen,
-                                    'md:grid-cols-6': viewMode !== 'default' 
+                                    'md:grid-cols-6': viewMode !== 'default',
                                   },
                                 )}
-                                id='console-panel'
+                                id="console-panel"
                               >
                                 <div
                                   className={cn(
-                                    'flex flex-col gap-2 md:col-span-1 w-[100%]',
+                                    'flex w-[100%] flex-col gap-2 md:col-span-1',
                                     {
                                       'md:col-span-5':
                                         viewMode === 'maximize_code' ||
@@ -611,10 +645,14 @@ export function UpdateThingService({
                                         viewMode === 'minimize_code',
                                     },
                                   )}
-                                  style={!fullScreen ? {'width': codeConsoleWidth} : {}}
-                                  id='code-console'
+                                  style={
+                                    !fullScreen
+                                      ? { width: codeConsoleWidth }
+                                      : {}
+                                  }
+                                  id="code-console"
                                 >
-                                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                  <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
                                         {t(
@@ -633,7 +671,7 @@ export function UpdateThingService({
                                           />
                                         }
                                       >
-                                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                           <div className="p-2">
                                             <div
                                               className="hover:background py-1 hover:cursor-pointer"
@@ -716,10 +754,13 @@ export function UpdateThingService({
                                     isUpdate={true}
                                   />
                                 </div>
-                                <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
+                                <div
+                                  className="w-[4px] cursor-col-resize"
+                                  onMouseDown={handleResize}
+                                ></div>
                                 <div
                                   className={cn(
-                                    'flex flex-col gap-2 md:col-span-1 w-[100%]',
+                                    'flex w-[100%] flex-col gap-2 md:col-span-1',
                                     {
                                       'md:col-span-5':
                                         viewMode == 'maximize_result' ||
@@ -731,10 +772,14 @@ export function UpdateThingService({
                                         viewMode == 'maximize_code',
                                     },
                                   )}
-                                  style={!fullScreen ? {'width': resultConsoleWidth} : {}}
-                                  id='result-console'
+                                  style={
+                                    !fullScreen
+                                      ? { width: resultConsoleWidth }
+                                      : {}
+                                  }
+                                  id="result-console"
                                 >
-                                  <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                  <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
                                         {t(
@@ -753,7 +798,7 @@ export function UpdateThingService({
                                           />
                                         }
                                       >
-                                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                           <div className="p-2">
                                             <div
                                               className="py-1 hover:cursor-pointer"
@@ -834,7 +879,7 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
