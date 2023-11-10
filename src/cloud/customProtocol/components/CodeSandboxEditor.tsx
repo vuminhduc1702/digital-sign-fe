@@ -6,7 +6,7 @@ import {
   useSandpack,
 } from '@codesandbox/sandpack-react'
 import { githubLight } from '@codesandbox/sandpack-themes'
-import { useEffect, useState } from 'react'
+import { CSSProperties, useEffect, useState } from 'react'
 import { cn } from '~/utils/misc'
 
 type CodeSandboxEditorProps = {
@@ -23,7 +23,7 @@ type CodeSandboxEditorProps = {
   editorName?: string
   isUpdate?: boolean
   showRunButton?: boolean
-}
+  }
 
 type SimpleCodeProps = {
   onChangeSimple: (e: string) => void
@@ -53,7 +53,7 @@ export function CodeSandboxEditor({
   editorName,
   isUpdate,
   showRunButton,
-}: CodeSandboxEditorProps) {
+  }: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
     '/index.js': {
@@ -107,6 +107,7 @@ export function CodeSandboxEditor({
           showLineNumbers
           readOnly={readOnly}
           showRunButton={showRunButton}
+          wrapContent={true}
         />
         {isShowLog && (
           <SandpackConsole

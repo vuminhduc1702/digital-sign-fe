@@ -211,6 +211,10 @@ export function UpdateUser({
               org_id: option?.value || '',
               role_id: role?.value || '',
               phone: values.phone,
+              province: values.province,
+              district: values.district,
+              ward: values.ward,
+              full_address: values.full_address
             },
             userId,
           })
