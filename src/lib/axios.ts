@@ -37,7 +37,25 @@ export const axiosUploadFile = Axios.create({
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
-  response => response.data,
+  response => {
+    let message = ''
+    const errCode = response?.data?.code
+    const errMessage = response?.data?.message
+    if (errMessage === 'malformed entity specification') {
+      message = i18n.t('error:server_res.malformed_data')
+      const customError = { ...response?.data, message }
+
+      return Promise.reject(customError)
+    }
+    if (errCode != null && errCode !== 0) {
+      message = errMessage ?? i18n.t('error:server_res.server')
+      const customError = { ...response?.data, message }
+
+      return Promise.reject(customError)
+    } else {
+      return response.data
+    }
+  },
   (error: AxiosError) => {
     console.error('res error: ', error)
     let message = ''

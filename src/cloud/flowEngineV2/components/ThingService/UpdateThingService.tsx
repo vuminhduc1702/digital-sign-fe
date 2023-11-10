@@ -105,7 +105,7 @@ export function UpdateThingService({
 
   const { mutate, isLoading, isSuccess } = useUpdateService()
   const {
-    mutate: mutateExcuteService,
+    mutate: mutateExecuteService,
     data: executeService,
     isSuccess: isSuccessExecute,
     isLoading: isLoadingExecute,
@@ -138,12 +138,12 @@ export function UpdateThingService({
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      value:
-        item.type === 'bool' && item.value === ''
-          ? 'false'
-          : numberInput.includes(item.type as string)
-          ? parseInt(item.value)
-          : item.value,
+      // value:
+      //   item.type === 'bool' && item.value === ''
+      //     ? 'false'
+      //     : numberInput.includes(item.type as string)
+      //     ? parseInt(item.value)
+      //     : item.value,
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
@@ -155,7 +155,7 @@ export function UpdateThingService({
             ? parseInt(item.value)
             : item.value
       })
-      mutateExcuteService({
+      mutateExecuteService({
         data: dataRun,
         thingId,
         projectId,
@@ -250,7 +250,7 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -298,11 +298,11 @@ export function UpdateThingService({
                     />
                   </div>
                   <Tab.Group>
-                    <Tab.List className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
+                    <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
                       <Tab
                         className={({ selected }) =>
                           clsx(
-                            'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
+                            'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                             { 'text-primary-400': selected },
                           )
                         }
@@ -314,7 +314,7 @@ export function UpdateThingService({
                       <Tab
                         className={({ selected }) =>
                           clsx(
-                            'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
+                            'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                             { 'text-primary-400': selected },
                           )
                         }
@@ -342,7 +342,7 @@ export function UpdateThingService({
                               )}
                             >
                               <div className="relative flex flex-col gap-2 md:col-span-1">
-                                <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+                                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                   <div className="flex gap-3">
                                     <p className="text-table-header">
                                       {t('cloud:custom_protocol.service.input')}
@@ -397,7 +397,7 @@ export function UpdateThingService({
                                               `input.${index}.type` as const,
                                             )}
                                             options={outputList}
-                                            className="h-9 pl-2 pr-2"
+                                            className="h-9 px-2"
                                             onChange={e => {
                                               setInputTypeValue(e.target.value)
                                               fields[index].type =
@@ -414,6 +414,8 @@ export function UpdateThingService({
                                               formState.errors[`input`]?.[index]
                                                 ?.value
                                             }
+                                            className="w-fit"
+                                            classchild="flex items-center gap-x-3"
                                           >
                                             <Controller
                                               control={control}
@@ -428,17 +430,14 @@ export function UpdateThingService({
                                                 return (
                                                   <Checkbox
                                                     {...field}
-                                                    checked={
-                                                      (
-                                                        value + ''
-                                                      ).toLowerCase() === 'true'
-                                                    }
+                                                    checked={value as boolean}
                                                     onCheckedChange={onChange}
+                                                    defaultChecked={false}
                                                   />
                                                 )
                                               }}
                                             />
-                                            <span className="pl-3">True</span>
+                                            <span>True</span>
                                           </FieldWrapper>
                                         ) : (
                                           <InputField
@@ -467,7 +466,7 @@ export function UpdateThingService({
                                         size="square"
                                         variant="none"
                                         className={cn(
-                                          'hover:bg-secondary-500 h-9',
+                                          'h-9 hover:bg-secondary-500',
                                           {
                                             '!justify-center': fullScreen,
                                           },
@@ -529,7 +528,7 @@ export function UpdateThingService({
                                   </div>
                                 </div>
                                 <div className="mt-1.5 flex flex-col gap-y-3">
-                                  <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
+                                  <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                                     <div className="flex gap-3 ">
                                       <p className="text-table-header">
                                         {t(
@@ -560,7 +559,7 @@ export function UpdateThingService({
                                               </TooltipTrigger>
                                               <TooltipContent side="right">
                                                 <div>
-                                                  <div className="text-table-header mb-4">
+                                                  <div className="mb-4 text-table-header">
                                                     {item.name}
                                                   </div>
                                                   <div>
@@ -652,7 +651,7 @@ export function UpdateThingService({
                                   }
                                   id="code-console"
                                 >
-                                  <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+                                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
                                         {t(
@@ -671,7 +670,7 @@ export function UpdateThingService({
                                           />
                                         }
                                       >
-                                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                           <div className="p-2">
                                             <div
                                               className="hover:background py-1 hover:cursor-pointer"
@@ -779,7 +778,7 @@ export function UpdateThingService({
                                   }
                                   id="result-console"
                                 >
-                                  <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+                                  <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                     <div className="flex gap-3">
                                       <p className="text-table-header">
                                         {t(
@@ -798,7 +797,7 @@ export function UpdateThingService({
                                           />
                                         }
                                       >
-                                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                           <div className="p-2">
                                             <div
                                               className="py-1 hover:cursor-pointer"
@@ -879,7 +878,7 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
