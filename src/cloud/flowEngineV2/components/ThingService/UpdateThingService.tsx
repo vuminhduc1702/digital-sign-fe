@@ -94,8 +94,8 @@ export function UpdateThingService({
   // Resize console window
   const [isResizable, setIsResizable] = useState(false);
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
-  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
+  const [resultConsoleWidth, setResultConsoleWidth] = useState((Number(consolePanelEle?.offsetWidth) - 4) / 2)
 
   const { id: projectId } = storage.getProject()
 
@@ -116,9 +116,9 @@ export function UpdateThingService({
   useEffect(() => {
     if (isSuccessExecute) {
       if (typeof executeService?.data === 'string') {
-        setCodeOutput(executeService?.data)
+        setCodeOutput(executeService?.data  || executeService?.message)
       } else {
-        const dataToString = JSON.stringify(executeService?.data)
+        const dataToString = JSON.stringify(executeService?.data  || executeService?.message)
         setCodeOutput(dataToString)
       }
     }
@@ -602,11 +602,13 @@ export function UpdateThingService({
                                   className={cn(
                                     'flex flex-col gap-2 md:col-span-1 w-[100%]',
                                     {
-                                      'w-[85%]':
-                                        (viewMode === 'maximize_code' ||
-                                        viewMode === 'minimize_result') && !fullScreen,
-                                      'w-[15%]': viewMode === 'minimize_code' && !fullScreen,
-                                      'w-[100%]': viewMode === 'default'
+                                      'md:col-span-5':
+                                        viewMode === 'maximize_code' ||
+                                        viewMode === 'minimize_result',
+                                    },
+                                    {
+                                      'md:col-span-1':
+                                        viewMode === 'minimize_code',
                                     },
                                   )}
                                   style={!fullScreen ? {'width': codeConsoleWidth} : {}}
@@ -714,19 +716,19 @@ export function UpdateThingService({
                                     isUpdate={true}
                                   />
                                 </div>
-                                <div className="w-[8px] cursor-col-resize" onMouseDown={handleResize}></div>
+                                <div className="w-[4px] cursor-col-resize" onMouseDown={handleResize}></div>
                                 <div
                                   className={cn(
                                     'flex flex-col gap-2 md:col-span-1 w-[100%]',
                                     {
-                                      'w-[85%]':
-                                        (viewMode == 'maximize_result' ||
-                                        viewMode == 'minimize_code') && !fullScreen,
+                                      'md:col-span-5':
+                                        viewMode == 'maximize_result' ||
+                                        viewMode == 'minimize_code',
                                     },
                                     {
-                                      'w-[15%]':
-                                        (viewMode == 'minimize_result' ||
-                                        viewMode == 'maximize_code') && !fullScreen,
+                                      'md:col-span-1':
+                                        viewMode == 'minimize_result' ||
+                                        viewMode == 'maximize_code',
                                     },
                                   )}
                                   style={!fullScreen ? {'width': resultConsoleWidth} : {}}

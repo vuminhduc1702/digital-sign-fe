@@ -120,9 +120,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   useEffect(() => {
     if (isSuccessExecute) {
       if (typeof executeService?.data === 'string') {
-        setCodeOutput(executeService?.data)
+        setCodeOutput(executeService?.data || executeService?.message)
       } else {
-        const dataToString = JSON.stringify(executeService?.data)
+        const dataToString = JSON.stringify(executeService?.data || executeService?.message)
         setCodeOutput(dataToString)
       }
     }
