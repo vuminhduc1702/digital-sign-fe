@@ -539,8 +539,8 @@ export function UpdateThingService({
                                   </div>
                                   <div
                                     className={cn('mt-0 overflow-auto', {
-                                      'max-h-44': !fullScreen,
-                                      'max-h-52': fullScreen,
+                                      'max-h-52': !fullScreen,
+                                      'max-h-96': fullScreen,
                                     })}
                                   >
                                     {thingServiceDataProps?.map(item => {

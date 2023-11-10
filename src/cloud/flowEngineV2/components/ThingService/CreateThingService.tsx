@@ -487,7 +487,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           label={t('cloud:custom_protocol.service.note')}
                           error={formState.errors['description']}
                           registration={register('description')}
-                          rows={5}
+                          rows={2}
                         />
                       </div>
                       <div className="flex items-center gap-2">
@@ -508,8 +508,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       </div>
                       <div
                         className={cn('mt-0 overflow-auto', {
-                          'max-h-44': !fullScreen,
-                          'max-h-52': fullScreen,
+                          'max-h-52': !fullScreen,
+                          'max-h-96': fullScreen,
                         })}
                       >
                         {thingServiceData?.map(item => {
