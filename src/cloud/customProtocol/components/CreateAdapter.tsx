@@ -89,7 +89,7 @@ export const adapterSchema = z
             start_byte: z.string(),
             length_byte: z.string(),
           }),
-        ),
+        ).optional(),
       }),
     ]),
   )

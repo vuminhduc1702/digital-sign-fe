@@ -207,8 +207,9 @@ export function UpdateAdapter({
               end_byte:
                 parseInt(item?.start_byte) + parseInt(item?.length_byte),
             }))
-          if (protocolTypeRef.current !== protocolType) {
-            if (protocolType === 'mqtt') {
+
+          if (protocolType === 'mqtt') {
+            if (fields.length > 0) {
               mutate({
                 data: {
                   project_id: projectId,
@@ -241,6 +242,33 @@ export function UpdateAdapter({
                 data: {
                   project_id: projectId,
                   name: values.name,
+                  protocol: values.protocol as 'mqtt',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service,
+                  host: values.host,
+                  port: values.port,
+                  configuration: {
+                    credentials: {
+                      username: values.configuration.credentials.username,
+                      password: values.configuration.credentials.password,
+                    },
+                    topic_filters: values.configuration.topic_filters.map(
+                      (topic: { topic: string }) => ({
+                        topic: topic.topic.trim(),
+                      }),
+                    ),
+                  },
+                },
+                id,
+              })
+            }
+          } else {
+            if (fields.length > 0) {
+              mutate({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
                   protocol: values.protocol as 'tcp' | 'udp',
                   content_type: values.content_type,
                   thing_id: values.thing_id,
@@ -248,6 +276,18 @@ export function UpdateAdapter({
                   schema: {
                     fields,
                   },
+                },
+                id,
+              })
+            } else {
+              mutate({
+                data: {
+                  project_id: projectId,
+                  name: values.name,
+                  protocol: values.protocol as 'tcp' | 'udp',
+                  content_type: values.content_type,
+                  thing_id: values.thing_id,
+                  handle_service: values.handle_service
                 },
                 id,
               })
