@@ -12,6 +12,7 @@ import { Button } from '~/components/Button'
 import storage from '~/utils/storage'
 import { PATHS } from '~/routes/PATHS'
 import { Link } from '~/components/Link'
+import { useGetDashboards } from '~/cloud/dashboard/api'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -26,6 +27,7 @@ export function LayoutOverView() {
     {
       title: 'Giải pháp Fleet Management',
       img: SmartTracking,
+      content: "Giải pháp quản lý đội xe giúp bạn quản lý hoạt động của đội xe, dẫn đến giảm chi phí, cải thiện hiệu quả và nâng cao tính tuân thủ. Giải pháp quản lý đội xe phù hợp có thể là công cụ trong việc điều phối các hoạt động quản lý đội xe của bạn. <br>Chức năng chính: <br>- Cảnh báo vùng an toàn qua SMS hoặc App Notification <br>- Cảnh báo pin yếu qua SMS hoặc App Notification<br>- Định vị được vị trí qua bản tin thiết bị bắn lên"
     },
     {
       title: 'Giải pháp Asset Management',
@@ -116,6 +118,13 @@ export function LayoutOverView() {
     },
   ]
 
+  const { data: dashboardData } = useGetDashboards({ projectId })
+
+  console.log(
+    dashboardData,
+    'dashboardDatadashboardDatadashboardDatadashboardData',
+  )
+
   return (
     <>
       <div className="flex justify-between rounded-md bg-secondary-500 px-2 py-4">
@@ -136,6 +145,14 @@ export function LayoutOverView() {
                     </div>
                   </div>
                   <h4 className="mt-3">{item.title}</h4>
+                  <p>{item.content}</p>
+                  <Button
+                    type="button"
+                    size="square"
+                    className="border-none bg-primary-400"
+                  >
+                    Cài đặt
+                  </Button>
                 </div>
               </div>
             )
@@ -160,6 +177,7 @@ export function LayoutOverView() {
                     </div>
                   </div>
                   <h4 className="mt-3">{item.title}</h4>
+                  
                 </div>
               </div>
             )
@@ -167,7 +185,7 @@ export function LayoutOverView() {
         </div>
       </div>
       <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-        <div className="flex justify-between rounded-md bg-secondary-500 px-2 py-4">
+        <div className="rounded-md bg-secondary-500 px-2 py-4">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -206,6 +224,7 @@ export function LayoutOverView() {
               </Button>
             </div>
           </div>
+          {type === 'Last viewed' ? <div>Hahahahaha</div> : <div>Heeee</div>}
         </div>
         <div className="rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
