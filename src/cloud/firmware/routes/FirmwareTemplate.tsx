@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import storage from '~/utils/storage'
 
-import { type EntityThing } from '~/cloud/customProtocol'
 import {
   ComboBoxSelectFirmWare,
   CreateFirmWare,

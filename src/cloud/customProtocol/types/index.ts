@@ -13,9 +13,9 @@ export type Configuration = {
 }
 
 export type FieldsType = {
-    name: string
-    start_byte: number
-    end_byte: number
+  name: string
+  start_byte: number
+  end_byte: number
 }
 
 export type SchemaType = {
@@ -76,11 +76,11 @@ export type Service = {
   update_ts: string | null
 }
 
-export type EntityThingType = 'thing' | 'template' | 'shape'
+export type EntityThingType = 'Thing' | 'Template' | 'Shape'
 export type EntityThing = {
   id: string
   name: string
-  type: 'Thing' | 'Template' | 'Shape'
+  type: EntityThingType
   project_id: string
   create_ts: string
   description: string

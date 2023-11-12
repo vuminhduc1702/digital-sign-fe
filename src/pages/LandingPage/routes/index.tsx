@@ -97,7 +97,7 @@ export function LandingPage() {
                   {t('landingpage:logo')}
                 </a>
               </div>
-              <div className="mx-auto flex">
+              <div className="flex w-full justify-center">
                 <div className="flex justify-start">
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
@@ -175,7 +175,7 @@ export function LandingPage() {
                     className="flex items-center gap-x-2"
                   >
                     <div className="ml-auto flex">
-                      <div className="flex min-w-fit ">
+                      <div className="flex w-max ">
                         <img
                           src={`${
                             userInfoData?.profile?.profile_image !== ''

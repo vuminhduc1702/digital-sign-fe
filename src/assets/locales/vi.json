@@ -54,19 +54,19 @@
   },
   "cloud": {
     "project_manager": {
-      "title": "Quản lý Project",
+      "title": "Quản lý dự án",
       "project": "Dự án",
       "no_data": "Bạn chưa có dự án nào, hãy tạo mới dự án",
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
-      "backup": "Export project",
-      "restore": "Import project",
+      "backup": "Export dự án",
+      "restore": "Import dự án",
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
-        "restore_project": "Import project",
+        "restore_project": "Import dự án",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
@@ -93,7 +93,7 @@
           "title": "Tổng quan",
           "name": "Tên",
           "desc": "Mô tả",
-          "choose_project": "Vui lòng click vào đây để chọn Project"
+          "choose_project": "Vui lòng click vào đây để chọn dự án"
         },
         "breadcrumb": {
           "device_list": "Danh sách thiết bị",

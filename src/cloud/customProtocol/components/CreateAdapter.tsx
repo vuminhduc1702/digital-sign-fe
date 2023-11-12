@@ -27,7 +27,6 @@ import {
   useGetEntityThings,
 } from '../api/entityThing'
 import { FormDialog } from '~/components/FormDialog'
-import { queryClient } from '~/lib/react-query'
 import {
   type CreateServiceThingDTO,
   useGetServiceThings,
@@ -35,16 +34,20 @@ import {
 } from '../api/serviceThing'
 import { CodeEditor } from './CodeEditor'
 import TitleBar from '~/components/Head/TitleBar'
+import { cn } from '~/utils/misc'
 
 import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
-import { inputService, type EntityThingList } from '../types'
-import { type BasePagination } from '~/types'
+import {
+  inputService,
+  type EntityThingType,
+  type ContentType,
+  type ProtocolType,
+} from '../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import { cn } from '~/utils/misc'
 
 export const adapterSchema = z
   .object({
@@ -83,13 +86,15 @@ export const adapterSchema = z
       }),
       z.object({
         content_type: z.enum(['hex', 'text'] as const),
-        fields: z.array(
-          z.object({
-            name: z.string(),
-            start_byte: z.string(),
-            length_byte: z.string(),
-          }),
-        ).optional(),
+        fields: z
+          .array(
+            z.object({
+              name: z.string(),
+              start_byte: z.string(),
+              length_byte: z.string(),
+            }),
+          )
+          .optional(),
       }),
     ]),
   )
@@ -190,22 +195,22 @@ export const outputList = [
   {
     label: i18n.t('cloud:custom_protocol.service.bool'),
     value: 'bool',
-  }
+  },
 ]
 
 export const thingTypeList = [
   {
     label: i18n.t('cloud:custom_protocol.thing.thing'),
-    value: 'thing',
+    value: 'Thing',
     selected: true,
   },
   {
     label: i18n.t('cloud:custom_protocol.thing.template'),
-    value: 'template',
+    value: 'Template',
   },
   {
     label: i18n.t('cloud:custom_protocol.thing.shape'),
-    value: 'shape',
+    value: 'Shape',
   },
 ]
 
@@ -215,9 +220,9 @@ export function CreateAdapter() {
   const { id: projectId } = storage.getProject()
 
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [protocolType, setProtocolType] = useState('mqtt')
-  const [contentType, setContentType] = useState('json')
-  const [thingType, setThingType] = useState('thing')
+  const [protocolType, setProtocolType] = useState<ProtocolType>('mqtt')
+  const [contentType, setContentType] = useState<ContentType>('json')
+  const [thingType, setThingType] = useState<EntityThingType>('Thing')
   const [isShow, setIsShow] = useState(true)
 
   const {
@@ -235,15 +240,24 @@ export function CreateAdapter() {
 
   const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
     projectId,
-    config: { enabled: false },
   })
-  const thingListCache:
-    | ({ data: EntityThingList } & BasePagination)
-    | undefined = queryClient.getQueryData(['entity-things'], { exact: false })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   })) || [{ value: '', label: '' }]
+
+  const thingSelectDataThing = thingData?.data?.list
+    ?.filter(thing => thing.type === 'Thing')
+    .map(thing => ({
+      value: thing.id,
+      label: thing.name,
+    })) || [{ value: '', label: '' }]
+  const thingSelectDataTemplate = thingData?.data?.list
+    ?.filter(thing => thing.type === 'Template')
+    .map(thing => ({
+      value: thing.id,
+      label: thing.name,
+    })) || [{ value: '', label: '' }]
 
   // TODO: Auto set default when user create new thing successfully
   // const [defaultThingValues, setDefaultThingValues] = useState(null)
@@ -289,16 +303,6 @@ export function CreateAdapter() {
   const [codeInput, setCodeInput] = useState('')
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
-
-  const { data: thingDataTemplate } = useGetEntityThings({
-    projectId,
-    type: 'template',
-  })
-
-  const thingSelectDataTemplate = thingDataTemplate?.data?.list?.map(thing => ({
-    value: thing.id,
-    label: thing.name,
-  })) || [{ value: '', label: '' }]
 
   const [optionThingId, setOptionThingId] = useState<SelectOption>({
     label: '',
@@ -431,7 +435,7 @@ export function CreateAdapter() {
                   protocol: values.protocol as 'tcp' | 'udp',
                   content_type: values.content_type,
                   thing_id: values.thing_id,
-                  handle_service: values.handle_service
+                  handle_service: values.handle_service,
                 },
               })
             }
@@ -779,11 +783,6 @@ export function CreateAdapter() {
                               option.label === t('loading:entity_thing')
                             }
                             noOptionsMessage={() => t('table:no_thing')}
-                            onMenuOpen={() => {
-                              if (thingListCache?.data.list) {
-                                return
-                              } else refetchThingData()
-                            }}
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}
@@ -857,16 +856,13 @@ export function CreateAdapter() {
                                       error={formState.errors['type']}
                                       registration={register('type')}
                                       options={thingTypeList}
-                                      onChange={event =>
-                                        setThingType(
-                                          String(
-                                            event.target.value,
-                                          ).toLowerCase(),
-                                        )
-                                      }
+                                      onChange={event => {
+                                        refetchThingData()
+                                        setThingType(event.target.value)
+                                      }}
                                     />
-                                    {thingType === 'thing' ||
-                                    thingType === 'template' ? (
+                                    {thingType === 'Thing' ||
+                                    thingType === 'Template' ? (
                                       <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -875,7 +871,11 @@ export function CreateAdapter() {
                                           formState.errors['base_template']
                                         }
                                         registration={register('base_template')}
-                                        options={thingSelectDataTemplate}
+                                        options={
+                                          thingType === 'Thing'
+                                            ? thingSelectDataThing
+                                            : thingSelectDataTemplate
+                                        }
                                       />
                                     ) : (
                                       <InputField
@@ -1021,11 +1021,7 @@ export function CreateAdapter() {
                                       registration={register('output')}
                                       options={outputList}
                                       onChange={event =>
-                                        setThingType(
-                                          String(
-                                            event.target.value,
-                                          ).toLowerCase(),
-                                        )
+                                        setThingType(event.target.value)
                                       }
                                     />
                                     <InputField

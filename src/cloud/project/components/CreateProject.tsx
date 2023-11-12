@@ -31,7 +31,10 @@ import {
 import defaultProjectImage from '~/assets/images/default-project.png'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { RestoreProjectDTO, useRestoreProject } from '../api/restoreProject'
+import {
+  type RestoreProjectDTO,
+  useRestoreProject,
+} from '../api/restoreProject'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 
 export const uploadImageResSchema = z.object({
@@ -95,7 +98,7 @@ export function CreateProject() {
     handleResetDefaultImage()
     handleResetRestoreProject()
   }
-  
+
   const [uploadImageErr, setUploadImageErr] = useState('')
 
   const {
@@ -142,12 +145,14 @@ export function CreateProject() {
               })
             }
             if (getValueUploadRestoreProject('backup') != null) {
-              const dataBackup = JSON.parse(getValueUploadRestoreProject('backup'))
+              const dataBackup = JSON.parse(
+                getValueUploadRestoreProject('backup'),
+              )
               await mutateAsyncUploadProjectFile({
                 projectId: dataCreateProject.id,
                 backup: {
-                  backup: dataBackup
-                }
+                  backup: dataBackup,
+                },
               })
             }
           }}
@@ -169,7 +174,7 @@ export function CreateProject() {
                     label={t('cloud:project_manager.add_project.description')}
                     error={formState.errors['description']}
                     registration={register('description')}
-                    rows={9}
+                    rows={11}
                   />
                 </div>
                 <div className="pl-5">
@@ -234,7 +239,9 @@ export function CreateProject() {
                   </div>
                   <div className="mb-3 space-y-1">
                     <FileField
-                      label={t('cloud:project_manager.add_project.restore_project')}
+                      label={t(
+                        'cloud:project_manager.add_project.restore_project',
+                      )}
                       control={controlUploadRestoreProject}
                       name="restore-project"
                       ref={fileInputRef}
@@ -246,7 +253,10 @@ export function CreateProject() {
                         reader.readAsText(file)
                         reader.onload = e => {
                           const formData = new FormData()
-                          formData.append('backup', e.target?.result as unknown as string)
+                          formData.append(
+                            'backup',
+                            e.target?.result as unknown as string,
+                          )
                           setValueUploadRestoreProject(
                             'backup',
                             formData.get('backup') as unknown as string,

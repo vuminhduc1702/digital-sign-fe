@@ -5,7 +5,12 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import { Form, InputField, TextAreaField } from '~/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
-import { type CreateProjectDTO, CreateProjectSchema, ACCEPTED_RESTORE_FILE, restoreProjectSchema } from '../api'
+import {
+  type CreateProjectDTO,
+  CreateProjectSchema,
+  ACCEPTED_RESTORE_FILE,
+  restoreProjectSchema,
+} from '../api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { useEffect, useRef, useState } from 'react'
@@ -26,7 +31,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import { API_URL } from '~/config'
-import { RestoreProjectDTO } from '../api/restoreProject'
+import { type RestoreProjectDTO } from '../api/restoreProject'
 
 export function UpdateProject({
   close,
@@ -180,7 +185,7 @@ export function UpdateProject({
                       label={t('cloud:project_manager.add_project.description')}
                       error={formState.errors['description']}
                       registration={register('description')}
-                      rows={9}
+                      rows={11}
                     />
                   </div>
                   <div className="pl-5">
@@ -253,7 +258,9 @@ export function UpdateProject({
                     </div>
                     <div className="mb-3 space-y-1">
                       <FileField
-                        label={t('cloud:project_manager.add_project.restore_project')}
+                        label={t(
+                          'cloud:project_manager.add_project.restore_project',
+                        )}
                         control={controlUploadRestoreProject}
                         name="restore-project"
                         ref={fileInputRef}
