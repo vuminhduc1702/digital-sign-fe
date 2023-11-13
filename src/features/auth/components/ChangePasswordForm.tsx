@@ -1,14 +1,12 @@
 import { useTranslation } from 'react-i18next'
 
-import { Link } from '~/components/Link'
 import { Form, InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
-import { PATHS } from '~/routes/PATHS'
 
 import { BtnPasswordLoginIcon, EyeHide, EyeShow } from '~/components/SVGIcons'
-import { useChangePassword } from '../api/changepassword'
 
 import {
+  useChangePassword,
   ChangePaswordSchema,
   type changePasswordDTO,
 } from '../api/changepassword'
@@ -159,11 +157,11 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
                 }
                 autoComplete="new-password"
               />
-              <div className="container mx-auto text-center text-body-xs">
+              <div className="text-body-xs container mx-auto text-center">
                 <Button
                   isLoading={changePasswordMutation.isLoading}
                   type="submit"
-                  className="w-full bg-primary-400"
+                  className="bg-primary-400 w-full"
                 >
                   {t('btn:confirm')}
                 </Button>
@@ -172,13 +170,6 @@ export const ChangePaswordForm = ({ onSuccess }: ChangePaswordFormProps) => {
           )
         }}
       </Form>
-      <div className="mt-8 flex justify-end">
-        <div className="text-body-sm text-black">
-          <Link to={PATHS.HOME} className="font-bold text-primary-400">
-            {t('auth:back_to_home')}
-          </Link>
-        </div>
-      </div>
     </div>
   )
 }
