@@ -31,7 +31,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import { API_URL } from '~/config'
-import { type RestoreProjectDTO } from '../api/restoreProject'
+import { useRestoreProject, type RestoreProjectDTO } from '../api/restoreProject'
 
 export function UpdateProject({
   close,
@@ -47,6 +47,7 @@ export function UpdateProject({
   const cancelButtonRef = useRef(null)
 
   const { mutate, isLoading, isSuccess } = useUpdateProject()
+  const { mutateAsync: mutateAsyncUploadProjectFile } = useRestoreProject()
 
   useEffect(() => {
     if (isSuccess) {
@@ -143,6 +144,17 @@ export function UpdateProject({
                     image: dataUploadImage.data.link,
                   },
                   projectId: selectedUpdateProject.id,
+                })
+              }
+              if (getValueUploadRestoreProject('backup') != null) {
+                const dataBackup = JSON.parse(
+                  getValueUploadRestoreProject('backup'),
+                )
+                await mutateAsyncUploadProjectFile({
+                  projectId: selectedUpdateProject.id,
+                  backup: {
+                    backup: dataBackup,
+                  },
                 })
               }
 
