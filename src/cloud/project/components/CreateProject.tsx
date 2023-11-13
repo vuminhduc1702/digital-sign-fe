@@ -15,26 +15,22 @@ import {
   ACCEPTED_RESTORE_FILE,
 } from '../api/createProject'
 import { Form, InputField, TextAreaField } from '~/components/Form'
-import {
-  type UploadImageDTO,
-  useUploadImage,
-} from '~/layout/OrgManagementLayout/api'
+import { useUploadImage } from '~/layout/OrgManagementLayout/api'
 import FileField from '~/components/Form/FileField'
 import { useUpdateProject } from '../api'
-
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
-  uploadImageSchema,
-} from '~/layout/OrgManagementLayout/components/CreateOrg'
-
-import defaultProjectImage from '~/assets/images/default-project.png'
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+  useResetDefaultImage,
+} from '~/utils/hooks'
 import {
   type RestoreProjectDTO,
   useRestoreProject,
 } from '../api/restoreProject'
+
+import defaultProjectImage from '~/assets/images/default-project.png'
+import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 
 export const uploadImageResSchema = z.object({
@@ -45,21 +41,24 @@ export const uploadImageResSchema = z.object({
 export function CreateProject() {
   const { t } = useTranslation()
 
+  const {
+    handleResetDefaultImage,
+    avatarRef,
+    uploadImageErr,
+    setUploadImageErr,
+    controlUploadImage,
+    setValueUploadImage,
+    getValueUploadImage,
+  } = useResetDefaultImage(defaultProjectImage)
+
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+
   const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
+
   const { mutateAsync: mutateAsyncUploadProjectFile } = useRestoreProject()
 
   const { mutate: mutateUpdateProject } = useUpdateProject({
     isOnCreateProject: true,
-  })
-
-  const avatarRef = useRef<HTMLImageElement>(null)
-  const {
-    control: controlUploadImage,
-    setValue: setValueUploadImage,
-    getValues: getValueUploadImage,
-  } = useForm<UploadImageDTO['data']>({
-    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
 
   const {
@@ -67,26 +66,6 @@ export function CreateProject() {
     isLoading: isLoadingCreateProject,
     isSuccess: isSuccessCreateProject,
   } = useCreateProject()
-
-  function handleResetDefaultImage() {
-    setUploadImageErr('')
-    if (getValueUploadImage('file') != null) {
-      if (avatarRef.current != null) {
-        avatarRef.current.src = defaultProjectImage
-      }
-      fetch(defaultProjectImage)
-        .then(res => res.blob())
-        .then(blob => {
-          const defaultFile = new File([blob], 'default-project.png', blob)
-          const formData = new FormData()
-          formData.append('file', defaultFile)
-          setValueUploadImage(
-            'file',
-            formData.get('file') as unknown as { file: File },
-          )
-        })
-    }
-  }
 
   function handleResetRestoreProject() {
     setValueUploadRestoreProject('backup', null)
@@ -98,8 +77,6 @@ export function CreateProject() {
     handleResetDefaultImage()
     handleResetRestoreProject()
   }
-
-  const [uploadImageErr, setUploadImageErr] = useState('')
 
   const {
     control: controlUploadRestoreProject,

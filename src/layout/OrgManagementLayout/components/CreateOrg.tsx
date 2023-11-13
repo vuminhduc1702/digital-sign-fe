@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
 import {
@@ -18,7 +16,6 @@ import {
   useCreateOrg,
   useUploadImage,
   type CreateOrgDTO,
-  type UploadImageDTO,
   useUpdateOrg,
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
@@ -26,7 +23,11 @@ import storage from '~/utils/storage'
 import { type OrgList } from '~/layout/MainLayout/types'
 import { queryClient } from '~/lib/react-query.ts'
 import { flattenData } from '~/utils/misc.ts'
-import i18n from '~/i18n'
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  useResetDefaultImage,
+} from '~/utils/hooks'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -40,23 +41,6 @@ export const orgSchema = z.object({
   project_id: z.string().optional(),
 })
 
-export const MAX_FILE_SIZE = 5000000
-export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
-export const uploadImageSchema = z.object({
-  file: z
-    .instanceof(File, {
-      message: i18n.t('cloud:org_manage.org_manage.add_org.choose_avatar'),
-    })
-    .refine(
-      file => file.size <= MAX_FILE_SIZE,
-      i18n.t('validate:image_max_size'),
-    )
-    .refine(
-      file => ACCEPTED_IMAGE_TYPES.includes(file.type),
-      i18n.t('validate:image_type'),
-    ),
-})
-
 export const uploadImageResSchema = z.object({
   link: z.string(),
   last_modified: z.number(),
@@ -65,10 +49,19 @@ export const uploadImageResSchema = z.object({
 export function CreateOrg() {
   const { t } = useTranslation()
 
+  const {
+    handleResetDefaultImage,
+    avatarRef,
+    uploadImageErr,
+    setUploadImageErr,
+    controlUploadImage,
+    setValueUploadImage,
+    getValueUploadImage,
+  } = useResetDefaultImage(defaultOrgImage)
+
   const { id: projectId } = storage.getProject()
 
   const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
-
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -87,18 +80,9 @@ export function CreateOrg() {
   const clearData = () => {
     setOptionOrg(null)
     setUploadImageErr('')
-    handleResetDefaultImage()
+    handleResetDefaultImage(defaultOrgImage)
   }
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const avatarRef = useRef<HTMLImageElement>(null)
-  const {
-    control: controlUploadImage,
-    setValue: setValueUploadImage,
-    getValues: getValueUploadImage,
-  } = useForm<UploadImageDTO['data']>({
-    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
-  })
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
 
   const {
@@ -107,28 +91,12 @@ export function CreateOrg() {
     isSuccess: isSuccessCreateOrg,
   } = useCreateOrg()
 
-  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
+  const {
+    mutateAsync: mutateAsyncUploadImage,
+    isLoading: isLoadingUploadImage,
+  } = useUploadImage()
 
-  function handleResetDefaultImage() {
-    if (getValueUploadImage('file') != null) {
-      if (avatarRef.current != null) {
-        avatarRef.current.src = defaultOrgImage
-      }
-      fetch(defaultOrgImage)
-        .then(res => res.blob())
-        .then(blob => {
-          const defaultFile = new File([blob], 'default-project.png', blob)
-          const formData = new FormData()
-          formData.append('file', defaultFile)
-          setValueUploadImage(
-            'file',
-            formData.get('file') as unknown as { file: File },
-          )
-        })
-    }
-  }
-
-  const [uploadImageErr, setUploadImageErr] = useState('')
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   return (
     <FormDrawer
@@ -149,7 +117,7 @@ export function CreateOrg() {
           form="create-org"
           type="submit"
           size="lg"
-          isLoading={isLoadingCreateOrg}
+          isLoading={isLoadingCreateOrg || isLoadingUploadImage}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
