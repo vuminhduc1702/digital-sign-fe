@@ -209,7 +209,7 @@ export function UpdateAdapter({
             }))
 
           if (protocolType === 'mqtt') {
-            if (fields.length > 0) {
+            if (fields && fields.length > 0) {
               mutate({
                 data: {
                   project_id: projectId,
@@ -264,7 +264,7 @@ export function UpdateAdapter({
               })
             }
           } else {
-            if (fields.length > 0) {
+            if (fields && fields.length > 0) {
               mutate({
                 data: {
                   project_id: projectId,
