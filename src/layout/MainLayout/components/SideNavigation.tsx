@@ -44,7 +44,7 @@ const AccordionTrigger = forwardRef<HTMLButtonElement, AccordionOtherProps>(
     <Accordion.Header className="flex">
       <Accordion.Trigger
         className={clsx(
-          'my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none hover:text-primary-400 data-[state=open]:text-primary-400',
+          'hover:text-primary-400 data-[state=open]:text-primary-400 my-3 flex flex-1 cursor-pointer items-center justify-between gap-x-3 leading-none outline-none',
           className,
         )}
         {...props}
@@ -61,7 +61,7 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
   ({ children, className, ...props }, forwardedRef) => (
     <Accordion.Content
       className={clsx(
-        'mb-1 overflow-hidden rounded-md hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown',
+        'hover:bg-primary-300 group-[.active]:bg-primary-300 data-[state=closed]:animate-slideUp data-[state=open]:animate-slideDown mb-1 overflow-hidden rounded-md hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25',
         className,
       )}
       {...props}
@@ -88,7 +88,7 @@ function SideNavigation() {
 
   return (
     <div className="px-8 py-7">
-      <div className="mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400">
+      <div className="hover:text-primary-400 mb-3 flex cursor-pointer items-center gap-x-3">
         <img
           src={tongquanIcon}
           alt="Cloud"
@@ -200,6 +200,9 @@ function SideNavigation() {
             <AccordionContent>{t('sidebar:payment.plgc')}</AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.CUSTOMER_MANAGE}/${projectId}`}>
+            <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
+          </NavLink>
+          <NavLink to={`${PATHS.BILLING_CUSTOMER}`}>
             <AccordionContent>{t('sidebar:payment.plkh')}</AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.BILLING_SUBSCRIPTION}/${projectId}`}>
