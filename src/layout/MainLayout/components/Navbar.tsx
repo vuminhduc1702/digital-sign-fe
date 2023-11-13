@@ -48,7 +48,7 @@ function Navbar() {
 
   return (
     <div className="flex w-full">
-      <nav className="bg-secondary-900 flex h-20 w-full justify-end gap-x-5 pr-5 lg:gap-x-10">
+      <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
         <a
           className="flex cursor-pointer items-center gap-x-2"
           target="_blank"
@@ -88,7 +88,7 @@ function Navbar() {
           </div>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+              className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={40}
             >
               {projectsData?.projects.map((project: Project) => {
@@ -177,10 +177,10 @@ function Navbar() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content
-                className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                 sideOffset={5}
               >
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   {userData ? (
                     <p
                       className="cursor-pointer"
@@ -192,18 +192,21 @@ function Navbar() {
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild
-                  className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
                   <Link to={PATHS.USER_INFO}>
                     {t('cloud:custom_protocol.adapter.username')}
                   </Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
                   <Link to={PATHS.CHANGEPASSWORD}>
                     {t('user:change_password')}
                   </Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   <p
                     className="cursor-pointer"
                     onClick={() => logout.mutate({})}
