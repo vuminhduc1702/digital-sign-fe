@@ -982,10 +982,33 @@
     "province_city": "Tỉnh/TP",
     "district": "Huyện/Quận",
     "village": "Phường/Xã",
+    "dob": "Ngày sinh",
+    "sex": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "detail_address": "Địa chỉ chi tiết",
+    "account_info": "Thông tin tài khoản",
+    "confirm_password": "Xác nhận mật khẩu",
+    "choose_project": "---Chọn project---",
     "user": {
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
-      "ddos": "Cập nhật DDOS thành công"
+      "ddos": "Cập nhật DDOS thành công",
+      "name": "Tên người dùng"
+    },
+    "customer": {
+      "success_delete": "Xoá khách hàng thành công",
+      "success_update": "Cập nhật khách hàng thành công",
+      "success_update_role": "Cập nhật quyền khách hàng thành công",
+      "edit": "Sửa khách hàng",
+      "delete": "Xoá khách hàng",
+      "create": "Tạo khách hàng"
+    },
+    "role": {
+      "edit": "Sửa quyền",
+      "delete": "Xoá quyền",
+      "add": "Thêm quyền",
+      "choose": "---Chọn quyền---"
     },
     "email": "Email",
     "back": "Trở lại"
