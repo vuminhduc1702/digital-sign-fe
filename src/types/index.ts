@@ -23,6 +23,11 @@ export type BaseAPIRes = {
   message: 'success' | string
 }
 
+export type BaseWSRes = {
+  errorCode: number
+  errorMsg: string
+}
+
 export type Attribute = {
   attribute_key: string
   logged: boolean

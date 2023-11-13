@@ -37,13 +37,6 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
 
-export type UpdateOrg = {
-  name: string
-  description: string
-  org_id?: string
-  image?: string
-}
-
 export function UpdateOrg({
   close,
   isOpen,
@@ -85,7 +78,12 @@ export function UpdateOrg({
 
   useEffect(() => {
     if (selectedUpdateOrg.id) {
-      if (selectedUpdateOrg.parent_name) {
+      if (selectedUpdateOrg.parent_name === 'undefined') {
+        setOptionOrg({
+          label: t('cloud:org_manage.org_manage.add_org.no_org'),
+          value: '',
+        })
+      } else {
         setOptionOrg({
           label: selectedUpdateOrg.parent_name,
           value: selectedUpdateOrg.id,
@@ -237,7 +235,7 @@ export function UpdateOrg({
                   options={
                     orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
-                  onChange={(e: SelectOptionString) => {
+                  onChange={e => {
                     setOptionOrg(e)
                     mutateUpdateOrgForOrg({
                       data: {

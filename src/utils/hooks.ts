@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 
 import { useNotificationStore } from '~/stores/notifications'
 
@@ -42,7 +41,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T extends JsonValue | null>(url: string) => {
+export const useWS = <T>(url: string) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -93,11 +92,21 @@ export function useCopyId() {
 
   async function handleCopyId(id: string, typeCopy?: string) {
     try {
-      await navigator.clipboard.writeText(id)
-      addNotification({
-        type: 'success',
-        title: typeCopy === 'token' ? t('cloud:org_manage.org_map.copy_token_success') : t('cloud:org_manage.org_map.copy_success'),
-      })
+      if (id == null || id === '') {
+        addNotification({
+          type: 'info',
+          title: t('noti:empty_id'),
+        })
+      } else {
+        await navigator.clipboard.writeText(id)
+        addNotification({
+          type: 'success',
+          title:
+            typeCopy === 'token'
+              ? t('cloud:org_manage.org_map.copy_token_success')
+              : t('cloud:org_manage.org_map.copy_success'),
+        })
+      }
     } catch (error) {
       console.error(error)
     }
