@@ -45,7 +45,7 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  let CheckboxState: boolean
+  let CheckboxState = (value === "true")
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -154,6 +154,7 @@ export function UpdateAttr({
                             checked={value}
                             onCheckedChange={onChange}
                             onClick={() => {
+                              console.log(CheckboxState)
                               CheckboxState = !value
                             }}
                           />

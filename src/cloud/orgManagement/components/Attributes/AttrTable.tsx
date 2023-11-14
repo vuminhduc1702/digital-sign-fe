@@ -22,7 +22,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
-
+import { useDebouncedCallback } from 'use-debounce'
 export const STATUS = {
   true: 'Có',
   false: 'Không',
@@ -151,6 +151,19 @@ export function AttrTable({
   const dataSorted =
     data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
 
+  const handleSwitchChange = (checked: boolean, attributeKey: string) => {
+    mutateUpdateLogged({
+      data: {
+        logged: checked,
+      },
+      device_id: entityId,
+      attribute_key: attributeKey,
+      entityType: entityType,
+    })
+  }
+
+  const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 200)
+
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
       columnHelper.display({
@@ -205,19 +218,13 @@ export function AttrTable({
         ),
         cell: info => {
           const { attribute_key } = info.row.original
+
           return (
             <Switch
               key={STATUS[info.getValue()]}
-              defaultChecked={STATUS[info.getValue()] === 'Có'}
+              defaultChecked={STATUS[info.getValue()] === STATUS['true']}
               onCheckedChange={checked => {
-                mutateUpdateLogged({
-                  data: {
-                    logged: checked,
-                  },
-                  device_id: entityId,
-                  attribute_key: attribute_key,
-                  entityType: entityType,
-                })
+                debouncedSwitchChange(checked, attribute_key)
               }}
             />
           )
