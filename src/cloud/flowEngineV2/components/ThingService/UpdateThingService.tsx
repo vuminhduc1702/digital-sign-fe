@@ -100,12 +100,16 @@ export function UpdateThingService({
   const defaultHeightForCodeEditor = 344
   const [isResizable, setIsResizable] = useState(false)
   const consolePanelEle = document.getElementById('console-panel')
-  let defaultWidthConsole = (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
+  let defaultWidthConsole =
+    (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
   let defaultHeightConsole = (defaultHeightForCodeEditor * 2 - resizerWidth) / 2
   const [codeConsoleWidth, setCodeConsoleWidth] = useState(defaultWidthConsole)
-  const [resultConsoleWidth, setResultConsoleWidth] = useState(defaultWidthConsole)
-  const [codeConsoleHeight, setCodeConsoleHeight] = useState(defaultHeightConsole)
-  const [resultConsoleHeight, setResultConsoleHeight] = useState(defaultHeightConsole)
+  const [resultConsoleWidth, setResultConsoleWidth] =
+    useState(defaultWidthConsole)
+  const [codeConsoleHeight, setCodeConsoleHeight] =
+    useState(defaultHeightConsole)
+  const [resultConsoleHeight, setResultConsoleHeight] =
+    useState(defaultHeightConsole)
 
   const { id: projectId } = storage.getProject()
 
@@ -232,7 +236,7 @@ export function UpdateThingService({
     } else if (isResizable && fullScreen) {
       event.preventDefault()
       let offsetCode = event.clientY - 256
-      let offsetResult = (defaultHeightConsole * 2) - offsetCode
+      let offsetResult = defaultHeightConsole * 2 - offsetCode
 
       if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
         setCodeConsoleHeight(offsetCode)
@@ -253,7 +257,8 @@ export function UpdateThingService({
 
   useEffect(() => {
     if (defaultWidthConsole) {
-      defaultWidthConsole = (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
+      setCodeConsoleWidth(defaultWidthConsole)
+      setResultConsoleWidth(defaultWidthConsole)
     }
   }, [viewMode])
 
@@ -642,18 +647,15 @@ export function UpdateThingService({
                                 </div>
                               </div>
                               <div
-                                className={cn(
-                                  'flex w-[100%] md:col-span-3',
-                                  {
-                                    'flex-col': fullScreen,
-                                    'md:grid-cols-6': viewMode !== 'default',
-                                  },
-                                )}
+                                className={cn('flex w-[100%] md:col-span-3', {
+                                  'flex-col': fullScreen,
+                                  'md:grid-cols-6': viewMode !== 'default',
+                                })}
                                 id="console-panel"
                               >
                                 <div
                                   className={cn(
-                                    'flex w-[100%] flex-col gap-2 md:col-span-1'
+                                    'flex w-[100%] flex-col gap-2 md:col-span-1',
                                   )}
                                   style={
                                     !fullScreen
@@ -688,11 +690,24 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('maximize_code')
                                                 if (!fullScreen) {
-                                                  setCodeConsoleWidth(Number(consolePanelEle?.offsetWidth) - minWidthResult)
-                                                  setResultConsoleWidth(minWidthResult)
+                                                  setCodeConsoleWidth(
+                                                    Number(
+                                                      consolePanelEle?.offsetWidth,
+                                                    ) - minWidthResult,
+                                                  )
+                                                  setResultConsoleWidth(
+                                                    minWidthResult,
+                                                  )
                                                 } else {
-                                                  setCodeConsoleHeight(defaultHeightForCodeEditor * 2 - resizerWidth - minHeightResult)
-                                                  setResultConsoleHeight(minHeightResult)
+                                                  setCodeConsoleHeight(
+                                                    defaultHeightForCodeEditor *
+                                                      2 -
+                                                      resizerWidth -
+                                                      minHeightResult,
+                                                  )
+                                                  setResultConsoleHeight(
+                                                    minHeightResult,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -705,11 +720,24 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('minimize_code')
                                                 if (!fullScreen) {
-                                                  setResultConsoleWidth(Number(consolePanelEle?.offsetWidth) - minWidthCode)
-                                                  setCodeConsoleWidth(minWidthCode)
+                                                  setResultConsoleWidth(
+                                                    Number(
+                                                      consolePanelEle?.offsetWidth,
+                                                    ) - minWidthCode,
+                                                  )
+                                                  setCodeConsoleWidth(
+                                                    minWidthCode,
+                                                  )
                                                 } else {
-                                                  setCodeConsoleHeight(minHeightCode)
-                                                  setResultConsoleHeight(defaultHeightForCodeEditor * 2 - resizerWidth - minHeightCode)
+                                                  setCodeConsoleHeight(
+                                                    minHeightCode,
+                                                  )
+                                                  setResultConsoleHeight(
+                                                    defaultHeightForCodeEditor *
+                                                      2 -
+                                                      resizerWidth -
+                                                      minHeightCode,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -722,11 +750,19 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('default')
                                                 if (!fullScreen) {
-                                                  setCodeConsoleWidth(defaultWidthConsole)
-                                                  setResultConsoleWidth(defaultWidthConsole)
+                                                  setCodeConsoleWidth(
+                                                    defaultWidthConsole,
+                                                  )
+                                                  setResultConsoleWidth(
+                                                    defaultWidthConsole,
+                                                  )
                                                 } else {
-                                                  setCodeConsoleHeight(defaultHeightConsole)
-                                                  setResultConsoleHeight(defaultHeightConsole)
+                                                  setCodeConsoleHeight(
+                                                    defaultHeightConsole,
+                                                  )
+                                                  setResultConsoleHeight(
+                                                    defaultHeightConsole,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -780,25 +816,29 @@ export function UpdateThingService({
                                     className={`${fullScreen ? '' : '!block'}`}
                                     setCodeInput={setCodeInput}
                                     isFullScreen={fullScreen}
-                                    style={fullScreen ? {'height': codeConsoleHeight} : {}}
+                                    style={
+                                      fullScreen
+                                        ? { height: codeConsoleHeight }
+                                        : {}
+                                    }
                                   />
                                 </div>
                                 {!fullScreen ? (
                                   <div
                                     className="h-[100%] cursor-col-resize"
-                                    style={{'width': resizerWidth}}
+                                    style={{ width: resizerWidth }}
                                     onMouseDown={handleResize}
                                   ></div>
                                 ) : (
                                   <div
                                     className=" w-[100%] cursor-row-resize"
-                                    style={{'height': resizerWidth}}
+                                    style={{ height: resizerWidth }}
                                     onMouseDown={handleResize}
                                   ></div>
                                 )}
                                 <div
                                   className={cn(
-                                    'flex w-[100%] flex-col gap-2 md:col-span-1'
+                                    'flex w-[100%] flex-col gap-2 md:col-span-1',
                                   )}
                                   style={
                                     !fullScreen
@@ -833,11 +873,24 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('maximize_result')
                                                 if (!fullScreen) {
-                                                  setResultConsoleWidth(Number(consolePanelEle?.offsetWidth) - minWidthCode)
-                                                  setCodeConsoleWidth(minWidthCode)
+                                                  setResultConsoleWidth(
+                                                    Number(
+                                                      consolePanelEle?.offsetWidth,
+                                                    ) - minWidthCode,
+                                                  )
+                                                  setCodeConsoleWidth(
+                                                    minWidthCode,
+                                                  )
                                                 } else {
-                                                  setCodeConsoleHeight(minHeightCode)
-                                                  setResultConsoleHeight(defaultHeightForCodeEditor * 2 - resizerWidth - minHeightCode)
+                                                  setCodeConsoleHeight(
+                                                    minHeightCode,
+                                                  )
+                                                  setResultConsoleHeight(
+                                                    defaultHeightForCodeEditor *
+                                                      2 -
+                                                      resizerWidth -
+                                                      minHeightCode,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -850,11 +903,24 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('minimize_result')
                                                 if (!fullScreen) {
-                                                  setCodeConsoleWidth(Number(consolePanelEle?.offsetWidth) - minWidthResult)
-                                                  setResultConsoleWidth(minWidthResult)
+                                                  setCodeConsoleWidth(
+                                                    Number(
+                                                      consolePanelEle?.offsetWidth,
+                                                    ) - minWidthResult,
+                                                  )
+                                                  setResultConsoleWidth(
+                                                    minWidthResult,
+                                                  )
                                                 } else {
-                                                  setResultConsoleHeight(minHeightResult)
-                                                  setCodeConsoleHeight(defaultHeightForCodeEditor * 2 - resizerWidth - minHeightResult)
+                                                  setResultConsoleHeight(
+                                                    minHeightResult,
+                                                  )
+                                                  setCodeConsoleHeight(
+                                                    defaultHeightForCodeEditor *
+                                                      2 -
+                                                      resizerWidth -
+                                                      minHeightResult,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -867,11 +933,19 @@ export function UpdateThingService({
                                               onClick={() => {
                                                 setViewMode('default')
                                                 if (!fullScreen) {
-                                                  setCodeConsoleWidth(defaultWidthConsole)
-                                                  setResultConsoleWidth(defaultWidthConsole)
+                                                  setCodeConsoleWidth(
+                                                    defaultWidthConsole,
+                                                  )
+                                                  setResultConsoleWidth(
+                                                    defaultWidthConsole,
+                                                  )
                                                 } else {
-                                                  setCodeConsoleHeight(defaultHeightConsole)
-                                                  setResultConsoleHeight(defaultHeightConsole)
+                                                  setCodeConsoleHeight(
+                                                    defaultHeightConsole,
+                                                  )
+                                                  setResultConsoleHeight(
+                                                    defaultHeightConsole,
+                                                  )
                                                 }
                                               }}
                                             >
@@ -889,7 +963,11 @@ export function UpdateThingService({
                                     readOnly={true}
                                     setCodeInput={setCodeOutput}
                                     isFullScreen={fullScreen}
-                                    style={fullScreen ? {'height': resultConsoleHeight} : {}}
+                                    style={
+                                      fullScreen
+                                        ? { height: resultConsoleHeight }
+                                        : {}
+                                    }
                                   />
                                 </div>
                               </div>

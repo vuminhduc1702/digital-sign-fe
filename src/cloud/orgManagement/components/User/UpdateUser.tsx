@@ -87,7 +87,7 @@ export function UpdateUser({
   province,
   district,
   ward,
-  full_address
+  full_address,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -130,28 +130,12 @@ export function UpdateUser({
   const { data: provinceList } = useAreaList({
     parentCode: '',
     type: 'PROVINCE',
-    config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
-    },
   })
 
   const { data: districtList } = useAreaList({
     parentCode: provinceCode,
     type: 'DISTRICT',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!provinceCode,
     },
   })
@@ -160,13 +144,6 @@ export function UpdateUser({
     parentCode: districtCode,
     type: 'WARD',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!districtCode,
     },
   })
@@ -214,7 +191,7 @@ export function UpdateUser({
               province: values.province,
               district: values.district,
               ward: values.ward,
-              full_address: values.full_address
+              full_address: values.full_address,
             },
             userId,
           })
@@ -228,7 +205,7 @@ export function UpdateUser({
             province,
             district,
             ward,
-            full_address
+            full_address,
           },
         }}
       >

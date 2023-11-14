@@ -57,71 +57,24 @@ export function CreateCustomer() {
   const [wardCode, setWardCode] = useState('')
   const [date, setDate] = useState<Date | null>()
 
-  //get province list
   const { data: provinceList } = useAreaList({
-    config: {
-      // suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === provinceCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        transformArr.push({ value: '', label: t('form:province_city') })
-        return transformArr
-      },
-    },
-    param: {
-      parentCode: '',
-      type: 'PROVINCE',
-      queryKey: 'province-list',
-    },
+    parentCode: '',
+    type: 'PROVINCE',
   })
 
-  // get district list
   const { data: districtList } = useAreaList({
+    parentCode: provinceCode,
+    type: 'DISTRICT',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === districtCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        transformArr.push({ value: '', label: t('form:district') })
-        return transformArr
-      },
       enabled: !!provinceCode,
     },
-    param: {
-      parentCode: provinceCode,
-      type: 'DISTRICT',
-      queryKey: 'district-list',
-    },
   })
 
-  // get ward list
   const { data: wardList } = useAreaList({
+    parentCode: districtCode,
+    type: 'WARD',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === wardCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        transformArr.push({ value: '', label: t('form:village') })
-        return transformArr
-      },
       enabled: !!districtCode,
-    },
-    param: {
-      parentCode: districtCode,
-      type: 'WARD',
-      queryKey: 'ward-list',
     },
   })
 

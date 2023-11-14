@@ -83,28 +83,12 @@ export function CreateUser() {
   const { data: provinceList } = useAreaList({
     parentCode: '',
     type: 'PROVINCE',
-    config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
-    },
   })
 
   const { data: districtList } = useAreaList({
     parentCode: provinceCode,
     type: 'DISTRICT',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!provinceCode,
     },
   })
@@ -113,13 +97,6 @@ export function CreateUser() {
     parentCode: districtCode,
     type: 'WARD',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!districtCode,
     },
   })
