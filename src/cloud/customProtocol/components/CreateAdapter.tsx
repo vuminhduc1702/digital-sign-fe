@@ -201,16 +201,16 @@ export const outputList = [
 export const thingTypeList = [
   {
     label: i18n.t('cloud:custom_protocol.thing.thing'),
-    value: 'Thing',
+    value: 'thing',
     selected: true,
   },
   {
     label: i18n.t('cloud:custom_protocol.thing.template'),
-    value: 'Template',
+    value: 'template',
   },
   {
     label: i18n.t('cloud:custom_protocol.thing.shape'),
-    value: 'Shape',
+    value: 'shape',
   },
 ]
 
@@ -222,7 +222,7 @@ export function CreateAdapter() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [protocolType, setProtocolType] = useState<ProtocolType>('mqtt')
   const [contentType, setContentType] = useState<ContentType>('json')
-  const [thingType, setThingType] = useState<EntityThingType>('Thing')
+  const [thingType, setThingType] = useState<EntityThingType>('thing')
   const [isShow, setIsShow] = useState(true)
 
   const {
@@ -861,8 +861,8 @@ export function CreateAdapter() {
                                         setThingType(event.target.value)
                                       }}
                                     />
-                                    {thingType === 'Thing' ||
-                                    thingType === 'Template' ? (
+                                    {thingType === 'thing' ||
+                                    thingType === 'template' ? (
                                       <SelectField
                                         label={t(
                                           'cloud:custom_protocol.thing.base_template',
@@ -872,7 +872,7 @@ export function CreateAdapter() {
                                         }
                                         registration={register('base_template')}
                                         options={
-                                          thingType === 'Thing'
+                                          thingType === 'thing'
                                             ? thingSelectDataThing
                                             : thingSelectDataTemplate
                                         }

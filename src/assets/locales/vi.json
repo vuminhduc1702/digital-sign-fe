@@ -793,7 +793,10 @@
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
       "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
     },
-    "no_data_res": "Dữ liệu trả về không đúng."
+    "no_data_res": "Dữ liệu trả về không đúng.",
+    "default_zod_err": {
+      "select": "Vui lòng chọn"
+    }
   },
   "loading": {
     "org": "Đang tải danh sách tổ chức...",
