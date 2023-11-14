@@ -12,8 +12,8 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
+import { Switch } from '~/components/Switch'
 import { getVNDateFormat } from '~/utils/misc'
-
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
 
@@ -21,6 +21,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
 export const STATUS = {
   true: 'Có',
@@ -58,7 +59,7 @@ function AttrTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -83,7 +84,7 @@ function AttrTableContextMenu({
               }
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -144,7 +145,7 @@ export function AttrTable({
   entityType: EntityType
 }) {
   const { t } = useTranslation()
-
+  const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
 
   const dataSorted =
@@ -202,7 +203,25 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.logged')}</span>
         ),
-        cell: info => STATUS[info.getValue()],
+        cell: info => {
+          const { attribute_key } = info.row.original
+          return (
+            <Switch
+              key={STATUS[info.getValue()]}
+              defaultChecked={STATUS[info.getValue()] === 'Có'}
+              onCheckedChange={checked => {
+                mutateUpdateLogged({
+                  data: {
+                    logged: checked,
+                  },
+                  device_id: entityId,
+                  attribute_key: attribute_key,
+                  entityType: entityType,
+                })
+              }}
+            />
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {

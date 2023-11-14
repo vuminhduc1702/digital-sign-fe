@@ -45,7 +45,7 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-
+  let CheckboxState: boolean
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -84,6 +84,7 @@ export function UpdateAttr({
       <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="update-attr"
         onSubmit={values => {
+          console.log(value)
           mutate({
             data: {
               attributes: [
@@ -98,6 +99,14 @@ export function UpdateAttr({
             entityType,
             entityId,
           })
+          mutateUpdateLogged({
+            data: {
+              logged: CheckboxState,
+            },
+            device_id: entityId,
+            attribute_key: attributeKey,
+            entityType: entityType,
+          })
         }}
         options={{
           defaultValues: {
@@ -111,6 +120,7 @@ export function UpdateAttr({
       >
         {({ register, formState, control }) => {
           console.log('formState errors: ', formState.errors)
+
           return (
             <>
               <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
@@ -144,14 +154,7 @@ export function UpdateAttr({
                             checked={value}
                             onCheckedChange={onChange}
                             onClick={() => {
-                              mutateUpdateLogged({
-                                data: {
-                                  logged: !value,
-                                },
-                                device_id: entityId,
-                                attribute_key: attributeKey,
-                                entityType: entityType,
-                              })
+                              CheckboxState = !value
                             }}
                           />
                         )

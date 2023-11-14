@@ -58,9 +58,9 @@ export const updatedUserSchema = z
     project_id: z.string().optional(),
     org_id: z.string().optional(),
     role_id: z.string().optional(),
-    province: emptySelectSchema,
-    district: emptySelectSchema,
-    ward: emptySelectSchema,
+    province: z.string().optional(),
+    district: z.string().optional(),
+    ward: z.string().optional(),
     full_address: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
@@ -87,7 +87,7 @@ export function UpdateUser({
   province,
   district,
   ward,
-  full_address
+  full_address,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -130,28 +130,12 @@ export function UpdateUser({
   const { data: provinceList } = useAreaList({
     parentCode: '',
     type: 'PROVINCE',
-    config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
-    },
   })
 
   const { data: districtList } = useAreaList({
     parentCode: provinceCode,
     type: 'DISTRICT',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!provinceCode,
     },
   })
@@ -160,13 +144,6 @@ export function UpdateUser({
     parentCode: districtCode,
     type: 'WARD',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!districtCode,
     },
   })
@@ -214,7 +191,7 @@ export function UpdateUser({
               province: values.province,
               district: values.district,
               ward: values.ward,
-              full_address: values.full_address
+              full_address: values.full_address,
             },
             userId,
           })
@@ -228,7 +205,7 @@ export function UpdateUser({
             province,
             district,
             ward,
-            full_address
+            full_address,
           },
         }}
       >
@@ -313,6 +290,9 @@ export function UpdateUser({
               </p>
             </div>
             <div className="grid grid-cols-3 gap-x-2">
+              <div className="col-start-1 col-end-4">
+                {t('cloud:org_manage.user_manage.add_user.address')}
+              </div>
               <SelectField
                 error={formState.errors['province']}
                 registration={register('province')}

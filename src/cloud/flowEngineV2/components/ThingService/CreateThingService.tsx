@@ -104,24 +104,25 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
   // Resize console window
+  const resizerWidth = 8
+  const minWidthCode = 126
+  const minWidthResult = 116
+  const minHeightCode = 70
+  const minHeightResult = 70
+  const defaultHeightForCodeEditor = 382
   const [isResizable, setIsResizable] = useState(false)
   const consolePanelEle = document.getElementById('console-panel')
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState(
-    (Number(consolePanelEle?.offsetWidth) - 8) / 2,
-  )
-  const [resultConsoleWidth, setResultConsoleWidth] = useState(
-    (Number(consolePanelEle?.offsetWidth) - 8) / 2,
-  )
-  const [codeConsoleHeight, setCodeConsoleHeight] = useState(
-    (Number(consolePanelEle?.offsetHeight) - 8) / 2,
-  )
-  const [resultConsoleHeight, setResultConsoleHeight] = useState(
-    (Number(consolePanelEle?.offsetHeight) - 8) / 2,
-  )
-  const minWidthCode = 80
-  const minWidthResult = 116
-  const minHeightCode = 100
-  const minHeightResult = 100
+  const defaultWidthConsole =
+    (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
+  const defaultHeightConsole =
+    (defaultHeightForCodeEditor * 2 - resizerWidth) / 2
+  const [codeConsoleWidth, setCodeConsoleWidth] = useState(defaultWidthConsole)
+  const [resultConsoleWidth, setResultConsoleWidth] =
+    useState(defaultWidthConsole)
+  const [codeConsoleHeight, setCodeConsoleHeight] =
+    useState(defaultHeightConsole)
+  const [resultConsoleHeight, setResultConsoleHeight] =
+    useState(defaultHeightConsole)
 
   const {
     mutate: mutateExecuteService,
@@ -167,12 +168,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     const dataInput = data.input.map(item => ({
       name: item.name,
       type: item.type,
-      // value:
-      //   item.type === 'bool' && item.value === ''
-      //     ? 'false'
-      //     : numberInput.includes(item.type as string)
-      //     ? parseInt(item.value)
-      //     : item.value,
     }))
     if (typeInput === 'Run') {
       const dataRun: dataRun = {}
@@ -215,8 +210,10 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setIsShowConsole(false)
     setInputTypeValue('')
     setViewMode('default')
-    setCodeConsoleWidth((Number(consolePanelEle?.offsetWidth) - 8) / 2)
-    setResultConsoleWidth((Number(consolePanelEle?.offsetWidth) - 8) / 2)
+    setCodeConsoleWidth(defaultWidthConsole)
+    setResultConsoleWidth(defaultWidthConsole)
+    setCodeConsoleHeight(defaultHeightConsole)
+    setResultConsoleHeight(defaultHeightConsole)
   }
 
   useEffect(() => {
@@ -242,6 +239,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   function handleMouseMove(event: MouseEvent) {
     if (isResizable && !fullScreen) {
+      event.preventDefault()
       let offsetCode = event.clientX - 660
       let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
       if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
@@ -249,8 +247,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
         setResultConsoleWidth(offsetResult)
       }
     } else if (isResizable && fullScreen) {
-      let offsetCode = event.clientY - 200
-      let offsetResult = Number(consolePanelEle?.offsetHeight) - offsetCode
+      event.preventDefault()
+      let offsetCode = event.clientY - 186
+      let offsetResult = defaultHeightConsole * 2 - offsetCode
 
       if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
         setCodeConsoleHeight(offsetCode)
@@ -268,6 +267,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [isResizable])
+
+  useEffect(() => {
+    if (defaultWidthConsole) {
+      setCodeConsoleWidth(defaultWidthConsole)
+      setResultConsoleWidth(defaultWidthConsole)
+    }
+  }, [viewMode])
 
   return (
     <FormDialog
@@ -579,7 +585,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
                   <div
                     className={cn('flex w-[100%] md:col-span-3', {
-                      'flex-col gap-2': fullScreen,
+                      'flex-col': fullScreen,
                       'md:grid-cols-6': viewMode !== 'default',
                     })}
                     id="console-panel"
@@ -587,15 +593,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div
                       className={cn(
                         'flex w-[100%] flex-col gap-2 md:col-span-1',
-                        {
-                          'w-[85%]':
-                            (viewMode === 'maximize_code' ||
-                              viewMode === 'minimize_result') &&
-                            !fullScreen,
-                          'w-[15%]':
-                            viewMode === 'minimize_code' && !fullScreen,
-                          'w-[100%]': viewMode === 'default',
-                        },
                       )}
                       style={!fullScreen ? { width: codeConsoleWidth } : {}}
                       id="code-console"
@@ -623,6 +620,20 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="hover:background py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('maximize_code')
+                                    if (!fullScreen) {
+                                      setCodeConsoleWidth(
+                                        Number(consolePanelEle?.offsetWidth) -
+                                          minWidthResult,
+                                      )
+                                      setResultConsoleWidth(minWidthResult)
+                                    } else {
+                                      setCodeConsoleHeight(
+                                        defaultHeightForCodeEditor * 2 -
+                                          resizerWidth -
+                                          minHeightResult,
+                                      )
+                                      setResultConsoleHeight(minHeightResult)
+                                    }
                                   }}
                                 >
                                   {t(
@@ -633,6 +644,20 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('minimize_code')
+                                    if (!fullScreen) {
+                                      setResultConsoleWidth(
+                                        Number(consolePanelEle?.offsetWidth) -
+                                          minWidthCode,
+                                      )
+                                      setCodeConsoleWidth(minWidthCode)
+                                    } else {
+                                      setCodeConsoleHeight(minHeightCode)
+                                      setResultConsoleHeight(
+                                        defaultHeightForCodeEditor * 2 -
+                                          resizerWidth -
+                                          minHeightCode,
+                                      )
+                                    }
                                   }}
                                 >
                                   {t(
@@ -643,6 +668,15 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('default')
+                                    if (!fullScreen) {
+                                      setCodeConsoleWidth(defaultWidthConsole)
+                                      setResultConsoleWidth(defaultWidthConsole)
+                                    } else {
+                                      setCodeConsoleHeight(defaultHeightConsole)
+                                      setResultConsoleHeight(
+                                        defaultHeightConsole,
+                                      )
+                                    }
                                   }}
                                 >
                                   {t(
@@ -691,36 +725,25 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         className={`${fullScreen ? '' : '!block'}`}
                         setCodeInput={setCodeInput}
                         isFullScreen={fullScreen}
-                        viewMode={viewMode}
-                        editorName={'code'}
+                        style={fullScreen ? { height: codeConsoleHeight } : {}}
                       />
                     </div>
                     {!fullScreen ? (
                       <div
-                        className="h-[100%] w-[8px] cursor-col-resize"
+                        className="h-[100%] cursor-col-resize"
+                        style={{ width: resizerWidth }}
                         onMouseDown={handleResize}
                       ></div>
                     ) : (
                       <div
-                        className="h-[8px] w-[100%] cursor-row-resize"
+                        className=" w-[100%] cursor-row-resize"
+                        style={{ height: resizerWidth }}
                         onMouseDown={handleResize}
                       ></div>
                     )}
                     <div
                       className={cn(
                         'flex w-[100%] flex-col gap-2 md:col-span-1',
-                        {
-                          'w-[85%]':
-                            (viewMode == 'maximize_result' ||
-                              viewMode == 'minimize_code') &&
-                            !fullScreen,
-                        },
-                        {
-                          'w-[15%]':
-                            (viewMode == 'minimize_result' ||
-                              viewMode == 'maximize_code') &&
-                            !fullScreen,
-                        },
                       )}
                       style={!fullScreen ? { width: resultConsoleWidth } : {}}
                       id="result-console"
@@ -748,6 +771,20 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('maximize_result')
+                                    if (!fullScreen) {
+                                      setResultConsoleWidth(
+                                        Number(consolePanelEle?.offsetWidth) -
+                                          minWidthCode,
+                                      )
+                                      setCodeConsoleWidth(minWidthCode)
+                                    } else {
+                                      setCodeConsoleHeight(minHeightCode)
+                                      setResultConsoleHeight(
+                                        defaultHeightForCodeEditor * 2 -
+                                          resizerWidth -
+                                          minHeightCode,
+                                      )
+                                    }
                                   }}
                                 >
                                   {t(
@@ -758,6 +795,20 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('minimize_result')
+                                    if (!fullScreen) {
+                                      setCodeConsoleWidth(
+                                        Number(consolePanelEle?.offsetWidth) -
+                                          minWidthResult,
+                                      )
+                                      setResultConsoleWidth(minWidthResult)
+                                    } else {
+                                      setResultConsoleHeight(minHeightResult)
+                                      setCodeConsoleHeight(
+                                        defaultHeightForCodeEditor * 2 -
+                                          resizerWidth -
+                                          minHeightResult,
+                                      )
+                                    }
                                   }}
                                 >
                                   {t(
@@ -768,6 +819,15 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="py-1 hover:cursor-pointer"
                                   onClick={() => {
                                     setViewMode('default')
+                                    if (!fullScreen) {
+                                      setCodeConsoleWidth(defaultWidthConsole)
+                                      setResultConsoleWidth(defaultWidthConsole)
+                                    } else {
+                                      setCodeConsoleHeight(defaultHeightConsole)
+                                      setResultConsoleHeight(
+                                        defaultHeightConsole,
+                                      )
+                                    }
                                   }}
                                 >
                                   {t(
@@ -785,8 +845,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         showRunButton={false}
                         setCodeInput={setCodeOutput}
                         isFullScreen={fullScreen}
-                        viewMode={viewMode}
-                        editorName={'result'}
+                        style={
+                          fullScreen ? { height: resultConsoleHeight } : {}
+                        }
                       />
                     </div>
                   </div>
