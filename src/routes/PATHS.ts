@@ -40,8 +40,6 @@ export const PATHS: { [key: string]: string } = {
   CUSTOMER_MANAGE: `${BASE_PATH_PAYMENT}customer-manage`,
   BILLING_CUSTOMER: `${BASE_PATH_PAYMENT}customer`,
 
-  USER_ACCOUNT: `${BASE_PATH}user_account`,
-
   // Intergration route
   AI: `${BASE_PATH_INTEGRATION}ai`,
   DDOS: `${BASE_PATH_INTEGRATION}ai/ddos`,

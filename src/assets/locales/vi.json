@@ -42,7 +42,11 @@
       "title": "Tích hợp",
       "tracking": "Tracking",
       "smarthome": "Smarthome",
-      "ai": "AI"
+      "ai": {
+        "title": "AI",
+        "ddos": "Dự báo DDOS",
+        "fuel": "Dự báo nhiên liệu"
+      }
     }
   },
   "nav": {

@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Reset CSS */
-
 @layer base {
   div,
   p,
