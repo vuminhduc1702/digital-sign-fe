@@ -18,11 +18,8 @@ type CodeSandboxEditorProps = {
   className?: string
   isFullScreen?: boolean
   defaultValue?: string
-  isEdit?: boolean
-  viewMode?: string
-  editorName?: string
-  isUpdate?: boolean
   showRunButton?: boolean
+  style?: CSSProperties
   }
 
 type SimpleCodeProps = {
@@ -47,12 +44,9 @@ export function CodeSandboxEditor({
   isShowLog,
   isFullScreen,
   defaultValue,
-  isEdit,
   className,
-  viewMode,
-  editorName,
-  isUpdate,
   showRunButton,
+  style
   }: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
@@ -82,56 +76,18 @@ export function CodeSandboxEditor({
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor
           className={cn('', {
-            '!h-96': isFullScreen,
             'border-0 border-b border-solid border-inherit': !isFullScreen,
-            '!h-[600px] border-0': !isFullScreen && !isShowLog,
-            '!h-[320px] border-0': isFullScreen && !isShowLog && isEdit,
-            '!h-[45rem]': isFullScreen
-              ? editorName == 'code'
-                ? viewMode == 'maximize_code' || viewMode == 'minimize_result'
-                : viewMode == 'maximize_result' || viewMode == 'minimize_code'
-              : '',
-            '!h-[41rem]':
-              isUpdate && isFullScreen
-                ? editorName == 'code'
-                  ? viewMode == 'maximize_code' || viewMode == 'minimize_result'
-                  : viewMode == 'maximize_result' || viewMode == 'minimize_code'
-                : '',
-            '!h-[3rem]': isFullScreen
-              ? editorName == 'code'
-                ? viewMode == 'maximize_result' || viewMode == 'minimize_code'
-                : viewMode == 'maximize_code' || viewMode == 'minimize_result'
-              : '',
+            '!h-[600px] border-0': !isFullScreen && !isShowLog
           })}
           showInlineErrors
           showLineNumbers
           readOnly={readOnly}
           showRunButton={showRunButton}
           wrapContent={true}
+          style={style}
         />
         {isShowLog && (
           <SandpackConsole
-            className={cn('', {
-              '!h-96': isFullScreen,
-              '!h-[45rem]': isFullScreen
-                ? editorName == 'code'
-                  ? viewMode == 'maximize_code' || viewMode == 'minimize_result'
-                  : viewMode == 'maximize_result' || viewMode == 'minimize_code'
-                : '',
-              '!h-[41rem]':
-                isUpdate && isFullScreen
-                  ? editorName == 'code'
-                    ? viewMode == 'maximize_code' ||
-                      viewMode == 'minimize_result'
-                    : viewMode == 'maximize_result' ||
-                      viewMode == 'minimize_code'
-                  : '',
-              '!h-[3rem]': isFullScreen
-                ? editorName == 'code'
-                  ? viewMode == 'maximize_result' || viewMode == 'minimize_code'
-                  : viewMode == 'maximize_code' || viewMode == 'minimize_result'
-                : '',
-            })}
             standalone
             showSyntaxError={true}
           />

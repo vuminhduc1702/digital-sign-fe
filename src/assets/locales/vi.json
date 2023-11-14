@@ -195,6 +195,7 @@
           "role": "Vai trò",
           "activate": "Kích hoạt",
           "parent": "Trực thuộc tổ chức",
+          "address": "Địa chỉ",
           "success_create": "Tạo người dùng thành công",
           "success_update": "Sửa người dùng thành công",
           "success_delete": "Xoá người dùng thành công",
