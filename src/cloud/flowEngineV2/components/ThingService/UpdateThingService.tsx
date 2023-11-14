@@ -94,7 +94,7 @@ export function UpdateThingService({
   // Resize console window
   const resizerWidth = 8
   const minWidthCode = 126
-  const minWidthResult = 116
+  const minWidthResult = 120
   const minHeightCode = 70
   const minHeightResult = 70
   const defaultHeightForCodeEditor = 344
@@ -254,13 +254,6 @@ export function UpdateThingService({
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [isResizable])
-
-  useEffect(() => {
-    if (defaultWidthConsole) {
-      setCodeConsoleWidth(defaultWidthConsole)
-      setResultConsoleWidth(defaultWidthConsole)
-    }
-  }, [viewMode])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>

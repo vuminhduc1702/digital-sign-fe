@@ -5,11 +5,13 @@ import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
-type Profile = {
+export type Profile = {
   identity_info: {
     identity: string
     front_image: string
     back_image: string
+    registration_form_image: string
+    authorization_letter_image: string
   }
   dob: string | null
   nationality: string
