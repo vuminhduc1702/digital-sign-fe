@@ -76,11 +76,11 @@ export type Service = {
   update_ts: string | null
 }
 
-export type EntityThingType = 'Thing' | 'Template' | 'Shape'
+export type EntityThingType = 'thing' | 'template' | 'shape'
 export type EntityThing = {
   id: string
   name: string
-  type: EntityThingType
+  type: 'Thing' | 'Template' | 'Shape'
   project_id: string
   create_ts: string
   description: string
