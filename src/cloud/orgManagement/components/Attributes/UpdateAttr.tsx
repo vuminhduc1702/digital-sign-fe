@@ -45,7 +45,7 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  let CheckboxState = (value === "true")
+  let CheckboxState = value === 'true'
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -84,7 +84,6 @@ export function UpdateAttr({
       <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="update-attr"
         onSubmit={values => {
-          console.log(value)
           mutate({
             data: {
               attributes: [
@@ -154,7 +153,6 @@ export function UpdateAttr({
                             checked={value}
                             onCheckedChange={onChange}
                             onClick={() => {
-                              console.log(CheckboxState)
                               CheckboxState = !value
                             }}
                           />
