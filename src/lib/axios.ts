@@ -9,15 +9,30 @@ import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
 import i18n from '~/i18n'
+import { useNotificationStore } from '~/stores/notifications'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+  const controller = new AbortController()
+
+  // setTimeout(() => {
+  //   controller.abort()
+  //   useNotificationStore.getState().addNotification({
+  //     type: 'error',
+  //     title: i18n.t('error:server_res.title'),
+  //     message: 'hahahahahahahahhaha',
+  //   })
+  // }, 200)
+
   const userStorage = storage.getToken()
   const token = userStorage?.token
   if (token) {
     ;(config.headers as AxiosHeaders).set('Authorization', `Bearer ${token}`)
   }
 
-  return config
+  return {
+    ...config,
+    signal: controller.signal,
+  }
 }
 
 export const axios = Axios.create({
@@ -25,6 +40,8 @@ export const axios = Axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // timeout: 100,
+  // timeoutErrorMessage: 'hahahahahahahahhaha',
 })
 
 export const axiosUploadFile = Axios.create({
