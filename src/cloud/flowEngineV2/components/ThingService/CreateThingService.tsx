@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
@@ -43,6 +43,7 @@ import {
 } from '~/components/Tooltip'
 import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { ImperativePanelGroupHandle, ImperativePanelHandle, Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -104,25 +105,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
   // Resize console window
-  const resizerWidth = 8
-  const minWidthCode = 126
-  const minWidthResult = 116
-  const minHeightCode = 70
-  const minHeightResult = 70
-  const defaultHeightForCodeEditor = 382
-  const [isResizable, setIsResizable] = useState(false)
-  const consolePanelEle = document.getElementById('console-panel')
-  const defaultWidthConsole =
-    (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
-  const defaultHeightConsole =
-    (defaultHeightForCodeEditor * 2 - resizerWidth) / 2
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState(defaultWidthConsole)
-  const [resultConsoleWidth, setResultConsoleWidth] =
-    useState(defaultWidthConsole)
-  const [codeConsoleHeight, setCodeConsoleHeight] =
-    useState(defaultHeightConsole)
-  const [resultConsoleHeight, setResultConsoleHeight] =
-    useState(defaultHeightConsole)
+  const codeRef = useRef<ImperativePanelGroupHandle>(null)
+  const codeConsoleRef = useRef<ImperativePanelHandle>(null)
+  const panelGroup = codeRef.current
 
   const {
     mutate: mutateExecuteService,
@@ -210,10 +195,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setIsShowConsole(false)
     setInputTypeValue('')
     setViewMode('default')
-    setCodeConsoleWidth(defaultWidthConsole)
-    setResultConsoleWidth(defaultWidthConsole)
-    setCodeConsoleHeight(defaultHeightConsole)
-    setResultConsoleHeight(defaultHeightConsole)
+    panelGroup?.setLayout([50, 50])
   }
 
   useEffect(() => {
@@ -229,51 +211,24 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     }
   }, [])
 
-  function handleResize() {
-    setIsResizable(true)
-  }
-
-  function handleMouseUp() {
-    setIsResizable(false)
-  }
-
-  function handleMouseMove(event: MouseEvent) {
-    if (isResizable && !fullScreen) {
-      event.preventDefault()
-      let offsetCode = event.clientX - 660
-      let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
-      if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
-        setCodeConsoleWidth(offsetCode)
-        setResultConsoleWidth(offsetResult)
-      }
-    } else if (isResizable && fullScreen) {
-      event.preventDefault()
-      let offsetCode = event.clientY - 186
-      let offsetResult = defaultHeightConsole * 2 - offsetCode
-
-      if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
-        setCodeConsoleHeight(offsetCode)
-        setResultConsoleHeight(offsetResult)
-      }
-    }
-  }
-
   useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isResizable])
-
-  useEffect(() => {
-    if (defaultWidthConsole) {
-      setCodeConsoleWidth(defaultWidthConsole)
-      setResultConsoleWidth(defaultWidthConsole)
+    if (panelGroup && !fullScreen) {
+      switch(viewMode){
+        case 'minimize_code':
+        case 'maximize_result':
+          panelGroup.setLayout([14, 86])
+          break
+        case 'maximize_code':
+        case 'minimize_result':
+          panelGroup.setLayout([86, 14])
+          break
+        case 'default':
+          panelGroup.setLayout([50, 50])
+          break
+      }
     }
   }, [viewMode])
+
 
   return (
     <FormDialog
@@ -583,7 +538,187 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     </div>
                   </div>
 
-                  <div
+                  <PanelGroup direction={!fullScreen ? "horizontal" : "vertical"}
+                    className={cn('flex w-[100%] md:col-span-3', {
+                      'flex-col': fullScreen,
+                      'md:grid-cols-6': viewMode !== 'default',
+                    })}
+                    ref={codeRef}
+                  >
+                    <Panel defaultSize={50} minSize={14} id="code-console">
+                      <div
+                        className={cn(
+                          'flex w-[100%] flex-col gap-2 md:col-span-1',
+                        )}
+                      >
+                        <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                          <div className="flex gap-3">
+                            <p className="text-table-header">
+                              {t('cloud:custom_protocol.service.code')}
+                            </p>
+                          </div>
+                          <div className="flex gap-3">
+                            <Dropdown
+                              icon={
+                                <img
+                                  height={20}
+                                  width={20}
+                                  src={btnChevronDownIcon}
+                                  className="text-secondary-700 hover:text-primary-400"
+                                />
+                              }
+                            >
+                              <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div className="p-2">
+                                  <div
+                                    className="hover:background py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('maximize_code')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.maximize_result',
+                                    )}
+                                  </div>
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('minimize_code')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.minimize_result',
+                                    )}
+                                  </div>
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('default')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.default_result',
+                                    )}
+                                  </div>
+                                  {isShowConsole ? (
+                                    <div
+                                      className="py-1 hover:cursor-pointer"
+                                      onClick={() => {
+                                        setIsShowConsole(false)
+                                      }}
+                                    >
+                                      {t(
+                                        'cloud:custom_protocol.service.hide_console',
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <div
+                                      className="py-1 hover:cursor-pointer"
+                                      onClick={() => {
+                                        setIsShowConsole(true)
+                                      }}
+                                    >
+                                      {t(
+                                        'cloud:custom_protocol.service.view_console',
+                                      )}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </Dropdown>
+                            <button form="create-serviceThing" type="submit">
+                              <img
+                                onClick={() => setTypeInput('Run')}
+                                src={btnRunCode}
+                                alt="Submit"
+                                className="h-5 w-5 cursor-pointer"
+                              />
+                            </button>
+                          </div>
+                        </div>
+                        <CodeSandboxEditor
+                          isShowLog={isShowConsole}
+                          value={codeInput}
+                          className={`${fullScreen ? '' : '!block'}`}
+                          setCodeInput={setCodeInput}
+                          isFullScreen={fullScreen}
+
+                        />
+                      </div>
+                    </Panel>
+                    <PanelResizeHandle className={!fullScreen ? 'w-[6px]' : 'h-[6px]'} />
+                    <Panel defaultSize={50} minSize={14} id="result-console">
+                      <div
+                        className={cn(
+                          'flex w-[100%] flex-col gap-2 md:col-span-1',
+                        )}
+                        id="result-console"
+                      >
+                        <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                          <div className="flex gap-3">
+                            <p className="text-table-header">
+                              {t('cloud:custom_protocol.service.output')}
+                            </p>
+                          </div>
+                          <div className="flex gap-3">
+                            <Dropdown
+                              icon={
+                                <img
+                                  height={20}
+                                  width={20}
+                                  src={btnChevronDownIcon}
+                                  className="text-secondary-700 hover:text-primary-400"
+                                />
+                              }
+                            >
+                              <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                <div className="p-2">
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('maximize_result')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.maximize_result',
+                                    )}
+                                  </div>
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('minimize_result')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.minimize_result',
+                                    )}
+                                  </div>
+                                  <div
+                                    className="py-1 hover:cursor-pointer"
+                                    onClick={() => {
+                                      setViewMode('default')
+                                    }}
+                                  >
+                                    {t(
+                                      'cloud:custom_protocol.service.default_result',
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </Dropdown>
+                          </div>
+                        </div>
+                        <CodeSandboxEditor
+                          value={codeOutput}
+                          readOnly={true}
+                          showRunButton={false}
+                          setCodeInput={setCodeOutput}
+                          isFullScreen={fullScreen}
+                        />
+                      </div>
+                    </Panel>
+                  </PanelGroup>
+                  {/* <div
                     className={cn('flex w-[100%] md:col-span-3', {
                       'flex-col': fullScreen,
                       'md:grid-cols-6': viewMode !== 'default',
@@ -850,7 +985,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                         }
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="absolute bottom-6 right-6 flex gap-3">
                   <img
