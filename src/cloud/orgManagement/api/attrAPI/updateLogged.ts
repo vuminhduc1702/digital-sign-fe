@@ -1,3 +1,4 @@
+import { ConsoleIcon } from '@codesandbox/sandpack-react/index'
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { axios } from '~/lib/axios'
@@ -24,11 +25,9 @@ export const updateLogged = ({
     data,
   )
 }
-
 export type UseUpdateLoggedOptions = {
   config?: MutationConfig<typeof updateLogged>
 }
-
 export const useUpdateLogged = (
   { config }: UseUpdateLoggedOptions = {},
   addNoti: boolean = true,
@@ -40,7 +39,7 @@ export const useUpdateLogged = (
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      if (addNoti === true) {
+      if (addNoti) {
         addNotification({
           type: 'success',
           title: t(
