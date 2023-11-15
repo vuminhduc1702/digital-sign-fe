@@ -21,7 +21,6 @@ import { ApplicationRoutes } from '~/applicationPages'
 import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
-import SelfAccountLayout from '~/layout/SelfAccountLayout'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
