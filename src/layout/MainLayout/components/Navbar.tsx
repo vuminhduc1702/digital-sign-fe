@@ -29,7 +29,6 @@ function Navbar() {
   const { data: projectsData } = useProjects()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
-      useErrorBoundary: false,
       suspense: false,
     },
   })
@@ -165,7 +164,9 @@ function Navbar() {
                 />
                 <p className="text-white">
                   {t('nav:hello')}{' '}
-                  {userInfoData?.name || userInfoData?.email?.split('@')[0]}
+                  {userInfoData != null
+                    ? userInfoData?.name || userInfoData?.email?.split('@')[0]
+                    : t('nav:friend')}
                 </p>
                 <SidebarDropDownIcon
                   width={12}

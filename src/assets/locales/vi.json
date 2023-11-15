@@ -51,6 +51,7 @@
   },
   "nav": {
     "hello": "Chào",
+    "friend": "Bạn",
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
     "support": "Hỗ trợ",
@@ -244,6 +245,7 @@
           "name": "Tên",
           "group": "Nhóm",
           "onClick": "onClick",
+          "onClick_btn": "Kích hoạt",
           "status": "Trạng thái",
           "delete_event": "Xoá sự kiện",
           "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
@@ -795,7 +797,8 @@
     },
     "no_data_res": "Dữ liệu trả về không đúng.",
     "default_zod_err": {
-      "select": "Vui lòng chọn"
+      "select": "Vui lòng chọn",
+      "select_union": "Vui lòng chọn 1 trong các option sau:"
     }
   },
   "loading": {

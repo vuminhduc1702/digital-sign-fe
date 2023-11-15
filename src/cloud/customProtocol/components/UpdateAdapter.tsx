@@ -120,21 +120,21 @@ export function UpdateAdapter({
     isSuccess: isSuccessService,
   } = useCreateServiceThing()
 
-  const [optionThingId, setOptionThingId] = useState<SelectOption>({
-    label: '',
-    value: '',
-  })
+  // const [optionThingId, setOptionThingId] = useState<SelectOption>({
+  //   label: '',
+  //   value: '',
+  // })
 
   const { data: serviceData } = useGetServiceThings({
     thingId: selectedThingId ? selectedThingId : thing_id,
     config: { enabled: !!selectedThingId, suspense: false },
   })
-  useEffect(() => {
-    const thingFilter =
-      thingSelectData.length &&
-      thingSelectData.filter(item => item.value === thing_id)
-    setOptionThingId(thingFilter[0] || [{ value: '', label: '' }])
-  }, [])
+  // useEffect(() => {
+  //   const thingFilter =
+  //     thingSelectData.length &&
+  //     thingSelectData.filter(item => item.value === thing_id)
+  //   setOptionThingId(thingFilter[0] || [{ value: '', label: '' }])
+  // }, [])
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -144,8 +144,6 @@ export function UpdateAdapter({
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
-  // const [isCreateAdapterFormUpdated, setIsCreateAdapterFormUpdated] =
-  //   useState(false)
   const protocolTypeRef = useRef(protocol)
 
   const renderFields = () => {
@@ -186,10 +184,6 @@ export function UpdateAdapter({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            // disabled={
-            //   !isCreateAdapterFormUpdated &&
-            //   protocolTypeRef.current === protocolType
-            // }
           />
         </>
       )}
@@ -287,7 +281,7 @@ export function UpdateAdapter({
                   protocol: values.protocol as 'tcp' | 'udp',
                   content_type: values.content_type,
                   thing_id: values.thing_id,
-                  handle_service: values.handle_service
+                  handle_service: values.handle_service,
                 },
                 id,
               })
@@ -317,7 +311,6 @@ export function UpdateAdapter({
           { append: appendSchema, fields: fieldsSchema, remove: removeSchema },
         ) => {
           console.log('zod adapter errors: ', formState.errors)
-          // setIsCreateAdapterFormUpdated(formState.isDirty)
 
           return (
             <>
@@ -664,12 +657,6 @@ export function UpdateAdapter({
                             //   ) as unknown as SelectOption
                             //   setSelectedThing(selectedThingWatch)
                             // }}
-                            onChange={e => {
-                              setSelectedThingId(e?.value)
-                              setOptionThingId(e)
-                              setValue('thing_id', e?.value)
-                            }}
-                            value={optionThingId}
                             placeholder={t(
                               'cloud:custom_protocol.thing.choose',
                             )}

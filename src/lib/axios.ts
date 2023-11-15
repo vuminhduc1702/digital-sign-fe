@@ -56,7 +56,7 @@ axios.interceptors.response.use(
       return response.data
     }
   },
-  (error: AxiosError) => {
+  (error: AxiosError<{ error: string }>) => {
     console.error('res error: ', error)
     let message = ''
     switch (error.response?.status) {
@@ -74,17 +74,14 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
-      case 500:
-        message = i18n.t('error:server_res.server')
-        break
+      // case 500:
+      //   message = i18n.t('error:server_res.server')
+      //   break
       default:
-        message = error.message
+        message = error?.response?.data?.error ?? error.message
     }
 
-    if (
-      (error.response?.data as { error: string })?.error ===
-      'malformed entity specification'
-    ) {
+    if (error.response?.data?.error === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
     }
 
