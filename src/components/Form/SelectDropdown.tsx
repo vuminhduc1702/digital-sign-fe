@@ -19,9 +19,9 @@ type SelectProps<
   classchild?: string
   classnamefieldwrapper?: string
   onChange?: (e: any) => void
-  customOnChange?: (e: any) => void
+  customOnChange?: (e?: any) => void
+  handleClearSelectDropdown?: () => void
   icon?: React.ReactElement
-  isArrDTO?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -41,9 +41,9 @@ export function SelectDropdown<
   classnamefieldwrapper,
   placeholder,
   icon,
-  customOnChange,
   isMulti,
-  isArrDTO,
+  customOnChange,
+  handleClearSelectDropdown,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -65,19 +65,21 @@ export function SelectDropdown<
               <Select
                 {...field}
                 {...props}
+                isMulti={isMulti}
                 className="w-full"
                 isSearchable
                 placeholder={placeholder ?? t('placeholder:select')}
-                onChange={e => {
+                onChange={(e, { action }) => {
+                  if (action === 'clear' || action === 'remove-value') {
+                    handleClearSelectDropdown?.()
+                  }
                   const option =
-                    (e as unknown as SelectOption[]).length > 0
+                    (e as unknown as SelectOption[])?.length > 0
                       ? (e as unknown as SelectOption[]).map(item => {
                           return item.value
                         })
-                      : isArrDTO
-                      ? [(e as unknown as SelectOption)?.value]
                       : (e as unknown as SelectOption)?.value
-                  console.log('option', option)
+                  // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)
                 }}

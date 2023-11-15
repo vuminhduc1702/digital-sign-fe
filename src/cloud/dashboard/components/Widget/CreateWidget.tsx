@@ -28,17 +28,10 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
 import { widgetAgg, wsInterval } from '../../routes/DashboardDetail'
-// import {
-//   Command,
-//   CommandEmpty,
-//   CommandGroup,
-//   CommandInput,
-//   CommandItem,
-// } from '~/components/Command'
 import { useDefaultCombobox } from '~/utils/hooks'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '~/utils/schemaValidation'
 import { type ControllerBtn } from './CreateControllerButton'
 
 import { Calendar as CalendarIcon } from 'lucide-react'
@@ -50,9 +43,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: selectOptionSchema().refine(val => val.value !== '', {
-      message: i18n.t('cloud:org_manage.org_manage.add_attr.choose_attr'),
-    }),
+    attribute_key: z.string(),
     label: z.string(),
     color: z.string(),
     unit: z.string(),
@@ -260,8 +251,7 @@ export function CreateWidget({
   const defaultComboboxOrgData = useDefaultCombobox('org')
   const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
 
-  const [deviceValue, setDeviceValue] = useState<SelectOptionString[]>()
-  const { data: deviceData } = useGetDevices({
+  const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id'),
     projectId,
     config: {
@@ -273,12 +263,11 @@ export function CreateWidget({
     label: device.name,
   })) || [{ value: '', label: '' }]
 
-  const { data: attrChartData, mutate: attrChartMutate } = useCreateAttrChart({
-    config: {
-      enabled: deviceValue?.[0]?.value !== '',
-      suspense: false,
-    },
-  })
+  const {
+    data: attrChartData,
+    mutate: attrChartMutate,
+    isLoading: attrChartIsLoading,
+  } = useCreateAttrChart()
   const attrSelectData = attrChartData?.keys?.map(item => ({
     value: item,
     label: item,
@@ -290,10 +279,7 @@ export function CreateWidget({
 
   useEffect(() => {
     append({
-      attribute_key: {
-        label: '',
-        value: '',
-      },
+      attribute_key: '',
       label: '',
       color: '',
       unit: '',
@@ -324,11 +310,11 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
+              console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
-                key: item.attribute_key.value,
+                key: item.attribute_key,
               }))
               const initMessage = {
                 entityDataCmds: [
@@ -379,7 +365,7 @@ export function CreateWidget({
                   {
                     tsCmd: {
                       keys: values.attributeConfig.map(
-                        item => item.attribute_key.value,
+                        item => item.attribute_key,
                       ),
                       startTs: Date.parse(
                         values.widgetSetting?.startDate?.toISOString() as string,
@@ -401,7 +387,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key.value,
+                              item => item.attribute_key,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString(),
@@ -424,7 +410,7 @@ export function CreateWidget({
                         {
                           historyCmd: {
                             keys: values.attributeConfig.map(
-                              item => item.attribute_key.value,
+                              item => item.attribute_key,
                             ),
                             startTs: Date.parse(
                               values.widgetSetting?.startDate?.toISOString() as string,
@@ -462,7 +448,7 @@ export function CreateWidget({
                       : '',
                 },
                 attribute_config: values.attributeConfig.map(item => ({
-                  attribute_key: item.attribute_key.value,
+                  attribute_key: item.attribute_key,
                   color: item.color,
                   decimal: item.decimal,
                   label: item.label,
@@ -524,6 +510,20 @@ export function CreateWidget({
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
                         }
+                        isClearable
+                        isLoading={orgIsLoading}
+                        handleClearSelectDropdown={() => {
+                          setValue('device', undefined as unknown as string[])
+                          setValue('attributeConfig', [
+                            {
+                              attribute_key: '',
+                              label: '',
+                              color: '',
+                              unit: '',
+                              decimal: '',
+                            },
+                          ])
+                        }}
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.org_id?.message}
@@ -557,15 +557,28 @@ export function CreateWidget({
                         }
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
-                        isArrDTO
                         customOnChange={option => {
-                          attrChartMutate({
-                            data: {
-                              entity_ids: option,
-                              entity_type: 'DEVICE',
-                              // time_series: true,
+                          if (option != null) {
+                            attrChartMutate({
+                              data: {
+                                entity_ids: option,
+                                entity_type: 'DEVICE',
+                                // time_series: true,
+                              },
+                            })
+                          }
+                        }}
+                        isLoading={deviceIsLoading}
+                        handleClearSelectDropdown={() => {
+                          setValue('attributeConfig', [
+                            {
+                              attribute_key: '',
+                              label: '',
+                              color: '',
+                              unit: '',
+                              decimal: '',
                             },
-                          })
+                          ])
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -595,10 +608,7 @@ export function CreateWidget({
                         }
                         onClick={() =>
                           append({
-                            attribute_key: {
-                              label: '',
-                              value: '',
-                            },
+                            attribute_key: '',
                             label: '',
                             color: '',
                             unit: '',
@@ -708,9 +718,8 @@ export function CreateWidget({
                             placeholder={t(
                               'cloud:org_manage.org_manage.add_attr.choose_attr',
                             )}
-                            value={watch(
-                              `attributeConfig.${index}.attribute_key`,
-                            )}
+                            isClearable
+                            isLoading={attrChartIsLoading}
                           />
                           <p className="text-body-sm text-primary-400">
                             {
