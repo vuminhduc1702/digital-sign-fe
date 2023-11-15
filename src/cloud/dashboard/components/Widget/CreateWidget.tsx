@@ -226,9 +226,26 @@ export function CreateWidget({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
-
   const { id: projectId } = storage.getProject()
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString[]>()
+
+  const {
+    register,
+    formState,
+    control,
+    handleSubmit,
+    watch,
+    getValues,
+    setValue,
+  } = useForm<WidgetCreate>({
+    resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
+  })
+  console.log('zod errors', formState.errors)
+
+  const { fields, append, remove } = useFieldArray({
+    name: 'attributeConfig',
+    control: control,
+  })
+
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
     config: {
@@ -245,7 +262,7 @@ export function CreateWidget({
 
   const [deviceValue, setDeviceValue] = useState<SelectOptionString[]>()
   const { data: deviceData } = useGetDevices({
-    orgId: optionOrg?.value,
+    orgId: watch('org_id'),
     projectId,
     config: {
       suspense: false,
@@ -267,23 +284,6 @@ export function CreateWidget({
     label: item,
   })) || [{ value: '', label: '' }]
 
-  const {
-    register,
-    formState,
-    control,
-    handleSubmit,
-    getValues,
-    setValue,
-    watch,
-  } = useForm<WidgetCreate>({
-    resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
-  })
-  console.log('zod errors', formState.errors)
-
-  const { fields, append, remove } = useFieldArray({
-    name: 'attributeConfig',
-    control: control,
-  })
   const [aggValue, setAggValue] = useState('')
   const [widgetDataTypeValue, setWidgetDataTypeValue] =
     useState<WidgetDataType>('REALTIME')
@@ -524,11 +524,6 @@ export function CreateWidget({
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
                         }
-                        onChange={e => {
-                          setOptionOrg(e)
-                          setValue('org_id', e?.value)
-                        }}
-                        value={optionOrg}
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.org_id?.message}
@@ -562,19 +557,11 @@ export function CreateWidget({
                         }
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
-                        value={deviceValue}
-                        onChange={(e: SelectOptionString[]) => {
-                          const entityIdsArr =
-                            e.length > 0
-                              ? e.map(item => {
-                                  return item.value
-                                })
-                              : [(e as unknown as SelectOptionString).value]
-                          setDeviceValue(e)
-                          setValue('device', entityIdsArr)
+                        isArrDTO
+                        customOnChange={option => {
                           attrChartMutate({
                             data: {
-                              entity_ids: entityIdsArr,
+                              entity_ids: option,
                               entity_type: 'DEVICE',
                               // time_series: true,
                             },
@@ -718,20 +705,11 @@ export function CreateWidget({
                               option.label === t('table:no_attr')
                             }
                             noOptionsMessage={() => t('table:no_attr')}
-                            onChange={e => {
-                              setValue(
-                                `attributeConfig.${index}.attribute_key`,
-                                {
-                                  label: e.label,
-                                  value: e.value,
-                                },
-                              )
-                            }}
-                            value={watch(
-                              `attributeConfig.${index}.attribute_key`,
-                            )}
                             placeholder={t(
                               'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                            value={watch(
+                              `attributeConfig.${index}.attribute_key`,
                             )}
                           />
                           <p className="text-body-sm text-primary-400">
@@ -820,27 +798,6 @@ export function CreateWidget({
                             `attributeConfig.${index}.decimal` as const,
                           )}
                         />
-                        {/* {type === 'road' ? (
-                                <div className="space-y-1">
-                                  <SelectDropdown
-                                    label={t('cloud:dashboard.config_chart.road')}
-                                    name="typeRoad"
-                                    isClearable={false}
-                                    control={control}
-                                    options={[
-                                      { label: 'Đường thẳng', value: 'Đường thẳng' },
-                                      { label: 'Đường nét đứt', value: 'Đường nét đứt' },
-                                    ]}
-                                    value={typeRoadValue}
-                                    onChange={e => {
-                                      setTypeRoadValue(e)
-                                    }}
-                                  />
-                                  <p className="text-body-sm text-primary-400">
-                                    {formState?.errors?.typeRoad?.message}
-                                  </p>
-                                </div>
-                              ) : ('')} */}
                       </div>
                       {isMultipleAttr ? (
                         <Button
@@ -1140,7 +1097,7 @@ export function CreateWidget({
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
-              disabled={!formState.isValid}
+              // disabled={!formState.isValid}
             />
           </div>
         </div>
