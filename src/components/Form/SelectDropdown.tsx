@@ -5,6 +5,7 @@ import { Controller, type FieldValues } from 'react-hook-form'
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
 
+import { type SelectOptionString } from './SelectField'
 import { type ControllerPassThroughProps } from '~/types'
 
 type SelectProps<
@@ -18,6 +19,7 @@ type SelectProps<
   classchild?: string
   classnamefieldwrapper?: string
   onChange?: (e: any) => void
+  icon?: React.ReactElement
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -36,6 +38,7 @@ export function SelectDropdown<
   classchild,
   classnamefieldwrapper,
   placeholder,
+  icon,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -48,20 +51,27 @@ export function SelectDropdown<
       label={label}
       error={error}
     >
-      <Controller
-        control={control}
-        name={name}
-        render={({ field }) => {
-          return (
-            <Select
-              {...field}
-              {...props}
-              isSearchable
-              placeholder={placeholder ?? t('placeholder:select')}
-            />
-          )
-        }}
-      />
+      <div className="flex justify-between gap-x-2">
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, value, ...field } }) => {
+            return (
+              <Select
+                {...field}
+                {...props}
+                className="w-full"
+                isSearchable
+                placeholder={placeholder ?? t('placeholder:select')}
+                onChange={e =>
+                  onChange((e as unknown as SelectOptionString).value)
+                }
+              />
+            )
+          }}
+        />
+        {icon}
+      </div>
     </FieldWrapper>
   )
 }

@@ -55,12 +55,31 @@ function App() {
   }, [])
 
   // Global error messages
-  const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
-    if (issue.code === z.ZodIssueCode.invalid_type) {
-      if (issue.expected === 'object') {
-        return { message: t('error:default_zod_err.select') }
-      }
+  const customErrorMap: z.ZodErrorMap = (error, ctx) => {
+    // console.log('error', error)
+    switch (error.code) {
+      case z.ZodIssueCode.invalid_type:
+        if (error.expected === 'string' || error.expected === 'object') {
+          return {
+            message: `${t('error:default_zod_err.select')} ${error.path[0]}`,
+          }
+        }
+        break
+      case z.ZodIssueCode.invalid_union_discriminator:
+        return {
+          message: `${t(
+            'error:default_zod_err.select_union',
+          )} ${error.options.join(', ')}`,
+        }
+      case z.ZodIssueCode.custom:
+        const params = error.params || {}
+        if (params.myField) {
+          return { message: `Nhập sai: ${params.myField}` }
+        }
+        break
     }
+
+    // fall back to default message!
     return { message: ctx.defaultError }
   }
   z.setErrorMap(customErrorMap)
