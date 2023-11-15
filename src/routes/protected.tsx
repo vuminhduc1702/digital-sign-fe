@@ -20,7 +20,8 @@ import { DeviceRoutes } from '~/device/routes'
 import { ApplicationRoutes } from '~/applicationPages'
 import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
-import BillingCustomer from '~/cloud/billingCustomer/BillingCustomer'
+import MainTenant from '~/cloud/tenant/MainTenant'
+import SelfAccountLayout from '~/layout/SelfAccountLayout'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -122,10 +123,10 @@ export const protectedRoutes = [
         ),
       },
       {
-        path: PATHS.BILLING_CUSTOMER,
+        path: PATHS.TENANT_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <BillingCustomer />
+            <MainTenant />
           </ErrorBoundary>
         ),
       },

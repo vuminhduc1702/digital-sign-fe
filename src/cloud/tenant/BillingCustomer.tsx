@@ -7,7 +7,7 @@ import { useCustomerList } from './api/getCustomerListApi'
 import { BillingCustomerTable } from './components/BillingCustomerTable'
 import { CreateCustomer } from './components/CreateCustomer'
 
-const BillingCustomer = () => {
+const Tenant = () => {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
   const [key, setKey] = useState('name')
@@ -101,4 +101,4 @@ const BillingCustomer = () => {
   )
 }
 
-export default BillingCustomer
+export default Tenant
