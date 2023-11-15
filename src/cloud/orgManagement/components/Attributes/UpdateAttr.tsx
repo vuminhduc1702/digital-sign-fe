@@ -43,7 +43,7 @@ export function UpdateAttr({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
-  const { mutate: mutateUpdateLogged } = useUpdateLogged()
+  const { mutate: mutateUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
   let CheckboxState = value === 'true'
   useEffect(() => {

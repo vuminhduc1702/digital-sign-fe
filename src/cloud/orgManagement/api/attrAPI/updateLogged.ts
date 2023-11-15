@@ -29,7 +29,10 @@ export type UseUpdateLoggedOptions = {
   config?: MutationConfig<typeof updateLogged>
 }
 
-export const useUpdateLogged = ({ config }: UseUpdateLoggedOptions = {}) => {
+export const useUpdateLogged = (
+  { config }: UseUpdateLoggedOptions = {},
+  addNoti: boolean = true,
+) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -37,10 +40,14 @@ export const useUpdateLogged = ({ config }: UseUpdateLoggedOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      // addNotification({
-      //   type: 'success',
-      //   title: t('cloud:org_manage.org_manage.add_attr.success_update_logged'),
-      // })
+      if (addNoti === true) {
+        addNotification({
+          type: 'success',
+          title: t(
+            'cloud:org_manage.org_manage.add_attr.success_update_logged',
+          ),
+        })
+      }
     },
     ...config,
     mutationFn: updateLogged,

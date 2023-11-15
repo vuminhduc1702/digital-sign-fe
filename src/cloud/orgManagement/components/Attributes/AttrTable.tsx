@@ -162,7 +162,7 @@ export function AttrTable({
     })
   }
 
-  const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 200)
+  const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 500)
 
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
