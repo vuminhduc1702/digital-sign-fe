@@ -5,7 +5,7 @@ import { Controller, type FieldValues } from 'react-hook-form'
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
 
-import { type SelectOptionString } from './SelectField'
+import { type SelectOption } from './SelectField'
 import { type ControllerPassThroughProps } from '~/types'
 
 type SelectProps<
@@ -19,6 +19,8 @@ type SelectProps<
   classchild?: string
   classnamefieldwrapper?: string
   onChange?: (e: any) => void
+  customOnChange?: (e?: any) => void
+  handleClearSelectDropdown?: () => void
   icon?: React.ReactElement
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
@@ -39,6 +41,9 @@ export function SelectDropdown<
   classnamefieldwrapper,
   placeholder,
   icon,
+  isMulti,
+  customOnChange,
+  handleClearSelectDropdown,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -60,12 +65,24 @@ export function SelectDropdown<
               <Select
                 {...field}
                 {...props}
+                isMulti={isMulti}
                 className="w-full"
                 isSearchable
                 placeholder={placeholder ?? t('placeholder:select')}
-                onChange={e =>
-                  onChange((e as unknown as SelectOptionString).value)
-                }
+                onChange={(e, { action }) => {
+                  if (action === 'clear' || action === 'remove-value') {
+                    handleClearSelectDropdown?.()
+                  }
+                  const option =
+                    (e as unknown as SelectOption[])?.length > 0
+                      ? (e as unknown as SelectOption[]).map(item => {
+                          return item.value
+                        })
+                      : (e as unknown as SelectOption)?.value
+                  // console.log('option', option)
+                  onChange(option)
+                  customOnChange?.(option)
+                }}
               />
             )
           }}
