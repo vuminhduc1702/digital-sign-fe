@@ -18,6 +18,11 @@ export type DashboardRes = {
     last_viewed: number
     starred: boolean
   }
+  dashboard_setting: {
+    widgets: null
+    last_viewed: string
+    starred: boolean
+  }
 }
 
 export type DashboardList = {

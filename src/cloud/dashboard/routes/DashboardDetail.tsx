@@ -58,6 +58,7 @@ import {
 } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { StarFilledIcon } from '@radix-ui/react-icons'
 
 const widgetAggSchema = z.object({
   label: z.string(),
@@ -106,6 +107,7 @@ export function DashboardDetail() {
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [isShowCreateControllerBtn, setIsShowCreateControllerBtn] =
     useState(false)
+  const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
@@ -138,6 +140,12 @@ export function DashboardDetail() {
       setWidgetList(widgetDetailDB)
     }
   }, [widgetDetailDB])
+
+  useEffect(() => {
+    if (detailDashboard) {
+      setIsStar(detailDashboard?.dashboard_setting?.starred)
+    }
+  }, [detailDashboard])
 
   useEffect(() => {
     if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
@@ -200,14 +208,21 @@ export function DashboardDetail() {
   })
 
   return (
-    <div className="flex grow flex-col">
+    <div className="relative flex grow flex-col">
       <TitleBar
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
+      <StarFilledIcon className={cn(
+        'absolute left-2 top-2 h-5 w-5 cursor-pointer',
+        {
+          'text-amber-300': isStar,
+          'text-white': !isStar
+        }
+      )} onClick={() => setIsStar(!isStar)} />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {widgetDetailDB == null &&
-        Object.keys(widgetList).length === 0 &&
-        connectionStatus === 'Open' ? (
+          Object.keys(widgetList).length === 0 &&
+          connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
@@ -225,25 +240,25 @@ export function DashboardDetail() {
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.timeseries as TimeSeries,
-                        ),
-                      )
+                      lastJsonMessage?.data?.map(
+                        device => device.timeseries as TimeSeries,
+                      ),
+                    )
                     : {}
 
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.latest.TIME_SERIES as LatestData,
-                        ),
-                      )
+                      lastJsonMessage?.data?.map(
+                        device => device.latest.TIME_SERIES as LatestData,
+                      ),
+                    )
                     : {}
 
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
-                        ?.TIME_SERIES as LatestData)
+                      ?.TIME_SERIES as LatestData)
                     : {}
 
                 return (
@@ -251,24 +266,24 @@ export function DashboardDetail() {
                     key={widgetId}
                     data-grid={
                       detailDashboard?.dashboard_setting?.layout != null &&
-                      detailDashboard?.dashboard_setting?.layout?.length > 0 &&
-                      Object.keys(widgetList).length === 0
+                        detailDashboard?.dashboard_setting?.layout?.length > 0 &&
+                        Object.keys(widgetList).length === 0
                         ? detailDashboard?.dashboard_setting?.layout?.find(
-                            layout => layout.i === widgetId,
-                          )
+                          layout => layout.i === widgetId,
+                        )
                         : {
-                            // x: index % 2 === 0 ? 0 : 4,
-                            x: index % 2 === 0 ? 0 : 6,
-                            y: 0,
-                            w:
-                              widgetList?.[widgetId]?.description === 'CARD'
-                                ? 3
-                                : 6,
-                            h:
-                              widgetList?.[widgetId]?.description === 'CARD'
-                                ? 1
-                                : 3,
-                          }
+                          // x: index % 2 === 0 ? 0 : 4,
+                          x: index % 2 === 0 ? 0 : 6,
+                          y: 0,
+                          w:
+                            widgetList?.[widgetId]?.description === 'CARD'
+                              ? 3
+                              : 6,
+                          h:
+                            widgetList?.[widgetId]?.description === 'CARD'
+                              ? 1
+                              : 3,
+                        }
                     }
                     className={cn(
                       'relative bg-secondary-500',
@@ -369,7 +384,7 @@ export function DashboardDetail() {
                       },
                       dashboard_setting: {
                         layout: layoutDashboard,
-                        starred: false,
+                        starred: isStar,
                         last_viewed: new Date(),
                       },
                     },

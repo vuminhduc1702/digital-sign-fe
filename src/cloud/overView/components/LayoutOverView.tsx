@@ -6,16 +6,22 @@ import SmartFarming from '~/assets/images/SolutionMaketplace/SmartFarming.png'
 import SmartHome from '~/assets/images/SolutionMaketplace/SmartHome.png'
 import SmartMetering from '~/assets/images/SolutionMaketplace/SmartMetering.png'
 import SmartTracking from '~/assets/images/SolutionMaketplace/SmartTracking.png'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cn } from '~/utils/misc'
 import { Button } from '~/components/Button'
 import storage from '~/utils/storage'
 import { PATHS } from '~/routes/PATHS'
 import { Link } from '~/components/Link'
-import { useGetDashboards } from '~/cloud/dashboard/api'
+import { type DashboardRes, useGetDashboards } from '~/cloud/dashboard/api'
 import { useGetConnectedDevices } from '../api'
 import { useGetRegistedUser } from '../api/getRegistedUser'
 import { useGetConcurrentUser } from '../api/getConcurrentUser'
+import { useRequestHandlingTime } from '../api/requestHandlingTime'
+import fleetManagementData from '../fleetManagement.json';
+import { DashboardTable } from './DashboardTable'
+import { ArrowTopRightIcon, AvatarIcon, RadiobuttonIcon, TimerIcon, CheckCircledIcon } from '@radix-ui/react-icons'
+import { useSuccessRate } from '../api/successRate'
+import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -23,6 +29,9 @@ export function LayoutOverView() {
   const navigate = useNavigate()
 
   const [type, setType] = useState('Last viewed')
+  const [lastView, setLastView] = useState<DashboardRes[] | null>()
+  const [starred, setStarred] = useState<DashboardRes[] | null>()
+  const [offset, setOffset] = useState(0)
 
   const dashboardType = ['Last viewed', 'Starred']
 
@@ -152,17 +161,45 @@ export function LayoutOverView() {
     },
   ]
 
-  const { data: dashboardData } = useGetDashboards({ projectId })
+  // let afterData = {
+  //   ...jsonData,
+  //   organizations: jsonData.organizations.map(x => {
+  //     return { ...x, project_id: 'khaidz' }
+  //   })
+  // }
+
+  const { data: dashboardData, isPreviousData } = useGetDashboards({ projectId })
   const { data: connectedDevicesData } = useGetConnectedDevices({ projectId })
   const { data: registedUserData } = useGetRegistedUser({ projectId })
   const { data: concurrentUserData } = useGetConcurrentUser({ projectId })
+  const {
+    mutate: mutateRequestHandlingTime,
+    data: RequestHandlingTimeData,
+    isLoading: isLoadingRequestHandlingTime,
+    isSuccess: isSuccessRequestHandlingTime,
+  } = useRequestHandlingTime()
+  const {
+    mutate: mutateSuccessRate,
+    data: SuccessRateData,
+    isLoading: isLoadingSuccessRate,
+    isSuccess: isSuccessSuccessRate,
+  } = useSuccessRate()
 
-  console.log(
-    connectedDevicesData,
-    registedUserData,
-    concurrentUserData,
-    'dashboardDatadashboardDatadashboardDatadashboardData',
-  )
+  useEffect(() => {
+    mutateRequestHandlingTime({
+      projectId,
+    })
+    mutateSuccessRate({
+      projectId,
+    })
+  }, [])
+
+  useEffect(() => {
+    const lastViewFilter = dashboardData?.dashboard?.filter(item => item?.dashboard_setting?.last_viewed)
+    const starredFilter = dashboardData?.dashboard?.filter(item => item?.dashboard_setting?.starred)
+    setLastView(lastViewFilter)
+    setStarred(starredFilter)
+  }, [dashboardData])
 
   return (
     <>
@@ -170,23 +207,57 @@ export function LayoutOverView() {
         <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-5">
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">Tổng số thiết bị</p>
+            <div className='mt-2 flex justify-between'>
+              <span>
+                {connectedDevicesData?.total}
+              </span>
+              <img
+              src={thietbiIcon}
+              alt="Overview"
+              className="aspect-square w-[20px]"
+            />
+            </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">Tổng số người dùng</p>
+            <div className='mt-2 flex justify-between'>
+              <span>
+                {registedUserData?.total}
+              </span>
+              <AvatarIcon className='h-5 w-5 text-primary-400'/>
+            </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">Tổng số user online</p>
+            <div className='mt-2 flex justify-between'>
+              <span>
+              {concurrentUserData?.total}
+              </span>
+              <RadiobuttonIcon className='h-5 w-5 text-primary-400'/>
+            </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Thời gian request trung bình</p>
+            <p className="text-table-header">Thời gian request</p>
+            <div className='mt-2 flex justify-between'>
+              <span>
+                4
+              </span>
+              <TimerIcon className='h-5 w-5 text-primary-400'/>
+            </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">Tỉ lệ thành công</p>
+            <div className='mt-2 flex justify-between'>
+              <span>
+                5
+              </span>
+              <CheckCircledIcon className='h-5 w-5 text-primary-400'/>
+            </div>
           </div>
         </div>
       </div>
       <div className="flex max-h-[50vh] justify-between overflow-auto rounded-md bg-secondary-500 px-4 py-6">
-        <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3"> 
+        <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
           {arr?.map(item => {
             return (
               <div
@@ -196,15 +267,15 @@ export function LayoutOverView() {
                 <div className="alignItemCenter">
                   <img src={item.img} alt="" width="100%" height="300" />
                 </div>
-                <div className="text mt-3 p-3">
-                  <div className="flex justify-between">
+                <div className="text p-3">
+                  {/* <div className="flex justify-between">
                     <div>
                       <i className="bx bx-user"></i> InnoWay
                     </div>
                     <div>
                       <i className="bx bx-calendar"></i> 01/06/2022
                     </div>
-                  </div>
+                  </div> */}
                   <h4 className="mt-3 text-table-header">{item.title}</h4>
                   <p className="mt-3 line-clamp-3 cursor-pointer hover:block">
                     {item.content}
@@ -230,8 +301,8 @@ export function LayoutOverView() {
           })}
         </div>
       </div>
-      <div className="mt-4 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[30vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+      <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
+        <div className="max-h-[24vh] overflow-auto rounded-md bg-secondary-500 p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -270,9 +341,23 @@ export function LayoutOverView() {
               </Button>
             </div>
           </div>
-          {type === 'Last viewed' ? <div>Hahahahaha</div> : <div>Heeee</div>}
+          {type === 'Last viewed' ?
+            <DashboardTable
+              data={lastView || []}
+              offset={offset}
+              setOffset={setOffset}
+              total={0}
+              isPreviousData={isPreviousData}
+            /> :
+            <DashboardTable
+              data={starred || []}
+              offset={offset}
+              setOffset={setOffset}
+              total={0}
+              isPreviousData={isPreviousData}
+            />}
         </div>
-        <div className="max-h-[25vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="max-h-[24vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">Quick Link</p>
           </div>
