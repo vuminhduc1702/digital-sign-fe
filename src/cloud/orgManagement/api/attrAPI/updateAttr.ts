@@ -24,7 +24,8 @@ export type UseUpdateAttrOptions = {
   config?: MutationConfig<typeof updateAttr>
 }
 
-export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
+export const 
+useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()

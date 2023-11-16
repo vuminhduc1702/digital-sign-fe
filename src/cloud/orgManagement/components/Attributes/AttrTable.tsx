@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import {
   useDeleteAttr,
@@ -14,6 +15,8 @@ import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { Switch } from '~/components/Switch'
 import { getVNDateFormat } from '~/utils/misc'
+import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
+
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
 
@@ -21,8 +24,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
-import { useDebouncedCallback } from 'use-debounce'
+
 export const STATUS = {
   true: 'Có',
   false: 'Không',
@@ -42,7 +44,6 @@ function AttrTableContextMenu({
   logged: boolean
 }) {
   const { t } = useTranslation()
-
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
@@ -161,7 +162,6 @@ export function AttrTable({
       entityType: entityType,
     })
   }
-
   const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 500)
 
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
@@ -221,8 +221,8 @@ export function AttrTable({
 
           return (
             <Switch
-              key={STATUS[info.getValue()]}
-              defaultChecked={STATUS[info.getValue()] === STATUS['true']}
+              key={attribute_key + STATUS[info.getValue()]}
+              defaultChecked={info.getValue() === 'true' ? true : false}
               onCheckedChange={checked => {
                 debouncedSwitchChange(checked, attribute_key)
               }}
@@ -259,7 +259,7 @@ export function AttrTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_attr')}

@@ -84,6 +84,14 @@ export function UpdateAttr({
       <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
         id="update-attr"
         onSubmit={values => {
+          mutateUpdateLogged({
+            data: {
+              logged: CheckboxState,
+            },
+            device_id: entityId,
+            attribute_key: attributeKey,
+            entityType: entityType,
+          })
           mutate({
             data: {
               attributes: [
@@ -98,14 +106,6 @@ export function UpdateAttr({
             entityType,
             entityId,
           })
-          mutateUpdateLogged({
-            data: {
-              logged: CheckboxState,
-            },
-            device_id: entityId,
-            attribute_key: attributeKey,
-            entityType: entityType,
-          })
         }}
         options={{
           defaultValues: {
@@ -118,7 +118,7 @@ export function UpdateAttr({
         schema={attrSchema}
       >
         {({ register, formState, control }) => {
-          console.log('formState errors: ', formState.errors)
+          // console.log('formState errors: ', formState.errors)
 
           return (
             <>

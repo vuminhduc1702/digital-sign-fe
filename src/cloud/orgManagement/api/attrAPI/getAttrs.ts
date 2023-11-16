@@ -37,7 +37,8 @@ type UseAttrsOptions = {
   config?: QueryConfig<QueryFnType>
 }
 
-export const useGetAttrs = ({
+export const 
+useGetAttrs = ({
   entityType,
   entityId,
   key,
