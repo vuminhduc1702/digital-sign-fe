@@ -478,7 +478,8 @@
         "schema": {
           "name": "Tên trường",
           "start_byte": "Byte bắt đầu",
-          "length_byte": "Độ dài"
+          "length_byte": "Độ dài",
+          "length_byte_validate": "Nhập độ dài lớn hơn 1"
         },
         "topic": "Topic",
         "ping_MQTT": {
@@ -758,6 +759,7 @@
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
     "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_base_template": "Không có base template. Vui lòng tạo hoặc chọn Thing trước.",
     "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
@@ -802,6 +804,7 @@
     }
   },
   "loading": {
+    "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",

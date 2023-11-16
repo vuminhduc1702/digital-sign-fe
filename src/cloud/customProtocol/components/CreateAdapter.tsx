@@ -1,7 +1,7 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as z from 'zod'
 import i18n from '~/i18n'
 
@@ -35,14 +35,12 @@ import TitleBar from '~/components/Head/TitleBar'
 import { cn } from '~/utils/misc'
 
 import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
-import { inputService, type EntityThingType } from '../types'
+import { inputService } from '../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useFieldArray, useForm } from 'react-hook-form'
 
 export const adapterSchema = z
   .object({
@@ -81,14 +79,20 @@ export const adapterSchema = z
       }),
       z.object({
         content_type: z.enum(['hex', 'text'] as const),
-        fields: z
-          .array(
-            z.object({
-              name: z.string(),
-              start_byte: z.string(),
-              length_byte: z.string(),
-            }),
-          )
+        schema: z
+          .object({
+            fields: z.array(
+              z.object({
+                name: nameSchema,
+                start_byte: z.coerce.number(),
+                length_byte: z.coerce.number().min(1, {
+                  message: i18n.t(
+                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
+                  ),
+                }),
+              }),
+            ),
+          })
           .optional(),
       }),
     ]),
@@ -197,7 +201,6 @@ export const thingTypeList = [
   {
     label: i18n.t('cloud:custom_protocol.thing.thing'),
     value: 'thing',
-    selected: true,
   },
   {
     label: i18n.t('cloud:custom_protocol.thing.template'),
@@ -214,8 +217,6 @@ export function CreateAdapter() {
 
   const { id: projectId } = storage.getProject()
 
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [thingType, setThingType] = useState<EntityThingType>('thing')
   const [isShow, setIsShow] = useState(true)
 
   const {
@@ -227,30 +228,33 @@ export function CreateAdapter() {
   const {
     data: dataCreateThing,
     mutate: mutateThing,
-    isLoading: isLoadingThing,
+    isLoading: isLoadingThingCreate,
     isSuccess: isSuccessThing,
   } = useCreateEntityThing()
 
-  const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
+  const {
+    data: thingData,
+    refetch: refetchThingData,
+    isLoading: isLoadingThing,
+  } = useGetEntityThings({
     projectId,
   })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
-  })) || [{ value: '', label: '' }]
-
+  }))
   const thingSelectDataThing = thingData?.data?.list
     ?.filter(thing => thing.type === 'Thing')
     .map(thing => ({
       value: thing.id,
       label: thing.name,
-    })) || [{ value: '', label: '' }]
+    }))
   const thingSelectDataTemplate = thingData?.data?.list
     ?.filter(thing => thing.type === 'Template')
     .map(thing => ({
       value: thing.id,
       label: thing.name,
-    })) || [{ value: '', label: '' }]
+    }))
 
   // TODO: Auto set default when user create new thing successfully
   // const [defaultThingValues, setDefaultThingValues] = useState(null)
@@ -297,7 +301,7 @@ export function CreateAdapter() {
     remove: removeSchema,
     replace: replaceSchema,
   } = useFieldArray({
-    name: 'fields',
+    name: 'schema.fields',
     control,
   })
 
@@ -312,7 +316,7 @@ export function CreateAdapter() {
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const [codeInput, setCodeInput] = useState('')
 
@@ -323,8 +327,8 @@ export function CreateAdapter() {
     replace({ topic: '' })
     replaceSchema({
       name: '',
-      start_byte: '',
-      length_byte: '',
+      start_byte: 0,
+      length_byte: 0,
     })
   }
 
@@ -358,10 +362,10 @@ export function CreateAdapter() {
         id="create-adapter"
         className="flex w-full flex-col justify-between"
         onSubmit={handleSubmit(values => {
-          console.log('adapter values', values)
+          // console.log('adapter values', values)
           const fields =
-            (values?.fields?.length &&
-              values?.fields?.map(item => ({
+            (values?.schema?.fields?.length &&
+              values?.schema?.fields?.map(item => ({
                 name: item.name,
                 start_byte: parseInt(item.start_byte),
                 end_byte:
@@ -369,85 +373,52 @@ export function CreateAdapter() {
               }))) ||
             []
           if (getValues('protocol') === 'mqtt') {
-            if (fields.length > 0) {
-              mutateAdapter({
-                data: {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol as 'mqtt',
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                  host: values.host,
-                  port: values.port,
-                  schema: {
-                    fields,
+            mutateAdapter({
+              data: {
+                project_id: projectId,
+                name: values.name,
+                protocol: values.protocol as 'mqtt',
+                content_type: values.content_type,
+                thing_id: values.thing_id,
+                handle_service: values.handle_service,
+                host: values.host,
+                port: values.port,
+                schema:
+                  fields.length > 0
+                    ? {
+                        fields,
+                      }
+                    : undefined,
+                configuration: {
+                  credentials: {
+                    username: values.configuration.credentials.username,
+                    password: values.configuration.credentials.password,
                   },
-                  configuration: {
-                    credentials: {
-                      username: values.configuration.credentials.username,
-                      password: values.configuration.credentials.password,
-                    },
-                    topic_filters: values.configuration.topic_filters.map(
-                      (topic: { topic: string }) => ({
-                        topic: topic.topic.trim(),
-                      }),
-                    ),
-                  },
+                  topic_filters: values.configuration.topic_filters.map(
+                    (topic: { topic: string }) => ({
+                      topic: topic.topic.trim(),
+                    }),
+                  ),
                 },
-              })
-            } else {
-              mutateAdapter({
-                data: {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol as 'mqtt',
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                  host: values.host,
-                  port: values.port,
-                  configuration: {
-                    credentials: {
-                      username: values.configuration.credentials.username,
-                      password: values.configuration.credentials.password,
-                    },
-                    topic_filters: values.configuration.topic_filters.map(
-                      (topic: { topic: string }) => ({
-                        topic: topic.topic.trim(),
-                      }),
-                    ),
-                  },
-                },
-              })
-            }
+              },
+            })
           } else {
-            if (fields.length > 0) {
-              mutateAdapter({
-                data: {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol as 'tcp' | 'udp',
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                  schema: {
-                    fields,
-                  },
-                },
-              })
-            } else {
-              mutateAdapter({
-                data: {
-                  project_id: projectId,
-                  name: values.name,
-                  protocol: values.protocol as 'tcp' | 'udp',
-                  content_type: values.content_type,
-                  thing_id: values.thing_id,
-                  handle_service: values.handle_service,
-                },
-              })
-            }
+            mutateAdapter({
+              data: {
+                project_id: projectId,
+                name: values.name,
+                protocol: values.protocol as 'tcp' | 'udp',
+                content_type: values.content_type,
+                thing_id: values.thing_id,
+                handle_service: values.handle_service,
+                schema:
+                  fields.length > 0
+                    ? {
+                        fields,
+                      }
+                    : undefined,
+              },
+            })
           }
         })}
       >
@@ -521,7 +492,8 @@ export function CreateAdapter() {
                           }}
                           schema={entityThingSchema}
                         >
-                          {({ register, formState }) => {
+                          {({ register, formState, watch, control }) => {
+                            console.log('first', watch('type'))
                             return (
                               <>
                                 <InputField
@@ -534,25 +506,44 @@ export function CreateAdapter() {
                                   error={formState.errors['type']}
                                   registration={register('type')}
                                   options={thingTypeList}
-                                  onChange={event => {
-                                    refetchThingData()
-                                    setThingType(event.target.value)
-                                  }}
                                 />
-                                {thingType === 'thing' ||
-                                thingType === 'template' ? (
-                                  <SelectField
-                                    label={t(
-                                      'cloud:custom_protocol.thing.base_template',
-                                    )}
-                                    error={formState.errors['base_template']}
-                                    registration={register('base_template')}
-                                    options={
-                                      thingType === 'thing'
-                                        ? thingSelectDataThing
-                                        : thingSelectDataTemplate
-                                    }
-                                  />
+                                {watch('type') === 'thing' ||
+                                watch('type') === 'template' ||
+                                watch('type') == null ? (
+                                  <div className="space-y-1">
+                                    <SelectDropdown
+                                      label={t(
+                                        'cloud:custom_protocol.thing.base_template',
+                                      )}
+                                      name="base_template"
+                                      control={control}
+                                      options={
+                                        watch('type') === 'thing'
+                                          ? thingSelectDataThing
+                                          : watch('type') === 'template'
+                                          ? thingSelectDataTemplate
+                                          : undefined
+                                      }
+                                      isOptionDisabled={option =>
+                                        option.label === t('loading:base')
+                                      }
+                                      noOptionsMessage={() =>
+                                        t('table:no_base_template')
+                                      }
+                                      placeholder={t(
+                                        'cloud:custom_protocol.thing.choose',
+                                      )}
+                                      isClearable
+                                      isLoading={isLoadingThing}
+                                      maxMenuHeight={150}
+                                    />
+                                    <p className="text-body-sm text-primary-400">
+                                      {
+                                        formState?.errors?.base_template
+                                          ?.message
+                                      }
+                                    </p>
+                                  </div>
                                 ) : (
                                   <InputField
                                     label={t(
@@ -590,7 +581,7 @@ export function CreateAdapter() {
                       }
                       confirmButton={
                         <Button
-                          isLoading={isLoadingThing}
+                          isLoading={isLoadingThingCreate}
                           form="create-entityThing"
                           type="submit"
                           size="md"
@@ -691,9 +682,6 @@ export function CreateAdapter() {
                                   error={formState.errors['output']}
                                   registration={register('output')}
                                   options={outputList}
-                                  onChange={event =>
-                                    setThingType(event.target.value)
-                                  }
                                 />
                                 <InputField
                                   label={t(
@@ -790,13 +778,14 @@ export function CreateAdapter() {
                     startIcon={
                       <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                     }
-                    onClick={() =>
+                    onClick={() => {
+                      setIsShow(true)
                       appendSchema({
                         name: '',
-                        start_byte: '',
-                        length_byte: '',
+                        start_byte: 0,
+                        length_byte: 0,
                       })
-                    }
+                    }}
                   />
                 </div>
                 {fieldsSchema.map((field, index) => (
@@ -812,29 +801,34 @@ export function CreateAdapter() {
                     <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
                       <InputField
                         label={t('cloud:custom_protocol.adapter.schema.name')}
-                        error={formState.errors?.fields?.[index]?.name}
-                        registration={register(`fields.${index}.name` as const)}
+                        error={formState.errors?.schema?.fields?.[index]?.name}
+                        registration={register(
+                          `schema.fields.${index}.name` as const,
+                        )}
                       />
                       <InputField
                         label={t(
                           'cloud:custom_protocol.adapter.schema.start_byte',
                         )}
-                        error={formState.errors?.fields?.[index]?.start_byte}
+                        error={
+                          formState.errors?.schema?.fields?.[index]?.start_byte
+                        }
                         type="number"
                         registration={register(
-                          `fields.${index}.start_byte` as const,
+                          `schema.fields.${index}.start_byte` as const,
                         )}
                       />
                       <InputField
                         label={t(
                           'cloud:custom_protocol.adapter.schema.length_byte',
                         )}
-                        error={formState.errors?.fields?.[index]?.length_byte}
+                        error={
+                          formState.errors?.schema?.fields?.[index]?.length_byte
+                        }
                         type="number"
                         registration={register(
-                          `fields.${index}.length_byte` as const,
+                          `schema.fields.${index}.length_byte` as const,
                         )}
-                        min="1"
                       />
                     </div>
                     <Button

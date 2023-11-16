@@ -273,10 +273,6 @@ export function CreateWidget({
     label: item,
   })) || [{ value: '', label: '' }]
 
-  const [aggValue, setAggValue] = useState('')
-  const [widgetDataTypeValue, setWidgetDataTypeValue] =
-    useState<WidgetDataType>('REALTIME')
-
   useEffect(() => {
     append({
       attribute_key: '',
@@ -844,11 +840,6 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          onChange={e => {
-                            setWidgetDataTypeValue(
-                              e.target.value as WidgetDataType,
-                            )
-                          }}
                         />
 
                         <div className="space-y-1">
@@ -939,7 +930,7 @@ export function CreateWidget({
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.endDate')}
                             error={
-                              widgetDataTypeValue === 'REALTIME'
+                              getValues('widgetSetting.dataType') === 'REALTIME'
                                 ? ''
                                 : formState?.errors?.widgetSetting?.startDate
                             }
@@ -962,7 +953,9 @@ export function CreateWidget({
                                           !value && 'text-secondary-700',
                                         )}
                                         disabled={
-                                          widgetDataTypeValue === 'REALTIME'
+                                          getValues(
+                                            'widgetSetting.dataType',
+                                          ) === 'REALTIME'
                                         }
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -1047,7 +1040,7 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.agg}
                           registration={register(`widgetSetting.agg` as const)}
                           options={
-                            widgetDataTypeValue === 'HISTORY'
+                            getValues('widgetSetting.dataType') === 'HISTORY'
                               ? widgetAgg
                                   .map(agg => ({
                                     label: agg.label,
@@ -1062,11 +1055,8 @@ export function CreateWidget({
                                   value: agg.value,
                                 }))
                           }
-                          onChange={e => {
-                            setAggValue(e.target.value)
-                          }}
                         />
-                        {aggValue === 'SMA' ? (
+                        {getValues('widgetSetting.agg') === 'SMA' ? (
                           <InputField
                             label={t('ws:filter.sma_window')}
                             error={formState?.errors?.widgetSetting?.window}

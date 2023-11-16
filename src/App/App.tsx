@@ -66,6 +66,7 @@ function App() {
         }
         break
       case z.ZodIssueCode.invalid_union_discriminator:
+      case z.ZodIssueCode.invalid_enum_value:
         return {
           message: `${t(
             'error:default_zod_err.select_union',
@@ -79,7 +80,6 @@ function App() {
         break
     }
 
-    // fall back to default message!
     return { message: ctx.defaultError }
   }
   z.setErrorMap(customErrorMap)
