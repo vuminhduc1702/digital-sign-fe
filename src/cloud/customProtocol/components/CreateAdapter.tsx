@@ -19,11 +19,7 @@ import {
   usePingMQTT,
 } from '../api/adapter'
 import storage from '~/utils/storage'
-import {
-  useCreateEntityThing,
-  type CreateEntityThingDTO,
-  useGetEntityThings,
-} from '../api/entityThing'
+import { useGetEntityThings } from '../api/entityThing'
 import { FormDialog } from '~/components/FormDialog'
 import {
   type CreateServiceThingDTO,
@@ -33,6 +29,7 @@ import {
 import { CodeEditor } from './CodeEditor'
 import TitleBar from '~/components/Head/TitleBar'
 import { cn } from '~/utils/misc'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 
 import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
 import { inputService } from '../types'
@@ -41,100 +38,6 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-
-export const adapterSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    thing_id: z.string(),
-    handle_service: z.string(),
-  })
-  .and(
-    z.discriminatedUnion('protocol', [
-      z.object({
-        protocol: z.literal('mqtt'),
-        host: z.string().min(1, { message: 'Vui lòng nhập host' }),
-        port: z.string().min(1, { message: 'Vui lòng nhập port' }),
-        configuration: z.object({
-          credentials: z.object({
-            username: z.string(),
-            password: z.string(),
-          }),
-          topic_filters: z.array(
-            z.object({
-              topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
-            }),
-          ),
-        }),
-      }),
-      z.object({
-        protocol: z.enum(['tcp', 'udp'] as const),
-      }),
-    ]),
-  )
-  .and(
-    z.discriminatedUnion('content_type', [
-      z.object({
-        content_type: z.literal('json'),
-      }),
-      z.object({
-        content_type: z.enum(['hex', 'text'] as const),
-        schema: z
-          .object({
-            fields: z.array(
-              z.object({
-                name: nameSchema,
-                start_byte: z.coerce.number(),
-                length_byte: z.coerce.number().min(1, {
-                  message: i18n.t(
-                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
-                  ),
-                }),
-              }),
-            ),
-          })
-          .optional(),
-      }),
-    ]),
-  )
-
-export const entityThingSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    description: z.string(),
-    base_template: z.string().nullable(),
-  })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.enum(['thing', 'template'] as const),
-        base_template: z.string().nullable(),
-      }),
-      z.object({
-        type: z.literal('shape'),
-        base_shapes: z.string().nullable(),
-      }),
-    ]),
-  )
-
-export const serviceThingSchema = z.object({
-  name: nameSchemaRegex,
-  description: z.string(),
-  input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
-  output: z.enum([
-    'json',
-    'str',
-    'i32',
-    'i64',
-    'f32',
-    'f64',
-    'bool',
-    'time',
-    'bin',
-  ] as const),
-  code: z.string().optional(),
-})
 
 export const protocolList = [
   {
@@ -212,6 +115,103 @@ export const thingTypeList = [
   },
 ]
 
+export const adapterSchema = z
+  .object({
+    name: nameSchema,
+    project_id: z.string().optional(),
+    thing_id: z.string(),
+    handle_service: z.string(),
+  })
+  .and(
+    z.discriminatedUnion('protocol', [
+      z.object({
+        protocol: z.literal('mqtt'),
+        host: z.string().min(1, { message: 'Vui lòng nhập host' }),
+        port: z.string().min(1, { message: 'Vui lòng nhập port' }),
+        configuration: z.object({
+          credentials: z.object({
+            username: z.string(),
+            password: z.string(),
+          }),
+          topic_filters: z.array(
+            z.object({
+              topic: z.string().min(1, { message: 'Vui lòng nhập topic' }),
+            }),
+          ),
+        }),
+      }),
+      z.object({
+        protocol: z.enum(['tcp', 'udp'] as const),
+      }),
+    ]),
+  )
+  .and(
+    z.discriminatedUnion('content_type', [
+      z.object({
+        content_type: z.literal('json'),
+      }),
+      z.object({
+        content_type: z.enum(['hex', 'text'] as const),
+        schema: z.object({
+          fields: z.array(
+            z.object({
+              name: nameSchema,
+              start_byte: z.number(),
+              length_byte: z
+                .number()
+                .min(1, {
+                  message: i18n.t(
+                    'cloud:custom_protocol.adapter.schema.length_byte_validate',
+                  ),
+                })
+                .optional(),
+            }),
+          ),
+        }),
+      }),
+    ]),
+  )
+
+export const entityThingSchema = z
+  .object({
+    name: nameSchema,
+    project_id: z.string().optional(),
+    description: z.string(),
+  })
+  .and(
+    z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('thing'),
+        base_template: z.string().optional(),
+      }),
+      z.object({
+        type: z.literal('template'),
+        base_shapes: z.string(),
+      }),
+      z.object({
+        type: z.literal('shape'),
+      }),
+    ]),
+  )
+
+export const serviceThingSchema = z.object({
+  name: nameSchemaRegex,
+  description: z.string(),
+  input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
+  output: z.enum([
+    'json',
+    'str',
+    'i32',
+    'i64',
+    'f32',
+    'f64',
+    'bool',
+    'time',
+    'bin',
+  ] as const),
+  code: z.string().optional(),
+})
+
 export function CreateAdapter() {
   const { t } = useTranslation()
 
@@ -225,51 +225,13 @@ export function CreateAdapter() {
     isSuccess: isSuccessAdapter,
   } = useCreateAdapter()
 
-  const {
-    data: dataCreateThing,
-    mutate: mutateThing,
-    isLoading: isLoadingThingCreate,
-    isSuccess: isSuccessThing,
-  } = useCreateEntityThing()
-
-  const {
-    data: thingData,
-    refetch: refetchThingData,
-    isLoading: isLoadingThing,
-  } = useGetEntityThings({
+  const { data: thingData } = useGetEntityThings({
     projectId,
   })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   }))
-  const thingSelectDataThing = thingData?.data?.list
-    ?.filter(thing => thing.type === 'Thing')
-    .map(thing => ({
-      value: thing.id,
-      label: thing.name,
-    }))
-  const thingSelectDataTemplate = thingData?.data?.list
-    ?.filter(thing => thing.type === 'Template')
-    .map(thing => ({
-      value: thing.id,
-      label: thing.name,
-    }))
-
-  // TODO: Auto set default when user create new thing successfully
-  // const [defaultThingValues, setDefaultThingValues] = useState(null)
-  // useEffect(() => {
-  //   if (dataCreateThing) {
-  //     setDefaultThingValues([
-  //       {
-  //         label: thingSelectData?.find(
-  //           thingSelect => thingSelect.value === dataCreateThing?.data.id,
-  //         )?.label,
-  //         value: dataCreateThing?.data.id,
-  //       },
-  //     ])
-  //   }
-  // }, [dataCreateThing])
 
   const {
     mutate: mutateService,
@@ -363,62 +325,81 @@ export function CreateAdapter() {
         className="flex w-full flex-col justify-between"
         onSubmit={handleSubmit(values => {
           // console.log('adapter values', values)
-          const fields =
-            (values?.schema?.fields?.length &&
-              values?.schema?.fields?.map(item => ({
-                name: item.name,
-                start_byte: parseInt(item.start_byte),
-                end_byte:
-                  parseInt(item.start_byte) + parseInt(item.length_byte),
-              }))) ||
-            []
-          if (getValues('protocol') === 'mqtt') {
-            mutateAdapter({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'mqtt',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                host: values.host,
-                port: values.port,
-                schema:
-                  fields.length > 0
-                    ? {
-                        fields,
-                      }
-                    : undefined,
-                configuration: {
-                  credentials: {
-                    username: values.configuration.credentials.username,
-                    password: values.configuration.credentials.password,
-                  },
-                  topic_filters: values.configuration.topic_filters.map(
-                    (topic: { topic: string }) => ({
-                      topic: topic.topic.trim(),
-                    }),
-                  ),
+          if (values.protocol === 'mqtt') {
+            const data = {
+              project_id: projectId,
+              name: values.name,
+              protocol: values.protocol,
+              content_type: values.content_type,
+              thing_id: values.thing_id,
+              handle_service: values.handle_service,
+              host: values.host,
+              port: values.port,
+              configuration: {
+                credentials: {
+                  username: values.configuration.credentials.username,
+                  password: values.configuration.credentials.password,
                 },
+                topic_filters: values.configuration.topic_filters.map(
+                  (topic: { topic: string }) => ({
+                    topic: topic.topic.trim(),
+                  }),
+                ),
               },
-            })
+            }
+            if (values.content_type === 'json') {
+              mutateAdapter({ data })
+            }
+            if (
+              values.content_type === 'hex' ||
+              values.content_type === 'text'
+            ) {
+              mutateAdapter({
+                data: {
+                  ...data,
+                  schema: {
+                    fields: values.schema.fields.map(item => ({
+                      name: item.name,
+                      start_byte: item.start_byte,
+                      end_byte:
+                        item.start_byte +
+                        (item.length_byte as unknown as number),
+                    })),
+                  },
+                },
+              })
+            }
           } else {
-            mutateAdapter({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'tcp' | 'udp',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                schema:
-                  fields.length > 0
-                    ? {
-                        fields,
-                      }
-                    : undefined,
-              },
-            })
+            const data = {
+              project_id: projectId,
+              name: values.name,
+              protocol: values.protocol,
+              content_type: values.content_type,
+              thing_id: values.thing_id,
+              handle_service: values.handle_service,
+            }
+            if (values.content_type === 'json') {
+              mutateAdapter({ data })
+            }
+            if (
+              values.content_type === 'hex' ||
+              values.content_type === 'text'
+            ) {
+              mutateAdapter({
+                data: {
+                  ...data,
+                  schema: {
+                    fields: values.schema.fields.map(item => ({
+                      name: item.name,
+                      start_byte: item.start_byte,
+                      end_byte:
+                        item.start_byte +
+                        (item.length_byte as unknown as number),
+                    })),
+                  },
+                },
+              })
+            }
           }
         })}
       >
@@ -451,153 +432,7 @@ export function CreateAdapter() {
                   }
                   noOptionsMessage={() => t('table:no_thing')}
                   placeholder={t('cloud:custom_protocol.thing.choose')}
-                  icon={
-                    <FormDialog
-                      isDone={isSuccessThing}
-                      title={t('cloud:custom_protocol.thing.create')}
-                      body={
-                        <Form<
-                          CreateEntityThingDTO['data'],
-                          typeof entityThingSchema
-                        >
-                          id="create-entityThing"
-                          className="flex flex-col justify-between"
-                          onSubmit={values => {
-                            // console.log('thing values', values)
-                            if (
-                              values.type === 'thing' ||
-                              values.type === 'template'
-                            ) {
-                              mutateThing({
-                                data: {
-                                  name: values.name,
-                                  project_id: projectId,
-                                  description: values.description,
-                                  type: values.type,
-                                  base_template: values.base_template || null,
-                                },
-                              })
-                            }
-                            if (values.type === 'shape') {
-                              mutateThing({
-                                data: {
-                                  name: values.name,
-                                  project_id: projectId,
-                                  description: values.description,
-                                  type: values.type as 'shape',
-                                  base_shapes: values.base_shapes || null,
-                                },
-                              })
-                            }
-                          }}
-                          schema={entityThingSchema}
-                        >
-                          {({ register, formState, watch, control }) => {
-                            console.log('first', watch('type'))
-                            return (
-                              <>
-                                <InputField
-                                  label={t('cloud:custom_protocol.thing.name')}
-                                  error={formState.errors['name']}
-                                  registration={register('name')}
-                                />
-                                <SelectField
-                                  label={t('cloud:custom_protocol.thing.type')}
-                                  error={formState.errors['type']}
-                                  registration={register('type')}
-                                  options={thingTypeList}
-                                />
-                                {watch('type') === 'thing' ||
-                                watch('type') === 'template' ||
-                                watch('type') == null ? (
-                                  <div className="space-y-1">
-                                    <SelectDropdown
-                                      label={t(
-                                        'cloud:custom_protocol.thing.base_template',
-                                      )}
-                                      name="base_template"
-                                      control={control}
-                                      options={
-                                        watch('type') === 'thing'
-                                          ? thingSelectDataThing
-                                          : watch('type') === 'template'
-                                          ? thingSelectDataTemplate
-                                          : undefined
-                                      }
-                                      isOptionDisabled={option =>
-                                        option.label === t('loading:base')
-                                      }
-                                      noOptionsMessage={() =>
-                                        t('table:no_base_template')
-                                      }
-                                      placeholder={t(
-                                        'cloud:custom_protocol.thing.choose',
-                                      )}
-                                      isClearable
-                                      isLoading={isLoadingThing}
-                                      maxMenuHeight={150}
-                                    />
-                                    <p className="text-body-sm text-primary-400">
-                                      {
-                                        formState?.errors?.base_template
-                                          ?.message
-                                      }
-                                    </p>
-                                  </div>
-                                ) : (
-                                  <InputField
-                                    label={t(
-                                      'cloud:custom_protocol.thing.base_shapes',
-                                    )}
-                                    error={formState.errors['base_shapes']}
-                                    registration={register('base_shapes')}
-                                  />
-                                )}
-                                <InputField
-                                  label={t(
-                                    'cloud:custom_protocol.thing.description',
-                                  )}
-                                  error={formState.errors['description']}
-                                  registration={register('description')}
-                                />
-                              </>
-                            )
-                          }}
-                        </Form>
-                      }
-                      triggerButton={
-                        <Button
-                          variant="trans"
-                          className="rounded-md"
-                          size="square"
-                          startIcon={
-                            <PlusIcon
-                              width={16}
-                              height={16}
-                              viewBox="0 0 16 16"
-                            />
-                          }
-                        />
-                      }
-                      confirmButton={
-                        <Button
-                          isLoading={isLoadingThingCreate}
-                          form="create-entityThing"
-                          type="submit"
-                          size="md"
-                          className="bg-primary-400"
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => refetchThingData()}
-                        />
-                      }
-                    />
-                  }
+                  icon={<CreateThing thingType="thing" />}
                   // defaultValue={defaultThingValues}
                 />
                 <p className="text-body-sm text-primary-400">
@@ -816,6 +651,9 @@ export function CreateAdapter() {
                         type="number"
                         registration={register(
                           `schema.fields.${index}.start_byte` as const,
+                          {
+                            valueAsNumber: true,
+                          },
                         )}
                       />
                       <InputField
@@ -828,6 +666,9 @@ export function CreateAdapter() {
                         type="number"
                         registration={register(
                           `schema.fields.${index}.length_byte` as const,
+                          {
+                            valueAsNumber: true,
+                          },
                         )}
                       />
                     </div>

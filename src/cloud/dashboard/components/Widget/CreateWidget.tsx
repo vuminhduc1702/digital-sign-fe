@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import ColorPicker from 'react-pick-color'
@@ -15,7 +15,6 @@ import {
   SelectDropdown,
   SelectField,
   type SelectOptionGeneric,
-  type SelectOptionString,
 } from '~/components/Form'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -43,11 +42,13 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: z.string(),
-    label: z.string(),
-    color: z.string(),
-    unit: z.string(),
-    decimal: z.string(),
+    attribute_key: z
+      .string()
+      .min(1, { message: i18n.t('ws:filter.choose_attr') }),
+    label: z.string().optional(),
+    color: z.string().optional(),
+    unit: z.string().optional(),
+    decimal: z.string().optional(),
   }),
 )
 
@@ -135,11 +136,9 @@ export const widgetCreateSchema = z.object({
   widgetSetting: z
     .object({
       agg: aggSchema,
-      interval: z.coerce
-        .number()
-        .refine(val => wsInterval.some(interval => val === interval.value), {
-          message: i18n.t('ws:filter.choose_interval'),
-        }),
+      interval: z.number({
+        required_error: i18n.t('ws:filter.choose_interval'),
+      }),
       startDate: z.date({
         required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
       }),
@@ -151,7 +150,7 @@ export const widgetCreateSchema = z.object({
         })
         .optional(),
       dataType: widgetDataTypeSchema,
-      window: z.coerce.number().optional(),
+      window: z.number().optional(),
     })
     .optional(),
   id: z.string().optional(),
@@ -162,7 +161,7 @@ export const widgetCreateSchema = z.object({
 //       type: z.literal('TIMESERIES'),
 //       widgetSetting: z.object({
 //         agg: aggSchema,
-//         interval: z.coerce.number(),
+//         interval: z.number(),
 //         startDate: z.date({
 //           required_error: i18n.t(
 //             'cloud:dashboard.config_chart.pick_date_alert',
@@ -227,6 +226,7 @@ export function CreateWidget({
     watch,
     getValues,
     setValue,
+    resetField,
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
   })
@@ -261,7 +261,7 @@ export function CreateWidget({
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
     label: device.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const {
     data: attrChartData,
@@ -271,7 +271,7 @@ export function CreateWidget({
   const attrSelectData = attrChartData?.keys?.map(item => ({
     value: item,
     label: item,
-  })) || [{ value: '', label: '' }]
+  }))
 
   useEffect(() => {
     append({
@@ -509,16 +509,14 @@ export function CreateWidget({
                         isClearable
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
-                          setValue('device', undefined as unknown as string[])
-                          setValue('attributeConfig', [
-                            {
-                              attribute_key: '',
-                              label: '',
-                              color: '',
-                              unit: '',
-                              decimal: '',
-                            },
-                          ])
+                          resetField('device')
+                          resetField('attributeConfig', {
+                            defaultValue: [
+                              {
+                                attribute_key: '',
+                              },
+                            ],
+                          })
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -566,15 +564,13 @@ export function CreateWidget({
                         }}
                         isLoading={deviceIsLoading}
                         handleClearSelectDropdown={() => {
-                          setValue('attributeConfig', [
-                            {
-                              attribute_key: '',
-                              label: '',
-                              color: '',
-                              unit: '',
-                              decimal: '',
-                            },
-                          ])
+                          resetField('attributeConfig', {
+                            defaultValue: [
+                              {
+                                attribute_key: '',
+                              },
+                            ],
+                          })
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -1029,6 +1025,9 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.interval}
                           registration={register(
                             `widgetSetting.interval` as const,
+                            {
+                              valueAsNumber: true,
+                            },
                           )}
                           options={wsInterval.map(interval => ({
                             label: interval.label,
@@ -1056,17 +1055,19 @@ export function CreateWidget({
                                 }))
                           }
                         />
-                        {getValues('widgetSetting.agg') === 'SMA' ? (
+                        {watch('widgetSetting.agg') === 'SMA' ? (
                           <InputField
+                            type="number"
                             label={t('ws:filter.sma_window')}
                             error={formState?.errors?.widgetSetting?.window}
                             registration={register(
                               `widgetSetting.window` as const,
+                              {
+                                valueAsNumber: true,
+                              },
                             )}
                           />
-                        ) : (
-                          <></>
-                        )}
+                        ) : null}
                       </div>
                     </>
                   ) : null}

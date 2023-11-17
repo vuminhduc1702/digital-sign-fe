@@ -56,12 +56,17 @@ function App() {
 
   // Global error messages
   const customErrorMap: z.ZodErrorMap = (error, ctx) => {
-    // console.log('error', error)
+    // console.log('customErrorMap', error)
     switch (error.code) {
       case z.ZodIssueCode.invalid_type:
         if (error.expected === 'string' || error.expected === 'object') {
           return {
             message: `${t('error:default_zod_err.select')} ${error.path[0]}`,
+          }
+        }
+        if (error.expected === 'number') {
+          return {
+            message: t('error:default_zod_err.number'),
           }
         }
         break
