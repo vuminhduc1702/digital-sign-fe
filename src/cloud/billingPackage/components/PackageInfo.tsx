@@ -30,7 +30,7 @@ export function PackageInfo() {
   const [type, setType] = useState('')
   const [paymentType, setPaymentType] = useState('')
   const [periodType, setPeriodType] = useState('')
-  const [expectedPayment, setExpectedPayment] = useState()
+  const [expectedPayment, setExpectedPayment] = useState('')
 
   const params = useParams()
   const { id: projectId } = storage.getProject()
@@ -52,6 +52,7 @@ export function PackageInfo() {
     setPaymentType(data?.data?.payment_type || '')
     setPeriodType(data?.data?.type_period || '')
     setIsDisabled(true)
+    setExpectedPayment('')
   }, [data])
 
   useEffect(() => {
@@ -160,7 +161,7 @@ export function PackageInfo() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result)
+    setExpectedPayment(result < 0 ? 0 : result)
   }
 
   return (
@@ -589,11 +590,8 @@ export function PackageInfo() {
                     <InputField
                       label={t('billing:package_manage.popup.price')}
                       error={formState.errors['price']}
-                      registration={register('price')}
-                      classnamefieldwrapper="flex items-center gap-x-3"
-                      type="number"
-                      onChange={e =>
-                        estimates === 'fix' &&
+                      registration={register('price', {
+                        onChange: (e) =>  estimates === 'fix' &&
                         handleOnChange(
                           '',
                           getValues('tax'),
@@ -602,7 +600,9 @@ export function PackageInfo() {
                           getValues('quantity_free'),
                           getValues('plan_lv'),
                         )
-                      }
+                      })}
+                      classnamefieldwrapper="flex items-center gap-x-3"
+                      type="number"
                       disabled={isDisabled}
                       classlabel="w-2/12"
                       classchild="w-10/12"
@@ -659,6 +659,7 @@ export function PackageInfo() {
                   disabled
                   value={expectedPayment}
                   classnamefieldwrapper="flex items-center gap-x-3"
+                  placeholder=''
                   classlabel="w-2/12"
                   classchild="w-10/12"
                 />
@@ -690,6 +691,7 @@ export function PackageInfo() {
                       setValue('tax', data?.data?.tax?.toString() || '')
                       setEstimates(data?.data?.estimate || '')
                       setIsDisabled(!isDisabled)
+                      setExpectedPayment('')
                     }}
                     className="rounded-md"
                     variant="trans"

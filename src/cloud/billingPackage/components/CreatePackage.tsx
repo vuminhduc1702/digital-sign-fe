@@ -208,7 +208,7 @@ export function CreatePackage() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result)
+    setExpectedPayment(result < 0 ? 0 : result)
   }
 
   return (
@@ -640,13 +640,8 @@ export function CreatePackage() {
                       <InputField
                         label={t('billing:package_manage.popup.price')}
                         error={formState.errors['price']}
-                        registration={register('price')}
-                        classnamefieldwrapper="flex items-center gap-x-3"
-                        classlabel="w-2/12"
-                        classchild="w-10/12"
-                        type="number"
-                        onChange={e =>
-                          estimates === 'fix' &&
+                        registration={register('price', {
+                          onChange: (e) =>  estimates === 'fix' &&
                           handleOnChange(
                             '',
                             getValues('tax'),
@@ -655,7 +650,11 @@ export function CreatePackage() {
                             getValues('quantity_free'),
                             getValues('plan_lv'),
                           )
-                        }
+                        })}
+                        classnamefieldwrapper="flex items-center gap-x-3"
+                        classlabel="w-2/12"
+                        classchild="w-10/12"
+                        type="number"
                       />
                       {estimates === 'unit' && (
                         <InputField
@@ -706,6 +705,7 @@ export function CreatePackage() {
                     label={t('billing:package_manage.popup.expected_payment')}
                     disabled
                     value={expectedPayment}
+                    placeholder=''
                     classlabel="w-2/12"
                     classchild="w-10/12"
                     classnamefieldwrapper="flex items-center gap-x-3"
