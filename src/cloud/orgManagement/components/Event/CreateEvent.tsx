@@ -323,8 +323,7 @@ export function CreateEvent() {
               org_id: orgValue?.value || '',
               group_id: groupValue?.value || '',
               name: values.name,
-              onClick:
-                typeEvent === 'event' ? values.onClick === true : false,
+              onClick: typeEvent === 'event' ? values.onClick === true : false,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: values.status === true,
@@ -347,6 +346,7 @@ export function CreateEvent() {
           },
           { append: actionAppend, fields: actionFields, remove: actionRemove },
         ) => {
+          console.log('create event errors', formState?.errors)
           return (
             <>
               <div className="space-y-3">
@@ -428,7 +428,9 @@ export function CreateEvent() {
                     />
                   </FieldWrapper>
                   <FieldWrapper
-                    label={t('cloud:org_manage.event_manage.add_event.condition.onClick')}
+                    label={t(
+                      'cloud:org_manage.event_manage.add_event.condition.onClick',
+                    )}
                     error={formState?.errors['onClick']}
                   >
                     <Controller
@@ -441,7 +443,11 @@ export function CreateEvent() {
                             checked={value}
                             onCheckedChange={onChange}
                             disabled={typeEvent === 'schedule'}
-                            onChange={event => setOnclickValue(Boolean(event.currentTarget.value))}
+                            onChange={event =>
+                              setOnclickValue(
+                                Boolean(event.currentTarget.value),
+                              )
+                            }
                           />
                         )
                       }}

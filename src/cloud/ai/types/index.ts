@@ -1,5 +1,4 @@
 export type GetDdosDTO = {
-    data:{
         tcp_srcport: number
         tcp_dstport: number
         ip_proto: number
@@ -19,7 +18,6 @@ export type GetDdosDTO = {
         tx_bytes: number,
         rx_packets: number,
         rx_bytes: number
-    }
   }
 
   export type GetFuelDTO = {

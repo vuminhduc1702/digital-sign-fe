@@ -10,7 +10,7 @@ export function AiLayout() {
   const { t } = useTranslation()
 
   return (
-    <ContentLayout title={t('sidebar:intergration.ai')}>
+    <ContentLayout title={t('sidebar:intergration.ai.title')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
         <div className="flex flex-col gap-2 md:col-span-2">
           <AiNavbar />

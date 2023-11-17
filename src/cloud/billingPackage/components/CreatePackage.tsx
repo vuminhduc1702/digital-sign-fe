@@ -539,7 +539,7 @@ export function CreatePackage() {
                           }}
                           src={btnAddIcon}
                           alt="add-icon"
-                          className="icon-container w-6 h-6 flex items-center justify-center cursor-pointer mt-6"
+                          className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
                         />
                       </div>
                     )}

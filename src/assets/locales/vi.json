@@ -42,11 +42,16 @@
       "title": "Tích hợp",
       "tracking": "Tracking",
       "smarthome": "Smarthome",
-      "ai": "AI"
+      "ai": {
+        "title": "AI",
+        "ddos": "Dự báo DDOS",
+        "fuel": "Dự báo nhiên liệu"
+      }
     }
   },
   "nav": {
     "hello": "Chào",
+    "friend": "Bạn",
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
     "support": "Hỗ trợ",
@@ -54,19 +59,19 @@
   },
   "cloud": {
     "project_manager": {
-      "title": "Quản lý Project",
+      "title": "Quản lý dự án",
       "project": "Dự án",
       "no_data": "Bạn chưa có dự án nào, hãy tạo mới dự án",
       "count_project": "Bạn đang quản lý {{NO_OF_PROJECT}} dự án",
-      "backup": "Export project",
-      "restore": "Import project",
+      "backup": "Export dự án",
+      "restore": "Import dự án",
       "add_project": {
         "title": "Tạo mới dự án",
         "avatar": "Chọn ảnh đại diện",
         "upload_ava": "Tải ảnh",
         "upload_ava_default": "Chọn ảnh mặc định",
         "upload_instruction": "Vui lòng lựa chọn ảnh định dạng jpg hoặc png có dung lượng tối đa 5MB",
-        "restore_project": "Import project",
+        "restore_project": "Import dự án",
         "name": "Tên dự án",
         "edit": "Sửa dự án",
         "description": "Mô tả",
@@ -93,7 +98,7 @@
           "title": "Tổng quan",
           "name": "Tên",
           "desc": "Mô tả",
-          "choose_project": "Vui lòng click vào đây để chọn Project"
+          "choose_project": "Vui lòng click vào đây để chọn dự án"
         },
         "breadcrumb": {
           "device_list": "Danh sách thiết bị",
@@ -191,6 +196,7 @@
           "role": "Vai trò",
           "activate": "Kích hoạt",
           "parent": "Trực thuộc tổ chức",
+          "address": "Địa chỉ",
           "success_create": "Tạo người dùng thành công",
           "success_update": "Sửa người dùng thành công",
           "success_delete": "Xoá người dùng thành công",
@@ -239,6 +245,7 @@
           "name": "Tên",
           "group": "Nhóm",
           "onClick": "onClick",
+          "onClick_btn": "Kích hoạt",
           "status": "Trạng thái",
           "delete_event": "Xoá sự kiện",
           "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
@@ -789,7 +796,11 @@
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
       "notfound": "Lỗi 404: Web đang bị lỗi, bản vá sắp được hoàn thành, xin lỗi về sự bất tiện này."
     },
-    "no_data_res": "Dữ liệu trả về không đúng."
+    "no_data_res": "Dữ liệu trả về không đúng.",
+    "default_zod_err": {
+      "select": "Vui lòng chọn",
+      "select_union": "Vui lòng chọn 1 trong các option sau:"
+    }
   },
   "loading": {
     "org": "Đang tải danh sách tổ chức...",
@@ -983,12 +994,38 @@
     "province_city": "Tỉnh/TP",
     "district": "Huyện/Quận",
     "village": "Phường/Xã",
+    "dob": "Ngày sinh",
+    "sex": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "detail_address": "Địa chỉ chi tiết",
+    "account_info": "Thông tin tài khoản",
+    "confirm_password": "Xác nhận mật khẩu",
+    "choose_project": "---Chọn project---",
     "user": {
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
-      "ddos": "Cập nhật ddos thành công"
+      "ddos": "Cập nhật DDOS thành công",
+      "name": "Tên người dùng"
+    },
+    "customer": {
+      "success_delete": "Xoá khách hàng thành công",
+      "success_update": "Cập nhật khách hàng thành công",
+      "success_update_role": "Cập nhật quyền khách hàng thành công",
+      "edit": "Sửa khách hàng",
+      "delete": "Xoá khách hàng",
+      "create": "Tạo khách hàng"
+    },
+    "role": {
+      "edit": "Sửa quyền",
+      "delete": "Xoá quyền",
+      "add": "Thêm quyền",
+      "choose": "---Chọn quyền---"
     },
     "email": "Email",
     "back": "Trở lại"
+  },
+  "noti": {
+    "empty_id": "Không có ID"
   }
 }

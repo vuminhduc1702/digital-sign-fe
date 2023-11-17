@@ -148,7 +148,7 @@ export default function FuelTemplate() {
             isShowLog={false}
             value={codeInputRef.current}
             className={`${fullScreen ? '' : '!block'}`}
-            setCodeInput={value => codeInputRef.current = value}
+            setCodeInput={value => (codeInputRef.current = value)}
             isFullScreen={fullScreen}
             viewMode={viewMode}
             editorName={'code'}

@@ -5,28 +5,29 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 
 import { Form, InputField, TextAreaField } from '~/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
-import { type CreateProjectDTO, CreateProjectSchema, ACCEPTED_RESTORE_FILE, restoreProjectSchema } from '../api'
+import {
+  CreateProjectSchema,
+  ACCEPTED_RESTORE_FILE,
+  restoreProjectSchema,
+} from '../api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { useEffect, useRef, useState } from 'react'
-import { type Project } from '../routes/ProjectManage'
 import FileField from '~/components/Form/FileField'
-import {
-  type UploadImageDTO,
-  useUploadImage,
-} from '~/layout/OrgManagementLayout/api'
+import { useUploadImage } from '~/layout/OrgManagementLayout/api'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
-  uploadImageSchema,
-} from '~/layout/OrgManagementLayout/components/CreateOrg'
+  useResetDefaultImage,
+} from '~/utils/hooks'
+import { type Project } from '../routes/ProjectManage'
 
 import defaultProjectImage from '~/assets/images/default-project.png'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import { API_URL } from '~/config'
-import { RestoreProjectDTO } from '../api/restoreProject'
+import { useRestoreProject, type RestoreProjectDTO } from '../api/restoreProject'
 
 export function UpdateProject({
   close,
@@ -39,9 +40,20 @@ export function UpdateProject({
 }) {
   const { t } = useTranslation()
 
+  const {
+    handleResetDefaultImage,
+    avatarRef,
+    uploadImageErr,
+    setUploadImageErr,
+    controlUploadImage,
+    setValueUploadImage,
+    getValueUploadImage,
+  } = useResetDefaultImage(defaultProjectImage)
+
   const cancelButtonRef = useRef(null)
 
   const { mutate, isLoading, isSuccess } = useUpdateProject()
+  const { mutateAsync: mutateAsyncUploadProjectFile } = useRestoreProject()
 
   useEffect(() => {
     if (isSuccess) {
@@ -55,35 +67,6 @@ export function UpdateProject({
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
-  const {
-    control: controlUploadImage,
-    setValue: setValueUploadImage,
-    getValues: getValueUploadImage,
-  } = useForm<UploadImageDTO['data']>({
-    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
-  })
-  const avatarRef = useRef<HTMLImageElement>(null)
-  const [uploadImageErr, setUploadImageErr] = useState('')
-
-  function handleResetDefaultImage() {
-    setUploadImageErr('')
-    if (getValueUploadImage('file') != null) {
-      if (avatarRef.current != null) {
-        avatarRef.current.src = defaultProjectImage
-      }
-      fetch(defaultProjectImage)
-        .then(res => res.blob())
-        .then(blob => {
-          const defaultFile = new File([blob], 'default-project.png', blob)
-          const formData = new FormData()
-          formData.append('file', defaultFile)
-          setValueUploadImage(
-            'file',
-            formData.get('file') as unknown as { file: File },
-          )
-        })
-    }
-  }
 
   const {
     control: controlUploadRestoreProject,
@@ -140,6 +123,17 @@ export function UpdateProject({
                   projectId: selectedUpdateProject.id,
                 })
               }
+              if (getValueUploadRestoreProject('backup') != null) {
+                const dataBackup = JSON.parse(
+                  getValueUploadRestoreProject('backup'),
+                )
+                await mutateAsyncUploadProjectFile({
+                  projectId: selectedUpdateProject.id,
+                  backup: {
+                    backup: dataBackup,
+                  },
+                })
+              }
 
               if (
                 getValueUploadImage('file') == null ||
@@ -180,7 +174,7 @@ export function UpdateProject({
                       label={t('cloud:project_manager.add_project.description')}
                       error={formState.errors['description']}
                       registration={register('description')}
-                      rows={9}
+                      rows={11}
                     />
                   </div>
                   <div className="pl-5">
@@ -253,7 +247,9 @@ export function UpdateProject({
                     </div>
                     <div className="mb-3 space-y-1">
                       <FileField
-                        label={t('cloud:project_manager.add_project.restore_project')}
+                        label={t(
+                          'cloud:project_manager.add_project.restore_project',
+                        )}
                         control={controlUploadRestoreProject}
                         name="restore-project"
                         ref={fileInputRef}
@@ -292,9 +288,8 @@ export function UpdateProject({
                               width={12}
                               src={btnRemoveIcon}
                               className="cursor-pointer text-secondary-700 hover:text-primary-400"
-                              onClick={() => {
-                                handleResetRestoreProject
-                              }}
+                              onClick={() => handleResetRestoreProject}
+                              alt="restore project"
                             />
                           </div>
                         ) : (

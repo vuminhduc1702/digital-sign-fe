@@ -1,11 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
-import { type JsonValue } from 'react-use-websocket/dist/lib/types'
+import * as z from 'zod'
 
 import { useNotificationStore } from '~/stores/notifications'
+import i18n from '~/i18n'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
+import { type UploadImageDTO } from '~/layout/OrgManagementLayout/api'
 
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
@@ -42,7 +46,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T extends JsonValue | null>(url: string) => {
+export const useWS = <T>(url: string) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -93,11 +97,21 @@ export function useCopyId() {
 
   async function handleCopyId(id: string, typeCopy?: string) {
     try {
-      await navigator.clipboard.writeText(id)
-      addNotification({
-        type: 'success',
-        title: typeCopy === 'token' ? t('cloud:org_manage.org_map.copy_token_success') : t('cloud:org_manage.org_map.copy_success'),
-      })
+      if (id == null || id === '') {
+        addNotification({
+          type: 'info',
+          title: t('noti:empty_id'),
+        })
+      } else {
+        await navigator.clipboard.writeText(id)
+        addNotification({
+          type: 'success',
+          title:
+            typeCopy === 'token'
+              ? t('cloud:org_manage.org_map.copy_token_success')
+              : t('cloud:org_manage.org_map.copy_success'),
+        })
+      }
     } catch (error) {
       console.error(error)
     }
@@ -123,5 +137,62 @@ export function useDefaultCombobox(
         image: '',
         org_id: '',
       }
+  }
+}
+
+export const MAX_FILE_SIZE = 5000000
+export const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png']
+const uploadImageSchema = z.object({
+  file: z
+    .instanceof(File, {
+      message: i18n.t('cloud:org_manage.org_manage.add_org.choose_avatar'),
+    })
+    .refine(
+      file => file.size <= MAX_FILE_SIZE,
+      i18n.t('validate:image_max_size'),
+    )
+    .refine(
+      file => ACCEPTED_IMAGE_TYPES.includes(file.type),
+      i18n.t('validate:image_type'),
+    ),
+})
+export function useResetDefaultImage(defaultImage: string) {
+  const avatarRef = useRef<HTMLImageElement>(null)
+  const [uploadImageErr, setUploadImageErr] = useState('')
+
+  const {
+    control: controlUploadImage,
+    setValue: setValueUploadImage,
+    getValues: getValueUploadImage,
+  } = useForm<UploadImageDTO['data']>({
+    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
+  })
+
+  function handleResetDefaultImage() {
+    setUploadImageErr('')
+    if (avatarRef.current != null) {
+      avatarRef.current.src = defaultImage
+    }
+    fetch(defaultImage)
+      .then(res => res.blob())
+      .then(blob => {
+        const defaultFile = new File([blob], 'default.png', blob)
+        const formData = new FormData()
+        formData.append('file', defaultFile)
+        setValueUploadImage(
+          'file',
+          formData.get('file') as unknown as { file: File },
+        )
+      })
+  }
+
+  return {
+    handleResetDefaultImage,
+    avatarRef,
+    uploadImageErr,
+    setUploadImageErr,
+    controlUploadImage,
+    setValueUploadImage,
+    getValueUploadImage,
   }
 }

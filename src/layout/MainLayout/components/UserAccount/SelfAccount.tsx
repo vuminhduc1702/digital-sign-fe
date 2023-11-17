@@ -57,58 +57,23 @@ const SelfAccount = () => {
     }
   }, [])
 
-  //get province list
   const { data: provinceList, isLoading: provinceListIsLoading } = useAreaList({
     parentCode: '',
     type: 'PROVINCE',
-    config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === provinceCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
-    },
   })
 
-  // get district list
   const { data: districtList } = useAreaList({
     parentCode: provinceCode,
     type: 'DISTRICT',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === districtCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!provinceCode,
     },
   })
 
-  // get ward list
   const { data: wardList } = useAreaList({
     parentCode: districtCode,
     type: 'WARD',
     config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data.map((item: any) => {
-          if (item.areaCode === wardCode) {
-            return { value: item.areaCode, label: item.name, selected: true }
-          }
-          return { value: item.areaCode, label: item.name }
-        })
-        return transformArr
-      },
       enabled: !!districtCode,
     },
   })
@@ -122,18 +87,18 @@ const SelfAccount = () => {
     <div className="flex h-full w-2/3 flex-col self-center py-8">
       <div className="flex items-center">
         <div
-          className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
+          className="border-secondary-700 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
           onClick={() => navigate(-1)}
         >
           <img src={narrowLeft} alt="left" className="aspect-square w-[20px]" />
           <span className="ml-2">{t('form:back')}</span>
         </div>
-        <div className="mr-auto text-h1">{t('form:title')}</div>
+        <div className="text-h1 mr-auto">{t('form:title')}</div>
       </div>
 
       <TitleBar
         title={t('billing:subcription.popup.customer_info')}
-        className="mb-4 mt-12 rounded-md bg-secondary-700 pl-3"
+        className="bg-secondary-700 mb-4 mt-12 rounded-md pl-3"
       />
 
       {userInfoIsLoading || provinceListIsLoading ? (
@@ -270,7 +235,7 @@ const SelfAccount = () => {
             )}
           </Form>
 
-          <div className="mt-auto flex justify-center">
+          <div className="mt-4 flex justify-center">
             <Button
               variant="primary"
               size="lg"

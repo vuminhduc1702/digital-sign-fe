@@ -491,7 +491,7 @@ export function PackageInfo() {
                         }}
                         src={btnAddIcon}
                         alt="add-icon"
-                        className="h-5 w-5 cursor-pointer"
+                        className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
                       />
                     </div>
                   )}

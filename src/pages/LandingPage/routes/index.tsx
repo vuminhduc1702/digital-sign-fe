@@ -19,7 +19,6 @@ import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import storage from '~/utils/storage'
 import { scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
@@ -36,9 +35,8 @@ export function LandingPage() {
   const { data: userDataFromStorage } = useUser()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
-      useErrorBoundary: false,
       suspense: false,
-      enabled: !!storage.getToken(),
+      enabled: !!userDataFromStorage,
     },
   })
   const logout = useLogout()
@@ -97,7 +95,7 @@ export function LandingPage() {
                   {t('landingpage:logo')}
                 </a>
               </div>
-              <div className="mx-auto flex">
+              <div className="flex w-full justify-center">
                 <div className="flex justify-start">
                   <div
                     className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
@@ -145,7 +143,7 @@ export function LandingPage() {
                     className="text-white"
                   />
                 </div>
-              ) : userInfoData == null ? (
+              ) : userInfoData == null && userDataFromStorage == null ? (
                 <div className="ml-auto flex">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
@@ -175,7 +173,7 @@ export function LandingPage() {
                     className="flex items-center gap-x-2"
                   >
                     <div className="ml-auto flex">
-                      <div className="flex min-w-fit ">
+                      <div className="flex w-max ">
                         <img
                           src={`${
                             userInfoData?.profile?.profile_image !== ''
@@ -194,8 +192,10 @@ export function LandingPage() {
                         <div className="mx-4 flex cursor-pointer items-center justify-center">
                           <p className="mr-2 text-white">
                             {t('nav:hello')}{' '}
-                            {userInfoData?.name ||
-                              userInfoData?.email?.split('@')[0]}
+                            {userInfoData != null
+                              ? userInfoData?.name ||
+                                userInfoData?.email?.split('@')[0]
+                              : t('nav:friend')}
                           </p>
                           <SidebarDropDownIcon
                             width={12}
