@@ -116,7 +116,7 @@ function SideNavigation() {
             <img
               src={thietbiIcon}
               alt="Overview"
-              className="aspect-square w-[20px]"
+              className="aspect-square w-5"
             />
             <div>{t('sidebar:device.title')}</div>
           </AccordionTrigger>
@@ -133,7 +133,7 @@ function SideNavigation() {
             <img
               src={dammayIcon}
               alt="Overview"
-              className="aspect-square w-[20px]"
+              className="aspect-square w-5"
             />
             <div>{t('sidebar:cloud.title')}</div>
           </AccordionTrigger>
@@ -180,7 +180,7 @@ function SideNavigation() {
             <img
               src={ungdungIcon}
               alt="Application"
-              className="aspect-square w-[20px]"
+              className="aspect-square w-5"
             />
             <div>{t('sidebar:application.title')}</div>
           </AccordionTrigger>
@@ -201,7 +201,7 @@ function SideNavigation() {
             <img
               src={thanhtoanIcon}
               alt="Payment"
-              className="aspect-square w-[20px]"
+              className="aspect-square w-5"
             />
             <div>{t('sidebar:payment.title')}</div>
           </AccordionTrigger>
@@ -217,24 +217,6 @@ function SideNavigation() {
           <NavLink to={`${PATHS.BILLING}/${projectId}`}>
             <AccordionContent>{t('sidebar:payment.plhd')}</AccordionContent>
           </NavLink>
-          {/* <AccordionContent>
-            <AccordionItem value="payment">
-              <AccordionTrigger>
-                <img
-                  src={ungdungIcon}
-                  alt="Application"
-                  className="aspect-square w-[20px]"
-                />
-                <div>{t('sidebar:payment.client.title')}</div>
-              </AccordionTrigger>
-              <AccordionContent>
-                {t('sidebar:payment.client.dshd')}
-              </AccordionContent>
-              <AccordionContent>
-                {t('sidebar:payment.client.cuoc')}
-              </AccordionContent>
-            </AccordionItem>
-          </AccordionContent> */}
         </AccordionItem>
 
         <AccordionItem value="integration">
@@ -242,18 +224,12 @@ function SideNavigation() {
             <img
               src={tichhopIcon}
               alt="Intergration"
-              className="aspect-square w-[20px]"
+              className="aspect-square w-5"
             />
             <div>{t('sidebar:intergration.title')}</div>
           </AccordionTrigger>
-          {/* <AccordionContent>
-            {t('sidebar:intergration.tracking')}
-          </AccordionContent>
-          <AccordionContent>
-            {t('sidebar:intergration.smarthome')}
-          </AccordionContent> */}
           <NavLink to={`${PATHS.AI}`}>
-            <AccordionContent>{t('sidebar:intergration.ai')}</AccordionContent>
+            <AccordionContent>{t('sidebar:intergration.ai.title')}</AccordionContent>
           </NavLink>
         </AccordionItem>
       </Accordion.Root>

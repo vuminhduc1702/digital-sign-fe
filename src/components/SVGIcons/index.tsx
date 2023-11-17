@@ -683,7 +683,7 @@ export function DeleteIcon({ ...props }: SVGIconProps) {
 export function ChartCircle({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_351_8179)">
+      <g clipPath="url(#clip0_351_8179)">
         <path
           d="M56.6786 58H1.32137C0.596371 58 0 57.4036 0 56.6786V1.32137C0 0.596371 0.596371 0 1.32137 0H56.6669C57.4036 0 57.9883 0.596371 57.9883 1.32137V56.6669C58 57.4036 57.4036 58 56.6786 58Z"
           fill="#FFF6EF"
@@ -752,7 +752,7 @@ export function ChartCircle({ ...props }: SVGIconProps) {
 export function ChartControl({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_676_8527)">
+      <g clipPath="url(#clip0_676_8527)">
         <path
           d="M56.6787 58H1.3331C1.15953 58.0001 0.987627 57.9661 0.827241 57.8997C0.666856 57.8334 0.521143 57.736 0.398411 57.6133C0.27568 57.4906 0.178361 57.3449 0.112011 57.1845C0.0456602 57.0241 0.0115655 56.8522 0.0117193 56.6786V1.32137C0.0115655 1.1478 0.0456602 0.975908 0.112011 0.815523C0.178361 0.655137 0.27568 0.509409 0.398411 0.386678C0.521143 0.263947 0.666856 0.166621 0.827241 0.100271C0.987627 0.03392 1.15953 -0.000153286 1.3331 5.18379e-07H56.6787C57.0286 0.000620287 57.364 0.140147 57.6111 0.387918C57.8582 0.63569 57.9968 0.971434 57.9965 1.32137V56.6669C57.9979 56.8411 57.9649 57.0138 57.8994 57.1752C57.8338 57.3366 57.737 57.4834 57.6145 57.6073C57.4921 57.7311 57.3464 57.8296 57.1858 57.897C57.0252 57.9644 56.8528 57.9994 56.6787 58Z"
           fill="#FFF6EF"
@@ -860,7 +860,7 @@ export function ChartControl({ ...props }: SVGIconProps) {
 export function ChartData({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_694_8580)">
+      <g clipPath="url(#clip0_694_8580)">
         <path
           d="M56.6669 58H1.32138C1.14781 58.0001 0.975908 57.9661 0.815523 57.8997C0.655137 57.8334 0.509424 57.736 0.386693 57.6133C0.263961 57.4906 0.166614 57.3449 0.100264 57.1845C0.0339129 57.0241 -0.000153286 56.8522 5.18486e-07 56.6786V1.32137C-0.000153286 1.1478 0.0339129 0.975908 0.100264 0.815523C0.166614 0.655137 0.263961 0.509409 0.386693 0.386678C0.509424 0.263947 0.655137 0.166621 0.815523 0.100271C0.975908 0.03392 1.14781 -0.000153286 1.32138 5.18379e-07H56.6669C56.8405 -0.000153286 57.0124 0.03392 57.1728 0.100271C57.3332 0.166621 57.4789 0.263947 57.6016 0.386678C57.7243 0.509409 57.8217 0.655137 57.8881 0.815523C57.9544 0.975908 57.9885 1.1478 57.9883 1.32137V56.6669C57.9906 56.8417 57.9581 57.0151 57.8927 57.1771C57.8272 57.3391 57.7302 57.4865 57.6072 57.6106C57.4842 57.7347 57.3377 57.833 57.1762 57.8999C57.0148 57.9668 56.8416 58.0008 56.6669 58Z"
           fill="#FFF6EF"
@@ -917,8 +917,8 @@ export function ChartData({ ...props }: SVGIconProps) {
           d="M50.8458 13.8868V36.7231C50.8448 37.335 50.6013 37.9214 50.1686 38.3539C49.7358 38.7864 49.1493 39.0297 48.5375 39.0303H15.2868C14.7551 39.0301 14.2397 38.8464 13.8276 38.5102C13.4156 38.174 13.1322 37.706 13.0253 37.185C12.9936 37.0343 12.978 36.8807 12.9785 36.7267V13.8868C12.9788 13.2745 13.2221 12.6873 13.6548 12.2541C14.0876 11.8209 14.6745 11.5771 15.2868 11.5762H48.5375C49.1498 11.5771 49.7367 11.8209 50.1695 12.2541C50.6022 12.6873 50.8455 13.2745 50.8458 13.8868Z"
           fill="#FFF6EF"
           stroke="#AEB1B3"
-          stroke-width="6"
-          stroke-miterlimit="10"
+          strokeWidth="6"
+          strokeMiterlimit="10"
         />
         <path
           d="M50.8458 13.8868V36.7231C50.8449 37.335 50.6014 37.9214 50.1686 38.3539C49.7359 38.7864 49.1494 39.0297 48.5375 39.0303H15.2869C14.7552 39.0301 14.2398 38.8464 13.8277 38.5102C13.4157 38.174 13.1323 37.706 13.0254 37.185H46.6888C47.301 37.185 47.8881 36.9418 48.321 36.509C48.7539 36.0761 48.9971 35.4889 48.9971 34.8767V13.8868C48.9974 13.5835 48.9379 13.2831 48.8221 13.0027C48.7062 12.7224 48.5362 12.4677 48.3218 12.2531C48.1075 12.0385 47.8529 11.8683 47.5727 11.7521C47.2925 11.636 46.9921 11.5762 46.6888 11.5762H48.5375C49.1495 11.5771 49.736 11.8206 50.1687 12.2533C50.6014 12.686 50.8449 13.2726 50.8458 13.8845V13.8868Z"
@@ -988,7 +988,7 @@ export function ChartData({ ...props }: SVGIconProps) {
 export function ChartGraph({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_351_8161)">
+      <g clipPath="url(#clip0_351_8161)">
         <path
           d="M56.6786 58H1.32137C0.596371 58 0 57.4036 0 56.6786V1.32137C0 0.596371 0.596371 0 1.32137 0H56.6669C57.4036 0 57.9883 0.596371 57.9883 1.32137V56.6669C58 57.4036 57.4036 58 56.6786 58Z"
           fill="#FFF6EF"
@@ -1057,7 +1057,7 @@ export function ChartGraph({ ...props }: SVGIconProps) {
 export function ChartLine({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_351_8138)">
+      <g clipPath="url(#clip0_351_8138)">
         <path
           d="M56.6786 58H1.32137C0.596371 58 0 57.4036 0 56.6786V1.32137C0 0.596371 0.596371 0 1.32137 0H56.6669C57.4036 0 57.9883 0.596371 57.9883 1.32137V56.6669C58 57.4036 57.4036 58 56.6786 58Z"
           fill="#FFF6EF"
@@ -1150,7 +1150,7 @@ export function ChartLine({ ...props }: SVGIconProps) {
 export function ChartMap({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_351_9505)">
+      <g clipPath="url(#clip0_351_9505)">
         <path
           d="M56.6786 58H1.32137C0.596371 58 0 57.4036 0 56.6786V1.32137C0 0.596371 0.596371 0 1.32137 0H56.6669C57.4036 0 57.9883 0.596371 57.9883 1.32137V56.6669C58 57.4036 57.4036 58 56.6786 58Z"
           fill="#FFF6EF"
@@ -1223,7 +1223,7 @@ export function ChartMap({ ...props }: SVGIconProps) {
 export function ChartTableData({ ...props }: SVGIconProps) {
   return (
     <SVGIcon {...props}>
-      <g clip-path="url(#clip0_351_9525)">
+      <g clipPath="url(#clip0_351_9525)">
         <path
           d="M56.6786 58H1.32137C0.596371 58 0 57.4036 0 56.6786V1.32137C0 0.596371 0.596371 0 1.32137 0H56.6669C57.4036 0 57.9883 0.596371 57.9883 1.32137V56.6669C58 57.4036 57.4036 58 56.6786 58Z"
           fill="#FFF6EF"
@@ -1294,17 +1294,17 @@ export function ChartGaugeIcon({ ...props }: SVGIconProps) {
           d="M24,184V161.1C24,103.6,70.2,56.2,127.6,56A104,104,0,0,1,232,160v24a8,8,0,0,1-8,8H32A8,8,0,0,1,24,184Z"
           fill="none"
           stroke="#EC1B2E"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="16"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="16"
         />
 
         <line
           fill="none"
           stroke="#EC1B2E"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="16"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="16"
           x1="128"
           x2="128"
           y1="56"
@@ -1313,9 +1313,9 @@ export function ChartGaugeIcon({ ...props }: SVGIconProps) {
         <line
           fill="none"
           stroke="#EC1B2E"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="16"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="16"
           x1="27.5"
           x2="58.5"
           y1="133.1"
@@ -1324,9 +1324,9 @@ export function ChartGaugeIcon({ ...props }: SVGIconProps) {
         <line
           fill="none"
           stroke="#EC1B2E"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="16"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="16"
           x1="228.5"
           x2="197.5"
           y1="133.1"
@@ -1335,9 +1335,9 @@ export function ChartGaugeIcon({ ...props }: SVGIconProps) {
         <line
           fill="none"
           stroke="#EC1B2E"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="16"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="16"
           x1="103.4"
           x2="171.8"
           y1="192"

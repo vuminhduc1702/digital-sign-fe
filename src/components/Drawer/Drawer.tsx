@@ -37,9 +37,6 @@ export const Drawer = ({
     if (typeof otherState === 'boolean') {
       setOtherState?.(false)
     }
-    if (typeof otherState === 'string') {
-      setOtherState?.('mqtt')
-    }
   }, [isOpen])
 
   return (
@@ -86,7 +83,7 @@ export const Drawer = ({
                       {children}
                     </div>
                   </div>
-                  <div className="flex flex-shrink-0 justify-end space-x-2 px-4 py-4">
+                  <div className="flex flex-shrink-0 justify-end space-x-2 p-4">
                     {renderFooter()}
                   </div>
                 </div>

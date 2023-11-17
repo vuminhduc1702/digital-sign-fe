@@ -9,15 +9,30 @@ import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
 import i18n from '~/i18n'
+import { useNotificationStore } from '~/stores/notifications'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
+  const controller = new AbortController()
+
+  // setTimeout(() => {
+  //   controller.abort()
+  //   useNotificationStore.getState().addNotification({
+  //     type: 'error',
+  //     title: i18n.t('error:server_res.title'),
+  //     message: 'hahahahahahahahhaha',
+  //   })
+  // }, 200)
+
   const userStorage = storage.getToken()
   const token = userStorage?.token
   if (token) {
     ;(config.headers as AxiosHeaders).set('Authorization', `Bearer ${token}`)
   }
 
-  return config
+  return {
+    ...config,
+    signal: controller.signal,
+  }
 }
 
 export const axios = Axios.create({
@@ -25,6 +40,8 @@ export const axios = Axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // timeout: 100,
+  // timeoutErrorMessage: 'hahahahahahahahhaha',
 })
 
 export const axiosUploadFile = Axios.create({
@@ -37,8 +54,26 @@ export const axiosUploadFile = Axios.create({
 axios.interceptors.request.use(authRequestInterceptor)
 axiosUploadFile.interceptors.request.use(authRequestInterceptor)
 axios.interceptors.response.use(
-  response => response.data,
-  (error: AxiosError) => {
+  response => {
+    let message = ''
+    const errCode = response?.data?.code
+    const errMessage = response?.data?.message
+    if (errMessage === 'malformed entity specification') {
+      message = i18n.t('error:server_res.malformed_data')
+      const customError = { ...response?.data, message }
+
+      return Promise.reject(customError)
+    }
+    if (errCode != null && errCode !== 0) {
+      message = errMessage ?? i18n.t('error:server_res.server')
+      const customError = { ...response?.data, message }
+
+      return Promise.reject(customError)
+    } else {
+      return response.data
+    }
+  },
+  (error: AxiosError<{ error: string }>) => {
     console.error('res error: ', error)
     let message = ''
     switch (error.response?.status) {
@@ -56,17 +91,14 @@ axios.interceptors.response.use(
       case 404:
         message = i18n.t('error:server_res.notfound')
         break
-      case 500:
-        message = i18n.t('error:server_res.server')
-        break
+      // case 500:
+      //   message = i18n.t('error:server_res.server')
+      //   break
       default:
-        message = error.message
+        message = error?.response?.data?.error ?? error.message
     }
 
-    if (
-      (error.response?.data as { error: string })?.error ===
-      'malformed entity specification'
-    ) {
+    if (error.response?.data?.error === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
     }
 

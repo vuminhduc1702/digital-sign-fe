@@ -1,17 +1,17 @@
-const defaultTheme = require('tailwindcss/defaultTheme')
+import { type Config } from 'tailwindcss'
+import { type RecursiveKeyValuePair } from 'tailwindcss/types/config'
+import defaultTheme from 'tailwindcss/defaultTheme.js'
 
-/** @type {import('tailwindcss').Config} */
-
-function withOpacity(variableName) {
-  return ({ opacityValue }) => {
+function withOpacity(variableName: string) {
+  return (({ opacityValue }) => {
     if (opacityValue != null) {
       return `hsla(${variableName}, ${opacityValue})`
     }
     return `hsl(${variableName})`
-  }
+  }) as unknown as string | RecursiveKeyValuePair<string, string>
 }
 
-module.exports = {
+export default {
   content: ['./src/**/*.{ts,tsx}'],
   plugins: [],
   theme: {
@@ -73,36 +73,36 @@ module.exports = {
       },
       keyframes: {
         slideDown: {
-          from: { height: 0 },
+          from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
         },
         slideUp: {
           from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: 0 },
+          to: { height: '0' },
         },
         slideDownAndFade: {
-          from: { opacity: 0, transform: 'translateY(-2px)' },
-          to: { opacity: 1, transform: 'translateY(0)' },
+          from: { opacity: '0', transform: 'translateY(-2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
         slideLeftAndFade: {
-          from: { opacity: 0, transform: 'translateX(2px)' },
-          to: { opacity: 1, transform: 'translateX(0)' },
+          from: { opacity: '0', transform: 'translateX(2px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
         },
         slideUpAndFade: {
-          from: { opacity: 0, transform: 'translateY(2px)' },
-          to: { opacity: 1, transform: 'translateY(0)' },
+          from: { opacity: '0', transform: 'translateY(2px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
         },
         slideRightAndFade: {
-          from: { opacity: 0, transform: 'translateX(2px)' },
-          to: { opacity: 1, transform: 'translateX(0)' },
+          from: { opacity: '0', transform: 'translateX(2px)' },
+          to: { opacity: '1', transform: 'translateX(0)' },
         },
         'accordion-down': {
-          from: { height: 0 },
+          from: { height: '0' },
           to: { height: 'var(--radix-accordion-content-height)' },
         },
         'accordion-up': {
           from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: 0 },
+          to: { height: '0' },
         },
       },
       animation: {
@@ -120,4 +120,4 @@ module.exports = {
       },
     },
   },
-}
+} satisfies Config

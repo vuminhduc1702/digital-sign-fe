@@ -13,9 +13,9 @@ export type Configuration = {
 }
 
 export type FieldsType = {
-    name: string
-    start_byte: number
-    end_byte: number
+  name: string
+  start_byte: number
+  end_byte: number
 }
 
 export type SchemaType = {

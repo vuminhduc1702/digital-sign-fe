@@ -7,14 +7,14 @@ import { WEBSOCKET_URL } from '../../routes/DashboardDetail'
 import storage from '~/utils/storage'
 import { useNotificationStore } from '~/stores/notifications'
 
+import { type BaseWSRes } from '~/types'
+
 type ControllerWSRes = {
   data: {
     code: 0 | 1
     message: string
   }
-  errorCode: number
-  errorMsg: string
-}
+} & BaseWSRes
 
 export function ControllerButton(data: { data: string }) {
   const { t } = useTranslation()

@@ -40,9 +40,8 @@ export const FormDrawer = ({
   triggerButton,
   submitButton,
   size = 'md',
-  otherState,
   resetData,
-  setOtherState,
+  ...props
 }: FormDrawerProps) => {
   const { close, open, isOpen } = useDisclosure()
 
@@ -88,8 +87,7 @@ export const FormDrawer = ({
             {submitButton}
           </>
         )}
-        otherState={otherState}
-        setOtherState={setOtherState}
+        {...props}
       >
         {children}
       </Drawer>

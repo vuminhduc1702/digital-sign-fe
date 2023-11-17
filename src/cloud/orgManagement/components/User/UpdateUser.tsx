@@ -8,6 +8,7 @@ import {
   Form,
   InputField,
   SelectDropdown,
+  SelectField,
   type SelectOptionString,
 } from '~/components/Form'
 import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
@@ -19,6 +20,7 @@ import { useGetRoles } from '~/cloud/role/api'
 
 import {
   emailSchema,
+  emptySelectSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
@@ -26,6 +28,7 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
 
 type UpdateUserProps = {
   userId: string
@@ -38,6 +41,10 @@ type UpdateUserProps = {
   role_id: string
   role_name: string
   phone: string
+  province: string
+  district: string
+  ward: string
+  full_address: string
 }
 
 // FIXME: password can not validate passwordSchema if add .or(z.string().optional())
@@ -51,6 +58,10 @@ export const updatedUserSchema = z
     project_id: z.string().optional(),
     org_id: z.string().optional(),
     role_id: z.string().optional(),
+    province: z.string().optional(),
+    district: z.string().optional(),
+    ward: z.string().optional(),
+    full_address: z.string().optional(),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -73,10 +84,16 @@ export function UpdateUser({
   role_id,
   role_name,
   phone,
+  province,
+  district,
+  ward,
+  full_address,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
+  const [provinceCode, setProvinceCode] = useState('')
+  const [districtCode, setDistrictCode] = useState('')
 
   useEffect(() => {
     if (isSuccess) {
@@ -108,6 +125,27 @@ export function UpdateUser({
   const [role, setRole] = useState<SelectOptionString>({
     label: role_name !== 'undefined' ? role_name : '',
     value: role_id !== 'undefined' ? role_id : '',
+  })
+
+  const { data: provinceList } = useAreaList({
+    parentCode: '',
+    type: 'PROVINCE',
+  })
+
+  const { data: districtList } = useAreaList({
+    parentCode: provinceCode,
+    type: 'DISTRICT',
+    config: {
+      enabled: !!provinceCode,
+    },
+  })
+
+  const { data: wardList } = useAreaList({
+    parentCode: districtCode,
+    type: 'WARD',
+    config: {
+      enabled: !!districtCode,
+    },
   })
 
   return (
@@ -150,6 +188,10 @@ export function UpdateUser({
               org_id: option?.value || '',
               role_id: role?.value || '',
               phone: values.phone,
+              province: values.province,
+              district: values.district,
+              ward: values.ward,
+              full_address: values.full_address,
             },
             userId,
           })
@@ -160,6 +202,10 @@ export function UpdateUser({
             name,
             email,
             phone: phone !== 'undefined' ? phone : '',
+            province,
+            district,
+            ward,
+            full_address,
           },
         }}
       >
@@ -243,6 +289,43 @@ export function UpdateUser({
                 {formState?.errors?.role_id?.message}
               </p>
             </div>
+            <div className="grid grid-cols-3 gap-x-2">
+              <div className="col-start-1 col-end-4">
+                {t('cloud:org_manage.user_manage.add_user.address')}
+              </div>
+              <SelectField
+                error={formState.errors['province']}
+                registration={register('province')}
+                options={provinceList || [{ value: '', label: '' }]}
+                classchild="w-full"
+                onChange={e => setProvinceCode(e.target.value)}
+                placeholder={t(
+                  'cloud:org_manage.user_manage.add_user.province',
+                )}
+              />
+
+              <SelectField
+                error={formState.errors['district']}
+                registration={register('district')}
+                options={districtList || [{ value: '', label: '' }]}
+                onChange={e => setDistrictCode(e.target.value)}
+                placeholder={t(
+                  'cloud:org_manage.user_manage.add_user.district',
+                )}
+              />
+
+              <SelectField
+                error={formState.errors['ward']}
+                registration={register('ward')}
+                options={wardList || [{ value: '', label: '' }]}
+                placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
+              />
+            </div>
+
+            <InputField
+              label={t('form:enter_address')}
+              registration={register('full_address')}
+            />
           </>
         )}
       </Form>

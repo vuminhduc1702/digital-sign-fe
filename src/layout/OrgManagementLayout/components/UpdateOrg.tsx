@@ -1,5 +1,3 @@
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState } from 'react'
 
@@ -12,23 +10,18 @@ import {
   TextAreaField,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import {
-  type UpdateOrgDTO,
-  useUpdateOrg,
-  useUploadImage,
-  type UploadImageDTO,
-} from '../api'
-import {
-  ACCEPTED_IMAGE_TYPES,
-  MAX_FILE_SIZE,
-  orgSchema,
-  uploadImageSchema,
-} from './CreateOrg'
+import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
+import { orgSchema } from './CreateOrg'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import FileField from '~/components/Form/FileField'
 import { API_URL } from '~/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  useResetDefaultImage,
+} from '~/utils/hooks'
 
 import { type OrgMapType } from './OrgManageSidebar'
 import { type OrgList } from '~/layout/MainLayout/types'
@@ -36,13 +29,6 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-
-export type UpdateOrg = {
-  name: string
-  description: string
-  org_id?: string
-  image?: string
-}
 
 export function UpdateOrg({
   close,
@@ -54,6 +40,16 @@ export function UpdateOrg({
   selectedUpdateOrg: OrgMapType
 }) {
   const { t } = useTranslation()
+
+  const {
+    handleResetDefaultImage,
+    avatarRef,
+    uploadImageErr,
+    setUploadImageErr,
+    controlUploadImage,
+    setValueUploadImage,
+    getValueUploadImage,
+  } = useResetDefaultImage(defaultOrgImage)
 
   const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
 
@@ -70,7 +66,6 @@ export function UpdateOrg({
     ['id'],
     'children',
   )
-
   const orgSelectOptions = orgFlattenData
     ?.map(org => ({
       label: org?.name,
@@ -85,7 +80,12 @@ export function UpdateOrg({
 
   useEffect(() => {
     if (selectedUpdateOrg.id) {
-      if (selectedUpdateOrg.parent_name) {
+      if (selectedUpdateOrg.parent_name === 'undefined') {
+        setOptionOrg({
+          label: t('cloud:org_manage.org_manage.add_org.no_org'),
+          value: '',
+        })
+      } else {
         setOptionOrg({
           label: selectedUpdateOrg.parent_name,
           value: selectedUpdateOrg.id,
@@ -95,41 +95,14 @@ export function UpdateOrg({
   }, [selectedUpdateOrg])
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
-  const { mutateAsync: mutateAsyncUploadImage } = useUploadImage()
+  const {
+    mutateAsync: mutateAsyncUploadImage,
+    isLoading: isLoadingUploadImage,
+  } = useUploadImage()
 
   const { mutate: mutateUpdateOrgForOrg } = useUpdateOrgForOrg()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const avatarRef = useRef<HTMLImageElement>(null)
-  const {
-    control: controlUploadImage,
-    setValue: setValueUploadImage,
-    getValues: getValueUploadImage,
-  } = useForm<UploadImageDTO['data']>({
-    resolver: uploadImageSchema && zodResolver(uploadImageSchema),
-  })
-
-  function handleResetDefaultImage() {
-    setUploadImageErr('')
-    if (getValueUploadImage('file') != null) {
-      if (avatarRef.current != null) {
-        avatarRef.current.src = defaultOrgImage
-      }
-      fetch(defaultOrgImage)
-        .then(res => res.blob())
-        .then(blob => {
-          const defaultFile = new File([blob], 'default-project.png', blob)
-          const formData = new FormData()
-          formData.append('file', defaultFile)
-          setValueUploadImage(
-            'file',
-            formData.get('file') as unknown as { file: File },
-          )
-        })
-    }
-  }
-
-  const [uploadImageErr, setUploadImageErr] = useState('')
 
   useEffect(() => {
     if (isSuccess) {
@@ -162,7 +135,7 @@ export function UpdateOrg({
             form="update-org"
             type="submit"
             size="lg"
-            isLoading={isLoading}
+            isLoading={isLoading || isLoadingUploadImage}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
@@ -237,7 +210,7 @@ export function UpdateOrg({
                   options={
                     orgSelectOptions || [{ label: t('loading:org'), value: '' }]
                   }
-                  onChange={(e: SelectOptionString) => {
+                  onChange={e => {
                     setOptionOrg(e)
                     mutateUpdateOrgForOrg({
                       data: {

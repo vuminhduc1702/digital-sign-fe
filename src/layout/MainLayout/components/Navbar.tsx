@@ -29,7 +29,6 @@ function Navbar() {
   const { data: projectsData } = useProjects()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
     config: {
-      useErrorBoundary: false,
       suspense: false,
     },
   })
@@ -165,7 +164,9 @@ function Navbar() {
                 />
                 <p className="text-white">
                   {t('nav:hello')}{' '}
-                  {userInfoData?.name || userInfoData?.email?.split('@')[0]}
+                  {userInfoData != null
+                    ? userInfoData?.name || userInfoData?.email?.split('@')[0]
+                    : t('nav:friend')}
                 </p>
                 <SidebarDropDownIcon
                   width={12}
@@ -196,6 +197,14 @@ function Navbar() {
                 >
                   <Link to={PATHS.USER_INFO}>
                     {t('cloud:custom_protocol.adapter.username')}
+                  </Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.CHANGEPASSWORD}>
+                    {t('user:change_password')}
                   </Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">

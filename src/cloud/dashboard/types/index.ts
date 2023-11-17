@@ -2,6 +2,8 @@ import * as z from 'zod'
 
 import i18n from '~/i18n'
 
+import { type BaseWSRes } from '~/types'
+
 export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
@@ -37,11 +39,9 @@ export type DataItem = {
 
 export type DashboardWS = {
   data: DataItem[]
-  errorCode: number
   id: string
-  errorMsg: string
   update: any[]
-}
+} & BaseWSRes
 
 export const aggSchema = z.enum(
   ['NONE', 'AVG', 'MIN', 'MAX', 'SUM', 'COUNT', 'SMA', 'FFT'] as const,
