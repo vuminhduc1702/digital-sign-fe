@@ -75,21 +75,23 @@ export const FormDialog = ({
         <div
           id={id}
           className={cn(
-            'inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:p-6 sm:align-middle',
+            'inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:w-full sm:p-3 sm:align-middle',
             className,
             size ? formDialogSizes[size] : 'sm:max-w-lg',
           )}
         >
           <div
-            className={cn('mt-3 text-center sm:mt-0 sm:text-left', {
+            className={cn('mt-3 text-center pl-5 pb-5 pr-5 sm:mt-0 sm:text-left', {
               'h-[95%]': isFullScreen,
             })}
           >
             <div className="flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {title}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
+              <div className="mx-auto">
+                <DialogTitle as="h3" className="text-2xl font-semibold ">
+                  {title}
+                </DialogTitle>
+              </div>
+              <div className="flex h-7 ">
                 <button
                   className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                   onClick={close}
@@ -101,7 +103,7 @@ export const FormDialog = ({
             </div>
             {body && (
               <div
-                className={cn('mt-2', {
+                className={cn('mt-4', {
                   'h-[95%]': isFullScreen,
                 })}
               >

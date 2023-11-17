@@ -585,13 +585,13 @@
     "package_manage": {
       "list_package": "Danh sách gói cước",
       "title": "Thông tin gói cước",
-      "create": "Tạo gói cước",
+      "create": "Thêm gói cước",
       "delete_plan": "Xoá gói cước",
       "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
       "id": "ID",
-      "description": "Mô tả",
+      "description": "Nội dung mô tả gói cước",
       "popup": {
-        "name": "Tên gói",
+        "name": "Tên gói cước",
         "type": "Loại gói",
         "description": "Mô tả gói",
         "status": "Trạng thái",
@@ -615,7 +615,7 @@
         "choose_expiry": "Thời gian gia hạn phải nhỏ hơn chu kỳ tính tiền",
         "choose_plan_price": "Vui lòng nhập số tiền",
         "expected_number": "Số lượng dự kiến",
-        "expected_payment": "Dự kiến thanh toán",
+        "expected_payment": "Dự kiến thanh toán(VNĐ)",
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
@@ -770,6 +770,7 @@
     "close": "Đóng",
     "confirm": "Xác nhận",
     "delete": "Xóa",
+    "add": "Thêm",
     "update": "Sửa",
     "save": "Lưu",
     "cancel": "Hủy"
