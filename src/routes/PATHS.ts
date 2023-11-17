@@ -5,7 +5,8 @@ export const BASE_PATH_PAYMENT = '/payment/'
 export const BASE_PATH_INTEGRATION = '/integration/'
 export const BASE_PATH_DEVICE = '/device/'
 export const BASE_PATH_APPLICATION = '/application/'
-export const BASE_PATH_TENANT = '/tenant/'
+export const BASE_PATH_TENANT = '/tenant'
+export const BASE_PATH_DEV_ROLE = '/dev-role'
 
 export const PATHS: { [key: string]: string } = {
   // Protected routes
@@ -41,7 +42,8 @@ export const PATHS: { [key: string]: string } = {
   CUSTOMER_MANAGE: `${BASE_PATH_PAYMENT}customer-manage`,
 
   //TENANT
-  TENANT_MANAGE: `${BASE_PATH_TENANT}tenant-dev`,
+  TENANT_MANAGE: `${BASE_PATH_TENANT}`,
+  DEV_ROLE: `${BASE_PATH_DEV_ROLE}`,
 
   // Intergration route
   AI: `${BASE_PATH_INTEGRATION}ai`,
