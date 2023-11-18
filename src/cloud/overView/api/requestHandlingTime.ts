@@ -8,6 +8,8 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export type RequestHandlingTimeDTO = {
   projectId: string
+  method?: string
+  url?: string
 }
 
 export type RequestHandlingTimeData = {
@@ -17,9 +19,13 @@ export type RequestHandlingTimeData = {
 
 export const RequestHandlingTime = ({
   projectId,
+  method,
+  url 
 }: RequestHandlingTimeDTO): Promise<RequestHandlingTimeData> => {
   return axios.post(`/api/overviews/latency`, {
     project_id: projectId,
+    method,
+    url
   })
 }
 

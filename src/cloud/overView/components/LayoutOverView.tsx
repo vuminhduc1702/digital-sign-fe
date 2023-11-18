@@ -17,11 +17,20 @@ import { useGetConnectedDevices } from '../api'
 import { useGetRegistedUser } from '../api/getRegistedUser'
 import { useGetConcurrentUser } from '../api/getConcurrentUser'
 import { useRequestHandlingTime } from '../api/requestHandlingTime'
-import fleetManagementData from '../fleetManagement.json';
 import { DashboardTable } from './DashboardTable'
-import { ArrowTopRightIcon, AvatarIcon, RadiobuttonIcon, TimerIcon, CheckCircledIcon } from '@radix-ui/react-icons'
+import { AvatarIcon, RadiobuttonIcon, TimerIcon, CheckCircledIcon, ChevronRightIcon, ChevronLeftIcon, ArrowTopRightIcon } from '@radix-ui/react-icons'
 import { useSuccessRate } from '../api/successRate'
 import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
+import fleetManagementData from '../fleetManagement.json';
+import assetManagementData from '../assetManagement.json';
+import smartFarmData from '../smartFarm.json';
+import smartHomeData from '../smartHome.json';
+import smartWaterData from '../smartWater.json';
+import { useRestoreProject } from '~/cloud/project/api/restoreProject'
+import { Tab } from '@headlessui/react'
+import clsx from 'clsx'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -35,7 +44,7 @@ export function LayoutOverView() {
 
   const dashboardType = ['Last viewed', 'Starred']
 
-  const arr = [
+  const sampleDivices = [
     {
       title: 'Giải pháp Fleet Management',
       img: SmartTracking,
@@ -45,6 +54,7 @@ export function LayoutOverView() {
       content3: '- Cảnh báo vùng an toàn qua SMS hoặc App Notification',
       content4: '- Cảnh báo pin yếu qua SMS hoặc App Notification',
       content5: '- Định vị được vị trí qua bản tin thiết bị bắn lên',
+      jsonData: fleetManagementData
     },
     {
       title: 'Giải pháp Asset Management',
@@ -57,6 +67,7 @@ export function LayoutOverView() {
       content4:
         '- Xử lý tập bản tin thiết bị gửi lên (gộp bản tin, kiểm tra trùng)',
       content5: '- Đăng ký RFID mới theo danh sách hoặc chỉnh sửa số lượng nhỏ',
+      jsonData: assetManagementData
     },
     {
       title: 'Giải pháp Smart Water Meter',
@@ -67,6 +78,7 @@ export function LayoutOverView() {
       content3: '- Đo lượng tổng lượng nước tiêu thụ',
       content4: '- Cảnh báo về sự cố đường nước qua SMS hoặc App notification',
       content5: '- Đo tốc độ dòng chảy của nước',
+      jsonData: smartWaterData
     },
     {
       title: 'Giải pháp Smart Farm',
@@ -77,6 +89,7 @@ export function LayoutOverView() {
       content3: '- Do độ ẩm hiện tại để bật/tắt máy bơm nước',
       content4: '- Do tổng lượng nước đã tiêu thụ',
       content5: '',
+      jsonData: smartFarmData
     },
     {
       title: 'Giải pháp Smarthome',
@@ -87,6 +100,7 @@ export function LayoutOverView() {
       content3: '',
       content4: '',
       content5: '',
+      jsonData: smartHomeData
     },
   ]
 
@@ -156,17 +170,23 @@ export function LayoutOverView() {
       link: `${PATHS.BILLING}/${projectId}`,
     },
     {
-      content: t('sidebar:intergration.ai'),
+      content: t('sidebar:intergration.ai.title'),
       link: `${PATHS.AI}`,
     },
   ]
 
-  // let afterData = {
-  //   ...jsonData,
-  //   organizations: jsonData.organizations.map(x => {
-  //     return { ...x, project_id: 'khaidz' }
-  //   })
-  // }
+  const tab1 = sampleDivices.slice(0, 3);
+  const tab2 = sampleDivices.slice(3, 5);
+
+  const {
+    mutateAsync: mutateAsyncUploadProjectFile,
+    isLoading: isLoadingProject,
+    isSuccess: isSuccessProject,
+  } = useRestoreProject(
+    {
+      type: 'overView'
+    }
+  )
 
   const { data: dashboardData, isPreviousData } = useGetDashboards({ projectId })
   const { data: connectedDevicesData } = useGetConnectedDevices({ projectId })
@@ -175,22 +195,22 @@ export function LayoutOverView() {
   const {
     mutate: mutateRequestHandlingTime,
     data: RequestHandlingTimeData,
-    isLoading: isLoadingRequestHandlingTime,
-    isSuccess: isSuccessRequestHandlingTime,
   } = useRequestHandlingTime()
   const {
     mutate: mutateSuccessRate,
     data: SuccessRateData,
-    isLoading: isLoadingSuccessRate,
-    isSuccess: isSuccessSuccessRate,
   } = useSuccessRate()
 
   useEffect(() => {
     mutateRequestHandlingTime({
       projectId,
+      method: 'POST',
+      url: 'devices'
     })
     mutateSuccessRate({
       projectId,
+      method: 'POST',
+      url: 'devices'
     })
   }, [])
 
@@ -206,109 +226,235 @@ export function LayoutOverView() {
       <div className="py-4">
         <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-5">
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Tổng số thiết bị</p>
+            <p className="text-table-header">{t('overView:total_devices')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
                 {connectedDevicesData?.total}
               </span>
               <img
-              src={thietbiIcon}
-              alt="Overview"
-              className="aspect-square w-[20px]"
-            />
+                src={thietbiIcon}
+                alt="Overview"
+                className="aspect-square w-[20px]"
+              />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Tổng số người dùng</p>
+            <p className="text-table-header">{t('overView:total_user')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
                 {registedUserData?.total}
               </span>
-              <AvatarIcon className='h-5 w-5 text-primary-400'/>
+              <AvatarIcon className='h-5 w-5 text-primary-400' />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Tổng số user online</p>
+            <p className="text-table-header">{t('overView:total_user_online')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
-              {concurrentUserData?.total}
+                {concurrentUserData?.total}
               </span>
-              <RadiobuttonIcon className='h-5 w-5 text-primary-400'/>
+              <RadiobuttonIcon className='h-5 w-5 text-primary-400' />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Thời gian request</p>
+            <p className="text-table-header">{t('overView:request_time')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
-                4
+              {RequestHandlingTimeData?.avg_latency}
               </span>
-              <TimerIcon className='h-5 w-5 text-primary-400'/>
+              <TimerIcon className='h-5 w-5 text-primary-400' />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">Tỉ lệ thành công</p>
+            <p className="text-table-header">{t('overView:success_rate')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
-                5
+                {SuccessRateData?.success_rate}
               </span>
-              <CheckCircledIcon className='h-5 w-5 text-primary-400'/>
+              <CheckCircledIcon className='h-5 w-5 text-primary-400' />
             </div>
           </div>
         </div>
       </div>
-      <div className="flex max-h-[50vh] justify-between overflow-auto rounded-md bg-secondary-500 px-4 py-6">
-        <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
-          {arr?.map(item => {
-            return (
-              <div
-                key={item.title}
-                className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
-              >
-                <div className="alignItemCenter">
-                  <img src={item.img} alt="" width="100%" height="300" />
-                </div>
-                <div className="text p-3">
-                  {/* <div className="flex justify-between">
-                    <div>
-                      <i className="bx bx-user"></i> InnoWay
-                    </div>
-                    <div>
-                      <i className="bx bx-calendar"></i> 01/06/2022
-                    </div>
-                  </div> */}
-                  <h4 className="mt-3 text-table-header">{item.title}</h4>
-                  <p className="mt-3 line-clamp-3 cursor-pointer hover:block">
-                    {item.content}
-                    {item.content2 && <br />}
-                    {item.content2}
-                    {item.content3 && <br />}
-                    {item.content3}
-                    {item.content4 && <br />}
-                    {item.content4}
-                    {item.content5 && <br />}
-                    {item.content5}
-                  </p>
-                  <Button
-                    type="button"
-                    size="square"
-                    className="border-none bg-primary-400"
-                  >
-                    Cài đặt
-                  </Button>
-                </div>
+      <div>
+        <Tab.Group>
+          <Tab.List className="flex justify-end gap-x-2 bg-secondary-500 px-10">
+            <Tab
+              className={({ selected }) =>
+                clsx(
+                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  { 'text-primary-400': selected },
+                )
+              }
+            >
+              <div className="flex items-center gap-x-2">
+                <ChevronLeftIcon className='h-5 w-5' />
               </div>
-            )
-          })}
-        </div>
+            </Tab>
+            <Tab
+              className={({ selected }) =>
+                clsx(
+                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  { 'text-primary-400': selected },
+                )
+              }
+            >
+              <div className="flex items-center gap-x-2">
+                <ChevronRightIcon className='h-5 w-5' />
+              </div>
+            </Tab>
+          </Tab.List>
+          <Tab.Panels className="flex grow flex-col">
+            <Tab.Panel
+              className={clsx('bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg')}
+            >
+              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
+                {tab1?.map(item => {
+                  return (
+                    <div
+                      key={item.title}
+                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                    >
+                      <div className="alignItemCenter">
+                        <img src={item.img} alt="" width="100%" height="300" />
+                      </div>
+                      <div className="text p-3">
+                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer hover:block">
+                          {item.content}
+                          {item.content2 && <br />}
+                          {item.content2}
+                          {item.content3 && <br />}
+                          {item.content3}
+                          {item.content4 && <br />}
+                          {item.content4}
+                          {item.content5 && <br />}
+                          {item.content5}
+                        </p>
+                        <ConfirmationDialog
+                          isDone={isSuccessProject}
+                          icon="danger"
+                          title={t('btn:setup')}
+                          body={
+                            t('overView:setup_confirm').replace(
+                              '{{TITLE}}',
+                              item.title,
+                            ) ?? 'Confirm delete?'
+                          }
+                          triggerButton={
+                            <Button
+                              type="button"
+                              size="square"
+                              className="border-none bg-primary-400"
+                            >
+                              {t('btn:setup')}
+                            </Button>
+                          }
+                          confirmButton={
+                            <Button
+                              isLoading={isLoadingProject}
+                              type="button"
+                              size="md"
+                              className="bg-primary-400"
+                              onClick={() => mutateAsyncUploadProjectFile({
+                                projectId,
+                                backup: {
+                                  backup: item.jsonData,
+                                }
+                              })}
+                              startIcon={
+                                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                              }
+                            />
+                          }
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Tab.Panel>
+            <Tab.Panel
+              className={clsx('bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg')}
+            >
+              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
+                {tab2?.map(item => {
+                  return (
+                    <div
+                      key={item.title}
+                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                    >
+                      <div className="alignItemCenter">
+                        <img src={item.img} alt="" width="100%" height="300" />
+                      </div>
+                      <div className="text p-3">
+                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer hover:block">
+                          {item.content}
+                          {item.content2 && <br />}
+                          {item.content2}
+                          {item.content3 && <br />}
+                          {item.content3}
+                          {item.content4 && <br />}
+                          {item.content4}
+                          {item.content5 && <br />}
+                          {item.content5}
+                        </p>
+                        <ConfirmationDialog
+                          isDone={isSuccessProject}
+                          icon="danger"
+                          title={t('btn:setup')}
+                          body={
+                            t('overView:setup_confirm').replace(
+                              '{{TITLE}}',
+                              item.title,
+                            ) ?? 'Confirm delete?'
+                          }
+                          triggerButton={
+                            <Button
+                              type="button"
+                              size="square"
+                              className="border-none bg-primary-400"
+                            >
+                              {t('btn:setup')}
+                            </Button>
+                          }
+                          confirmButton={
+                            <Button
+                              isLoading={isLoadingProject}
+                              type="button"
+                              size="md"
+                              className="bg-primary-400"
+                              onClick={() => mutateAsyncUploadProjectFile({
+                                projectId,
+                                backup: {
+                                  backup: item.jsonData,
+                                },
+                              })}
+                              startIcon={
+                                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                              }
+                            />
+                          }
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Tab.Panel>
+          </Tab.Panels>
+        </Tab.Group>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[24vh] overflow-auto rounded-md bg-secondary-500 p-2">
+        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
               onClick={() => navigate(`${PATHS.DASHBOARD}/${projectId}`)}
             >
-              <p className="text-table-header">Dashboard</p>
+              <p className="text-table-header">{t('overView:dashboard')}</p>
+              <ArrowTopRightIcon className='h-5 w-5'/>
             </div>
             <div className="flex ">
               <div className="w-fit rounded-2xl bg-slate-200">
@@ -337,7 +483,7 @@ export function LayoutOverView() {
                 }
                 className="ml-3 border-none bg-primary-400"
               >
-                Add dashboard
+                {t('overView:add_dashboard')}
               </Button>
             </div>
           </div>
@@ -357,9 +503,9 @@ export function LayoutOverView() {
               isPreviousData={isPreviousData}
             />}
         </div>
-        <div className="max-h-[24vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
-            <p className="text-table-header">Quick Link</p>
+            <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>
           <div className="grid w-full grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-3">
             {quickLink?.map(item => {

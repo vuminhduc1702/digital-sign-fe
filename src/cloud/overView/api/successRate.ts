@@ -7,6 +7,8 @@ import { useNotificationStore } from '~/stores/notifications'
 
 export type SuccessRateDTO = {
   projectId: string
+  method?: string
+  url?: string
 }
 
 export type SuccessRateData = {
@@ -16,9 +18,13 @@ export type SuccessRateData = {
 
 export const SuccessRate = ({
   projectId,
+  method,
+  url,
 }: SuccessRateDTO): Promise<SuccessRateData> => {
   return axios.post(`/api/overviews/successrate`, {
     project_id: projectId,
+    method,
+    url,
   })
 }
 

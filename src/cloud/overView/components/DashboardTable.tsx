@@ -77,7 +77,7 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_thing')}
+      {''}
     </div>
   )
 }

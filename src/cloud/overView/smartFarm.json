@@ -1,0 +1,611 @@
+{
+    "organizations": null,
+    "groups": [
+        {
+            "id": "e0756597-4d87-45ac-b9d3-b6475b96225c",
+            "owner": "",
+            "created_by": "",
+            "name": "Profile1",
+            "organization": "",
+            "entity_type": "DEVICE",
+            "Metadata": null,
+            "OrgName": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": null
+        }
+    ],
+    "roles": null,
+    "users": null,
+    "templates": [
+        {
+            "id": "c1918da5-5a1f-40f7-a9da-3616db537106",
+            "name": "Humidity",
+            "rule_chain_id": "",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set_humidify",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "battery",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "error",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "id_pump",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "_name",
+                    "logged": false,
+                    "value": "Sensor",
+                    "value_as_string": "Sensor",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current_humidify",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210354662,
+                    "value_type": "DBL"
+                }
+            ]
+        },
+        {
+            "id": "f6cb3fcc-dc23-42dd-a992-5a46047b7cbd",
+            "name": "Pump",
+            "rule_chain_id": "",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "status",
+                    "logged": false,
+                    "value": false,
+                    "value_as_string": "false",
+                    "last_update_ts": 1700210508934,
+                    "value_type": "BOOL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "total_water_consumption",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210508934,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "water_consumption",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210508934,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "_switch",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210508934,
+                    "value_type": "STR"
+                }
+            ]
+        }
+    ],
+    "devices": [
+        {
+            "id": "2ac642d0-89ac-429f-a79a-ac2292a49160",
+            "key": "2ac642d0-89ac-429f-a79a-ac2292a49160",
+            "template_id": "c1918da5-5a1f-40f7-a9da-3616db537106",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "name": "humidity-01",
+            "group_id": "",
+            "type": "",
+            "org_id": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "status": "offline",
+            "created_time": 0,
+            "metadata": {},
+            "additional_info": {
+                "device_id": "",
+                "imei": "",
+                "device_manufacture": "",
+                "protocol": "",
+                "heartbeat_interval": 0,
+                "last_heartbeat": 0,
+                "timeout_lifecycle": 0,
+                "device_model": "",
+                "mqtt_config": null,
+                "firmware_version": ""
+            },
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "error",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "id_pump",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set_humidify",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current_humidify",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "_name",
+                    "logged": false,
+                    "value": "Sensor",
+                    "value_as_string": "Sensor",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "battery",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700210607891,
+                    "value_type": "JSON"
+                }
+            ]
+        },
+        {
+            "id": "57521819-ef7c-47e9-af43-aeb2f63a46e9",
+            "key": "57521819-ef7c-47e9-af43-aeb2f63a46e9",
+            "template_id": "f6cb3fcc-dc23-42dd-a992-5a46047b7cbd",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "name": "pump-01",
+            "group_id": "",
+            "type": "",
+            "org_id": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "status": "offline",
+            "created_time": 0,
+            "metadata": {},
+            "additional_info": {
+                "device_id": "",
+                "imei": "",
+                "device_manufacture": "",
+                "protocol": "",
+                "heartbeat_interval": 0,
+                "last_heartbeat": 0,
+                "timeout_lifecycle": 0,
+                "device_model": "",
+                "mqtt_config": null,
+                "firmware_version": ""
+            },
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "_switch",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700210653970,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "status",
+                    "logged": false,
+                    "value": false,
+                    "value_as_string": "false",
+                    "last_update_ts": 1700210653970,
+                    "value_type": "BOOL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "total_water_consumption",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210653970,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "water_consumption",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700210653970,
+                    "value_type": "DBL"
+                }
+            ]
+        }
+    ],
+    "events": null,
+    "rule_chains": null,
+    "dashboard": [
+        {
+            "id": "0b0859aa-01e4-4fc8-a521-586f7a1dd2df",
+            "project_id": "",
+            "name": "Quản lý Smart Farm dashboard",
+            "created_time": 1700211045,
+            "title": "Quản lý Smart Farm dashboard",
+            "tenant_id": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "configuration": {
+                "description": "",
+                "widgets": {
+                    "05951d2c-d2be-4464-95d7-4311612fc04f": {
+                        "type": "TIMESERIES",
+                        "title": "widget1",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"57521819-ef7c-47e9-af43-aeb2f63a46e9\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"total_water_consumption\"}]},\"id\":\"05951d2c-d2be-4464-95d7-4311612fc04f\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"total_water_consumption\"],\"startTs\":1699203600000,\"interval\":86400000,\"limit\":10,\"offset\":0,\"agg\":\"AVG\"},\"id\":\"05951d2c-d2be-4464-95d7-4311612fc04f\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 86400000
+                            },
+                            "aggregation": "AVG",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699203600000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "total_water_consumption",
+                                "label": "total_water",
+                                "color": "rgba(55, 21, 21, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "66cd6e09-9ab0-4762-ba15-67ff313ccdbd": {
+                        "type": "TIMESERIES",
+                        "title": "widget2",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"2ac642d0-89ac-429f-a79a-ac2292a49160\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"current_humidify\"}]},\"id\":\"66cd6e09-9ab0-4762-ba15-67ff313ccdbd\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"current_humidify\"],\"startTs\":1699722000000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"AVG\"},\"id\":\"66cd6e09-9ab0-4762-ba15-67ff313ccdbd\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 60000
+                            },
+                            "aggregation": "AVG",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699722000000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "current_humidify",
+                                "label": "current_humidify",
+                                "color": "rgba(221, 104, 104, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "6b240d76-6a03-49bb-bbad-e79cb919bb11": {
+                        "type": "LASTEST",
+                        "title": "widget3",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"2ac642d0-89ac-429f-a79a-ac2292a49160\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"current_humidify\"}]},\"id\":\"6b240d76-6a03-49bb-bbad-e79cb919bb11\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"current_humidify\"}]},\"id\":\"6b240d76-6a03-49bb-bbad-e79cb919bb11\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "current_humidify",
+                                "label": "current_humidify",
+                                "color": "rgba(91, 29, 29, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "6c5d9b28-f0ae-4993-8f69-28c44d04509f": {
+                        "type": "TIMESERIES",
+                        "title": "widget6",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"2ac642d0-89ac-429f-a79a-ac2292a49160\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"6c5d9b28-f0ae-4993-8f69-28c44d04509f\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"battery\"],\"startTs\":1699290000000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"6c5d9b28-f0ae-4993-8f69-28c44d04509f\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 60000
+                            },
+                            "aggregation": "NONE",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699290000000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "battery",
+                                "label": "battery",
+                                "color": "rgba(169, 108, 108, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "b799efaa-7641-452f-8bc6-6bfef3fbad8d": {
+                        "type": "LASTEST",
+                        "title": "widget4",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"2ac642d0-89ac-429f-a79a-ac2292a49160\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"b799efaa-7641-452f-8bc6-6bfef3fbad8d\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"battery\"}]},\"id\":\"b799efaa-7641-452f-8bc6-6bfef3fbad8d\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "battery",
+                                "label": "battery",
+                                "color": "rgba(54, 23, 23, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "c928b6ee-f536-4bd0-8e01-608bfeddc4cf": {
+                        "type": "LASTEST",
+                        "title": "widget7",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"57521819-ef7c-47e9-af43-aeb2f63a46e9\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"status\"}]},\"id\":\"c928b6ee-f536-4bd0-8e01-608bfeddc4cf\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"status\"}]},\"id\":\"c928b6ee-f536-4bd0-8e01-608bfeddc4cf\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "status",
+                                "label": "status",
+                                "color": "rgba(99, 43, 43, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "fb3c5e36-90b2-4a2e-99e1-61f618e7447d": {
+                        "type": "LASTEST",
+                        "title": "widget5",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"57521819-ef7c-47e9-af43-aeb2f63a46e9\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"water_consumption\"}]},\"id\":\"fb3c5e36-90b2-4a2e-99e1-61f618e7447d\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"water_consumption\"}]},\"id\":\"fb3c5e36-90b2-4a2e-99e1-61f618e7447d\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "water_consumption",
+                                "label": "water_consum",
+                                "color": "rgba(36, 17, 17, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dashboard_setting": {
+                "last_viewed": "2023-11-17T09:14:16.822Z",
+                "layout": [
+                    {
+                        "h": 3,
+                        "i": "05951d2c-d2be-4464-95d7-4311612fc04f",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "h": 3,
+                        "i": "66cd6e09-9ab0-4762-ba15-67ff313ccdbd",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 6,
+                        "y": 0
+                    },
+                    {
+                        "h": 1,
+                        "i": "6b240d76-6a03-49bb-bbad-e79cb919bb11",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 3
+                    },
+                    {
+                        "h": 1,
+                        "i": "b799efaa-7641-452f-8bc6-6bfef3fbad8d",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 3
+                    },
+                    {
+                        "h": 1,
+                        "i": "fb3c5e36-90b2-4a2e-99e1-61f618e7447d",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 4
+                    },
+                    {
+                        "h": 3,
+                        "i": "6c5d9b28-f0ae-4993-8f69-28c44d04509f",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 6,
+                        "y": 4
+                    },
+                    {
+                        "h": 1,
+                        "i": "c928b6ee-f536-4bd0-8e01-608bfeddc4cf",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 5
+                    }
+                ]
+            }
+        }
+    ],
+    "fota": null,
+    "thing": null,
+    "service": null
+}

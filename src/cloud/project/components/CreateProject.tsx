@@ -122,14 +122,9 @@ export function CreateProject() {
               })
             }
             if (getValueUploadRestoreProject('backup') != null) {
-<<<<<<< HEAD
-              const dataBackup = JSON.parse(getValueUploadRestoreProject('backup'))
-              console.log(dataBackup, 'dataBackupdataBackupdataBackup')
-=======
               const dataBackup = JSON.parse(
                 getValueUploadRestoreProject('backup'),
               )
->>>>>>> 48489ffd47a83a009eb6ed5333d14a25290b13e6
               await mutateAsyncUploadProjectFile({
                 projectId: dataCreateProject.id,
                 backup: {

@@ -555,7 +555,7 @@ export function CreateWidget({
                           option.label === t('loading:device') ||
                           option.label === t('table:no_device')
                         }
-                        isMulti={isMultipleDevice}
+                        isMulti={true}
                         closeMenuOnSelect={!isMultipleDevice}
                         customOnChange={option => {
                           if (option != null) {
