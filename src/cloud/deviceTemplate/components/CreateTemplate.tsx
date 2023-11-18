@@ -18,7 +18,7 @@ import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { Controller } from 'react-hook-form'
 
-import { nameSchema } from '~/utils/schemaValidation'
+import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -26,17 +26,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
-  attributes: z.array(
-    z.object({
-      attribute_key: z
-        .string()
-        .min(1, { message: 'Tên thuộc tính quá ngắn' })
-        .max(30, { message: 'Tên thuộc tính quá dài' }),
-      value: z.string().optional(),
-      logged: z.boolean().default(true),
-      value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
-    }),
-  ),
+  attributes: z.array(attrSchema),
 })
 
 export default function CreateTemplate() {

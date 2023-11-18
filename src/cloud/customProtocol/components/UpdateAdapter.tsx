@@ -4,45 +4,24 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import {
-  Form,
-  InputField,
-  SelectDropdown,
-  SelectField,
-} from '~/components/Form'
+import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import {
   type UpdateAdapterDTO,
   useUpdateAdapter,
   usePingMQTT,
 } from '../api/adapter'
-import {
-  adapterSchema,
-  contentTypeList,
-  entityThingSchema,
-  outputList,
-  protocolList,
-  serviceThingSchema,
-  thingTypeList,
-} from './CreateAdapter'
+import { adapterSchema, contentTypeList, protocolList } from './CreateAdapter'
 import storage from '~/utils/storage'
-import {
-  useCreateEntityThing,
-  type CreateEntityThingDTO,
-  type GetEntityThingsRes,
-} from '../api/entityThing'
-import { FormDialog } from '~/components/FormDialog'
-import {
-  useGetServiceThings,
-  useCreateServiceThing,
-  type CreateServiceThingDTO,
-} from '../api/serviceThing'
-import { CodeEditor } from './CodeEditor'
+import { useGetEntityThings } from '../api/entityThing'
+import { useGetServiceThings } from '../api/serviceThing'
 import TitleBar from '~/components/Head/TitleBar'
 import { cn } from '~/utils/misc'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from './CreateService'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
-import { inputService, type FieldsType } from '../types'
+import { type FieldsType } from '../types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -53,8 +32,6 @@ import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 type UpdateDeviceProps = {
   close: () => void
   isOpen: boolean
-  thingData: GetEntityThingsRes
-  refetchThingData: any
 } & AdapterTableContextMenuProps
 
 export function UpdateAdapter({
@@ -69,8 +46,6 @@ export function UpdateAdapter({
   configuration,
   close,
   isOpen,
-  thingData,
-  refetchThingData,
   schema,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
@@ -84,37 +59,16 @@ export function UpdateAdapter({
   }, [isSuccess, close])
 
   const { id: projectId } = storage.getProject()
-  const [thingType, setThingType] = useState('thing')
   const [isShow, setIsShow] = useState(true)
 
-  const {
-    mutate: mutateThing,
-    isLoading: isLoadingThing,
-    isSuccess: isSuccessThing,
-  } = useCreateEntityThing()
-
+  const { data: thingData } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   }))
-  const thingSelectDataThing = thingData?.data?.list
-    ?.filter(thing => thing.type === 'Thing')
-    .map(thing => ({
-      value: thing.id,
-      label: thing.name,
-    }))
-  const thingSelectDataTemplate = thingData?.data?.list
-    ?.filter(thing => thing.type === 'Template')
-    .map(thing => ({
-      value: thing.id,
-      label: thing.name,
-    }))
-
-  const {
-    mutate: mutateService,
-    isLoading: isLoadingService,
-    isSuccess: isSuccessService,
-  } = useCreateServiceThing()
 
   const { register, formState, control, handleSubmit, watch, getValues } =
     useForm<UpdateAdapterDTO['data']>({
@@ -156,8 +110,6 @@ export function UpdateAdapter({
     value: service.name,
     label: service.name,
   }))
-
-  const [codeInput, setCodeInput] = useState('')
 
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
@@ -208,64 +160,83 @@ export function UpdateAdapter({
         className="flex w-full flex-col justify-between"
         onSubmit={handleSubmit(values => {
           // console.log('adapter values', values)
-          const fields =
-            (values?.schema?.fields?.length &&
-              values?.schema?.fields?.map(item => ({
-                name: item.name,
-                start_byte: parseInt(item.start_byte),
-                end_byte:
-                  parseInt(item.start_byte) + parseInt(item.length_byte),
-              }))) ||
-            []
-          if (getValues('protocol') === 'mqtt') {
-            mutate({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'mqtt',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                host: values.host,
-                port: values.port,
-                schema:
-                  fields.length > 0
-                    ? {
-                        fields,
-                      }
-                    : undefined,
-                configuration: {
-                  credentials: {
-                    username: values.configuration.credentials.username,
-                    password: values.configuration.credentials.password,
-                  },
-                  topic_filters: values.configuration.topic_filters.map(
-                    (topic: { topic: string }) => ({
-                      topic: topic.topic.trim(),
-                    }),
-                  ),
+          if (values.protocol === 'mqtt') {
+            const data = {
+              project_id: projectId,
+              name: values.name,
+              protocol: values.protocol,
+              content_type: values.content_type,
+              thing_id: values.thing_id,
+              handle_service: values.handle_service,
+              host: values.host,
+              port: values.port,
+              configuration: {
+                credentials: {
+                  username: values.configuration.credentials.username,
+                  password: values.configuration.credentials.password,
                 },
+                topic_filters: values.configuration.topic_filters.map(
+                  (topic: { topic: string }) => ({
+                    topic: topic.topic.trim(),
+                  }),
+                ),
               },
-              id,
-            })
+            }
+            if (values.content_type === 'json') {
+              mutate({ data, id })
+            }
+            if (
+              values.content_type === 'hex' ||
+              values.content_type === 'text'
+            ) {
+              mutate({
+                data: {
+                  ...data,
+                  schema: {
+                    fields: values.schema.fields.map(item => ({
+                      name: item.name,
+                      start_byte: item.start_byte,
+                      end_byte:
+                        item.start_byte +
+                        (item.length_byte as unknown as number),
+                    })),
+                  },
+                },
+                id,
+              })
+            }
           } else {
-            mutate({
-              data: {
-                project_id: projectId,
-                name: values.name,
-                protocol: values.protocol as 'tcp' | 'udp',
-                content_type: values.content_type,
-                thing_id: values.thing_id,
-                handle_service: values.handle_service,
-                schema:
-                  fields.length > 0
-                    ? {
-                        fields,
-                      }
-                    : undefined,
-              },
-              id,
-            })
+            const data = {
+              project_id: projectId,
+              name: values.name,
+              protocol: values.protocol,
+              content_type: values.content_type,
+              thing_id: values.thing_id,
+              handle_service: values.handle_service,
+            }
+            if (values.content_type === 'json') {
+              mutate({ data, id })
+            }
+            if (
+              values.content_type === 'hex' ||
+              values.content_type === 'text'
+            ) {
+              mutate({
+                data: {
+                  ...data,
+                  schema: {
+                    fields: values.schema.fields.map(item => ({
+                      name: item.name,
+                      start_byte: item.start_byte,
+                      end_byte:
+                        item.start_byte +
+                        (item.length_byte as unknown as number),
+                    })),
+                  },
+                },
+                id,
+              })
+            }
           }
         })}
       >
@@ -277,162 +248,38 @@ export function UpdateAdapter({
               registration={register('name')}
             />
             <div className="flex items-end gap-x-3">
-              <div className="w-full space-y-1">
-                <SelectDropdown
-                  isClearable
-                  label={t('cloud:custom_protocol.thing.id')}
-                  name="thing_id"
-                  control={control}
-                  options={
-                    thingData
-                      ? thingSelectData
-                      : [
-                          {
-                            label: t('loading:entity_thing'),
-                            value: '',
-                          },
-                        ]
-                  }
-                  isOptionDisabled={option =>
-                    option.label === t('loading:entity_thing')
-                  }
-                  noOptionsMessage={() => t('table:no_thing')}
-                  placeholder={t('cloud:custom_protocol.thing.choose')}
-                  icon={
-                    <FormDialog
-                      isDone={isSuccessThing}
-                      title={t('cloud:custom_protocol.thing.create')}
-                      body={
-                        <Form<
-                          CreateEntityThingDTO['data'],
-                          typeof entityThingSchema
-                        >
-                          id="create-entityThing"
-                          className="flex flex-col justify-between"
-                          onSubmit={values => {
-                            // console.log('thing values', values)
-                            if (
-                              values.type === 'thing' ||
-                              values.type === 'template'
-                            ) {
-                              mutateThing({
-                                data: {
-                                  name: values.name,
-                                  project_id: projectId,
-                                  description: values.description,
-                                  type: values.type,
-                                  base_template: values.base_template || null,
-                                },
-                              })
-                            }
-                            if (values.type === 'shape') {
-                              mutateThing({
-                                data: {
-                                  name: values.name,
-                                  project_id: projectId,
-                                  description: values.description,
-                                  type: values.type as 'shape',
-                                  base_shapes: values.base_shapes || null,
-                                },
-                              })
-                            }
-                          }}
-                          schema={entityThingSchema}
-                        >
-                          {({ register, formState }) => {
-                            return (
-                              <>
-                                <InputField
-                                  label={t('cloud:custom_protocol.thing.name')}
-                                  error={formState.errors['name']}
-                                  registration={register('name')}
-                                />
-                                <SelectField
-                                  label={t('cloud:custom_protocol.thing.type')}
-                                  error={formState.errors['type']}
-                                  registration={register('type')}
-                                  options={thingTypeList}
-                                  onChange={event => {
-                                    refetchThingData()
-                                    setThingType(event.target.value)
-                                  }}
-                                />
-                                {thingType === 'thing' ||
-                                thingType === 'template' ? (
-                                  <SelectField
-                                    label={t(
-                                      'cloud:custom_protocol.thing.base_template',
-                                    )}
-                                    error={formState.errors['base_template']}
-                                    registration={register('base_template')}
-                                    options={
-                                      thingType === 'thing'
-                                        ? thingSelectDataThing
-                                        : thingSelectDataTemplate
-                                    }
-                                  />
-                                ) : (
-                                  <InputField
-                                    label={t(
-                                      'cloud:custom_protocol.thing.base_shapes',
-                                    )}
-                                    error={formState.errors['base_shapes']}
-                                    registration={register('base_shapes')}
-                                  />
-                                )}
-                                <InputField
-                                  label={t(
-                                    'cloud:custom_protocol.thing.description',
-                                  )}
-                                  error={formState.errors['description']}
-                                  registration={register('description')}
-                                />
-                              </>
-                            )
-                          }}
-                        </Form>
-                      }
-                      triggerButton={
-                        <Button
-                          variant="trans"
-                          className="rounded-md"
-                          size="square"
-                          startIcon={
-                            <PlusIcon
-                              width={16}
-                              height={16}
-                              viewBox="0 0 16 16"
-                            />
-                          }
-                        />
-                      }
-                      confirmButton={
-                        <Button
-                          isLoading={isLoadingThing}
-                          form="create-entityThing"
-                          type="submit"
-                          size="md"
-                          className="bg-primary-400"
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => refetchThingData()}
-                        />
-                      }
-                    />
-                  }
-                  defaultValue={thingSelectData.find(
-                    thing => thing.value === getValues('thing_id'),
-                  )}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.thing_id?.message}
-                </p>
-              </div>
+              {thingSelectData != null ? (
+                <div className="w-full space-y-1">
+                  <SelectDropdown
+                    isClearable
+                    label={t('cloud:custom_protocol.thing.id')}
+                    name="thing_id"
+                    control={control}
+                    options={
+                      thingData
+                        ? thingSelectData
+                        : [
+                            {
+                              label: t('loading:entity_thing'),
+                              value: '',
+                            },
+                          ]
+                    }
+                    isOptionDisabled={option =>
+                      option.label === t('loading:entity_thing')
+                    }
+                    noOptionsMessage={() => t('table:no_thing')}
+                    placeholder={t('cloud:custom_protocol.thing.choose')}
+                    defaultValue={thingSelectData.find(
+                      thing => thing.value === getValues('thing_id'),
+                    )}
+                    icon={<CreateThing thingType="thing" />}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.thing_id?.message}
+                  </p>
+                </div>
+              ) : null}
             </div>
             <div className="flex items-end gap-x-3">
               {serviceSelectData != null ? (
@@ -468,108 +315,7 @@ export function UpdateAdapter({
                     defaultValue={serviceSelectData.find(
                       service => service.value === getValues('handle_service'),
                     )}
-                    icon={
-                      <FormDialog
-                        isDone={isSuccessService}
-                        title={t('cloud:custom_protocol.service.create')}
-                        body={
-                          <Form<
-                            CreateServiceThingDTO['data'],
-                            typeof serviceThingSchema
-                          >
-                            id="create-serviceThing"
-                            className="flex flex-col justify-between"
-                            onSubmit={values => {
-                              // console.log('service values', values)
-                              mutateService({
-                                data: {
-                                  name: values.name,
-                                  description: values.description,
-                                  output: values.output,
-                                  input: inputService,
-                                  code: codeInput,
-                                },
-                                thingId: getValues('thing_id'),
-                              })
-                            }}
-                            schema={serviceThingSchema}
-                          >
-                            {({ register, formState }) => {
-                              // console.log(
-                              //   'zod service errors: ',
-                              //   formState.errors,
-                              // )
-                              return (
-                                <>
-                                  <InputField
-                                    label={t(
-                                      'cloud:custom_protocol.service.name',
-                                    )}
-                                    error={formState.errors['name']}
-                                    registration={register('name')}
-                                  />
-                                  <SelectField
-                                    label={t(
-                                      'cloud:custom_protocol.service.output',
-                                    )}
-                                    error={formState.errors['output']}
-                                    registration={register('output')}
-                                    options={outputList}
-                                    onChange={event =>
-                                      setThingType(event.target.value)
-                                    }
-                                  />
-                                  <InputField
-                                    label={t(
-                                      'cloud:custom_protocol.service.description',
-                                    )}
-                                    error={formState.errors['description']}
-                                    registration={register('description')}
-                                  />
-                                  <CodeEditor
-                                    label={t(
-                                      'cloud:custom_protocol.service.code',
-                                    )}
-                                    setCodeInput={setCodeInput}
-                                  />
-                                </>
-                              )
-                            }}
-                          </Form>
-                        }
-                        triggerButton={
-                          <Button
-                            variant="trans"
-                            className="rounded-md"
-                            size="square"
-                            disabled={!watch('thing_id')}
-                            startIcon={
-                              <PlusIcon
-                                width={16}
-                                height={16}
-                                viewBox="0 0 16 16"
-                              />
-                            }
-                          />
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoadingService}
-                            form="create-serviceThing"
-                            type="submit"
-                            size="md"
-                            className="bg-primary-400"
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="h-5 w-5"
-                              />
-                            }
-                          />
-                        }
-                      />
-                    }
+                    icon={<CreateService thingId={watch('thing_id')} />}
                   />
                   <p className="text-body-sm text-primary-400">
                     {formState?.errors?.handle_service?.message}
@@ -653,6 +399,9 @@ export function UpdateAdapter({
                         type="number"
                         registration={register(
                           `schema.fields.${index}.start_byte` as const,
+                          {
+                            valueAsNumber: true,
+                          },
                         )}
                       />
                       <InputField
@@ -665,6 +414,9 @@ export function UpdateAdapter({
                         type="number"
                         registration={register(
                           `schema.fields.${index}.length_byte` as const,
+                          {
+                            valueAsNumber: true,
+                          },
                         )}
                       />
                     </div>

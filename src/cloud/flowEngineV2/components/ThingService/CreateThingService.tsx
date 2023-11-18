@@ -33,7 +33,6 @@ import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
-import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
 import {
   Tooltip,
@@ -43,6 +42,7 @@ import {
 } from '~/components/Tooltip'
 import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -52,7 +52,7 @@ export const serviceThingSchema = z.object({
       name: z
         .string()
         .min(1, { message: 'Tên biến quá ngắn' })
-        .max(30, { message: 'Tên biến quá dài' }),
+        .max(64, { message: 'Tên biến quá dài' }),
       type: z.string(),
       value: z.string().optional().or(z.boolean()),
     }),

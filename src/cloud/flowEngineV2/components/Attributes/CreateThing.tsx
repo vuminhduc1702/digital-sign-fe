@@ -2,25 +2,46 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
+import * as z from 'zod'
 
 import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
   useGetEntityThings,
 } from '~/cloud/customProtocol/api/entityThing'
-import {
-  entityThingSchema,
-  thingTypeList,
-} from '~/cloud/customProtocol/components'
+import { thingTypeList } from '~/cloud/customProtocol/components'
 import { Button } from '~/components/Button'
 import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import storage from '~/utils/storage'
 
 import { type EntityThingType } from '~/cloud/customProtocol'
+import { nameSchema } from '~/utils/schemaValidation'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+
+export const entityThingSchema = z
+  .object({
+    name: nameSchema,
+    project_id: z.string().optional(),
+    description: z.string(),
+  })
+  .and(
+    z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('thing'),
+        base_template: z.string().optional(),
+      }),
+      z.object({
+        type: z.literal('template'),
+        base_shapes: z.string(),
+      }),
+      z.object({
+        type: z.literal('shape'),
+      }),
+    ]),
+  )
 
 export function CreateThing({ thingType }: { thingType: EntityThingType }) {
   const { t } = useTranslation()

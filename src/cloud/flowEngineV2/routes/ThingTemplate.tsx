@@ -31,7 +31,7 @@ export function ThingTemplate() {
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
-            <CreateThing />
+            <CreateThing thingType="thing" />
             {isSuccess ? (
               <ComboBoxSelectThing
                 data={thingData.data}

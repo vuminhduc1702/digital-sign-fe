@@ -7,7 +7,6 @@ import i18n from '~/i18n'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -20,19 +19,13 @@ import {
 } from '../api/adapter'
 import storage from '~/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
-import { FormDialog } from '~/components/FormDialog'
-import {
-  type CreateServiceThingDTO,
-  useGetServiceThings,
-  useCreateServiceThing,
-} from '../api/serviceThing'
-import { CodeEditor } from './CodeEditor'
+import { useGetServiceThings } from '../api/serviceThing'
 import TitleBar from '~/components/Head/TitleBar'
 import { cn } from '~/utils/misc'
 import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from './CreateService'
 
 import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
-import { inputService } from '../types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -66,37 +59,6 @@ export const contentTypeList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
-  },
-]
-
-export const outputList = [
-  {
-    label: i18n.t('cloud:custom_protocol.service.json'),
-    value: 'json',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.str'),
-    value: 'str',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.i32'),
-    value: 'i32',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.i64'),
-    value: 'i64',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.f32'),
-    value: 'f32',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.f64'),
-    value: 'f64',
-  },
-  {
-    label: i18n.t('cloud:custom_protocol.service.bool'),
-    value: 'bool',
   },
 ]
 
@@ -172,43 +134,11 @@ export const adapterSchema = z
     ]),
   )
 
-export const entityThingSchema = z
-  .object({
-    name: nameSchema,
-    project_id: z.string().optional(),
-    description: z.string(),
-  })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('thing'),
-        base_template: z.string().optional(),
-      }),
-      z.object({
-        type: z.literal('template'),
-        base_shapes: z.string(),
-      }),
-      z.object({
-        type: z.literal('shape'),
-      }),
-    ]),
-  )
-
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
   description: z.string(),
   input: z.array(z.object({ name: z.string(), type: z.string() })).optional(),
-  output: z.enum([
-    'json',
-    'str',
-    'i32',
-    'i64',
-    'f32',
-    'f64',
-    'bool',
-    'time',
-    'bin',
-  ] as const),
+  output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   code: z.string().optional(),
 })
 
@@ -227,17 +157,12 @@ export function CreateAdapter() {
 
   const { data: thingData } = useGetEntityThings({
     projectId,
+    type: 'thing',
   })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
   }))
-
-  const {
-    mutate: mutateService,
-    isLoading: isLoadingService,
-    isSuccess: isSuccessService,
-  } = useCreateServiceThing()
 
   const {
     register,
@@ -280,8 +205,6 @@ export function CreateAdapter() {
     label: service.name,
   }))
 
-  const [codeInput, setCodeInput] = useState('')
-
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
   const resetData = () => {
@@ -290,13 +213,14 @@ export function CreateAdapter() {
     replaceSchema({
       name: '',
       start_byte: 0,
-      length_byte: 0,
+      length_byte: 1,
     })
   }
 
   return (
     <FormDrawer
       isDone={isSuccessAdapter}
+      title={t('cloud:custom_protocol.adapter.create')}
       triggerButton={
         <Button
           className="rounded-md"
@@ -305,7 +229,6 @@ export function CreateAdapter() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud:custom_protocol.adapter.create')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -470,105 +393,7 @@ export function CreateAdapter() {
                   }
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
-                  icon={
-                    <FormDialog
-                      isDone={isSuccessService}
-                      title={t('cloud:custom_protocol.service.create')}
-                      body={
-                        <Form<
-                          CreateServiceThingDTO['data'],
-                          typeof serviceThingSchema
-                        >
-                          id="create-serviceThing"
-                          className="flex flex-col justify-between"
-                          onSubmit={values => {
-                            // console.log('service values', values)
-                            mutateService({
-                              data: {
-                                name: values.name,
-                                description: values.description,
-                                output: values.output,
-                                input: inputService,
-                                code: codeInput,
-                              },
-                              thingId: getValues('thing_id'),
-                            })
-                          }}
-                          schema={serviceThingSchema}
-                        >
-                          {({ register, formState }) => {
-                            // console.log(
-                            //   'zod service errors: ',
-                            //   formState.errors,
-                            // )
-                            return (
-                              <>
-                                <InputField
-                                  label={t(
-                                    'cloud:custom_protocol.service.name',
-                                  )}
-                                  error={formState.errors['name']}
-                                  registration={register('name')}
-                                />
-                                <SelectField
-                                  label={t(
-                                    'cloud:custom_protocol.service.output',
-                                  )}
-                                  error={formState.errors['output']}
-                                  registration={register('output')}
-                                  options={outputList}
-                                />
-                                <InputField
-                                  label={t(
-                                    'cloud:custom_protocol.service.description',
-                                  )}
-                                  error={formState.errors['description']}
-                                  registration={register('description')}
-                                />
-                                <CodeEditor
-                                  label={t(
-                                    'cloud:custom_protocol.service.code',
-                                  )}
-                                  setCodeInput={setCodeInput}
-                                />
-                              </>
-                            )
-                          }}
-                        </Form>
-                      }
-                      triggerButton={
-                        <Button
-                          variant="trans"
-                          className="rounded-md"
-                          size="square"
-                          disabled={!watch('thing_id')}
-                          startIcon={
-                            <PlusIcon
-                              width={16}
-                              height={16}
-                              viewBox="0 0 16 16"
-                            />
-                          }
-                        />
-                      }
-                      confirmButton={
-                        <Button
-                          isLoading={isLoadingService}
-                          form="create-serviceThing"
-                          type="submit"
-                          size="md"
-                          className="bg-primary-400"
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="h-5 w-5"
-                            />
-                          }
-                        />
-                      }
-                    />
-                  }
+                  icon={<CreateService thingId={watch('thing_id')} />}
                 />
                 <p className="text-body-sm text-primary-400">
                   {formState?.errors?.handle_service?.message}
@@ -618,7 +443,7 @@ export function CreateAdapter() {
                       appendSchema({
                         name: '',
                         start_byte: 0,
-                        length_byte: 0,
+                        length_byte: 1,
                       })
                     }}
                   />

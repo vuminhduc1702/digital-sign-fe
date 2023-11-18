@@ -19,7 +19,6 @@ import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { outputList } from '~/cloud/customProtocol/components'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -54,6 +53,7 @@ import {
 } from '~/components/Tooltip'
 import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
 
 export const updateThingSchema = z.object({
   name: nameSchema,

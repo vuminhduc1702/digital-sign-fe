@@ -10,8 +10,6 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { useDeleteAdapter } from '../api/adapter'
 import { UpdateAdapter } from './UpdateAdapter'
-import { useGetEntityThings } from '../api/entityThing'
-import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
 import { type Adapter } from '../types'
@@ -37,7 +35,7 @@ function AdapterTableContextMenu({
   host,
   port,
   configuration,
-  schema
+  schema,
 }: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
@@ -46,11 +44,6 @@ function AdapterTableContextMenu({
   const { mutate, isLoading, isSuccess } = useDeleteAdapter()
 
   const handleCopyId = useCopyId()
-
-  const { id: projectId } = storage.getProject()
-  const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
-    projectId,
-  })
 
   return (
     <>
@@ -141,8 +134,6 @@ function AdapterTableContextMenu({
           close={close}
           isOpen={isOpen}
           schema={schema}
-          thingData={thingData}
-          refetchThingData={refetchThingData}
         />
       ) : null}
     </>
@@ -232,7 +223,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
-            schema
+            schema,
           } = info.row.original
           return AdapterTableContextMenu({
             id,
@@ -244,7 +235,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
-            schema
+            schema,
           })
         },
         header: () => null,
