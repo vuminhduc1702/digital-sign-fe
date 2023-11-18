@@ -253,7 +253,6 @@ export function CreateCustomer() {
                     autoComplete="off"
                     error={formState.errors['phone']}
                     registration={register('phone')}
-                    maxlength="10"
                   />
 
                   <div className="text-end">
@@ -294,7 +293,7 @@ export function CreateCustomer() {
       confirmButton={
         <Button
           isLoading={isLoading}
-          form="create-entityThing"
+          form="create-customer"
           type="submit"
           size="md"
           className="bg-primary-400"

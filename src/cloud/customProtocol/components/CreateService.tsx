@@ -11,6 +11,7 @@ import {
   useCreateServiceThing,
 } from '../api/serviceThing'
 import i18n from '~/i18n'
+import { cn } from '~/utils/misc'
 
 import { inputService } from '../types'
 
@@ -48,7 +49,13 @@ export const outputList = [
   },
 ]
 
-export function CreateService({ thingId }: { thingId: string }) {
+export function CreateService({
+  thingId,
+  classNameTriggerBtn,
+}: {
+  thingId: string
+  classNameTriggerBtn?: string
+}) {
   const { t } = useTranslation()
 
   const [codeInput, setCodeInput] = useState('')
@@ -113,7 +120,7 @@ export function CreateService({ thingId }: { thingId: string }) {
       triggerButton={
         <Button
           variant="trans"
-          className="rounded-md"
+          className={cn('rounded-md', classNameTriggerBtn)}
           size="square"
           disabled={!thingId}
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}

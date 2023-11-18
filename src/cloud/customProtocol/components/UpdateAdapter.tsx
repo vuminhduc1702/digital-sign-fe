@@ -247,82 +247,76 @@ export function UpdateAdapter({
               error={formState.errors['name']}
               registration={register('name')}
             />
-            <div className="flex items-end gap-x-3">
-              {thingSelectData != null ? (
-                <div className="w-full space-y-1">
-                  <SelectDropdown
-                    isClearable
-                    label={t('cloud:custom_protocol.thing.id')}
-                    name="thing_id"
-                    control={control}
-                    options={
-                      thingData
-                        ? thingSelectData
-                        : [
-                            {
-                              label: t('loading:entity_thing'),
-                              value: '',
-                            },
-                          ]
-                    }
-                    isOptionDisabled={option =>
-                      option.label === t('loading:entity_thing')
-                    }
-                    noOptionsMessage={() => t('table:no_thing')}
-                    placeholder={t('cloud:custom_protocol.thing.choose')}
-                    defaultValue={thingSelectData.find(
-                      thing => thing.value === getValues('thing_id'),
-                    )}
-                    icon={<CreateThing thingType="thing" />}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.thing_id?.message}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-            <div className="flex items-end gap-x-3">
-              {serviceSelectData != null ? (
-                <div className="w-full space-y-1">
-                  <SelectDropdown
-                    isClearable
-                    label={t('cloud:custom_protocol.service.title')}
-                    name="handle_service"
-                    control={control}
-                    options={
-                      serviceData?.data != null
-                        ? serviceSelectData
-                        : serviceData?.data == null
-                        ? [
-                            {
-                              label: t('table:no_service'),
-                              value: '',
-                            },
-                          ]
-                        : [
-                            {
-                              label: t('loading:service_thing'),
-                              value: '',
-                            },
-                          ]
-                    }
-                    isOptionDisabled={option =>
-                      option.label === t('loading:service_thing') ||
-                      option.label === t('table:no_service')
-                    }
-                    noOptionsMessage={() => t('table:no_service')}
-                    placeholder={t('cloud:custom_protocol.service.choose')}
-                    defaultValue={serviceSelectData.find(
-                      service => service.value === getValues('handle_service'),
-                    )}
-                    icon={<CreateService thingId={watch('thing_id')} />}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.handle_service?.message}
-                  </p>
-                </div>
-              ) : null}
-            </div>
+            {thingSelectData != null ? (
+              <div className="w-[calc(100%-2.5rem)] space-y-1">
+                <SelectDropdown
+                  isClearable
+                  label={t('cloud:custom_protocol.thing.id')}
+                  name="thing_id"
+                  control={control}
+                  options={
+                    thingData
+                      ? thingSelectData
+                      : [
+                          {
+                            label: t('loading:entity_thing'),
+                            value: '',
+                          },
+                        ]
+                  }
+                  isOptionDisabled={option =>
+                    option.label === t('loading:entity_thing')
+                  }
+                  noOptionsMessage={() => t('table:no_thing')}
+                  placeholder={t('cloud:custom_protocol.thing.choose')}
+                  defaultValue={thingSelectData.find(
+                    thing => thing.value === getValues('thing_id'),
+                  )}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.thing_id?.message}
+                </p>
+              </div>
+            ) : null}
+            {serviceSelectData != null ? (
+              <div className="w-[calc(100%-2.5rem)] space-y-1">
+                <SelectDropdown
+                  isClearable
+                  label={t('cloud:custom_protocol.service.title')}
+                  name="handle_service"
+                  control={control}
+                  options={
+                    serviceData?.data != null
+                      ? serviceSelectData
+                      : serviceData?.data == null
+                      ? [
+                          {
+                            label: t('table:no_service'),
+                            value: '',
+                          },
+                        ]
+                      : [
+                          {
+                            label: t('loading:service_thing'),
+                            value: '',
+                          },
+                        ]
+                  }
+                  isOptionDisabled={option =>
+                    option.label === t('loading:service_thing') ||
+                    option.label === t('table:no_service')
+                  }
+                  noOptionsMessage={() => t('table:no_service')}
+                  placeholder={t('cloud:custom_protocol.service.choose')}
+                  defaultValue={serviceSelectData.find(
+                    service => service.value === getValues('handle_service'),
+                  )}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.handle_service?.message}
+                </p>
+              </div>
+            ) : null}
             <SelectField
               label={t('cloud:custom_protocol.protocol')}
               error={formState.errors['protocol']}
@@ -538,6 +532,14 @@ export function UpdateAdapter({
           </div>
         </div>
       </form>
+      <CreateThing
+        thingType="thing"
+        classNameTriggerBtn="absolute right-0 top-[102px] mr-6"
+      />
+      <CreateService
+        thingId={watch('thing_id')}
+        classNameTriggerBtn="absolute right-0 top-[186px] mr-6"
+      />
     </Drawer>
   )
 }

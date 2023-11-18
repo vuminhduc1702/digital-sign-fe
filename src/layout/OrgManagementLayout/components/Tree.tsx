@@ -87,7 +87,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             className={cn(
               'ml-1 h-10 gap-y-3 rounded-l-md border-none px-4 py-0',
               {
-                '!bg-red-200': data.isSearch,
+                '!bg-primary-300': data.isSearch,
               },
             )}
             key={data.id}

@@ -14,6 +14,7 @@ import { Button } from '~/components/Button'
 import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import storage from '~/utils/storage'
+import { cn } from '~/utils/misc'
 
 import { type EntityThingType } from '~/cloud/customProtocol'
 import { nameSchema } from '~/utils/schemaValidation'
@@ -43,7 +44,13 @@ export const entityThingSchema = z
     ]),
   )
 
-export function CreateThing({ thingType }: { thingType: EntityThingType }) {
+export function CreateThing({
+  thingType,
+  classNameTriggerBtn,
+}: {
+  thingType: EntityThingType
+  classNameTriggerBtn?: string
+}) {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
@@ -181,7 +188,7 @@ export function CreateThing({ thingType }: { thingType: EntityThingType }) {
       triggerButton={
         <Button
           variant="trans"
-          className="rounded-md"
+          className={cn('rounded-md', classNameTriggerBtn)}
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
