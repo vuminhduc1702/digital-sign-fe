@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -6,26 +6,20 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
-import {
-  InputField,
-  SelectDropdown,
-  SelectField,
-  type SelectOptionString,
-} from '~/components/Form'
-import { useUpdateUser, type UpdateUserDTO, Profile } from '../../api/userAPI'
+import { InputField, SelectDropdown, SelectField } from '~/components/Form'
+import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
 import i18n from '~/i18n'
-import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
-import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -85,10 +79,10 @@ export function UpdateUser({
   profile,
 }: UpdateUserProps) {
   const { t } = useTranslation()
+  console.log('first', org_name, role_name)
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
-  const [provinceCode, setProvinceCode] = useState('')
-  const [districtCode, setDistrictCode] = useState('')
+
   const dataProfile = JSON.parse(profile)
 
   useEffect(() => {
@@ -97,68 +91,55 @@ export function UpdateUser({
     }
   }, [isSuccess, close])
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
+  const { register, formState, handleSubmit, control, getValues, watch } =
+    useForm<UpdateUserDTO['data']>({
+      resolver: updatedUserSchema && zodResolver(updatedUserSchema),
+      defaultValues: {
+        name,
+        email,
+        phone: phone !== 'undefined' ? phone : '',
+        org_id,
+        role_id,
+        profile: dataProfile,
+      },
+    })
+
+  const { id: projectId } = storage.getProject()
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
-  const { id: projectId } = storage.getProject()
-
-  const { data } = useGetRoles({ projectId })
-  const roleOptions = data?.roles?.map(item => ({
+  const { data: roleData } = useGetRoles({ projectId })
+  const roleOptions = roleData?.roles?.map(item => ({
     label: item.name,
     value: item.id,
-  })) || [{ label: '', value: '' }]
-
-  const [option, setOption] = useState<SelectOptionString>({
-    label: org_name !== 'undefined' ? org_name : '',
-    value: org_id !== 'undefined' ? org_id : '',
-  })
-  const [role, setRole] = useState<SelectOptionString>({
-    label: role_name !== 'undefined' ? role_name : '',
-    value: role_id !== 'undefined' ? role_id : '',
-  })
+  }))
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
     type: 'PROVINCE',
   })
-
   const { data: districtList } = useAreaList({
-    parentCode: provinceCode,
+    parentCode: watch('profile.province'),
     type: 'DISTRICT',
     config: {
-      enabled: !!provinceCode,
+      enabled: !!watch('profile.province'),
     },
   })
-
   const { data: wardList } = useAreaList({
-    parentCode: districtCode,
+    parentCode: watch('profile.district'),
     type: 'WARD',
     config: {
-      enabled: !!districtCode,
+      enabled: !!watch('profile.district'),
     },
   })
-
-  const { register, formState, control, setValue, handleSubmit } = useForm<
-    UpdateUserDTO['data']
-  >({
-    resolver: updatedUserSchema && zodResolver(updatedUserSchema),
-    defaultValues: {
-      name,
-      email,
-      phone: phone !== 'undefined' ? phone : '',
-      profile: dataProfile,
-    },
-  })
-  useEffect(() => {
-    setProvinceCode(dataProfile.province)
-    setDistrictCode(dataProfile.district)
-  }, [dataProfile])
 
   return (
     <Drawer
@@ -199,8 +180,8 @@ export function UpdateUser({
               phone: values.phone,
               password: values.password,
               email: values.email,
-              org_id: option?.value || '',
-              role_id: role?.value || '',
+              org_id: values.org_id,
+              role_id: values.role_id,
               profile: {
                 province: values.profile.province,
                 district: values.profile.district,
@@ -245,17 +226,10 @@ export function UpdateUser({
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
-              options={
-                orgFlattenData?.map(org => ({
-                  label: org?.name,
-                  value: org?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
-              }
-              onChange={e => {
-                setOption(e)
-                setValue('org_id', e.value)
-              }}
-              value={option}
+              options={orgSelectOptions}
+              defaultValue={orgSelectOptions.find(
+                item => item.value === getValues('org_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
@@ -268,11 +242,9 @@ export function UpdateUser({
               name="role_id"
               control={control}
               options={roleOptions}
-              onChange={e => {
-                setRole(e)
-                setValue('role_id', e.value)
-              }}
-              value={role}
+              defaultValue={roleOptions?.find(
+                item => item.value === getValues('role_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.role_id?.message}
@@ -285,24 +257,22 @@ export function UpdateUser({
             <SelectField
               error={formState?.errors?.profile?.province}
               registration={register('profile.province')}
-              options={provinceList || [{ value: '', label: '' }]}
+              options={provinceList}
               classchild="w-full"
-              onChange={e => setProvinceCode(e.target.value)}
               placeholder={t('cloud:org_manage.user_manage.add_user.province')}
             />
 
             <SelectField
               error={formState?.errors?.profile?.district}
               registration={register('profile.district')}
-              options={districtList || [{ value: '', label: '' }]}
-              onChange={e => setDistrictCode(e.target.value)}
+              options={districtList}
               placeholder={t('cloud:org_manage.user_manage.add_user.district')}
             />
 
             <SelectField
               error={formState?.errors?.profile?.ward}
               registration={register('profile.ward')}
-              options={wardList || [{ value: '', label: '' }]}
+              options={wardList}
               placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
             />
           </div>
