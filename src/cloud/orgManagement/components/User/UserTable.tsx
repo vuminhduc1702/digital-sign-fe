@@ -10,7 +10,7 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { UpdateUser } from './UpdateUser'
 import { STATUS } from '../Attributes'
-import { type UserInfo, useDeleteUser } from '../../api/userAPI'
+import { type UserInfo, useDeleteUser, Profile } from '../../api/userAPI'
 
 import { type BaseTablePagination } from '~/types'
 
@@ -29,11 +29,7 @@ function UserTableContextMenu({
   role_id,
   role_name,
   phone,
-  province,
-  district,
-  ward,
-  full_address,
-  ...props
+  profile,
 }: {
   user_id: string
   name: string
@@ -43,10 +39,7 @@ function UserTableContextMenu({
   role_id: string
   role_name: string
   phone: string
-  province: string
-  district: string
-  ward: string
-  full_address: string
+  profile: string
 }) {
   const { t } = useTranslation()
 
@@ -141,7 +134,7 @@ function UserTableContextMenu({
           role_name={role_name}
           close={close}
           isOpen={isOpen}
-          {...props}
+          profile={profile}
         />
       ) : null}
     </>
@@ -207,10 +200,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
             role_id,
             role_name,
             phone,
-            province,
-            district,
-            ward,
-            full_address,
+            profile,
           } = info.row.original
           return UserTableContextMenu({
             name,
@@ -221,10 +211,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
             role_id,
             role_name,
             phone,
-            province,
-            district,
-            ward,
-            full_address,
+            profile,
           })
         },
         header: () => null,

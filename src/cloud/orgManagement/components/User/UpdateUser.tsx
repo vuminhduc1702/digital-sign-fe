@@ -12,7 +12,7 @@ import {
   SelectField,
   type SelectOptionString,
 } from '~/components/Form'
-import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
+import { useUpdateUser, type UpdateUserDTO, Profile } from '../../api/userAPI'
 import i18n from '~/i18n'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
@@ -41,26 +41,25 @@ type UpdateUserProps = {
   role_id: string
   role_name: string
   phone: string
-  province: string
-  district: string
-  ward: string
-  full_address: string
+  profile: string
 }
 
 export const updatedUserSchema = z
   .object({
     name: nameSchema,
-    email: emailSchema,
     phone: z.string(),
     password: passwordSchema.or(z.string().optional()),
     confirmPassword: passwordSchema.or(z.string().optional()),
-    project_id: z.string().optional(),
+    email: emailSchema,
     org_id: z.string().optional(),
     role_id: z.string().optional(),
-    province: z.string().optional(),
-    district: z.string().optional(),
-    ward: z.string().optional(),
-    full_address: z.string().optional(),
+    project_id: z.string().optional(),
+    profile: z.object({
+      province: z.string().optional(),
+      district: z.string().optional(),
+      ward: z.string().optional(),
+      full_address: z.string().optional(),
+    }),
   })
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
@@ -83,16 +82,14 @@ export function UpdateUser({
   role_id,
   role_name,
   phone,
-  province,
-  district,
-  ward,
-  full_address,
+  profile,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
+  const dataProfile = JSON.parse(profile)
 
   useEffect(() => {
     if (isSuccess) {
@@ -155,12 +152,13 @@ export function UpdateUser({
       name,
       email,
       phone: phone !== 'undefined' ? phone : '',
-      province,
-      district,
-      ward,
-      full_address,
+      profile: dataProfile,
     },
   })
+  useEffect(() => {
+    setProvinceCode(dataProfile.province)
+    setDistrictCode(dataProfile.district)
+  }, [dataProfile])
 
   return (
     <Drawer
@@ -198,15 +196,17 @@ export function UpdateUser({
           mutate({
             data: {
               name: values.name,
-              email: values.email,
+              phone: values.phone,
               password: values.password,
+              email: values.email,
               org_id: option?.value || '',
               role_id: role?.value || '',
-              phone: values.phone,
-              province: values.province,
-              district: values.district,
-              ward: values.ward,
-              full_address: values.full_address,
+              profile: {
+                province: values.profile.province,
+                district: values.profile.district,
+                ward: values.profile.ward,
+                full_address: values.profile.full_address,
+              },
             },
             userId,
           }),
@@ -283,8 +283,8 @@ export function UpdateUser({
               {t('cloud:org_manage.user_manage.add_user.address')}
             </div>
             <SelectField
-              error={formState.errors['province']}
-              registration={register('province')}
+              error={formState?.errors?.profile?.province}
+              registration={register('profile.province')}
               options={provinceList || [{ value: '', label: '' }]}
               classchild="w-full"
               onChange={e => setProvinceCode(e.target.value)}
@@ -292,16 +292,16 @@ export function UpdateUser({
             />
 
             <SelectField
-              error={formState.errors['district']}
-              registration={register('district')}
+              error={formState?.errors?.profile?.district}
+              registration={register('profile.district')}
               options={districtList || [{ value: '', label: '' }]}
               onChange={e => setDistrictCode(e.target.value)}
               placeholder={t('cloud:org_manage.user_manage.add_user.district')}
             />
 
             <SelectField
-              error={formState.errors['ward']}
-              registration={register('ward')}
+              error={formState?.errors?.profile?.ward}
+              registration={register('profile.ward')}
               options={wardList || [{ value: '', label: '' }]}
               placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
             />
@@ -309,7 +309,7 @@ export function UpdateUser({
 
           <InputField
             label={t('form:enter_address')}
-            registration={register('full_address')}
+            registration={register('profile.full_address')}
           />
         </>
       </form>
