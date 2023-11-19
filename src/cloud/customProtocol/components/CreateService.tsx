@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 
-import { Form, InputField, SelectField } from '~/components/Form'
+import { InputField, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { serviceThingSchema } from './CreateAdapter'
 import { CodeEditor } from './CodeEditor'
@@ -58,6 +60,12 @@ export function CreateService({
 }) {
   const { t } = useTranslation()
 
+  const { register, formState, handleSubmit } = useForm<
+    CreateServiceThingDTO['data']
+  >({
+    resolver: serviceThingSchema && zodResolver(serviceThingSchema),
+  })
+
   const [codeInput, setCodeInput] = useState('')
 
   const {
@@ -71,10 +79,10 @@ export function CreateService({
       isDone={isSuccessService}
       title={t('cloud:custom_protocol.service.create')}
       body={
-        <Form<CreateServiceThingDTO['data'], typeof serviceThingSchema>
+        <form
           id="create-serviceThing"
           className="flex flex-col justify-between"
-          onSubmit={values => {
+          onSubmit={handleSubmit(values => {
             // console.log('service values', values)
             mutateService({
               data: {
@@ -86,36 +94,31 @@ export function CreateService({
               },
               thingId,
             })
-          }}
-          schema={serviceThingSchema}
+          })}
         >
-          {({ register, formState }) => {
-            return (
-              <>
-                <InputField
-                  label={t('cloud:custom_protocol.service.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                />
-                <SelectField
-                  label={t('cloud:custom_protocol.service.output')}
-                  error={formState.errors['output']}
-                  registration={register('output')}
-                  options={outputList}
-                />
-                <InputField
-                  label={t('cloud:custom_protocol.service.description')}
-                  error={formState.errors['description']}
-                  registration={register('description')}
-                />
-                <CodeEditor
-                  label={t('cloud:custom_protocol.service.code')}
-                  setCodeInput={setCodeInput}
-                />
-              </>
-            )
-          }}
-        </Form>
+          <>
+            <InputField
+              label={t('cloud:custom_protocol.service.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <SelectField
+              label={t('cloud:custom_protocol.service.output')}
+              error={formState.errors['output']}
+              registration={register('output')}
+              options={outputList}
+            />
+            <InputField
+              label={t('cloud:custom_protocol.service.description')}
+              error={formState.errors['description']}
+              registration={register('description')}
+            />
+            <CodeEditor
+              label={t('cloud:custom_protocol.service.code')}
+              setCodeInput={setCodeInput}
+            />
+          </>
+        </form>
       }
       triggerButton={
         <Button

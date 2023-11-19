@@ -42,7 +42,6 @@ const SelfAccount = () => {
   const navigate = useNavigate()
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
-  const [wardCode, setWardCode] = useState('')
 
   const { mutate, isLoading } = useMutationSelfAccountInfo()
 
@@ -57,7 +56,6 @@ const SelfAccount = () => {
     if (userInfoData?.profile != null) {
       setProvinceCode(userInfoData.profile.province)
       setDistrictCode(userInfoData.profile.district)
-      setWardCode(userInfoData.profile.ward)
     }
   }, [])
 

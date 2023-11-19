@@ -1,11 +1,12 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { Form, InputField } from '~/components/Form'
+import { InputField } from '~/components/Form'
 import {
   useUpdateCustomer,
   type UpdateCustomerDTO,
@@ -14,12 +15,14 @@ import * as z from 'zod'
 import {
   emailSchema,
   nameSchema,
-  passwordSchema,
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 import { UpdateCustomerRole } from './UpdateCustomerRole'
 import { CustomerRoleTable } from './CustomerRoleTable'
 import { useDisclosure } from '~/utils/hooks'
+
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const updateCustomerSchema = z.object({
   name: nameSchema,
@@ -49,6 +52,18 @@ export function UpdateCustomer({
 }: UpdateCustomerProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
+
+  const { register, formState, handleSubmit } = useForm<
+    UpdateCustomerDTO['data']
+  >({
+    resolver: updateCustomerSchema && zodResolver(updateCustomerSchema),
+    defaultValues: {
+      customerId,
+      name,
+      email,
+      phone,
+    },
+  })
 
   const { mutate, isLoading, isSuccess } = useUpdateCustomer()
   const {
@@ -83,10 +98,10 @@ export function UpdateCustomer({
               </button>
             </div>
           </div>
-          <Form<UpdateCustomerDTO['data'], typeof updateCustomerSchema>
+          <form
             id="update-customer"
             className="mt-6 flex flex-col justify-between"
-            onSubmit={values => {
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   name: values.name,
@@ -96,55 +111,40 @@ export function UpdateCustomer({
                 },
                 customerId,
               })
-            }}
-            schema={updateCustomerSchema}
-            options={{
-              defaultValues: {
-                customerId,
-                name,
-                email,
-                phone,
-              },
-            }}
+            })}
           >
-            {({ register, formState }) => {
-              return (
-                <div className="grid grid-cols-6 gap-4">
-                  <div className="self-center text-right">ID</div>
-                  <InputField registration={register('customerId')} disabled />
-                  <div className="col-start-4 self-center text-right">
-                    Email
-                  </div>
-                  <InputField
-                    error={formState.errors['email']}
-                    registration={register('email')}
-                  />
-                  <div className="col-start-1 self-center text-right">
-                    {t('cloud:org_manage.org_manage.overview.name')}
-                  </div>
-                  <InputField
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <div className="col-start-4 self-center text-right">
-                    {t('cloud:org_manage.user_manage.add_user.phone')}
-                  </div>
-                  <InputField
-                    error={formState.errors['phone']}
-                    registration={register('phone')}
-                  />
-                  <div className="col-start-1 self-center text-right">
-                    {t('cloud:org_manage.user_manage.add_user.password')}
-                  </div>
-                  <InputField
-                    error={formState.errors['password']}
-                    registration={register('password')}
-                    type="password"
-                  />
-                </div>
-              )
-            }}
-          </Form>
+            <div className="grid grid-cols-6 gap-4">
+              <div className="self-center text-right">ID</div>
+              <InputField registration={register('customerId')} disabled />
+              <div className="col-start-4 self-center text-right">Email</div>
+              <InputField
+                error={formState.errors['email']}
+                registration={register('email')}
+              />
+              <div className="col-start-1 self-center text-right">
+                {t('cloud:org_manage.org_manage.overview.name')}
+              </div>
+              <InputField
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <div className="col-start-4 self-center text-right">
+                {t('cloud:org_manage.user_manage.add_user.phone')}
+              </div>
+              <InputField
+                error={formState.errors['phone']}
+                registration={register('phone')}
+              />
+              <div className="col-start-1 self-center text-right">
+                {t('cloud:org_manage.user_manage.add_user.password')}
+              </div>
+              <InputField
+                error={formState.errors['password']}
+                registration={register('password')}
+                type="password"
+              />
+            </div>
+          </form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button
