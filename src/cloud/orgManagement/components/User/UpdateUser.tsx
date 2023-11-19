@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import {
-  Form,
   InputField,
   SelectDropdown,
   SelectField,
@@ -17,10 +18,10 @@ import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetRoles } from '~/cloud/role/api'
+import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
 
 import {
   emailSchema,
-  emptySelectSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'
@@ -28,7 +29,6 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
 
 type UpdateUserProps = {
   userId: string
@@ -47,7 +47,6 @@ type UpdateUserProps = {
   full_address: string
 }
 
-// FIXME: password can not validate passwordSchema if add .or(z.string().optional())
 export const updatedUserSchema = z
   .object({
     name: nameSchema,
@@ -148,6 +147,21 @@ export function UpdateUser({
     },
   })
 
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    UpdateUserDTO['data']
+  >({
+    resolver: updatedUserSchema && zodResolver(updatedUserSchema),
+    defaultValues: {
+      name,
+      email,
+      phone: phone !== 'undefined' ? phone : '',
+      province,
+      district,
+      ward,
+      full_address,
+    },
+  })
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -177,9 +191,10 @@ export function UpdateUser({
         </>
       )}
     >
-      <Form<UpdateUserDTO['data'], typeof updatedUserSchema>
+      <form
         id="update-user"
-        onSubmit={values =>
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values =>
           mutate({
             data: {
               name: values.name,
@@ -194,141 +209,119 @@ export function UpdateUser({
               full_address: values.full_address,
             },
             userId,
-          })
-        }
-        schema={updatedUserSchema}
-        options={{
-          defaultValues: {
-            name,
-            email,
-            phone: phone !== 'undefined' ? phone : '',
-            province,
-            district,
-            ward,
-            full_address,
-          },
-        }}
-      >
-        {({ register, formState, control, setValue }) => (
-          <>
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.name') ?? "User's name"
-              }
-              error={formState.errors['name']}
-              registration={register('name')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'
-              }
-              type="number"
-              error={formState.errors['phone']}
-              registration={register('phone')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.email') ??
-                "User's email"
-              }
-              error={formState.errors['email']}
-              registration={register('email')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.password') ??
-                'Password'
-              }
-              error={formState.errors['password']}
-              registration={register('password')}
-            />
-            <InputField
-              label={
-                t('cloud:org_manage.user_manage.add_user.confirm_password') ??
-                'Confirm password'
-              }
-              error={formState.errors['confirmPassword']}
-              registration={register('confirmPassword')}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgFlattenData?.map(org => ({
-                    label: org?.name,
-                    value: org?.id,
-                  })) || [{ label: t('loading:org'), value: '' }]
-                }
-                onChange={e => {
-                  setOption(e)
-                  setValue('org_id', e.value)
-                }}
-                value={option}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.user_manage.add_user.role')}
-                name="role_id"
-                control={control}
-                options={roleOptions}
-                onChange={e => {
-                  setRole(e)
-                  setValue('role_id', e.value)
-                }}
-                value={role}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.role_id?.message}
-              </p>
-            </div>
-            <div className="grid grid-cols-3 gap-x-2">
-              <div className="col-start-1 col-end-4">
-                {t('cloud:org_manage.user_manage.add_user.address')}
-              </div>
-              <SelectField
-                error={formState.errors['province']}
-                registration={register('province')}
-                options={provinceList || [{ value: '', label: '' }]}
-                classchild="w-full"
-                onChange={e => setProvinceCode(e.target.value)}
-                placeholder={t(
-                  'cloud:org_manage.user_manage.add_user.province',
-                )}
-              />
-
-              <SelectField
-                error={formState.errors['district']}
-                registration={register('district')}
-                options={districtList || [{ value: '', label: '' }]}
-                onChange={e => setDistrictCode(e.target.value)}
-                placeholder={t(
-                  'cloud:org_manage.user_manage.add_user.district',
-                )}
-              />
-
-              <SelectField
-                error={formState.errors['ward']}
-                registration={register('ward')}
-                options={wardList || [{ value: '', label: '' }]}
-                placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
-              />
-            </div>
-
-            <InputField
-              label={t('form:enter_address')}
-              registration={register('full_address')}
-            />
-          </>
+          }),
         )}
-      </Form>
+      >
+        <>
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.name') ?? "User's name"
+            }
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <InputField
+            label={t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'}
+            type="number"
+            error={formState.errors['phone']}
+            registration={register('phone')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.email') ?? "User's email"
+            }
+            error={formState.errors['email']}
+            registration={register('email')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.password') ?? 'Password'
+            }
+            error={formState.errors['password']}
+            registration={register('password')}
+          />
+          <InputField
+            label={
+              t('cloud:org_manage.user_manage.add_user.confirm_password') ??
+              'Confirm password'
+            }
+            error={formState.errors['confirmPassword']}
+            registration={register('confirmPassword')}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgFlattenData?.map(org => ({
+                  label: org?.name,
+                  value: org?.id,
+                })) || [{ label: t('loading:org'), value: '' }]
+              }
+              onChange={e => {
+                setOption(e)
+                setValue('org_id', e.value)
+              }}
+              value={option}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.user_manage.add_user.role')}
+              name="role_id"
+              control={control}
+              options={roleOptions}
+              onChange={e => {
+                setRole(e)
+                setValue('role_id', e.value)
+              }}
+              value={role}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.role_id?.message}
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-x-2">
+            <div className="col-start-1 col-end-4">
+              {t('cloud:org_manage.user_manage.add_user.address')}
+            </div>
+            <SelectField
+              error={formState.errors['province']}
+              registration={register('province')}
+              options={provinceList || [{ value: '', label: '' }]}
+              classchild="w-full"
+              onChange={e => setProvinceCode(e.target.value)}
+              placeholder={t('cloud:org_manage.user_manage.add_user.province')}
+            />
+
+            <SelectField
+              error={formState.errors['district']}
+              registration={register('district')}
+              options={districtList || [{ value: '', label: '' }]}
+              onChange={e => setDistrictCode(e.target.value)}
+              placeholder={t('cloud:org_manage.user_manage.add_user.district')}
+            />
+
+            <SelectField
+              error={formState.errors['ward']}
+              registration={register('ward')}
+              options={wardList || [{ value: '', label: '' }]}
+              placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
+            />
+          </div>
+
+          <InputField
+            label={t('form:enter_address')}
+            registration={register('full_address')}
+          />
+        </>
+      </form>
     </Drawer>
   )
 }

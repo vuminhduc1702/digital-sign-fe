@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 import { Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, Form, InputField, SelectField } from '~/components/Form'
+import { FieldWrapper, InputField, SelectField } from '~/components/Form'
 import { valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import {
@@ -45,7 +47,17 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-
+  const { register, formState, control, handleSubmit } = useForm<
+    UpdateAttrDTO['data']['attributes'][0]
+  >({
+    resolver: attrSchema && zodResolver(attrSchema),
+    defaultValues: {
+      attribute_key: attributeKey,
+      logged: String(logged) === 'true',
+      value: value.toString(),
+      value_t: value_type,
+    },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -81,9 +93,10 @@ export function UpdateAttr({
         </>
       )}
     >
-      <Form<UpdateAttrDTO['data']['attributes'][0], typeof attrSchema>
+      <form
         id="update-attr"
-        onSubmit={values => {
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               attributes: [
@@ -98,72 +111,58 @@ export function UpdateAttr({
             entityType,
             entityId,
           })
-        }}
-        options={{
-          defaultValues: {
-            attribute_key: attributeKey,
-            logged: String(logged) === 'true',
-            value: value.toString(),
-            value_t: value_type,
-          },
-        }}
-        schema={attrSchema}
+        })}
       >
-        {({ register, formState, control }) => {
-          console.log('formState errors: ', formState.errors)
-          return (
-            <>
-              <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
-                <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                  <SelectField
-                    label={t('cloud:org_manage.org_manage.add_attr.value_type')}
-                    error={formState.errors['value_t']}
-                    registration={register('value_t')}
-                    options={valueTypeList.map(valueType => ({
-                      label: valueType.name,
-                      value: valueType.type,
-                    }))}
-                  />
-                  <InputField
-                    label={t('cloud:org_manage.org_manage.add_attr.value')}
-                    error={formState.errors['value']}
-                    registration={register('value')}
-                  />
-                  <FieldWrapper
-                    className="mt-2 space-y-2"
-                    label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                    error={formState.errors['logged']}
-                  >
-                    <Controller
-                      control={control}
-                      name={'logged'}
-                      render={({ field: { onChange, value, ...field } }) => {
-                        return (
-                          <Checkbox
-                            {...field}
-                            checked={value}
-                            onCheckedChange={onChange}
-                            onClick={() => {
-                              mutateUpdateLogged({
-                                data: {
-                                  logged: !value,
-                                },
-                                device_id: entityId,
-                                attribute_key: attributeKey,
-                                entityType: entityType,
-                              })
-                            }}
-                          />
-                        )
-                      }}
-                    />
-                  </FieldWrapper>
-                </div>
-              </section>
-            </>
-          )
-        }}
-      </Form>
+        <>
+          <section className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4">
+            <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
+              <SelectField
+                label={t('cloud:org_manage.org_manage.add_attr.value_type')}
+                error={formState.errors['value_t']}
+                registration={register('value_t')}
+                options={valueTypeList.map(valueType => ({
+                  label: valueType.name,
+                  value: valueType.type,
+                }))}
+              />
+              <InputField
+                label={t('cloud:org_manage.org_manage.add_attr.value')}
+                error={formState.errors['value']}
+                registration={register('value')}
+              />
+              <FieldWrapper
+                className="mt-2 space-y-2"
+                label={t('cloud:org_manage.org_manage.add_attr.logged')}
+                error={formState.errors['logged']}
+              >
+                <Controller
+                  control={control}
+                  name={'logged'}
+                  render={({ field: { onChange, value, ...field } }) => {
+                    return (
+                      <Checkbox
+                        {...field}
+                        checked={value}
+                        onCheckedChange={onChange}
+                        onClick={() => {
+                          mutateUpdateLogged({
+                            data: {
+                              logged: !value,
+                            },
+                            device_id: entityId,
+                            attribute_key: attributeKey,
+                            entityType: entityType,
+                          })
+                        }}
+                      />
+                    )
+                  }}
+                />
+              </FieldWrapper>
+            </div>
+          </section>
+        </>
+      </form>
     </Drawer>
   )
 }
