@@ -198,7 +198,7 @@ export function UpdateOrg({
       >
         <>
           <InputField
-            label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
+            label={t('cloud:org_manage.org_manage.add_org.name')}
             error={formState.errors['name']}
             registration={register('name')}
           />
@@ -228,9 +228,7 @@ export function UpdateOrg({
             </p>
           </div>
           <TextAreaField
-            label={
-              t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
-            }
+            label={t('cloud:org_manage.org_manage.add_org.desc')}
             error={formState.errors['description']}
             registration={register('description')}
           />

@@ -127,7 +127,7 @@ export function UpdateTemplate({
           {({ register, formState, control }, { fields, append, remove }) => (
             <>
               <InputField
-                label={t('cloud:device_template.add_template.name') ?? 'Name'}
+                label={t('cloud:device_template.add_template.name')}
                 error={formState.errors['name']}
                 registration={register('name')}
               />
@@ -138,9 +138,7 @@ export function UpdateTemplate({
                 >
                   <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
                     <InputField
-                      label={
-                        t('cloud:org_manage.org_manage.add_attr.name') ?? 'Name'
-                      }
+                      label={t('cloud:org_manage.org_manage.add_attr.name')}
                       error={
                         formState?.errors?.attributes?.[index]?.attribute_key
                       }
@@ -151,10 +149,9 @@ export function UpdateTemplate({
                     />
                     <SelectField
                       className="h-[36px] py-1"
-                      label={
-                        t('cloud:org_manage.org_manage.add_attr.value_type') ??
-                        'Value type'
-                      }
+                      label={t(
+                        'cloud:org_manage.org_manage.add_attr.value_type',
+                      )}
                       error={formState?.errors?.attributes?.[index]?.value_t}
                       registration={register(
                         `attributes.${index}.value_t` as const,
@@ -166,10 +163,7 @@ export function UpdateTemplate({
                     />
                     <InputField
                       classnamefieldwrapper="mt-2"
-                      label={
-                        t('cloud:org_manage.org_manage.add_attr.value') ??
-                        'Value'
-                      }
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
                       error={formState?.errors?.attributes?.[index]?.value}
                       registration={register(
                         `attributes.${index}.value` as const,

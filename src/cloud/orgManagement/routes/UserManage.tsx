@@ -34,9 +34,7 @@ export function UserManage() {
 
   return (
     <div ref={ref} className="uer-pnf flex grow flex-col">
-      <TitleBar
-        title={t('cloud:org_manage.user_manage.header') ?? 'User management'}
-      />
+      <TitleBar title={t('cloud:org_manage.user_manage.header')} />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable refComponent={ref} />

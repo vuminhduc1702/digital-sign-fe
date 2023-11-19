@@ -109,15 +109,12 @@ export function CreateGroup() {
       >
         <>
           <InputField
-            label={t('cloud:org_manage.group_manage.add_group.name') ?? 'Name'}
+            label={t('cloud:org_manage.group_manage.add_group.name')}
             error={formState.errors['name']}
             registration={register('name')}
           />
           <SelectField
-            label={
-              t('cloud:org_manage.group_manage.add_group.entity_type') ??
-              'Entity type'
-            }
+            label={t('cloud:org_manage.group_manage.add_group.entity_type')}
             error={formState.errors['entity_type']}
             registration={register('entity_type')}
             options={entityTypeList.map(entityType => ({

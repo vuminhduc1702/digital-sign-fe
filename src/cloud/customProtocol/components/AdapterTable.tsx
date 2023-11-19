@@ -83,11 +83,9 @@ function AdapterTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
-              body={
-                t(
-                  'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
-                ).replace('{{ADAPTERNAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
+              ).replace('{{ADAPTERNAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

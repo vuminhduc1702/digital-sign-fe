@@ -153,34 +153,29 @@ export function CreateUser() {
       >
         <>
           <InputField
-            label={t('cloud:org_manage.user_manage.add_user.name') ?? 'Name'}
+            label={t('cloud:org_manage.user_manage.add_user.name')}
             error={formState.errors['name']}
             registration={register('name')}
           />
           <InputField
-            label={t('cloud:org_manage.user_manage.add_user.phone') ?? 'Phone'}
+            label={t('cloud:org_manage.user_manage.add_user.phone')}
             type="number"
             error={formState.errors['phone']}
             registration={register('phone')}
           />
           <InputField
-            label={t('cloud:org_manage.user_manage.add_user.email') ?? 'Email'}
+            label={t('cloud:org_manage.user_manage.add_user.email')}
             error={formState.errors['email']}
             registration={register('email')}
           />
           <InputField
-            label={
-              t('cloud:org_manage.user_manage.add_user.password') ?? 'Password'
-            }
+            label={t('cloud:org_manage.user_manage.add_user.password')}
             error={formState.errors['password']}
             registration={register('password')}
             type="password"
           />
           <InputField
-            label={
-              t('cloud:org_manage.user_manage.add_user.confirm_password') ??
-              'Confirm password'
-            }
+            label={t('cloud:org_manage.user_manage.add_user.confirm_password')}
             error={formState.errors['confirmPassword']}
             registration={register('confirmPassword')}
             type="password"

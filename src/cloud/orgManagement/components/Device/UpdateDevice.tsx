@@ -209,7 +209,7 @@ export function UpdateDevice({
             </p>
           </div>
           <InputField
-            label={t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'}
+            label={t('cloud:org_manage.device_manage.add_device.key')}
             error={formState.errors['key']}
             registration={register('key')}
           />

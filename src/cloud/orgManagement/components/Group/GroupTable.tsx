@@ -42,7 +42,7 @@ function GroupTableContextMenu({
 }: {
   id: string
   name: string
-  entity_type : Omit<EntityType, "GROUP" | "TEMPLATE">
+  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
   organization: string
 }) {
   const { t } = useTranslation()
@@ -109,11 +109,9 @@ function GroupTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:org_manage.group_manage.table.delete_group')}
-              body={
-                t(
-                  'cloud:org_manage.group_manage.table.delete_group_confirm',
-                ).replace('{{GROUPNAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.group_manage.table.delete_group_confirm',
+              ).replace('{{GROUPNAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"
@@ -208,7 +206,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         id: 'contextMenu',
         cell: info => {
           const { name, id, organization, entity_type } = info.row.original
-          return GroupTableContextMenu({ name, id, organization ,entity_type })
+          return GroupTableContextMenu({ name, id, organization, entity_type })
         },
         header: () => null,
         footer: info => info.column.id,

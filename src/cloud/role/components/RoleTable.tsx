@@ -81,12 +81,10 @@ function RoleTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:role_manage.sidebar.delete_role')}
-              body={
-                t('cloud:role_manage.sidebar.delete_role_confirm').replace(
-                  '{{ROLENAME}}',
-                  name,
-                ) ?? 'Confirm delete?'
-              }
+              body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
+                '{{ROLENAME}}',
+                name,
+              )}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

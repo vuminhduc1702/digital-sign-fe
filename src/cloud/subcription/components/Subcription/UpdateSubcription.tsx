@@ -188,12 +188,9 @@ export function UpdateSubcription({
                         isDone={isSuccess}
                         icon="danger"
                         title={t('billing:subcription.delete')}
-                        body={
-                          t('billing:subcription.delete_sub_confirm').replace(
-                            '{{SUBCRIPTION}}',
-                            id,
-                          ) ?? 'Confirm delete?'
-                        }
+                        body={t(
+                          'billing:subcription.delete_sub_confirm',
+                        ).replace('{{SUBCRIPTION}}', id)}
                         triggerButton={
                           <Button
                             className="w-full rounded-md border-none bg-orange-500 text-white shadow-none"

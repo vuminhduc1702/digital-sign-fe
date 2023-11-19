@@ -76,11 +76,9 @@ function AttrTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-              body={
-                t(
-                  'cloud:org_manage.org_manage.table.delete_attr_confirm',
-                ).replace('{{ATTRNAME}}', attribute_key) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.org_manage.table.delete_attr_confirm',
+              ).replace('{{ATTRNAME}}', attribute_key)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"
