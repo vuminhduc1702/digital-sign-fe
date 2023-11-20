@@ -7,7 +7,6 @@ import { Button } from '~/components/Button'
 import {
   InputField,
   SelectDropdown,
-  type SelectOptionString,
   TextAreaField,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
@@ -52,8 +51,6 @@ export function UpdateOrg({
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
-
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -79,22 +76,6 @@ export function UpdateOrg({
         !selectedUpdateOrgChildren.some(child => child.id === org.value),
     )
 
-  useEffect(() => {
-    if (selectedUpdateOrg.id) {
-      if (selectedUpdateOrg.parent_name === 'undefined') {
-        setOptionOrg({
-          label: t('cloud:org_manage.org_manage.add_org.no_org'),
-          value: '',
-        })
-      } else {
-        setOptionOrg({
-          label: selectedUpdateOrg.parent_name,
-          value: selectedUpdateOrg.id,
-        })
-      }
-    }
-  }, [selectedUpdateOrg])
-
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
   const {
     mutateAsync: mutateAsyncUploadImage,
@@ -104,12 +85,12 @@ export function UpdateOrg({
   const { mutate: mutateUpdateOrgForOrg } = useUpdateOrgForOrg()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, getValues, handleSubmit } = useForm<
     UpdateOrgDTO['data']
   >({
     resolver: orgSchema && zodResolver(orgSchema),
     defaultValues: {
-      name: selectedUpdateOrg.name,
+      name: selectedUpdateOrg?.name,
       description:
         selectedUpdateOrg?.description !== 'undefined'
           ? selectedUpdateOrg?.description
@@ -172,7 +153,7 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id: optionOrg?.value,
+                org_id: values?.org_id,
                 image: dataUploadImage?.data?.link,
               },
               org_id: selectedUpdateOrg?.id,
@@ -189,7 +170,7 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id: optionOrg?.value,
+                org_id: values.org_id,
               },
               org_id: selectedUpdateOrg?.id,
             })
@@ -204,24 +185,29 @@ export function UpdateOrg({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={false}
+              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              onChange={e => {
-                setOptionOrg(e)
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              customOnChange={(e) => {
                 mutateUpdateOrgForOrg({
                   data: {
                     ids: [selectedUpdateOrg.id],
                     org_id: e.value,
                   },
                 })
-                setValue('org_id', e?.value)
               }}
-              value={optionOrg}
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              defaultValue={orgFlattenData.find(
+                org => org.id === getValues('org_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
