@@ -21,6 +21,7 @@ import { ApplicationRoutes } from '~/applicationPages'
 import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
+import DevRole from '~/cloud/devRole/DevRole'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -126,6 +127,14 @@ export const protectedRoutes = [
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <MainTenant />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: PATHS.DEV_ROLE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DevRole />
           </ErrorBoundary>
         ),
       },
