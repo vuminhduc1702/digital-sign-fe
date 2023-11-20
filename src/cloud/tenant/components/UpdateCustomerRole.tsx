@@ -1,18 +1,22 @@
-import { XMarkIcon } from '@heroicons/react/24/outline'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+
 import { useProjects } from '~/cloud/project/api'
 import { useGetRoles } from '~/cloud/role/api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { Form, InputField, SelectField } from '~/components/Form'
+import { InputField, SelectField } from '~/components/Form'
 import {
   useUpdateCustomerRole,
   type UpdateEntityCustomerRoleDTO,
 } from '../api/updateCustomerRole'
+
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
 type UpdateCustomerRoleProps = {
   customerId: string
@@ -42,7 +46,17 @@ export function UpdateCustomerRole({
   const [roleId, setRoleId] = useState()
   const cancelButtonRef = useRef(null)
 
-  console.log(project_id, 'project_id')
+  const { register, formState, handleSubmit } = useForm<
+    UpdateEntityCustomerRoleDTO['data']
+  >({
+    resolver:
+      updateEntityCustomerSchema && zodResolver(updateEntityCustomerSchema),
+    defaultValues: {
+      customer_id: customerId,
+      project_list: project_id,
+      role_list: roleIdProps,
+    },
+  })
 
   const { data: projectList } = useProjects({
     config: {
@@ -61,11 +75,9 @@ export function UpdateCustomerRole({
   })
 
   const { data: roleList } = useGetRoles({
-    // projectId: project_id ? project_id : projectId,
     projectId: projectId,
     config: {
       suspense: false,
-      // enabled: project_id ? !!project_id : !!projectId,
       enabled: !!projectId,
       select: (data: any) => {
         if (data?.roles.length > 0) {
@@ -113,13 +125,10 @@ export function UpdateCustomerRole({
               </button>
             </div>
           </div>
-          <Form<
-            UpdateEntityCustomerRoleDTO['data'],
-            typeof updateEntityCustomerSchema
-          >
+          <form
             id="customer-role-form"
             className="mt-6 flex flex-col justify-between"
-            onSubmit={values => {
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   project_permission: [
@@ -131,53 +140,39 @@ export function UpdateCustomerRole({
                   ],
                 },
               })
-            }}
-            schema={updateEntityCustomerSchema}
-            options={{
-              defaultValues: {
-                customer_id: customerId,
-                project_list: project_id,
-                role_list: roleIdProps,
-              },
-            }}
+            })}
           >
-            {({ register, formState }) => {
-              return (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>User ID</div>
-                  <InputField disabled registration={register('customer_id')} />
+            <div className="grid grid-cols-2 gap-4">
+              <div>User ID</div>
+              <InputField disabled registration={register('customer_id')} />
 
-                  <div>Project</div>
-                  <div>
-                    <SelectField
-                      error={formState.errors['project_list']}
-                      registration={register('project_list')}
-                      options={projectList}
-                      onChange={e => {
-                        setProjectId(e.target.value)
-                      }}
-                    />
-                  </div>
+              <div>Project</div>
+              <div>
+                <SelectField
+                  error={formState.errors['project_list']}
+                  registration={register('project_list')}
+                  options={projectList}
+                  onChange={e => {
+                    setProjectId(e.target.value)
+                  }}
+                />
+              </div>
 
-                  <div>Role</div>
-                  <div>
-                    <SelectField
-                      error={formState.errors['role_list']}
-                      registration={register('role_list')}
-                      options={
-                        roleList || [
-                          { value: '', label: t('form:role.choose') },
-                        ]
-                      }
-                      onChange={e => {
-                        setRoleId(e.target.value)
-                      }}
-                    />
-                  </div>
-                </div>
-              )
-            }}
-          </Form>
+              <div>Role</div>
+              <div>
+                <SelectField
+                  error={formState.errors['role_list']}
+                  registration={register('role_list')}
+                  options={
+                    roleList || [{ value: '', label: t('form:role.choose') }]
+                  }
+                  onChange={e => {
+                    setRoleId(e.target.value)
+                  }}
+                />
+              </div>
+            </div>
+          </form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

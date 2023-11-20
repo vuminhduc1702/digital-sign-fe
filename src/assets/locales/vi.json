@@ -478,7 +478,8 @@
         "schema": {
           "name": "Tên trường",
           "start_byte": "Byte bắt đầu",
-          "length_byte": "Độ dài"
+          "length_byte": "Độ dài",
+          "length_byte_validate": "Nhập độ dài lớn hơn 1"
         },
         "topic": "Topic",
         "ping_MQTT": {
@@ -758,6 +759,8 @@
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
     "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_base_template": "Không có base template. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_base_shapes": "Không có base shape. Vui lòng tạo hoặc chọn Thing trước.",
     "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
@@ -798,10 +801,12 @@
     "no_data_res": "Dữ liệu trả về không đúng.",
     "default_zod_err": {
       "select": "Vui lòng chọn",
-      "select_union": "Vui lòng chọn 1 trong các option sau:"
+      "select_union": "Vui lòng chọn 1 trong các option sau:",
+      "number": "Vui lòng nhập số"
     }
   },
   "loading": {
+    "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
@@ -849,6 +854,7 @@
       "data_aggregation": "Tổng hợp dữ liệu",
       "dataType": "Loại biểu đồ",
       "sma_window": "Số data point",
+      "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_interval": "Vui lòng chọn khoảng thời gian",
       "choose_widgetType": "Vui lòng chọn loại biểu đồ",
       "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu"

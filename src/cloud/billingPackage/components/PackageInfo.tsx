@@ -722,12 +722,10 @@ export function PackageInfo() {
               isDone={isSuccessDelete}
               icon="danger"
               title={t('billing:package_manage.delete_plan')}
-              body={
-                t('billing:package_manage.delete_plan_confirm').replace(
-                  '{{PLAN_NAME}}',
-                  data?.data?.name || '',
-                ) ?? 'Confirm delete?'
-              }
+              body={t('billing:package_manage.delete_plan_confirm').replace(
+                '{{PLAN_NAME}}',
+                data?.data?.name || '',
+              )}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

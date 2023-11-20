@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
+import { InputField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 
 import { type UpdateDashboardDTO, useUpdateDashboard } from '../../api'
@@ -29,6 +31,19 @@ export function UpdateDashboard({
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateDashboard()
+  const { register, formState, handleSubmit } = useForm<
+    UpdateDashboardDTO['data']
+  >({
+    resolver: dashboardSchema && zodResolver(dashboardSchema),
+    defaultValues: {
+      title,
+      configuration: {
+        description,
+        widgets: null,
+      },
+      dashboard_setting: null,
+    },
+  })
 
   useEffect(() => {
     if (isSuccess) {
@@ -65,9 +80,10 @@ export function UpdateDashboard({
         </>
       )}
     >
-      <Form<UpdateDashboardDTO['data'], typeof dashboardSchema>
+      <form
         id="update-dashboard"
-        onSubmit={values => {
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               title: values.title,
@@ -79,37 +95,21 @@ export function UpdateDashboard({
             },
             dashboardId: id,
           })
-        }}
-        options={{
-          defaultValues: {
-            title,
-            configuration: {
-              description,
-              widgets: null,
-            },
-            dashboard_setting: null,
-          },
-        }}
-        schema={dashboardSchema}
+        })}
       >
-        {({ register, formState }) => {
-          console.log('formState errors: ', formState.errors)
-          return (
-            <>
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.name')}
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.description')}
-                error={formState?.errors?.configuration?.description}
-                registration={register('configuration.description')}
-              />
-            </>
-          )
-        }}
-      </Form>
+        <>
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.name')}
+            error={formState.errors['title']}
+            registration={register('title')}
+          />
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.description')}
+            error={formState?.errors?.configuration?.description}
+            registration={register('configuration.description')}
+          />
+        </>
+      </form>
     </Drawer>
   )
 }

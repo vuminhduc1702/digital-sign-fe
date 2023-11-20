@@ -38,9 +38,7 @@ export function EventManage() {
 
   return (
     <div ref={ref} className="flex grow flex-col">
-      <TitleBar
-        title={t('cloud:org_manage.event_manage.header') ?? 'Event management'}
-      />
+      <TitleBar title={t('cloud:org_manage.event_manage.header')} />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable refComponent={ref} />

@@ -84,12 +84,10 @@ function FireWareTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:firmware.table.delete_firmware')}
-              body={
-                t('cloud:firmware.table.delete_firmware_confirm').replace(
-                  '{{FIRMWARE_NAME}}',
-                  name,
-                ) ?? 'Confirm delete?'
-              }
+              body={t('cloud:firmware.table.delete_firmware_confirm').replace(
+                '{{FIRMWARE_NAME}}',
+                name,
+              )}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

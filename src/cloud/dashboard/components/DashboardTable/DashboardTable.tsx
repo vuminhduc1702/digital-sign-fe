@@ -63,12 +63,10 @@ function DashboardTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:dashboard.table.delete_dashboard_full')}
-              body={
-                t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                  '{{DBNAME}}',
-                  title,
-                ) ?? 'Confirm delete?'
-              }
+              body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
+                '{{DBNAME}}',
+                title,
+              )}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"
