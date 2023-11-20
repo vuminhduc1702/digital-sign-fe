@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -23,6 +23,7 @@ import {
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { EyeHide, EyeShow } from '~/components/SVGIcons'
 
 type UpdateUserProps = {
   userId: string
@@ -140,7 +141,14 @@ export function UpdateUser({
       enabled: !!watch('profile.district'),
     },
   })
-
+  const [showPassword, setShowPassword] = useState(false)
+  const [showRePassword, setShowRePassword] = useState(false)
+  const toggleRePasswordVisibility = () => {
+    setShowRePassword(prev => !prev)
+  }
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev)
+  }
   return (
     <Drawer
       isOpen={isOpen}
@@ -214,11 +222,51 @@ export function UpdateUser({
             label={t('cloud:org_manage.user_manage.add_user.password')}
             error={formState.errors['password']}
             registration={register('password')}
+            type={showPassword ? 'text' : 'password'}
+            endIcon={
+              showPassword ? (
+                <EyeShow
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={togglePasswordVisibility}
+                />
+              ) : (
+                <EyeHide
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={togglePasswordVisibility}
+                />
+              )
+            }
           />
           <InputField
             label={t('cloud:org_manage.user_manage.add_user.confirm_password')}
             error={formState.errors['confirmPassword']}
             registration={register('confirmPassword')}
+            type={showRePassword ? 'text' : 'password'}
+            endIcon={
+              showRePassword ? (
+                <EyeShow
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={toggleRePasswordVisibility}
+                />
+              ) : (
+                <EyeHide
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={toggleRePasswordVisibility}
+                />
+              )
+            }
           />
           <div className="space-y-1">
             <SelectDropdown

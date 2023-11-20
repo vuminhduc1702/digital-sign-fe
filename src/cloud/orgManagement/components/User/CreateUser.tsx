@@ -27,7 +27,7 @@ import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getA
 
 import { type OrgList } from '~/layout/MainLayout/types'
 
-import { PlusIcon } from '~/components/SVGIcons'
+import { EyeHide, EyeShow, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const userSchema = z
@@ -92,6 +92,14 @@ export function CreateUser() {
       enabled: !!provinceCode,
     },
   })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showRePassword, setShowRePassword] = useState(false)
+  const toggleRePasswordVisibility = () => {
+    setShowRePassword(prev => !prev)
+  }
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev)
+  }
 
   const { data: wardList } = useAreaList({
     parentCode: districtCode,
@@ -172,13 +180,51 @@ export function CreateUser() {
             label={t('cloud:org_manage.user_manage.add_user.password')}
             error={formState.errors['password']}
             registration={register('password')}
-            type="password"
+            type={showPassword ? 'text' : 'password'}
+            endIcon={
+              showPassword ? (
+                <EyeShow
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={togglePasswordVisibility}
+                />
+              ) : (
+                <EyeHide
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={togglePasswordVisibility}
+                />
+              )
+            }
           />
           <InputField
             label={t('cloud:org_manage.user_manage.add_user.confirm_password')}
             error={formState.errors['confirmPassword']}
             registration={register('confirmPassword')}
-            type="password"
+            type={showRePassword ? 'text' : 'password'}
+            endIcon={
+              showRePassword ? (
+                <EyeShow
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={toggleRePasswordVisibility}
+                />
+              ) : (
+                <EyeHide
+                  height={30}
+                  width={30}
+                  viewBox="0 0 30 30"
+                  className="absolute bottom-0 right-2 z-20"
+                  onClick={toggleRePasswordVisibility}
+                />
+              )
+            }
           />
           <div className="space-y-1">
             <SelectDropdown
