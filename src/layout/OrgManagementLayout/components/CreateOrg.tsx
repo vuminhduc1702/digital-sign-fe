@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,7 +10,6 @@ import {
   InputField,
   SelectDropdown,
   TextAreaField,
-  type SelectOptionString,
 } from '~/components/Form'
 import FileField from '~/components/Form/FileField'
 import {
@@ -62,7 +61,6 @@ export function CreateOrg() {
 
   const { id: projectId } = storage.getProject()
 
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString | null>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -77,12 +75,6 @@ export function CreateOrg() {
       value: org?.id,
     }))
     .sort((a, b) => a.value.length - b.value.length)
-
-  const clearData = () => {
-    setOptionOrg(null)
-    setUploadImageErr('')
-    handleResetDefaultImage()
-  }
 
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
 
@@ -103,6 +95,12 @@ export function CreateOrg() {
   >({
     resolver: orgSchema && zodResolver(orgSchema),
   })
+
+  const clearData = () => {
+    setUploadImageErr('')
+    handleResetDefaultImage()
+  }
+
   return (
     <FormDrawer
       isDone={isSuccessCreateOrg}
@@ -136,7 +134,7 @@ export function CreateOrg() {
           const dataCreateOrg = await mutateAsyncCreateOrg({
             data: {
               project_id: projectId,
-              org_id: optionOrg?.value,
+              org_id: values.org_id,
               name: values.name,
               description: values.description,
             },
@@ -168,18 +166,18 @@ export function CreateOrg() {
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
+              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              onChange={e => {
-                setOptionOrg(e)
-                setValue('org_id', e?.value)
-              }}
-              value={optionOrg}
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
