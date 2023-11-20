@@ -296,14 +296,12 @@ export function UpdateUser({
               classchild="w-full"
               placeholder={t('cloud:org_manage.user_manage.add_user.province')}
             />
-
             <SelectField
               error={formState?.errors?.profile?.district}
               registration={register('profile.district')}
               options={districtList}
               placeholder={t('cloud:org_manage.user_manage.add_user.district')}
             />
-
             <SelectField
               error={formState?.errors?.profile?.ward}
               registration={register('profile.ward')}
@@ -311,7 +309,6 @@ export function UpdateUser({
               placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
             />
           </div>
-
           <InputField
             label={t('form:enter_address')}
             registration={register('profile.full_address')}

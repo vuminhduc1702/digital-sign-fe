@@ -2,6 +2,7 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
@@ -104,6 +105,7 @@ export function CreateUser() {
       enabled: !!watch('profile.province'),
     },
   })
+
   const [showPassword, setShowPassword] = useState(false)
   const [showRePassword, setShowRePassword] = useState(false)
   const toggleRePasswordVisibility = () => {
@@ -160,10 +162,15 @@ export function CreateUser() {
               password: values.password,
               role_id: values.role_id,
               phone: values.phone,
-              province: values.province,
-              district: values.district,
-              ward: values.ward,
-              full_address: values.full_address,
+              profile:
+                values.profile != null
+                  ? {
+                      province: values.profile.province,
+                      district: values.profile.district,
+                      ward: values.profile.ward,
+                      full_address: values.profile.full_address,
+                    }
+                  : undefined,
             },
           })
         })}
@@ -271,31 +278,28 @@ export function CreateUser() {
               {t('cloud:org_manage.user_manage.add_user.address')}
             </div>
             <SelectField
-              error={formState.errors['province']}
-              registration={register('province')}
+              error={formState?.errors?.profile?.province}
+              registration={register('profile.province')}
               options={provinceList}
               classchild="w-full"
               placeholder={t('cloud:org_manage.user_manage.add_user.province')}
             />
-
             <SelectField
-              error={formState.errors['district']}
-              registration={register('district')}
+              error={formState?.errors?.profile?.district}
+              registration={register('profile.district')}
               options={districtList}
               placeholder={t('cloud:org_manage.user_manage.add_user.district')}
             />
-
             <SelectField
-              error={formState.errors['ward']}
-              registration={register('ward')}
+              error={formState?.errors?.profile?.ward}
+              registration={register('profile.ward')}
               options={wardList}
               placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
             />
           </div>
-
           <InputField
             label={t('form:enter_address')}
-            registration={register('full_address')}
+            registration={register('profile.full_address')}
           />
         </>
       </form>
