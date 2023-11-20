@@ -81,6 +81,18 @@ export function SubcriptionTable({
     setCalUnit('')
   }, [estimate, plan, calUnit])
 
+  const planArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.p_name === o.p_name);
+  });
+
+  const estimateArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.p_estimate === o.p_estimate);
+  });
+
+  const calUnitArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.p_cal_unit === o.p_cal_unit);
+  });
+
   const handleSearch = (
     e: React.MouseEvent<HTMLInputElement>,
     field: string,
@@ -144,7 +156,7 @@ export function SubcriptionTable({
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {planArr?.map(item => {
                   return (
                     <div
                       key={item.p_id}
@@ -188,7 +200,7 @@ export function SubcriptionTable({
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {calUnitArr?.map(item => {
                   const valuePeriod = () => {
                     let result = ''
                     if (item.p_cal_unit) {
@@ -284,7 +296,7 @@ export function SubcriptionTable({
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {estimateArr?.map(item => {
                   const valuePriceMethod = () => {
                     let result = ''
                     if (item.p_estimate) {
