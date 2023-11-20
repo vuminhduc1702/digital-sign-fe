@@ -273,7 +273,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"
@@ -344,7 +344,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                           groupDataDevice?.groups?.map(groups => ({
                             label: groups?.name,
                             value: groups?.id,
-                          })) || [{ label: t('loading:org'), value: '' }]
+                          })) || [{ label: t('loading:device'), value: '' }]
                         }
                         isMulti
                         control={control}
@@ -363,7 +363,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                           groupDataEvent?.groups?.map(groups => ({
                             label: groups?.name,
                             value: groups?.id,
-                          })) || [{ label: t('loading:org'), value: '' }]
+                          })) || [{ label: t('loading:event'), value: '' }]
                         }
                         isMulti
                         control={control}
@@ -382,7 +382,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                           groupDataUser?.groups?.map(groups => ({
                             label: groups?.name,
                             value: groups?.id,
-                          })) || [{ label: t('loading:org'), value: '' }]
+                          })) || [{ label: t('loading:user'), value: '' }]
                         }
                         isMulti
                         control={control}
