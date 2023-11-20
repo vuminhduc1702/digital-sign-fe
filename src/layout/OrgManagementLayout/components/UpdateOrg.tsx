@@ -51,7 +51,10 @@ export function UpdateOrg({
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
+<<<<<<< HEAD
   // const [updatedOrg, setUpdatedOrg] = useState<OrgMapType>()
+=======
+>>>>>>> 72d4c4f... Update dropdown and select field for org
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -86,12 +89,16 @@ export function UpdateOrg({
   const { mutate: mutateUpdateOrgForOrg } = useUpdateOrgForOrg()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+<<<<<<< HEAD
   const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
+=======
+  const { register, formState, control, getValues, handleSubmit } = useForm<
+>>>>>>> 72d4c4f... Update dropdown and select field for org
     UpdateOrgDTO['data']
   >({
     resolver: orgSchema && zodResolver(orgSchema),
     defaultValues: {
-      name: selectedUpdateOrg.name,
+      name: selectedUpdateOrg?.name,
       description:
         selectedUpdateOrg.description !== 'undefined'
           ? selectedUpdateOrg.description
@@ -167,7 +174,11 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
+<<<<<<< HEAD
                 org_id: getValues('org_id'),
+=======
+                org_id: values?.org_id,
+>>>>>>> 72d4c4f... Update dropdown and select field for org
                 image: dataUploadImage?.data?.link,
               },
               org_id: selectedUpdateOrg?.id,
@@ -199,15 +210,39 @@ export function UpdateOrg({
           />
           <div className="space-y-1">
             <SelectDropdown
+<<<<<<< HEAD
+=======
+              isClearable
+>>>>>>> 72d4c4f... Update dropdown and select field for org
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
                 orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+<<<<<<< HEAD
               }
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               defaultValue={orgSelectOptions.find(org => org.value === selectedUpdateOrg.org_id)}
+=======
+              }
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              customOnChange={(e) => {
+                mutateUpdateOrgForOrg({
+                  data: {
+                    ids: [selectedUpdateOrg.id],
+                    org_id: e.value,
+                  },
+                })
+              }}
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              defaultValue={orgFlattenData.find(
+                org => org.id === getValues('org_id'),
+              )}
+>>>>>>> 72d4c4f... Update dropdown and select field for org
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
