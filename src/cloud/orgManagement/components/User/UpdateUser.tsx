@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
@@ -15,11 +15,7 @@ import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 
-import {
-  emailSchema,
-  nameSchema,
-  passwordSchema,
-} from '~/utils/schemaValidation'
+import { userInfoSchema } from './CreateUser'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -38,23 +34,14 @@ type UpdateUserProps = {
   profile: string
 }
 
-export const updatedUserSchema = z
-  .object({
-    name: nameSchema,
-    phone: z.string(),
-    password: passwordSchema.or(z.string().optional()),
-    confirmPassword: passwordSchema.or(z.string().optional()),
-    email: emailSchema,
-    org_id: z.string().optional(),
-    role_id: z.string().optional(),
-    project_id: z.string().optional(),
-    profile: z.object({
-      province: z.string().optional(),
-      district: z.string().optional(),
-      ward: z.string().optional(),
-      full_address: z.string().optional(),
+export const updatedUserSchema = userInfoSchema
+  .omit({ password: true, confirmPassword: true })
+  .and(
+    z.object({
+      password: z.string().optional(),
+      confirmPassword: z.string().optional(),
     }),
-  })
+  )
   .superRefine(({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
@@ -72,14 +59,11 @@ export function UpdateUser({
   isOpen,
   email,
   org_id,
-  org_name,
   role_id,
-  role_name,
   phone,
   profile,
 }: UpdateUserProps) {
   const { t } = useTranslation()
-  console.log('first', org_name, role_name)
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
@@ -182,12 +166,15 @@ export function UpdateUser({
               email: values.email,
               org_id: values.org_id,
               role_id: values.role_id,
-              profile: {
-                province: values.profile.province,
-                district: values.profile.district,
-                ward: values.profile.ward,
-                full_address: values.profile.full_address,
-              },
+              profile:
+                values.profile != null
+                  ? {
+                      province: values.profile.province,
+                      district: values.profile.district,
+                      ward: values.profile.ward,
+                      full_address: values.profile.full_address,
+                    }
+                  : undefined,
             },
             userId,
           }),

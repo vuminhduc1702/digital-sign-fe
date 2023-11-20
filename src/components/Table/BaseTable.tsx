@@ -121,39 +121,39 @@ export function BaseTable<T extends Record<string, any>>({
             {table.getRowModel().rows.map(row => {
               return (
                 <Fragment key={row.id}>
-                <tr className="border-secondary-70 border-t-2" key={row.id}>
-                  {row.getVisibleCells().map((cell, index) => {
-                    if (index === row.getVisibleCells().length - 1) {
-                      return (
-                        <Fragment key={cell.id}>
+                  <tr className="border-secondary-70 border-t-2" key={row.id}>
+                    {row.getVisibleCells().map((cell, index) => {
+                      if (index === row.getVisibleCells().length - 1) {
+                        return (
+                          <Fragment key={cell.id}>
+                            <td className="h-9" key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                          </Fragment>
+                        )
+                      } else {
+                        return (
                           <td className="h-9" key={cell.id}>
                             {flexRender(
                               cell.column.columnDef.cell,
                               cell.getContext(),
                             )}
                           </td>
-                        </Fragment>
-                      )
-                    } else {
-                      return (
-                        <td className="h-9" key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      )
-                    }
-                  })}
-                </tr>
-                {row.getIsExpanded() && (
-                  <tr>
-                    {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getVisibleCells().length}>
-                      {renderSubComponent?.({ row })}
-                    </td>
+                        )
+                      }
+                    })}
                   </tr>
-                )}
+                  {row.getIsExpanded() && (
+                    <tr>
+                      {/* 2nd row is a custom 1 cell row */}
+                      <td colSpan={row.getVisibleCells().length}>
+                        {renderSubComponent?.({ row })}
+                      </td>
+                    </tr>
+                  )}
                 </Fragment>
               )
             })}
