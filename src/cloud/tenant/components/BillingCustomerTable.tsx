@@ -66,7 +66,7 @@ function CustomerTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('form:customer.delete')}
-              body={`Bạn có chắc chắn muốn xoá ${name}` ?? 'Confirm delete?'}
+              body={`Bạn có chắc chắn muốn xoá ${name}`}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

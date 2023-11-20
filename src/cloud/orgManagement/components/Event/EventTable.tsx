@@ -124,11 +124,9 @@ function EventTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:org_manage.event_manage.table.delete_event')}
-              body={
-                t(
-                  'cloud:org_manage.event_manage.table.delete_event_confirm',
-                ).replace('{{EVENTNAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.event_manage.table.delete_event_confirm',
+              ).replace('{{EVENTNAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

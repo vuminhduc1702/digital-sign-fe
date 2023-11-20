@@ -15,11 +15,7 @@ export function TemplateInfo() {
 
   return (
     <>
-      <TitleBar
-        title={
-          t('cloud:device_template.info.title') ?? 'Device template management'
-        }
-      />
+      <TitleBar title={t('cloud:device_template.info.title')} />
       <div className="flex flex-col gap-y-3 px-9 py-5 shadow-lg">
         <p>
           {t('cloud:device_template.info.flow')}: {data?.rule_chain_id}

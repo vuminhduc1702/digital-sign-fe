@@ -31,7 +31,6 @@ export type ConfirmationDialogProps = {
   resetData?: () => void
   size?: keyof typeof formDialogSizes
   isFullScreen?: boolean
-  setCustomState?: React.Dispatch<React.SetStateAction<any>>
 }
 
 export const FormDialog = ({
@@ -45,7 +44,6 @@ export const FormDialog = ({
   isFullScreen,
   size,
   className,
-  setCustomState,
 }: ConfirmationDialogProps) => {
   const { close, open, isOpen } = useDisclosure()
 

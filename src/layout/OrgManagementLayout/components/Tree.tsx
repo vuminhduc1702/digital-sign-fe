@@ -87,7 +87,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             className={cn(
               'ml-1 h-10 gap-y-3 rounded-l-md border-none px-4 py-0',
               {
-                '!bg-red-200': data.isSearch,
+                '!bg-primary-300': data.isSearch,
               },
             )}
             key={data.id}
@@ -164,12 +164,9 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                     isDone={isSuccess}
                     icon="danger"
                     title={t('cloud:org_manage.org_map.delete')}
-                    body={
-                      t('cloud:org_manage.org_map.delete_org_confirm').replace(
-                        '{{ORGNAME}}',
-                        data.name,
-                      ) ?? 'Confirm delete?'
-                    }
+                    body={t(
+                      'cloud:org_manage.org_map.delete_org_confirm',
+                    ).replace('{{ORGNAME}}', data.name)}
                     triggerButton={
                       <Button
                         className="w-full justify-start border-none hover:text-primary-400"

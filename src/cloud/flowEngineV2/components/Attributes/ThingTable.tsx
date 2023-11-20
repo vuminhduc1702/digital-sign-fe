@@ -65,12 +65,9 @@ function ThingTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:custom_protocol.thing.delete')}
-              body={
-                t('cloud:custom_protocol.thing.delete_thing_confirm').replace(
-                  '{{THINGNAME}}',
-                  name,
-                ) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:custom_protocol.thing.delete_thing_confirm',
+              ).replace('{{THINGNAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"

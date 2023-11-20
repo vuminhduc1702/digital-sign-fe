@@ -134,9 +134,7 @@ export function CreateDevice() {
       >
         <>
           <InputField
-            label={
-              t('cloud:org_manage.device_manage.add_device.name') ?? 'Name'
-            }
+            label={t('cloud:org_manage.device_manage.add_device.name')}
             error={formState.errors['name']}
             registration={register('name')}
           />
@@ -204,7 +202,7 @@ export function CreateDevice() {
             </p>
           </div>
           <InputField
-            label={t('cloud:org_manage.device_manage.add_device.key') ?? 'Key'}
+            label={t('cloud:org_manage.device_manage.add_device.key')}
             error={formState.errors['key']}
             registration={register('key')}
           />

@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { Form, FormDrawer, InputField } from '~/components/Form'
+import { FormDrawer, InputField } from '~/components/Form'
 import {
   type CreateDashboardDTO,
   useCreateDashboard,
@@ -40,7 +42,11 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useCreateDashboard()
-
+  const { register, formState, handleSubmit } = useForm<
+    CreateDashboardDTO['data']
+  >({
+    resolver: dashboardSchema && zodResolver(dashboardSchema),
+  })
   return (
     <FormDrawer
       isDone={isSuccess}
@@ -66,9 +72,10 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
         />
       }
     >
-      <Form<CreateDashboardDTO['data'], typeof dashboardSchema>
+      <form
         id="create-dashboard"
-        onSubmit={values => {
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               title: values.title,
@@ -80,27 +87,21 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
               dashboard_setting: null,
             },
           })
-        }}
-        schema={dashboardSchema}
+        })}
       >
-        {({ register, formState }) => {
-          console.log('formState errors', formState.errors)
-          return (
-            <>
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.name')}
-                error={formState.errors['title']}
-                registration={register('title')}
-              />
-              <InputField
-                label={t('cloud:dashboard.add_dashboard.description')}
-                error={formState?.errors?.configuration?.description}
-                registration={register('configuration.description')}
-              />
-            </>
-          )
-        }}
-      </Form>
+        <>
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.name')}
+            error={formState.errors['title']}
+            registration={register('title')}
+          />
+          <InputField
+            label={t('cloud:dashboard.add_dashboard.description')}
+            error={formState?.errors?.configuration?.description}
+            registration={register('configuration.description')}
+          />
+        </>
+      </form>
     </FormDrawer>
   )
 }

@@ -41,7 +41,7 @@ function DeviceTableContextMenu({
   group,
   template_name,
   template_id,
-  token
+  token,
 }: {
   id: string
   name: string
@@ -90,7 +90,8 @@ function DeviceTableContextMenu({
               }
               onClick={() =>
                 navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
@@ -141,11 +142,9 @@ function DeviceTableContextMenu({
               title={t(
                 'cloud:org_manage.device_manage.table.delete_device_full',
               )}
-              body={
-                t(
-                  'cloud:org_manage.device_manage.table.delete_device_confirm',
-                ).replace('{{DEVICENAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.device_manage.table.delete_device_confirm',
+              ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"
@@ -295,7 +294,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group_name,
             template_id,
             template_name,
-            token
+            token,
           } = info.row.original
           const group = {
             label: group_name,
@@ -309,7 +308,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group,
             template_name,
             template_id,
-            token
+            token,
           })
         },
         header: () => null,

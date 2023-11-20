@@ -1,9 +1,11 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -20,7 +22,6 @@ import { type OrgList } from '~/layout/MainLayout/types'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useState } from 'react'
 
 type EntityTypeGroup = {
   type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
@@ -62,7 +63,11 @@ export function CreateGroup() {
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-
+  const { register, formState, control, setValue, handleSubmit } = useForm<
+    CreateGroupDTO['data']
+  >({
+    resolver: groupSchema && zodResolver(groupSchema),
+  })
   return (
     <FormDrawer
       isDone={isSuccess}
@@ -88,9 +93,10 @@ export function CreateGroup() {
         />
       }
     >
-      <Form<CreateGroupDTO['data'], typeof groupSchema>
+      <form
         id="create-group"
-        onSubmit={values => {
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               name: values.name,
@@ -99,52 +105,44 @@ export function CreateGroup() {
               org_id: option?.value || '',
             },
           })
-        }}
-        schema={groupSchema}
+        })}
       >
-        {({ register, formState, control, setValue }) => (
-          <>
-            <InputField
-              label={
-                t('cloud:org_manage.group_manage.add_group.name') ?? 'Name'
+        <>
+          <InputField
+            label={t('cloud:org_manage.group_manage.add_group.name')}
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <SelectField
+            label={t('cloud:org_manage.group_manage.add_group.entity_type')}
+            error={formState.errors['entity_type']}
+            registration={register('entity_type')}
+            options={entityTypeList.map(entityType => ({
+              label: entityType.name,
+              value: entityType.type,
+            }))}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
               }
-              error={formState.errors['name']}
-              registration={register('name')}
+              onChange={e => {
+                setOption(e)
+                setValue('org_id', e.value)
+              }}
+              value={option}
             />
-            <SelectField
-              label={
-                t('cloud:org_manage.group_manage.add_group.entity_type') ??
-                'Entity type'
-              }
-              error={formState.errors['entity_type']}
-              registration={register('entity_type')}
-              options={entityTypeList.map(entityType => ({
-                label: entityType.name,
-                value: entityType.type,
-              }))}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
-                }
-                onChange={e => {
-                  setOption(e)
-                  setValue('org_id', e.value)
-                }}
-                value={option}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-          </>
-        )}
-      </Form>
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+        </>
+      </form>
     </FormDrawer>
   )
 }

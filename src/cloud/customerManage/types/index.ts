@@ -1,4 +1,5 @@
-import { type BaseAPIRes, type BasePagination } from '~/types'
+import { type Profile } from '~/cloud/orgManagement/api/userAPI'
+import {type BasePagination } from '~/types'
 
 export type Customer = {
   email: string
@@ -10,25 +11,7 @@ export type Customer = {
   is_admin: boolean
   customer_code: string
   activate: boolean
-  profile: {
-    identity_info: {
-      identity: string
-      front_image: string
-      back_image: string
-      registration_form_image: string
-      authorization_letter_image: string
-    }
-    dob: any
-    nationality: string
-    province: string
-    district: string
-    ward: string
-    full_address: string
-    url: string
-    company: string
-    gender: string
-    profile_image: string
-  }
+  profile: Profile
   cmp_role: string
   valid_to: number
   created_time: number

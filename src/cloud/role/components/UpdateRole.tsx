@@ -268,7 +268,7 @@ export function UpdateRole({
             return (
               <>
                 <InputField
-                  label={t('cloud:role_manage.add_role.name') ?? 'Role name'}
+                  label={t('cloud:role_manage.add_role.name')}
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
@@ -305,9 +305,7 @@ export function UpdateRole({
                     <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
                       <div className="space-y-1">
                         <InputField
-                          label={
-                            t('cloud:role_manage.add_policy.name') ?? 'Policy'
-                          }
+                          label={t('cloud:role_manage.add_policy.name')}
                           registration={register(
                             `policies.${index}.policy_name` as const,
                           )}
@@ -323,10 +321,7 @@ export function UpdateRole({
                         <div className="space-y-1">
                           <SelectDropdown
                             isClearable={true}
-                            label={
-                              t('cloud:role_manage.add_policy.resources') ??
-                              'Authorization resources'
-                            }
+                            label={t('cloud:role_manage.add_policy.resources')}
                             name={`policies.${index}.resources`}
                             options={resourcesList.map(
                               resourcesType => resourcesType,
@@ -418,10 +413,7 @@ export function UpdateRole({
                       <div className="space-y-1">
                         <SelectDropdown
                           isClearable={true}
-                          label={
-                            t('cloud:role_manage.add_policy.actions') ??
-                            'Authorization actions'
-                          }
+                          label={t('cloud:role_manage.add_policy.actions')}
                           name={`policies.${index}.actions`}
                           options={actionsList.map(actionsType => actionsType)}
                           control={control}

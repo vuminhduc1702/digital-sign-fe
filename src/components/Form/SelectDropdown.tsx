@@ -83,6 +83,12 @@ export function SelectDropdown<
                   onChange(option)
                   customOnChange?.(option)
                 }}
+                // styles={{
+                //   control: (baseStyles, state) => ({
+                //     ...baseStyles,
+                //     borderColor: state.isFocused ? 'grey' : 'red',
+                //   }),
+                // }}
               />
             )
           }}

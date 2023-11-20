@@ -19,7 +19,6 @@ import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { outputList } from '~/cloud/customProtocol/components'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -54,6 +53,7 @@ import {
 } from '~/components/Tooltip'
 import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -94,7 +94,7 @@ export function UpdateThingService({
   // Resize console window
   const resizerWidth = 8
   const minWidthCode = 126
-  const minWidthResult = 116
+  const minWidthResult = 120
   const minHeightCode = 70
   const minHeightResult = 70
   const defaultHeightForCodeEditor = 344
@@ -254,13 +254,6 @@ export function UpdateThingService({
       document.removeEventListener('mouseup', handleMouseUp)
     }
   }, [isResizable])
-
-  useEffect(() => {
-    if (defaultWidthConsole) {
-      setCodeConsoleWidth(defaultWidthConsole)
-      setResultConsoleWidth(defaultWidthConsole)
-    }
-  }, [viewMode])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>

@@ -14,7 +14,7 @@ export function FlowEngine() {
 
   return (
     <ContentLayout title={t('sidebar:cloud.flow_engine')}>
-      <TitleBar title={t('flow_engine:title') ?? 'Flow Engine'} />
+      <TitleBar title={t('flow_engine:title')} />
       <Iframe
         className="mt-3 h-full w-full"
         url={`${FLOW_URL}/ruleChains?token=${token}&project_id=${projectId}`}

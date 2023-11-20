@@ -33,7 +33,6 @@ import { Switch } from '~/components/Switch'
 import storage from '~/utils/storage'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { type InputService, type ThingService } from '../../types'
-import { outputList } from '~/cloud/customProtocol/components'
 import { Dropdown } from '~/components/Dropdown'
 import {
   Tooltip,
@@ -43,6 +42,7 @@ import {
 } from '~/components/Tooltip'
 import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
@@ -52,7 +52,7 @@ export const serviceThingSchema = z.object({
       name: z
         .string()
         .min(1, { message: 'Tên biến quá ngắn' })
-        .max(30, { message: 'Tên biến quá dài' }),
+        .max(64, { message: 'Tên biến quá dài' }),
       type: z.string(),
       value: z.string().optional().or(z.boolean()),
     }),
@@ -106,7 +106,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   // Resize console window
   const resizerWidth = 8
   const minWidthCode = 126
-  const minWidthResult = 116
+  const minWidthResult = 120
   const minHeightCode = 70
   const minHeightResult = 70
   const defaultHeightForCodeEditor = 382
@@ -238,8 +238,13 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   }
 
   function handleMouseMove(event: MouseEvent) {
+    // if(event.stopPropagation) {
+    //   event.stopPropagation();
+    // }
+    // if(event.preventDefault) {
+    //   event.preventDefault();
+    // }
     if (isResizable && !fullScreen) {
-      event.preventDefault()
       let offsetCode = event.clientX - 660
       let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
       if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
@@ -247,7 +252,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
         setResultConsoleWidth(offsetResult)
       }
     } else if (isResizable && fullScreen) {
-      event.preventDefault()
       let offsetCode = event.clientY - 186
       let offsetResult = defaultHeightConsole * 2 - offsetCode
 
@@ -268,12 +272,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     }
   }, [isResizable])
 
-  useEffect(() => {
-    if (defaultWidthConsole) {
-      setCodeConsoleWidth(defaultWidthConsole)
-      setResultConsoleWidth(defaultWidthConsole)
-    }
-  }, [viewMode])
+  // useEffect(() => {
+  //   if (defaultWidthConsole) {
+  //     setCodeConsoleWidth(defaultWidthConsole)
+  //     setResultConsoleWidth(defaultWidthConsole)
+  //   }
+  // }, [viewMode])
 
   return (
     <FormDialog
@@ -302,7 +306,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           name={['input']}
         >
           {(
-            { register, formState, control, setError },
+            { register, formState, control, setError, setValue },
             { fields, append, remove },
           ) => {
             return (
@@ -353,7 +357,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                       {fields.map((field, index) => {
                         return (
                           <div
-                            key={field.id}
                             className={cn(
                               'flex items-center border-0 border-b border-solid border-inherit py-3 first:pt-0',
                               {
@@ -362,6 +365,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             )}
                           >
                             <div
+                              key={field.id}
                               className={cn(
                                 'grid w-full grid-cols-1 gap-x-4 gap-y-2 pr-2',
                               )}
@@ -394,11 +398,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                   className="h-9 px-2"
                                   onChange={e => {
                                     setInputTypeValue(e.target.value)
-                                    fields[index].type = e.target.value
+                                    field.type = e.target.value
+                                    if (field.type === 'bool') {
+                                      setValue(`input.${index}.value`, true)
+                                    }
                                   }}
                                 />
                               </div>
-                              {fields[index].type === 'bool' ? (
+                              {field.type === 'bool' ? (
                                 <FieldWrapper
                                   label={t(
                                     'cloud:custom_protocol.service.service_input.value',
@@ -418,7 +425,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                           {...field}
                                           checked={value as boolean}
                                           onCheckedChange={onChange}
-                                          defaultChecked={false}
                                         />
                                       )
                                     }}
