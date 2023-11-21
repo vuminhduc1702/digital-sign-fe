@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -51,6 +51,7 @@ export function UpdateOrg({
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
+  // const [updatedOrg, setUpdatedOrg] = useState<OrgMapType>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -198,29 +199,15 @@ export function UpdateOrg({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
                 orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.name === t('loading:org')
-              }
-              customOnChange={(e) => {
-                mutateUpdateOrgForOrg({
-                  data: {
-                    ids: [selectedUpdateOrg.id],
-                    org_id: e.value,
-                  },
-                })
-              }}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgFlattenData.find(
-                org => org.id === getValues('org_id'),
-              )}
+              defaultValue={orgSelectOptions.find(org => org.value === selectedUpdateOrg.org_id)}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
