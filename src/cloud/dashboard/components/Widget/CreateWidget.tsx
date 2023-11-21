@@ -551,7 +551,7 @@ export function CreateWidget({
                         }
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
-                        isSingleDevice
+                        isWrappedArray
                         customOnChange={option => {
                           if (option != null) {
                             attrChartMutate({

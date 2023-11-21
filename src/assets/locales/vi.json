@@ -748,6 +748,7 @@
     "copy_token": "Sao chép TOKEN",
     "delete": "Xoá",
     "no_attr": "Không có thuộc tính. Vui lòng tạo.",
+    "no_org": "Không có tổ chức. Vui lòng tạo.",
     "no_device": "Không có thiết bị. Vui lòng tạo.",
     "no_group": "Không có nhóm. Vui lòng tạo.",
     "no_log_attr": "Không có bản tin thuộc tính",
@@ -858,6 +859,8 @@
       "sma_window": "Số data point",
       "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_interval": "Vui lòng chọn khoảng thời gian",
+      "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
+      "choose_endTime": "Vui lòng nhập thời gian kết thúc",
       "choose_widgetType": "Vui lòng chọn loại biểu đồ",
       "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu"
     }

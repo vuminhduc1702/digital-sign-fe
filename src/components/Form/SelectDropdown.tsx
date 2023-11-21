@@ -22,7 +22,7 @@ type SelectProps<
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   icon?: React.ReactElement
-  isSingleDevice?: boolean
+  isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -45,7 +45,7 @@ export function SelectDropdown<
   isMulti,
   customOnChange,
   handleClearSelectDropdown,
-  isSingleDevice,
+  isWrappedArray,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -80,7 +80,7 @@ export function SelectDropdown<
                       ? (e as unknown as SelectOption[]).map(item => {
                           return item.value
                         })
-                      : isSingleDevice
+                      : isWrappedArray
                       ? [(e as unknown as SelectOption)?.value]
                       : (e as unknown as SelectOption)?.value
                   // console.log('option', option)

@@ -125,6 +125,7 @@ export function UpdateUser({
       enabled: !!watch('profile.district'),
     },
   })
+
   const [showPassword, setShowPassword] = useState(false)
   const [showRePassword, setShowRePassword] = useState(false)
   const toggleRePasswordVisibility = () => {
@@ -133,6 +134,7 @@ export function UpdateUser({
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
+
   return (
     <Drawer
       isOpen={isOpen}

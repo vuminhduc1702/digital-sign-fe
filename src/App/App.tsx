@@ -87,7 +87,9 @@ function App() {
 
     return { message: ctx.defaultError }
   }
-  z.setErrorMap(customErrorMap)
+  if (import.meta.env.NODE_ENV === 'production') {
+    z.setErrorMap(customErrorMap)
+  }
 
   return (
     <Suspense

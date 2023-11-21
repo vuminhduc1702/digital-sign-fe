@@ -61,18 +61,14 @@ export const userSchema = userInfoSchema.superRefine(
 export function CreateUser() {
   const { t } = useTranslation()
 
-  const {
-    register,
-    formState,
-    handleSubmit,
-    control,
-    getValues,
-    watch,
-    reset,
-  } = useForm<CreateUserDTO['data']>({
+  const { register, formState, handleSubmit, control, watch, reset } = useForm<
+    CreateUserDTO['data']
+  >({
     resolver: userSchema && zodResolver(userSchema),
   })
   console.log('formState.errors', formState.errors)
+
+  const { mutate, isLoading, isSuccess } = useCreateUser()
 
   const { id: projectId } = storage.getProject()
   const { data: orgData } = useGetOrgs({ projectId })
@@ -86,9 +82,8 @@ export function CreateUser() {
     value: org?.id,
   }))
 
-  const { mutate, isLoading, isSuccess } = useCreateUser()
-  const { data } = useGetRoles({ projectId })
-  const roleOptions = data?.roles?.map(item => ({
+  const { data: roleData } = useGetRoles({ projectId })
+  const roleOptions = roleData?.roles?.map(item => ({
     label: item.name,
     value: item.id,
   }))
@@ -97,12 +92,18 @@ export function CreateUser() {
     parentCode: '',
     type: 'PROVINCE',
   })
-
   const { data: districtList } = useAreaList({
     parentCode: watch('profile.province'),
     type: 'DISTRICT',
     config: {
       enabled: !!watch('profile.province'),
+    },
+  })
+  const { data: wardList } = useAreaList({
+    parentCode: watch('profile.district'),
+    type: 'WARD',
+    config: {
+      enabled: !!watch('profile.district'),
     },
   })
 
@@ -114,14 +115,6 @@ export function CreateUser() {
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
-
-  const { data: wardList } = useAreaList({
-    parentCode: watch('profile.district'),
-    type: 'WARD',
-    config: {
-      enabled: !!watch('profile.district'),
-    },
-  })
 
   return (
     <FormDrawer
@@ -249,9 +242,6 @@ export function CreateUser() {
               name="org_id"
               control={control}
               options={orgSelectOptions}
-              defaultValue={orgSelectOptions.find(
-                item => item.value === getValues('org_id'),
-              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
@@ -264,9 +254,6 @@ export function CreateUser() {
               name="role_id"
               control={control}
               options={roleOptions}
-              defaultValue={roleOptions?.find(
-                item => item.value === getValues('role_id'),
-              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.role_id?.message}
