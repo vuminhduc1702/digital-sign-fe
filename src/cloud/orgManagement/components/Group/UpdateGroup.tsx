@@ -9,7 +9,6 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionString,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
@@ -63,7 +62,6 @@ export function UpdateGroup({
       value: org?.id,
     }))
     .sort((a, b) => a.value.length - b.value.length)
-    .filter(org => org.value !== organization)
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
@@ -74,19 +72,12 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, getValues, handleSubmit } = useForm<
     UpdateGroupDTO['data']
   >({
     resolver: groupSchema && zodResolver(groupSchema),
     defaultValues: { name: name, org_id: organization },
   })
-
-  useEffect(() => {
-    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
-    if (organization) {
-      setValue('org_id', filterOrg?.org_id)
-    }
-  }, [organization])
 
   return (
     <Drawer
@@ -121,15 +112,22 @@ export function UpdateGroup({
       <form
         className="w-full space-y-6"
         id="update-group"
-        onSubmit={handleSubmit(values =>
+        onSubmit={handleSubmit(values => {
+          if (getValues('org_id') !== organization) {
+            mutateUpdateOrgForGroup({
+              data: {
+                ids: [groupId],
+                org_id: getValues('org_id'),
+              },
+            })
+          }
           mutate({
             data: {
-              name: values.name,
-              org_id: values.org_id,
+              name: values.name
             },
             groupId,
-          }),
-        )}
+          })
+        })}
       >
         <>
           <InputField
@@ -166,15 +164,7 @@ export function UpdateGroup({
               }
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               noOptionsMessage={() => t('table:no_in_org')}
-              customOnChange={e => {
-                mutateUpdateOrgForGroup({
-                  data: {
-                    ids: [groupId],
-                    org_id: e,
-                  },
-                })
-                setValue('org_id', e)
-              }}
+              defaultValue={orgSelectOptions.find(org => org.value === getValues('org_id'))}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -51,6 +51,7 @@ export function UpdateOrg({
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
+  // const [updatedOrg, setUpdatedOrg] = useState<OrgMapType>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -85,7 +86,7 @@ export function UpdateOrg({
   const { mutate: mutateUpdateOrgForOrg } = useUpdateOrgForOrg()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { register, formState, control, getValues, handleSubmit } = useForm<
+  const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
     UpdateOrgDTO['data']
   >({
     resolver: orgSchema && zodResolver(orgSchema),
@@ -95,9 +96,10 @@ export function UpdateOrg({
         selectedUpdateOrg.description !== 'undefined'
           ? selectedUpdateOrg.description
           : '',
-      org_id: selectedUpdateOrg.id,
+      org_id: selectedUpdateOrg.org_id,
     },
   })
+
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -105,8 +107,12 @@ export function UpdateOrg({
   }, [isSuccess, close])
 
   useEffect(() => {
+    if (selectedUpdateOrg) {
+      setValue('name', selectedUpdateOrg.name)
+      setValue('description', selectedUpdateOrg.description !== 'undefined' ? selectedUpdateOrg.description : '')
+    } 
     setUploadImageErr('')
-  }, [isOpen])
+  }, [isOpen, selectedUpdateOrg])
 
   return (
     <Drawer
@@ -141,6 +147,14 @@ export function UpdateOrg({
         id="update-org"
         className="w-full space-y-6"
         onSubmit={handleSubmit(async values => {
+          if (getValues('org_id') !== selectedUpdateOrg.id) {
+            mutateUpdateOrgForOrg({
+              data: {
+                ids: [selectedUpdateOrg.id],
+                org_id: getValues('org_id'),
+              },
+            })
+          }
           const defaultFileName = avatarRef.current?.src.split('/')
           if (getValueUploadImage('file') != null) {
             const dataUploadImage = await mutateAsyncUploadImage({
@@ -153,7 +167,7 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id: values?.org_id,
+                org_id: getValues('org_id'),
                 image: dataUploadImage?.data?.link,
               },
               org_id: selectedUpdateOrg?.id,
@@ -185,29 +199,15 @@ export function UpdateOrg({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
                 orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.id === t('loading:org')
-              }
-              customOnChange={(e) => {
-                mutateUpdateOrgForOrg({
-                  data: {
-                    ids: [selectedUpdateOrg.id],
-                    org_id: e.value,
-                  },
-                })
-              }}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgFlattenData.find(
-                org => org.id === getValues('org_id'),
-              )}
+              defaultValue={orgSelectOptions.find(org => org.value === selectedUpdateOrg.org_id)}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}

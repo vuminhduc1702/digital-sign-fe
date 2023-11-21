@@ -71,6 +71,7 @@ export function UpdateDevice({
     offset,
     entity_type: 'DEVICE',
   })
+  const { data } = useGetTemplates({ projectId })
 
   const orgSelectOptions = orgFlattenData
     ?.map(org => ({
@@ -79,12 +80,21 @@ export function UpdateDevice({
     }))
     .sort((a, b) => a.value.length - b.value.length)
 
-  const { data } = useGetTemplates({ projectId })
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const groupSelectOptions = groupData?.groups?.map(groups => ({
+    label: groups?.name,
+    value: groups?.id,
+  }))
+
+  const templateSelectOptions = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  }))
+
+  const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
     UpdateDeviceDTO['data']
   >({
     resolver: deviceSchema && zodResolver(deviceSchema),
-    defaultValues: { name, org_id, group_id: group.value, template_id: template_id, key: keyDevice },
+    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
   })
   useEffect(() => {
     if (isSuccess) {
@@ -165,6 +175,7 @@ export function UpdateDevice({
               }
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
             />
           </div>
           <div className="space-y-1">
@@ -172,12 +183,9 @@ export function UpdateDevice({
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-              options={
-                groupData?.groups?.map(groups => ({
-                  label: groups?.name,
-                  value: groups?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
+              options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }]
               }
+              defaultValue={groupSelectOptions?.find(group => group.value === getValues('group_id'))}
             />
           </div>
           <div>
@@ -186,12 +194,8 @@ export function UpdateDevice({
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              options={
-                data?.templates?.map(template => ({
-                  label: template?.name,
-                  value: template?.id,
-                })) || [{ label: '', value: '' }]
-              }
+              options={ templateSelectOptions || [{ label: '', value: '' }]}
+              defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.template_id?.message}

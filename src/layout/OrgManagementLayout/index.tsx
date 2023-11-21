@@ -26,7 +26,7 @@ export function OrgManagementLayout() {
               </div>
             }
           >
-            <Outlet />
+            <Outlet></Outlet>
           </Suspense>
         </div>
       </div>
