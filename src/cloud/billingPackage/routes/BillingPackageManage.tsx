@@ -16,13 +16,13 @@ export function BillingPackageManage() {
 
   return (
     <ContentLayout title={t('sidebar:payment.plgc')}>
-      <div className="grid grow grid-cols-1 gap-x-4 pt-2 pr-2 pl-2 md:grid-cols-5">
+      <div className="grid grow grid-cols-1 gap-x-4 pt-2 pr-2 pl-2 md:grid-cols-4">
         <div className="flex grow flex-col gap-2 md:col-span-1">
           <PackageSidebar />
         </div>
 
         {projectId && packageId ? (
-          <div className="flex flex-col gap-2 pr-5 pb-2 pl-5 md:col-span-4">
+          <div className="flex flex-col gap-2 pr-5 pb-2 pl-5 md:col-span-3 overflow-y-auto">
             <Suspense
               fallback={
                 <div className="flex grow items-center justify-center md:col-span-4">

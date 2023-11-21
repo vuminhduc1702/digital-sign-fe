@@ -33,9 +33,9 @@ export function CustomerManageTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.plkh')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
+      {/* <TitleBar title={t('sidebar:payment.plkh')} /> */}
+      <div className="flex grow flex-col px-9 py-3 shadow-lg bg-gray-50 rounded-md">
+        <div className="flex justify-between mb-5">
           <div className="flex items-center gap-x-3">
             <SelectField
               options={[

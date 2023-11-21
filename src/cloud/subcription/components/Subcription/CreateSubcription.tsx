@@ -220,9 +220,9 @@ export function CreateSubcription() {
           {({ register, formState, control, setError, setValue }) => {
             return (
               <>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2">
                   <div className="flex gap-3">
-                    <p className="text-table-header">
+                    <p className="text-lg font-semibold">
                       {t('billing:subcription.popup.customer_info')}
                     </p>
                   </div>
@@ -271,9 +271,9 @@ export function CreateSubcription() {
                     disabled
                   />
                 </div>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2">
                   <div className="flex gap-3">
-                    <p className="text-table-header">
+                    <p className="text-lg font-semibold">
                       {t('billing:subcription.popup.service_info')}
                     </p>
                   </div>
@@ -323,9 +323,9 @@ export function CreateSubcription() {
                     disabled
                   />
                 </div>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-4 py-2">
                   <div className="flex gap-3">
-                    <p className="text-table-header">
+                    <p className="text-lg font-semibold">
                       {t('billing:subcription.popup.billing_info')}
                     </p>
                   </div>

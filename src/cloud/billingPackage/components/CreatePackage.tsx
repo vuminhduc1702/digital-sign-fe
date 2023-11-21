@@ -553,7 +553,7 @@ export function CreatePackage() {
                             <section className="flex w-full" key={field.id}>
                               <div
                                 className={cn(
-                                  'relative grid w-full grid-cols-1 gap-x-5',
+                                  'relative grid w-full grid-cols-1 gap-x-4',
                                   {
                                     // 'md:grid-cols-2':
                                     //   estimates === 'accumulated' ||
@@ -644,22 +644,6 @@ export function CreatePackage() {
                                   />
                                   
                                 )}
-                                {/* <div  className="absolute right-0">
-                                  <Button
-                                    type="button"
-                                    size="square"
-                                    variant="trans"
-                                    className="border-none shadow-none"
-                                    onClick={() => planlvRemove(index)}
-                                    startIcon={
-                                      <img
-                                        src={btnDeleteIcon}
-                                        alt="Delete condition"
-                                        className="icon-container w-6 h-6 ml-2"
-                                  />
-                                  }
-                                />
-                                </div> */}
                               </div>
                               <Button
                                 type="button"

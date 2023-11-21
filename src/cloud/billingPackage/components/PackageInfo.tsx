@@ -496,7 +496,7 @@ export function PackageInfo() {
                     </div>
                   )}
                 </div>
-                <div className="max-h-[122px] overflow-auto">
+                <div className="max-h-[122px] overflow-auto mr-8">
                   {estimates === 'mass' ||
                   estimates === 'accumulated' ||
                   estimates === 'step'
@@ -584,13 +584,13 @@ export function PackageInfo() {
                               size="square"
                               variant="trans"
                               disabled={isDisabled}
-                              className="mt-1 border-none shadow-none"
+                              className="border-none shadow-none"
                               onClick={() => planlvRemove(index)}
                               startIcon={
                                 <img
                                   src={btnDeleteIcon}
                                   alt="Delete condition"
-                                  className="h-6 w-6"
+                                  className="icon-container w-6 h-6 flex items-center justify-center ml-2"
                                 />
                               }
                             />
@@ -731,7 +731,7 @@ export function PackageInfo() {
 
       {isDisabled && (
         <div className="flex">
-          <div className="absolute w-[100px] bottom-3 bg-gray-100 rounded-md">
+          <div className="absolute w-[100px] bottom-1 bg-gray-100 rounded-md">
             <ConfirmationDialog
               isDone={isSuccessDelete}
               icon="danger"
@@ -776,7 +776,7 @@ export function PackageInfo() {
           <Button
             type="button"
             size="md"
-            className="absolute bottom-3 right-11 bg-primary-400 rounded-md"
+            className="absolute bottom-1 right-11 bg-primary-400 rounded-md"
             onClick={() => setIsDisabled(!isDisabled)}
           >
             {t('btn:update')}

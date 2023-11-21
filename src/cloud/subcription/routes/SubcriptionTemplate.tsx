@@ -44,11 +44,12 @@ export function SubcriptionTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.pldk')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
+      {/* <TitleBar title={t('sidebar:payment.pldk')} /> */}
+      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
+        <div className="flex justify-between mb-5">
           <div className="flex items-center gap-x-3">
             <SelectField
+              className=""
               options={[
                 { label: 'Mã đăng ký', value: 'subscription' },
                 { label: 'Mã khách hàng', value: 'customer_code' },

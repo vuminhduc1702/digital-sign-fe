@@ -56,9 +56,9 @@ export function BillingTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.plhd')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
+      {/* <TitleBar title={t('sidebar:payment.plhd')} /> */}
+      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
+        <div className="flex justify-between mb-5">
           <div className="flex items-center gap-x-3">
             <SelectField
               options={[

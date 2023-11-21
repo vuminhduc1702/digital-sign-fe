@@ -28,17 +28,17 @@ export function PackageSidebar() {
 
   return (
     <>
-      <div className="flex h-[60px] items-center gap-2 rounded-md bg-secondary-400 px-4 py-3">
+      <div className="flex h-[60px] items-center gap-3 rounded-md bg-secondary-400 px-4 py-3">
         <div className="flex gap-3">  
           <img
             src={listIcon}
             alt="Template list"
-            className="aspect-square w-[35px]"
+            className="aspect-square w-[45px]"
           />
           {/* <p>{t('billing:package_manage.list_package')}</p> */}
         </div>
         <CreatePackage />
-        <div className="w-50">
+        <div className="w-full">
         <ComboBoxSelectPackage 
           setFilteredComboboxData={setFilteredComboboxData}
         />

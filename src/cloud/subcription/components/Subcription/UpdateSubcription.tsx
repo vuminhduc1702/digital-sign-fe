@@ -136,12 +136,12 @@ export function UpdateSubcription({
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {isUpdate
-                ? t('billing:subcription.edit')
-                : t('billing:subcription.title')}
-            </DialogTitle>
-            <div className="ml-3 flex h-7 items-center">
+              <DialogTitle as="h3" className="mx-auto text-2xl font-semibold ">
+                {isUpdate
+                  ? t('billing:subcription.edit')
+                  : t('billing:subcription.title')}
+              </DialogTitle>
+            <div className="flex h-7 items-center">
               <button
                 className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
@@ -177,7 +177,7 @@ export function UpdateSubcription({
                 <>
                   <div className="mt-2 flex justify-between gap-2 py-2 ">
                     <div className="flex items-center gap-3">
-                      <p className="text-table-header">
+                      <p className="text-lg font-semibold">
                         {t('billing:subcription.table.sub_code')} : {id}
                       </p>
                     </div>
@@ -225,9 +225,9 @@ export function UpdateSubcription({
                         </div>
                       )}
                   </div>
-                  <div className="mt-2 flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2 ">
+                  <div className="mt-2 flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2 ">
                     <div className="flex gap-3">
-                      <p className="text-table-header">
+                      <p className="text-lg font-semibold">
                         {t('billing:subcription.popup.customer_info')}
                       </p>
                     </div>
@@ -244,9 +244,9 @@ export function UpdateSubcription({
                       disabled
                     />
                   </div>
-                  <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
                     <div className="flex gap-3">
-                      <p className="text-table-header">
+                      <p className="text-lg font-semibold">
                         {t('billing:subcription.popup.service_info')}
                       </p>
                     </div>
@@ -274,9 +274,9 @@ export function UpdateSubcription({
                       registration={register('register')}
                     />
                   </div>
-                  <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="flex items-center gap-2 rounded-lg bg-gray-200 px-3 py-2">
                     <div className="flex gap-3">
-                      <p className="text-table-header">
+                      <p className="text-lg font-semibold">
                         {t('billing:subcription.popup.billing_info')}
                       </p>
                     </div>
@@ -316,12 +316,12 @@ export function UpdateSubcription({
             }}
           </Form>
         </div>
-        <div className="mt-4 flex justify-center space-x-2">
+        <div className="mt-4 flex justify-center space-x-3">
           {!isUpdate ? (
             <>
               <Button
                 type="button"
-                className="rounded-md"
+                className="w-[100px] rounded-md"
                 variant="trans"
                 onClick={close}
                 ref={cancelButtonRef}
@@ -331,7 +331,7 @@ export function UpdateSubcription({
               <Button
                 onClick={() => setIsUpdate(true)}
                 size="md"
-                className="bg-primary-400"
+                className="w-[100px] bg-primary-400 rounded-md"
               >
                 {t('btn:update')}
               </Button>
@@ -342,7 +342,7 @@ export function UpdateSubcription({
               form="update-subcription"
               type="submit"
               size="md"
-              className="bg-primary-400"
+              className="bg-primary-400 "
             >
               {t('btn:save')}
             </Button>
