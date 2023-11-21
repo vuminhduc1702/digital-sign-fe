@@ -41,29 +41,6 @@ export function CreateDevice() {
   const { orgId } = useParams()
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
-  const [orgValue, setOrgValue] = useState<SelectOptionString>({
-    label: '',
-    value: '',
-  })
-  const [groupValue, setGroupValue] = useState<SelectOptionString>({
-    label: '',
-    value: '',
-  })
-
-  const clearData = () => {
-    setOrgValue({
-      label: '',
-      value: '',
-    })
-    setGroupValue({
-      label: '',
-      value: '',
-    })
-    setTemplateValue(null)
-  }
-
-  const [templateValue, setTemplateValue] =
-    useState<SelectOptionString | null>()
 
   const { data } = useGetTemplates({ projectId })
 
@@ -82,6 +59,12 @@ export function CreateDevice() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
 
   const { register, formState, control, setValue, handleSubmit } = useForm<
     CreateDeviceDTO['data']
@@ -92,7 +75,6 @@ export function CreateDevice() {
   return (
     <FormDrawer
       isDone={isSuccess}
-      resetData={clearData}
       triggerButton={
         <Button
           className="rounded-md"
@@ -142,19 +124,18 @@ export function CreateDevice() {
             <SelectDropdown
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
-              isClearable={false}
-              value={orgValue}
               onChange={e => {
-                setOrgValue(e)
-                setValue('org_id', e.value)
+                setValue('org_id', e)
               }}
               control={control}
               options={
-                orgFlattenData?.map(org => ({
-                  label: org?.name,
-                  value: org?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
@@ -162,14 +143,11 @@ export function CreateDevice() {
           </div>
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={false}
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-              value={groupValue}
               onChange={e => {
-                setGroupValue(e)
-                setValue('group_id', e.value)
+                setValue('group_id', e)
               }}
               options={
                 groupData?.groups?.map(groups => ({
@@ -181,14 +159,11 @@ export function CreateDevice() {
           </div>
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={false}
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              value={templateValue}
               onChange={e => {
-                setValue('template_id', e.value)
-                setTemplateValue(e)
+                setValue('template_id', e)
               }}
               options={
                 data?.templates?.map(template => ({
