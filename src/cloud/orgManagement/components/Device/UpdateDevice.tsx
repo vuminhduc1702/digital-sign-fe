@@ -86,6 +86,16 @@ export function UpdateDevice({
     .sort((a, b) => a.value.length - b.value.length)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 3f4b019... Update select dropdown
+=======
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+
 >>>>>>> 3f4b019... Update select dropdown
   const { data } = useGetTemplates({ projectId })
 
@@ -112,15 +122,7 @@ export function UpdateDevice({
     UpdateDeviceDTO['data']
   >({
     resolver: deviceSchema && zodResolver(deviceSchema),
-<<<<<<< HEAD
-<<<<<<< HEAD
-    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
-=======
     defaultValues: { name, org_id, group_id: group.value, template_id: template_id, key: keyDevice },
->>>>>>> 3f4b019... Update select dropdown
-=======
-    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
->>>>>>> c821404... Update select dropdown for org and group
   })
   useEffect(() => {
     if (isSuccess) {
@@ -203,12 +205,15 @@ export function UpdateDevice({
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
 =======
 >>>>>>> 3f4b019... Update select dropdown
 =======
               defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
 >>>>>>> c821404... Update select dropdown for org and group
+=======
+>>>>>>> 3f4b019... Update select dropdown
             />
           </div>
           <div className="space-y-1">
@@ -218,8 +223,11 @@ export function UpdateDevice({
               control={control}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }]
 =======
+=======
+>>>>>>> 3f4b019... Update select dropdown
               options={
                 groupData?.groups?.map(groups => ({
                   label: groups?.name,
@@ -241,9 +249,12 @@ export function UpdateDevice({
               control={control}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               options={ templateSelectOptions || [{ label: '', value: '' }]}
               defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
 =======
+=======
+>>>>>>> 3f4b019... Update select dropdown
               options={
                 data?.templates?.map(template => ({
                   label: template?.name,
