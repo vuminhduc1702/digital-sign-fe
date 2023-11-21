@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 
@@ -90,7 +90,7 @@ export function UpdateOrg({
   >({
     resolver: orgSchema && zodResolver(orgSchema),
     defaultValues: {
-      name: selectedUpdateOrg?.name,
+      name: selectedUpdateOrg.name,
       description:
         selectedUpdateOrg.description !== 'undefined'
           ? selectedUpdateOrg.description
