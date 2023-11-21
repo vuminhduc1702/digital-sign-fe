@@ -1,15 +1,14 @@
-import { useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  type SelectOptionString,
   SelectField,
 } from '~/components/Form'
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
@@ -17,35 +16,38 @@ import {
   emailSchema,
   nameSchema,
   passwordSchema,
+  phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import i18n from '~/i18n'
 import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
-
-import { type OrgList } from '~/layout/MainLayout/types'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { EyeHide, EyeShow, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-export const userSchema = z
-  .object({
-    name: nameSchema,
-    email: emailSchema,
-    phone: z.string(),
-    password: passwordSchema,
-    confirmPassword: passwordSchema.optional(),
-    project_id: z.string().optional(),
-    org_id: z.string().optional(),
-    role_id: z.string().optional(),
-    province: z.string().optional(),
-    district: z.string().optional(),
-    ward: z.string().optional(),
-    full_address: z.string().optional(),
-  })
-  .superRefine(({ password, confirmPassword }, ctx) => {
+export const userInfoSchema = z.object({
+  name: nameSchema,
+  phone: phoneSchemaRegex,
+  password: passwordSchema,
+  confirmPassword: passwordSchema.optional(),
+  email: emailSchema,
+  org_id: z.string().optional(),
+  role_id: z.string().optional(),
+  project_id: z.string().optional(),
+  profile: z
+    .object({
+      province: z.string(),
+      district: z.string(),
+      ward: z.string(),
+      full_address: z.string(),
+    })
+    .optional(),
+})
+export const userSchema = userInfoSchema.superRefine(
+  ({ password, confirmPassword }, ctx) => {
     if (password !== confirmPassword) {
       ctx.addIssue({
         path: ['confirmPassword'],
@@ -53,32 +55,43 @@ export const userSchema = z
         message: i18n.t('auth:pass_invalid'),
       })
     }
-  })
+  },
+)
 
 export function CreateUser() {
   const { t } = useTranslation()
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
+  const {
+    register,
+    formState,
+    handleSubmit,
+    control,
+    getValues,
+    watch,
+    reset,
+  } = useForm<CreateUserDTO['data']>({
+    resolver: userSchema && zodResolver(userSchema),
   })
+  console.log('formState.errors', formState.errors)
+
+  const { id: projectId } = storage.getProject()
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
-  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateUser()
   const { data } = useGetRoles({ projectId })
   const roleOptions = data?.roles?.map(item => ({
     label: item.name,
     value: item.id,
-  })) || [{ label: '', value: '' }]
-
-  const [option, setOption] = useState<SelectOptionString>()
-  const [role, setRole] = useState<SelectOptionString>()
-  const [provinceCode, setProvinceCode] = useState('')
-  const [districtCode, setDistrictCode] = useState('')
+  }))
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
@@ -86,12 +99,13 @@ export function CreateUser() {
   })
 
   const { data: districtList } = useAreaList({
-    parentCode: provinceCode,
+    parentCode: watch('profile.province'),
     type: 'DISTRICT',
     config: {
-      enabled: !!provinceCode,
+      enabled: !!watch('profile.province'),
     },
   })
+
   const [showPassword, setShowPassword] = useState(false)
   const [showRePassword, setShowRePassword] = useState(false)
   const toggleRePasswordVisibility = () => {
@@ -102,17 +116,13 @@ export function CreateUser() {
   }
 
   const { data: wardList } = useAreaList({
-    parentCode: districtCode,
+    parentCode: watch('profile.district'),
     type: 'WARD',
     config: {
-      enabled: !!districtCode,
+      enabled: !!watch('profile.district'),
     },
   })
-  const { register, formState, control, setValue, handleSubmit } = useForm<
-    CreateUserDTO['data']
-  >({
-    resolver: userSchema && zodResolver(userSchema),
-  })
+
   return (
     <FormDrawer
       isDone={isSuccess}
@@ -137,6 +147,7 @@ export function CreateUser() {
           }
         />
       }
+      resetData={() => reset()}
     >
       <form
         id="create-user"
@@ -145,16 +156,21 @@ export function CreateUser() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: option?.value || '',
+              org_id: values.org_id,
               name: values.name,
               email: values.email,
               password: values.password,
-              role_id: role?.value || '',
+              role_id: values.role_id,
               phone: values.phone,
-              province: values.province,
-              district: values.district,
-              ward: values.ward,
-              full_address: values.full_address,
+              profile:
+                values.profile != null
+                  ? {
+                      province: values.profile.province,
+                      district: values.profile.district,
+                      ward: values.profile.ward,
+                      full_address: values.profile.full_address,
+                    }
+                  : undefined,
             },
           })
         })}
@@ -232,17 +248,10 @@ export function CreateUser() {
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
-              options={
-                orgFlattenData?.map(org => ({
-                  label: org?.name,
-                  value: org?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
-              }
-              onChange={e => {
-                setOption(e)
-                setValue('org_id', e.value)
-              }}
-              value={option}
+              options={orgSelectOptions}
+              defaultValue={orgSelectOptions.find(
+                item => item.value === getValues('org_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
@@ -255,11 +264,9 @@ export function CreateUser() {
               name="role_id"
               control={control}
               options={roleOptions}
-              onChange={e => {
-                setRole(e)
-                setValue('role_id', e.value)
-              }}
-              value={role}
+              defaultValue={roleOptions?.find(
+                item => item.value === getValues('role_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.role_id?.message}
@@ -271,33 +278,28 @@ export function CreateUser() {
               {t('cloud:org_manage.user_manage.add_user.address')}
             </div>
             <SelectField
-              error={formState.errors['province']}
-              registration={register('province')}
-              options={provinceList || [{ value: '', label: '' }]}
+              error={formState?.errors?.profile?.province}
+              registration={register('profile.province')}
+              options={provinceList}
               classchild="w-full"
-              onChange={e => setProvinceCode(e.target.value)}
               placeholder={t('cloud:org_manage.user_manage.add_user.province')}
             />
-
             <SelectField
-              error={formState.errors['district']}
-              registration={register('district')}
-              options={districtList || [{ value: '', label: '' }]}
-              onChange={e => setDistrictCode(e.target.value)}
+              error={formState?.errors?.profile?.district}
+              registration={register('profile.district')}
+              options={districtList}
               placeholder={t('cloud:org_manage.user_manage.add_user.district')}
             />
-
             <SelectField
-              error={formState.errors['ward']}
-              registration={register('ward')}
-              options={wardList || [{ value: '', label: '' }]}
+              error={formState?.errors?.profile?.ward}
+              registration={register('profile.ward')}
+              options={wardList}
               placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
             />
           </div>
-
           <InputField
             label={t('form:enter_address')}
-            registration={register('full_address')}
+            registration={register('profile.full_address')}
           />
         </>
       </form>

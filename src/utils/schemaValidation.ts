@@ -35,7 +35,7 @@ export const emailSchema = z
 export const passwordSchema = z
   .string()
   .min(6, { message: 'Password quá ngắn' })
-  .max(100, { message: 'Password quá dài' })
+  .max(64, { message: 'Password quá dài' })
 
 export const attrSchema = z.object({
   attribute_key: z

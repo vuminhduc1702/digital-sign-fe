@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Controller } from 'react-hook-form'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
@@ -18,6 +19,12 @@ import storage from '~/utils/storage'
 import { useGetAttrs } from '../../api/attrAPI'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
+import { Drawer } from '~/components/Drawer'
+import {
+  useUpdateEvent,
+  type UpdateEventDTO,
+} from '../../api/eventAPI/updateEvent'
+import { Checkbox } from '~/components/Checkbox'
 
 import { type OrgList } from '~/layout/MainLayout/types'
 import {
@@ -28,19 +35,19 @@ import {
   type EventType,
   type Group,
 } from '../../types'
+import {
+  conditionTypeOptions,
+  createEventSchema,
+  operatorOptions,
+  type IntervalData,
+  logicalOperatorOption,
+  actionTypeOptions,
+} from './CreateEvent'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Drawer } from '~/components/Drawer'
 import { PlusIcon } from '~/components/SVGIcons'
-import {
-  useUpdateEvent,
-  type UpdateEventDTO,
-} from '../../api/eventAPI/updateEvent'
-import { createEventSchema, type IntervalData } from './CreateEvent'
-import { Controller } from 'react-hook-form'
-import { Checkbox } from '~/components/Checkbox'
 
 type UpdateEventProps = {
   eventId: string
@@ -93,102 +100,6 @@ export function UpdateEvent({
 
   const params = useParams()
   const orgId = params.orgId as string
-
-  const logicalOperatorOption = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
-      ),
-      value: 'and',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
-      ),
-      value: 'or',
-    },
-  ]
-
-  const operatorOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-      ),
-      value: '>',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-      ),
-      value: '<',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.not',
-      ),
-      value: '!=',
-    },
-  ]
-
-  const conditionTypeOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-      ),
-      value: 'normal',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-      ),
-      value: 'delay',
-    },
-  ]
-
-  const actionTypeOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.sms',
-      ),
-      value: 'sms',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.email',
-      ),
-      value: 'email',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
-      ),
-      value: 'mqtt',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
-      ),
-      value: 'fcm',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.event',
-      ),
-      value: 'event',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
-      ),
-      value: 'eventactive',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.delay',
-      ),
-      value: 'delay',
-    },
-  ]
 
   const { data: groupData, refetch: refetchGroupData } = useGetGroups({
     orgId,
@@ -352,11 +263,11 @@ export function UpdateEvent({
         id="update-event"
         options={{
           defaultValues: {
-            onClick: (data.onClick+'').toLowerCase() === 'true',
+            onClick: (data.onClick + '').toLowerCase() === 'true',
             name,
             action: renderDataAction(),
             retry: data.retry.toString(),
-            status: (data.status+'').toLowerCase() === 'true',
+            status: (data.status + '').toLowerCase() === 'true',
             condition: renderDataCondition(),
             interval: renderInterval(),
           },
@@ -433,8 +344,7 @@ export function UpdateEvent({
               org_id: orgValue?.value || '',
               group_id: groupValue?.value || '',
               name: values.name,
-              onClick:
-                typeEvent === 'event' ? values.onClick === true : false,
+              onClick: typeEvent === 'event' ? values.onClick === true : false,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: Boolean(values.status),
@@ -535,7 +445,9 @@ export function UpdateEvent({
                     />
                   </FieldWrapper>
                   <FieldWrapper
-                    label={t('cloud:org_manage.event_manage.add_event.condition.onClick')}
+                    label={t(
+                      'cloud:org_manage.event_manage.add_event.condition.onClick',
+                    )}
                     error={formState?.errors['onClick']}
                   >
                     <Controller

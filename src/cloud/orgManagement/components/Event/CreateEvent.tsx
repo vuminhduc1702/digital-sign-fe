@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import { Controller } from 'react-hook-form'
 import { useState } from 'react'
 
 import { Button } from '~/components/Button'
@@ -22,6 +23,8 @@ import { queryClient } from '~/lib/react-query'
 import { cn, flattenData } from '~/utils/misc'
 import TitleBar from '~/components/Head/TitleBar'
 import storage from '~/utils/storage'
+import { Checkbox } from '~/components/Checkbox'
+import i18n from '~/i18n'
 
 import {
   type ActionType,
@@ -35,8 +38,102 @@ import { type OrgList } from '~/layout/MainLayout/types'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { Controller } from 'react-hook-form'
-import { Checkbox } from '~/components/Checkbox'
+
+export const logicalOperatorOption = [
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
+    ),
+    value: 'and',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
+    ),
+    value: 'or',
+  },
+]
+
+export const operatorOptions = [
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.operator.gte',
+    ),
+    value: '>',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.operator.lte',
+    ),
+    value: '<',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.operator.not',
+    ),
+    value: '!=',
+  },
+]
+
+export const conditionTypeOptions = [
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
+    ),
+    value: 'normal',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
+    ),
+    value: 'delay',
+  },
+]
+
+export const actionTypeOptions = [
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.sms',
+    ),
+    value: 'sms',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.email',
+    ),
+    value: 'email',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
+    ),
+    value: 'mqtt',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
+    ),
+    value: 'fcm',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.event',
+    ),
+    value: 'event',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
+    ),
+    value: 'eventactive',
+  },
+  {
+    label: i18n.t(
+      'cloud:org_manage.event_manage.add_event.action.action_type.delay',
+    ),
+    value: 'delay',
+  },
+]
 
 export const eventConditionSchema = z.array(
   z.object({
@@ -153,7 +250,7 @@ export function CreateEvent() {
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
     label: device.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const [selectedDeviceId, setSelectedDeviceId] = useState('')
   const { data: attrData, refetch: refetchAttrData } = useGetAttrs({
@@ -164,10 +261,6 @@ export function CreateEvent() {
       suspense: false,
     },
   })
-  const attrListCache: Attribute[] | undefined = queryClient.getQueryData(
-    ['attrs'],
-    { exact: false },
-  )
   const attrSelectData = attrData?.attributes.map(attribute => ({
     value: attribute.attribute_key,
     label: attribute.attribute_key,
@@ -643,20 +736,7 @@ export function CreateEvent() {
                                 'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
                               )}
                               name={`condition.${index}.condition_type`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-                                  ),
-                                  value: 'normal',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-                                  ),
-                                  value: 'delay',
-                                },
-                              ]}
+                              options={conditionTypeOptions}
                               control={control}
                             />
                             <p className="text-body-sm text-primary-400">
@@ -673,26 +753,7 @@ export function CreateEvent() {
                                 'cloud:org_manage.event_manage.add_event.condition.operator.title',
                               )}
                               name={`condition.${index}.operator`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-                                  ),
-                                  value: '>',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-                                  ),
-                                  value: '<',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.operator.not',
-                                  ),
-                                  value: '!=',
-                                },
-                              ]}
+                              options={operatorOptions}
                               control={control}
                             />
                             <p className="text-body-sm text-primary-400">
@@ -718,20 +779,7 @@ export function CreateEvent() {
                                 'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
                               )}
                               name={`condition.${index}.logical_operator`}
-                              options={[
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
-                                  ),
-                                  value: 'and',
-                                },
-                                {
-                                  label: t(
-                                    'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
-                                  ),
-                                  value: 'or',
-                                },
-                              ]}
+                              options={logicalOperatorOption}
                               control={control}
                             />
                             <Button
@@ -783,50 +831,7 @@ export function CreateEvent() {
                             'cloud:org_manage.event_manage.add_event.action.action_type.title',
                           )}
                           name={`action.${index}.action_type`}
-                          options={[
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.sms',
-                              ),
-                              value: 'sms',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.email',
-                              ),
-                              value: 'email',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
-                              ),
-                              value: 'mqtt',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
-                              ),
-                              value: 'fcm',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.event',
-                              ),
-                              value: 'event',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
-                              ),
-                              value: 'eventactive',
-                            },
-                            {
-                              label: t(
-                                'cloud:org_manage.event_manage.add_event.action.action_type.delay',
-                              ),
-                              value: 'delay',
-                            },
-                          ]}
+                          options={actionTypeOptions}
                           control={control}
                         />
                         <p className="text-body-sm text-primary-400">

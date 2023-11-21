@@ -1,26 +1,21 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useRef, useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-
 import { Button } from '~/components/Button'
-import {
-  FormDrawer,
-  FormMultipleFields,
-  InputField,
-  SelectDropdown,
-} from '~/components/Form'
-import { type CreateRoleDTO, useCreateRole } from '../api'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
+import { FormDrawer, InputField, SelectDropdown } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
+import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-
+import { useCreateRole, type CreateRoleDTO } from '../api'
 import { type ActionsType, type ResourcesType } from '../types'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { cn } from '~/utils/misc'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
+import { PlusIcon } from '~/components/SVGIcons'
+import { cn } from '~/utils/misc'
 
 export const resourcesList: ResourcesType[] = [
   { value: 'users', label: 'Người dùng' },
@@ -53,10 +48,10 @@ export const roleSchema = z
           z.object({
             policy_name: nameSchema,
             resources: z
-              .array(selectOptionSchema())
+              .array(z.string())
               .nonempty({ message: 'Vui lòng chọn ít nhất 1 tài nguyên' }),
             actions: z
-              .array(selectOptionSchema())
+              .array(z.string())
               .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
           }),
         ),
@@ -68,12 +63,12 @@ export const roleSchema = z
             .object({
               policy_name: nameSchema,
               actions: z
-                .array(selectOptionSchema())
+                .array(z.string())
                 .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
-              devices: z.array(selectOptionSchema()),
-              events: z.array(selectOptionSchema()),
-              users: z.array(selectOptionSchema()),
-              orgs: z.array(selectOptionSchema()),
+              devices: z.array(z.string()),
+              events: z.array(z.string()),
+              users: z.array(z.string()),
+              orgs: z.array(z.string()),
             })
             .refine(
               ({ devices, events, orgs, users }) => {
@@ -91,13 +86,48 @@ export const roleSchema = z
     ]),
   )
 
-export function CreateRole() {
+export function CreateRole({ project_id = '' }: { project_id: string }) {
   const { t } = useTranslation()
   const [type, setType] = useState('Generic')
 
   const roleType = ['Generic', 'Group']
 
-  const { id: projectId } = storage.getProject()
+  const {
+    register,
+    formState,
+    handleSubmit,
+    control,
+    getValues,
+    watch,
+    setValue,
+    reset,
+  } = useForm<CreateRoleDTO['data']>({
+    resolver: roleSchema && zodResolver(roleSchema),
+    defaultValues: {
+      name: '',
+      policies: [
+        {
+          policy_name: '',
+          resources: [],
+          actions: [],
+          devices: [],
+          users: [],
+          events: [],
+          orgs: [],
+        },
+      ],
+      role_type: 'Generic',
+    },
+  })
+
+  const { fields, append, remove, replace } = useFieldArray({
+    name: 'policies',
+    control,
+  })
+
+  const dataStorage = storage.getProject()
+
+  let projectId = project_id ? project_id : dataStorage?.id
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
   const { data: groupDataDevice } = useGetGroups({
@@ -123,10 +153,15 @@ export function CreateRole() {
   const resourceArrRef = useRef<ResourcesType['value'][]>([])
   const actionArrRef = useRef<ActionsType['value'][]>([])
 
+  const resetData = () => {
+    reset()
+    setType('Generic')
+  }
+
   return (
     <FormDrawer
       isDone={isSuccess}
-      resetData={() => setType('Generic')}
+      resetData={resetData}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
@@ -150,305 +185,270 @@ export function CreateRole() {
       }
       size="lg"
     >
-      <FormMultipleFields<CreateRoleDTO['data'], typeof roleSchema>
+      <form
         id="create-role"
-        onSubmit={values => {
+        className="w-full space-y-5"
+        onSubmit={handleSubmit(values => {
           if (type === 'Generic') {
             const policies = values.policies.map(policy => {
               resourceArrRef.current =
-                policy?.resources?.map(resource => resource.value) || []
-              actionArrRef.current = policy.actions.map(action => action.value)
+                policy?.resources?.map(resource => resource) || []
+              actionArrRef.current = policy.actions.map(action => action)
               return {
                 policy_name: policy.policy_name,
                 resources: resourceArrRef.current,
                 actions: actionArrRef.current,
               }
             })
-            mutate({
-              data: {
-                name: values.name,
-                policies,
-                project_id: projectId,
-                role_type: type,
-              },
-            })
+            const data = {
+              name: values.name,
+              policies,
+              project_id: projectId,
+              role_type: type,
+            }
+
+            if (project_id) {
+              data.applicable_to = 'TENANT_DEV'
+            }
+
+            mutate({ data })
           } else {
             const policies = values.policies.map(policy => {
-              const deviceArr = policy.devices.map(devices => devices?.value)
-              const eventArr = policy.events.map(events => events?.value)
-              const userArr = policy.users.map(users => users?.value)
-              const orgsArr = policy.orgs.map(orgs => orgs?.value)
+              const deviceArr = policy.devices.map(devices => devices)
+              const eventArr = policy.events.map(events => events)
+              const userArr = policy.users.map(users => users)
+              const orgsArr = policy.orgs.map(orgs => orgs)
 
               const group_resources = {
                 groups: [...deviceArr, ...eventArr, ...userArr, ...orgsArr],
               }
-              actionArrRef.current = policy.actions.map(action => action.value)
+              actionArrRef.current = policy.actions.map(action => action)
               return {
                 policy_name: policy.policy_name,
                 group_resources,
                 actions: actionArrRef.current,
               }
             })
-            mutate({
-              data: {
-                name: values.name,
-                policies,
-                project_id: projectId,
-                role_type: type,
-              },
-            })
+
+            const data = {
+              name: values.name,
+              policies,
+              project_id: projectId,
+              role_type: type,
+            }
+
+            if (project_id) {
+              data.applicable_to = 'TENANT_DEV'
+            }
+
+            mutate({ data })
           }
-        }}
-        schema={roleSchema}
-        options={{
-          defaultValues: {
-            name: '',
-            policies: [
-              {
-                policy_name: '',
-                resources: [],
-                actions: [],
-                devices: [],
-                users: [],
-                events: [],
-                orgs: [],
-              },
-            ],
-            role_type: 'Generic',
-          },
-        }}
-        name={['policies']}
+        })}
       >
-        {(
-          { register, formState, control, setValue },
-          { fields, append, remove },
-        ) => {
-          console.log('formState err: ', formState.errors)
-          return (
-            <>
-              <div className="w-fit rounded-2xl bg-slate-200">
-                {roleType.map(item => {
-                  return (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => {
-                        setValue('role_type', item)
-                        setType(item)
-                      }}
-                      className={cn('px-4 py-2 text-slate-400', {
-                        'rounded-2xl bg-primary-400 text-white': type === item,
-                      })}
-                    >
-                      {item}
-                    </button>
-                  )
-                })}
-              </div>
-              <InputField
-                label={t('cloud:role_manage.add_role.name')}
-                error={formState.errors['name']}
-                registration={register('name')}
-              />
-              <div className="flex justify-between space-x-3">
-                <TitleBar
-                  title={t('cloud:role_manage.add_policy.title')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
-                />
-                <Button
-                  className="rounded-md"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                  }
-                  onClick={() =>
-                    append({
-                      policy_name: '',
-                      resources: [],
-                      devices: [],
-                      actions: [],
-                      users: [],
-                      events: [],
-                      orgs: [],
-                    })
-                  }
-                />
-              </div>
-              {fields.map((field, index) => (
-                <section
-                  className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
-                  key={field.id}
+        <>
+          <div className="w-fit rounded-2xl bg-slate-200">
+            {roleType.map(item => {
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => {
+                    setValue('role_type', item)
+                    setType(item)
+                  }}
+                  className={cn('px-4 py-2 text-slate-400', {
+                    'bg-primary-400 rounded-2xl text-white': type === item,
+                  })}
                 >
-                  <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                    <div className="space-y-1">
-                      <InputField
-                        label={t('cloud:role_manage.add_policy.name')}
-                        registration={register(
-                          `policies.${index}.policy_name` as const,
-                        )}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {
-                          formState?.errors?.policies?.[index]?.policy_name
-                            ?.message
-                        }
-                      </p>
-                    </div>
-                    {type === 'Generic' && (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
-                          label={
-                            t('cloud:role_manage.add_policy.resources') ??
-                            'Authorization resources'
-                          }
-                          name={`policies.${index}.resources`}
-                          options={resourcesList.map(
-                            resourcesType => resourcesType,
-                          )}
-                          control={control}
-                          isMulti
-                          closeMenuOnSelect={false}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.policies?.[index]?.resources
-                              ?.message
-                          }
-                        </p>
-                      </div>
+                  {item}
+                </button>
+              )
+            })}
+          </div>
+          <InputField
+            label={t('cloud:role_manage.add_role.name')}
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <div className="flex justify-between space-x-3">
+            <TitleBar
+              title={t('cloud:role_manage.add_policy.title')}
+              className="w-full rounded-md bg-secondary-700 pl-3"
+            />
+            <Button
+              className="rounded-md"
+              variant="trans"
+              size="square"
+              startIcon={
+                <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+              }
+              onClick={() =>
+                append({
+                  policy_name: '',
+                  resources: [],
+                  devices: [],
+                  actions: [],
+                  users: [],
+                  events: [],
+                  orgs: [],
+                })
+              }
+            />
+          </div>
+          {fields.map((field, index) => (
+            <section
+              className="mt-3 flex justify-between rounded-md bg-slate-200 px-2 py-4"
+              key={field.id}
+            >
+              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                <div className="space-y-1">
+                  <InputField
+                    label={t('cloud:role_manage.add_policy.name')}
+                    registration={register(
+                      `policies.${index}.policy_name` as const,
                     )}
-                    {type === 'Group' && (
-                      <div className="space-y-3">
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={'Thiết bị'}
-                            name={`policies.${index}.devices`}
-                            options={
-                              groupDataDevice?.groups?.map(groups => ({
-                                label: groups?.name,
-                                value: groups?.id,
-                              })) || [{ label: t('loading:org'), value: '' }]
-                            }
-                            isMulti
-                            control={control}
-                            closeMenuOnSelect={false}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.policies?.[index]?.root
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={'Sự kiện'}
-                            name={`policies.${index}.events`}
-                            options={
-                              groupDataEvent?.groups?.map(groups => ({
-                                label: groups?.name,
-                                value: groups?.id,
-                              })) || [{ label: t('loading:org'), value: '' }]
-                            }
-                            isMulti
-                            control={control}
-                            closeMenuOnSelect={false}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.policies?.[index]?.root
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={'Người dùng'}
-                            name={`policies.${index}.users`}
-                            options={
-                              groupDataUser?.groups?.map(groups => ({
-                                label: groups?.name,
-                                value: groups?.id,
-                              })) || [{ label: t('loading:org'), value: '' }]
-                            }
-                            isMulti
-                            control={control}
-                            closeMenuOnSelect={false}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.policies?.[index]?.root
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            isClearable={true}
-                            label={'Tổ chức'}
-                            name={`policies.${index}.orgs`}
-                            options={
-                              groupDataOrg?.groups?.map(groups => ({
-                                label: groups?.name,
-                                value: groups?.id,
-                              })) || [{ label: t('loading:org'), value: '' }]
-                            }
-                            isMulti
-                            control={control}
-                            closeMenuOnSelect={false}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.policies?.[index]?.root
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.policies?.[index]?.policy_name?.message}
+                  </p>
+                </div>
+                {type === 'Generic' && (
+                  <div className="space-y-1">
+                    <SelectDropdown
+                      isClearable
+                      label={
+                        t('cloud:role_manage.add_policy.resources') ??
+                        'Authorization resources'
+                      }
+                      name={`policies.${index}.resources`}
+                      options={resourcesList.map(
+                        resourcesType => resourcesType,
+                      )}
+                      control={control}
+                      isMulti
+                      closeMenuOnSelect={false}
+                    />
+                    <p className="text-body-sm text-primary-400">
+                      {formState?.errors?.policies?.[index]?.resources?.message}
+                    </p>
+                  </div>
+                )}
+                {type === 'Group' && (
+                  <div className="space-y-3">
                     <div className="space-y-1">
                       <SelectDropdown
                         isClearable={true}
-                        label={
-                          t('cloud:role_manage.add_policy.actions') ??
-                          'Authorization actions'
+                        label={'Thiết bị'}
+                        name={`policies.${index}.devices`}
+                        options={
+                          groupDataDevice?.groups?.map(groups => ({
+                            label: groups?.name,
+                            value: groups?.id,
+                          })) || [{ label: t('loading:device'), value: '' }]
                         }
-                        name={`policies.${index}.actions`}
-                        options={actionsList.map(actionsType => actionsType)}
-                        control={control}
                         isMulti
+                        control={control}
                         closeMenuOnSelect={false}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.policies?.[index]?.actions?.message}
+                        {formState?.errors?.policies?.[index]?.root?.message}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        isClearable={true}
+                        label={'Sự kiện'}
+                        name={`policies.${index}.events`}
+                        options={
+                          groupDataEvent?.groups?.map(groups => ({
+                            label: groups?.name,
+                            value: groups?.id,
+                          })) || [{ label: t('loading:event'), value: '' }]
+                        }
+                        isMulti
+                        control={control}
+                        closeMenuOnSelect={false}
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {formState?.errors?.policies?.[index]?.root?.message}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        isClearable={true}
+                        label={'Người dùng'}
+                        name={`policies.${index}.users`}
+                        options={
+                          groupDataUser?.groups?.map(groups => ({
+                            label: groups?.name,
+                            value: groups?.id,
+                          })) || [{ label: t('loading:user'), value: '' }]
+                        }
+                        isMulti
+                        control={control}
+                        closeMenuOnSelect={false}
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {formState?.errors?.policies?.[index]?.root?.message}
+                      </p>
+                    </div>
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        isClearable={true}
+                        label={'Tổ chức'}
+                        name={`policies.${index}.orgs`}
+                        options={
+                          groupDataOrg?.groups?.map(groups => ({
+                            label: groups?.name,
+                            value: groups?.id,
+                          })) || [{ label: t('loading:org'), value: '' }]
+                        }
+                        isMulti
+                        control={control}
+                        closeMenuOnSelect={false}
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {formState?.errors?.policies?.[index]?.root?.message}
                       </p>
                     </div>
                   </div>
-                  <Button
-                    type="button"
-                    size="square"
-                    variant="none"
-                    className="mt-3 self-start !pr-0"
-                    onClick={() => remove(index)}
-                    startIcon={
-                      <img
-                        src={btnDeleteIcon}
-                        alt="Delete policy"
-                        className="h-10 w-10"
-                      />
+                )}
+                <div className="space-y-1">
+                  <SelectDropdown
+                    isClearable={true}
+                    label={
+                      t('cloud:role_manage.add_policy.actions') ??
+                      'Authorization actions'
                     }
+                    name={`policies.${index}.actions`}
+                    options={actionsList.map(actionsType => actionsType)}
+                    control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
                   />
-                </section>
-              ))}
-            </>
-          )
-        }}
-      </FormMultipleFields>
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.policies?.[index]?.actions?.message}
+                  </p>
+                </div>
+              </div>
+              <Button
+                type="button"
+                size="square"
+                variant="none"
+                className="mt-3 self-start !pr-0"
+                onClick={() => remove(index)}
+                startIcon={
+                  <img
+                    src={btnDeleteIcon}
+                    alt="Delete policy"
+                    className="h-10 w-10"
+                  />
+                }
+              />
+            </section>
+          ))}
+        </>
+      </form>
     </FormDrawer>
   )
 }
