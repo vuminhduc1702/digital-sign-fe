@@ -72,19 +72,12 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-  const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
+  const { register, formState, control, getValues, handleSubmit } = useForm<
     UpdateGroupDTO['data']
   >({
     resolver: groupSchema && zodResolver(groupSchema),
     defaultValues: { name: name, org_id: organization },
   })
-
-  useEffect(() => {
-    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
-    if (organization) {
-      setValue('org_id', filterOrg?.org_id)
-    }
-  }, [organization])
 
   return (
     <Drawer
