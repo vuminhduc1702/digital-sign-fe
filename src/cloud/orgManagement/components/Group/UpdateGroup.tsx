@@ -48,7 +48,6 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -75,22 +74,19 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-  useEffect(() => {
-    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
-    if (organization) {
-      setOptionOrg({
-        label: filterOrg?.name,
-        value: filterOrg?.id,
-      })
-    }
-  }, [organization])
-
   const { register, formState, control, setValue, handleSubmit } = useForm<
     UpdateGroupDTO['data']
   >({
     resolver: groupSchema && zodResolver(groupSchema),
     defaultValues: { name: name, org_id: organization },
   })
+
+  useEffect(() => {
+    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
+    if (organization) {
+      setValue('org_id', filterOrg?.org_id)
+    }
+  }, [organization])
 
   return (
     <Drawer
@@ -129,7 +125,7 @@ export function UpdateGroup({
           mutate({
             data: {
               name: values.name,
-              org_id: optionOrg?.value,
+              org_id: values.org_id,
             },
             groupId,
           }),
@@ -158,24 +154,27 @@ export function UpdateGroup({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
+              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              onChange={e => {
-                setOptionOrg(e)
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              noOptionsMessage={() => t('table:no_in_org')}
+              customOnChange={e => {
                 mutateUpdateOrgForGroup({
                   data: {
                     ids: [groupId],
-                    org_id: e.value,
+                    org_id: e,
                   },
                 })
-                setValue('org_id', e?.value)
+                setValue('org_id', e)
               }}
-              value={optionOrg}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
