@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import {
+  type ColumnDef,
+  createColumnHelper,
+  type VisibilityState,
+} from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -78,7 +82,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -147,7 +151,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -206,6 +210,24 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
 
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
+  let colsVisibility = {
+    stt: true,
+    [t('cloud:org_manage.device_manage.table.name')]: true,
+    [t('cloud:org_manage.device_manage.table.group')]: true,
+    [t('cloud:org_manage.device_manage.table.status')]: true,
+    [t('cloud:org_manage.device_manage.table.attributes')]: false,
+    [t('cloud:org_manage.device_manage.table.create_by')]: false,
+    [t('cloud:org_manage.device_manage.table.group_id')]: false,
+    [t('cloud:org_manage.device_manage.table.token')]: false,
+    [t('cloud:org_manage.device_manage.table.org_id')]: false,
+    [t('cloud:org_manage.device_manage.table.template_id')]: false,
+    [t('cloud:org_manage.device_manage.table.device_type')]: true,
+    [t('cloud:org_manage.device_manage.table.key')]: true,
+    [t('cloud:org_manage.device_manage.table.created_at')]: true,
+    contextMenu: true,
+  }
+  const [columnVisibility, setColumnVisibility] =
+    useState<VisibilityState>(colsVisibility)
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
@@ -219,20 +241,81 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
+        id: t('cloud:org_manage.device_manage.table.name'),
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('group_name', {
+        id: t('cloud:org_manage.device_manage.table.group'),
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.group')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.accessor('status', {
+        id: t('cloud:org_manage.device_manage.table.status'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.status')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('attributes', {
+        id: t('cloud:org_manage.device_manage.table.attributes'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('created_by', {
+        id: t('cloud:org_manage.device_manage.table.create_by'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('group_id', {
+        id: t('cloud:org_manage.device_manage.table.group_id'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.group_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('token', {
+        id: t('cloud:org_manage.device_manage.table.token'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.token')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('org_id', {
+        id: t('cloud:org_manage.device_manage.table.org_id'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.org_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('template_id', {
+        id: t('cloud:org_manage.device_manage.table.template_id'),
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+
       columnHelper.accessor('template_name', {
+        id: t('cloud:org_manage.device_manage.table.device_type'),
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.device_type')}</span>
         ),
@@ -275,6 +358,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {
+        id: t('cloud:org_manage.device_manage.table.created_at'),
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.created_at')}</span>
         ),
@@ -319,7 +403,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      data={dataSorted}
+      columns={columns}
+      columnVisibility={columnVisibility}
+      setColumnVisibility={setColumnVisibility}
+      {...props}
+      className="overflow-auto"
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_device')}

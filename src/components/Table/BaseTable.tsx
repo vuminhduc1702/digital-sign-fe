@@ -8,8 +8,17 @@ import {
   type SortingState,
   type Row,
   getExpandedRowModel,
+  type VisibilityState,
 } from '@tanstack/react-table'
-import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  type Dispatch,
+  Fragment,
+  type SetStateAction,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -17,7 +26,8 @@ import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
-
+import { SettingIcon } from '~/components/SVGIcons'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 export function BaseTable<T extends Record<string, any>>({
   data,
   columns,
@@ -28,6 +38,8 @@ export function BaseTable<T extends Record<string, any>>({
   className,
   renderSubComponent,
   getRowCanExpand,
+  columnVisibility,
+  setColumnVisibility,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -38,6 +50,8 @@ export function BaseTable<T extends Record<string, any>>({
   className?: string
   renderSubComponent?: (props: { row: Row<T> }) => React.ReactElement
   getRowCanExpand?: (row: Row<T>) => boolean
+  columnVisibility?: VisibilityState
+  setColumnVisibility?: Dispatch<SetStateAction<VisibilityState>>
 }) {
   const { t } = useTranslation()
 
@@ -50,6 +64,7 @@ export function BaseTable<T extends Record<string, any>>({
     columns,
     state: {
       sorting,
+      columnVisibility,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -57,6 +72,7 @@ export function BaseTable<T extends Record<string, any>>({
     getPaginationRowModel: getPaginationRowModel(),
     debugTable: true,
     getRowCanExpand,
+    onColumnVisibilityChange: setColumnVisibility,
     getExpandedRowModel: getExpandedRowModel(),
   })
 
@@ -79,90 +95,148 @@ export function BaseTable<T extends Record<string, any>>({
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
-        <table className="w-full border-collapse" id="table-ref">
-          <thead className="border-b-2 border-secondary-700">
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <th
-                      className="h-9 text-left"
-                      key={header.id}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={`flex items-center justify-between text-table-header ${
-                            header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
-                          }`}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          <div className="w-2 pr-5 text-xl text-black">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </div>
-                        </div>
-                      )}
-                    </th>
-                  )
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map(row => {
-              return (
-                <Fragment key={row.id}>
-                <tr className="border-secondary-70 border-t-2" key={row.id}>
-                  {row.getVisibleCells().map((cell, index) => {
-                    if (index === row.getVisibleCells().length - 1) {
-                      return (
-                        <Fragment key={cell.id}>
-                          <td className="h-9" key={cell.id}>
+        <>
+          <table className="w-full border-collapse" id="table-ref">
+            <thead className="border-secondary-700 border-b-2">
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <th
+                        className="h-9 text-left"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={`text-table-header flex items-center justify-between ${
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
                             {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
+                              header.column.columnDef.header,
+                              header.getContext(),
                             )}
-                          </td>
-                        </Fragment>
-                      )
-                    } else {
-                      return (
-                        <td className="h-9" key={cell.id}>
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext(),
-                          )}
-                        </td>
-                      )
-                    }
+                            <div className="w-2 pr-5 text-xl text-black">
+                              {{
+                                asc: '↑',
+                                desc: '↓',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                          </div>
+                        )}
+                      </th>
+                    )
                   })}
+                  <Popover>
+                    <PopoverTrigger
+                      onClick={e => e.stopPropagation()}
+                      className=""
+                      asChild
+                    >
+                      <Button
+                        className="border-none shadow-none"
+                        variant="trans"
+                        size="square"
+                        startIcon={
+                          <SettingIcon
+                            className="h-9"
+                            height={24}
+                            width={24}
+                            viewBox="0 0 48 48"
+                          />
+                        }
+                      />
+                    </PopoverTrigger>
+                    <PopoverContent className="w-40" align="start">
+                      <div className="mb-1 border-b border-black px-1">
+                        <label>
+                          <input
+                            {...{
+                              type: 'checkbox',
+                              className:
+                                'ring-offset-background focus-visible:ring-ring peer h-4 w-4 shrink-0 rounded-sm border border-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary-400 data-[state=checked]:text-white',
+                              checked: table.getIsAllColumnsVisible(),
+                              onChange:
+                                table.getToggleAllColumnsVisibilityHandler(),
+                            }}
+                          />{' '}
+                          Toggle All
+                        </label>
+                      </div>
+                      {table.getAllLeafColumns().map(column => {
+                        return (
+                          <div key={column.id} className="px-1">
+                            <label>
+                              <input
+                                {...{
+                                  type: 'checkbox',
+                                  className:
+                                    'ring-offset-background focus-visible:ring-ring peer h-4 w-4 shrink-0 rounded-sm border border-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary-400 data-[state=checked]:text-white',
+                                  checked: column.getIsVisible(),
+                                  onChange: column.getToggleVisibilityHandler(),
+                                }}
+                              />{' '}
+                              {column.id}
+                            </label>
+                          </div>
+                        )
+                      })}
+                    </PopoverContent>
+                  </Popover>
                 </tr>
-                {row.getIsExpanded() && (
-                  <tr>
-                    {/* 2nd row is a custom 1 cell row */}
-                    <td colSpan={row.getVisibleCells().length}>
-                      {renderSubComponent?.({ row })}
-                    </td>
-                  </tr>
-                )}
-                </Fragment>
-              )
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => {
+                return (
+                  <Fragment key={row.id}>
+                    <tr className="border-secondary-70 border-t-2" key={row.id}>
+                      {row.getVisibleCells().map((cell, index) => {
+                        if (index === row.getVisibleCells().length - 1) {
+                          return (
+                            <Fragment key={cell.id}>
+                              <td className="h-9" key={cell.id}>
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
+                              </td>
+                            </Fragment>
+                          )
+                        } else {
+                          return (
+                            <td className="h-9" key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                          )
+                        }
+                      })}
+                    </tr>
+                    {row.getIsExpanded() && (
+                      <tr>
+                        {/* 2nd row is a custom 1 cell row */}
+                        <td colSpan={row.getVisibleCells().length}>
+                          {renderSubComponent?.({ row })}
+                        </td>
+                      </tr>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </tbody>
+          </table>
+        </>
       )}
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="flex gap-3">
-          <span className="flex items-center gap-1 text-body-light">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
