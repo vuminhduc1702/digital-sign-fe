@@ -1,8 +1,6 @@
 import {
-  type Dispatch,
   type ReactElement,
   type ReactNode,
-  type SetStateAction,
   cloneElement,
   useEffect,
 } from 'react'
@@ -20,9 +18,7 @@ type FormDrawerProps = {
   title: string
   children: ReactNode
   size?: DrawerProps['size']
-  otherState?: boolean | string
   resetData?: () => void
-  setOtherState?: Dispatch<SetStateAction<any>>
 }
 
 export const FormDrawer = ({

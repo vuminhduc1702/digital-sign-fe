@@ -192,7 +192,7 @@ export const createEventSchema = z
     action: eventActionSchema,
     interval: eventIntervalSchema,
     status: z.boolean().optional(),
-    retry: z.string(),
+    retry: z.number(),
     onClick: z.boolean(),
   })
   .and(
@@ -295,27 +295,55 @@ export function CreateEvent() {
     label: item,
   }))
 
-  const [todos, setTodos] = useState([
-    { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
-    { id: '2', name: 'Thứ Ba', selected: false, value: 'tuesday' },
-    { id: '3', name: 'Thứ Tư', selected: false, value: 'wednesday' },
-    { id: '4', name: 'Thứ Năm', selected: false, value: 'thursday' },
-    { id: '5', name: 'Thứ Sáu', selected: false, value: 'friday' },
-    { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
-    { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
-  ])
+  const initialTodos = [
+    {
+      id: '1',
+      name: t('cloud:org_manage.event_manage.add_event.interval.mon'),
+      selected: false,
+      value: 'monday',
+    },
+    {
+      id: '2',
+      name: t('cloud:org_manage.event_manage.add_event.interval.tue'),
+      selected: false,
+      value: 'tuesday',
+    },
+    {
+      id: '3',
+      name: t('cloud:org_manage.event_manage.add_event.interval.wed'),
+      selected: false,
+      value: 'wednesday',
+    },
+    {
+      id: '4',
+      name: t('cloud:org_manage.event_manage.add_event.interval.thu'),
+      selected: false,
+      value: 'thursday',
+    },
+    {
+      id: '5',
+      name: t('cloud:org_manage.event_manage.add_event.interval.fri'),
+      selected: false,
+      value: 'friday',
+    },
+    {
+      id: '6',
+      name: t('cloud:org_manage.event_manage.add_event.interval.sat'),
+      selected: false,
+      value: 'saturday',
+    },
+    {
+      id: '7',
+      name: t('cloud:org_manage.event_manage.add_event.interval.sun'),
+      selected: false,
+      value: 'sunday',
+    },
+  ]
+  const [todos, setTodos] = useState(initialTodos)
 
   const clearData = () => {
     reset()
-    setTodos([
-      { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
-      { id: '2', name: 'Thứ Ba', selected: false, value: 'tuesday' },
-      { id: '3', name: 'Thứ Tư', selected: false, value: 'wednesday' },
-      { id: '4', name: 'Thứ Năm', selected: false, value: 'thursday' },
-      { id: '5', name: 'Thứ Sáu', selected: false, value: 'friday' },
-      { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
-      { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
-    ])
+    setTodos(initialTodos)
   }
 
   const todoClicked = (e: any) => {
@@ -403,7 +431,7 @@ export function CreateEvent() {
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: values.status === true,
-              retry: values.retry ? parseInt(values.retry) : null,
+              retry: values.retry,
               schedule: scheduleValue,
               interval,
               type: getValues('type'),
@@ -505,13 +533,25 @@ export function CreateEvent() {
                 error={formState.errors['type']}
                 registration={register('type')}
                 options={[
-                  { value: 'schedule', label: 'Lập lịch schedule' },
-                  { value: 'event', label: 'Lập lịch event' },
+                  {
+                    value: 'schedule',
+                    label: t(
+                      'cloud:org_manage.event_manage.add_event.schedule_type',
+                    ),
+                  },
+                  {
+                    value: 'event',
+                    label: t(
+                      'cloud:org_manage.event_manage.add_event.event_type',
+                    ),
+                  },
                 ]}
               />
               <InputField
                 label={t('cloud:org_manage.event_manage.add_event.retry')}
-                registration={register('retry')}
+                registration={register('retry', {
+                  valueAsNumber: true,
+                })}
                 type="number"
               />
             </div>

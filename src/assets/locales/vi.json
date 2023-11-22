@@ -257,6 +257,8 @@
           "parent": "Trực thuộc tổ chức",
           "info": " Thông tin cơ bản",
           "type_event": "Kiểu sự kiện",
+          "schedule_type": "Lập lịch schedule",
+          "event_type": "Lập lịch event",
           "status": "Trạng thái",
           "retry": " Số lần lặp lại",
           "test_condition_time": "Thời gian kiểm tra điều kiện",
@@ -301,6 +303,15 @@
             },
             "address": "Địa chỉ",
             "message": "Nội dung gửi"
+          },
+          "interval": {
+            "mon": "Thứ hai",
+            "tue": "Thứ ba",
+            "wed": "Thứ tư",
+            "thu": "Thứ năm",
+            "fri": "Thứ sáu",
+            "sat": "Thứ bảy",
+            "sun": "Chủ nhật"
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
