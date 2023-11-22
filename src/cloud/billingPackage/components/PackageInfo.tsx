@@ -761,7 +761,7 @@ export function PackageInfo() {
           <Button
             type="button"
             size="md"
-            // disabled={!data?.data?.updatable}
+            disabled={!data?.data?.updatable}
             className="absolute bottom-3 right-2 bg-primary-400"
             onClick={() => setIsDisabled(!isDisabled)}
           >
