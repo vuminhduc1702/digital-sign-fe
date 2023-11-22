@@ -48,7 +48,7 @@ export const entityPlanSchema = z
     price: z.string().optional(),
     tax: z.string().optional(),
     estimate: z.string(),
-    expiry: z.string().optional(),
+    exprity: z.string().optional(),
   })
   .and(
     z.discriminatedUnion('estimate', [
@@ -236,7 +236,7 @@ export function CreatePackage() {
               }))
             }
             const expiryNumber =
-              values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
+              values?.exprity && parseInt(values?.exprity) * 24 * 60 * 60
             mutate({
               data: {
                 ...values,
@@ -354,8 +354,8 @@ export function CreatePackage() {
                     {paymentType === 'POSTPAID' && (
                       <InputField
                         label={t('billing:package_manage.popup.expiry')}
-                        error={formState.errors['expiry']}
-                        registration={register('expiry')}
+                        error={formState.errors['exprity']}
+                        registration={register('exprity')}
                         type="number"
                         classnamefieldwrapper="flex items-center gap-x-3"
                         classlabel="w-2/12"
@@ -368,12 +368,12 @@ export function CreatePackage() {
                               getValues('cal_unit'),
                             )
                           ) {
-                            setError('expiry', {
+                            setError('exprity', {
                               message: t(
                                 'billing:package_manage.popup.choose_expiry',
                               ),
                             })
-                          } else setError('expiry', { message: '' })
+                          } else setError('exprity', { message: '' })
                         }}
                       />
                     )}
