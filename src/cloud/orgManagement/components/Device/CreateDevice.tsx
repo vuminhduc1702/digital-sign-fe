@@ -146,7 +146,7 @@ export function CreateDevice() {
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-              onChange={e => {
+              customOnChange={e => {
                 setValue('group_id', e)
               }}
               options={
@@ -162,7 +162,7 @@ export function CreateDevice() {
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              onChange={e => {
+              customOnChange={e => {
                 setValue('template_id', e)
               }}
               options={
