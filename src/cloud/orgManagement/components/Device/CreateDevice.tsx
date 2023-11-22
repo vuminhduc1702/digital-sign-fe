@@ -66,6 +66,16 @@ export function CreateDevice() {
     }))
     .sort((a, b) => a.value.length - b.value.length)
 
+  const groupSelectOptions = groupData?.groups?.map(groups => ({
+    label: groups?.name,
+    value: groups?.id,
+  }))
+
+  const templateSelectOptions = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  }))
+
   const { register, formState, control, setValue, handleSubmit } = useForm<
     CreateDeviceDTO['data']
   >({
@@ -124,9 +134,6 @@ export function CreateDevice() {
             <SelectDropdown
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
-              onChange={e => {
-                setValue('org_id', e)
-              }}
               control={control}
               options={
                 orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
@@ -146,14 +153,8 @@ export function CreateDevice() {
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-              customOnChange={e => {
-                setValue('group_id', e)
-              }}
               options={
-                groupData?.groups?.map(groups => ({
-                  label: groups?.name,
-                  value: groups?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
+                groupSelectOptions !== null ? groupSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
             />
           </div>
@@ -162,14 +163,8 @@ export function CreateDevice() {
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              customOnChange={e => {
-                setValue('template_id', e)
-              }}
-              options={
-                data?.templates?.map(template => ({
-                  label: template?.name,
-                  value: template?.id,
-                })) || [{ label: '', value: '' }]
+              options={ 
+                templateSelectOptions !== null ? templateSelectOptions : [{ label: '', value: '' }]
               }
             />
             <p className="text-body-sm text-primary-400">
