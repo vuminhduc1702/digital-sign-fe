@@ -453,7 +453,6 @@ export function CreateEvent() {
               />
               <div className="space-y-1">
                 <SelectDropdown
-                  isClearable={true}
                   label={t('cloud:org_manage.device_manage.add_device.parent')}
                   name="org_id"
                   control={control}
@@ -471,7 +470,6 @@ export function CreateEvent() {
               </div>
               <div className="space-y-1">
                 <SelectDropdown
-                  isClearable={true}
                   label={t('cloud:org_manage.event_manage.add_event.group')}
                   name="group_id"
                   control={control}
@@ -643,7 +641,6 @@ export function CreateEvent() {
                     <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
                       <div className="space-y-1">
                         <SelectDropdown
-                          isClearable={true}
                           label={t(
                             'cloud:org_manage.event_manage.add_event.condition.device',
                           )}
@@ -668,7 +665,6 @@ export function CreateEvent() {
                       </div>
                       <div className="space-y-1">
                         <SelectDropdown
-                          isClearable={true}
                           label={t(
                             'cloud:org_manage.event_manage.add_event.condition.attr',
                           )}

@@ -149,7 +149,6 @@ export function CreateThing({
                     option.label === t('loading:base')
                   }
                   noOptionsMessage={() => t('table:no_base_template')}
-                  isClearable
                   isLoading={isLoadingThing}
                   maxMenuHeight={150}
                 />
@@ -168,7 +167,6 @@ export function CreateThing({
                     option.label === t('loading:base')
                   }
                   noOptionsMessage={() => t('table:no_base_shapes')}
-                  isClearable
                   isLoading={isLoadingThing}
                   maxMenuHeight={150}
                 />

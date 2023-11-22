@@ -314,7 +314,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                 {type === 'Generic' && (
                   <div className="space-y-1">
                     <SelectDropdown
-                      isClearable
                       label={
                         t('cloud:role_manage.add_policy.resources') ??
                         'Authorization resources'
@@ -336,7 +335,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                   <div className="space-y-3">
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={'Thiết bị'}
                         name={`policies.${index}.devices`}
                         options={
@@ -355,7 +353,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={'Sự kiện'}
                         name={`policies.${index}.events`}
                         options={
@@ -374,7 +371,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={'Người dùng'}
                         name={`policies.${index}.users`}
                         options={
@@ -393,7 +389,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={'Tổ chức'}
                         name={`policies.${index}.orgs`}
                         options={
@@ -414,7 +409,6 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                 )}
                 <div className="space-y-1">
                   <SelectDropdown
-                    isClearable={true}
                     label={
                       t('cloud:role_manage.add_policy.actions') ??
                       'Authorization actions'

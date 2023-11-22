@@ -6,19 +6,14 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
-import {
-  InputField,
-  SelectDropdown,
-} from '~/components/Form'
-import { queryClient } from '~/lib/react-query'
+import { InputField, SelectDropdown } from '~/components/Form'
 import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
 import { deviceSchema } from './CreateDevice'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
-
-import { type OrgList } from '~/layout/MainLayout/types'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -34,7 +29,6 @@ type UpdateDeviceProps = {
   }
   close: () => void
   isOpen: boolean
-  template_name: string
   template_id: string
 }
 export function UpdateDevice({
@@ -45,57 +39,65 @@ export function UpdateDevice({
   group,
   close,
   isOpen,
-  template_name,
   template_id,
 }: UpdateDeviceProps) {
-  console.log(group)
   const { t } = useTranslation()
+
+  const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
   const [offset, setOffset] = useState(0)
-  
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
+
+  const {
+    register,
+    formState,
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    watch,
+  } = useForm<UpdateDeviceDTO['data']>({
+    resolver: deviceSchema && zodResolver(deviceSchema),
+    defaultValues: {
+      name,
+      org_id: org_id,
+      group_id: group.value,
+      template_id: template_id,
+      key: keyDevice,
+    },
   })
+
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations || [],
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
-  const { orgId } = useParams()
-  const { id: projectId } = storage.getProject()
   const { data: groupData } = useGetGroups({
-    orgId,
+    orgId: watch('org_id'),
     projectId,
     offset,
     entity_type: 'DEVICE',
+    config: {
+      suspense: false,
+    },
   })
-
-  const { data } = useGetTemplates({ projectId })
-
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
   }))
 
-  const templateSelectOptions = data?.templates?.map(template => ({
+  const { data: templateData } = useGetTemplates({ projectId })
+  const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,
     value: template?.id,
   }))
 
-  const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
-    UpdateDeviceDTO['data']
-  >({
-    resolver: deviceSchema && zodResolver(deviceSchema),
-    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
-  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -104,8 +106,7 @@ export function UpdateDevice({
 
   useEffect(() => {
     const dataFilter = orgFlattenData.filter(item => item.id === org_id)
-    dataFilter.length &&
-      setValue('org_id', dataFilter[0]?.id)
+    dataFilter.length && setValue('org_id', dataFilter[0]?.id)
   }, [org_id])
 
   return (
@@ -133,6 +134,7 @@ export function UpdateDevice({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
+            disabled={!formState.isDirty}
           />
         </>
       )}
@@ -147,7 +149,7 @@ export function UpdateDevice({
               key: values.key,
               org_id: values.org_id,
               group_id: values.group_id,
-              template_id: values.template_id || '',
+              template_id: values.template_id,
             },
             deviceId,
           }),
@@ -168,14 +170,16 @@ export function UpdateDevice({
               name="org_id"
               control={control}
               options={
-                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.label === t('loading:org')
-              }
+              isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
+              defaultValue={orgSelectOptions?.find(
+                org => org.value === getValues('org_id'),
+              )}
             />
           </div>
           <div className="space-y-1">
@@ -183,18 +187,27 @@ export function UpdateDevice({
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-              options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }] }
-              defaultValue={groupSelectOptions?.find(group => group.value === getValues('group_id'))}
+              options={
+                groupSelectOptions || [{ label: t('loading:group'), value: '' }]
+              }
+              defaultValue={groupSelectOptions?.find(
+                group => group.value === getValues('group_id'),
+              )}
             />
           </div>
           <div>
             <SelectDropdown
-              isClearable
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              options={ templateSelectOptions || [{ label: '', value: '' }]}
-              defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
+              options={
+                templateSelectOptions || [
+                  { label: t('loading:template'), value: '' },
+                ]
+              }
+              defaultValue={templateSelectOptions?.find(
+                template => template.value === getValues('template_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.template_id?.message}

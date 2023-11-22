@@ -164,6 +164,7 @@ export function useResetDefaultImage(defaultImage: string) {
     control: controlUploadImage,
     setValue: setValueUploadImage,
     getValues: getValueUploadImage,
+    formState: formStateUploadImage,
   } = useForm<UploadImageDTO['data']>({
     resolver: uploadImageSchema && zodResolver(uploadImageSchema),
   })
@@ -194,5 +195,6 @@ export function useResetDefaultImage(defaultImage: string) {
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
+    formStateUploadImage,
   }
 }

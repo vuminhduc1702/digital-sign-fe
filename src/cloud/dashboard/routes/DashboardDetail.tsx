@@ -180,7 +180,7 @@ export function DashboardDetail() {
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
-          if (obj[key] !== null && result != null) {
+          if (obj[key] != null && result != null) {
             if (!result[key]) {
               result[key] = []
             }

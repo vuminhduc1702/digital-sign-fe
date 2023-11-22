@@ -249,7 +249,6 @@ export function UpdateAdapter({
             {thingSelectData != null ? (
               <div className="w-[calc(100%-2.5rem)] space-y-1">
                 <SelectDropdown
-                  isClearable
                   label={t('cloud:custom_protocol.thing.id')}
                   name="thing_id"
                   control={control}
@@ -280,7 +279,6 @@ export function UpdateAdapter({
             {serviceSelectData != null ? (
               <div className="w-[calc(100%-2.5rem)] space-y-1">
                 <SelectDropdown
-                  isClearable
                   label={t('cloud:custom_protocol.service.title')}
                   name="handle_service"
                   control={control}

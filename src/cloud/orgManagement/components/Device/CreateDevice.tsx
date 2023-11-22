@@ -4,19 +4,11 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import {
-  FormDrawer,
-  InputField,
-  SelectDropdown,
-  type SelectOptionString,
-} from '~/components/Form'
-import { queryClient } from '~/lib/react-query'
+import { FormDrawer, InputField, SelectDropdown } from '~/components/Form'
 import { flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
-
-import { type OrgList } from '~/layout/MainLayout/types'
 
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -24,6 +16,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -38,53 +31,50 @@ export function CreateDevice() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
-  const { orgId } = useParams()
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
-  const { data } = useGetTemplates({ projectId })
-
-  const { data: groupData } = useGetGroups({
-    orgId,
-    projectId,
-    offset,
-    entity_type: 'DEVICE',
-  })
-
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
-  const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
-
-  const groupSelectOptions = groupData?.groups?.map(groups => ({
-    label: groups?.name,
-    value: groups?.id,
-  }))
-
-  const templateSelectOptions = data?.templates?.map(template => ({
-    label: template?.name,
-    value: template?.id,
-  }))
-
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, watch, reset } = useForm<
     CreateDeviceDTO['data']
   >({
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
 
+  const { data: orgData } = useGetOrgs({ projectId })
+  const { acc: orgFlattenData } = flattenData(
+    orgData?.organizations,
+    ['id', 'name', 'level', 'description', 'parent_name'],
+    'sub_orgs',
+  )
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
+
+  const { data: groupData } = useGetGroups({
+    orgId: watch('org_id'),
+    projectId,
+    offset,
+    entity_type: 'DEVICE',
+    config: {
+      suspense: false,
+    },
+  })
+  const groupSelectOptions = groupData?.groups?.map(groups => ({
+    label: groups?.name,
+    value: groups?.id,
+  }))
+
+  const { data: templateData } = useGetTemplates({ projectId })
+  const templateSelectOptions = templateData?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  }))
+
   return (
     <FormDrawer
       isDone={isSuccess}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="rounded-md"
@@ -104,7 +94,6 @@ export function CreateDevice() {
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
-          disabled={!formState.isDirty}
         />
       }
     >
@@ -136,11 +125,11 @@ export function CreateDevice() {
               name="org_id"
               control={control}
               options={
-                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.label === t('loading:org')
-              }
+              isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />
@@ -154,7 +143,9 @@ export function CreateDevice() {
               name="group_id"
               control={control}
               options={
-                groupSelectOptions !== null ? groupSelectOptions : [{ label: t('loading:org'), value: '' }]
+                groupSelectOptions != null
+                  ? groupSelectOptions
+                  : [{ label: t('loading:group'), value: '' }]
               }
             />
           </div>
@@ -163,8 +154,10 @@ export function CreateDevice() {
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              options={ 
-                templateSelectOptions !== null ? templateSelectOptions : [{ label: '', value: '' }]
+              options={
+                templateSelectOptions != null
+                  ? templateSelectOptions
+                  : [{ label: t('loading:template'), value: '' }]
               }
             />
             <p className="text-body-sm text-primary-400">

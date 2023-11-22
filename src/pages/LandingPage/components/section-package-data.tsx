@@ -208,7 +208,7 @@ export function SectionPackageData() {
                                     ariaCheckedPrevValue === 'true'
                                       ? 'false'
                                       : 'true'
-                                  if (ariaCheckedPrevValue !== null) {
+                                  if (ariaCheckedPrevValue != null) {
                                     updateItemStateByName(
                                       item.name,
                                       ariaCheckedCurrentValue,

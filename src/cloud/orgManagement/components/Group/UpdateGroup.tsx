@@ -2,30 +2,27 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { Button } from '~/components/Button'
-import {
-  InputField,
-  SelectDropdown,
-  SelectField,
-} from '~/components/Form'
+import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
-import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
 
-import { type OrgList } from '~/layout/MainLayout/types'
 import { nameSchema } from '~/utils/schemaValidation'
 import { type EntityType } from '../../api/attrAPI'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import storage from '~/utils/storage'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
-const groupSchema = z.object({
+const groupUpdateSchema = z.object({
   name: nameSchema,
+  org_id: z.string(),
 })
 
 type UpdateGroupProps = {
@@ -47,21 +44,17 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
-
+  const { id: projectId } = storage.getProject()
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
@@ -75,9 +68,10 @@ export function UpdateGroup({
   const { register, formState, control, getValues, handleSubmit } = useForm<
     UpdateGroupDTO['data']
   >({
-    resolver: groupSchema && zodResolver(groupSchema),
+    resolver: groupUpdateSchema && zodResolver(groupUpdateSchema),
     defaultValues: { name: name, org_id: organization },
   })
+  console.log('formState.errors', formState.errors)
 
   return (
     <Drawer
@@ -113,17 +107,21 @@ export function UpdateGroup({
         className="w-full space-y-6"
         id="update-group"
         onSubmit={handleSubmit(values => {
-          if (getValues('org_id') !== organization) {
+          if (
+            getValues('org_id') !== organization &&
+            getValues('org_id') != null
+          ) {
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id: getValues('org_id'),
+                org_id: values.org_id,
               },
             })
           }
           mutate({
             data: {
-              name: values.name
+              name: values.name,
+              org_id: values.org_id,
             },
             groupId,
           })
@@ -152,19 +150,20 @@ export function UpdateGroup({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.label === t('loading:org')
-              }
+              isOptionDisabled={option => option.label === t('loading:org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               noOptionsMessage={() => t('table:no_in_org')}
-              defaultValue={orgSelectOptions.find(org => org.value === getValues('org_id'))}
+              defaultValue={orgSelectOptions.find(
+                org => org.value === getValues('org_id'),
+              )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}

@@ -259,7 +259,6 @@ export function UpdateUser({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
@@ -274,7 +273,6 @@ export function UpdateUser({
           </div>
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
               label={t('cloud:org_manage.user_manage.add_user.role')}
               name="role_id"
               control={control}

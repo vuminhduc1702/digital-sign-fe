@@ -1,6 +1,5 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -10,15 +9,12 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionString,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
 import { flattenData } from '~/utils/misc'
-import { queryClient } from '~/lib/react-query'
-
-import { type OrgList } from '~/layout/MainLayout/types'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -35,7 +31,7 @@ export const entityTypeList: EntityTypeGroup[] = [
   { type: 'EVENT', name: 'Sự kiện' },
 ]
 
-const groupSchema = z.object({
+const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
   org_id: z.string().optional(),
@@ -49,31 +45,29 @@ export function CreateGroup() {
     value: entityType.type,
   }))
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
+  const { id: projectId } = storage.getProject()
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
-  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, reset } = useForm<
     CreateGroupDTO['data']
   >({
-    resolver: groupSchema && zodResolver(groupSchema),
+    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
   })
+
   return (
     <FormDrawer
       isDone={isSuccess}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="rounded-md"
@@ -105,7 +99,7 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: values.org_id || '',
+              org_id: values.org_id,
             },
           })
         })}
@@ -124,15 +118,15 @@ export function CreateGroup() {
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.label === t('loading:org')
-              }
+              isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />

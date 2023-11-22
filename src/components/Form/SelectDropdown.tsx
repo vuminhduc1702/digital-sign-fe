@@ -70,6 +70,7 @@ export function SelectDropdown<
                 isMulti={isMulti}
                 className="w-full"
                 isSearchable
+                isClearable
                 placeholder={placeholder ?? t('placeholder:select')}
                 onChange={(e, { action }) => {
                   if (action === 'clear' || action === 'remove-value') {

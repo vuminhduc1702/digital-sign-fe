@@ -83,22 +83,22 @@ export function UpdateRole({
   const groupDataDeviceOptons = groupDataDevice?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
-  })) || [{ label: t('loading:org'), value: '' }]
+  })) || [{ label: t('loading:group'), value: '' }]
 
   const groupDataEventOptons = groupDataEvent?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
-  })) || [{ label: t('loading:org'), value: '' }]
+  })) || [{ label: t('loading:group'), value: '' }]
 
   const groupDataUserOptons = groupDataUser?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
-  })) || [{ label: t('loading:org'), value: '' }]
+  })) || [{ label: t('loading:group'), value: '' }]
 
   const groupDataOrgOptons = groupDataOrg?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
-  })) || [{ label: t('loading:org'), value: '' }]
+  })) || [{ label: t('loading:group'), value: '' }]
 
   useEffect(() => {
     if (isSuccess) {
@@ -247,10 +247,10 @@ export function UpdateRole({
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
-              className="text-secondary-700 rounded-md"
+              className="rounded-md text-secondary-700"
               variant="trans"
               size="square"
               startIcon={
@@ -289,7 +289,6 @@ export function UpdateRole({
                 {type === 'Generic' && (
                   <div className="space-y-1">
                     <SelectDropdown
-                      isClearable={true}
                       label={t('cloud:role_manage.add_policy.resources')}
                       name={`policies.${index}.resources`}
                       options={resourcesList}
@@ -311,7 +310,6 @@ export function UpdateRole({
                   <div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:org_manage.device_manage.title')}
                         name={`policies.${index}.devices`}
                         options={groupDataDeviceOptons}
@@ -330,7 +328,6 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:org_manage.event_manage.title')}
                         name={`policies.${index}.events`}
                         options={groupDataEventOptons}
@@ -349,7 +346,6 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:org_manage.user_manage.title')}
                         name={`policies.${index}.users`}
                         options={groupDataUserOptons}
@@ -368,7 +364,6 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isClearable={true}
                         label={t('cloud:org_manage.org_manage.title')}
                         name={`policies.${index}.orgs`}
                         options={groupDataOrgOptons}
@@ -389,7 +384,6 @@ export function UpdateRole({
                 )}
                 <div className="space-y-1">
                   <SelectDropdown
-                    isClearable={true}
                     label={t('cloud:role_manage.add_policy.actions')}
                     name={`policies.${index}.actions`}
                     options={actionsList}

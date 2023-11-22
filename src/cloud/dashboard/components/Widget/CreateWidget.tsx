@@ -14,7 +14,6 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionGeneric,
 } from '~/components/Form'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -199,7 +198,7 @@ type CreateWidgetProps = {
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataTypeOptions: SelectOptionGeneric<WidgetDataType>[] = [
+const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -506,7 +505,6 @@ export function CreateWidget({
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
                         }
-                        isClearable
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
@@ -711,7 +709,6 @@ export function CreateWidget({
                             placeholder={t(
                               'cloud:org_manage.org_manage.add_attr.choose_attr',
                             )}
-                            isClearable
                             isLoading={attrChartIsLoading}
                           />
                           <p className="text-body-sm text-primary-400">

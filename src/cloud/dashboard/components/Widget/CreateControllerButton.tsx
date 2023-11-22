@@ -318,7 +318,6 @@ export function CreateControllerButton({
                       <div className="flex w-2/3 gap-x-2">
                         <div className="w-full space-y-1">
                           <SelectDropdown
-                            isClearable={true}
                             label={t('cloud:custom_protocol.service.input')}
                             name={`input.${index}.name`}
                             control={control}

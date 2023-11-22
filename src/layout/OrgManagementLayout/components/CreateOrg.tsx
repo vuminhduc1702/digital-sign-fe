@@ -20,14 +20,13 @@ import {
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { type OrgList } from '~/layout/MainLayout/types'
-import { queryClient } from '~/lib/react-query.ts'
 import { flattenData } from '~/utils/misc.ts'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
   useResetDefaultImage,
 } from '~/utils/hooks'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -61,20 +60,16 @@ export function CreateOrg() {
 
   const { id: projectId } = storage.getProject()
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
 
@@ -90,7 +85,7 @@ export function CreateOrg() {
   } = useUploadImage()
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, reset } = useForm<
     CreateOrgDTO['data']
   >({
     resolver: orgSchema && zodResolver(orgSchema),
@@ -99,6 +94,7 @@ export function CreateOrg() {
   const clearData = () => {
     setUploadImageErr('')
     handleResetDefaultImage()
+    reset()
   }
 
   return (
@@ -166,16 +162,15 @@ export function CreateOrg() {
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              isOptionDisabled={option =>
-                option.label === t('loading:org')
-              }
+              isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />

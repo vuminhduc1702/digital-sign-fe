@@ -384,7 +384,6 @@ export function UpdateEvent({
                   />
                   <div className="space-y-1">
                     <SelectDropdown
-                      isClearable={true}
                       label={t(
                         'cloud:org_manage.device_manage.add_device.parent',
                       )}
@@ -405,7 +404,6 @@ export function UpdateEvent({
                   </div>
                   <div className="space-y-1">
                     <SelectDropdown
-                      isClearable={true}
                       label={t('cloud:org_manage.event_manage.add_event.group')}
                       name="group_id"
                       control={control}
@@ -560,7 +558,6 @@ export function UpdateEvent({
                         <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
                           <div className="space-y-1">
                             <SelectDropdown
-                              isClearable={true}
                               label={t(
                                 'cloud:org_manage.event_manage.add_event.condition.device',
                               )}
@@ -589,7 +586,6 @@ export function UpdateEvent({
                           </div>
                           <div className="space-y-1">
                             <SelectDropdown
-                              isClearable={true}
                               label={t(
                                 'cloud:org_manage.event_manage.add_event.condition.attr',
                               )}
@@ -610,7 +606,6 @@ export function UpdateEvent({
                           </div>
                           <div className="space-y-1">
                             <SelectDropdown
-                              isClearable={true}
                               label={t(
                                 'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
                               )}
@@ -627,7 +622,6 @@ export function UpdateEvent({
                           </div>
                           <div className="space-y-1">
                             <SelectDropdown
-                              isClearable={true}
                               label={t(
                                 'cloud:org_manage.event_manage.add_event.condition.operator.title',
                               )}
@@ -653,7 +647,6 @@ export function UpdateEvent({
                           />
                           <div className="flex justify-end">
                             <SelectDropdown
-                              isClearable={true}
                               label={t(
                                 'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
                               )}
@@ -705,7 +698,6 @@ export function UpdateEvent({
                     <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                       <div className="space-y-1">
                         <SelectDropdown
-                          isClearable={true}
                           label={t(
                             'cloud:org_manage.event_manage.add_event.action.action_type.title',
                           )}

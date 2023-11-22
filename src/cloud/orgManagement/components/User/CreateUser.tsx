@@ -71,6 +71,7 @@ export function CreateUser() {
   const { mutate, isLoading, isSuccess } = useCreateUser()
 
   const { id: projectId } = storage.getProject()
+
   const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
@@ -237,7 +238,6 @@ export function CreateUser() {
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
@@ -249,7 +249,6 @@ export function CreateUser() {
           </div>
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
               label={t('cloud:org_manage.user_manage.add_user.role')}
               name="role_id"
               control={control}
