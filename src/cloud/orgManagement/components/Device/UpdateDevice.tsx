@@ -71,22 +71,7 @@ export function UpdateDevice({
     offset,
     entity_type: 'DEVICE',
   })
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-  const { data } = useGetTemplates({ projectId })
->>>>>>> c821404... Update select dropdown for org and group
 
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
-
-<<<<<<< HEAD
->>>>>>> 3f4b019... Update select dropdown
   const { data } = useGetTemplates({ projectId })
 
   const orgSelectOptions = orgFlattenData
@@ -96,8 +81,6 @@ export function UpdateDevice({
     }))
     .sort((a, b) => a.value.length - b.value.length)
 
-=======
->>>>>>> c821404... Update select dropdown for org and group
   const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
@@ -112,15 +95,7 @@ export function UpdateDevice({
     UpdateDeviceDTO['data']
   >({
     resolver: deviceSchema && zodResolver(deviceSchema),
-<<<<<<< HEAD
-<<<<<<< HEAD
     defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
-=======
-    defaultValues: { name, org_id, group_id: group.value, template_id: template_id, key: keyDevice },
->>>>>>> 3f4b019... Update select dropdown
-=======
-    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
->>>>>>> c821404... Update select dropdown for org and group
   })
   useEffect(() => {
     if (isSuccess) {
@@ -201,14 +176,7 @@ export function UpdateDevice({
               }
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-<<<<<<< HEAD
-<<<<<<< HEAD
               defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
-=======
->>>>>>> 3f4b019... Update select dropdown
-=======
-              defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
->>>>>>> c821404... Update select dropdown for org and group
             />
           </div>
           <div className="space-y-1">
@@ -216,19 +184,7 @@ export function UpdateDevice({
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}
-<<<<<<< HEAD
-<<<<<<< HEAD
               options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }]
-=======
-              options={
-                groupData?.groups?.map(groups => ({
-                  label: groups?.name,
-                  value: groups?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
->>>>>>> 3f4b019... Update select dropdown
-=======
-              options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }]
->>>>>>> c821404... Update select dropdown for org and group
               }
               defaultValue={groupSelectOptions?.find(group => group.value === getValues('group_id'))}
             />
@@ -239,22 +195,8 @@ export function UpdateDevice({
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-<<<<<<< HEAD
-<<<<<<< HEAD
               options={ templateSelectOptions || [{ label: '', value: '' }]}
               defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
-=======
-              options={
-                data?.templates?.map(template => ({
-                  label: template?.name,
-                  value: template?.id,
-                })) || [{ label: '', value: '' }]
-              }
->>>>>>> 3f4b019... Update select dropdown
-=======
-              options={ templateSelectOptions || [{ label: '', value: '' }]}
-              defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
->>>>>>> c821404... Update select dropdown for org and group
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.template_id?.message}
