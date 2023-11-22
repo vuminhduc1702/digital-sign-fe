@@ -37,7 +37,6 @@ export const actionsList: ActionsType[] = [
 
 export const roleSchema = z
   .object({
-    role_type: z.string(),
     name: nameSchema,
   })
   .and(

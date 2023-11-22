@@ -26,10 +26,12 @@ function RoleTableContextMenu({
   id,
   name,
   role,
+  project_id,
 }: {
   id: string
   name: string
   role: Role
+  project_id: string
 }) {
   const { t } = useTranslation()
   const [selectedUpdateRole, setSelectedUpdateRole] = useState<Role>()
@@ -119,6 +121,7 @@ function RoleTableContextMenu({
       </Dropdown>
       {selectedUpdateRole != null ? (
         <UpdateRole
+          project_id={project_id}
           close={close}
           isOpen={isOpen}
           roleId={selectedUpdateRole.id}
@@ -133,6 +136,7 @@ function RoleTableContextMenu({
 
 type RoleTableProps = {
   data: Role[]
+  project_id: string
 } & BaseTablePagination
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
@@ -191,6 +195,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
             id,
             name,
             role,
+            project_id: props.project_id,
           })
         },
         header: () => null,
