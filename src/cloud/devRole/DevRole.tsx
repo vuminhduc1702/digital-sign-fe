@@ -69,6 +69,7 @@ export default function DevRole() {
         </div>
         {projectId && (
           <RoleTable
+            project_id={projectId}
             data={filteredComboboxData}
             offset={offset}
             setOffset={setOffset}
