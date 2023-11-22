@@ -209,6 +209,7 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "select_all" : "Chọn tất cả",
           "group_id": "ID Nhóm",
           "org_id": "ID Tổ chức",
           "template_id": "ID Mẫu thiết bị",

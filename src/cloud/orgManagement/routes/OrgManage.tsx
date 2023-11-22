@@ -66,7 +66,7 @@ export function OrgManage() {
           </div>
           <div className="flex grow flex-col">
             <TitleBar title={t('cloud:org_manage.org_manage.attr_list')} />
-            <div className="flex grow flex-col px-9 py-3 shadow-lg">
+            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">

@@ -57,7 +57,7 @@ export function BillingTemplate() {
   return (
     <>
       <TitleBar title={t('sidebar:payment.plhd')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-3">
             <SelectField
@@ -72,7 +72,7 @@ export function BillingTemplate() {
             />
             <InputField
               value={value}
-              className='mt-1 h-[37px]'
+              className="mt-1 h-[37px]"
               onChange={e => setValue(e.target.value)}
             />
             <div className={cn('grid gap-2')}>
@@ -97,10 +97,7 @@ export function BillingTemplate() {
                         format(date.from, 'dd MM, y')
                       )
                     ) : (
-                      <span>{t(
-                        'cloud:dashboard.config_chart.pick_date',
-                      )}
-                      </span>
+                      <span>{t('cloud:dashboard.config_chart.pick_date')}</span>
                     )}
                     {date?.from && (
                       <XMarkIcon

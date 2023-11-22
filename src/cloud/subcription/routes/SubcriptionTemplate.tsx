@@ -45,7 +45,7 @@ export function SubcriptionTemplate() {
   return (
     <>
       <TitleBar title={t('sidebar:payment.pldk')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-3">
             <SelectField
@@ -61,7 +61,7 @@ export function SubcriptionTemplate() {
             />
             <InputField
               value={value}
-              className='mt-1 h-[37px]'
+              className="mt-1 h-[37px]"
               onChange={e => setValue(e.target.value)}
             />
             <Button

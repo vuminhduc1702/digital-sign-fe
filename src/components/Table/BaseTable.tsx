@@ -11,9 +11,7 @@ import {
   type VisibilityState,
 } from '@tanstack/react-table'
 import {
-  type Dispatch,
   Fragment,
-  type SetStateAction,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -28,6 +26,7 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+
 export function BaseTable<T extends Record<string, any>>({
   data,
   columns,
@@ -38,8 +37,7 @@ export function BaseTable<T extends Record<string, any>>({
   className,
   renderSubComponent,
   getRowCanExpand,
-  columnVisibility,
-  setColumnVisibility,
+  colsVisibility = {},
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -50,13 +48,12 @@ export function BaseTable<T extends Record<string, any>>({
   className?: string
   renderSubComponent?: (props: { row: Row<T> }) => React.ReactElement
   getRowCanExpand?: (row: Row<T>) => boolean
-  columnVisibility?: VisibilityState
-  setColumnVisibility?: Dispatch<SetStateAction<VisibilityState>>
+  colsVisibility?: VisibilityState
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
-
+  const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const defaultData = useMemo(() => [], [])
 
   const table = useReactTable({
@@ -134,7 +131,7 @@ export function BaseTable<T extends Record<string, any>>({
                   <Popover>
                     <PopoverTrigger
                       onClick={e => e.stopPropagation()}
-                      className=""
+                      className="absolute right-0 top-1"
                       asChild
                     >
                       <Button
@@ -151,40 +148,48 @@ export function BaseTable<T extends Record<string, any>>({
                         }
                       />
                     </PopoverTrigger>
-                    <PopoverContent className="w-40" align="start">
-                      <div className="mb-1 border-b border-black px-1">
-                        <label>
+                    <PopoverContent
+                      className="h-72 w-40 overflow-auto"
+                      align="start"
+                    >
+                      <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
+                        <label htmlFor="checkAll">
                           <input
-                            {...{
-                              type: 'checkbox',
-                              className:
-                                'ring-offset-background focus-visible:ring-ring peer h-4 w-4 shrink-0 rounded-sm border border-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary-400 data-[state=checked]:text-white',
-                              checked: table.getIsAllColumnsVisible(),
-                              onChange:
-                                table.getToggleAllColumnsVisibilityHandler(),
-                            }}
-                          />{' '}
-                          Toggle All
+                            type="checkbox"
+                            id="checkAll"
+                            className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                            checked={table.getIsAllColumnsVisible()}
+                            onChange={table.getToggleAllColumnsVisibilityHandler()}
+                          />
+                          {t('cloud:org_manage.device_manage.table.select_all')}
                         </label>
                       </div>
-                      {table.getAllLeafColumns().map(column => {
-                        return (
-                          <div key={column.id} className="px-1">
-                            <label>
-                              <input
-                                {...{
-                                  type: 'checkbox',
-                                  className:
-                                    'ring-offset-background focus-visible:ring-ring peer h-4 w-4 shrink-0 rounded-sm border border-primary-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary-400 data-[state=checked]:text-white',
-                                  checked: column.getIsVisible(),
-                                  onChange: column.getToggleVisibilityHandler(),
-                                }}
-                              />{' '}
-                              {column.id}
-                            </label>
-                          </div>
-                        )
-                      })}
+
+                      <div className="mt-4">
+                        {table
+                          .getAllLeafColumns()
+                          .filter(
+                            column =>
+                              column.id !== 'contextMenu' &&
+                              column.id !== 'stt',
+                          )
+                          .map(column => {
+                            return (
+                              <div key={column.id} className="p-1">
+                                <label htmlFor={column.id}>
+                                  <input
+                                    type="checkbox"
+                                    id={column.id}
+                                    className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                    checked={column.getIsVisible()}
+                                    onChange={column.getToggleVisibilityHandler()}
+                                  />
+                                  {column.columnDef.header()}
+                                </label>
+                              </div>
+                            )
+                          })}
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </tr>
