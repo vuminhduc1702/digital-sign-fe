@@ -9,7 +9,6 @@ import { Drawer } from '~/components/Drawer'
 import {
   InputField,
   SelectDropdown,
-  type SelectOptionString,
 } from '~/components/Form'
 import { queryClient } from '~/lib/react-query'
 import { flattenData } from '~/utils/misc'
@@ -49,20 +48,12 @@ export function UpdateDevice({
   template_name,
   template_id,
 }: UpdateDeviceProps) {
+  console.log(group)
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
   const [offset, setOffset] = useState(0)
-  const [orgValue, setOrgValue] = useState<SelectOptionString>({
-    label: '',
-    value: '',
-  })
-  const [templateValue, setTemplateValue] = useState<SelectOptionString>({
-    label: template_name,
-    value: template_id,
-  })
-  const [groupValue, setGroupValue] = useState(group)
-
+  
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -82,11 +73,28 @@ export function UpdateDevice({
   })
 
   const { data } = useGetTemplates({ projectId })
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+
+  const orgSelectOptions = orgFlattenData
+    ?.map(org => ({
+      label: org?.name,
+      value: org?.id,
+    }))
+    .sort((a, b) => a.value.length - b.value.length)
+  const groupSelectOptions = groupData?.groups?.map(groups => ({
+    label: groups?.name,
+    value: groups?.id,
+  }))
+
+  const templateSelectOptions = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  }))
+
+  const { register, formState, control, setValue, getValues, handleSubmit } = useForm<
     UpdateDeviceDTO['data']
   >({
     resolver: deviceSchema && zodResolver(deviceSchema),
-    defaultValues: { name, key: keyDevice },
+    defaultValues: { name, org_id: org_id, group_id: group.value, template_id: template_id, key: keyDevice },
   })
   useEffect(() => {
     if (isSuccess) {
@@ -97,10 +105,7 @@ export function UpdateDevice({
   useEffect(() => {
     const dataFilter = orgFlattenData.filter(item => item.id === org_id)
     dataFilter.length &&
-      setOrgValue({
-        label: dataFilter[0]?.name,
-        value: dataFilter[0]?.id,
-      })
+      setValue('org_id', dataFilter[0]?.id)
   }, [org_id])
 
   return (
@@ -140,9 +145,9 @@ export function UpdateDevice({
             data: {
               name: values.name,
               key: values.key,
-              org_id: orgValue?.value,
-              group_id: groupValue?.value,
-              template_id: templateValue?.value || '',
+              org_id: values.org_id,
+              group_id: values.group_id,
+              template_id: values.template_id || '',
             },
             deviceId,
           }),
@@ -159,50 +164,37 @@ export function UpdateDevice({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={false}
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
-              value={orgValue}
-              onChange={e => setOrgValue(e)}
               options={
-                orgFlattenData?.map(org => ({
-                  label: org?.name,
-                  value: org?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              defaultValue={orgSelectOptions?.find(org => org.value === getValues('org_id'))}
             />
           </div>
           <div className="space-y-1">
             <SelectDropdown
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
-              isClearable={false}
               control={control}
-              value={groupValue}
-              onChange={e => setGroupValue(e)}
-              options={
-                groupData?.groups?.map(groups => ({
-                  label: groups?.name,
-                  value: groups?.id,
-                })) || [{ label: t('loading:org'), value: '' }]
-              }
+              options={ groupSelectOptions || [{ label: t('loading:org'), value:'' }] }
+              defaultValue={groupSelectOptions?.find(group => group.value === getValues('group_id'))}
             />
           </div>
           <div>
             <SelectDropdown
-              isClearable={false}
+              isClearable
               label={t('cloud:firmware.add_firmware.template')}
               name="template_id"
               control={control}
-              value={templateValue}
-              onChange={e => setTemplateValue(e)}
-              options={
-                data?.templates?.map(template => ({
-                  label: template?.name,
-                  value: template?.id,
-                })) || [{ label: '', value: '' }]
-              }
+              options={ templateSelectOptions || [{ label: '', value: '' }]}
+              defaultValue={templateSelectOptions?.find(template => template.value === getValues('template_id'))}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.template_id?.message}

@@ -159,7 +159,6 @@ export function UpdateAdapter({
         id="update-adapter"
         className="flex w-full flex-col justify-between"
         onSubmit={handleSubmit(values => {
-          // console.log('adapter values', values)
           if (values.protocol === 'mqtt') {
             const data = {
               project_id: projectId,

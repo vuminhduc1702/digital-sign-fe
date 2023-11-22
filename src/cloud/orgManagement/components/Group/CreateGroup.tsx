@@ -44,7 +44,10 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
-  const [option, setOption] = useState<SelectOptionString>()
+  const entityTypeOptions = entityTypeList.map(entityType => ({
+    label: entityType.name,
+    value: entityType.type,
+  }))
 
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
@@ -63,7 +66,7 @@ export function CreateGroup() {
 
   const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit } = useForm<
     CreateGroupDTO['data']
   >({
     resolver: groupSchema && zodResolver(groupSchema),
@@ -102,7 +105,7 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: option?.value || '',
+              org_id: values.org_id || '',
             },
           })
         })}
@@ -117,25 +120,21 @@ export function CreateGroup() {
             label={t('cloud:org_manage.group_manage.add_group.entity_type')}
             error={formState.errors['entity_type']}
             registration={register('entity_type')}
-            options={entityTypeList.map(entityType => ({
-              label: entityType.name,
-              value: entityType.type,
-            }))}
+            options={entityTypeOptions}
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              isClearable
               name="org_id"
               control={control}
               options={
-                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              onChange={e => {
-                setOption(e)
-                setValue('org_id', e.value)
-              }}
-              value={option}
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}

@@ -9,7 +9,6 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionString,
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
@@ -48,7 +47,6 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
-  const [optionOrg, setOptionOrg] = useState<SelectOptionString>()
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
@@ -64,7 +62,6 @@ export function UpdateGroup({
       value: org?.id,
     }))
     .sort((a, b) => a.value.length - b.value.length)
-    .filter(org => org.value !== organization)
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()
@@ -75,17 +72,7 @@ export function UpdateGroup({
     }
   }, [isSuccess, close])
 
-  useEffect(() => {
-    const filterOrg = orgFlattenData.filter(org => org.id === organization)[0]
-    if (organization) {
-      setOptionOrg({
-        label: filterOrg?.name,
-        value: filterOrg?.id,
-      })
-    }
-  }, [organization])
-
-  const { register, formState, control, setValue, handleSubmit } = useForm<
+  const { register, formState, control, getValues, handleSubmit } = useForm<
     UpdateGroupDTO['data']
   >({
     resolver: groupSchema && zodResolver(groupSchema),
@@ -125,15 +112,22 @@ export function UpdateGroup({
       <form
         className="w-full space-y-6"
         id="update-group"
-        onSubmit={handleSubmit(values =>
+        onSubmit={handleSubmit(values => {
+          if (getValues('org_id') !== organization) {
+            mutateUpdateOrgForGroup({
+              data: {
+                ids: [groupId],
+                org_id: getValues('org_id'),
+              },
+            })
+          }
           mutate({
             data: {
-              name: values.name,
-              org_id: optionOrg?.value,
+              name: values.name
             },
             groupId,
-          }),
-        )}
+          })
+        })}
       >
         <>
           <InputField
@@ -158,24 +152,19 @@ export function UpdateGroup({
           />
           <div className="space-y-1">
             <SelectDropdown
-              isClearable={true}
+              isClearable
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
               options={
-                orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                orgSelectOptions !== null ? orgSelectOptions : [{ label: t('loading:org'), value: '' }]
               }
-              onChange={e => {
-                setOptionOrg(e)
-                mutateUpdateOrgForGroup({
-                  data: {
-                    ids: [groupId],
-                    org_id: e.value,
-                  },
-                })
-                setValue('org_id', e?.value)
-              }}
-              value={optionOrg}
+              isOptionDisabled={option =>
+                option.label === t('loading:org')
+              }
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              noOptionsMessage={() => t('table:no_in_org')}
+              defaultValue={orgSelectOptions.find(org => org.value === getValues('org_id'))}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
