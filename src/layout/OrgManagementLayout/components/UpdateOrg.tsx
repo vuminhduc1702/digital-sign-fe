@@ -51,10 +51,6 @@ export function UpdateOrg({
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
-<<<<<<< HEAD
-=======
-  // const [updatedOrg, setUpdatedOrg] = useState<OrgMapType>()
->>>>>>> 7d2ff3fd20131c67041a0e12e94c1e9a240b8d13
   const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
     exact: false,
   })
