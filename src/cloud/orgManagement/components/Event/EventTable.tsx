@@ -12,6 +12,7 @@ import storage from '~/utils/storage'
 import { useDeleteEvent } from '../../api/eventAPI'
 import { useTriggerEvent } from '../../api/eventAPI/triggerEvent'
 import { UpdateEvent } from './UpdateEvent'
+import i18n from '~/i18n'
 
 import { type EventType } from '../../types'
 
@@ -20,6 +21,51 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+
+export const initialTodos = [
+  {
+    id: '1',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.mon'),
+    selected: false,
+    value: 'monday',
+  },
+  {
+    id: '2',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.tue'),
+    selected: false,
+    value: 'tuesday',
+  },
+  {
+    id: '3',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.wed'),
+    selected: false,
+    value: 'wednesday',
+  },
+  {
+    id: '4',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.thu'),
+    selected: false,
+    value: 'thursday',
+  },
+  {
+    id: '5',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.fri'),
+    selected: false,
+    value: 'friday',
+  },
+  {
+    id: '6',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.sat'),
+    selected: false,
+    value: 'saturday',
+  },
+  {
+    id: '7',
+    name: i18n.t('cloud:org_manage.event_manage.add_event.interval.sun'),
+    selected: false,
+    value: 'sunday',
+  },
+]
 
 function EventTableContextMenu({
   id,
@@ -36,15 +82,7 @@ function EventTableContextMenu({
   const [startTime, setStartTime] = useState('')
   const [endTime, setEndTime] = useState('')
   const [typeEvent, setTypeEvent] = useState('')
-  const [todos, setTodos] = useState([
-    { id: '1', name: 'Thứ Hai', selected: false, value: 'monday' },
-    { id: '2', name: 'Thứ Ba', selected: false, value: 'tuesday' },
-    { id: '3', name: 'Thứ Tư', selected: false, value: 'wednesday' },
-    { id: '4', name: 'Thứ Năm', selected: false, value: 'thursday' },
-    { id: '5', name: 'Thứ Sáu', selected: false, value: 'friday' },
-    { id: '6', name: 'Thứ Bảy', selected: false, value: 'saturday' },
-    { id: '7', name: 'Chủ Nhật', selected: false, value: 'sunday' },
-  ])
+  const [todos, setTodos] = useState(initialTodos)
 
   useEffect(() => {
     typeof dataRow?.action === 'string' &&
@@ -219,10 +257,11 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
           return (
             <span
               className={`${
-                info.row.original.onClick === 'true' && 'cursor-pointer'
+                (info.row.original.onClick as unknown as string) === 'true' &&
+                'cursor-pointer'
               }`}
               onClick={() =>
-                info.row.original.onClick === 'true' &&
+                (info.row.original.onClick as unknown as string) === 'true' &&
                 mutate({
                   data: {
                     event_id: id,
@@ -231,7 +270,7 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
                 })
               }
             >
-              {info.row.original.onClick === 'true' && (
+              {(info.row.original.onClick as unknown as string) === 'true' && (
                 <Button
                   className="w-30 justify-start rounded-md border-none"
                   variant="secondaryLight"

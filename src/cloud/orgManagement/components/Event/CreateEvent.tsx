@@ -2,9 +2,9 @@ import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useState } from 'react'
-import { useGetOrgs } from '~/layout/MainLayout/api'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { useGetOrgs } from '~/layout/MainLayout/api'
 import { Button } from '~/components/Button'
 import {
   FormDrawer,
@@ -15,7 +15,6 @@ import {
 } from '~/components/Form'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
-import { nameSchema } from '~/utils/schemaValidation'
 import { useGetDevices } from '../../api/deviceAPI'
 import { cn, flattenData } from '~/utils/misc'
 import TitleBar from '~/components/Head/TitleBar'
@@ -23,6 +22,9 @@ import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import i18n from '~/i18n'
 import { useCreateAttrChart } from '~/cloud/dashboard/api'
+
+import { nameSchema } from '~/utils/schemaValidation'
+import { initialTodos } from './EventTable'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -230,6 +232,7 @@ export function CreateEvent() {
       onClick: false,
       status: true,
       action: [{}],
+      condition: [{}],
     },
   })
   const {
@@ -295,50 +298,6 @@ export function CreateEvent() {
     label: item,
   }))
 
-  const initialTodos = [
-    {
-      id: '1',
-      name: t('cloud:org_manage.event_manage.add_event.interval.mon'),
-      selected: false,
-      value: 'monday',
-    },
-    {
-      id: '2',
-      name: t('cloud:org_manage.event_manage.add_event.interval.tue'),
-      selected: false,
-      value: 'tuesday',
-    },
-    {
-      id: '3',
-      name: t('cloud:org_manage.event_manage.add_event.interval.wed'),
-      selected: false,
-      value: 'wednesday',
-    },
-    {
-      id: '4',
-      name: t('cloud:org_manage.event_manage.add_event.interval.thu'),
-      selected: false,
-      value: 'thursday',
-    },
-    {
-      id: '5',
-      name: t('cloud:org_manage.event_manage.add_event.interval.fri'),
-      selected: false,
-      value: 'friday',
-    },
-    {
-      id: '6',
-      name: t('cloud:org_manage.event_manage.add_event.interval.sat'),
-      selected: false,
-      value: 'saturday',
-    },
-    {
-      id: '7',
-      name: t('cloud:org_manage.event_manage.add_event.interval.sun'),
-      selected: false,
-      value: 'sunday',
-    },
-  ]
   const [todos, setTodos] = useState(initialTodos)
 
   const clearData = () => {
@@ -630,7 +589,7 @@ export function CreateEvent() {
                 startIcon={
                   <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                 }
-                onClick={() => conditionAppend([])}
+                onClick={() => conditionAppend([{}])}
               />
             </div>
           ) : null}
@@ -773,7 +732,7 @@ export function CreateEvent() {
               startIcon={
                 <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
               }
-              onClick={() => actionAppend([])}
+              onClick={() => actionAppend([{}])}
             />
           </div>
           {actionFields.map((field, index) => {

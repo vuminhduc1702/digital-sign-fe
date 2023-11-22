@@ -11,6 +11,7 @@ import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { flattenData } from '~/utils/misc'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { nameSchema } from '~/utils/schemaValidation'
 import { type EntityType } from '../../api/attrAPI'
@@ -18,7 +19,6 @@ import { type EntityType } from '../../api/attrAPI'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import storage from '~/utils/storage'
-import { useGetOrgs } from '~/layout/MainLayout/api'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
