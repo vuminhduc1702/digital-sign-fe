@@ -11,7 +11,7 @@ type IconProps = {
 }
 
 type InputFieldProps = FieldWrapperPassThroughProps & {
-  type?: 'text' | 'email' | 'password' | 'number' | 'file'
+  type?: 'text' | 'email' | 'password' | 'number' | 'file' | 'time'
   className?: string
   classnamefieldwrapper?: string
   registration?: Partial<UseFormRegisterReturn>

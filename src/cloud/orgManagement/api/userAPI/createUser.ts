@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+
+import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { type userSchema } from '../../components/User'
 
 type CreateUserRes = {

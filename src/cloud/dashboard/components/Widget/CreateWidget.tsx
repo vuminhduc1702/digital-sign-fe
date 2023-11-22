@@ -306,7 +306,7 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              console.log('values: ', values)
+              // console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -551,6 +551,7 @@ export function CreateWidget({
                         }
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
+                        isWrappedArray
                         customOnChange={option => {
                           if (option != null) {
                             attrChartMutate({
