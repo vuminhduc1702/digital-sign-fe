@@ -91,6 +91,14 @@ export function BillingTable({
     setPlan('')
   }, [status, plan])
 
+  const planArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.plan_name === o.plan_name);
+  });
+
+  const statusArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.status === o.status);
+  });
+
   const handleSearch = (e: React.MouseEvent<HTMLInputElement>,field: string, value: any, id: string) => {
     e.stopPropagation()
     setPlan(id)
@@ -149,7 +157,7 @@ export function BillingTable({
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {planArr?.map(item => {
                   return (
                     <div
                       key={item.id}
@@ -224,7 +232,7 @@ export function BillingTable({
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {statusArr?.map(item => {
                   const valueStatus = () => {
                     let result = ''
                     if (item.status) {

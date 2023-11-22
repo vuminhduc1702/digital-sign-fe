@@ -30,7 +30,7 @@ export function PackageInfo() {
   const [type, setType] = useState('')
   const [paymentType, setPaymentType] = useState('')
   const [periodType, setPeriodType] = useState('')
-  const [expectedPayment, setExpectedPayment] = useState()
+  const [expectedPayment, setExpectedPayment] = useState('')
 
   const params = useParams()
   const { id: projectId } = storage.getProject()
@@ -52,6 +52,7 @@ export function PackageInfo() {
     setPaymentType(data?.data?.payment_type || '')
     setPeriodType(data?.data?.type_period || '')
     setIsDisabled(true)
+    setExpectedPayment('')
   }, [data])
 
   useEffect(() => {
@@ -160,7 +161,7 @@ export function PackageInfo() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result)
+    setExpectedPayment(result < 0 ? 0 : result)
   }
 
   return (
@@ -183,8 +184,8 @@ export function PackageInfo() {
               estimate: values.estimate,
             }))
           }
-          const expiryNumber =
-            values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
+          const exprityNumber =
+            values?.exprity && parseInt(values?.exprity) * 24 * 60 * 60
           mutate({
             data: {
               ...values,
@@ -197,7 +198,7 @@ export function PackageInfo() {
                 (values.quantity_free && parseInt(values.quantity_free)) ||
                 null,
               price: (values.price && parseInt(values.price)) || null,
-              expiry: expiryNumber || null,
+              exprity: exprityNumber || null,
             },
             planId: packageId,
           })
@@ -221,6 +222,7 @@ export function PackageInfo() {
             quantity_free: data?.data?.quantity_free?.toString() || '',
             plan_lv: data?.data?.plan_lv || [],
             tax: data?.data?.tax?.toString() || '',
+            exprity: data?.data?.exprity?.toString() || '',
           },
         }}
       >
@@ -311,9 +313,10 @@ export function PackageInfo() {
                   {paymentType === 'POSTPAID' && (
                     <InputField
                       label={t('billing:package_manage.popup.expiry')}
-                      error={formState.errors['expiry']}
-                      registration={register('expiry')}
+                      error={formState.errors['exprity']}
+                      registration={register('exprity')}
                       type="number"
+                      disabled={isDisabled}
                       classnamefieldwrapper="flex items-center gap-x-3"
                       classlabel="w-2/12"
                       classchild="w-10/12"
@@ -325,12 +328,12 @@ export function PackageInfo() {
                             getValues('cal_unit'),
                           )
                         ) {
-                          setError('expiry', {
+                          setError('exprity', {
                             message: t(
                               'billing:package_manage.popup.choose_expiry',
                             ),
                           })
-                        } else setError('expiry', { message: '' })
+                        } else setError('exprity', { message: '' })
                       }}
                     />
                   )}
@@ -589,11 +592,8 @@ export function PackageInfo() {
                     <InputField
                       label={t('billing:package_manage.popup.price')}
                       error={formState.errors['price']}
-                      registration={register('price')}
-                      classnamefieldwrapper="flex items-center gap-x-3"
-                      type="number"
-                      onChange={e =>
-                        estimates === 'fix' &&
+                      registration={register('price', {
+                        onChange: (e) =>  estimates === 'fix' &&
                         handleOnChange(
                           '',
                           getValues('tax'),
@@ -602,7 +602,9 @@ export function PackageInfo() {
                           getValues('quantity_free'),
                           getValues('plan_lv'),
                         )
-                      }
+                      })}
+                      classnamefieldwrapper="flex items-center gap-x-3"
+                      type="number"
                       disabled={isDisabled}
                       classlabel="w-2/12"
                       classchild="w-10/12"
@@ -659,6 +661,7 @@ export function PackageInfo() {
                   disabled
                   value={expectedPayment}
                   classnamefieldwrapper="flex items-center gap-x-3"
+                  placeholder=''
                   classlabel="w-2/12"
                   classchild="w-10/12"
                 />
@@ -690,6 +693,7 @@ export function PackageInfo() {
                       setValue('tax', data?.data?.tax?.toString() || '')
                       setEstimates(data?.data?.estimate || '')
                       setIsDisabled(!isDisabled)
+                      setExpectedPayment('')
                     }}
                     className="rounded-md"
                     variant="trans"
@@ -726,7 +730,7 @@ export function PackageInfo() {
               )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="w-full justify-start border-none hover:text-primary-400 bg-white"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -757,6 +761,7 @@ export function PackageInfo() {
           <Button
             type="button"
             size="md"
+            disabled={!data?.data?.updatable}
             className="absolute bottom-3 right-2 bg-primary-400"
             onClick={() => setIsDisabled(!isDisabled)}
           >

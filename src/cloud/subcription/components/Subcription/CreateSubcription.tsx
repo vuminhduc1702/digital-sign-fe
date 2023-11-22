@@ -40,7 +40,7 @@ export function CreateSubcription() {
   const { id: projectId } = storage.getProject()
   const [userValue, setUserValue] = useState<SelectOptionString | null>()
   const [userId, setUserId] = useState('')
-  const [planValue, setPlanValue] = useState<SelectOptionString | null>()
+  const [planValue, setPlanValue] = useState<string | null>()
   const [customerName, setCustomerName] = useState('')
   const [customerCode, setCustomerCode] = useState('')
   const [registerValue, setRegisterValue] = useState('')
@@ -50,8 +50,8 @@ export function CreateSubcription() {
   const { data: PlanData } = useGetPlans({ projectId })
 
   const { data: PlanDataById } = usePlanById({
-    planId: planValue?.value || '',
-    config: { enabled: !!planValue?.value, suspense: false },
+    planId: planValue || '',
+    config: { enabled: !!planValue, suspense: false },
   })
 
   const { mutate, isLoading, isSuccess } = useCreateSubcription()
@@ -140,7 +140,7 @@ export function CreateSubcription() {
       }
 
       result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-      setRegisterValue(result)
+      setRegisterValue(result < 0 ? 0 : result)
     }
   }
 
@@ -212,7 +212,7 @@ export function CreateSubcription() {
             mutate({
               data: {
                 project_id: projectId,
-                plan_id: planValue?.value || '',
+                plan_id: planValue || '',
                 user_id: userId || '',
                 register: parseInt(values?.register || ''),
               },
@@ -236,10 +236,10 @@ export function CreateSubcription() {
                 classlabel="w-3/12"
                 classchild="w-9/12"
                 control={control}
-                value={userValue}
-                onChange={e => {
-                  const arrValue = e.value.split(' - ')
-                  setValue('user_id', e.value)
+                // value={userValue}
+                customOnChange={e => {
+                  const arrValue = e.split(' - ')
+                  setValue('user_id', e)
                   setCustomerName(
                     arrValue[2] !== 'undefined'
                       ? arrValue[2]
@@ -247,7 +247,7 @@ export function CreateSubcription() {
                   )
                   setCustomerCode(arrValue[0])
                   setUserId(arrValue[1])
-                  setUserValue(e)
+                  // setUserValue(e)
                 }}
                 options={
                   UserData?.users?.map(user => ({
@@ -284,9 +284,9 @@ export function CreateSubcription() {
                 label={t('billing:subcription.popup.package')}
                 name="plan_id"
                 control={control}
-                value={planValue}
-                onChange={e => {
-                  setValue('plan_id', e.value)
+                // value={planValue}
+                customOnChange={e => {
+                  setValue('plan_id', e)
                   setPlanValue(e)
                 }}
                 options={
