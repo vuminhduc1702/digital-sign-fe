@@ -44,35 +44,6 @@ export function CustomerManageTemplate() {
     <>
       <TitleBar title={t('sidebar:payment.plkh')} />
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
-        {/* <div className="flex justify-between">
-          <div className="flex items-center gap-x-3">
-            <SelectField
-              options={[
-                { label: 'Tên khách hàng', value: 'name' },
-                { label: 'Mã khách hàng', value: 'customer_code' },
-                { label: 'Số điện thoại', value: 'phone' },
-              ]}
-              onChange={e => {
-                setKey(e.target.value)
-              }}
-              value={key}
-            />
-            <InputField
-              value={value}
-              className="mt-1 h-[37px]"
-              onChange={e => setValue(e.target.value)}
-            />
-            <Button
-              className="mt-1 h-[37px] rounded-md "
-              variant="trans"
-              size="square"
-              startIcon={
-                <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-              }
-              onClick={handleSearch}
-            />
-          </div>
-        </div> */}
         <form
           id="search-customer"
           className="flex justify-between"
