@@ -40,8 +40,6 @@ export const selfInfoSchema = z.object({
 const SelfAccount = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [provinceCode, setProvinceCode] = useState('')
-  const [districtCode, setDistrictCode] = useState('')
 
   const { mutate, isLoading } = useMutationSelfAccountInfo()
 
@@ -52,12 +50,28 @@ const SelfAccount = () => {
     },
   })
 
+  const { register, formState, handleSubmit, watch, reset, setValue } = useForm<
+    UpdateSelfAccountInfoDTO['data']
+  >({
+    resolver: selfInfoSchema && zodResolver(selfInfoSchema),
+  })
+
   useEffect(() => {
-    if (userInfoData?.profile != null) {
-      setProvinceCode(userInfoData.profile.province)
-      setDistrictCode(userInfoData.profile.district)
+    if (userInfoData != null) {
+      reset({
+        name: userInfoData?.name,
+        phone: userInfoData?.phone,
+        email: userInfoData?.email,
+        profile: {
+          tax_code: userInfoData?.profile?.tax_code,
+          province: userInfoData?.profile?.province,
+          district: userInfoData?.profile?.district,
+          ward: userInfoData?.profile?.ward,
+          full_address: userInfoData?.profile?.full_address,
+        },
+      })
     }
-  }, [])
+  }, [userInfoData])
 
   const { data: provinceList, isLoading: provinceListIsLoading } = useAreaList({
     parentCode: '',
@@ -65,41 +79,24 @@ const SelfAccount = () => {
   })
 
   const { data: districtList } = useAreaList({
-    parentCode: provinceCode,
+    parentCode: watch('profile.province'),
     type: 'DISTRICT',
     config: {
-      enabled: !!provinceCode,
+      enabled: !!watch('profile.province'),
     },
   })
 
   const { data: wardList } = useAreaList({
-    parentCode: districtCode,
+    parentCode: watch('profile.district'),
     type: 'WARD',
     config: {
-      enabled: !!districtCode,
+      enabled: !!watch('profile.district'),
     },
   })
 
   const showSpinner = useSpinDelay(userInfoIsLoading || provinceListIsLoading, {
     delay: 150,
     minDuration: 300,
-  })
-  const { register, formState, handleSubmit } = useForm<
-    UpdateSelfAccountInfoDTO['data']
-  >({
-    resolver: selfInfoSchema && zodResolver(selfInfoSchema),
-    defaultValues: {
-      name: userInfoData?.name,
-      phone: userInfoData?.phone,
-      email: userInfoData?.email,
-      profile: {
-        tax_code: userInfoData?.profile?.tax_code,
-        province: userInfoData?.profile?.province,
-        district: userInfoData?.profile?.district,
-        ward: userInfoData?.profile?.ward,
-        full_address: userInfoData?.profile?.full_address,
-      },
-    },
   })
 
   return (
@@ -193,10 +190,12 @@ const SelfAccount = () => {
               <div className="col-start-2">
                 <SelectField
                   error={formState?.errors?.profile?.province}
-                  registration={register('profile.province')}
-                  options={provinceList || [{ value: '', label: '' }]}
+                  registration={register('profile.province', {
+                    onChange: () =>
+                      setValue('profile.district', districtList?.[0]?.value),
+                  })}
+                  options={provinceList}
                   classchild="w-full"
-                  onChange={e => setProvinceCode(e.target.value)}
                   placeholder={t(
                     'cloud:org_manage.user_manage.add_user.province',
                   )}
@@ -206,8 +205,7 @@ const SelfAccount = () => {
                 <SelectField
                   error={formState?.errors?.profile?.district}
                   registration={register('profile.district')}
-                  options={districtList || [{ value: '', label: '' }]}
-                  onChange={e => setDistrictCode(e.target.value)}
+                  options={districtList}
                   placeholder={t(
                     'cloud:org_manage.user_manage.add_user.district',
                   )}
@@ -217,7 +215,7 @@ const SelfAccount = () => {
                 <SelectField
                   error={formState?.errors?.profile?.ward}
                   registration={register('profile.ward')}
-                  options={wardList || [{ value: '', label: '' }]}
+                  options={wardList}
                   placeholder={t('cloud:org_manage.user_manage.add_user.ward')}
                 />
               </div>

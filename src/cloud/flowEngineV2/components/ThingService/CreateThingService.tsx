@@ -541,7 +541,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                                 <span className="text-primary-400">
                                                   {data.name}
                                                 </span>
-                                                <span>: {type[0].label}</span>
+                                                <span>: {type[0]?.label}</span>
                                               </li>
                                             )
                                           },

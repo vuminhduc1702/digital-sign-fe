@@ -55,11 +55,6 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-export const updateThingSchema = z.object({
-  name: nameSchema,
-  description: z.string(),
-})
-
 type UpdateThingProps = {
   name: string
   close: () => void
@@ -597,7 +592,7 @@ export function UpdateThingService({
                                                               {data.name}
                                                             </span>
                                                             <span>
-                                                              : {type[0].label}
+                                                              : {type[0]?.label}
                                                             </span>
                                                           </li>
                                                         )
