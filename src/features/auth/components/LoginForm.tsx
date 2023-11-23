@@ -109,7 +109,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           />
 
           <FieldWrapper
-            className="mt-2 flex h-8 flex-row-reverse items-center justify-end gap-x-2"
+            className="mt-2 flex h-8 w-fit flex-row-reverse items-center justify-end gap-x-2"
             label={t('auth:checkbox')}
           >
             <Checkbox />

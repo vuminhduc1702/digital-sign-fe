@@ -34,6 +34,7 @@ import {
   type IntervalData,
   logicalOperatorOption,
   actionTypeOptions,
+  eventTypeOptions,
 } from './CreateEvent'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -339,6 +340,7 @@ export function UpdateEvent({
                 <FieldWrapper
                   label={t('cloud:org_manage.event_manage.add_event.status')}
                   error={formState?.errors['status']}
+                  className="w-fit"
                 >
                   <Controller
                     control={control}
@@ -359,6 +361,7 @@ export function UpdateEvent({
                     'cloud:org_manage.event_manage.add_event.condition.onClick',
                   )}
                   error={formState?.errors['onClick']}
+                  className="w-fit"
                 >
                   <Controller
                     control={control}
@@ -381,20 +384,7 @@ export function UpdateEvent({
                   )}
                   error={formState.errors['type']}
                   registration={register('type')}
-                  options={[
-                    {
-                      value: 'schedule',
-                      label: t(
-                        'cloud:org_manage.event_manage.add_event.schedule_type',
-                      ),
-                    },
-                    {
-                      value: 'event',
-                      label: t(
-                        'cloud:org_manage.event_manage.add_event.event_type',
-                      ),
-                    },
-                  ]}
+                  options={eventTypeOptions}
                 />
                 <InputField
                   label={t('cloud:org_manage.event_manage.add_event.retry')}
@@ -641,10 +631,8 @@ export function UpdateEvent({
                           'cloud:org_manage.event_manage.add_event.action.address',
                         )}
                         registration={register(`action.${index}.receiver`)}
+                        error={formState?.errors?.action?.[index]?.receiver}
                       />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.action?.[index]?.receiver?.message}
-                      </p>
                     </div>
                     <div className="space-y-1">
                       <InputField
@@ -652,10 +640,8 @@ export function UpdateEvent({
                           'cloud:org_manage.event_manage.add_event.action.subject',
                         )}
                         registration={register(`action.${index}.subject`)}
+                        error={formState?.errors?.action?.[index]?.subject}
                       />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.action?.[index]?.subject?.message}
-                      </p>
                     </div>
                     <div className="flex justify-end">
                       <InputField
@@ -663,10 +649,8 @@ export function UpdateEvent({
                           'cloud:org_manage.event_manage.add_event.action.message',
                         )}
                         registration={register(`action.${index}.message`)}
+                        error={formState?.errors?.action?.[index]?.message}
                       />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.action?.[index]?.message?.message}
-                      </p>
                       <Button
                         type="button"
                         size="square"

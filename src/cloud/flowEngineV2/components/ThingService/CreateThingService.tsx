@@ -398,6 +398,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 'cloud:custom_protocol.service.service_input.value',
                               )}
                               error={formState.errors[`input`]?.[index]?.value}
+                              className="w-fit"
                             >
                               <Controller
                                 control={control}

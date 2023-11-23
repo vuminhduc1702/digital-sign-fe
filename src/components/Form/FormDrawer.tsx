@@ -23,11 +23,11 @@ type FormDrawerProps = {
   resetData?: () => void
 }
 
-const useQuery = () => {
-  const { search } = useLocation();
+const useSearchQuery = () => {
+  const { search } = useLocation()
 
-  return useMemo(() => new URLSearchParams(search), [search]);
-};
+  return useMemo(() => new URLSearchParams(search), [search])
+}
 
 export const FormDrawer = ({
   title,
@@ -41,8 +41,8 @@ export const FormDrawer = ({
 }: FormDrawerProps) => {
   const { close, open, isOpen } = useDisclosure()
 
-  const query = useQuery();
-  const openDrawer = query.get('openDrawer');
+  const query = useSearchQuery()
+  const openDrawer = query.get('openDrawer')
 
   useEffect(() => {
     if (isDone) {
@@ -51,7 +51,7 @@ export const FormDrawer = ({
   }, [isDone, close])
 
   useEffect(() => {
-    if(openDrawer) {
+    if (openDrawer) {
       open()
     }
   }, [openDrawer])

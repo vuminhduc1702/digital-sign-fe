@@ -126,6 +126,17 @@ export const actionTypeOptions = [
   },
 ]
 
+export const eventTypeOptions = [
+  {
+    value: 'schedule',
+    label: i18n.t('cloud:org_manage.event_manage.add_event.schedule_type'),
+  },
+  {
+    value: 'event',
+    label: i18n.t('cloud:org_manage.event_manage.add_event.event_type'),
+  },
+]
+
 const eventConditionSchema = z.array(
   z.object({
     device_id: z.string({
@@ -140,7 +151,9 @@ const eventConditionSchema = z.array(
     }),
     condition_type: z.enum(['normal', 'delay'] as const),
     operator: z.enum(['<', '>', '!='] as const),
-    threshold: z.string(),
+    threshold: z
+      .string()
+      .min(1, { message: 'Vui lòng nhập giá trị đối chiếu' }),
     logical_operator: z.enum(['and', 'or'] as const),
   }),
 )
@@ -166,7 +179,7 @@ const eventActionSchema = z
         .object({
           action_type: z.enum(['eventactive', 'delay'] as const),
           message: z.string().optional(),
-          subject: z.string(),
+          subject: z.string().min(1, { message: 'Vui lòng nhập tiêu đề' }),
         })
         .or(
           z.object({
@@ -177,8 +190,8 @@ const eventActionSchema = z
               'event',
               'email',
             ] as const),
-            message: z.string(),
-            subject: z.string(),
+            message: z.string().min(1, { message: 'Vui lòng nhập tin nhắn' }),
+            subject: z.string().min(1, { message: 'Vui lòng nhập tiêu đề' }),
           }),
         ),
     ),
@@ -194,18 +207,17 @@ export const createEventSchema = z
     action: eventActionSchema,
     interval: eventIntervalSchema,
     status: z.boolean().optional(),
-    retry: z.number(),
+    retry: z.number().optional(),
     onClick: z.boolean(),
   })
   .and(
-    z.discriminatedUnion('onClick', [
+    z.discriminatedUnion('type', [
       z.object({
-        onClick: z.literal(true),
-        condition: z.tuple([]),
+        type: z.literal('event'),
+        condition: eventConditionSchema,
       }),
       z.object({
-        onClick: z.literal(false),
-        condition: eventConditionSchema,
+        type: z.literal('schedule'),
       }),
     ]),
   )
@@ -233,6 +245,7 @@ export function CreateEvent() {
       status: true,
       action: [{}],
       condition: [{}],
+      retry: 0,
     },
   })
   const {
@@ -314,6 +327,7 @@ export function CreateEvent() {
       ),
     )
   }
+  console.log('watch', getValues('type'))
 
   return (
     <FormDrawer
@@ -364,14 +378,16 @@ export function CreateEvent() {
             start_time: getValues('interval.start_time'),
             end_time: getValues('interval.end_time'),
           }
-          const conditionArr = values.condition?.map(item => ({
-            device_id: item.device_id,
-            attribute_name: item.attribute_name,
-            condition_type: item.condition_type,
-            operator: item.operator,
-            threshold: item.threshold,
-            logical_operator: item.logical_operator,
-          }))
+          const conditionArr =
+            'condition' in values &&
+            values.condition.map(item => ({
+              device_id: item.device_id,
+              attribute_name: item.attribute_name,
+              condition_type: item.condition_type,
+              operator: item.operator,
+              threshold: item.threshold,
+              logical_operator: item.logical_operator,
+            }))
           const actionArr = values.action?.map(item => ({
             action_type: item.action_type,
             receiver: item.receiver,
@@ -449,6 +465,7 @@ export function CreateEvent() {
               <FieldWrapper
                 label={t('cloud:org_manage.event_manage.add_event.status')}
                 error={formState?.errors['status']}
+                className="w-fit"
               >
                 <Controller
                   control={control}
@@ -469,6 +486,7 @@ export function CreateEvent() {
                   'cloud:org_manage.event_manage.add_event.condition.onClick',
                 )}
                 error={formState?.errors['onClick']}
+                className="w-fit"
               >
                 <Controller
                   control={control}
@@ -479,7 +497,11 @@ export function CreateEvent() {
                         {...field}
                         checked={value}
                         onCheckedChange={onChange}
-                        disabled={getValues('type') === 'schedule'}
+                        onClick={() => {
+                          if (getValues('type') === 'event') {
+                            setValue('type', 'schedule')
+                          }
+                        }}
                       />
                     )
                   }}
@@ -489,20 +511,8 @@ export function CreateEvent() {
                 label={t('cloud:org_manage.event_manage.add_event.type_event')}
                 error={formState.errors['type']}
                 registration={register('type')}
-                options={[
-                  {
-                    value: 'schedule',
-                    label: t(
-                      'cloud:org_manage.event_manage.add_event.schedule_type',
-                    ),
-                  },
-                  {
-                    value: 'event',
-                    label: t(
-                      'cloud:org_manage.event_manage.add_event.event_type',
-                    ),
-                  },
-                ]}
+                options={eventTypeOptions}
+                disabled={watch('onClick')}
               />
               <InputField
                 label={t('cloud:org_manage.event_manage.add_event.retry')}
@@ -525,7 +535,7 @@ export function CreateEvent() {
                 <div
                   onClick={e => {
                     const todoInterval = todos.map(todo =>
-                      todo.id === e.target.getAttribute('data-id')
+                      todo.id === e.currentTarget.getAttribute('data-id')
                         ? { ...todo, selected: !todo.selected }
                         : todo,
                     )
@@ -682,6 +692,7 @@ export function CreateEvent() {
                         label={t(
                           'cloud:org_manage.event_manage.add_event.condition.threshold',
                         )}
+                        error={formState?.errors?.condition?.[index]?.threshold}
                         registration={register(`condition.${index}.threshold`)}
                         type="number"
                       />
@@ -753,10 +764,8 @@ export function CreateEvent() {
                         'cloud:org_manage.event_manage.add_event.action.address',
                       )}
                       registration={register(`action.${index}.receiver`)}
+                      error={formState?.errors?.action?.[index]?.receiver}
                     />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.action?.[index]?.receiver?.message}
-                    </p>
                   </div>
                   <div className="space-y-1">
                     <InputField
@@ -764,10 +773,8 @@ export function CreateEvent() {
                         'cloud:org_manage.event_manage.add_event.action.subject',
                       )}
                       registration={register(`action.${index}.subject`)}
+                      error={formState?.errors?.action?.[index]?.subject}
                     />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.action?.[index]?.subject?.message}
-                    </p>
                   </div>
                   <div className="flex justify-end">
                     <InputField
@@ -775,10 +782,8 @@ export function CreateEvent() {
                         'cloud:org_manage.event_manage.add_event.action.message',
                       )}
                       registration={register(`action.${index}.message`)}
+                      error={formState?.errors?.action?.[index]?.message}
                     />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.action?.[index]?.message?.message}
-                    </p>
                     <Button
                       type="button"
                       size="square"

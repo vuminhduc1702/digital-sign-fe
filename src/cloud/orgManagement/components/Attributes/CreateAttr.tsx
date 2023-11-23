@@ -167,7 +167,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   registration={register(`attributes.${index}.value` as const)}
                 />
                 <FieldWrapper
-                  className="space-y-2"
+                  className="w-fit space-y-2"
                   label={t('cloud:org_manage.org_manage.add_attr.logged')}
                   error={formState?.errors?.attributes?.[index]?.logged}
                 >
