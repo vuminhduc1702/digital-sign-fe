@@ -55,8 +55,13 @@ export function UpdateFirmWare({
 
   const { data } = useGetTemplates({ projectId })
 
+  const firmwareData = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  })) || [{ label: '', value: '' }]
+
   const { mutate, isLoading, isSuccess } = useUpdateFirmware()
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, getValues } = useForm<
     UpdateFirmwareDTO['data']
   >({
     resolver: entityFirmWareSchema && zodResolver(entityFirmWareSchema),
@@ -96,7 +101,7 @@ export function UpdateFirmWare({
                   description: values.description,
                   tag: values.tag,
                   version: values.version,
-                  template_id: templateValue.value,
+                  template_id: values.template_id,
                 },
                 firmwareId,
               })
@@ -109,14 +114,10 @@ export function UpdateFirmWare({
                   label={t('cloud:firmware.add_firmware.template')}
                   name="template_id"
                   control={control}
-                  value={templateValue}
-                  onChange={e => setTemplateValue(e)}
-                  options={
-                    data?.templates?.map(template => ({
-                      label: template?.name,
-                      value: template?.id,
-                    })) || [{ label: '', value: '' }]
-                  }
+                  options={firmwareData}
+                  defaultValue={firmwareData.find(
+                    firm => firm.value === getValues('template_id'),
+                  )}
                 />
                 <p className="text-body-sm text-primary-400">
                   {formState?.errors?.template_id?.message}

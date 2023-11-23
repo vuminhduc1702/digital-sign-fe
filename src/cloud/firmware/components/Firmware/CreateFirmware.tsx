@@ -64,7 +64,7 @@ export function CreateFirmWare() {
                 project_id: projectId,
                 tag: values.tag,
                 version: values.version,
-                template_id: templateValue?.value || '',
+                template_id: values?.template_id || '',
                 description: values.description,
               },
             })
@@ -77,12 +77,6 @@ export function CreateFirmWare() {
                 label={t('cloud:firmware.add_firmware.template')}
                 name="template_id"
                 control={control}
-                value={templateValue}
-                onChange={e => {
-                  setValue('template_id', e.value)
-                  setError('template_id', { message: '' })
-                  setTemplateValue(e)
-                }}
                 options={
                   data?.templates?.map(template => ({
                     label: template?.name,
