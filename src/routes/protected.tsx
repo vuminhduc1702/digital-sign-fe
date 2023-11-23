@@ -31,6 +31,10 @@ const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
   'BillingPackageManage',
 )
+const { OverViewManage } = lazyImport(
+  () => import('~/cloud/overView'),
+  'OverViewManage',
+)
 const { FlowEngine } = lazyImport(
   () => import('~/cloud/flowEngine'),
   'FlowEngine',
@@ -96,6 +100,15 @@ export const protectedRoutes = [
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <BillingPackageManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
+      },
+      {
+        path: PATHS.OVER_VIEW,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <OverViewManage />
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],

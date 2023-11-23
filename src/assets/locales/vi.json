@@ -80,7 +80,8 @@
         "choose_file": "Vui lòng chọn file tải lên",
         "success_add": "Tạo mới dự án thành công",
         "success_update": "Sửa dự án thành công",
-        "success_delete": "Xóa dự án thành công"
+        "success_delete": "Xóa dự án thành công",
+        "success_restore": "Cài đặt mẫu thiết bị thành công"
       }
     },
     "org_manage": {
@@ -603,6 +604,7 @@
   "billing": {
     "package_manage": {
       "list_package": "Danh sách gói cước",
+      "no_package": "Không có gói cước",
       "title": "Thông tin gói cước",
       "create": "Tạo gói cước",
       "delete_plan": "Xoá gói cước",
@@ -745,6 +747,17 @@
       }
     }
   },
+  "overView": {
+    "dashboard": "Dashboard",
+    "add_dashboard": "Add Dashboard",
+    "total_devices": "Tổng số thiết bị",
+    "total_user": "Tổng số người dùng",
+    "total_user_online": "Tổng số user online",
+    "request_time": "Thời gian request",
+    "success_rate": "Tỉ lệ thành công",
+    "quick_link": "Quick Link",
+    "setup_confirm": "Bạn có chắc chắn muốn cài đặt Mẫu thiết bị {{TITLE}}?"
+  },
   "table": {
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
@@ -794,7 +807,8 @@
     "delete": "Xóa",
     "update": "Sửa",
     "save": "Lưu",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "setup": "Cài đặt"
   },
   "error": {
     "no_data": "Không có dữ liệu",

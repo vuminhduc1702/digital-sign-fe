@@ -1,0 +1,596 @@
+{
+    "organizations": null,
+    "groups": [
+        {
+            "id": "e0756597-4d87-45ac-b9d3-b6475b96225c",
+            "owner": "",
+            "created_by": "",
+            "name": "Profile1",
+            "organization": "",
+            "entity_type": "DEVICE",
+            "Metadata": null,
+            "OrgName": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": null
+        }
+    ],
+    "roles": null,
+    "users": null,
+    "templates": [
+        {
+            "id": "80b6b57d-39b4-4795-837e-6ae767737989",
+            "name": "Asset",
+            "rule_chain_id": "",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "unknown_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "config",
+                    "logged": false,
+                    "value": {
+                        "M": 0,
+                        "P": 30
+                    },
+                    "value_as_string": "{\"M\":0,\"P\":30}",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "missing",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "owner",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "firmware_version",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "unknown",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "last_update",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": false,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "missing_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "name",
+                    "logged": false,
+                    "value": "Master",
+                    "value_as_string": "Master",
+                    "last_update_ts": 1700125459404,
+                    "value_type": "STR"
+                }
+            ]
+        }
+    ],
+    "devices": [
+        {
+            "id": "a2430e86-e314-4a10-a79a-d5f97cc3c511",
+            "key": "a2430e86-e314-4a10-a79a-d5f97cc3c511",
+            "template_id": "80b6b57d-39b4-4795-837e-6ae767737989",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "name": "asset",
+            "group_id": "e0756597-4d87-45ac-b9d3-b6475b96225c",
+            "type": "",
+            "org_id": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "status": "offline",
+            "created_time": 0,
+            "metadata": {},
+            "additional_info": {
+                "device_id": "",
+                "imei": "",
+                "device_manufacture": "",
+                "protocol": "",
+                "heartbeat_interval": 0,
+                "last_heartbeat": 0,
+                "timeout_lifecycle": 0,
+                "device_model": "",
+                "mqtt_config": null,
+                "firmware_version": ""
+            },
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "config",
+                    "logged": false,
+                    "value": {
+                        "M": 0,
+                        "P": 30
+                    },
+                    "value_as_string": "{\"M\":0,\"P\":30}",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "firmware_version",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": false,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "owner",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "unknown_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "name",
+                    "logged": false,
+                    "value": "Master",
+                    "value_as_string": "Master",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "missing",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "missing_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "set_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "unknown",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "current_rf",
+                    "logged": true,
+                    "value": {
+                        "count": 0,
+                        "list": []
+                    },
+                    "value_as_string": "{\"count\":0,\"list\":[]}",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "last_update",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700125648662,
+                    "value_type": "DBL"
+                }
+            ]
+        }
+    ],
+    "events": null,
+    "rule_chains": null,
+    "dashboard": [
+        {
+            "id": "cfef1f5e-9d52-471b-b016-a45cb649410e",
+            "project_id": "",
+            "name": "Quản lý Asset dashboard",
+            "created_time": 1700125747,
+            "title": "Quản lý Asset dashboard",
+            "tenant_id": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "configuration": {
+                "description": "",
+                "widgets": {
+                    "4cca84ad-5c5e-4f99-a84a-e0e5f0c801ee": {
+                        "type": "LASTEST",
+                        "title": "widget3",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"a2430e86-e314-4a10-a79a-d5f97cc3c511\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"current_rf\"}]},\"id\":\"4cca84ad-5c5e-4f99-a84a-e0e5f0c801ee\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"current_rf\"}]},\"id\":\"4cca84ad-5c5e-4f99-a84a-e0e5f0c801ee\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "current_rf",
+                                "label": "current_rf",
+                                "color": "rgba(192, 65, 65, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "6abde734-c7da-457f-ab94-5902a57b588c": {
+                        "type": "LASTEST",
+                        "title": "widget5",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"a2430e86-e314-4a10-a79a-d5f97cc3c511\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"missing_rf\"}]},\"id\":\"6abde734-c7da-457f-ab94-5902a57b588c\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"missing_rf\"}]},\"id\":\"6abde734-c7da-457f-ab94-5902a57b588c\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "missing_rf",
+                                "label": "missing_rf",
+                                "color": "rgba(240, 89, 89, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "c7b13400-afbf-404f-982b-07e6e1331953": {
+                        "type": "TIMESERIES",
+                        "title": "widget1",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"a2430e86-e314-4a10-a79a-d5f97cc3c511\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"set_rf\"},{\"type\":\"TIME_SERIES\",\"key\":\"current_rf\"},{\"type\":\"TIME_SERIES\",\"key\":\"unknown_rf\"},{\"type\":\"TIME_SERIES\",\"key\":\"missing_rf\"}]},\"id\":\"c7b13400-afbf-404f-982b-07e6e1331953\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"set_rf\",\"current_rf\",\"unknown_rf\",\"missing_rf\"],\"startTs\":1699808400000,\"interval\":1000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"c7b13400-afbf-404f-982b-07e6e1331953\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 1000
+                            },
+                            "aggregation": "NONE",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699808400000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "set_rf",
+                                "label": "set_rf",
+                                "color": "rgba(216, 78, 78, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            },
+                            {
+                                "attribute_key": "current_rf",
+                                "label": "current_rf",
+                                "color": "rgba(194, 56, 56, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            },
+                            {
+                                "attribute_key": "unknown_rf",
+                                "label": "unknown_rf",
+                                "color": "rgba(192, 41, 41, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            },
+                            {
+                                "attribute_key": "missing_rf",
+                                "label": "missing_rf",
+                                "color": "rgba(229, 91, 91, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "c860c2ab-6512-43b1-89db-61ad85e42b4e": {
+                        "type": "LASTEST",
+                        "title": "widget2",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"a2430e86-e314-4a10-a79a-d5f97cc3c511\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"set_rf\"}]},\"id\":\"c860c2ab-6512-43b1-89db-61ad85e42b4e\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"set_rf\"}]},\"id\":\"c860c2ab-6512-43b1-89db-61ad85e42b4e\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "set_rf",
+                                "label": "set_rf",
+                                "color": "rgba(169, 49, 49, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "db432510-7d28-476f-b3cd-12f40a898f48": {
+                        "type": "LASTEST",
+                        "title": "widget4",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"a2430e86-e314-4a10-a79a-d5f97cc3c511\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"unknown_rf\"}]},\"id\":\"db432510-7d28-476f-b3cd-12f40a898f48\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"unknown_rf\"}]},\"id\":\"db432510-7d28-476f-b3cd-12f40a898f48\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "unknown_rf",
+                                "label": "unknown_rf",
+                                "color": "rgba(194, 99, 99, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dashboard_setting": {
+                "last_viewed": "2023-11-16T09:15:09.410Z",
+                "layout": [
+                    {
+                        "h": 3,
+                        "i": "c7b13400-afbf-404f-982b-07e6e1331953",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "h": 1,
+                        "i": "c860c2ab-6512-43b1-89db-61ad85e42b4e",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 0
+                    },
+                    {
+                        "h": 1,
+                        "i": "4cca84ad-5c5e-4f99-a84a-e0e5f0c801ee",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 3
+                    },
+                    {
+                        "h": 1,
+                        "i": "db432510-7d28-476f-b3cd-12f40a898f48",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 1
+                    },
+                    {
+                        "h": 1,
+                        "i": "6abde734-c7da-457f-ab94-5902a57b588c",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 4
+                    }
+                ]
+            }
+        }
+    ],
+    "fota": null,
+    "thing": null,
+    "service": null
+}

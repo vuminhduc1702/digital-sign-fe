@@ -13,6 +13,7 @@ export const PATHS: { [key: string]: string } = {
 
   // Project routes
   PROJECT_MANAGE: `${BASE_PATH}project-management`,
+  OVER_VIEW: `${BASE_PATH}overview`,
 
   // Cloud routes
   ORG: `${BASE_PATH_CLOUD}org-management`,
