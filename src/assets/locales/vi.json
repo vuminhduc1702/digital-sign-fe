@@ -1017,7 +1017,9 @@
     "products": "CÁC SẢN PHẨM",
     "information": "Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng dẫn tích hợp.",
     "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG",
-    "udpate_device": "{{value}} thiết bị thành công"
+    "udpate_device": "{{value}} thiết bị thành công",
+    "block": "Khoá thiết bị",
+    "active": "Kích hoạt thiết bị"
   },
   "application": {
     "android": "ANDROID",

@@ -127,14 +127,18 @@ function DeviceTableContextMenu({
               }}
             >
               {status === 'online' || status === 'offline'
-                ? 'Block device'
-                : 'Active device'}
+                ? t('device:block')
+                : t('device:active')}
             </MenuItem>
             <MenuItem
               icon={<UpdateIcon className="h-5 w-5" />}
               onClick={() => {
                 open()
                 setType('update-version')
+              }}
+              style={{
+                color: status === 'blocked' ? 'gray' : '',
+                pointerEvents: status === 'blocked' ? 'none' : '',
               }}
             >
               {t('cloud:firmware.fota')}
