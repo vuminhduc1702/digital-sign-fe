@@ -2,10 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
-import {
-  type ColumnDef,
-  createColumnHelper,
-} from '@tanstack/react-table'
+import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -390,6 +387,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
 
   return data != null && data?.length !== 0 ? (
     <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}
       columns={columns}
       colsVisibility={colsVisibility}

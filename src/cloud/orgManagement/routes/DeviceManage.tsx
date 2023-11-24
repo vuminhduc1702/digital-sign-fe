@@ -54,6 +54,7 @@ export function DeviceManage() {
           </div>
         </div>
         <DeviceTable
+        
           data={filteredComboboxData}
           offset={offset}
           setOffset={setOffset}

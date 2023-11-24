@@ -32,7 +32,10 @@ export function DashboardManage() {
             />
           </div>
         </div>
-        <DashboardTable data={filteredComboboxData} projectId={projectId} />
+        <DashboardTable
+          data={filteredComboboxData}
+          projectId={projectId}
+        />
       </div>
     </div>
   )
