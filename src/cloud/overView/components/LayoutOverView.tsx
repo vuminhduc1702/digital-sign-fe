@@ -60,7 +60,7 @@ export function LayoutOverView() {
       title: 'Giải pháp Asset Management',
       img: AssetManagement,
       content:
-        'Giải pháp quản lý tài sản giúp bạn theo dõi tài sản thông qua việc sử dụng các thẻ RFID được gắn vào chúng. Các thẻ được đọc bằng máy quét cố định được gắn ở vị trí cố đinh. Mỗi khi một thẻ được đọc, nó sẽ được lưu tổng hợp thành một chuỗi và bán tổng tất cả các RFID đã quét được lên hệ thống. Bên cạnh đó, giải pháp còn cảnh báo cho bạn những RFID bị thiếu hoặc RFID lạ để giúp bạn tránh bị thiếu sót tài sản',
+        'Giải pháp quản lý tài sản giúp bạn theo dõi tài sản thông qua việc sử dụng các thẻ RFID được gắn vào chúng. Các thẻ được đọc bằng máy quét cố định được gắn ở vị trí cố đinh. Mỗi khi một thẻ được đọc, nó sẽ được lưu tổng hợp thành một chuỗi và bán tổng tất cả các RFID đã quét được lên hệ thống. Bên cạnh đó, giải pháp còn cảnh báo cho bạn những RFID bị thiếu hoặc RFID lạ để giúp bạn tránh bị thiếu sót tài sản.',
       content2: 'Chức năng chính:',
       content3:
         '- Cảnh báo RFID bị thiếu, RFID lạ qua SMS hoặc App Notification',
@@ -95,7 +95,7 @@ export function LayoutOverView() {
       title: 'Giải pháp Smarthome',
       img: SmartHome,
       content:
-        'Giải pháp hỗ trợ các ngữ cảnh thông minh được đặt theo giờ hoặc theo ngoại cảnh để người sử dụng có trải nghiệm và sức khỏe tinh thần tốt nhất trong căn nhà',
+        'Giải pháp hỗ trợ các ngữ cảnh thông minh được đặt theo giờ hoặc theo ngoại cảnh để người sử dụng có trải nghiệm và sức khỏe tinh thần tốt nhất trong căn nhà.',
       content2: '',
       content3: '',
       content4: '',
@@ -260,7 +260,7 @@ export function LayoutOverView() {
             <p className="text-table-header">{t('overView:request_time')}</p>
             <div className='mt-2 flex justify-between'>
               <span>
-              {RequestHandlingTimeData?.avg_latency}
+                {RequestHandlingTimeData?.avg_latency}
               </span>
               <TimerIcon className='h-5 w-5 text-primary-400' />
             </div>
@@ -320,7 +320,7 @@ export function LayoutOverView() {
                       </div>
                       <div className="text p-3">
                         <h4 className="mt-3 text-table-header">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer hover:block">
+                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer">
                           {item.content}
                           {item.content2 && <br />}
                           {item.content2}
@@ -336,10 +336,23 @@ export function LayoutOverView() {
                           icon="danger"
                           title={t('btn:setup')}
                           body={
-                            t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            ) ?? 'Confirm delete?'
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              ) ?? 'Confirm delete?'}
+                              <p className="mb-2 mt-3 cursor-pointer">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>
                           }
                           triggerButton={
                             <Button
@@ -389,7 +402,7 @@ export function LayoutOverView() {
                       </div>
                       <div className="text p-3">
                         <h4 className="mt-3 text-table-header">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer hover:block">
+                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer">
                           {item.content}
                           {item.content2 && <br />}
                           {item.content2}
@@ -405,10 +418,23 @@ export function LayoutOverView() {
                           icon="danger"
                           title={t('btn:setup')}
                           body={
-                            t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            ) ?? 'Confirm delete?'
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              ) ?? 'Confirm delete?'}
+                              <p className="mb-2 mt-3 cursor-pointer">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>
                           }
                           triggerButton={
                             <Button
@@ -454,7 +480,7 @@ export function LayoutOverView() {
               onClick={() => navigate(`${PATHS.DASHBOARD}/${projectId}`)}
             >
               <p className="text-table-header">{t('overView:dashboard')}</p>
-              <ArrowTopRightIcon className='h-5 w-5'/>
+              <ArrowTopRightIcon className='h-5 w-5' />
             </div>
             <div className="flex ">
               <div className="w-fit rounded-2xl bg-slate-200">
