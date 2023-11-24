@@ -16,9 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 export function CustomerManageTemplate() {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
-  const [key, setKey] = useState('name')
   const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
-  const [value, setValue] = useState('')
   const { id: projectId } = storage.getProject()
   const { data, isPreviousData } = useGetCustomers({
     projectId,
@@ -26,13 +24,6 @@ export function CustomerManageTemplate() {
     search_str: searchFilter.search_str,
     config: { keepPreviousData: true, staleTime: 0 },
   })
-
-  const handleSearch = () => {
-    setSearchFilter({
-      search_field: key,
-      search_str: value,
-    })
-  }
 
   const { register, formState, control, handleSubmit } = useForm({
     resolver: searchSubcriptionSchema && zodResolver(searchSubcriptionSchema),

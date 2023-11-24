@@ -23,10 +23,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 export function BillingTemplate() {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
-  const [key, setKey] = useState('id')
   const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
   const [searchData, setsearchData] = useState<SearchFilter>({})
-  const [value, setValue] = useState('')
   const [startTime, setStartTime] = useState<number | undefined>()
   const [endTime, setEndTime] = useState<number | undefined>()
   const [date, setDate] = useState<DateRange | undefined>({
@@ -42,14 +40,6 @@ export function BillingTemplate() {
     end_time: endTime,
     config: { keepPreviousData: true, staleTime: 0 },
   })
-
-  const handleSearch = () => {
-    const newObj: SearchFilter = {}
-    newObj[key] = value
-    setStartTime(date?.from?.getTime() && date?.from?.getTime() / 1000)
-    setEndTime(date?.to?.getTime() && date?.to?.getTime() / 1000)
-    setSearchFilter(newObj)
-  }
 
   const handleField = (field: string, value: any) => {
     const newObj: SearchFilter = {}
