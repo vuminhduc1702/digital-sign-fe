@@ -82,7 +82,12 @@ export function BaseTable<T extends Record<string, any>>({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <div className={cn('mt-2 flex grow flex-col justify-between', className)}>
+    <div
+      className={cn(
+        'mt-2 flex grow flex-col justify-between overflow-x-auto',
+        className,
+      )}
+    >
       {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />

@@ -392,7 +392,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columns={columns}
       colsVisibility={colsVisibility}
       {...props}
-      className="overflow-x-auto "
+      className="autoflow-y-auto max-h-[26rem]"
     />
   ) : (
     <div className="flex grow items-center justify-center">
