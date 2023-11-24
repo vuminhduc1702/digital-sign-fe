@@ -728,7 +728,6 @@ export function PackageInfo() {
           )
         }}
       </FormMultipleFields>
-
       {isDisabled && (
         <div className="flex">
           <div className="absolute w-[100px] bottom-1 bg-gray-100 rounded-md">
