@@ -210,7 +210,7 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
-          "select_all" : "Chọn tất cả",
+          "select_all": "Chọn tất cả",
           "group_id": "ID Nhóm",
           "org_id": "ID Tổ chức",
           "template_id": "ID Mẫu thiết bị",
@@ -1016,7 +1016,8 @@
     "download": "Tải xuống",
     "products": "CÁC SẢN PHẨM",
     "information": "Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng dẫn tích hợp.",
-    "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG"
+    "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG",
+    "udpate_device": "{{value}} thiết bị thành công"
   },
   "application": {
     "android": "ANDROID",
