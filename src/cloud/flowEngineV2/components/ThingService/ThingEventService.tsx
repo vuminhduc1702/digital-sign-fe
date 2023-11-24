@@ -66,7 +66,7 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
 
   return (
     <>
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             {isSuccess ? (

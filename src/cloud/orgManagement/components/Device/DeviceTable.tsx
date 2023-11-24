@@ -78,7 +78,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -147,7 +147,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -206,6 +206,22 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
 
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
+  let colsVisibility = {
+    stt: true,
+    name: true,
+    group_name: true,
+    status: true,
+    attributes: false,
+    created_by: false,
+    group_id: false,
+    token: false,
+    org_id: false,
+    template_id: false,
+    device_type: true,
+    key: true,
+    created_at: true,
+    contextMenu: true,
+  }
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
@@ -225,6 +241,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('group_name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.group')}</span>
@@ -232,6 +249,56 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.accessor('status', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.status')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('attributes', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('created_by', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('group_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.group_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('token', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.token')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('org_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.org_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('template_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+
       columnHelper.accessor('template_name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.device_type')}</span>
@@ -319,7 +386,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      colsVisibility={colsVisibility}
+      {...props}
+      className="overflow-auto"
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_device')}

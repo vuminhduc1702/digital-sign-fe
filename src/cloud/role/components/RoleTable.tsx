@@ -206,7 +206,12 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={data}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_role')}

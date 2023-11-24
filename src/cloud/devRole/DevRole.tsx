@@ -55,7 +55,7 @@ export default function DevRole() {
       />
 
       <TitleBar title="Danh sách dev role" className="mx-32" />
-      <div className="mx-32 flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative mx-32 flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           {projectId && (
             <div className="flex items-center gap-x-3">

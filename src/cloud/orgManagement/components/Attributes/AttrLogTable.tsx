@@ -60,7 +60,12 @@ export function AttrLogTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_log_attr')}

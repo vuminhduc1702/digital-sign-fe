@@ -32,7 +32,7 @@ export function ComboBoxSelectUser({
       'role_name',
       'role_id',
       'phone',
-      'profile'
+      'profile',
     ],
   )
 

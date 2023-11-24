@@ -51,9 +51,9 @@ export function DeviceTemplateManage() {
                   'Device template management'
                 }
               />
-              <div className="flex grow flex-col px-9 py-3 shadow-lg">
+              <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
-                  <ExportTable refComponent={ref}/>
+                  <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
                     <CreateAttr entityId={templateId} entityType="TEMPLATE" />
                     <ComboBoxSelectAttr

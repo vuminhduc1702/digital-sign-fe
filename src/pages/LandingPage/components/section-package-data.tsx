@@ -139,7 +139,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                    className="border-primary-400 text-primary-400 rounded-r-lg rounded-tl-lg border bg-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                     variant="primary"
                     onClick={open}
                   >
@@ -154,9 +154,9 @@ export function SectionPackageData() {
                     <button
                       key={idx}
                       onClick={() => setCategory(categories[idx])}
-                      className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 ${
+                      className={`hover:text-primary-400 flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider ${
                         category === categories[idx]
-                          ? 'bg-white text-primary-400'
+                          ? 'text-primary-400 bg-white'
                           : ''
                       }`}
                     >
@@ -189,7 +189,7 @@ export function SectionPackageData() {
                         )
                         .map((item, idx) => (
                           <div className="w-60 rounded-lg shadow-md" key={idx}>
-                            <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
+                            <div className="bg-primary-400 flex justify-center rounded-t-lg py-2 text-center text-xl font-medium text-white">
                               <Checkbox
                                 defaultChecked={
                                   PackofDataRef.current?.find(
@@ -215,7 +215,7 @@ export function SectionPackageData() {
                                     )
                                   }
                                 }}
-                                className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
+                                className={`data-[state=checked]:text-primary-400 mr-4 bg-white data-[state=checked]:bg-white`}
                               />
                               {item.name}
                             </div>

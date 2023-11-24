@@ -31,11 +31,11 @@ export function CustomProtocolManage() {
     offset,
     config: { keepPreviousData: true },
   })
- 
+
   return (
     <ContentLayout title={t('cloud:custom_protocol.title')}>
       <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateAdapter />

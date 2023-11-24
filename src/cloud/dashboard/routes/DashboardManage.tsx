@@ -21,7 +21,7 @@ export function DashboardManage() {
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar title={t('cloud:dashboard.title')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">
@@ -32,7 +32,10 @@ export function DashboardManage() {
             />
           </div>
         </div>
-        <DashboardTable data={filteredComboboxData} projectId={projectId} />
+        <DashboardTable
+          data={filteredComboboxData}
+          projectId={projectId}
+        />
       </div>
     </div>
   )
