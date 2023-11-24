@@ -20,7 +20,6 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -83,15 +82,20 @@ export function BaseTable<T extends Record<string, any>>({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <div className={cn('mt-2 flex grow flex-col justify-between', className)}>
+    <div
+      className={cn(
+        'mt-2 flex grow flex-col justify-between overflow-x-auto',
+        className,
+      )}
+    >
       {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
         <>
-          <table className="w-full border-collapse" id="table-ref">
-            <thead className="border-b-2 border-secondary-700">
+          <table className="mb-10 w-full border-collapse" id="table-ref">
+            <thead className="border-secondary-700 border-b-2">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
@@ -272,8 +276,8 @@ export function BaseTable<T extends Record<string, any>>({
         </>
       )}
       <div className="mt-2 flex items-center justify-between gap-2">
-        <div className="flex gap-3">
-          <span className="flex items-center gap-1 text-body-light">
+        <div className="absolute bottom-10 flex gap-3">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
@@ -284,7 +288,7 @@ export function BaseTable<T extends Record<string, any>>({
               .replace('{{TOTAL}}', totalAttrs?.toString())}
           </span>
         </div>
-        <div className="flex gap-x-2">
+        <div className="absolute bottom-10 right-6 flex gap-x-2">
           <Button
             className="rounded-l-md border-none"
             onClick={() => {

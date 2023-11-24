@@ -256,13 +256,13 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('attributes', {
-        header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
-        ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('attributes', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
+      //   ),
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('created_by', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
@@ -392,7 +392,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columns={columns}
       colsVisibility={colsVisibility}
       {...props}
-      className="overflow-auto"
+      className="autoflow-y-auto max-h-[26rem]"
     />
   ) : (
     <div className="flex grow items-center justify-center">
