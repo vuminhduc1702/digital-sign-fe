@@ -3,7 +3,7 @@ import {
   CheckCircleIcon,
   ExclamationCircleIcon,
   XCircleIcon,
-  // XMarkIcon,
+  XMarkIcon,
   InformationCircleIcon,
 } from '@heroicons/react/24/outline'
 import { Fragment, useEffect } from 'react'
