@@ -151,9 +151,14 @@ const eventConditionSchema = z.array(
     }),
     condition_type: z.enum(['normal', 'delay'] as const),
     operator: z.enum(['<', '>', '!='] as const),
-    threshold: z
-      .string()
-      .min(1, { message: 'Vui lòng nhập giá trị đối chiếu' }),
+    threshold: z.string().min(1, {
+      message: i18n
+        .t('placeholder:input_text_value')
+        .replace(
+          '{{VALUE}}',
+          i18n.t('cloud:org_manage.event_manage.add_event.condition.threshold'),
+        ),
+    }),
     logical_operator: z.enum(['and', 'or'] as const),
   }),
 )
@@ -327,7 +332,6 @@ export function CreateEvent() {
       ),
     )
   }
-  console.log('watch', getValues('type'))
 
   return (
     <FormDrawer
@@ -379,15 +383,16 @@ export function CreateEvent() {
             end_time: getValues('interval.end_time'),
           }
           const conditionArr =
-            'condition' in values &&
-            values.condition.map(item => ({
-              device_id: item.device_id,
-              attribute_name: item.attribute_name,
-              condition_type: item.condition_type,
-              operator: item.operator,
-              threshold: item.threshold,
-              logical_operator: item.logical_operator,
-            }))
+            ('condition' in values &&
+              values.condition.map(item => ({
+                device_id: item.device_id,
+                attribute_name: item.attribute_name,
+                condition_type: item.condition_type,
+                operator: item.operator,
+                threshold: item.threshold,
+                logical_operator: item.logical_operator,
+              }))) ||
+            []
           const actionArr = values.action?.map(item => ({
             action_type: item.action_type,
             receiver: item.receiver,

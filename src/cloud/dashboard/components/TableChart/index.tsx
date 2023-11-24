@@ -79,7 +79,7 @@ export function TableChart({
         values.map(({ ts, value }) => ({
           ts: ts,
           attribute_key,
-          value: parseFloat(value),
+          value,
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)

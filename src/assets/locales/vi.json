@@ -853,8 +853,10 @@
   },
   "placeholder": {
     "select": "Vui lòng chọn",
+    "select_value": "Vui lòng chọn {{VALUE}}",
     "search": "Nhập để tìm kiếm",
-    "input_text": "Vui lòng nhập"
+    "input_text": "Vui lòng nhập",
+    "input_text_value": "Vui lòng nhập {{VALUE}}"
   },
   "search": {
     "title": "Tìm kiếm",

@@ -47,7 +47,7 @@ export const attrWidgetSchema = z.array(
     label: z.string().optional(),
     color: z.string().optional(),
     unit: z.string().optional(),
-    decimal: z.string().optional(),
+    // decimal: z.string().optional(),
   }),
 )
 
@@ -278,7 +278,7 @@ export function CreateWidget({
       label: '',
       color: '',
       unit: '',
-      decimal: '',
+      // decimal: '',
     })
   }, [])
 
@@ -445,7 +445,7 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  decimal: item.decimal,
+                  // decimal: item.decimal,
                   label: item.label,
                   unit: item.unit,
                 })),
@@ -603,7 +603,7 @@ export function CreateWidget({
                             label: '',
                             color: '',
                             unit: '',
-                            decimal: '',
+                            // decimal: '',
                           })
                         }
                       />
@@ -615,7 +615,7 @@ export function CreateWidget({
                       className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
+                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                         {/* <div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.attr')}
@@ -788,7 +788,7 @@ export function CreateWidget({
                             `attributeConfig.${index}.unit` as const,
                           )}
                         />
-                        <InputField
+                        {/* <InputField
                           label={t('cloud:dashboard.config_chart.decimal')}
                           error={
                             formState?.errors?.attributeConfig?.[index]?.decimal
@@ -796,7 +796,7 @@ export function CreateWidget({
                           registration={register(
                             `attributeConfig.${index}.decimal` as const,
                           )}
-                        />
+                        /> */}
                       </div>
                       {isMultipleAttr ? (
                         <Button

@@ -70,24 +70,31 @@ export function UpdateEvent({
   endTimeProps,
 }: UpdateEventProps) {
   const { t } = useTranslation()
-  console.log('data', data)
+  // console.log('data', data)
 
-  const { register, formState, handleSubmit, control, watch, getValues } =
-    useForm<UpdateEventDTO['data']>({
-      resolver: createEventSchema && zodResolver(createEventSchema),
-      defaultValues: {
-        onClick: (data.onClick as unknown as string) === 'true',
-        name,
-        action: dataAction,
-        retry: data.retry,
-        status: (data.status as unknown as string) === 'true',
-        condition: conditionData,
-        interval: renderInterval(),
-        type,
-        org_id: data.org_id,
-        group_id: data.group_id,
-      },
-    })
+  const {
+    register,
+    formState,
+    handleSubmit,
+    control,
+    watch,
+    getValues,
+    setValue,
+  } = useForm<UpdateEventDTO['data']>({
+    resolver: createEventSchema && zodResolver(createEventSchema),
+    defaultValues: {
+      onClick: (data.onClick as unknown as string) === 'true',
+      name,
+      action: dataAction,
+      retry: data.retry,
+      status: (data.status as unknown as string) === 'true',
+      condition: conditionData,
+      interval: renderInterval(),
+      type,
+      org_id: data.org_id,
+      group_id: data.group_id,
+    },
+  })
   const {
     append: conditionAppend,
     fields: conditionFields,
@@ -225,6 +232,7 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
+          console.log('values', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -243,20 +251,24 @@ export function UpdateEvent({
             start_time: getValues('interval.start_time'),
             end_time: getValues('interval.end_time'),
           }
-          const conditionArr = values.condition?.map(item => ({
-            device_id: item.device_id,
-            attribute_name: item.attribute_name,
-            condition_type: item.condition_type,
-            operator: item.operator,
-            threshold: item.threshold,
-            logical_operator: item.logical_operator,
-          }))
+          const conditionArr =
+            ('condition' in values &&
+              values.condition.map(item => ({
+                device_id: item.device_id,
+                attribute_name: item.attribute_name,
+                condition_type: item.condition_type,
+                operator: item.operator,
+                threshold: item.threshold,
+                logical_operator: item.logical_operator,
+              }))) ||
+            []
           const actionArr = values.action?.map(item => ({
             action_type: item.action_type,
             receiver: item.receiver,
             message: item.message,
             subject: item.subject,
           }))
+          console.log('conditionArr', conditionArr)
 
           mutate({
             data: {
@@ -372,7 +384,11 @@ export function UpdateEvent({
                           {...field}
                           checked={value}
                           onCheckedChange={onChange}
-                          disabled={getValues('type') === 'schedule'}
+                          onClick={() => {
+                            if (getValues('type') === 'event') {
+                              setValue('type', 'schedule')
+                            }
+                          }}
                         />
                       )
                     }}
@@ -556,6 +572,9 @@ export function UpdateEvent({
                           label={t(
                             'cloud:org_manage.event_manage.add_event.condition.threshold',
                           )}
+                          error={
+                            formState?.errors?.condition?.[index]?.threshold
+                          }
                           registration={register(
                             `condition.${index}.threshold`,
                           )}

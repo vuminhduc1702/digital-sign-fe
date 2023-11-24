@@ -104,7 +104,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
       config: {
         ...dateTimeOptionsWithoutYearMonthDay,
         second: '2-digit',
-        fractionalSecondDigits: 3,
+        // fractionalSecondDigits: 3,
       },
     })
   }

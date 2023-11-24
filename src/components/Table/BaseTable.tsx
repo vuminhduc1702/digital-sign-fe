@@ -107,7 +107,7 @@ export function BaseTable<T extends Record<string, any>>({
                       >
                         {header.isPlaceholder ? null : (
                           <div
-                            className={`text-table-header flex items-center justify-between ${
+                            className={`flex items-center justify-between text-table-header ${
                               header.column.getCanSort()
                                 ? 'cursor-pointer select-none'
                                 : ''
@@ -160,7 +160,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -212,7 +212,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
