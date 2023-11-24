@@ -246,15 +246,16 @@ export function PackageInfo() {
                 <SelectField
                   label={t('billing:package_manage.popup.type')}
                   error={formState.errors['type']}
-                  registration={register('type')}
+                  registration={register('type' , {
+                    onChange: e => {
+                      setType(e.target.value)
+                      setPaymentType('PREPAY')
+                    }
+                  })}
                   options={[
                     { label: 'Chính thức', value: 'official' },
                     { label: 'Dùng thử', value: 'trial' },
                   ]}
-                  onChange={e => {
-                    setType(e.target.value)
-                    setPaymentType('PREPAY')
-                  }}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
                   classlabel="w-2/12"
@@ -290,12 +291,13 @@ export function PackageInfo() {
                 <SelectField
                   label={t('billing:package_manage.popup.payment_type')}
                   error={formState.errors['payment_type']}
-                  registration={register('payment_type')}
-                  onChange={e => {
-                    setPaymentType(e.target.value)
-                    setValue('payment_type', e.target.value)
-                    setPeriodType('PERIODIC')
-                  }}
+                  registration={register('payment_type' , {
+                    onChange: e => {
+                      setPaymentType(e.target.value)
+                      setValue('payment_type', e.target.value)
+                      setPeriodType('PERIODIC')
+                    }
+                  })}
                   options={
                     type === 'trial'
                       ? [{ label: 'Trả trước', value: 'PREPAY' }]
@@ -314,34 +316,37 @@ export function PackageInfo() {
                     <InputField
                       label={t('billing:package_manage.popup.expiry')}
                       error={formState.errors['exprity']}
-                      registration={register('exprity')}
+                      registration={register('exprity' , {
+                        onChange: e => {
+                          if (
+                            parseNumber(e.target.value) >
+                            parseNumberCalUnit(
+                              getValues('period'),
+                              getValues('cal_unit'),
+                            )
+                          ) {
+                            setError('exprity', {
+                              message: t(
+                                'billing:package_manage.popup.choose_expiry',
+                              ),
+                            })
+                          } else setError('exprity', { message: '' })
+                        }
+                      })}
                       type="number"
                       disabled={isDisabled}
                       classnamefieldwrapper="flex items-center gap-x-3"
                       classlabel="w-2/12"
                       classchild="w-10/12"
-                      onChange={e => {
-                        if (
-                          parseNumber(e.target.value) >
-                          parseNumberCalUnit(
-                            getValues('period'),
-                            getValues('cal_unit'),
-                          )
-                        ) {
-                          setError('exprity', {
-                            message: t(
-                              'billing:package_manage.popup.choose_expiry',
-                            ),
-                          })
-                        } else setError('exprity', { message: '' })
-                      }}
                     />
                   )}
                 </div>
                 <SelectField
                   label={t('billing:package_manage.popup.type_period')}
                   error={formState.errors['type_period']}
-                  registration={register('type_period')}
+                  registration={register('type_period' , {
+                    onChange: e => setPeriodType(e.target.value)
+                  })}
                   options={
                     type === 'official' && paymentType === 'PREPAY'
                       ? [
@@ -350,7 +355,6 @@ export function PackageInfo() {
                         ]
                       : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                   }
-                  onChange={e => setPeriodType(e.target.value)}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
                   classlabel="w-2/12"
@@ -431,7 +435,20 @@ export function PackageInfo() {
                   <SelectField
                     label={t('billing:package_manage.popup.estimate')}
                     error={formState.errors['estimate']}
-                    registration={register('estimate')}
+                    registration={register('estimate' , {
+                      onChange: e => {
+                        setEstimates(e.target.value)
+                        setValue('plan_lv', [
+                          {
+                            level: '',
+                            price: '',
+                            free: '',
+                          },
+                        ])
+                        setValue('quantity_free', '')
+                        setValue('price', '')
+                      }
+                    })}
                     disabled={isDisabled}
                     options={
                       type === 'official' &&
@@ -449,18 +466,6 @@ export function PackageInfo() {
                             { label: 'Theo đơn vị', value: 'unit' },
                           ]
                     }
-                    onChange={e => {
-                      setEstimates(e.target.value)
-                      setValue('plan_lv', [
-                        {
-                          level: '',
-                          price: '',
-                          free: '',
-                        },
-                      ])
-                      setValue('quantity_free', '')
-                      setValue('price', '')
-                    }}
                     classnamefieldwrapper="flex items-center gap-x-3"
                     classlabel="w-2/12"
                     classchild="w-10/12"

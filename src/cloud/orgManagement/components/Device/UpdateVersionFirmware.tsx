@@ -89,7 +89,7 @@ export function UpdateVersionFirmWare({
         id="update-version"
         className="mt-2 flex w-full flex-col justify-between space-y-6"
         onSubmit={handleSubmit(values => {
-          const fota = fotaValue?.value.split('(')
+          const fota = values?.version.split('(')
           const name = fota?.[0].slice(0, -1) || ''
           const version = fota?.[1].slice(0, -1) || ''
           mutate({
@@ -108,12 +108,6 @@ export function UpdateVersionFirmWare({
             label={t('cloud:firmware.fota')}
             name="version"
             control={control}
-            value={fotaValue}
-            onChange={e => {
-              setValue('version', e.value)
-              setError('version', { message: '' })
-              setFotaValue(e)
-            }}
             options={
               data?.data?.map(fota => ({
                 label: `${fota.name} (${fota.version})`,
