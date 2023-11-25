@@ -83,7 +83,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -133,12 +133,14 @@ function DeviceTableContextMenu({
             <MenuItem
               icon={<UpdateIcon className="h-5 w-5" />}
               onClick={() => {
-                open()
-                setType('update-version')
+                if (status !== 'blocked') {
+                  open()
+                  setType('update-version')
+                }
               }}
               style={{
                 color: status === 'blocked' ? 'gray' : '',
-                pointerEvents: status === 'blocked' ? 'none' : '',
+                cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
               }}
             >
               {t('cloud:firmware.fota')}
@@ -172,7 +174,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={

@@ -184,7 +184,18 @@ const eventActionSchema = z
         .object({
           action_type: z.enum(['eventactive', 'delay'] as const),
           message: z.string().optional(),
-          subject: z.string().min(1, { message: 'Vui lòng nhập tiêu đề' }),
+          subject: z
+            .string()
+            .min(1, {
+              message: i18n
+                .t('placeholder:input_text_value')
+                .replace(
+                  '{{VALUE}}',
+                  i18n.t(
+                    'cloud:org_manage.event_manage.add_event.action.subject',
+                  ),
+                ),
+            }),
         })
         .or(
           z.object({
@@ -195,8 +206,30 @@ const eventActionSchema = z
               'event',
               'email',
             ] as const),
-            message: z.string().min(1, { message: 'Vui lòng nhập tin nhắn' }),
-            subject: z.string().min(1, { message: 'Vui lòng nhập tiêu đề' }),
+            message: z
+              .string()
+              .min(1, {
+                message: i18n
+                  .t('placeholder:input_text_value')
+                  .replace(
+                    '{{VALUE}}',
+                    i18n.t(
+                      'cloud:org_manage.event_manage.add_event.action.message',
+                    ),
+                  ),
+              }),
+            subject: z
+              .string()
+              .min(1, {
+                message: i18n
+                  .t('placeholder:input_text_value')
+                  .replace(
+                    '{{VALUE}}',
+                    i18n.t(
+                      'cloud:org_manage.event_manage.add_event.action.subject',
+                    ),
+                  ),
+              }),
           }),
         ),
     ),
@@ -210,7 +243,6 @@ export const createEventSchema = z
     group_id: z.string().optional(),
     name: nameSchema,
     action: eventActionSchema,
-    interval: eventIntervalSchema,
     status: z.boolean().optional(),
     retry: z.number().optional(),
     onClick: z.boolean(),
@@ -220,9 +252,13 @@ export const createEventSchema = z
       z.object({
         type: z.literal('event'),
         condition: eventConditionSchema,
+        interval: eventIntervalSchema,
       }),
       z.object({
         type: z.literal('schedule'),
+        interval: eventIntervalSchema
+          .omit({ end_time: true })
+          .and(z.object({ end_time: z.string().optional() })),
       }),
     ]),
   )
@@ -586,6 +622,7 @@ export function CreateEvent() {
                 label={t('cloud:org_manage.event_manage.add_event.end')}
                 error={formState?.errors?.interval?.end_time}
                 registration={register('interval.end_time')}
+                disabled={watch('type') === 'schedule'}
               />
             </div>
           </div>

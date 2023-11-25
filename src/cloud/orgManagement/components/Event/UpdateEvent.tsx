@@ -401,6 +401,7 @@ export function UpdateEvent({
                   error={formState.errors['type']}
                   registration={register('type')}
                   options={eventTypeOptions}
+                  disabled={watch('onClick')}
                 />
                 <InputField
                   label={t('cloud:org_manage.event_manage.add_event.retry')}
@@ -445,6 +446,7 @@ export function UpdateEvent({
                   label={t('cloud:org_manage.event_manage.add_event.end')}
                   error={formState?.errors?.interval?.end_time}
                   registration={register('interval.end_time')}
+                  disabled={watch('type') === 'schedule'}
                 />
               </div>
             </div>

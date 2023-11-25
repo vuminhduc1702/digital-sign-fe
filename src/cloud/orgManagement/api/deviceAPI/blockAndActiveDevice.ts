@@ -32,8 +32,7 @@ export const useBlockAndActiveDevice = ({
   const { addNotification } = useNotificationStore()
 
   return useMutation({
-    onSuccess: async (result, variables) => {
-      console.log(result, variables, 'check result, variables')
+    onSuccess: async (_, variables) => {
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
