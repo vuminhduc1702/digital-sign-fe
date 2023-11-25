@@ -32,6 +32,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
+import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 
 function DeviceTableContextMenu({
   id,
@@ -42,6 +43,7 @@ function DeviceTableContextMenu({
   template_name,
   template_id,
   token,
+  status,
 }: {
   id: string
   name: string
@@ -51,6 +53,7 @@ function DeviceTableContextMenu({
   template_name: string
   template_id: string
   token: string
+  status: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -63,6 +66,8 @@ function DeviceTableContextMenu({
   const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
+
+  const { mutate: mutateBlockAndActive } = useBlockAndActiveDevice()
 
   const handleCopyId = useCopyId()
 
@@ -110,10 +115,30 @@ function DeviceTableContextMenu({
               {t('cloud:org_manage.device_manage.add_device.edit')}
             </MenuItem>
             <MenuItem
+              icon={
+                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+              }
+              onClick={() => {
+                let type = 'active'
+                if (status === 'online' || status === 'offline') {
+                  type = 'block'
+                }
+                mutateBlockAndActive({ type, deviceId: id })
+              }}
+            >
+              {status === 'online' || status === 'offline'
+                ? t('device:block')
+                : t('device:active')}
+            </MenuItem>
+            <MenuItem
               icon={<UpdateIcon className="h-5 w-5" />}
               onClick={() => {
                 open()
                 setType('update-version')
+              }}
+              style={{
+                color: status === 'blocked' ? 'gray' : '',
+                pointerEvents: status === 'blocked' ? 'none' : '',
               }}
             >
               {t('cloud:firmware.fota')}
@@ -362,6 +387,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             template_id,
             template_name,
             token,
+            status,
           } = info.row.original
           const group = {
             label: group_name,
@@ -376,6 +402,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             template_name,
             template_id,
             token,
+            status,
           })
         },
         header: () => null,
