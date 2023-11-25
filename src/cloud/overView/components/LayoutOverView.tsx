@@ -18,14 +18,22 @@ import { useGetRegistedUser } from '../api/getRegistedUser'
 import { useGetConcurrentUser } from '../api/getConcurrentUser'
 import { useRequestHandlingTime } from '../api/requestHandlingTime'
 import { DashboardTable } from './DashboardTable'
-import { AvatarIcon, RadiobuttonIcon, TimerIcon, CheckCircledIcon, ChevronRightIcon, ChevronLeftIcon, ArrowTopRightIcon } from '@radix-ui/react-icons'
+import {
+  AvatarIcon,
+  RadiobuttonIcon,
+  TimerIcon,
+  CheckCircledIcon,
+  ChevronRightIcon,
+  ChevronLeftIcon,
+  ArrowTopRightIcon,
+} from '@radix-ui/react-icons'
 import { useSuccessRate } from '../api/successRate'
 import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
-import fleetManagementData from '../fleetManagement.json';
-import assetManagementData from '../assetManagement.json';
-import smartFarmData from '../smartFarm.json';
-import smartHomeData from '../smartHome.json';
-import smartWaterData from '../smartWater.json';
+import fleetManagementData from '../fleetManagement.json'
+import assetManagementData from '../assetManagement.json'
+import smartFarmData from '../smartFarm.json'
+import smartHomeData from '../smartHome.json'
+import smartWaterData from '../smartWater.json'
 import { useRestoreProject } from '~/cloud/project/api/restoreProject'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
@@ -54,7 +62,7 @@ export function LayoutOverView() {
       content3: '- Cảnh báo vùng an toàn qua SMS hoặc App Notification',
       content4: '- Cảnh báo pin yếu qua SMS hoặc App Notification',
       content5: '- Định vị được vị trí qua bản tin thiết bị bắn lên',
-      jsonData: fleetManagementData
+      jsonData: fleetManagementData,
     },
     {
       title: 'Giải pháp Asset Management',
@@ -67,7 +75,7 @@ export function LayoutOverView() {
       content4:
         '- Xử lý tập bản tin thiết bị gửi lên (gộp bản tin, kiểm tra trùng)',
       content5: '- Đăng ký RFID mới theo danh sách hoặc chỉnh sửa số lượng nhỏ',
-      jsonData: assetManagementData
+      jsonData: assetManagementData,
     },
     {
       title: 'Giải pháp Smart Water Meter',
@@ -78,7 +86,7 @@ export function LayoutOverView() {
       content3: '- Đo lượng tổng lượng nước tiêu thụ',
       content4: '- Cảnh báo về sự cố đường nước qua SMS hoặc App notification',
       content5: '- Đo tốc độ dòng chảy của nước',
-      jsonData: smartWaterData
+      jsonData: smartWaterData,
     },
     {
       title: 'Giải pháp Smart Farm',
@@ -89,7 +97,7 @@ export function LayoutOverView() {
       content3: '- Do độ ẩm hiện tại để bật/tắt máy bơm nước',
       content4: '- Do tổng lượng nước đã tiêu thụ',
       content5: '',
-      jsonData: smartFarmData
+      jsonData: smartFarmData,
     },
     {
       title: 'Giải pháp Smarthome',
@@ -100,7 +108,7 @@ export function LayoutOverView() {
       content3: '',
       content4: '',
       content5: '',
-      jsonData: smartHomeData
+      jsonData: smartHomeData,
     },
   ]
 
@@ -175,48 +183,47 @@ export function LayoutOverView() {
     },
   ]
 
-  const tab1 = sampleDivices.slice(0, 3);
-  const tab2 = sampleDivices.slice(3, 5);
+  const tab1 = sampleDivices.slice(0, 3)
+  const tab2 = sampleDivices.slice(3, 5)
 
   const {
     mutateAsync: mutateAsyncUploadProjectFile,
     isLoading: isLoadingProject,
     isSuccess: isSuccessProject,
-  } = useRestoreProject(
-    {
-      type: 'overView'
-    }
-  )
+  } = useRestoreProject({
+    type: 'overView',
+  })
 
-  const { data: dashboardData, isPreviousData } = useGetDashboards({ projectId })
+  const { data: dashboardData, isPreviousData } = useGetDashboards({
+    projectId,
+  })
   const { data: connectedDevicesData } = useGetConnectedDevices({ projectId })
   const { data: registedUserData } = useGetRegistedUser({ projectId })
   const { data: concurrentUserData } = useGetConcurrentUser({ projectId })
-  const {
-    mutate: mutateRequestHandlingTime,
-    data: RequestHandlingTimeData,
-  } = useRequestHandlingTime()
-  const {
-    mutate: mutateSuccessRate,
-    data: SuccessRateData,
-  } = useSuccessRate()
+  const { mutate: mutateRequestHandlingTime, data: RequestHandlingTimeData } =
+    useRequestHandlingTime()
+  const { mutate: mutateSuccessRate, data: SuccessRateData } = useSuccessRate()
 
   useEffect(() => {
     mutateRequestHandlingTime({
       projectId,
       method: 'POST',
-      url: 'devices'
+      url: 'devices',
     })
     mutateSuccessRate({
       projectId,
       method: 'POST',
-      url: 'devices'
+      url: 'devices',
     })
   }, [])
 
   useEffect(() => {
-    const lastViewFilter = dashboardData?.dashboard?.filter(item => item?.dashboard_setting?.last_viewed)
-    const starredFilter = dashboardData?.dashboard?.filter(item => item?.dashboard_setting?.starred)
+    const lastViewFilter = dashboardData?.dashboard?.filter(
+      item => item?.dashboard_setting?.last_viewed,
+    )
+    const starredFilter = dashboardData?.dashboard?.filter(
+      item => item?.dashboard_setting?.starred,
+    )
     setLastView(lastViewFilter)
     setStarred(starredFilter)
   }, [dashboardData])
@@ -227,10 +234,8 @@ export function LayoutOverView() {
         <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-5">
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:total_devices')}</p>
-            <div className='mt-2 flex justify-between'>
-              <span>
-                {connectedDevicesData?.total}
-              </span>
+            <div className="mt-2 flex justify-between">
+              <span>{connectedDevicesData?.total}</span>
               <img
                 src={thietbiIcon}
                 alt="Overview"
@@ -240,38 +245,32 @@ export function LayoutOverView() {
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:total_user')}</p>
-            <div className='mt-2 flex justify-between'>
-              <span>
-                {registedUserData?.total}
-              </span>
-              <AvatarIcon className='h-5 w-5 text-primary-400' />
+            <div className="mt-2 flex justify-between">
+              <span>{registedUserData?.total}</span>
+              <AvatarIcon className="h-5 w-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
-            <p className="text-table-header">{t('overView:total_user_online')}</p>
-            <div className='mt-2 flex justify-between'>
-              <span>
-                {concurrentUserData?.total}
-              </span>
-              <RadiobuttonIcon className='h-5 w-5 text-primary-400' />
+            <p className="text-table-header">
+              {t('overView:total_user_online')}
+            </p>
+            <div className="mt-2 flex justify-between">
+              <span>{concurrentUserData?.total}</span>
+              <RadiobuttonIcon className="h-5 w-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:request_time')}</p>
-            <div className='mt-2 flex justify-between'>
-              <span>
-                {RequestHandlingTimeData?.avg_latency}
-              </span>
-              <TimerIcon className='h-5 w-5 text-primary-400' />
+            <div className="mt-2 flex justify-between">
+              <span>{RequestHandlingTimeData?.avg_latency}</span>
+              <TimerIcon className="h-5 w-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:success_rate')}</p>
-            <div className='mt-2 flex justify-between'>
-              <span>
-                {SuccessRateData?.success_rate}
-              </span>
-              <CheckCircledIcon className='h-5 w-5 text-primary-400' />
+            <div className="mt-2 flex justify-between">
+              <span>{SuccessRateData?.success_rate}</span>
+              <CheckCircledIcon className="h-5 w-5 text-primary-400" />
             </div>
           </div>
         </div>
@@ -288,7 +287,7 @@ export function LayoutOverView() {
               }
             >
               <div className="flex items-center gap-x-2">
-                <ChevronLeftIcon className='h-5 w-5' />
+                <ChevronLeftIcon className="h-5 w-5" />
               </div>
             </Tab>
             <Tab
@@ -300,13 +299,15 @@ export function LayoutOverView() {
               }
             >
               <div className="flex items-center gap-x-2">
-                <ChevronRightIcon className='h-5 w-5' />
+                <ChevronRightIcon className="h-5 w-5" />
               </div>
             </Tab>
           </Tab.List>
           <Tab.Panels className="flex grow flex-col">
             <Tab.Panel
-              className={clsx('bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg')}
+              className={clsx(
+                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+              )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
                 {tab1?.map(item => {
@@ -320,7 +321,7 @@ export function LayoutOverView() {
                       </div>
                       <div className="text p-3">
                         <h4 className="mt-3 text-table-header">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer">
+                        <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
                           {item.content2}
@@ -340,8 +341,8 @@ export function LayoutOverView() {
                               {t('overView:setup_confirm').replace(
                                 '{{TITLE}}',
                                 item.title,
-                              ) ?? 'Confirm delete?'}
-                              <p className="mb-2 mt-3 cursor-pointer">
+                              )}
+                              <p className="mb-2 mt-3">
                                 {item.content}
                                 {item.content2 && <br />}
                                 {item.content2}
@@ -369,14 +370,20 @@ export function LayoutOverView() {
                               type="button"
                               size="md"
                               className="bg-primary-400"
-                              onClick={() => mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                }
-                              })}
+                              onClick={() =>
+                                mutateAsyncUploadProjectFile({
+                                  projectId,
+                                  backup: {
+                                    backup: item.jsonData,
+                                  },
+                                })
+                              }
                               startIcon={
-                                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                                <img
+                                  src={btnSubmitIcon}
+                                  alt="Submit"
+                                  className="h-5 w-5"
+                                />
                               }
                             />
                           }
@@ -388,7 +395,9 @@ export function LayoutOverView() {
               </div>
             </Tab.Panel>
             <Tab.Panel
-              className={clsx('bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg')}
+              className={clsx(
+                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+              )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
                 {tab2?.map(item => {
@@ -402,7 +411,7 @@ export function LayoutOverView() {
                       </div>
                       <div className="text p-3">
                         <h4 className="mt-3 text-table-header">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3 cursor-pointer">
+                        <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
                           {item.content2}
@@ -422,8 +431,8 @@ export function LayoutOverView() {
                               {t('overView:setup_confirm').replace(
                                 '{{TITLE}}',
                                 item.title,
-                              ) ?? 'Confirm delete?'}
-                              <p className="mb-2 mt-3 cursor-pointer">
+                              )}
+                              <p className="mb-2 mt-3">
                                 {item.content}
                                 {item.content2 && <br />}
                                 {item.content2}
@@ -451,14 +460,20 @@ export function LayoutOverView() {
                               type="button"
                               size="md"
                               className="bg-primary-400"
-                              onClick={() => mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                },
-                              })}
+                              onClick={() =>
+                                mutateAsyncUploadProjectFile({
+                                  projectId,
+                                  backup: {
+                                    backup: item.jsonData,
+                                  },
+                                })
+                              }
                               startIcon={
-                                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                                <img
+                                  src={btnSubmitIcon}
+                                  alt="Submit"
+                                  className="h-5 w-5"
+                                />
                               }
                             />
                           }
@@ -480,7 +495,7 @@ export function LayoutOverView() {
               onClick={() => navigate(`${PATHS.DASHBOARD}/${projectId}`)}
             >
               <p className="text-table-header">{t('overView:dashboard')}</p>
-              <ArrowTopRightIcon className='h-5 w-5' />
+              <ArrowTopRightIcon className="h-5 w-5" />
             </div>
             <div className="flex ">
               <div className="w-fit rounded-2xl bg-slate-200">
@@ -513,21 +528,23 @@ export function LayoutOverView() {
               </Button>
             </div>
           </div>
-          {type === 'Last viewed' ?
+          {type === 'Last viewed' ? (
             <DashboardTable
               data={lastView || []}
               offset={offset}
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
-            /> :
+            />
+          ) : (
             <DashboardTable
               data={starred || []}
               offset={offset}
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
-            />}
+            />
+          )}
         </div>
         <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
