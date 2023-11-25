@@ -5,6 +5,7 @@ import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
@@ -65,6 +66,11 @@ const widgetAggSchema = z.object({
   value: aggSchema,
 })
 export type WidgetAgg = z.infer<typeof widgetAggSchema>
+export type WidgetAttrDeviceType = Array<{
+  id: string
+  attr: string
+  deviceName: string
+}>
 
 export const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -142,17 +148,41 @@ export function DashboardDetail() {
   }, [widgetDetailDB])
 
   useEffect(() => {
-    if (detailDashboard) {
+    if (detailDashboard?.dashboard_setting?.starred != null) {
       setIsStar(detailDashboard?.dashboard_setting?.starred)
     }
-  }, [detailDashboard])
+  }, [detailDashboard?.dashboard_setting?.starred])
 
+  const [widgetAttrDeviceData, setWidgetAttrDeviceData] =
+    useState<WidgetAttrDeviceType>()
   useEffect(() => {
     if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
       addNotification({
         type: 'error',
         title: lastJsonMessage.errorMsg,
       })
+    }
+    if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
+      setWidgetAttrDeviceData(
+        lastJsonMessage?.data
+          ?.map(item => {
+            const {
+              entityId: { entityName },
+              timeseries,
+            } = item
+            if (timeseries != null) {
+              const attributes = Object.keys(timeseries).filter(
+                attr => timeseries[attr] !== null,
+              )
+              return attributes.map(attr => {
+                const id = uuidv4()
+                return { id, attr, deviceName: entityName }
+              })
+            }
+            return []
+          })
+          .flat(),
+      )
     }
   }, [lastJsonMessage])
 
@@ -212,17 +242,22 @@ export function DashboardDetail() {
       <TitleBar
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
-      <StarFilledIcon className={cn(
-        'absolute left-2 top-2 h-5 w-5 cursor-pointer',
-        {
-          'text-amber-300': isStar,
-          'text-white': !isStar
-        }
-      )} onClick={() => setIsStar(!isStar)} />
+      <StarFilledIcon
+        className={cn('absolute left-2 top-2 h-5 w-5 cursor-pointer', {
+          'text-amber-400': isStar,
+          'text-white': !isStar,
+          'cursor-not-allowed': !isEditMode,
+        })}
+        onClick={() => {
+          if (isEditMode) {
+            setIsStar(!isStar)
+          }
+        }}
+      />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {widgetDetailDB == null &&
-          Object.keys(widgetList).length === 0 &&
-          connectionStatus === 'Open' ? (
+        Object.keys(widgetList).length === 0 &&
+        connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
@@ -240,25 +275,25 @@ export function DashboardDetail() {
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                      lastJsonMessage?.data?.map(
-                        device => device.timeseries as TimeSeries,
-                      ),
-                    )
+                        lastJsonMessage?.data?.map(
+                          device => device.timeseries as TimeSeries,
+                        ),
+                      )
                     : {}
 
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                      lastJsonMessage?.data?.map(
-                        device => device.latest.TIME_SERIES as LatestData,
-                      ),
-                    )
+                        lastJsonMessage?.data?.map(
+                          device => device.latest.TIME_SERIES as LatestData,
+                        ),
+                      )
                     : {}
 
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
-                      ?.TIME_SERIES as LatestData)
+                        ?.TIME_SERIES as LatestData)
                     : {}
 
                 return (
@@ -266,24 +301,24 @@ export function DashboardDetail() {
                     key={widgetId}
                     data-grid={
                       detailDashboard?.dashboard_setting?.layout != null &&
-                        detailDashboard?.dashboard_setting?.layout?.length > 0 &&
-                        Object.keys(widgetList).length === 0
+                      detailDashboard?.dashboard_setting?.layout?.length > 0 &&
+                      Object.keys(widgetList).length === 0
                         ? detailDashboard?.dashboard_setting?.layout?.find(
-                          layout => layout.i === widgetId,
-                        )
+                            layout => layout.i === widgetId,
+                          )
                         : {
-                          // x: index % 2 === 0 ? 0 : 4,
-                          x: index % 2 === 0 ? 0 : 6,
-                          y: 0,
-                          w:
-                            widgetList?.[widgetId]?.description === 'CARD'
-                              ? 3
-                              : 6,
-                          h:
-                            widgetList?.[widgetId]?.description === 'CARD'
-                              ? 1
-                              : 3,
-                        }
+                            // x: index % 2 === 0 ? 0 : 4,
+                            x: index % 2 === 0 ? 0 : 6,
+                            y: 0,
+                            w:
+                              widgetList?.[widgetId]?.description === 'CARD'
+                                ? 3
+                                : 6,
+                            h:
+                              widgetList?.[widgetId]?.description === 'CARD'
+                                ? 1
+                                : 3,
+                          }
                     }
                     className={cn(
                       'relative bg-secondary-500',
@@ -295,9 +330,20 @@ export function DashboardDetail() {
                       {widgetList?.[widgetId]?.title ?? ''}
                     </p>
                     {widgetList?.[widgetId]?.description === 'LINE' ? (
-                      <LineChart data={realtimeValues} />
+                      <LineChart
+                        data={realtimeValues}
+                        widgetInfo={
+                          detailDashboard?.configuration?.widgets?.[widgetId]
+                        }
+                      />
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
-                      <BarChart data={realtimeValues} />
+                      <BarChart
+                        data={realtimeValues}
+                        widgetInfo={
+                          detailDashboard?.configuration?.widgets?.[widgetId]
+                        }
+                        widgetAttrDeviceData={widgetAttrDeviceData}
+                      />
                     ) : widgetList?.[widgetId]?.description === 'PIE' ? (
                       <PieChart data={lastestValues} />
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
@@ -357,6 +403,7 @@ export function DashboardDetail() {
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
                 )
                 setIsEditMode(false)
+                setIsStar(detailDashboard?.dashboard_setting?.starred || false)
               }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

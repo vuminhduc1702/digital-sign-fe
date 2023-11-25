@@ -67,11 +67,7 @@ export function ListProjectItem({
               height: '288px',
               backgroundSize: '100% 100%',
               backgroundRepeat: 'no-repeat',
-              backgroundImage: `${
-                project?.image !== ''
-                  ? `url(${API_URL}/file/${project?.image})`
-                  : `url(${defaultProjectImage})`
-              }`,
+              backgroundImage: `url(${API_URL}/file/${project?.image}), url(${defaultProjectImage})`,
               borderRadius: '10px 10px 10px 0',
             }}
             onClick={() => {

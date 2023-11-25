@@ -9,14 +9,23 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  Brush,
 } from 'recharts'
+import type * as z from 'zod'
 
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
 import { type TimeSeries } from '../../types'
+import { type widgetSchema } from '../Widget'
 
-export function LineChart({ data }: { data: TimeSeries }) {
+export function LineChart({
+  data,
+  widgetInfo,
+}: {
+  data: TimeSeries
+  widgetInfo?: z.infer<typeof widgetSchema>
+}) {
   // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
@@ -110,6 +119,16 @@ export function LineChart({ data }: { data: TimeSeries }) {
       },
     })
   }
+
+  const [widgetInfoToChart, setWidgetInfoToChart] = useState<z.infer<
+    typeof widgetSchema
+  > | null>()
+  useEffect(() => {
+    if (widgetInfo != null) {
+      setWidgetInfoToChart(widgetInfo)
+    }
+  }, [widgetInfo])
+
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
     minDuration: 300,
@@ -127,6 +146,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
             <YAxis />
             <Tooltip />
             <Legend />
+            <Brush dataKey="ts" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
               return (
                 <Line

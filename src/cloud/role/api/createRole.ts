@@ -11,6 +11,7 @@ import {
   type ActionsType,
   type SelectType,
 } from '../types'
+import { type RoleTypes } from '~/lib/authorization'
 
 export type PoliciesReq = {
   policy_name: string
@@ -28,6 +29,7 @@ export type CreateRoleDTO = {
     project_id: string
     policies: PoliciesReq[]
     role_type: string
+    applicable_to: RoleTypes
   }
 }
 

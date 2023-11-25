@@ -615,70 +615,7 @@ export function CreateWidget({
                       className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                        {/* <div className="space-y-1">
-                          <FieldWrapper
-                            label={t('cloud:dashboard.config_chart.attr')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]
-                                ?.attribute_key
-                            }
-                          >
-                            <Controller
-                              control={control}
-                              name={`attributeConfig.${index}.attribute_key`}
-                              render={({
-                                field: { onChange, value, ...field },
-                              }) => {
-                                return (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant="trans"
-                                        size="md"
-                                        role="combobox"
-                                        className={cn(
-                                          'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
-                                          !value && 'text-secondary-700',
-                                        )}
-                                      >
-                                        {value !== ''
-                                          ? attrSelectData.find(
-                                              attr => attr.value === value,
-                                            )?.label
-                                          : t('placeholder:select')}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Command>
-                                        <CommandInput />
-                                        <CommandEmpty>
-                                          {t('table:no_attr')}
-                                        </CommandEmpty>
-                                        <CommandGroup>
-                                          {attrSelectData.map(attr => (
-                                            <CommandItem
-                                              value={attr.label}
-                                              key={attr.value}
-                                              onSelect={() => {
-                                                setValue(
-                                                  `attributeConfig.${index}.attribute_key`,
-                                                  attr.value,
-                                                )
-                                              }}
-                                            >
-                                              {attr.label}
-                                            </CommandItem>
-                                          ))}
-                                        </CommandGroup>
-                                      </Command>
-                                    </PopoverContent>
-                                  </Popover>
-                                )
-                              }}
-                            />
-                          </FieldWrapper>
-                        </div> */}
+                      <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                         <div className="w-full space-y-1">
                           <SelectDropdown
                             label={t('cloud:dashboard.config_chart.attr')}
@@ -1102,4 +1039,70 @@ export function CreateWidget({
       </div>
     </Dialog>
   )
+}
+
+{
+  /* <div className="space-y-1">
+  <FieldWrapper
+    label={t('cloud:dashboard.config_chart.attr')}
+    error={
+      formState?.errors?.attributeConfig?.[index]
+        ?.attribute_key
+    }
+  >
+    <Controller
+      control={control}
+      name={`attributeConfig.${index}.attribute_key`}
+      render={({
+        field: { onChange, value, ...field },
+      }) => {
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="trans"
+                size="md"
+                role="combobox"
+                className={cn(
+                  'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
+                  !value && 'text-secondary-700',
+                )}
+              >
+                {value !== ''
+                  ? attrSelectData.find(
+                      attr => attr.value === value,
+                    )?.label
+                  : t('placeholder:select')}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Command>
+                <CommandInput />
+                <CommandEmpty>
+                  {t('table:no_attr')}
+                </CommandEmpty>
+                <CommandGroup>
+                  {attrSelectData.map(attr => (
+                    <CommandItem
+                      value={attr.label}
+                      key={attr.value}
+                      onSelect={() => {
+                        setValue(
+                          `attributeConfig.${index}.attribute_key`,
+                          attr.value,
+                        )
+                      }}
+                    >
+                      {attr.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        )
+      }}
+    />
+  </FieldWrapper>
+</div> */
 }
