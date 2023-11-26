@@ -191,7 +191,7 @@ export function GaugeChart({ data }: { data: LatestData }) {
     value: 0,
   })
 
-  const newDataValue = Object.values(data)?.[0]?.value ?? ''
+  // const newDataValue = Object.values(data)?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       const gaugeDataType = {
@@ -200,7 +200,7 @@ export function GaugeChart({ data }: { data: LatestData }) {
       }
       setDataTransformedFeedToChart(gaugeDataType)
     }
-  }, [newDataValue])
+  }, [data])
 
   const { value } = useGaugeChart(dataTransformedFeedToChart.value)
 

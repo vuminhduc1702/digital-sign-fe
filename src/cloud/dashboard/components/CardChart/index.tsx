@@ -13,16 +13,15 @@ export function CardChart({ data }: { data: LatestData }) {
     value: '',
   })
 
-  const newDataValue = Object.values(data)?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       const dataDataType = {
         key: Object.keys(data)[0],
-        value: newDataValue,
+        value: Object.values(data)?.[0]?.value,
       }
       setDataTransformedFeedToChart(dataDataType)
     }
-  }, [newDataValue])
+  }, [data])
 
   const showSpinner = useSpinDelay(Object.keys(data).length === 0, {
     delay: 150,

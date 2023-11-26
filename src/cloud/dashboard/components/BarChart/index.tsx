@@ -69,7 +69,7 @@ export const BarChart = ({
         dataManipulation()
       }
     }
-  }, [newDataValue])
+  }, [data])
 
   function dataManipulation() {
     const barWidgetDataType = Object.entries(
