@@ -88,27 +88,6 @@ export const widgetSchema = z.object({
     })
     .nullable(),
 })
-// .and(
-//   z.discriminatedUnion('type', [
-//     z.object({
-//       type: z.literal('TIMESERIES'),
-//       config: z.object({
-//         chartsetting: z.object({
-//           start_date: z.number(),
-//           end_date: z.number(),
-//           data_type: widgetDataTypeSchema,
-//         }),
-//         timewindow: z.object({
-//           interval: z.number(),
-//         }),
-//         aggregation: aggSchema,
-//       }),
-//     }),
-//     z.object({
-//       type: z.literal('LASTEST'),
-//     }),
-//   ]),
-// )
 
 export const widgetListSchema = z.record(widgetSchema)
 export type Widget = z.infer<typeof widgetListSchema>
@@ -154,33 +133,6 @@ export const widgetCreateSchema = z.object({
     .optional(),
   id: z.string().optional(),
 })
-// .and(
-//   z.discriminatedUnion('type', [
-//     z.object({
-//       type: z.literal('TIMESERIES'),
-//       widgetSetting: z.object({
-//         agg: aggSchema,
-//         interval: z.number(),
-//         startDate: z.date({
-//           required_error: i18n.t(
-//             'cloud:dashboard.config_chart.pick_date_alert',
-//           ),
-//         }),
-//         endDate: z
-//           .date({
-//             required_error: i18n.t(
-//               'cloud:dashboard.config_chart.pick_date_alert',
-//             ),
-//           })
-//           .optional(),
-//         dataType: widgetDataTypeSchema,
-//       }),
-//     }),
-//     z.object({
-//       type: z.literal('LASTEST'),
-//     }),
-//   ]),
-// )
 
 type WidgetCreateDTO = {
   data: z.infer<typeof widgetCreateSchema> & { id: string }

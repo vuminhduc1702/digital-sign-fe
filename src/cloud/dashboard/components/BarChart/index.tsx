@@ -16,18 +16,16 @@ import type * as z from 'zod'
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type TimeSeries } from '../../types'
+import { type DataItem, type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import { type WidgetAttrDeviceType } from '../../routes/DashboardDetail'
 
 export const BarChart = ({
   data,
   widgetInfo,
-  widgetAttrDeviceData,
 }: {
   data: TimeSeries
   widgetInfo?: z.infer<typeof widgetSchema>
-  widgetAttrDeviceData?: WidgetAttrDeviceType
 }) => {
   // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -130,9 +128,7 @@ export const BarChart = ({
 
   return (
     <>
-      {dataTransformedFeedToChart.length > 0 &&
-      newValuesRef.current != null &&
-      widgetAttrDeviceData != null ? (
+      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
         <ResponsiveContainer width="98%" height="90%" className="pt-8">
           <BarReChart data={dataTransformedFeedToChart}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -141,32 +137,31 @@ export const BarChart = ({
             <Tooltip />
             <Legend />
             <Brush dataKey="time" height={30} stroke="#8884d8" />
-            {widgetAttrDeviceData.length > 0 &&
-              widgetAttrDeviceData.map((item, index) => {
-                return (
-                  <Bar
-                    key={item.id}
-                    dataKey={item.attr}
-                    stackId={item.deviceName}
-                    animationDuration={250}
-                    barSize={10}
-                    stroke={
-                      index === 0
-                        ? '#e8c1a0'
-                        : index === 1
-                        ? '#f47560'
-                        : '#f1e15b'
-                    }
-                    fill={
-                      index === 0
-                        ? '#e8c1a0'
-                        : index === 1
-                        ? '#f47560'
-                        : '#f1e15b'
-                    }
-                  />
-                )
-              })}
+            {Object.keys(newValuesRef.current).map((key, index) => {
+              return (
+                <Bar
+                  key={index.toString()}
+                  dataKey={key}
+                  animationDuration={250}
+                  barSize={10}
+                  stroke={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                  fill={
+                    index === 0
+                      ? '#e8c1a0'
+                      : index === 1
+                      ? '#f47560'
+                      : '#f1e15b'
+                  }
+                />
+              )
+            })}
+            {/* stackId="a" */}
           </BarReChart>
         </ResponsiveContainer>
       ) : (

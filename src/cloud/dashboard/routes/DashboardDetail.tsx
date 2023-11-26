@@ -28,10 +28,12 @@ import {
   type Widget,
   type WidgetCategoryType,
   CreateControllerButton,
+  UpdateWidget,
 } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 import { cn } from '~/utils/misc'
+import { useNotificationStore } from '~/stores/notifications'
 
 import {
   aggSchema,
@@ -42,7 +44,6 @@ import {
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
-import { useNotificationStore } from '~/stores/notifications'
 
 import {
   DeleteIcon,
@@ -70,6 +71,7 @@ export type WidgetAttrDeviceType = Array<{
   id: string
   attr: string
   deviceName: string
+  deviceId: string
 }>
 
 export const wsInterval = [
@@ -153,8 +155,6 @@ export function DashboardDetail() {
     }
   }, [detailDashboard?.dashboard_setting?.starred])
 
-  const [widgetAttrDeviceData, setWidgetAttrDeviceData] =
-    useState<WidgetAttrDeviceType>()
   useEffect(() => {
     if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
       addNotification({
@@ -162,28 +162,33 @@ export function DashboardDetail() {
         title: lastJsonMessage.errorMsg,
       })
     }
-    if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
-      setWidgetAttrDeviceData(
-        lastJsonMessage?.data
-          ?.map(item => {
-            const {
-              entityId: { entityName },
-              timeseries,
-            } = item
-            if (timeseries != null) {
-              const attributes = Object.keys(timeseries).filter(
-                attr => timeseries[attr] !== null,
-              )
-              return attributes.map(attr => {
-                const id = uuidv4()
-                return { id, attr, deviceName: entityName }
-              })
-            }
-            return []
-          })
-          .flat(),
-      )
-    }
+    // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
+    //   setWidgetAttrDeviceData(
+    //     lastJsonMessage?.data
+    //       ?.map(item => {
+    //         const {
+    //           entityId: { entityName, id },
+    //           timeseries,
+    //         } = item
+    //         if (timeseries != null) {
+    //           const attributes = Object.keys(timeseries).filter(
+    //             attr => timeseries[attr] !== null,
+    //           )
+    //           return attributes.map(attr => {
+    //             const attrId = uuidv4()
+    //             return {
+    //               id: attrId,
+    //               attr,
+    //               deviceName: entityName,
+    //               deviceId: id,
+    //             }
+    //           })
+    //         }
+    //         return []
+    //       })
+    //       .flat(),
+    //   )
+    // }
   }, [lastJsonMessage])
 
   useEffect(() => {
@@ -272,6 +277,7 @@ export function DashboardDetail() {
           >
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
+                const widgetInfo = widgetDetailDB?.[widgetId]
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -280,7 +286,6 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -289,7 +294,6 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
@@ -302,7 +306,8 @@ export function DashboardDetail() {
                     data-grid={
                       detailDashboard?.dashboard_setting?.layout != null &&
                       detailDashboard?.dashboard_setting?.layout?.length > 0 &&
-                      Object.keys(widgetList).length === 0
+                      Object.keys(widgetDetailDB).length ===
+                        Object.keys(widgetList).length
                         ? detailDashboard?.dashboard_setting?.layout?.find(
                             layout => layout.i === widgetId,
                           )
@@ -332,18 +337,10 @@ export function DashboardDetail() {
                     {widgetList?.[widgetId]?.description === 'LINE' ? (
                       <LineChart
                         data={realtimeValues}
-                        widgetInfo={
-                          detailDashboard?.configuration?.widgets?.[widgetId]
-                        }
+                        widgetInfo={widgetInfo}
                       />
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
-                      <BarChart
-                        data={realtimeValues}
-                        widgetInfo={
-                          detailDashboard?.configuration?.widgets?.[widgetId]
-                        }
-                        widgetAttrDeviceData={widgetAttrDeviceData}
-                      />
+                      <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
                     ) : widgetList?.[widgetId]?.description === 'PIE' ? (
                       <PieChart data={lastestValues} />
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
@@ -366,19 +363,22 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {isEditMode ? (
-                      <DeleteIcon
-                        width={20}
-                        height={20}
-                        className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer text-secondary-700 hover:text-primary-400"
-                        viewBox="0 0 20 20"
-                        onClick={() => {
-                          if (widgetList?.hasOwnProperty(widgetId)) {
-                            const { [widgetId]: deletedKey, ...newObject } =
-                              widgetList
-                            setWidgetList(newObject)
-                          }
-                        }}
-                      />
+                      <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                        <UpdateWidget widgetInfo={widgetInfo} />
+                        <DeleteIcon
+                          width={20}
+                          height={20}
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          viewBox="0 0 20 20"
+                          onClick={() => {
+                            if (widgetList?.hasOwnProperty(widgetId)) {
+                              const { [widgetId]: deletedKey, ...newObject } =
+                                widgetList
+                              setWidgetList(newObject)
+                            }
+                          }}
+                        />
+                      </div>
                     ) : null}
                   </div>
                 )
