@@ -391,9 +391,9 @@ export function DashboardDetail() {
         )}
 
         {isEditMode ? (
-          <div className="absolute bottom-0 right-0 flex p-3">
+          <div className="sticky bottom-0 ml-auto flex">
             <Button
-              className="ml-2 rounded border-none p-3"
+              className="ml-2 rounded border-none"
               variant="secondary"
               size="square"
               onClick={() => {
@@ -412,7 +412,7 @@ export function DashboardDetail() {
               {t('btn:back')}
             </Button>
             <Button
-              className="ml-2 rounded border-none p-3"
+              className="ml-2 rounded border-none"
               form="update-dashboard"
               type="submit"
               size="square"
@@ -446,7 +446,7 @@ export function DashboardDetail() {
               {t('btn:confirm')}
             </Button>
             <Button
-              className="ml-2 rounded p-3"
+              className="ml-2 rounded"
               size="square"
               variant="trans"
               onClick={() => open()}
@@ -684,7 +684,7 @@ export function DashboardDetail() {
             )}
           </div>
         ) : (
-          <div className="absolute bottom-0 right-0 p-3">
+          <div className="sticky bottom-0 ml-auto ">
             <Button
               className="rounded"
               form="update-dashboard"
