@@ -8,7 +8,7 @@ import { useNotificationStore } from '~/stores/notifications'
 type UpdateOrgForOrgDTO = {
   data: {
     ids: string[]
-    org_id: string
+    org_id?: string
   }
 }
 

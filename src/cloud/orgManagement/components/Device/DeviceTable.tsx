@@ -38,8 +38,7 @@ function DeviceTableContextMenu({
   name,
   key,
   org_id,
-  group,
-  template_name,
+  group_id,
   template_id,
   token,
 }: {
@@ -47,8 +46,7 @@ function DeviceTableContextMenu({
   name: string
   key: string
   org_id: string
-  group: { label: string; value: string }
-  template_name: string
+  group_id: string
   template_id: string
   token: string
 }) {
@@ -183,10 +181,9 @@ function DeviceTableContextMenu({
           org_id={org_id}
           name={name}
           keyDevice={key}
-          group={group}
+          group_id={group_id}
           close={close}
           isOpen={isOpen}
-          template_name={template_name}
           template_id={template_id}
         />
       ) : null}
@@ -291,24 +288,17 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             key,
             org_id,
             group_id,
-            group_name,
             template_id,
-            template_name,
             token,
           } = info.row.original
-          const group = {
-            label: group_name,
-            value: group_id,
-          }
           return DeviceTableContextMenu({
             name,
             id,
             key,
             org_id,
-            group,
-            template_name,
             template_id,
             token,
+            group_id
           })
         },
         header: () => null,
