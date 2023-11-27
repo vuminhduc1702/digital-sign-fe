@@ -131,7 +131,7 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
+  console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
