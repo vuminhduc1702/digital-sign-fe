@@ -388,6 +388,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                                 field.type = e.target.value
                                 if (field.type === 'bool') {
                                   setValue(`input.${index}.value`, true)
+                                } else {
+                                  setValue(`input.${index}.value`, '')
                                 }
                               }}
                             />

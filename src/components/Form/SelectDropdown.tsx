@@ -1,6 +1,6 @@
-import Select, { type Props, type GroupBase } from 'react-select'
+import Select, { type Props, type GroupBase, ClearIndicatorProps } from 'react-select'
 import { useTranslation } from 'react-i18next'
-import { Controller, type FieldValues } from 'react-hook-form'
+import { Control, Controller, type FieldValues } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
@@ -21,6 +21,7 @@ type SelectProps<
   onChange?: (e: any) => void
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
+  handleChangeSelect?:() => void
   icon?: React.ReactElement
   isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
@@ -45,6 +46,7 @@ export function SelectDropdown<
   isMulti,
   customOnChange,
   handleClearSelectDropdown,
+  handleChangeSelect,
   isWrappedArray,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
@@ -75,6 +77,9 @@ export function SelectDropdown<
                 onChange={(e, { action }) => {
                   if (action === 'clear' || action === 'remove-value') {
                     handleClearSelectDropdown?.()
+                  }
+                  if (action === 'select-option') {
+                    handleChangeSelect?.()
                   }
                   const option =
                     (e as unknown as SelectOption[])?.length > 0

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import { FieldWrapper, InputField, SelectField } from '~/components/Form'
-import { valueTypeList } from './CreateAttr'
+import { numberInput, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import {
   type UpdateAttrDTO,
@@ -47,7 +47,7 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, watch } = useForm<
     UpdateAttrDTO['data']['attributes'][0]
   >({
     resolver: attrSchema && zodResolver(attrSchema),
@@ -126,11 +126,27 @@ export function UpdateAttr({
                   value: valueType.type,
                 }))}
               />
-              <InputField
-                label={t('cloud:org_manage.org_manage.add_attr.value')}
-                error={formState.errors['value']}
-                registration={register('value')}
-              />
+              {watch(`value_t`) === 'BOOL' ? (
+                <SelectField
+                  className="h-[36px] py-1"
+                  label={t('cloud:org_manage.org_manage.add_attr.value')}
+                  error={formState?.errors?.value}
+                  registration={register(`value` as const)}
+                  options={[
+                    { label: 'False', value: 'false' },
+                    { label: 'True', value: 'true' },
+                  ]}
+                />
+              ) : (
+                <InputField
+                  label={t('cloud:org_manage.org_manage.add_attr.value')}
+                  error={formState?.errors?.value}
+                  registration={register(`value` as const)}
+                  type={
+                    numberInput.includes(watch(`value_t`)) ? 'number' : 'text'
+                  }
+                />
+              )}
               <FieldWrapper
                 className="mt-2 w-fit space-y-2"
                 label={t('cloud:org_manage.org_manage.add_attr.logged')}

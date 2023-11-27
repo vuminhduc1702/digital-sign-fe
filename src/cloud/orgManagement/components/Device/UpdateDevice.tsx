@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
-import { useParams } from 'react-router-dom'
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import { InputField, SelectDropdown } from '~/components/Form'
@@ -23,10 +22,7 @@ type UpdateDeviceProps = {
   name: string
   keyDevice: string
   org_id?: string
-  group: {
-    label: string | ''
-    value: string | ''
-  }
+  group_id: string
   close: () => void
   isOpen: boolean
   template_id: string
@@ -36,7 +32,7 @@ export function UpdateDevice({
   name,
   keyDevice,
   org_id,
-  group,
+  group_id,
   close,
   isOpen,
   template_id,
@@ -53,15 +49,16 @@ export function UpdateDevice({
     formState,
     control,
     setValue,
-    getValues,
     handleSubmit,
     watch,
+    resetField,
+    getValues,
   } = useForm<UpdateDeviceDTO['data']>({
     resolver: deviceSchema && zodResolver(deviceSchema),
     defaultValues: {
       name,
       org_id: org_id,
-      group_id: group.value,
+      group_id: group_id,
       template_id: template_id,
       key: keyDevice,
     },
@@ -177,9 +174,12 @@ export function UpdateDevice({
               isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions?.find(
-                org => org.value === getValues('org_id'),
-              )}
+              defaultValue={orgSelectOptions?.find(org => org.value === org_id)}
+              handleChangeSelect={() =>
+                resetField('group_id', {
+                  defaultValue: '',
+                })
+              }
             />
           </div>
           <div className="space-y-1">
@@ -188,10 +188,14 @@ export function UpdateDevice({
               name="group_id"
               control={control}
               options={
-                groupSelectOptions || [{ label: t('loading:group'), value: '' }]
+                groupData !== null
+                  ? groupSelectOptions
+                  : groupData == null
+                  ? [{ label: t('table:no_group'), value: '' }]
+                  : [{ label: t('loading:group'), value: '' }]
               }
               defaultValue={groupSelectOptions?.find(
-                group => group.value === getValues('group_id'),
+                group => group.value === group_id,
               )}
             />
           </div>
@@ -206,7 +210,7 @@ export function UpdateDevice({
                 ]
               }
               defaultValue={templateSelectOptions?.find(
-                template => template.value === getValues('template_id'),
+                template => template.value === template_id,
               )}
             />
             <p className="text-body-sm text-primary-400">
