@@ -393,7 +393,10 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             org_id,
             template_id,
             token,
+<<<<<<< HEAD
             status,
+=======
+>>>>>>> ab096e0eae1dd98b3a540795c98530ae5878150c
             group_id
           })
         },
