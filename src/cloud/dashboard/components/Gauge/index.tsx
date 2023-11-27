@@ -191,12 +191,11 @@ export function GaugeChart({ data }: { data: LatestData }) {
     value: 0,
   })
 
-  // const newDataValue = Object.values(data)?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       const gaugeDataType = {
         key: Object.keys(data)[0],
-        value: parseFloat(newDataValue),
+        value: parseFloat(Object.values(data)?.[0]?.value),
       }
       setDataTransformedFeedToChart(gaugeDataType)
     }
