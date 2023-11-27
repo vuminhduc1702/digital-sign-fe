@@ -20,6 +20,7 @@ export type Plan = {
   project_id: string
   date_created: number
   tax: number
+  updatable: boolean
 }
 
 export type PlanById = {

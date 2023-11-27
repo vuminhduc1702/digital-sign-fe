@@ -10,7 +10,7 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { UpdateUser } from './UpdateUser'
 import { STATUS } from '../Attributes'
-import { type UserInfo, useDeleteUser } from '../../api/userAPI'
+import { type UserInfo, useDeleteUser, Profile } from '../../api/userAPI'
 
 import { type BaseTablePagination } from '~/types'
 
@@ -29,11 +29,7 @@ function UserTableContextMenu({
   role_id,
   role_name,
   phone,
-  province,
-  district,
-  ward,
-  full_address,
-  ...props
+  profile,
 }: {
   user_id: string
   name: string
@@ -43,10 +39,7 @@ function UserTableContextMenu({
   role_id: string
   role_name: string
   phone: string
-  province: string
-  district: string
-  ward: string
-  full_address: string
+  profile: string
 }) {
   const { t } = useTranslation()
 
@@ -68,7 +61,7 @@ function UserTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -94,14 +87,12 @@ function UserTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:org_manage.user_manage.table.delete_user_full')}
-              body={
-                t(
-                  'cloud:org_manage.user_manage.table.delete_user_confirm',
-                ).replace('{{USERNAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.user_manage.table.delete_user_confirm',
+              ).replace('{{USERNAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -143,7 +134,7 @@ function UserTableContextMenu({
           role_name={role_name}
           close={close}
           isOpen={isOpen}
-          {...props}
+          profile={profile}
         />
       ) : null}
     </>
@@ -187,7 +178,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.user_manage.table.role_name')}</span>
         ),
-        cell: info => info.getValue() === 'undefined' ? '' : info.getValue(),
+        cell: info => (info.getValue() === 'undefined' ? '' : info.getValue()),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('activate', {
@@ -200,8 +191,17 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, email, user_id, org_id, org_name, role_id, role_name, phone, province, district, ward, full_address } =
-            info.row.original
+          const {
+            name,
+            email,
+            user_id,
+            org_id,
+            org_name,
+            role_id,
+            role_name,
+            phone,
+            profile,
+          } = info.row.original
           return UserTableContextMenu({
             name,
             email,
@@ -211,10 +211,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
             role_id,
             role_name,
             phone,
-            province,
-            district,
-            ward,
-            full_address
+            profile,
           })
         },
         header: () => null,
@@ -225,7 +222,12 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={data}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_user')}

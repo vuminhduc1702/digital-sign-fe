@@ -1,26 +1,23 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   FormDrawer,
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionString,
 } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
 import { flattenData } from '~/utils/misc'
-import { queryClient } from '~/lib/react-query'
-
-import { type OrgList } from '~/layout/MainLayout/types'
+import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useState } from 'react'
 
 type EntityTypeGroup = {
   type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
@@ -34,7 +31,7 @@ export const entityTypeList: EntityTypeGroup[] = [
   { type: 'EVENT', name: 'Sự kiện' },
 ]
 
-const groupSchema = z.object({
+const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
   org_id: z.string().optional(),
@@ -43,29 +40,34 @@ const groupSchema = z.object({
 export function CreateGroup() {
   const { t } = useTranslation()
 
-  const [option, setOption] = useState<SelectOptionString>()
+  const entityTypeOptions = entityTypeList.map(entityType => ({
+    label: entityType.name,
+    value: entityType.type,
+  }))
 
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
+  const { id: projectId } = storage.getProject()
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .sort((a, b) => a.value.length - b.value.length)
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
 
-  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useCreateGroup()
+  const { register, formState, control, handleSubmit, reset } = useForm<
+    CreateGroupDTO['data']
+  >({
+    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
+  })
 
   return (
     <FormDrawer
       isDone={isSuccess}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="rounded-md"
@@ -88,63 +90,52 @@ export function CreateGroup() {
         />
       }
     >
-      <Form<CreateGroupDTO['data'], typeof groupSchema>
+      <form
         id="create-group"
-        onSubmit={values => {
+        className="w-full space-y-6"
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: option?.value || '',
+              org_id: values.org_id,
             },
           })
-        }}
-        schema={groupSchema}
+        })}
       >
-        {({ register, formState, control, setValue }) => (
-          <>
-            <InputField
-              label={
-                t('cloud:org_manage.group_manage.add_group.name') ?? 'Name'
+        <>
+          <InputField
+            label={t('cloud:org_manage.group_manage.add_group.name')}
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+          <SelectField
+            label={t('cloud:org_manage.group_manage.add_group.entity_type')}
+            error={formState.errors['entity_type']}
+            registration={register('entity_type')}
+            options={entityTypeOptions}
+          />
+          <div className="space-y-1">
+            <SelectDropdown
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={
+                orgSelectOptions != null
+                  ? orgSelectOptions
+                  : [{ label: t('loading:org'), value: '' }]
               }
-              error={formState.errors['name']}
-              registration={register('name')}
+              isOptionDisabled={option => option.label === t('loading:org')}
+              noOptionsMessage={() => t('table:no_in_org')}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             />
-            <SelectField
-              label={
-                t('cloud:org_manage.group_manage.add_group.entity_type') ??
-                'Entity type'
-              }
-              error={formState.errors['entity_type']}
-              registration={register('entity_type')}
-              options={entityTypeList.map(entityType => ({
-                label: entityType.name,
-                value: entityType.type,
-              }))}
-            />
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={true}
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={
-                  orgSelectOptions || [{ label: t('loading:org'), value: '' }]
-                }
-                onChange={e => {
-                  setOption(e)
-                  setValue('org_id', e.value)
-                }}
-                value={option}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.org_id?.message}
-              </p>
-            </div>
-          </>
-        )}
-      </Form>
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.org_id?.message}
+            </p>
+          </div>
+        </>
+      </form>
     </FormDrawer>
   )
 }

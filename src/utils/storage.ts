@@ -34,6 +34,17 @@ const storage = {
       JSON.stringify(project),
     )
   },
+  setAllProjectToStorage: (project: Project) => {
+    window.localStorage.setItem(
+      `${storagePrefix}allProject`,
+      JSON.stringify(project),
+    )
+  },
+  getAllProjectStorage: (): Project => {
+    return JSON.parse(
+      window.localStorage.getItem(`${storagePrefix}allProject`) as string,
+    )
+  },
   clearProject: () => {
     window.localStorage.removeItem(`${storagePrefix}project`)
   },

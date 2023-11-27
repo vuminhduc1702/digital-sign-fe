@@ -17,16 +17,11 @@ export type SelectOptionString = {
   selected?: boolean
 }
 
-export type SelectOptionGeneric<T> = {
-  label: string
-  value: T
-  selected?: boolean
-}
-
 type SelectFieldProps = FieldWrapperPassThroughProps & {
-  options: SelectOption[]
+  options?: SelectOption[]
   className?: string
   placeholder?: string
+  noDataPlaceholder?: string
   registration?: Partial<UseFormRegisterReturn>
   value?: string | number
   classnamefieldwrapper?: string
@@ -41,6 +36,7 @@ export const SelectField = ({
   className,
   registration,
   placeholder,
+  noDataPlaceholder,
   value,
   require,
   classnamefieldwrapper,
@@ -69,15 +65,21 @@ export const SelectField = ({
         {...props}
       >
         <option value="" disabled selected hidden>
-          {placeholder ?? t('placeholder:select')}
+          {placeholder || t('placeholder:select')}
         </option>
-        {options.map(({ label, value, selected }) => {
-          return (
-            <option key={label} value={value} selected={selected}>
-              {label}
-            </option>
-          )
-        })}
+        {options != null ? (
+          options.map(({ label, value, selected }) => {
+            return (
+              <option key={label} value={value} selected={selected}>
+                {label}
+              </option>
+            )
+          })
+        ) : (
+          <option value="" disabled>
+            {noDataPlaceholder || t('error:no_data')}
+          </option>
+        )}
       </select>
     </FieldWrapper>
   )

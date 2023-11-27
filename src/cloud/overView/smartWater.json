@@ -1,0 +1,680 @@
+{
+    "organizations": null,
+    "groups": [
+        {
+            "id": "e0756597-4d87-45ac-b9d3-b6475b96225c",
+            "owner": "",
+            "created_by": "",
+            "name": "Profile1",
+            "organization": "",
+            "entity_type": "DEVICE",
+            "Metadata": null,
+            "OrgName": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": null
+        }
+    ],
+    "roles": null,
+    "users": null,
+    "templates": [
+        {
+            "id": "f7a6d9e3-b252-4659-b61b-0be6036725d2",
+            "name": "SmartWaterMeter",
+            "rule_chain_id": "",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "firmware_version",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "name",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "status",
+                    "logged": true,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "total_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "config",
+                    "logged": false,
+                    "value": {
+                        "M": 1,
+                        "P": 60
+                    },
+                    "value_as_string": "{\"M\":1,\"P\":60}",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "error",
+                    "logged": true,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "flow_rate",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "temperature",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "last_update",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "owner",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "delta_volume",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": false,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "negative_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "positive_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126297865,
+                    "value_type": "STR"
+                }
+            ]
+        }
+    ],
+    "devices": [
+        {
+            "id": "7a40e933-f018-4b8d-b933-461800bad3e0",
+            "key": "7a40e933-f018-4b8d-b933-461800bad3e0",
+            "template_id": "f7a6d9e3-b252-4659-b61b-0be6036725d2",
+            "owner": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "created_by": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "name": "water-01",
+            "group_id": "",
+            "type": "",
+            "org_id": "",
+            "project_id": "01333080-e454-45b2-96c4-03224f344d2a",
+            "status": "offline",
+            "created_time": 0,
+            "metadata": {},
+            "additional_info": {
+                "device_id": "",
+                "imei": "",
+                "device_manufacture": "",
+                "protocol": "",
+                "heartbeat_interval": 0,
+                "last_heartbeat": 0,
+                "timeout_lifecycle": 0,
+                "device_model": "",
+                "mqtt_config": null,
+                "firmware_version": ""
+            },
+            "attributes": [
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "last_update",
+                    "logged": false,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "owner",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "firmware_version",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "name",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "negative_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "status",
+                    "logged": true,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "temperature",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "delta_volume",
+                    "logged": true,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "error",
+                    "logged": true,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "positive_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "flow_rate",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "message",
+                    "logged": false,
+                    "value": null,
+                    "value_as_string": "null",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "config",
+                    "logged": false,
+                    "value": {
+                        "M": 1,
+                        "P": 60
+                    },
+                    "value_as_string": "{\"M\":1,\"P\":60}",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "JSON"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "connection",
+                    "logged": false,
+                    "value": "",
+                    "value_as_string": "",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "STR"
+                },
+                {
+                    "attribute_type": "SCOPE_CLIENT",
+                    "attribute_key": "total_volume",
+                    "logged": true,
+                    "value": 0,
+                    "value_as_string": "0",
+                    "last_update_ts": 1700126384867,
+                    "value_type": "DBL"
+                }
+            ]
+        }
+    ],
+    "events": null,
+    "rule_chains": null,
+    "dashboard": [
+        {
+            "id": "57f55241-9b97-43c9-bffc-12ce5e85c644",
+            "project_id": "",
+            "name": "Quản lý Smart Water dashboard",
+            "created_time": 1700126464,
+            "title": "Quản lý Smart Water dashboard",
+            "tenant_id": "20a86126-37d8-4102-85c2-da1642f049dd",
+            "configuration": {
+                "description": "",
+                "widgets": {
+                    "0d815b44-9aad-4d8d-903e-3004f0a7c859": {
+                        "type": "LASTEST",
+                        "title": "widget5",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"negative_volume\"}]},\"id\":\"0d815b44-9aad-4d8d-903e-3004f0a7c859\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"negative_volume\"}]},\"id\":\"0d815b44-9aad-4d8d-903e-3004f0a7c859\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "negative_volume",
+                                "label": "negative_volume",
+                                "color": "rgba(176, 67, 67, 1)",
+                                "unit": "1",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "22c0b25b-37c9-48b3-9f71-93bcbc3890be": {
+                        "type": "LASTEST",
+                        "title": "widget7",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"total_volume\"}]},\"id\":\"22c0b25b-37c9-48b3-9f71-93bcbc3890be\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"total_volume\"}]},\"id\":\"22c0b25b-37c9-48b3-9f71-93bcbc3890be\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "total_volume",
+                                "label": "total_volume",
+                                "color": "rgba(174, 86, 86, 1)",
+                                "unit": "2",
+                                "decimal": "2"
+                            }
+                        ]
+                    },
+                    "396fb303-a735-4e56-8609-b1a401f54d17": {
+                        "type": "LASTEST",
+                        "title": "widget8",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"396fb303-a735-4e56-8609-b1a401f54d17\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"connection\"}]},\"id\":\"396fb303-a735-4e56-8609-b1a401f54d17\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "connection",
+                                "label": "connection",
+                                "color": "rgba(210, 75, 75, 1)",
+                                "unit": "2",
+                                "decimal": "2"
+                            }
+                        ]
+                    },
+                    "3a959c41-b383-40e5-b1cf-57b98fc6f29b": {
+                        "type": "LASTEST",
+                        "title": "widget3",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"flow_rate\"}]},\"id\":\"3a959c41-b383-40e5-b1cf-57b98fc6f29b\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"flow_rate\"}]},\"id\":\"3a959c41-b383-40e5-b1cf-57b98fc6f29b\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "flow_rate",
+                                "label": "flow_rate",
+                                "color": "rgba(196, 86, 86, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "5caed2c5-db3a-447a-ab0d-f614a3cf16b6": {
+                        "type": "TIMESERIES",
+                        "title": "widget2",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"temperature\"}]},\"id\":\"5caed2c5-db3a-447a-ab0d-f614a3cf16b6\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"temperature\"],\"startTs\":1699722000000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"5caed2c5-db3a-447a-ab0d-f614a3cf16b6\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 60000
+                            },
+                            "aggregation": "NONE",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699722000000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "temperature",
+                                "label": "temperature",
+                                "color": "rgba(193, 43, 43, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "8bff21bb-e4af-4ee6-b35f-5799f8bf808a": {
+                        "type": "TIMESERIES",
+                        "title": "widget1",
+                        "description": "LINE",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"negative_volume\"},{\"type\":\"TIME_SERIES\",\"key\":\"positive_volume\"},{\"type\":\"TIME_SERIES\",\"key\":\"total_volume\"}]},\"id\":\"8bff21bb-e4af-4ee6-b35f-5799f8bf808a\"}]}",
+                            "lastest_message": "",
+                            "realtime_message": "{\"entityDataCmds\":[{\"tsCmd\":{\"keys\":[\"negative_volume\",\"positive_volume\",\"total_volume\"],\"startTs\":1699894800000,\"interval\":60000,\"limit\":10,\"offset\":0,\"agg\":\"NONE\"},\"id\":\"8bff21bb-e4af-4ee6-b35f-5799f8bf808a\"}]}"
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 60000
+                            },
+                            "aggregation": "NONE",
+                            "chartsetting": {
+                                "data_type": "REALTIME",
+                                "end_date": null,
+                                "start_date": 1699894800000
+                            }
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "negative_volume",
+                                "label": "",
+                                "color": "rgba(210, 48, 48, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            },
+                            {
+                                "attribute_key": "positive_volume",
+                                "label": "",
+                                "color": "rgba(197, 90, 90, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            },
+                            {
+                                "attribute_key": "total_volume",
+                                "label": "",
+                                "color": "rgba(222, 109, 109, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "95d4ec6e-54bd-41fa-b6d1-d2e7ea06b079": {
+                        "type": "LASTEST",
+                        "title": "widget4",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"temperature\"}]},\"id\":\"95d4ec6e-54bd-41fa-b6d1-d2e7ea06b079\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"temperature\"}]},\"id\":\"95d4ec6e-54bd-41fa-b6d1-d2e7ea06b079\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "temperature",
+                                "label": "temperature",
+                                "color": "rgba(235, 116, 116, 1)",
+                                "unit": "2",
+                                "decimal": "1"
+                            }
+                        ]
+                    },
+                    "e9d096d6-fba4-4d2c-9e87-18c75e25d29a": {
+                        "type": "LASTEST",
+                        "title": "widget6",
+                        "description": "CARD",
+                        "datasource": {
+                            "history_message": "",
+                            "init_message": "{\"entityDataCmds\":[{\"query\":{\"entityFilter\":{\"type\":\"entityList\",\"entityType\":\"DEVICE\",\"entityIds\":[\"7a40e933-f018-4b8d-b933-461800bad3e0\"]},\"pageLink\":{\"pageSize\":1,\"page\":0,\"sortOrder\":{\"key\":{\"type\":\"ENTITY_FIELD\",\"key\":\"ts\"},\"direction\":\"DESC\"}},\"entityFields\":[{\"type\":\"ENTITY_FIELD\",\"key\":\"name\"}],\"latestValues\":[{\"type\":\"TIME_SERIES\",\"key\":\"positive_volume\"}]},\"id\":\"e9d096d6-fba4-4d2c-9e87-18c75e25d29a\"}]}",
+                            "lastest_message": "{\"entityDataCmds\":[{\"latestCmd\":{\"keys\":[{\"type\":\"TIME_SERIES\",\"key\":\"positive_volume\"}]},\"id\":\"e9d096d6-fba4-4d2c-9e87-18c75e25d29a\"}]}",
+                            "realtime_message": ""
+                        },
+                        "config": {
+                            "timewindow": {
+                                "interval": 0
+                            },
+                            "aggregation": "",
+                            "chartsetting": null
+                        },
+                        "id": "",
+                        "attribute_config": [
+                            {
+                                "attribute_key": "positive_volume",
+                                "label": "positive_volume",
+                                "color": "rgba(216, 84, 84, 1)",
+                                "unit": "2",
+                                "decimal": "2"
+                            }
+                        ]
+                    }
+                }
+            },
+            "dashboard_setting": {
+                "last_viewed": "2023-11-16T10:26:22.634Z",
+                "layout": [
+                    {
+                        "h": 3,
+                        "i": "8bff21bb-e4af-4ee6-b35f-5799f8bf808a",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 0,
+                        "y": 0
+                    },
+                    {
+                        "h": 3,
+                        "i": "5caed2c5-db3a-447a-ab0d-f614a3cf16b6",
+                        "moved": false,
+                        "static": false,
+                        "w": 6,
+                        "x": 4,
+                        "y": 3
+                    },
+                    {
+                        "h": 1,
+                        "i": "3a959c41-b383-40e5-b1cf-57b98fc6f29b",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 3
+                    },
+                    {
+                        "h": 1,
+                        "i": "95d4ec6e-54bd-41fa-b6d1-d2e7ea06b079",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 0
+                    },
+                    {
+                        "h": 1,
+                        "i": "0d815b44-9aad-4d8d-903e-3004f0a7c859",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 4
+                    },
+                    {
+                        "h": 1,
+                        "i": "e9d096d6-fba4-4d2c-9e87-18c75e25d29a",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 1
+                    },
+                    {
+                        "h": 1,
+                        "i": "22c0b25b-37c9-48b3-9f71-93bcbc3890be",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 0,
+                        "y": 5
+                    },
+                    {
+                        "h": 1,
+                        "i": "396fb303-a735-4e56-8609-b1a401f54d17",
+                        "moved": false,
+                        "static": false,
+                        "w": 3,
+                        "x": 6,
+                        "y": 2
+                    }
+                ]
+            }
+        }
+    ],
+    "fota": null,
+    "thing": null,
+    "service": null
+}

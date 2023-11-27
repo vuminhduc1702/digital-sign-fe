@@ -9,14 +9,23 @@ import {
   Tooltip,
   ResponsiveContainer,
   Legend,
+  Brush,
 } from 'recharts'
+import type * as z from 'zod'
 
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
 import { type TimeSeries } from '../../types'
+import { type widgetSchema } from '../Widget'
 
-export function LineChart({ data }: { data: TimeSeries }) {
+export function LineChart({
+  data,
+  widgetInfo,
+}: {
+  data: TimeSeries
+  widgetInfo?: z.infer<typeof widgetSchema>
+}) {
   // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
@@ -29,7 +38,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
     },
   ])
 
-  const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
+  // const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
@@ -59,7 +68,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
         dataManipulation()
       }
     }
-  }, [newDataValue])
+  }, [data])
 
   function dataManipulation() {
     const lineWidgetDataType = Object.entries(
@@ -106,10 +115,20 @@ export function LineChart({ data }: { data: TimeSeries }) {
       config: {
         ...dateTimeOptionsWithoutYearMonthDay,
         second: '2-digit',
-        fractionalSecondDigits: 3,
+        // fractionalSecondDigits: 3,
       },
     })
   }
+
+  const [widgetInfoToChart, setWidgetInfoToChart] = useState<z.infer<
+    typeof widgetSchema
+  > | null>()
+  useEffect(() => {
+    if (widgetInfo != null) {
+      setWidgetInfoToChart(widgetInfo)
+    }
+  }, [widgetInfo])
+
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
     minDuration: 300,
@@ -127,6 +146,7 @@ export function LineChart({ data }: { data: TimeSeries }) {
             <YAxis />
             <Tooltip />
             <Legend />
+            <Brush dataKey="ts" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
               return (
                 <Line

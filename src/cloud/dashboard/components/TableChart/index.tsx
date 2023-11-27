@@ -39,7 +39,7 @@ export function TableChart({
     },
   ])
 
-  const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
+  // const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       prevValuesRef.current = newValuesRef.current || data
@@ -69,7 +69,7 @@ export function TableChart({
         dataManipulation()
       }
     }
-  }, [newDataValue])
+  }, [data])
 
   function dataManipulation() {
     const tableWidgetDataType = Object.entries(
@@ -79,7 +79,7 @@ export function TableChart({
         values.map(({ ts, value }) => ({
           ts: ts,
           attribute_key,
-          value: parseFloat(value),
+          value,
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)

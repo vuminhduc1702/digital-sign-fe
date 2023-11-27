@@ -10,12 +10,7 @@ import { type createEventSchema } from '../../components/Event'
 import { type EventType } from '../../types'
 
 export type CreateEventDTO = {
-  data: z.infer<typeof createEventSchema> & {
-    org_id: string
-    group_id: string
-    type?: string
-    schedule?: any
-  }
+  data: z.infer<typeof createEventSchema>
 }
 
 export const createEvent = ({ data }: CreateEventDTO): Promise<EventType> => {

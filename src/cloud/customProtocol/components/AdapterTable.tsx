@@ -10,8 +10,6 @@ import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { useDeleteAdapter } from '../api/adapter'
 import { UpdateAdapter } from './UpdateAdapter'
-import { useGetEntityThings } from '../api/entityThing'
-import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
 import { type Adapter } from '../types'
@@ -37,7 +35,7 @@ function AdapterTableContextMenu({
   host,
   port,
   configuration,
-  schema
+  schema,
 }: AdapterTableContextMenuProps) {
   const { t } = useTranslation()
 
@@ -46,11 +44,6 @@ function AdapterTableContextMenu({
   const { mutate, isLoading, isSuccess } = useDeleteAdapter()
 
   const handleCopyId = useCopyId()
-
-  const { id: projectId } = storage.getProject()
-  const { data: thingData, refetch: refetchThingData } = useGetEntityThings({
-    projectId,
-  })
 
   return (
     <>
@@ -64,7 +57,7 @@ function AdapterTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -90,14 +83,12 @@ function AdapterTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
-              body={
-                t(
-                  'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
-                ).replace('{{ADAPTERNAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
+              ).replace('{{ADAPTERNAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -141,8 +132,6 @@ function AdapterTableContextMenu({
           close={close}
           isOpen={isOpen}
           schema={schema}
-          thingData={thingData}
-          refetchThingData={refetchThingData}
         />
       ) : null}
     </>
@@ -232,7 +221,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
-            schema
+            schema,
           } = info.row.original
           return AdapterTableContextMenu({
             id,
@@ -244,7 +233,7 @@ export function AdapterTable({
             host,
             port,
             configuration,
-            schema
+            schema,
           })
         },
         header: () => null,
@@ -255,7 +244,12 @@ export function AdapterTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_adapter')}

@@ -8,15 +8,25 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  Brush,
 } from 'recharts'
 import { useSpinDelay } from 'spin-delay'
+import type * as z from 'zod'
 
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type TimeSeries } from '../../types'
+import { type DataItem, type TimeSeries } from '../../types'
+import { type widgetSchema } from '../Widget'
+import { type WidgetAttrDeviceType } from '../../routes/DashboardDetail'
 
-export const BarChart = ({ data }: { data: TimeSeries }) => {
+export const BarChart = ({
+  data,
+  widgetInfo,
+}: {
+  data: TimeSeries
+  widgetInfo?: z.infer<typeof widgetSchema>
+}) => {
   // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
@@ -59,7 +69,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
         dataManipulation()
       }
     }
-  }, [newDataValue])
+  }, [data])
 
   function dataManipulation() {
     const barWidgetDataType = Object.entries(
@@ -104,7 +114,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
       config: {
         ...dateTimeOptionsWithoutYearMonthDay,
         second: '2-digit',
-        fractionalSecondDigits: 3,
+        // fractionalSecondDigits: 3,
       },
     })
   }
@@ -126,6 +136,7 @@ export const BarChart = ({ data }: { data: TimeSeries }) => {
             <YAxis />
             <Tooltip />
             <Legend />
+            <Brush dataKey="time" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
               return (
                 <Bar

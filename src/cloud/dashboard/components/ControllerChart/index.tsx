@@ -13,6 +13,7 @@ type ControllerWSRes = {
   data: {
     code: 0 | 1
     message: string
+    data?: any
   }
 } & BaseWSRes
 
@@ -41,7 +42,9 @@ export function ControllerButton(data: { data: string }) {
           type: 'success',
           title: t(
             'cloud:dashboard.detail_dashboard.add_widget.controller.success',
-          ).replace('{{SERVICE_NAME}}', service_name),
+          )
+            .replace('{{SERVICE_NAME}}', service_name)
+            .replace('{{DATA}}', lastJsonMessage.data.data),
         })
       }
     }

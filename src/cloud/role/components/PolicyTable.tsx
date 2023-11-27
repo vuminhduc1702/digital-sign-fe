@@ -63,7 +63,7 @@ export function PolicyTable({ ...props }) {
   )
 
   return data != null && data?.policies.length !== 0 ? (
-    <BaseTable data={data.policies} columns={columns} {...props} />
+    <BaseTable popoverClassName="absolute right-0 top-1 block" data={data.policies} columns={columns} {...props} />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_policy')}

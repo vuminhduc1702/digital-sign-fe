@@ -23,6 +23,7 @@ export const getEntityThings = ({
     params: {
       project_id: projectId,
       type,
+      share: true,
     },
   })
 }

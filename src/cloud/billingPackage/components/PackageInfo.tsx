@@ -30,7 +30,7 @@ export function PackageInfo() {
   const [type, setType] = useState('')
   const [paymentType, setPaymentType] = useState('')
   const [periodType, setPeriodType] = useState('')
-  const [expectedPayment, setExpectedPayment] = useState()
+  const [expectedPayment, setExpectedPayment] = useState('')
 
   const params = useParams()
   const { id: projectId } = storage.getProject()
@@ -52,6 +52,7 @@ export function PackageInfo() {
     setPaymentType(data?.data?.payment_type || '')
     setPeriodType(data?.data?.type_period || '')
     setIsDisabled(true)
+    setExpectedPayment('')
   }, [data])
 
   useEffect(() => {
@@ -160,7 +161,7 @@ export function PackageInfo() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result)
+    setExpectedPayment(result < 0 ? 0 : result)
   }
 
   return (
@@ -183,8 +184,8 @@ export function PackageInfo() {
               estimate: values.estimate,
             }))
           }
-          const expiryNumber =
-            values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
+          const exprityNumber =
+            values?.exprity && parseInt(values?.exprity) * 24 * 60 * 60
           mutate({
             data: {
               ...values,
@@ -197,7 +198,7 @@ export function PackageInfo() {
                 (values.quantity_free && parseInt(values.quantity_free)) ||
                 null,
               price: (values.price && parseInt(values.price)) || null,
-              expiry: expiryNumber || null,
+              exprity: exprityNumber || null,
             },
             planId: packageId,
           })
@@ -221,6 +222,7 @@ export function PackageInfo() {
             quantity_free: data?.data?.quantity_free?.toString() || '',
             plan_lv: data?.data?.plan_lv || [],
             tax: data?.data?.tax?.toString() || '',
+            exprity: data?.data?.exprity?.toString() || '',
           },
         }}
       >
@@ -244,15 +246,16 @@ export function PackageInfo() {
                 <SelectField
                   label={t('billing:package_manage.popup.type')}
                   error={formState.errors['type']}
-                  registration={register('type')}
+                  registration={register('type' , {
+                    onChange: e => {
+                      setType(e.target.value)
+                      setPaymentType('PREPAY')
+                    }
+                  })}
                   options={[
                     { label: 'Chính thức', value: 'official' },
                     { label: 'Dùng thử', value: 'trial' },
                   ]}
-                  onChange={e => {
-                    setType(e.target.value)
-                    setPaymentType('PREPAY')
-                  }}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
                   classlabel="w-2/12"
@@ -288,12 +291,13 @@ export function PackageInfo() {
                 <SelectField
                   label={t('billing:package_manage.popup.payment_type')}
                   error={formState.errors['payment_type']}
-                  registration={register('payment_type')}
-                  onChange={e => {
-                    setPaymentType(e.target.value)
-                    setValue('payment_type', e.target.value)
-                    setPeriodType('PERIODIC')
-                  }}
+                  registration={register('payment_type' , {
+                    onChange: e => {
+                      setPaymentType(e.target.value)
+                      setValue('payment_type', e.target.value)
+                      setPeriodType('PERIODIC')
+                    }
+                  })}
                   options={
                     type === 'trial'
                       ? [{ label: 'Trả trước', value: 'PREPAY' }]
@@ -311,34 +315,38 @@ export function PackageInfo() {
                   {paymentType === 'POSTPAID' && (
                     <InputField
                       label={t('billing:package_manage.popup.expiry')}
-                      error={formState.errors['expiry']}
-                      registration={register('expiry')}
+                      error={formState.errors['exprity']}
+                      registration={register('exprity' , {
+                        onChange: e => {
+                          if (
+                            parseNumber(e.target.value) >
+                            parseNumberCalUnit(
+                              getValues('period'),
+                              getValues('cal_unit'),
+                            )
+                          ) {
+                            setError('exprity', {
+                              message: t(
+                                'billing:package_manage.popup.choose_expiry',
+                              ),
+                            })
+                          } else setError('exprity', { message: '' })
+                        }
+                      })}
                       type="number"
+                      disabled={isDisabled}
                       classnamefieldwrapper="flex items-center gap-x-3"
                       classlabel="w-2/12"
                       classchild="w-10/12"
-                      onChange={e => {
-                        if (
-                          parseNumber(e.target.value) >
-                          parseNumberCalUnit(
-                            getValues('period'),
-                            getValues('cal_unit'),
-                          )
-                        ) {
-                          setError('expiry', {
-                            message: t(
-                              'billing:package_manage.popup.choose_expiry',
-                            ),
-                          })
-                        } else setError('expiry', { message: '' })
-                      }}
                     />
                   )}
                 </div>
                 <SelectField
                   label={t('billing:package_manage.popup.type_period')}
                   error={formState.errors['type_period']}
-                  registration={register('type_period')}
+                  registration={register('type_period' , {
+                    onChange: e => setPeriodType(e.target.value)
+                  })}
                   options={
                     type === 'official' && paymentType === 'PREPAY'
                       ? [
@@ -347,7 +355,6 @@ export function PackageInfo() {
                         ]
                       : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                   }
-                  onChange={e => setPeriodType(e.target.value)}
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
                   classlabel="w-2/12"
@@ -428,7 +435,20 @@ export function PackageInfo() {
                   <SelectField
                     label={t('billing:package_manage.popup.estimate')}
                     error={formState.errors['estimate']}
-                    registration={register('estimate')}
+                    registration={register('estimate' , {
+                      onChange: e => {
+                        setEstimates(e.target.value)
+                        setValue('plan_lv', [
+                          {
+                            level: '',
+                            price: '',
+                            free: '',
+                          },
+                        ])
+                        setValue('quantity_free', '')
+                        setValue('price', '')
+                      }
+                    })}
                     disabled={isDisabled}
                     options={
                       type === 'official' &&
@@ -446,18 +466,6 @@ export function PackageInfo() {
                             { label: 'Theo đơn vị', value: 'unit' },
                           ]
                     }
-                    onChange={e => {
-                      setEstimates(e.target.value)
-                      setValue('plan_lv', [
-                        {
-                          level: '',
-                          price: '',
-                          free: '',
-                        },
-                      ])
-                      setValue('quantity_free', '')
-                      setValue('price', '')
-                    }}
                     classnamefieldwrapper="flex items-center gap-x-3"
                     classlabel="w-2/12"
                     classchild="w-10/12"
@@ -589,11 +597,8 @@ export function PackageInfo() {
                     <InputField
                       label={t('billing:package_manage.popup.price')}
                       error={formState.errors['price']}
-                      registration={register('price')}
-                      classnamefieldwrapper="flex items-center gap-x-3"
-                      type="number"
-                      onChange={e =>
-                        estimates === 'fix' &&
+                      registration={register('price', {
+                        onChange: (e) =>  estimates === 'fix' &&
                         handleOnChange(
                           '',
                           getValues('tax'),
@@ -602,7 +607,9 @@ export function PackageInfo() {
                           getValues('quantity_free'),
                           getValues('plan_lv'),
                         )
-                      }
+                      })}
+                      classnamefieldwrapper="flex items-center gap-x-3"
+                      type="number"
                       disabled={isDisabled}
                       classlabel="w-2/12"
                       classchild="w-10/12"
@@ -659,6 +666,7 @@ export function PackageInfo() {
                   disabled
                   value={expectedPayment}
                   classnamefieldwrapper="flex items-center gap-x-3"
+                  placeholder=''
                   classlabel="w-2/12"
                   classchild="w-10/12"
                 />
@@ -690,6 +698,7 @@ export function PackageInfo() {
                       setValue('tax', data?.data?.tax?.toString() || '')
                       setEstimates(data?.data?.estimate || '')
                       setIsDisabled(!isDisabled)
+                      setExpectedPayment('')
                     }}
                     className="rounded-md"
                     variant="trans"
@@ -720,15 +729,13 @@ export function PackageInfo() {
               isDone={isSuccessDelete}
               icon="danger"
               title={t('billing:package_manage.delete_plan')}
-              body={
-                t('billing:package_manage.delete_plan_confirm').replace(
-                  '{{PLAN_NAME}}',
-                  data?.data?.name || '',
-                ) ?? 'Confirm delete?'
-              }
+              body={t('billing:package_manage.delete_plan_confirm').replace(
+                '{{PLAN_NAME}}',
+                data?.data?.name || '',
+              )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="w-full justify-start border-none hover:text-primary-400 bg-white"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -759,6 +766,7 @@ export function PackageInfo() {
           <Button
             type="button"
             size="md"
+            disabled={!data?.data?.updatable}
             className="absolute bottom-3 right-2 bg-primary-400"
             onClick={() => setIsDisabled(!isDisabled)}
           >

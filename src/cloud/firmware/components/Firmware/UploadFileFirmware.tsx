@@ -1,22 +1,24 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
-import { type UpdateFirmwareDTO } from '../../api/firmwareAPI'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { UploadIcon } from '@radix-ui/react-icons'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { cn } from '~/utils/misc'
 import {
   type UploadFileFirmWareDTO,
   useUploadFileFireWare,
 } from '../../api/firmwareAPI/uploadFileFirmware'
-import * as z from 'zod'
 import i18n from '~/i18n'
+import { InputField } from '~/components/Form'
+
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import { UploadIcon } from '@radix-ui/react-icons'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 type UploadFileFirmWareProps = {
   firmwareId: string
@@ -38,7 +40,10 @@ export function UploadFileFirmWare({
   const [file, setFile] = useState<File | null>(null)
 
   const { mutate, isLoading, isSuccess } = useUploadFileFireWare()
-
+  const { formState, setError, setValue, handleSubmit } =
+    useForm<UploadFileFirmWareDTO>({
+      resolver: uploadFileSchema && zodResolver(uploadFileSchema),
+    })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -63,10 +68,10 @@ export function UploadFileFirmWare({
               </button>
             </div>
           </div>
-          <Form<UploadFileFirmWareDTO, typeof uploadFileSchema>
+          <form
             id="update-firm-ware"
-            className="mt-2 flex flex-col justify-between"
-            onSubmit={values => {
+            className="mt-2 flex w-full flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
               const formData = new FormData()
               formData.append('file', file)
               file &&
@@ -74,59 +79,54 @@ export function UploadFileFirmWare({
                   file: formData,
                   firmwareId,
                 })
-            }}
-            schema={uploadFileSchema}
+            })}
           >
-            {({ register, formState, control, setValue, setError }) => {
-              return (
-                <>
-                  <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
-                    <label
-                      htmlFor="file"
-                      className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
-                    >
-                      <UploadIcon className="h-6 w-6 text-primary-400" />
-                      <div>
-                        {file ? (
-                          <div className="flex cursor-pointer items-center justify-center gap-1">
-                            <span>Name: {file.name}</span>
-                          </div>
-                        ) : (
-                          'Upload File'
-                        )}
+            <>
+              <div className="flex items-center justify-center rounded-md border border-dashed border-rose-300 bg-red-50">
+                <label
+                  htmlFor="file"
+                  className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
+                >
+                  <UploadIcon className="h-6 w-6 text-primary-400" />
+                  <div>
+                    {file ? (
+                      <div className="flex cursor-pointer items-center justify-center gap-1">
+                        <span>Name: {file.name}</span>
                       </div>
-                    </label>
-                    {file && (
-                      <button
-                        className="rounded-md text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
-                        onClick={() => {
-                          setValue('file', null)
-                          setFile(null)
-                        }}
-                      >
-                        <span className="sr-only">Close panel</span>
-                        <XMarkIcon className="h-5 w-5" aria-hidden="true" />
-                      </button>
+                    ) : (
+                      'Upload File'
                     )}
-                    <InputField
-                      id="file"
-                      type="file"
-                      onChange={e => {
-                        if (e.target.files) {
-                          setFile(e.target.files[0])
-                          setValue('file', e.target.files[0])
-                          setError('file', { message: '' })
-                        }
-                      }}
-                    />
                   </div>
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.file?.message}
-                  </p>
-                </>
-              )
-            }}
-          </Form>
+                </label>
+                {file && (
+                  <button
+                    className="rounded-md text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                    onClick={() => {
+                      setValue('file', null)
+                      setFile(null)
+                    }}
+                  >
+                    <span className="sr-only">Close panel</span>
+                    <XMarkIcon className="h-5 w-5" aria-hidden="true" />
+                  </button>
+                )}
+                <InputField
+                  id="file"
+                  type="file"
+                  onChange={e => {
+                    if (e.target.files) {
+                      setFile(e.target.files[0])
+                      setValue('file', e.target.files[0])
+                      setError('file', { message: '' })
+                    }
+                  }}
+                />
+              </div>
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.file?.message}
+              </p>
+            </>
+          </form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

@@ -32,6 +32,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
+import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 
 function DeviceTableContextMenu({
   id,
@@ -41,7 +42,8 @@ function DeviceTableContextMenu({
   group,
   template_name,
   template_id,
-  token
+  token,
+  status,
 }: {
   id: string
   name: string
@@ -51,6 +53,7 @@ function DeviceTableContextMenu({
   template_name: string
   template_id: string
   token: string
+  status: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -63,6 +66,8 @@ function DeviceTableContextMenu({
   const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
+
+  const { mutate: mutateBlockAndActive } = useBlockAndActiveDevice()
 
   const handleCopyId = useCopyId()
 
@@ -90,7 +95,8 @@ function DeviceTableContextMenu({
               }
               onClick={() =>
                 navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
+                    orgId != null ? `${orgId}/${id}` : ` /${id}`
                   }`,
                 )
               }
@@ -109,10 +115,32 @@ function DeviceTableContextMenu({
               {t('cloud:org_manage.device_manage.add_device.edit')}
             </MenuItem>
             <MenuItem
+              icon={
+                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+              }
+              onClick={() => {
+                let type = 'active'
+                if (status === 'online' || status === 'offline') {
+                  type = 'block'
+                }
+                mutateBlockAndActive({ type, deviceId: id })
+              }}
+            >
+              {status === 'online' || status === 'offline'
+                ? t('device:block')
+                : t('device:active')}
+            </MenuItem>
+            <MenuItem
               icon={<UpdateIcon className="h-5 w-5" />}
               onClick={() => {
-                open()
-                setType('update-version')
+                if (status !== 'blocked') {
+                  open()
+                  setType('update-version')
+                }
+              }}
+              style={{
+                color: status === 'blocked' ? 'gray' : '',
+                cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
               }}
             >
               {t('cloud:firmware.fota')}
@@ -141,11 +169,9 @@ function DeviceTableContextMenu({
               title={t(
                 'cloud:org_manage.device_manage.table.delete_device_full',
               )}
-              body={
-                t(
-                  'cloud:org_manage.device_manage.table.delete_device_confirm',
-                ).replace('{{DEVICENAME}}', name) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.device_manage.table.delete_device_confirm',
+              ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
                   className="w-full justify-start border-none hover:text-primary-400"
@@ -207,6 +233,22 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
 
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
+  let colsVisibility = {
+    stt: true,
+    name: true,
+    group_name: true,
+    status: true,
+    attributes: false,
+    created_by: false,
+    group_id: false,
+    token: false,
+    org_id: false,
+    template_id: false,
+    device_type: true,
+    key: true,
+    created_at: true,
+    contextMenu: true,
+  }
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
@@ -226,6 +268,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('group_name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.group')}</span>
@@ -233,6 +276,56 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      columnHelper.accessor('status', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.status')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      // columnHelper.accessor('attributes', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
+      //   ),
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
+      columnHelper.accessor('created_by', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('group_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.group_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('token', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.token')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('org_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.org_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('template_id', {
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+
       columnHelper.accessor('template_name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.device_type')}</span>
@@ -295,7 +388,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group_name,
             template_id,
             template_name,
-            token
+            token,
+            status,
           } = info.row.original
           const group = {
             label: group_name,
@@ -309,7 +403,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group,
             template_name,
             template_id,
-            token
+            token,
+            status,
           })
         },
         header: () => null,
@@ -320,7 +415,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      colsVisibility={colsVisibility}
+      {...props}
+      className="autoflow-y-auto max-h-[26rem]"
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_device')}

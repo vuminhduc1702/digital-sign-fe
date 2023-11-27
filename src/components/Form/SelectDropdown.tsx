@@ -22,6 +22,7 @@ type SelectProps<
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   icon?: React.ReactElement
+  isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -44,6 +45,7 @@ export function SelectDropdown<
   isMulti,
   customOnChange,
   handleClearSelectDropdown,
+  isWrappedArray,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -68,6 +70,7 @@ export function SelectDropdown<
                 isMulti={isMulti}
                 className="w-full"
                 isSearchable
+                isClearable
                 placeholder={placeholder ?? t('placeholder:select')}
                 onChange={(e, { action }) => {
                   if (action === 'clear' || action === 'remove-value') {
@@ -78,11 +81,19 @@ export function SelectDropdown<
                       ? (e as unknown as SelectOption[]).map(item => {
                           return item.value
                         })
+                      : isWrappedArray
+                      ? [(e as unknown as SelectOption)?.value]
                       : (e as unknown as SelectOption)?.value
                   // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)
                 }}
+                // styles={{
+                //   control: (baseStyles, state) => ({
+                //     ...baseStyles,
+                //     borderColor: state.isFocused ? 'grey' : 'red',
+                //   }),
+                // }}
               />
             )
           }}

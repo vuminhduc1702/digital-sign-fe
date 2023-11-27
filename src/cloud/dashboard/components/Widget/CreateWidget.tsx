@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import ColorPicker from 'react-pick-color'
@@ -14,8 +14,6 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOptionGeneric,
-  type SelectOptionString,
 } from '~/components/Form'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -43,11 +41,13 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: z.string(),
-    label: z.string(),
-    color: z.string(),
-    unit: z.string(),
-    decimal: z.string(),
+    attribute_key: z
+      .string()
+      .min(1, { message: i18n.t('ws:filter.choose_attr') }),
+    label: z.string().optional(),
+    color: z.string().optional(),
+    unit: z.string().optional(),
+    // decimal: z.string().optional(),
   }),
 )
 
@@ -88,27 +88,6 @@ export const widgetSchema = z.object({
     })
     .nullable(),
 })
-// .and(
-//   z.discriminatedUnion('type', [
-//     z.object({
-//       type: z.literal('TIMESERIES'),
-//       config: z.object({
-//         chartsetting: z.object({
-//           start_date: z.number(),
-//           end_date: z.number(),
-//           data_type: widgetDataTypeSchema,
-//         }),
-//         timewindow: z.object({
-//           interval: z.number(),
-//         }),
-//         aggregation: aggSchema,
-//       }),
-//     }),
-//     z.object({
-//       type: z.literal('LASTEST'),
-//     }),
-//   ]),
-// )
 
 export const widgetListSchema = z.record(widgetSchema)
 export type Widget = z.infer<typeof widgetListSchema>
@@ -135,11 +114,9 @@ export const widgetCreateSchema = z.object({
   widgetSetting: z
     .object({
       agg: aggSchema,
-      interval: z.coerce
-        .number()
-        .refine(val => wsInterval.some(interval => val === interval.value), {
-          message: i18n.t('ws:filter.choose_interval'),
-        }),
+      interval: z.number({
+        required_error: i18n.t('ws:filter.choose_interval'),
+      }),
       startDate: z.date({
         required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
       }),
@@ -151,38 +128,11 @@ export const widgetCreateSchema = z.object({
         })
         .optional(),
       dataType: widgetDataTypeSchema,
-      window: z.coerce.number().optional(),
+      window: z.number().optional(),
     })
     .optional(),
   id: z.string().optional(),
 })
-// .and(
-//   z.discriminatedUnion('type', [
-//     z.object({
-//       type: z.literal('TIMESERIES'),
-//       widgetSetting: z.object({
-//         agg: aggSchema,
-//         interval: z.coerce.number(),
-//         startDate: z.date({
-//           required_error: i18n.t(
-//             'cloud:dashboard.config_chart.pick_date_alert',
-//           ),
-//         }),
-//         endDate: z
-//           .date({
-//             required_error: i18n.t(
-//               'cloud:dashboard.config_chart.pick_date_alert',
-//             ),
-//           })
-//           .optional(),
-//         dataType: widgetDataTypeSchema,
-//       }),
-//     }),
-//     z.object({
-//       type: z.literal('LASTEST'),
-//     }),
-//   ]),
-// )
 
 type WidgetCreateDTO = {
   data: z.infer<typeof widgetCreateSchema> & { id: string }
@@ -200,7 +150,7 @@ type CreateWidgetProps = {
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataTypeOptions: SelectOptionGeneric<WidgetDataType>[] = [
+const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -227,6 +177,7 @@ export function CreateWidget({
     watch,
     getValues,
     setValue,
+    resetField,
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
   })
@@ -261,7 +212,7 @@ export function CreateWidget({
   const deviceSelectData = deviceData?.devices.map(device => ({
     value: device.id,
     label: device.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const {
     data: attrChartData,
@@ -271,11 +222,7 @@ export function CreateWidget({
   const attrSelectData = attrChartData?.keys?.map(item => ({
     value: item,
     label: item,
-  })) || [{ value: '', label: '' }]
-
-  const [aggValue, setAggValue] = useState('')
-  const [widgetDataTypeValue, setWidgetDataTypeValue] =
-    useState<WidgetDataType>('REALTIME')
+  }))
 
   useEffect(() => {
     append({
@@ -283,7 +230,7 @@ export function CreateWidget({
       label: '',
       color: '',
       unit: '',
-      decimal: '',
+      // decimal: '',
     })
   }, [])
 
@@ -310,7 +257,7 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              console.log('values: ', values)
+              // console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -450,7 +397,7 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  decimal: item.decimal,
+                  // decimal: item.decimal,
                   label: item.label,
                   unit: item.unit,
                 })),
@@ -510,19 +457,16 @@ export function CreateWidget({
                             value: org?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
                         }
-                        isClearable
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
-                          setValue('device', undefined as unknown as string[])
-                          setValue('attributeConfig', [
-                            {
-                              attribute_key: '',
-                              label: '',
-                              color: '',
-                              unit: '',
-                              decimal: '',
-                            },
-                          ])
+                          resetField('device')
+                          resetField('attributeConfig', {
+                            defaultValue: [
+                              {
+                                attribute_key: '',
+                              },
+                            ],
+                          })
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -557,6 +501,7 @@ export function CreateWidget({
                         }
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
+                        isWrappedArray
                         customOnChange={option => {
                           if (option != null) {
                             attrChartMutate({
@@ -570,15 +515,13 @@ export function CreateWidget({
                         }}
                         isLoading={deviceIsLoading}
                         handleClearSelectDropdown={() => {
-                          setValue('attributeConfig', [
-                            {
-                              attribute_key: '',
-                              label: '',
-                              color: '',
-                              unit: '',
-                              decimal: '',
-                            },
-                          ])
+                          resetField('attributeConfig', {
+                            defaultValue: [
+                              {
+                                attribute_key: '',
+                              },
+                            ],
+                          })
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -612,7 +555,7 @@ export function CreateWidget({
                             label: '',
                             color: '',
                             unit: '',
-                            decimal: '',
+                            // decimal: '',
                           })
                         }
                       />
@@ -624,70 +567,7 @@ export function CreateWidget({
                       className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
                     >
-                      <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-5">
-                        {/* <div className="space-y-1">
-                          <FieldWrapper
-                            label={t('cloud:dashboard.config_chart.attr')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]
-                                ?.attribute_key
-                            }
-                          >
-                            <Controller
-                              control={control}
-                              name={`attributeConfig.${index}.attribute_key`}
-                              render={({
-                                field: { onChange, value, ...field },
-                              }) => {
-                                return (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        variant="trans"
-                                        size="md"
-                                        role="combobox"
-                                        className={cn(
-                                          'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
-                                          !value && 'text-secondary-700',
-                                        )}
-                                      >
-                                        {value !== ''
-                                          ? attrSelectData.find(
-                                              attr => attr.value === value,
-                                            )?.label
-                                          : t('placeholder:select')}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent>
-                                      <Command>
-                                        <CommandInput />
-                                        <CommandEmpty>
-                                          {t('table:no_attr')}
-                                        </CommandEmpty>
-                                        <CommandGroup>
-                                          {attrSelectData.map(attr => (
-                                            <CommandItem
-                                              value={attr.label}
-                                              key={attr.value}
-                                              onSelect={() => {
-                                                setValue(
-                                                  `attributeConfig.${index}.attribute_key`,
-                                                  attr.value,
-                                                )
-                                              }}
-                                            >
-                                              {attr.label}
-                                            </CommandItem>
-                                          ))}
-                                        </CommandGroup>
-                                      </Command>
-                                    </PopoverContent>
-                                  </Popover>
-                                )
-                              }}
-                            />
-                          </FieldWrapper>
-                        </div> */}
+                      <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                         <div className="w-full space-y-1">
                           <SelectDropdown
                             label={t('cloud:dashboard.config_chart.attr')}
@@ -718,7 +598,6 @@ export function CreateWidget({
                             placeholder={t(
                               'cloud:org_manage.org_manage.add_attr.choose_attr',
                             )}
-                            isClearable
                             isLoading={attrChartIsLoading}
                           />
                           <p className="text-body-sm text-primary-400">
@@ -798,7 +677,7 @@ export function CreateWidget({
                             `attributeConfig.${index}.unit` as const,
                           )}
                         />
-                        <InputField
+                        {/* <InputField
                           label={t('cloud:dashboard.config_chart.decimal')}
                           error={
                             formState?.errors?.attributeConfig?.[index]?.decimal
@@ -806,7 +685,7 @@ export function CreateWidget({
                           registration={register(
                             `attributeConfig.${index}.decimal` as const,
                           )}
-                        />
+                        /> */}
                       </div>
                       {isMultipleAttr ? (
                         <Button
@@ -844,11 +723,6 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          onChange={e => {
-                            setWidgetDataTypeValue(
-                              e.target.value as WidgetDataType,
-                            )
-                          }}
                         />
 
                         <div className="space-y-1">
@@ -939,7 +813,7 @@ export function CreateWidget({
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.endDate')}
                             error={
-                              widgetDataTypeValue === 'REALTIME'
+                              getValues('widgetSetting.dataType') === 'REALTIME'
                                 ? ''
                                 : formState?.errors?.widgetSetting?.startDate
                             }
@@ -962,7 +836,9 @@ export function CreateWidget({
                                           !value && 'text-secondary-700',
                                         )}
                                         disabled={
-                                          widgetDataTypeValue === 'REALTIME'
+                                          getValues(
+                                            'widgetSetting.dataType',
+                                          ) === 'REALTIME'
                                         }
                                       >
                                         <CalendarIcon className="mr-2 h-4 w-4" />
@@ -1036,6 +912,9 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.interval}
                           registration={register(
                             `widgetSetting.interval` as const,
+                            {
+                              valueAsNumber: true,
+                            },
                           )}
                           options={wsInterval.map(interval => ({
                             label: interval.label,
@@ -1047,7 +926,7 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.agg}
                           registration={register(`widgetSetting.agg` as const)}
                           options={
-                            widgetDataTypeValue === 'HISTORY'
+                            getValues('widgetSetting.dataType') === 'HISTORY'
                               ? widgetAgg
                                   .map(agg => ({
                                     label: agg.label,
@@ -1062,21 +941,20 @@ export function CreateWidget({
                                   value: agg.value,
                                 }))
                           }
-                          onChange={e => {
-                            setAggValue(e.target.value)
-                          }}
                         />
-                        {aggValue === 'SMA' ? (
+                        {watch('widgetSetting.agg') === 'SMA' ? (
                           <InputField
+                            type="number"
                             label={t('ws:filter.sma_window')}
                             error={formState?.errors?.widgetSetting?.window}
                             registration={register(
                               `widgetSetting.window` as const,
+                              {
+                                valueAsNumber: true,
+                              },
                             )}
                           />
-                        ) : (
-                          <></>
-                        )}
+                        ) : null}
                       </div>
                     </>
                   ) : null}
@@ -1113,4 +991,70 @@ export function CreateWidget({
       </div>
     </Dialog>
   )
+}
+
+{
+  /* <div className="space-y-1">
+  <FieldWrapper
+    label={t('cloud:dashboard.config_chart.attr')}
+    error={
+      formState?.errors?.attributeConfig?.[index]
+        ?.attribute_key
+    }
+  >
+    <Controller
+      control={control}
+      name={`attributeConfig.${index}.attribute_key`}
+      render={({
+        field: { onChange, value, ...field },
+      }) => {
+        return (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="trans"
+                size="md"
+                role="combobox"
+                className={cn(
+                  'h-9 w-[200px] justify-between rounded-md !px-3 !text-body-sm',
+                  !value && 'text-secondary-700',
+                )}
+              >
+                {value !== ''
+                  ? attrSelectData.find(
+                      attr => attr.value === value,
+                    )?.label
+                  : t('placeholder:select')}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Command>
+                <CommandInput />
+                <CommandEmpty>
+                  {t('table:no_attr')}
+                </CommandEmpty>
+                <CommandGroup>
+                  {attrSelectData.map(attr => (
+                    <CommandItem
+                      value={attr.label}
+                      key={attr.value}
+                      onSelect={() => {
+                        setValue(
+                          `attributeConfig.${index}.attribute_key`,
+                          attr.value,
+                        )
+                      }}
+                    >
+                      {attr.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        )
+      }}
+    />
+  </FieldWrapper>
+</div> */
 }

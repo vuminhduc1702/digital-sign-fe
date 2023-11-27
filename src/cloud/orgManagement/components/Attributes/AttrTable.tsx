@@ -78,11 +78,9 @@ function AttrTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-              body={
-                t(
-                  'cloud:org_manage.org_manage.table.delete_attr_confirm',
-                ).replace('{{ATTRNAME}}', attribute_key) ?? 'Confirm delete?'
-              }
+              body={t(
+                'cloud:org_manage.org_manage.table.delete_attr_confirm',
+              ).replace('{{ATTRNAME}}', attribute_key)}
               triggerButton={
                 <Button
                   className="hover:text-primary-400 w-full justify-start border-none"
@@ -259,7 +257,12 @@ export function AttrTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_attr')}

@@ -15,7 +15,10 @@ export type DashboardRes = {
   configuration: {
     description: string
     widgets: null
-    last_viewed: number
+  }
+  dashboard_setting: {
+    widgets: null
+    last_viewed: string
     starred: boolean
   }
 }

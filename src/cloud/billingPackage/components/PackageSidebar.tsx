@@ -73,7 +73,7 @@ export function PackageSidebar() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center">
-            {t('cloud:device_template.sidebar.no_template')}
+            {t('billing:package_manage.no_package')}
           </div>
         )}
       </div>

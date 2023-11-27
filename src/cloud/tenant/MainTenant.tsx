@@ -6,6 +6,8 @@ import { SearchIcon } from '~/components/SVGIcons'
 import { useCustomerList } from './api/getCustomerListApi'
 import { BillingCustomerTable } from './components/BillingCustomerTable'
 import { CreateCustomer } from './components/CreateCustomer'
+import { useNavigate } from 'react-router-dom'
+import narrowLeft from '~/assets/icons/narrow-left.svg'
 
 const MainTenant = () => {
   const { t } = useTranslation()
@@ -16,6 +18,7 @@ const MainTenant = () => {
     search_str: '',
   })
   const [value, setValue] = useState('')
+  const navigate = useNavigate()
 
   const handleSearch = () => {
     console.log(key, value)
@@ -54,6 +57,13 @@ const MainTenant = () => {
 
   return (
     <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div
+        className="border-secondary-700 mb-6 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
+        onClick={() => navigate(-1)}
+      >
+        <img src={narrowLeft} alt="left" className="aspect-square w-[20px]" />
+        <span className="ml-2">{t('form:back')}</span>
+      </div>
       <div className="mb-4 flex justify-between">
         <div className="flex justify-between">
           <div className="flex items-center gap-x-3">

@@ -1,46 +1,46 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCreateAttrChart } from '~/cloud/dashboard/api'
+import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
 import {
   FieldWrapper,
-  FormMultipleFields,
   InputField,
   SelectDropdown,
   SelectField,
-  type SelectOption,
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
-import { queryClient } from '~/lib/react-query'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
-import { useGetAttrs } from '../../api/attrAPI'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
-
-import { type OrgList } from '~/layout/MainLayout/types'
-import {
-  type Action,
-  type ActionType,
-  type Condition,
-  type DeviceList,
-  type EventType,
-  type Group,
-} from '../../types'
-
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Drawer } from '~/components/Drawer'
-import { PlusIcon } from '~/components/SVGIcons'
 import {
   useUpdateEvent,
   type UpdateEventDTO,
 } from '../../api/eventAPI/updateEvent'
-import { createEventSchema, type IntervalData } from './CreateEvent'
-import { Controller } from 'react-hook-form'
 import { Checkbox } from '~/components/Checkbox'
+import { useGetOrgs } from '~/layout/MainLayout/api'
+import { Spinner } from '~/components/Spinner'
+
+import { type Action, type Condition, type EventType } from '../../types'
+import {
+  conditionTypeOptions,
+  createEventSchema,
+  operatorOptions,
+  type IntervalData,
+  logicalOperatorOption,
+  actionTypeOptions,
+  eventTypeOptions,
+} from './CreateEvent'
+
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
 type UpdateEventProps = {
   eventId: string
@@ -63,185 +63,101 @@ export function UpdateEvent({
   dataAction,
   conditionData,
   dateArr,
-  startTimeProps,
-  endTimeProps,
-  type,
   close,
   isOpen,
+  type,
+  startTimeProps,
+  endTimeProps,
 }: UpdateEventProps) {
-  console.log(data)
   const { t } = useTranslation()
+  // console.log('data', data)
 
-  const [onClickValue, setOnclickValue] = useState(data.onClick)
-  const [typeEvent, setTypeEvent] = useState(type)
-  const [startTime, setStartTime] = useState(startTimeProps)
-  const [endTime, setEndTime] = useState(endTimeProps)
-  const [orgValue, setOrgValue] = useState<SelectOption | null>()
-  const [groupValue, setGroupValue] = useState<SelectOption | null>({
-    label: data?.group_name,
-    value: data?.group_id,
+  const {
+    register,
+    formState,
+    handleSubmit,
+    control,
+    watch,
+    getValues,
+    setValue,
+  } = useForm<UpdateEventDTO['data']>({
+    resolver: createEventSchema && zodResolver(createEventSchema),
+    defaultValues: {
+      onClick: (data.onClick as unknown as string) === 'true',
+      name,
+      action: dataAction,
+      retry: data.retry,
+      status: (data.status as unknown as string) === 'true',
+      condition: conditionData,
+      interval: renderInterval(),
+      type,
+      org_id: data.org_id,
+      group_id: data.group_id,
+    },
   })
+  const {
+    append: conditionAppend,
+    fields: conditionFields,
+    remove: conditionRemove,
+  } = useFieldArray({
+    name: 'condition',
+    control,
+  })
+  const {
+    append: actionAppend,
+    fields: actionFields,
+    remove: actionRemove,
+  } = useFieldArray({
+    name: 'action',
+    control,
+  })
+  console.log('formState.errors', formState.errors)
 
-  const { id: projectId } = storage.getProject()
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
 
-  useEffect(() => {
-    if (!data?.group_id) {
-      setGroupValue(null)
-    }
-  }, [eventId])
+  const { id: projectId } = storage.getProject()
 
-  const params = useParams()
-  const orgId = params.orgId as string
-
-  const logicalOperatorOption = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.logical_operator.and',
-      ),
-      value: 'and',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.logical_operator.or',
-      ),
-      value: 'or',
-    },
-  ]
-
-  const operatorOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.gte',
-      ),
-      value: '>',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.lte',
-      ),
-      value: '<',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.operator.not',
-      ),
-      value: '!=',
-    },
-  ]
-
-  const conditionTypeOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.condition_type.normal',
-      ),
-      value: 'normal',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.condition.condition_type.delay',
-      ),
-      value: 'delay',
-    },
-  ]
-
-  const actionTypeOptions = [
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.sms',
-      ),
-      value: 'sms',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.email',
-      ),
-      value: 'email',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.mqtt',
-      ),
-      value: 'mqtt',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.fcm',
-      ),
-      value: 'fcm',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.event',
-      ),
-      value: 'event',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.eventactive',
-      ),
-      value: 'eventactive',
-    },
-    {
-      label: t(
-        'cloud:org_manage.event_manage.add_event.action.action_type.delay',
-      ),
-      value: 'delay',
-    },
-  ]
-
-  const { data: groupData, refetch: refetchGroupData } = useGetGroups({
-    orgId,
-    projectId,
-    entity_type: 'EVENT',
-    config: { enabled: false },
-  })
-  const groupListCache: Group[] | undefined = queryClient.getQueryData(
-    ['groups'],
-    { exact: false },
-  )
-
-  const { data: deviceData, refetch: refetchDeviceData } = useGetDevices({
-    orgId,
-    projectId,
-    // config: { enabled: false },
-  })
-  const deviceListCache: DeviceList | undefined = queryClient.getQueryData(
-    ['devices'],
-    { exact: false },
-  )
-  const deviceSelectData = deviceData?.devices.map(device => ({
-    value: device.id,
-    label: device.name,
-  })) || [{ value: '', label: '' }]
-
-  const groupDataSelect = groupData?.groups.map(group => ({
-    label: group?.name,
-    value: group?.id,
-  })) || [{ label: t('loading:group'), value: '' }]
-
-  const [selectedDeviceId, setSelectedDeviceId] = useState('')
-  const { data: attrData, refetch: refetchAttrData } = useGetAttrs({
-    entityType: 'DEVICE',
-    entityId: selectedDeviceId,
-    config: {
-      enabled: !!selectedDeviceId,
-      suspense: false,
-    },
-  })
-  const attrSelectData = attrData?.attributes.map(attribute => ({
-    value: attribute.attribute_key,
-    label: attribute.attribute_key,
-  })) || [{ value: '', label: t('loading:attr') }]
-
-  const orgListCache: OrgList | undefined = queryClient.getQueryData(['orgs'], {
-    exact: false,
-  })
+  const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
-    orgListCache?.organizations,
+    orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const orgSelectOptions = orgFlattenData?.map(org => ({
+    label: org?.name,
+    value: org?.id,
+  }))
+
+  const { data: groupData } = useGetGroups({
+    orgId: watch('org_id'),
+    projectId,
+    entity_type: 'EVENT',
+    config: { suspense: false },
+  })
+  const groupSelectOptions = groupData?.groups?.map(group => ({
+    label: group?.name,
+    value: group?.id,
+  }))
+
+  const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
+    orgId: watch('org_id'),
+    projectId,
+    config: { suspense: false },
+  })
+  const deviceSelectOptions = deviceData?.devices.map(device => ({
+    value: device.id,
+    label: device.name,
+  }))
+
+  const {
+    data: attrData,
+    mutate: attrMutate,
+    isLoading: attrIsLoading,
+  } = useCreateAttrChart()
+  const attrSelectOptions = attrData?.keys?.map(item => ({
+    value: item,
+    label: item,
+  }))
 
   const [todos, setTodos] = useState(dateArr)
 
@@ -255,55 +171,7 @@ export function UpdateEvent({
     )
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
-
-  const renderDataCondition = () => {
-    const defaultCondition = conditionData?.map(item => {
-      const conditionType = conditionTypeOptions.filter(
-        e => e.value === item.condition_type,
-      )
-      const operatorFilter = operatorOptions.filter(
-        e => e.value === item.operator,
-      )
-      const logicalOperator = logicalOperatorOption.filter(
-        e => e.value === item.logical_operator,
-      )
-      const deviceFilter = deviceSelectData.filter(
-        e => e.value === item.device_id,
-      )
-      return {
-        ...item,
-        attribute_name: {
-          label: item.attribute_name,
-          value: item.attribute_name,
-        },
-        device_id: deviceFilter[0],
-        condition_type: conditionType[0],
-        operator: operatorFilter[0],
-        logical_operator: logicalOperator[0],
-      }
-    })
-    return defaultCondition
-  }
-
-  const renderDataAction = () => {
-    const defaultAction = dataAction?.map(item => {
-      const actionType = actionTypeOptions.filter(
-        e => e.value === item.action_type,
-      )
-      return {
-        ...item,
-        action_type: actionType[0],
-      }
-    })
-    return defaultAction
-  }
-
-  const renderInterval = () => {
+  function renderInterval() {
     const dataFilter = dateArr.filter(item => item.selected)
 
     const intervalDay: IntervalData = {}
@@ -312,11 +180,22 @@ export function UpdateEvent({
     })
     const interval = {
       ...intervalDay,
-      start_time: startTime,
-      end_time: endTime,
+      start_time: startTimeProps,
+      end_time: endTimeProps,
     }
     return interval
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
+
+  const showSpinner = useSpinDelay(groupSelectOptions == null, {
+    delay: 150,
+    minDuration: 300,
+  })
 
   return (
     <Drawer
@@ -344,31 +223,23 @@ export function UpdateEvent({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
+            // disabled={!formState.isDirty}
           />
         </>
       )}
     >
-      <FormMultipleFields<UpdateEventDTO['data'], typeof createEventSchema>
+      <form
         id="update-event"
-        options={{
-          defaultValues: {
-            onClick: (data.onClick+'').toLowerCase() === 'true',
-            name,
-            action: renderDataAction(),
-            retry: data.retry.toString(),
-            status: (data.status+'').toLowerCase() === 'true',
-            condition: renderDataCondition(),
-            interval: renderInterval(),
-          },
-        }}
-        onSubmit={values => {
+        className="w-full space-y-5"
+        onSubmit={handleSubmit(values => {
+          console.log('values', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
             repeat = repeat + item.value + ','
           })
           const scheduleValue = {
-            time: startTime,
+            time: getValues('interval.start_time'),
             repeat,
           }
           const intervalDay: IntervalData = {}
@@ -377,403 +248,213 @@ export function UpdateEvent({
           })
           const interval = {
             ...intervalDay,
-            start_time: startTime,
-            end_time: endTime,
+            start_time: getValues('interval.start_time'),
+            end_time: getValues('interval.end_time'),
           }
           const conditionArr =
-            values.condition?.map(item => ({
-              device_id: (
-                item.device_id as unknown as { value: string; label: string }
-              )?.value,
-              device_name: (
-                item.device_id as unknown as { value: string; label: string }
-              )?.label,
-              attribute_name: (
-                item.attribute_name as unknown as {
-                  value: string
-                  label: string
-                }
-              )?.value,
-              condition_type: (
-                item.condition_type as unknown as {
-                  value: Condition['condition_type']
-                  label: string
-                }
-              )?.value,
-              operator: (
-                item.operator as unknown as {
-                  value: Condition['operator']
-                  label: string
-                }
-              )?.value,
-              threshold: item.threshold,
-              logical_operator: (
-                item.logical_operator as unknown as {
-                  value: Condition['logical_operator']
-                  label: string
-                }
-              )?.value,
-            })) || []
-          const actionArr =
-            values.action?.map(item => ({
-              action_type: (
-                item.action_type as unknown as {
-                  value: ActionType
-                  label: string
-                }
-              )?.value,
-              receiver: item.receiver,
-              message: item.message,
-              subject: item.subject,
-            })) || []
+            ('condition' in values &&
+              values.condition.map(item => ({
+                device_id: item.device_id,
+                attribute_name: item.attribute_name,
+                condition_type: item.condition_type,
+                operator: item.operator,
+                threshold: item.threshold,
+                logical_operator: item.logical_operator,
+              }))) ||
+            []
+          const actionArr = values.action?.map(item => ({
+            action_type: item.action_type,
+            receiver: item.receiver,
+            message: item.message,
+            subject: item.subject,
+          }))
+          console.log('conditionArr', conditionArr)
 
           mutate({
             data: {
               project_id: projectId,
-              org_id: orgValue?.value || '',
-              group_id: groupValue?.value || '',
+              org_id: values.org_id,
+              group_id: values.group_id,
               name: values.name,
               onClick:
-                typeEvent === 'event' ? values.onClick === true : false,
+                getValues('type') === 'event' ? values.onClick === true : false,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
-              status: Boolean(values.status),
-              retry: values.retry ? parseInt(values.retry) : null,
+              status: values.status === true,
+              retry: values.retry,
               schedule: scheduleValue,
               interval,
-              type: typeEvent,
+              type: getValues('type'),
             },
             eventId,
           })
-        }}
-        schema={createEventSchema}
-        name={['condition', 'action']}
+        })}
       >
-        {(
-          { register, formState, control, setValue },
-          {
-            append: conditionAppend,
-            fields: conditionFields,
-            remove: conditionRemove,
-          },
-          { append: actionAppend, fields: actionFields, remove: actionRemove },
-        ) => {
-          console.log('control: ', control)
-          return (
-            <>
-              <div className="space-y-3">
-                <TitleBar
-                  title={t('cloud:org_manage.event_manage.add_event.info')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+        {groupSelectOptions != null ? (
+          <>
+            <div className="space-y-3">
+              <TitleBar
+                title={t('cloud:org_manage.event_manage.add_event.info')}
+                className="w-full rounded-md bg-secondary-700 pl-3"
+              />
+              <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
+                <InputField
+                  label={t('cloud:org_manage.event_manage.add_event.name')}
+                  error={formState.errors['name']}
+                  registration={register('name')}
                 />
-                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
-                  <InputField
-                    label={t('cloud:org_manage.event_manage.add_event.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      isClearable={true}
-                      label={t(
-                        'cloud:org_manage.device_manage.add_device.parent',
-                      )}
-                      name="org_id"
-                      control={control}
-                      options={
-                        orgFlattenData?.map(org => ({
-                          label: org?.name,
-                          value: org?.id,
-                        })) || [{ label: t('loading:org'), value: '' }]
-                      }
-                      value={orgValue}
-                      onChange={e => setOrgValue(e)}
-                    />
-                    {/* <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.org_id?.message}
-                    </p> */}
-                  </div>
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      isClearable={true}
-                      label={t('cloud:org_manage.event_manage.add_event.group')}
-                      name="group_id"
-                      control={control}
-                      options={groupDataSelect}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:group')
-                      }
-                      noOptionsMessage={() => t('table:no_group')}
-                      onMenuOpen={() => {
-                        if (groupListCache) {
-                          return
-                        } else refetchGroupData()
-                      }}
-                      value={groupValue}
-                      onChange={e => setGroupValue(e)}
-                    />
-                    {/* <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.org_id?.message}
-                    </p> */}
-                  </div>
-                  <FieldWrapper
-                    label={t('cloud:org_manage.event_manage.add_event.status')}
-                    error={formState?.errors['status']}
-                  >
-                    <Controller
-                      control={control}
-                      name={'status'}
-                      render={({ field: { onChange, value, ...field } }) => {
-                        return (
-                          <Checkbox
-                            {...field}
-                            checked={Boolean(value)}
-                            onCheckedChange={onChange}
-                          />
-                        )
-                      }}
-                    />
-                  </FieldWrapper>
-                  <FieldWrapper
-                    label={t('cloud:org_manage.event_manage.add_event.condition.onClick')}
-                    error={formState?.errors['onClick']}
-                  >
-                    <Controller
-                      control={control}
-                      name={'onClick'}
-                      render={({ field: { onChange, value, ...field } }) => {
-                        return (
-                          <Checkbox
-                            {...field}
-                            checked={Boolean(value)}
-                            onCheckedChange={onChange}
-                            disabled={typeEvent === 'schedule'}
-                          />
-                        )
-                      }}
-                    />
-                  </FieldWrapper>
-                  <SelectField
+                <div className="space-y-1">
+                  <SelectDropdown
                     label={t(
-                      'cloud:org_manage.event_manage.add_event.type_event',
+                      'cloud:org_manage.device_manage.add_device.parent',
                     )}
-                    // error={formState.errors['type']}
-                    // registration={register('onClick')}
-                    options={[
-                      { value: 'schedule', label: 'Lập lịch schedule' },
-                      { value: 'event', label: 'Lập lịch event' },
-                    ]}
-                    value={typeEvent}
-                    onChange={event => setTypeEvent(event.target.value)}
-                  />
-                  <InputField
-                    label={t('cloud:org_manage.event_manage.add_event.retry')}
-                    registration={register('retry')}
-                    type="number"
-                  />
-                </div>
-              </div>
-              <div>
-                <TitleBar
-                  title={t(
-                    'cloud:org_manage.event_manage.add_event.test_condition_time',
-                  )}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
-                />
-                <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
-                  {todos.map(todo => (
-                    <div
-                      onClick={todoClicked}
-                      data-id={todo.id}
-                      key={todo.id}
-                      className={cn(
-                        'mt-5 cursor-pointer rounded-lg bg-stone-300 py-3 text-center text-white',
-                        { 'bg-primary-400': todo.selected },
-                      )}
-                    >
-                      {todo.name}
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 grid grid-cols-1 gap-x-4 md:grid-cols-2">
-                  <div className="relative w-full">
-                    <p className="mb-2 text-center">
-                      {t('cloud:org_manage.event_manage.add_event.start')}
-                    </p>
-                    <input
-                      name="startTime"
-                      value={startTime}
-                      onChange={e => setStartTime(e.target.value)}
-                      className="w-full rounded border border-solid border-slate-300 px-4 py-2"
-                      type="time"
-                    />
-                  </div>
-                  <div className="relative w-full">
-                    <p className="mb-2 text-center">
-                      {t('cloud:org_manage.event_manage.add_event.end')}
-                    </p>
-                    <input
-                      name="endTime"
-                      value={endTime}
-                      onChange={e => setEndTime(e.target.value)}
-                      className="w-full rounded border border-solid border-slate-300 px-4 py-2"
-                      type="time"
-                    />
-                  </div>
-                </div>
-              </div>
-              {onClickValue === false && typeEvent === 'event' ? (
-                <div className="flex justify-between space-x-3">
-                  <TitleBar
-                    title={t(
-                      'cloud:org_manage.event_manage.add_event.condition.title',
-                    )}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
-                  />
-                  <Button
-                    className="rounded-md"
-                    variant="trans"
-                    size="square"
-                    startIcon={
-                      <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                    name="org_id"
+                    control={control}
+                    options={
+                      orgData
+                        ? orgSelectOptions
+                        : [{ label: t('loading:org'), value: '' }]
                     }
-                    onClick={() => conditionAppend()}
+                    isOptionDisabled={option =>
+                      option.label === t('loading:org')
+                    }
+                    noOptionsMessage={() => t('table:no_org')}
+                    defaultValue={orgSelectOptions.find(
+                      item => item.value === getValues('org_id'),
+                    )}
                   />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.org_id?.message}
+                  </p>
                 </div>
-              ) : null}
-              {onClickValue === false && typeEvent === 'event'
-                ? conditionFields.map((field, index) => {
-                    return (
-                      <section className="!mt-3 space-y-2" key={field.id}>
-                        <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
-                          <div className="space-y-1">
-                            <SelectDropdown
-                              isClearable={true}
-                              label={t(
-                                'cloud:org_manage.event_manage.add_event.condition.device',
-                              )}
-                              name={`condition.${index}.device_id`}
-                              control={control}
-                              options={
-                                deviceData
-                                  ? deviceSelectData
-                                  : [{ label: t('loading:device'), value: '' }]
-                              }
-                              isOptionDisabled={option =>
-                                option.label === t('loading:device')
-                              }
-                              noOptionsMessage={() => t('table:no_device')}
-                              onChange={e => {
-                                setSelectedDeviceId(e?.value)
-                                setValue(`condition.${index}.device_id`, e)
-                              }}
-                            />
-                            <p className="text-body-sm text-primary-400">
-                              {
-                                formState?.errors?.condition?.[index]?.device_id
-                                  ?.message
-                              }
-                            </p>
-                          </div>
-                          <div className="space-y-1">
-                            <SelectDropdown
-                              isClearable={true}
-                              label={t(
-                                'cloud:org_manage.event_manage.add_event.condition.attr',
-                              )}
-                              name={`condition.${index}.attribute_name`}
-                              options={attrSelectData}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              control={control}
-                            />
-                            <p className="text-body-sm text-primary-400">
-                              {
-                                formState?.errors?.condition?.[index]
-                                  ?.attribute_name?.message
-                              }
-                            </p>
-                          </div>
-                          <div className="space-y-1">
-                            <SelectDropdown
-                              isClearable={true}
-                              label={t(
-                                'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
-                              )}
-                              name={`condition.${index}.condition_type`}
-                              options={conditionTypeOptions}
-                              control={control}
-                            />
-                            <p className="text-body-sm text-primary-400">
-                              {
-                                formState?.errors?.condition?.[index]
-                                  ?.condition_type?.message
-                              }
-                            </p>
-                          </div>
-                          <div className="space-y-1">
-                            <SelectDropdown
-                              isClearable={true}
-                              label={t(
-                                'cloud:org_manage.event_manage.add_event.condition.operator.title',
-                              )}
-                              name={`condition.${index}.operator`}
-                              options={operatorOptions}
-                              control={control}
-                            />
-                            <p className="text-body-sm text-primary-400">
-                              {
-                                formState?.errors?.condition?.[index]?.operator
-                                  ?.message
-                              }
-                            </p>
-                          </div>
-                          <InputField
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.threshold',
-                            )}
-                            registration={register(
-                              `condition.${index}.threshold`,
-                            )}
-                            type="number"
-                          />
-                          <div className="flex justify-end">
-                            <SelectDropdown
-                              isClearable={true}
-                              label={t(
-                                'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
-                              )}
-                              name={`condition.${index}.logical_operator`}
-                              options={logicalOperatorOption}
-                              control={control}
-                            />
-                            <Button
-                              type="button"
-                              size="square"
-                              variant="trans"
-                              className="ml-5 mt-3 border-none"
-                              onClick={() => conditionRemove(index)}
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete condition"
-                                  className="h-10 w-10"
-                                />
-                              }
-                            />
-                          </div>
-                        </div>
-                      </section>
-                    )
-                  })
-                : null}
-
+                <div className="space-y-1">
+                  <SelectDropdown
+                    label={t('cloud:org_manage.event_manage.add_event.group')}
+                    name="group_id"
+                    control={control}
+                    options={
+                      groupData
+                        ? groupSelectOptions
+                        : [{ label: t('loading:group'), value: '' }]
+                    }
+                    isOptionDisabled={option =>
+                      option.label === t('loading:group')
+                    }
+                    noOptionsMessage={() => t('table:no_group')}
+                    defaultValue={groupSelectOptions?.find(
+                      item => item.value === getValues('group_id'),
+                    )}
+                  />
+                  <p className="text-body-sm text-primary-400">
+                    {formState?.errors?.group_id?.message}
+                  </p>
+                </div>
+                <FieldWrapper
+                  label={t('cloud:org_manage.event_manage.add_event.status')}
+                  error={formState?.errors['status']}
+                  className="w-fit"
+                >
+                  <Controller
+                    control={control}
+                    name={'status'}
+                    render={({ field: { onChange, value, ...field } }) => {
+                      return (
+                        <Checkbox
+                          {...field}
+                          checked={value}
+                          onCheckedChange={onChange}
+                        />
+                      )
+                    }}
+                  />
+                </FieldWrapper>
+                <FieldWrapper
+                  label={t(
+                    'cloud:org_manage.event_manage.add_event.condition.onClick',
+                  )}
+                  error={formState?.errors['onClick']}
+                  className="w-fit"
+                >
+                  <Controller
+                    control={control}
+                    name={'onClick'}
+                    render={({ field: { onChange, value, ...field } }) => {
+                      return (
+                        <Checkbox
+                          {...field}
+                          checked={value}
+                          onCheckedChange={onChange}
+                          onClick={() => {
+                            if (getValues('type') === 'event') {
+                              setValue('type', 'schedule')
+                            }
+                          }}
+                        />
+                      )
+                    }}
+                  />
+                </FieldWrapper>
+                <SelectField
+                  label={t(
+                    'cloud:org_manage.event_manage.add_event.type_event',
+                  )}
+                  error={formState.errors['type']}
+                  registration={register('type')}
+                  options={eventTypeOptions}
+                  disabled={watch('onClick')}
+                />
+                <InputField
+                  label={t('cloud:org_manage.event_manage.add_event.retry')}
+                  registration={register('retry', {
+                    valueAsNumber: true,
+                  })}
+                  type="number"
+                />
+              </div>
+            </div>
+            <div>
+              <TitleBar
+                title={t(
+                  'cloud:org_manage.event_manage.add_event.test_condition_time',
+                )}
+                className="w-full rounded-md bg-secondary-700 pl-3"
+              />
+              <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
+                {todos.map(todo => (
+                  <div
+                    onClick={todoClicked}
+                    data-id={todo.id}
+                    key={todo.id}
+                    className={cn(
+                      'mt-5 cursor-pointer rounded-lg bg-stone-300 py-3 text-center text-white',
+                      { 'bg-primary-400': todo.selected },
+                    )}
+                  >
+                    {todo.name}
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 grid grid-cols-1 gap-x-4 md:grid-cols-2">
+                <InputField
+                  type="time"
+                  label={t('cloud:org_manage.event_manage.add_event.start')}
+                  error={formState?.errors?.interval?.start_time}
+                  registration={register('interval.start_time')}
+                />
+                <InputField
+                  type="time"
+                  label={t('cloud:org_manage.event_manage.add_event.end')}
+                  error={formState?.errors?.interval?.end_time}
+                  registration={register('interval.end_time')}
+                  disabled={watch('type') === 'schedule'}
+                />
+              </div>
+            </div>
+            {!watch('onClick') && watch('type') === 'event' ? (
               <div className="flex justify-between space-x-3">
                 <TitleBar
                   title={t(
-                    'cloud:org_manage.event_manage.add_event.action.title',
+                    'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
                   className="w-full rounded-md bg-secondary-700 pl-3"
                 />
@@ -784,88 +465,239 @@ export function UpdateEvent({
                   startIcon={
                     <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                   }
-                  onClick={() => actionAppend()}
+                  onClick={() => conditionAppend([{}])}
                 />
               </div>
-              {actionFields.map((field, index) => {
-                return (
-                  <section className="!mt-3 space-y-2" key={field.id}>
-                    <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          isClearable={true}
+            ) : null}
+            {!watch('onClick') && watch('type') === 'event'
+              ? conditionFields.map((field, index) => {
+                  return (
+                    <section className="!mt-3 space-y-2" key={field.id}>
+                      <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            label={t(
+                              'cloud:org_manage.event_manage.add_event.condition.device',
+                            )}
+                            name={`condition.${index}.device_id`}
+                            control={control}
+                            options={
+                              deviceData
+                                ? deviceSelectOptions
+                                : [{ label: t('loading:device'), value: '' }]
+                            }
+                            isOptionDisabled={option =>
+                              option.label === t('loading:device')
+                            }
+                            isLoading={deviceIsLoading}
+                            defaultValue={deviceSelectOptions?.find(
+                              item =>
+                                item.value ===
+                                getValues(`condition.${index}.device_id`),
+                            )}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.condition?.[index]?.device_id
+                                ?.message
+                            }
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <SelectDropdown
+                            label={t(
+                              'cloud:org_manage.event_manage.add_event.condition.attr',
+                            )}
+                            name={`condition.${index}.attribute_name`}
+                            options={
+                              attrData
+                                ? attrSelectOptions
+                                : [{ label: t('loading:attr'), value: '' }]
+                            }
+                            isOptionDisabled={option =>
+                              option.label === t('loading:attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            control={control}
+                            isLoading={attrIsLoading}
+                            onMenuOpen={() => {
+                              attrMutate({
+                                data: {
+                                  entity_ids: [
+                                    watch(`condition.${index}.device_id`),
+                                  ],
+
+                                  entity_type: 'DEVICE',
+                                },
+                              })
+                            }}
+                            defaultValue={{
+                              label: getValues(
+                                `condition.${index}.attribute_name`,
+                              ),
+                              value: getValues(
+                                `condition.${index}.attribute_name`,
+                              ),
+                            }}
+                          />
+                          <p className="text-body-sm text-primary-400">
+                            {
+                              formState?.errors?.condition?.[index]
+                                ?.attribute_name?.message
+                            }
+                          </p>
+                        </div>
+                        <SelectField
                           label={t(
-                            'cloud:org_manage.event_manage.add_event.action.action_type.title',
+                            'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
                           )}
-                          name={`action.${index}.action_type`}
-                          options={actionTypeOptions}
-                          control={control}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.action?.[index]?.action_type
-                              ?.message
+                          error={
+                            formState?.errors?.condition?.[index]
+                              ?.condition_type
                           }
-                        </p>
-                      </div>
-                      <div className="space-y-1">
+                          registration={register(
+                            `condition.${index}.condition_type`,
+                          )}
+                          options={conditionTypeOptions}
+                        />
+                        <SelectField
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.operator.title',
+                          )}
+                          error={
+                            formState?.errors?.condition?.[index]?.operator
+                          }
+                          registration={register(`condition.${index}.operator`)}
+                          options={operatorOptions}
+                        />
                         <InputField
                           label={t(
-                            'cloud:org_manage.event_manage.add_event.action.address',
+                            'cloud:org_manage.event_manage.add_event.condition.threshold',
                           )}
-                          registration={register(`action.${index}.receiver`)}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.action?.[index]?.receiver
-                              ?.message
+                          error={
+                            formState?.errors?.condition?.[index]?.threshold
                           }
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <InputField
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.action.subject',
+                          registration={register(
+                            `condition.${index}.threshold`,
                           )}
-                          registration={register(`action.${index}.subject`)}
+                          type="number"
                         />
-                        <p className="text-body-sm text-primary-400">
-                          {formState?.errors?.action?.[index]?.subject?.message}
-                        </p>
+                        <div className="flex justify-end">
+                          <SelectField
+                            label={t(
+                              'cloud:org_manage.event_manage.add_event.condition.logical_operator.title',
+                            )}
+                            error={
+                              formState?.errors?.condition?.[index]
+                                ?.logical_operator
+                            }
+                            registration={register(
+                              `condition.${index}.logical_operator`,
+                            )}
+                            options={logicalOperatorOption}
+                          />
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="trans"
+                            className="ml-5 mt-3 border-none"
+                            onClick={() => conditionRemove(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete condition"
+                                className="h-10 w-10"
+                              />
+                            }
+                          />
+                        </div>
                       </div>
-                      <div className="flex justify-end">
-                        <InputField
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.action.message',
-                          )}
-                          registration={register(`action.${index}.message`)}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {formState?.errors?.action?.[index]?.message?.message}
-                        </p>
-                        <Button
-                          type="button"
-                          size="square"
-                          variant="trans"
-                          className="ml-5 mt-3 border-none"
-                          onClick={() => actionRemove(index)}
-                          startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete condition"
-                              className="h-10 w-10"
-                            />
-                          }
-                        />
-                      </div>
+                    </section>
+                  )
+                })
+              : null}
+
+            <div className="flex justify-between space-x-3">
+              <TitleBar
+                title={t(
+                  'cloud:org_manage.event_manage.add_event.action.title',
+                )}
+                className="w-full rounded-md bg-secondary-700 pl-3"
+              />
+              <Button
+                className="rounded-md"
+                variant="trans"
+                size="square"
+                startIcon={
+                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                }
+                onClick={() => actionAppend([{}])}
+              />
+            </div>
+            {actionFields.map((field, index) => {
+              return (
+                <section className="!mt-3 space-y-2" key={field.id}>
+                  <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
+                    <SelectField
+                      label={t(
+                        'cloud:org_manage.event_manage.add_event.action.action_type.title',
+                      )}
+                      error={formState?.errors?.action?.[index]?.action_type}
+                      registration={register(`action.${index}.action_type`)}
+                      options={actionTypeOptions}
+                    />
+                    <div className="space-y-1">
+                      <InputField
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.action.address',
+                        )}
+                        registration={register(`action.${index}.receiver`)}
+                        error={formState?.errors?.action?.[index]?.receiver}
+                      />
                     </div>
-                  </section>
-                )
-              })}
-            </>
-          )
-        }}
-      </FormMultipleFields>
+                    <div className="space-y-1">
+                      <InputField
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.action.subject',
+                        )}
+                        registration={register(`action.${index}.subject`)}
+                        error={formState?.errors?.action?.[index]?.subject}
+                      />
+                    </div>
+                    <div className="flex justify-end">
+                      <InputField
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.action.message',
+                        )}
+                        registration={register(`action.${index}.message`)}
+                        error={formState?.errors?.action?.[index]?.message}
+                      />
+                      <Button
+                        type="button"
+                        size="square"
+                        variant="trans"
+                        className="ml-5 mt-3 border-none"
+                        onClick={() => actionRemove(index)}
+                        startIcon={
+                          <img
+                            src={btnDeleteIcon}
+                            alt="Delete condition"
+                            className="h-10 w-10"
+                          />
+                        }
+                      />
+                    </div>
+                  </div>
+                </section>
+              )
+            })}
+          </>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Spinner showSpinner={showSpinner} size="xl" />
+          </div>
+        )}
+      </form>
     </Drawer>
   )
 }

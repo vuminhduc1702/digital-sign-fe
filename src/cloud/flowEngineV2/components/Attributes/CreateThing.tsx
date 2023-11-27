@@ -1,122 +1,199 @@
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
 import * as z from 'zod'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   useCreateEntityThing,
   type CreateEntityThingDTO,
   useGetEntityThings,
 } from '~/cloud/customProtocol/api/entityThing'
+import { thingTypeList } from '~/cloud/customProtocol/components'
 import { Button } from '~/components/Button'
-import { Form, InputField, SelectField } from '~/components/Form'
+import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
-import { PlusIcon } from '~/components/SVGIcons'
-import { nameSchema, selectOptionSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
+import { cn } from '~/utils/misc'
 
-export const deviceSchema = z.object({
-  name: nameSchema,
-  org_id: selectOptionSchema(),
-})
+import { type EntityThingType } from '~/cloud/customProtocol'
+import { nameSchema } from '~/utils/schemaValidation'
 
-export const entityThingSchema = z.object({
-  name: nameSchema,
-  project_id: z.string().optional(),
-  description: z.string(),
-  base_template: z.string().nullable(),
-  type: z.string().nullable(),
-})
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
-export function CreateThing() {
+export const entityThingSchema = z
+  .object({
+    name: nameSchema,
+    project_id: z.string().optional(),
+    description: z.string(),
+  })
+  .and(
+    z.discriminatedUnion('type', [
+      z.object({
+        type: z.literal('thing'),
+        base_template: z.string().optional(),
+      }),
+      z.object({
+        type: z.literal('template'),
+        base_shapes: z.string(),
+      }),
+      z.object({
+        type: z.literal('shape'),
+      }),
+    ]),
+  )
+
+export function CreateThing({
+  thingType,
+  classNameTriggerBtn,
+}: {
+  thingType: EntityThingType
+  classNameTriggerBtn?: string
+}) {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
 
-  const { data: thingData, isSuccess } = useGetEntityThings({
-    projectId,
-    type: 'template',
-  })
+  const { register, formState, handleSubmit, control, watch, setValue } =
+    useForm<CreateEntityThingDTO['data']>({
+      resolver: entityThingSchema && zodResolver(entityThingSchema),
+    })
 
   const {
-    data: dataCreateThing,
     mutate: mutateThing,
-    isLoading: isLoadingThing,
-    isSuccess: isSuccessThing,
+    isLoading: isLoadingCreateThing,
+    isSuccess: isSuccessCreateThing,
   } = useCreateEntityThing()
 
+  const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
+    projectId,
+    type: thingType,
+  })
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
-  })) || [{ value: '', label: '' }]
+  }))
+
+  useEffect(() => {
+    setValue('type', thingType)
+  }, [])
 
   return (
     <FormDialog
-      isDone={isSuccessThing}
+      isDone={isSuccessCreateThing}
       title={t('cloud:custom_protocol.thing.create')}
       body={
-        <Form<CreateEntityThingDTO['data'], typeof entityThingSchema>
+        <form
           id="create-entityThing"
-          className="flex flex-col justify-between"
-          onSubmit={values => {
-            mutateThing({
-              data: {
-                name: values.name,
-                project_id: projectId,
-                description: values.description,
-                base_template: values.base_template || null,
-                type: 'thing',
-              },
-            })
-          }}
-          schema={entityThingSchema}
+          className="flex w-full flex-col justify-between space-y-6"
+          onSubmit={handleSubmit(values => {
+            // console.log('thing values', values)
+            if (values.type === 'thing') {
+              mutateThing({
+                data: {
+                  name: values.name,
+                  project_id: projectId,
+                  description: values.description,
+                  type: values.type,
+                  base_template: values.base_template,
+                },
+              })
+            }
+            if (values.type === 'template') {
+              mutateThing({
+                data: {
+                  name: values.name,
+                  project_id: projectId,
+                  description: values.description,
+                  type: values.type,
+                  base_shapes: [values.base_shapes],
+                },
+              })
+            }
+            if (values.type === 'shape') {
+              mutateThing({
+                data: {
+                  name: values.name,
+                  project_id: projectId,
+                  description: values.description,
+                  type: values.type,
+                },
+              })
+            }
+          })}
         >
-          {({ register, formState }) => {
-            return (
-              <>
-                <InputField
-                  label={t('cloud:custom_protocol.thing.name')}
-                  error={formState.errors['name']}
-                  registration={register('name')}
-                />
-                <div className="hidden">
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.name')}
-                    error={formState.errors['type']}
-                    registration={register('type')}
-                  />
-                </div>
-                {/* <InputField
+          <>
+            <InputField
+              label={t('cloud:custom_protocol.thing.name')}
+              error={formState.errors['name']}
+              registration={register('name')}
+            />
+            <SelectField
+              label={t('cloud:custom_protocol.thing.type')}
+              error={formState.errors['type']}
+              registration={register('type')}
+              options={thingTypeList
+                .filter(item => item.value === thingType)
+                .map(item => ({ ...item, selected: true }))}
+              disabled
+            />
+            {watch('type') === 'thing' ? (
+              <div className="space-y-1">
+                <SelectDropdown
                   label={t('cloud:custom_protocol.thing.base_template')}
-                  error={formState.errors['base_template']}
-                  registration={register('base_template')}
-                /> */}
-                <SelectField
-                  label={t('cloud:custom_protocol.thing.base_template')}
-                  error={formState.errors['base_template']}
-                  registration={register('base_template')}
+                  name="base_template"
+                  control={control}
                   options={thingSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:base')
+                  }
+                  noOptionsMessage={() => t('table:no_base_template')}
+                  isLoading={isLoadingThing}
+                  maxMenuHeight={150}
                 />
-                <InputField
-                  label={t('cloud:custom_protocol.thing.description')}
-                  error={formState.errors['description']}
-                  registration={register('description')}
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.base_template?.message}
+                </p>
+              </div>
+            ) : watch('type') === 'template' ? (
+              <div className="space-y-1">
+                <SelectDropdown
+                  label={t('cloud:custom_protocol.thing.base_shapes')}
+                  name="base_shapes"
+                  control={control}
+                  options={thingSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:base')
+                  }
+                  noOptionsMessage={() => t('table:no_base_shapes')}
+                  isLoading={isLoadingThing}
+                  maxMenuHeight={150}
                 />
-              </>
-            )
-          }}
-        </Form>
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.base_shapes?.message}
+                </p>
+              </div>
+            ) : null}
+            <InputField
+              label={t('cloud:custom_protocol.thing.description')}
+              error={formState.errors['description']}
+              registration={register('description')}
+            />
+          </>
+        </form>
       }
       triggerButton={
         <Button
-          className="rounded-md"
           variant="trans"
+          className={cn('rounded-md', classNameTriggerBtn)}
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
       confirmButton={
         <Button
-          isLoading={isLoadingThing}
+          isLoading={isLoadingCreateThing}
           form="create-entityThing"
           type="submit"
           size="md"

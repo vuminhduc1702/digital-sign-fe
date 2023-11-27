@@ -1,16 +1,19 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 
 import { Button } from '~/components/Button'
-import { Form, InputField } from '~/components/Form'
+import { InputField } from '~/components/Form'
 import { useUpdateThing, type UpdateThingDTO } from '../../api/thingAPI'
+import { Dialog, DialogTitle } from '~/components/Dialog'
+
+import { nameSchema } from '~/utils/schemaValidation'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import * as z from 'zod'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import { nameSchema } from '~/utils/schemaValidation'
 
 export const updateThingSchema = z.object({
   name: nameSchema,
@@ -36,6 +39,13 @@ export function UpdateThing({
 
   const { mutate, isLoading, isSuccess } = useUpdateThing()
 
+  const { register, formState, handleSubmit } = useForm<UpdateThingDTO['data']>(
+    {
+      resolver: updateThingSchema && zodResolver(updateThingSchema),
+      defaultValues: { name, description },
+    },
+  )
+
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -60,10 +70,10 @@ export function UpdateThing({
               </button>
             </div>
           </div>
-          <Form<UpdateThingDTO['data'], typeof updateThingSchema>
-            id="update-entityThing"
-            className="mt-2 flex flex-col justify-between"
-            onSubmit={values => {
+          <form
+            id="create-entityThing"
+            className="mt-2 flex w-full flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   name: values.name,
@@ -71,29 +81,21 @@ export function UpdateThing({
                 },
                 thingId,
               })
-            }}
-            schema={updateThingSchema}
-            options={{
-              defaultValues: { name, description },
-            }}
+            })}
           >
-            {({ register, formState }) => {
-              return (
-                <>
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <InputField
-                    label={t('cloud:custom_protocol.thing.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                  />
-                </>
-              )
-            }}
-          </Form>
+            <>
+              <InputField
+                label={t('cloud:custom_protocol.thing.name')}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <InputField
+                label={t('cloud:custom_protocol.thing.description')}
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          </form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

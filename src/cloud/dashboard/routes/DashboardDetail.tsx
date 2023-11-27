@@ -5,6 +5,7 @@ import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
@@ -27,10 +28,12 @@ import {
   type Widget,
   type WidgetCategoryType,
   CreateControllerButton,
+  UpdateWidget,
 } from '../components/Widget'
 import { Drawer } from '~/components/Drawer'
 import storage, { type UserStorage } from '~/utils/storage'
 import { cn } from '~/utils/misc'
+import { useNotificationStore } from '~/stores/notifications'
 
 import {
   aggSchema,
@@ -41,7 +44,6 @@ import {
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
-import { useNotificationStore } from '~/stores/notifications'
 
 import {
   DeleteIcon,
@@ -58,12 +60,19 @@ import {
 } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import { StarFilledIcon } from '@radix-ui/react-icons'
 
 const widgetAggSchema = z.object({
   label: z.string(),
   value: aggSchema,
 })
 export type WidgetAgg = z.infer<typeof widgetAggSchema>
+export type WidgetAttrDeviceType = Array<{
+  id: string
+  attr: string
+  deviceName: string
+  deviceId: string
+}>
 
 export const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -106,6 +115,7 @@ export function DashboardDetail() {
   const [isShowCreateWidget, setIsShowCreateWidget] = useState(false)
   const [isShowCreateControllerBtn, setIsShowCreateControllerBtn] =
     useState(false)
+  const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
@@ -140,12 +150,45 @@ export function DashboardDetail() {
   }, [widgetDetailDB])
 
   useEffect(() => {
+    if (detailDashboard?.dashboard_setting?.starred != null) {
+      setIsStar(detailDashboard?.dashboard_setting?.starred)
+    }
+  }, [detailDashboard?.dashboard_setting?.starred])
+
+  useEffect(() => {
     if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
       addNotification({
         type: 'error',
         title: lastJsonMessage.errorMsg,
       })
     }
+    // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
+    //   setWidgetAttrDeviceData(
+    //     lastJsonMessage?.data
+    //       ?.map(item => {
+    //         const {
+    //           entityId: { entityName, id },
+    //           timeseries,
+    //         } = item
+    //         if (timeseries != null) {
+    //           const attributes = Object.keys(timeseries).filter(
+    //             attr => timeseries[attr] !== null,
+    //           )
+    //           return attributes.map(attr => {
+    //             const attrId = uuidv4()
+    //             return {
+    //               id: attrId,
+    //               attr,
+    //               deviceName: entityName,
+    //               deviceId: id,
+    //             }
+    //           })
+    //         }
+    //         return []
+    //       })
+    //       .flat(),
+    //   )
+    // }
   }, [lastJsonMessage])
 
   useEffect(() => {
@@ -180,7 +223,7 @@ export function DashboardDetail() {
     if (data != null) {
       combinedObject = data.reduce((result, obj) => {
         for (const key in obj) {
-          if (obj[key] !== null && result != null) {
+          if (obj[key] != null && result != null) {
             if (!result[key]) {
               result[key] = []
             }
@@ -200,9 +243,21 @@ export function DashboardDetail() {
   })
 
   return (
-    <div className="flex grow flex-col">
+    <div className="relative flex grow flex-col">
       <TitleBar
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
+      />
+      <StarFilledIcon
+        className={cn('absolute left-2 top-2 h-5 w-5 cursor-pointer', {
+          'text-amber-400': isStar,
+          'text-white': !isStar,
+          'cursor-not-allowed': !isEditMode,
+        })}
+        onClick={() => {
+          if (isEditMode) {
+            setIsStar(!isStar)
+          }
+        }}
       />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {widgetDetailDB == null &&
@@ -222,6 +277,7 @@ export function DashboardDetail() {
           >
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
+                const widgetInfo = widgetDetailDB?.[widgetId]
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -230,7 +286,6 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-
                 const lastestValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -239,7 +294,6 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
@@ -252,7 +306,8 @@ export function DashboardDetail() {
                     data-grid={
                       detailDashboard?.dashboard_setting?.layout != null &&
                       detailDashboard?.dashboard_setting?.layout?.length > 0 &&
-                      Object.keys(widgetList).length === 0
+                      Object.keys(widgetDetailDB).length ===
+                        Object.keys(widgetList).length
                         ? detailDashboard?.dashboard_setting?.layout?.find(
                             layout => layout.i === widgetId,
                           )
@@ -280,9 +335,12 @@ export function DashboardDetail() {
                       {widgetList?.[widgetId]?.title ?? ''}
                     </p>
                     {widgetList?.[widgetId]?.description === 'LINE' ? (
-                      <LineChart data={realtimeValues} />
+                      <LineChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                      />
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
-                      <BarChart data={realtimeValues} />
+                      <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
                     ) : widgetList?.[widgetId]?.description === 'PIE' ? (
                       <PieChart data={lastestValues} />
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
@@ -305,19 +363,22 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {isEditMode ? (
-                      <DeleteIcon
-                        width={20}
-                        height={20}
-                        className="absolute right-0 top-0 mr-2 mt-2 cursor-pointer text-secondary-700 hover:text-primary-400"
-                        viewBox="0 0 20 20"
-                        onClick={() => {
-                          if (widgetList?.hasOwnProperty(widgetId)) {
-                            const { [widgetId]: deletedKey, ...newObject } =
-                              widgetList
-                            setWidgetList(newObject)
-                          }
-                        }}
-                      />
+                      <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                        <UpdateWidget widgetInfo={widgetInfo} />
+                        <DeleteIcon
+                          width={20}
+                          height={20}
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          viewBox="0 0 20 20"
+                          onClick={() => {
+                            if (widgetList?.hasOwnProperty(widgetId)) {
+                              const { [widgetId]: deletedKey, ...newObject } =
+                                widgetList
+                              setWidgetList(newObject)
+                            }
+                          }}
+                        />
+                      </div>
                     ) : null}
                   </div>
                 )
@@ -330,9 +391,9 @@ export function DashboardDetail() {
         )}
 
         {isEditMode ? (
-          <div className="absolute bottom-0 right-0 flex p-3">
+          <div className="sticky bottom-0 ml-auto flex">
             <Button
-              className="ml-2 rounded border-none p-3"
+              className="ml-2 rounded border-none"
               variant="secondary"
               size="square"
               onClick={() => {
@@ -342,6 +403,7 @@ export function DashboardDetail() {
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
                 )
                 setIsEditMode(false)
+                setIsStar(detailDashboard?.dashboard_setting?.starred || false)
               }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
@@ -350,7 +412,7 @@ export function DashboardDetail() {
               {t('btn:back')}
             </Button>
             <Button
-              className="ml-2 rounded border-none p-3"
+              className="ml-2 rounded border-none"
               form="update-dashboard"
               type="submit"
               size="square"
@@ -369,7 +431,7 @@ export function DashboardDetail() {
                       },
                       dashboard_setting: {
                         layout: layoutDashboard,
-                        starred: false,
+                        starred: isStar,
                         last_viewed: new Date(),
                       },
                     },
@@ -384,7 +446,7 @@ export function DashboardDetail() {
               {t('btn:confirm')}
             </Button>
             <Button
-              className="ml-2 rounded p-3"
+              className="ml-2 rounded"
               size="square"
               variant="trans"
               onClick={() => open()}
@@ -622,7 +684,7 @@ export function DashboardDetail() {
             )}
           </div>
         ) : (
-          <div className="absolute bottom-0 right-0 p-3">
+          <div className="sticky bottom-0 ml-auto ">
             <Button
               className="rounded"
               form="update-dashboard"

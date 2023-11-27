@@ -91,7 +91,12 @@ export function BillingTable({
     setPlan('')
   }, [status, plan])
 
-  const handleSearch = (e: React.MouseEvent<HTMLInputElement>,field: string, value: any, id: string) => {
+  const handleSearch = (
+    e: React.MouseEvent<HTMLInputElement>,
+    field: string,
+    value: any,
+    id: string,
+  ) => {
     e.stopPropagation()
     setPlan(id)
     setStatus(id)
@@ -129,7 +134,7 @@ export function BillingTable({
           <>
             <span>{t('billing:manage_bill.table.plan_name')}</span>
             <Popover>
-              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
+              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -137,25 +142,24 @@ export function BillingTable({
                   startIcon={
                     <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
-                  
                 />
               </PopoverTrigger>
               <PopoverContent className="w-40" align="start">
                 <div
-                  className={cn(
-                    'cursor-pointer p-2 hover:bg-red-300',
-                  )}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e,'plan_id', '', '')}
+                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                    handleSearch(e, 'plan_id', '', '')
+                  }
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {planArr?.map(item => {
                   return (
                     <div
                       key={item.id}
                       className={cn('cursor-pointer p-2 hover:bg-red-300')}
                       onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(e,'plan_id', item.plan_id, item.id)
+                        handleSearch(e, 'plan_id', item.plan_id, item.id)
                       }
                     >
                       {item.plan_name}
@@ -207,7 +211,7 @@ export function BillingTable({
           <>
             <span>{t('billing:manage_bill.table.status')}</span>
             <Popover>
-              <PopoverTrigger onClick={(e) => e.stopPropagation()} asChild>
+              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
                 <Button
                   className="border-none shadow-none"
                   variant="trans"
@@ -220,11 +224,13 @@ export function BillingTable({
               <PopoverContent className="w-40" align="start">
                 <div
                   className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) => handleSearch(e, 'status', '', '')}
+                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
+                    handleSearch(e, 'status', '', '')
+                  }
                 >
                   All
                 </div>
-                {data?.map(item => {
+                {statusArr?.map(item => {
                   const valueStatus = () => {
                     let result = ''
                     if (item.status) {
@@ -250,9 +256,7 @@ export function BillingTable({
                   return (
                     <div
                       key={item.id}
-                      className={cn(
-                        'cursor-pointer p-2 hover:bg-red-300',
-                      )}
+                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
                       onClick={(e: React.MouseEvent<HTMLInputElement>) =>
                         handleSearch(e, 'status', item.status, item.id)
                       }
@@ -309,7 +313,12 @@ export function BillingTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-2 block"
+      data={data}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_bill')}

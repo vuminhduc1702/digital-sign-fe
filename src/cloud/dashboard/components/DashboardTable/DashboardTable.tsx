@@ -6,7 +6,7 @@ import { Menu } from '@headlessui/react'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { getVNDateFormat } from '~/utils/misc'
 import { BaseTable } from '~/components/Table'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -45,7 +45,7 @@ function DashboardTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -63,15 +63,13 @@ function DashboardTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:dashboard.table.delete_dashboard_full')}
-              body={
-                t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                  '{{DBNAME}}',
-                  title,
-                ) ?? 'Confirm delete?'
-              }
+              body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
+                '{{DBNAME}}',
+                title,
+              )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -189,7 +187,12 @@ export function DashboardTable({
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={dataSorted} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={dataSorted}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_dashboard')}

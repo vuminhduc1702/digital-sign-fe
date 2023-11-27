@@ -26,10 +26,12 @@ function RoleTableContextMenu({
   id,
   name,
   role,
+  project_id,
 }: {
   id: string
   name: string
   role: Role
+  project_id: string
 }) {
   const { t } = useTranslation()
   const [selectedUpdateRole, setSelectedUpdateRole] = useState<Role>()
@@ -52,7 +54,7 @@ function RoleTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -81,15 +83,13 @@ function RoleTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('cloud:role_manage.sidebar.delete_role')}
-              body={
-                t('cloud:role_manage.sidebar.delete_role_confirm').replace(
-                  '{{ROLENAME}}',
-                  name,
-                ) ?? 'Confirm delete?'
-              }
+              body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
+                '{{ROLENAME}}',
+                name,
+              )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -121,6 +121,7 @@ function RoleTableContextMenu({
       </Dropdown>
       {selectedUpdateRole != null ? (
         <UpdateRole
+          project_id={project_id}
           close={close}
           isOpen={isOpen}
           roleId={selectedUpdateRole.id}
@@ -135,6 +136,7 @@ function RoleTableContextMenu({
 
 type RoleTableProps = {
   data: Role[]
+  project_id: string
 } & BaseTablePagination
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
@@ -193,6 +195,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
             id,
             name,
             role,
+            project_id: props.project_id,
           })
         },
         header: () => null,
@@ -203,7 +206,12 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
   )
 
   return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={data}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_role')}

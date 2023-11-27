@@ -27,15 +27,15 @@ export const useUpdateOrgForGroup = ({
   const { addNotification } = useNotificationStore()
 
   return useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['groups'],
-      })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.group_manage.add_group.success_update_org'),
-      })
-    },
+    // onSuccess: async () => {
+    //   await queryClient.invalidateQueries({
+    //     queryKey: ['groups'],
+    //   })
+    //   addNotification({
+    //     type: 'success',
+    //     title: t('cloud:org_manage.group_manage.add_group.success_update_org'),
+    //   })
+    // },
     ...config,
     mutationFn: updateOrgForGroup,
   })

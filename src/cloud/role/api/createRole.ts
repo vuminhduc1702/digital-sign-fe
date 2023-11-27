@@ -5,7 +5,13 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type ResourcesType, type Role, type ActionsType, type SelectType } from '../types'
+import {
+  type ResourcesType,
+  type Role,
+  type ActionsType,
+  type SelectType,
+} from '../types'
+import { type RoleTypes } from '~/lib/authorization'
 
 export type PoliciesReq = {
   policy_name: string
@@ -23,11 +29,15 @@ export type CreateRoleDTO = {
     project_id: string
     policies: PoliciesReq[]
     role_type: string
+    applicable_to: RoleTypes
   }
 }
 
 export const createRole = ({ data }: CreateRoleDTO): Promise<Role> => {
-  return axios.post(`/api/roles${data.role_type === 'Group' ? '/group' : ''}`, data)
+  return axios.post(
+    `/api/roles${data.role_type === 'Group' ? '/group' : ''}`,
+    data,
+  )
 }
 
 type UseCreateRoleOptions = {

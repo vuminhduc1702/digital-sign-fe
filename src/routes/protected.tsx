@@ -21,6 +21,7 @@ import { ApplicationRoutes } from '~/applicationPages'
 import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
+import DevRole from '~/cloud/devRole/DevRole'
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
@@ -29,6 +30,10 @@ const { DeviceTemplateManage } = lazyImport(
 const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
   'BillingPackageManage',
+)
+const { OverViewManage } = lazyImport(
+  () => import('~/cloud/overView'),
+  'OverViewManage',
 )
 const { FlowEngine } = lazyImport(
   () => import('~/cloud/flowEngine'),
@@ -99,6 +104,15 @@ export const protectedRoutes = [
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
       },
+      {
+        path: PATHS.OVER_VIEW,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <OverViewManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
+      },
     ],
   },
   {
@@ -126,6 +140,14 @@ export const protectedRoutes = [
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <MainTenant />
+          </ErrorBoundary>
+        ),
+      },
+      {
+        path: PATHS.DEV_ROLE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DevRole />
           </ErrorBoundary>
         ),
       },

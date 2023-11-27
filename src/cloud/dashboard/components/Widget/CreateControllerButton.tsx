@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { v4 as uuidv4 } from 'uuid'
@@ -7,11 +7,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useSpinDelay } from 'spin-delay'
 
 import { Button } from '~/components/Button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOptionString,
-} from '~/components/Form'
+import { InputField, SelectDropdown } from '~/components/Form'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import storage from '~/utils/storage'
 import TitleBar from '~/components/Head/TitleBar'
@@ -22,7 +18,6 @@ import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/ge
 import i18n from '~/i18n'
 
 import { widgetCategorySchema } from '../../types'
-import { selectOptionSchema } from '~/utils/schemaValidation'
 import { type Widget, type WidgetCategoryType } from './CreateWidget'
 import { type OutputType } from '~/cloud/customProtocol'
 
@@ -48,7 +43,7 @@ export const controllerBtnCreateSchema = z.object({
   handle_service: z.string(),
   input: z.array(
     z.object({
-      name: selectOptionSchema().refine(val => val.value !== '', {
+      name: z.string().min(1, {
         message: i18n.t('cloud:custom_protocol.service.choose_input'),
       }),
       value: z.string().min(1, {
@@ -81,15 +76,13 @@ export function CreateControllerButton({
 
   const { id: projectId } = storage.getProject()
 
-  const [optionThingId, setOptionThingId] = useState<SelectOptionString>({
-    label: '',
-    value: '',
+  const { register, formState, control, handleSubmit, watch } = useForm<
+    ControllerBtnCreateDTO['data']
+  >({
+    resolver:
+      controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
   })
-  const [optionThingService, setOptionThingService] =
-    useState<SelectOptionString>({
-      label: '',
-      value: '',
-    })
+  // console.log('zod errors', formState.errors)
 
   const { data: thingData, isLoading: thingIsLoading } = useGetEntityThings({
     projectId,
@@ -100,51 +93,33 @@ export function CreateControllerButton({
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const { data: serviceData } = useGetServiceThings({
-    thingId: optionThingId?.value,
+    thingId: watch('thing_id'),
     config: {
-      enabled: !!optionThingId?.value,
+      enabled: !!watch('thing_id'),
       suspense: false,
     },
   })
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
-  })) || [{ value: '', label: '' }]
+  }))
 
   const { data: thingServiceData } = useThingServiceById({
-    thingId: optionThingId?.value,
-    name: optionThingService.value,
+    thingId: watch('thing_id'),
+    name: watch('handle_service'),
     config: {
       suspense: false,
-      enabled: !!optionThingId?.value && !!optionThingService.value,
+      enabled: !!watch('thing_id') && !!watch('handle_service'),
     },
   })
   const inputSelectData = thingServiceData?.data?.input?.map(input => ({
     value: input.name,
     label: input.name,
     type: input.type,
-  })) || [{ value: '', label: '', type: '' }]
-
-  useEffect(() => {
-    setOptionThingId({
-      label: '',
-      value: '',
-    })
-    setOptionThingService({
-      label: '',
-      value: '',
-    })
-  }, [])
-
-  const { register, formState, control, handleSubmit, setValue, watch } =
-    useForm<ControllerBtnCreateDTO['data']>({
-      resolver:
-        controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
-    })
-  console.log('zod errors', formState.errors)
+  }))
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -153,10 +128,7 @@ export function CreateControllerButton({
 
   useEffect(() => {
     append({
-      name: {
-        label: '',
-        value: '',
-      },
+      name: '',
       value: '',
     })
   }, [])
@@ -204,19 +176,19 @@ export function CreateControllerButton({
                         input: values.input.reduce(
                           (acc: { [key: string]: any }, item) => {
                             const itemType = inputSelectData?.find(
-                              input => input.value === item.name.value,
+                              input => input.value === item.name,
                             )?.type as OutputType
                             if (itemType === 'json' || itemType === 'str') {
-                              acc[item.name.value] = item.value
+                              acc[item.name] = item.value
                             }
                             if (itemType === 'i32' || itemType === 'i64') {
-                              acc[item.name.value] = parseInt(item.value)
+                              acc[item.name] = parseInt(item.value)
                             }
                             if (itemType === 'f32' || itemType === 'f64') {
-                              acc[item.name.value] = parseFloat(item.value)
+                              acc[item.name] = parseFloat(item.value)
                             }
                             if (itemType === 'bool') {
-                              acc[item.name.value] = item.value === 'true'
+                              acc[item.name] = item.value === 'true'
                             }
 
                             return acc
@@ -276,11 +248,6 @@ export function CreateControllerButton({
                         }
                         noOptionsMessage={() => t('table:no_thing')}
                         placeholder={t('cloud:custom_protocol.thing.choose')}
-                        onChange={e => {
-                          setOptionThingId(e)
-                          setValue('thing_id', e?.value)
-                        }}
-                        value={optionThingId}
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.thing_id?.message}
@@ -314,11 +281,6 @@ export function CreateControllerButton({
                         }
                         noOptionsMessage={() => t('table:no_service')}
                         placeholder={t('cloud:custom_protocol.service.choose')}
-                        onChange={e => {
-                          setOptionThingService(e)
-                          setValue('handle_service', e?.value)
-                        }}
-                        value={optionThingService}
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.handle_service?.message}
@@ -342,10 +304,7 @@ export function CreateControllerButton({
                       }
                       onClick={() =>
                         append({
-                          name: {
-                            label: '',
-                            value: '',
-                          },
+                          name: '',
                           value: '',
                         })
                       }
@@ -359,7 +318,6 @@ export function CreateControllerButton({
                       <div className="flex w-2/3 gap-x-2">
                         <div className="w-full space-y-1">
                           <SelectDropdown
-                            isClearable={true}
                             label={t('cloud:custom_protocol.service.input')}
                             name={`input.${index}.name`}
                             control={control}
@@ -371,12 +329,14 @@ export function CreateControllerButton({
                                     {
                                       label: t('table:no_input'),
                                       value: '',
+                                      type: '',
                                     },
                                   ]
                                 : [
                                     {
                                       label: t('loading:input'),
                                       value: '',
+                                      type: '',
                                     },
                                   ]
                             }
@@ -388,13 +348,6 @@ export function CreateControllerButton({
                             placeholder={t(
                               'cloud:custom_protocol.service.choose_input',
                             )}
-                            onChange={e => {
-                              setValue(`input.${index}.name`, {
-                                label: e.label,
-                                value: e.value,
-                              })
-                            }}
-                            value={watch(`input.${index}.name`)}
                           />
                           <p className="text-body-sm text-primary-400">
                             {formState?.errors?.input?.[index]?.name?.message}

@@ -11,7 +11,7 @@ type MenuItemProps = {
   className?: string
   icon?: React.ReactElement
   onClick: () => Promise<void> | void
-}
+} & React.ComponentProps<'button'>
 
 type DropdownProps = {
   children: ReactNode

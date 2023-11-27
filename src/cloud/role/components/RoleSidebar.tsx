@@ -24,7 +24,7 @@ export function RoleSidebar() {
   return (
     <>
       <TitleBar title={t('cloud:role_manage.sidebar.title')} />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateRole />

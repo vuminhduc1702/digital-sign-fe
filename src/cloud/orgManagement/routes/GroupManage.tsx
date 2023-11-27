@@ -36,10 +36,8 @@ export function GroupManage() {
 
   return (
     <div ref={ref} className="flex grow flex-col">
-      <TitleBar
-        title={t('cloud:org_manage.group_manage.header') ?? 'Group management'}
-      />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <TitleBar title={t('cloud:org_manage.group_manage.header')} />
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">

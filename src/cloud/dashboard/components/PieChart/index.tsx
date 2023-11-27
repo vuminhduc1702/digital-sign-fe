@@ -20,7 +20,7 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
     PieWidgetDataType[]
   >([])
 
-  const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
+  // const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
       const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
@@ -30,7 +30,7 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
       }))
       setDataTransformedFeedToChart(pieWidgetDataType)
     }
-  }, [newDataValue])
+  }, [data])
 
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,

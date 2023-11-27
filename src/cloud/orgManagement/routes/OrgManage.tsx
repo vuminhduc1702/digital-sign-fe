@@ -36,11 +36,7 @@ export function OrgManage() {
       {orgId ? (
         <div ref={ref} className="flex grow flex-col gap-y-3">
           <div>
-            <TitleBar
-              title={
-                t('cloud:org_manage.org_manage.overview.title') ?? 'Overview'
-              }
-            />
+            <TitleBar title={t('cloud:org_manage.org_manage.overview.title')} />
             <div className="flex gap-6 px-11 py-3 shadow-lg">
               <div className="flex flex-none items-center">
                 <img
@@ -69,12 +65,8 @@ export function OrgManage() {
             </div>
           </div>
           <div className="flex grow flex-col">
-            <TitleBar
-              title={
-                t('cloud:org_manage.org_manage.attr_list') ?? "Attribute's list"
-              }
-            />
-            <div className="flex grow flex-col px-9 py-3 shadow-lg">
+            <TitleBar title={t('cloud:org_manage.org_manage.attr_list')} />
+            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
-  Form,
   InputField,
   SelectDropdown,
   type SelectOption,
@@ -13,13 +14,14 @@ import {
   type UpdateFirmwareDTO,
 } from '../../api/firmwareAPI'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import storage from '~/utils/storage'
 import { entityFirmWareSchema } from './CreateFirmware'
+
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 type UpdateFirmWareProps = {
   firmwareId: string
@@ -53,8 +55,18 @@ export function UpdateFirmWare({
 
   const { data } = useGetTemplates({ projectId })
 
-  const { mutate, isLoading, isSuccess } = useUpdateFirmware()
+  const firmwareData = data?.templates?.map(template => ({
+    label: template?.name,
+    value: template?.id,
+  })) || [{ label: '', value: '' }]
 
+  const { mutate, isLoading, isSuccess } = useUpdateFirmware()
+  const { register, formState, control, handleSubmit, getValues } = useForm<
+    UpdateFirmwareDTO['data']
+  >({
+    resolver: entityFirmWareSchema && zodResolver(entityFirmWareSchema),
+    defaultValues: { name, description, tag, version, template_id },
+  })
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -79,72 +91,60 @@ export function UpdateFirmWare({
               </button>
             </div>
           </div>
-          <Form<UpdateFirmwareDTO['data'], typeof entityFirmWareSchema>
+          <form
             id="update-firm-ware"
-            className="mt-2 flex flex-col justify-between"
-            onSubmit={values => {
+            className="mt-2 flex w-full flex-col justify-between space-y-6"
+            onSubmit={handleSubmit(values => {
               mutate({
                 data: {
                   name: values.name,
                   description: values.description,
                   tag: values.tag,
                   version: values.version,
-                  template_id: templateValue.value,
+                  template_id: values.template_id,
                 },
                 firmwareId,
               })
-            }}
-            schema={entityFirmWareSchema}
-            options={{
-              defaultValues: { name, description, tag, version, template_id },
-            }}
+            })}
           >
-            {({ register, formState, control }) => {
-              return (
-                <>
-                  <div>
-                    <SelectDropdown
-                      isClearable={false}
-                      label={t('cloud:firmware.add_firmware.template')}
-                      name="template_id"
-                      control={control}
-                      value={templateValue}
-                      onChange={e => setTemplateValue(e)}
-                      options={
-                        data?.templates?.map(template => ({
-                          label: template?.name,
-                          value: template?.id,
-                        })) || [{ label: '', value: '' }]
-                      }
-                    />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.template_id?.message}
-                    </p>
-                  </div>
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.name')}
-                    error={formState.errors['name']}
-                    registration={register('name')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.version')}
-                    error={formState.errors['version']}
-                    registration={register('version')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.tag')}
-                    error={formState.errors['tag']}
-                    registration={register('tag')}
-                  />
-                  <InputField
-                    label={t('cloud:firmware.add_firmware.description')}
-                    error={formState.errors['description']}
-                    registration={register('description')}
-                  />
-                </>
-              )
-            }}
-          </Form>
+            <>
+              <div>
+                <SelectDropdown
+                  isClearable={false}
+                  label={t('cloud:firmware.add_firmware.template')}
+                  name="template_id"
+                  control={control}
+                  options={firmwareData}
+                  defaultValue={firmwareData.find(
+                    firm => firm.value === getValues('template_id'),
+                  )}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.template_id?.message}
+                </p>
+              </div>
+              <InputField
+                label={t('cloud:firmware.add_firmware.name')}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.version')}
+                error={formState.errors['version']}
+                registration={register('version')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.tag')}
+                error={formState.errors['tag']}
+                registration={register('tag')}
+              />
+              <InputField
+                label={t('cloud:firmware.add_firmware.description')}
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+            </>
+          </form>
         </div>
         <div className="mt-4 flex justify-center space-x-2">
           <Button

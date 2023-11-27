@@ -39,20 +39,11 @@ export const useCreateEntityThing = ({
 
   const { addNotification } = useNotificationStore()
 
-  const { id: projectId } = storage.getProject()
-  const { refetch: refetchThingData } = useGetEntityThings({
-    projectId,
-    config: { enabled: false },
-  })
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['entity-things'],
       })
-
-      refetchThingData()
-
       addNotification({
         type: 'success',
         title: t('cloud:custom_protocol.thing.success_create'),

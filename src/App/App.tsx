@@ -56,7 +56,7 @@ function App() {
 
   // Global error messages
   const customErrorMap: z.ZodErrorMap = (error, ctx) => {
-    // console.log('error', error)
+    // console.log('customErrorMap', error)
     switch (error.code) {
       case z.ZodIssueCode.invalid_type:
         if (error.expected === 'string' || error.expected === 'object') {
@@ -64,8 +64,14 @@ function App() {
             message: `${t('error:default_zod_err.select')} ${error.path[0]}`,
           }
         }
+        if (error.expected === 'number') {
+          return {
+            message: t('error:default_zod_err.number'),
+          }
+        }
         break
       case z.ZodIssueCode.invalid_union_discriminator:
+      case z.ZodIssueCode.invalid_enum_value:
         return {
           message: `${t(
             'error:default_zod_err.select_union',
@@ -79,10 +85,9 @@ function App() {
         break
     }
 
-    // fall back to default message!
     return { message: ctx.defaultError }
   }
-  z.setErrorMap(customErrorMap)
+  // z.setErrorMap(customErrorMap)
 
   return (
     <Suspense

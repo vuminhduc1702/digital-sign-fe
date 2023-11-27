@@ -80,7 +80,8 @@
         "choose_file": "Vui lòng chọn file tải lên",
         "success_add": "Tạo mới dự án thành công",
         "success_update": "Sửa dự án thành công",
-        "success_delete": "Xóa dự án thành công"
+        "success_delete": "Xóa dự án thành công",
+        "success_restore": "Cài đặt mẫu thiết bị thành công"
       }
     },
     "org_manage": {
@@ -209,11 +210,18 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "select_all": "Chọn tất cả",
+          "group_id": "ID Nhóm",
+          "org_id": "ID Tổ chức",
+          "template_id": "ID Mẫu thiết bị",
+          "token": "Token",
           "name": "Tên",
           "group": "Nhóm",
           "device_type": "Mẫu thiết bị",
           "org_name": "Tổ chức",
           "key": "Key",
+          "status": "Trạng thái",
+          "attributes": "Thuộc tính",
           "created_at": "Ngày tạo",
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
@@ -257,6 +265,8 @@
           "parent": "Trực thuộc tổ chức",
           "info": " Thông tin cơ bản",
           "type_event": "Kiểu sự kiện",
+          "schedule_type": "Lập lịch schedule",
+          "event_type": "Lập lịch event",
           "status": "Trạng thái",
           "retry": " Số lần lặp lại",
           "test_condition_time": "Thời gian kiểm tra điều kiện",
@@ -301,6 +311,15 @@
             },
             "address": "Địa chỉ",
             "message": "Nội dung gửi"
+          },
+          "interval": {
+            "mon": "Thứ hai",
+            "tue": "Thứ ba",
+            "wed": "Thứ tư",
+            "thu": "Thứ năm",
+            "fri": "Thứ sáu",
+            "sat": "Thứ bảy",
+            "sun": "Chủ nhật"
           },
           "success_create": "Tạo sự kiện thành công",
           "success_update": "Sửa sự kiện thành công",
@@ -478,7 +497,8 @@
         "schema": {
           "name": "Tên trường",
           "start_byte": "Byte bắt đầu",
-          "length_byte": "Độ dài"
+          "length_byte": "Độ dài",
+          "length_byte_validate": "Nhập độ dài lớn hơn 1"
         },
         "topic": "Topic",
         "ping_MQTT": {
@@ -548,7 +568,7 @@
             "input_list": "Danh sách biến đầu vào",
             "input": "Nhập tên biến",
             "value": "Giá trị",
-            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công"
+            "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
           }
         }
       }
@@ -591,6 +611,7 @@
   "billing": {
     "package_manage": {
       "list_package": "Danh sách gói cước",
+      "no_package": "Không có gói cước",
       "title": "Thông tin gói cước",
       "create": "Tạo gói cước",
       "delete_plan": "Xoá gói cước",
@@ -733,6 +754,17 @@
       }
     }
   },
+  "overView": {
+    "dashboard": "Dashboard",
+    "add_dashboard": "Add Dashboard",
+    "total_devices": "Tổng số thiết bị",
+    "total_user": "Tổng số người dùng",
+    "total_user_online": "Tổng số user online",
+    "request_time": "Thời gian request",
+    "success_rate": "Tỉ lệ thành công",
+    "quick_link": "Quick Link",
+    "setup_confirm": "Bạn có chắc chắn muốn cài đặt Mẫu thiết bị {{TITLE}}?"
+  },
   "table": {
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
@@ -747,6 +779,7 @@
     "copy_token": "Sao chép TOKEN",
     "delete": "Xoá",
     "no_attr": "Không có thuộc tính. Vui lòng tạo.",
+    "no_org": "Không có tổ chức. Vui lòng tạo.",
     "no_device": "Không có thiết bị. Vui lòng tạo.",
     "no_group": "Không có nhóm. Vui lòng tạo.",
     "no_log_attr": "Không có bản tin thuộc tính",
@@ -758,6 +791,8 @@
     "no_thing": "Không có Thing. Vui lòng tạo.",
     "no_firmware": "Không có Firmware. Vui lòng tạo.",
     "no_service": "Không có nghiệp vụ. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_base_template": "Không có base template. Vui lòng tạo hoặc chọn Thing trước.",
+    "no_base_shapes": "Không có base shape. Vui lòng tạo hoặc chọn Thing trước.",
     "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
@@ -779,7 +814,8 @@
     "delete": "Xóa",
     "update": "Sửa",
     "save": "Lưu",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "setup": "Cài đặt"
   },
   "error": {
     "no_data": "Không có dữ liệu",
@@ -798,22 +834,29 @@
     "no_data_res": "Dữ liệu trả về không đúng.",
     "default_zod_err": {
       "select": "Vui lòng chọn",
-      "select_union": "Vui lòng chọn 1 trong các option sau:"
+      "select_union": "Vui lòng chọn 1 trong các option sau:",
+      "number": "Vui lòng nhập số"
     }
   },
   "loading": {
+    "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
+    "event": "Đang tải danh sách sự kiện...",
+    "user": "Đang tải danh sách người dùng...",
+    "template": "Đang tải danh sách mẫu thiết bị...",
     "entity_thing": "Đang tải danh sách Entity thing...",
     "service_thing": "Vui lòng chọn Entity thing trước",
     "input": "Vui lòng chọn nghiệp vụ trước"
   },
   "placeholder": {
     "select": "Vui lòng chọn",
+    "select_value": "Vui lòng chọn {{VALUE}}",
     "search": "Nhập để tìm kiếm",
-    "input_text": "Vui lòng nhập"
+    "input_text": "Vui lòng nhập",
+    "input_text_value": "Vui lòng nhập {{VALUE}}"
   },
   "search": {
     "title": "Tìm kiếm",
@@ -849,7 +892,10 @@
       "data_aggregation": "Tổng hợp dữ liệu",
       "dataType": "Loại biểu đồ",
       "sma_window": "Số data point",
+      "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_interval": "Vui lòng chọn khoảng thời gian",
+      "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
+      "choose_endTime": "Vui lòng nhập thời gian kết thúc",
       "choose_widgetType": "Vui lòng chọn loại biểu đồ",
       "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu"
     }
@@ -970,7 +1016,10 @@
     "download": "Tải xuống",
     "products": "CÁC SẢN PHẨM",
     "information": "Gồm thông tin các bộ sản phẩm đi kèm code mẫu, tài liệu hướng dẫn tích hợp.",
-    "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG"
+    "method_communication": "CHỌN PHƯƠNG THỨC TRUYỀN THÔNG",
+    "udpate_device": "{{value}} thiết bị thành công",
+    "block": "Khoá thiết bị",
+    "active": "Kích hoạt thiết bị"
   },
   "application": {
     "android": "ANDROID",
