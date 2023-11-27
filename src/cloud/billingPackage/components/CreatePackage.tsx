@@ -97,7 +97,8 @@ export function CreatePackage() {
   const [type, setType] = useState('official')
   const [paymentType, setPaymentType] = useState('PREPAY')
   const [periodType, setPeriodType] = useState('PERIODIC')
-  const [expectedPayment, setExpectedPayment] = useState()
+  const [expectedPayment, setExpectedPayment] = useState('')
+  const [expectedNumber, setExpectedNumber] = useState('')
 
   const { mutate, isLoading, isSuccess } = useCreatePlan()
   const resetData = () => {
@@ -106,6 +107,7 @@ export function CreatePackage() {
     setType('official')
     setPeriodType('PERIODIC')
     setExpectedPayment('')
+    setExpectedNumber('')
   }
 
   const parseNumber = (value: any) => {
@@ -442,7 +444,12 @@ export function CreatePackage() {
                   <InputField
                     label={t('billing:package_manage.popup.fix_cost')}
                     error={formState.errors['fix_cost']}
-                    registration={register('fix_cost')}
+                    registration={register('fix_cost', {
+                      onChange: e => {
+                        setExpectedNumber('')
+                        setExpectedPayment('')
+                      }
+                    })}
                     classlabel="w-2/12"
                     classchild="w-10/12"
                     type="number"
@@ -559,7 +566,12 @@ export function CreatePackage() {
                                     )
                                 }
                                 registration={register(
-                                  `plan_lv.${index}.level`,
+                                  `plan_lv.${index}.level`, {
+                                  onChange: e => {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  }
+                                }
                                 )}
                                 onBlur={e => {
                                   if (
@@ -591,7 +603,12 @@ export function CreatePackage() {
                                       )
                                   }
                                   registration={register(
-                                    `plan_lv.${index}.price`,
+                                    `plan_lv.${index}.price`, {
+                                    onChange: e => {
+                                      setExpectedNumber('')
+                                      setExpectedPayment('')
+                                    }
+                                  }
                                   )}
                                   classlabel="w-2/12"
                                   classchild="w-10/12"
@@ -612,7 +629,12 @@ export function CreatePackage() {
                                     'billing:package_manage.popup.free',
                                   )}
                                   registration={register(
-                                    `plan_lv.${index}.free`,
+                                    `plan_lv.${index}.free`, {
+                                    onChange: e => {
+                                      setExpectedNumber('')
+                                      setExpectedPayment('')
+                                    }
+                                  }
                                   )}
                                   classlabel="w-2/12"
                                   classchild="w-10/12"
@@ -646,15 +668,19 @@ export function CreatePackage() {
                         label={t('billing:package_manage.popup.price')}
                         error={formState.errors['price']}
                         registration={register('price', {
-                          onChange: (e) => estimates === 'fix' &&
-                            handleOnChange(
-                              '',
-                              getValues('tax'),
-                              e.target.value,
-                              getValues('fix_cost'),
-                              getValues('quantity_free'),
-                              getValues('plan_lv'),
-                            )
+                          onChange: (e) => {
+                            (estimates === 'fix' &&
+                              handleOnChange(
+                                '',
+                                getValues('tax'),
+                                e.target.value,
+                                getValues('fix_cost'),
+                                getValues('quantity_free'),
+                                getValues('plan_lv'),
+                              ))
+                            setExpectedNumber('')
+                            setExpectedPayment('')
+                          }
                         })}
                         classnamefieldwrapper="flex items-center gap-x-3"
                         classlabel="w-2/12"
@@ -667,7 +693,12 @@ export function CreatePackage() {
                             'billing:package_manage.popup.quantity_free',
                           )}
                           error={formState.errors['quantity_free']}
-                          registration={register('quantity_free')}
+                          registration={register('quantity_free', {
+                            onChange: e => {
+                              setExpectedNumber('')
+                              setExpectedPayment('')
+                            }
+                          })}
                           classnamefieldwrapper="flex items-center gap-x-3"
                           classlabel="w-2/12"
                           classchild="w-10/12"
@@ -691,7 +722,8 @@ export function CreatePackage() {
                   {estimates !== 'fix' && (
                     <InputField
                       label={t('billing:package_manage.popup.expected_number')}
-                      onChange={e =>
+                      onChange={e => {
+                        setExpectedNumber(e.target.value)
                         handleOnChange(
                           e.target.value,
                           getValues('tax'),
@@ -700,7 +732,8 @@ export function CreatePackage() {
                           getValues('quantity_free'),
                           getValues('plan_lv'),
                         )
-                      }
+                      }}
+                      value={expectedNumber}
                       classlabel="w-2/12"
                       classchild="w-10/12"
                       classnamefieldwrapper="flex items-center gap-x-3"
