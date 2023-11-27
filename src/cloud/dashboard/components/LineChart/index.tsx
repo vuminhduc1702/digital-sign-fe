@@ -135,6 +135,22 @@ export function LineChart({
   })
 
   // console.log('transform line', dataTransformedFeedToChart)
+  // console.log('data', newValuesRef.current)
+  // console.log('info', widgetInfo)
+  // console.log('config', widgetInfoToChart)
+
+  const renderLegend = (props: any) => {
+    const { payload } = props;
+    return (
+      <div className='text-center pt-3'>
+        {
+          payload.reverse().map((entry: any, index: number) => (
+            <span key={`item-${index}`} className='pr-4'><div style={{marginRight: '3px',display:'inline-block',width:'12px',height:'12px',backgroundColor:entry.color}}></div>{entry.value}</span>
+          ))
+        }
+      </div>
+    );
+  }
 
   return (
     <>
@@ -145,7 +161,7 @@ export function LineChart({
             <XAxis dataKey="ts" allowDuplicatedCategory={false} />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend content={renderLegend}/>
             <Brush dataKey="ts" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
               return (
@@ -158,20 +174,16 @@ export function LineChart({
                   stroke={
                     key.includes('SMA') || key.includes('FFT')
                       ? '#2c2c2c'
-                      : index === 0
-                      ? '#e8c1a0'
-                      : index === 1
-                      ? '#f47560'
-                      : '#f1e15b'
+                      : widgetInfoToChart?.attribute_config[index]?.color != '' ?
+                      widgetInfoToChart?.attribute_config[index]?.color
+                      : '#e8c1a0'
                   }
                   fill={
                     key.includes('SMA') || key.includes('FFT')
                       ? '#2c2c2c'
-                      : index === 0
-                      ? '#e8c1a0'
-                      : index === 1
-                      ? '#f47560'
-                      : '#f1e15b'
+                      : widgetInfoToChart?.attribute_config[index]?.color != '' ?
+                      widgetInfoToChart?.attribute_config[index]?.color
+                      : '#e8c1a0'
                   }
                 />
               )
