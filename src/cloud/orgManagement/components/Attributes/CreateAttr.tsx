@@ -48,17 +48,19 @@ export const valueTypeList: ValueType[] = [
   { type: 'JSON', name: 'JSON' },
 ]
 
-export const loggedList = [
-  { type: false, name: 'Không' },
-  { type: true, name: 'Có' },
-]
+export const numberInput = ['DBL', 'LONG']
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useCreateAttr()
 
-  const { register, formState, control, handleSubmit, reset } = useForm<
+  const valueTypeOptions = valueTypeList.map(valueType => ({
+    label: valueType.name,
+    value: valueType.type,
+  }))
+
+  const { register, formState, control, watch, handleSubmit, reset } = useForm<
     CreateAttrDTO['data']
   >({
     resolver: attrListCreateSchema && zodResolver(attrListCreateSchema),
@@ -156,16 +158,35 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   registration={register(
                     `attributes.${index}.value_t` as const,
                   )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
+                  options={valueTypeOptions}
                 />
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
-                />
+                {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
+                  <SelectField
+                    className="h-[36px] py-1"
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                    options={[
+                      { label: 'False', value: 'false' },
+                      { label: 'True', value: 'true' },
+                    ]}
+                  />
+                ) : (
+                  <InputField
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                    type={
+                      numberInput.includes(watch(`attributes.${index}.value_t`))
+                        ? 'number'
+                        : 'text'
+                    }
+                  />
+                )}
                 <FieldWrapper
                   className="w-fit space-y-2"
                   label={t('cloud:org_manage.org_manage.add_attr.logged')}
