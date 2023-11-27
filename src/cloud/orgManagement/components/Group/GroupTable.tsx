@@ -25,6 +25,7 @@ import btnDetailIcon from '~/assets/icons/btn-detail.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import AssignUser from './AssignUser'
 
 export type GroupType = {
   id: string
@@ -49,6 +50,12 @@ function GroupTableContextMenu({
   const navigate = useNavigate()
 
   const { close, open, isOpen } = useDisclosure()
+
+  const {
+    close: closeAssignUser,
+    open: openAssignUser,
+    isOpen: isOpenAssignUser,
+  } = useDisclosure()
 
   const { id: projectId } = storage.getProject()
   const { orgId } = useParams()
@@ -85,6 +92,20 @@ function GroupTableContextMenu({
             >
               {t('table:view_detail')}
             </MenuItem>
+            {props.entity_type === 'DEVICE' && (
+              <MenuItem
+                icon={
+                  <img
+                    src={btnEditIcon}
+                    alt="Assign user"
+                    className="h-5 w-5"
+                  />
+                }
+                onClick={openAssignUser}
+              >
+                {t('cloud:org_manage.user_manage.add_user.assign')}
+              </MenuItem>
+            )}
             <MenuItem
               icon={
                 <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
@@ -153,6 +174,14 @@ function GroupTableContextMenu({
           {...props}
         />
       ) : null}
+
+      {isOpenAssignUser && (
+        <AssignUser
+          closeAssignUser={closeAssignUser}
+          isOpenAssignUser={isOpenAssignUser}
+          groupId={id}
+        />
+      )}
     </>
   )
 }
