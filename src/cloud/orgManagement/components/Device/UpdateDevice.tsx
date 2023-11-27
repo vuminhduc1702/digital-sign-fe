@@ -52,6 +52,7 @@ export function UpdateDevice({
     handleSubmit,
     watch,
     resetField,
+    getValues,
   } = useForm<UpdateDeviceDTO['data']>({
     resolver: deviceSchema && zodResolver(deviceSchema),
     defaultValues: {
@@ -173,16 +174,12 @@ export function UpdateDevice({
               isOptionDisabled={option => option.label === t('loading:org')}
               noOptionsMessage={() => t('table:no_in_org')}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions?.find(
-                org => org.value === org_id,
-              )}
-              customOnChange={() => {
-                setValue("group_id", '')
-                resetField("group_id", { defaultValue: ''})
-              }}
-              handleChangeSelect={() => {
-                /// to-do
-              }}
+              defaultValue={orgSelectOptions?.find(org => org.value === org_id)}
+              handleChangeSelect={() =>
+                resetField('group_id', {
+                  defaultValue: '',
+                })
+              }
             />
           </div>
           <div className="space-y-1">
@@ -194,7 +191,7 @@ export function UpdateDevice({
                 groupData !== null
                   ? groupSelectOptions
                   : groupData == null
-                  ? [{ label: t('loading:group'), value: '' }]
+                  ? [{ label: t('table:no_group'), value: '' }]
                   : [{ label: t('loading:group'), value: '' }]
               }
               defaultValue={groupSelectOptions?.find(
