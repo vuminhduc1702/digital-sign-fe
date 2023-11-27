@@ -24,6 +24,7 @@ import { attrListSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { useState } from 'react'
 
 type ValueType = {
   type: Attribute['value_type']
@@ -53,12 +54,21 @@ export const loggedList = [
   { type: true, name: 'Có' },
 ]
 
+export const numberInput = ['DBL', 'LONG']
+
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useCreateAttr()
 
-  const { register, formState, control, handleSubmit, reset } = useForm<
+  const valueTypeOptions = valueTypeList.map(valueType => ({
+    label: valueType.name,
+    value: valueType.type,
+  }))
+
+  const [, setInputTypeValue] = useState('')
+
+  const { register, formState, control, setValue, handleSubmit, reset } = useForm<
     CreateAttrDTO['data']
   >({
     resolver: attrListCreateSchema && zodResolver(attrListCreateSchema),
@@ -156,16 +166,54 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   registration={register(
                     `attributes.${index}.value_t` as const,
                   )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
+                  options={valueTypeOptions}
+                  onChange={e => {
+                    setInputTypeValue(e.target.value)
+                    field.value_t = e.target.value
+                    if (field.value_t === 'BOOL') {
+                      setValue(`attributes.${index}.value`, true)
+                    } else {
+                      setValue(`attributes.${index}.value`, '')
+                    }
+                  }}
                 />
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
-                />
+                {
+                  field.value_t === 'BOOL' ? (
+                    <FieldWrapper
+                      className="w-fit space-y-2"
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.attributes?.[index]?.value}
+                    >
+                      <Controller
+                        control={control}
+                        name={`attributes.${index}.value`}
+                        render={({ field: { onChange, value, ...field } }) => {
+                          return (
+                            <Checkbox
+                              {...field}
+                              checked={value as boolean}
+                              onCheckedChange={onChange}
+                            />
+                          )
+                        }}
+                      />
+                      <span className="pl-3">True</span>
+                    </FieldWrapper>
+                  ) : (
+                    <InputField
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.attributes?.[index]?.value}
+                      registration={register(`attributes.${index}.value` as const)}
+                      type={
+                        numberInput.includes(
+                          field.value_t as string,
+                        )
+                          ? 'number'
+                          : 'text'
+                      }
+                    />
+                  )
+                }
                 <FieldWrapper
                   className="w-fit space-y-2"
                   label={t('cloud:org_manage.org_manage.add_attr.logged')}

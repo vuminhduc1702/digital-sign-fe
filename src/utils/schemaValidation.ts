@@ -42,7 +42,7 @@ export const attrSchema = z.object({
     .string()
     .min(1, { message: 'Tên thuộc tính quá ngắn' })
     .max(64, { message: 'Tên thuộc tính quá dài' }),
-  value: z.string().optional(),
+  value: z.string().optional().or(z.boolean()),
   logged: z.boolean().default(true),
   value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
 })
