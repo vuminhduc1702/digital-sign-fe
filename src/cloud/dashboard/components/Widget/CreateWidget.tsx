@@ -54,7 +54,6 @@ export const attrWidgetSchema = z.array(
 export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const, {
   errorMap: () => ({ message: i18n.t('ws:filter.choose_widgetType') }),
 })
-type WidgetDataType = z.infer<typeof widgetDataTypeSchema>
 
 export const widgetTypeSchema = z
   .enum(['TIMESERIES', 'LASTEST'] as const)

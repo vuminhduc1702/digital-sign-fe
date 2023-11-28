@@ -1,4 +1,8 @@
-import Select, { type Props, type GroupBase, ClearIndicatorProps } from 'react-select'
+import Select, {
+  type Props,
+  type GroupBase,
+  ClearIndicatorProps,
+} from 'react-select'
 import { useTranslation } from 'react-i18next'
 import { Control, Controller, type FieldValues } from 'react-hook-form'
 
@@ -21,7 +25,7 @@ type SelectProps<
   onChange?: (e: any) => void
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
-  handleChangeSelect?:() => void
+  handleChangeSelect?: () => void
   icon?: React.ReactElement
   isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
@@ -68,7 +72,6 @@ export function SelectDropdown<
             return (
               <Select
                 {...field}
-                {...props}
                 isMulti={isMulti}
                 className="w-full"
                 isSearchable
@@ -99,6 +102,7 @@ export function SelectDropdown<
                 //     borderColor: state.isFocused ? 'grey' : 'red',
                 //   }),
                 // }}
+                {...props}
               />
             )
           }}
