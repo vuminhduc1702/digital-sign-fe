@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
+import { useDebouncedCallback } from 'use-debounce'
 
 import {
   useDeleteAttr,
@@ -12,7 +13,9 @@ import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
+import { Switch } from '~/components/Switch'
 import { getVNDateFormat } from '~/utils/misc'
+import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
@@ -41,7 +44,6 @@ function AttrTableContextMenu({
   logged: boolean
 }) {
   const { t } = useTranslation()
-
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
@@ -142,11 +144,23 @@ export function AttrTable({
   entityType: EntityType
 }) {
   const { t } = useTranslation()
-
+  const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
 
   const dataSorted =
     data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
+
+  const handleSwitchChange = (checked: boolean, attributeKey: string) => {
+    mutateUpdateLogged({
+      data: {
+        logged: checked,
+      },
+      device_id: entityId,
+      attribute_key: attributeKey,
+      entityType: entityType,
+    })
+  }
+  const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 500)
 
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
@@ -200,7 +214,19 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.logged')}</span>
         ),
-        cell: info => STATUS[info.getValue()],
+        cell: info => {
+          const { attribute_key } = info.row.original
+
+          return (
+            <Switch
+              key={attribute_key + STATUS[info.getValue()]}
+              defaultChecked={info.getValue() === 'true' ? true : false}
+              onCheckedChange={checked => {
+                debouncedSwitchChange(checked, attribute_key)
+              }}
+            />
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('last_update_ts', {

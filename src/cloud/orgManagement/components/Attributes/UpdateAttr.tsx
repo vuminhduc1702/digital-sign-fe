@@ -45,7 +45,7 @@ export function UpdateAttr({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
-  const { mutate: mutateUpdateLogged } = useUpdateLogged()
+  const { mutate: mutateUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
   const { register, formState, control, handleSubmit, watch } = useForm<
     UpdateAttrDTO['data']['attributes'][0]
