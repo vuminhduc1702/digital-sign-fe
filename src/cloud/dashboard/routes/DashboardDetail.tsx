@@ -118,7 +118,7 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
-  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
+  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading, isSuccess: updateDashboardIsSuccess } =
     useUpdateDashboard()
 
   const { data: detailDashboard, refetch: detailDashboardRefetch } =
@@ -131,7 +131,6 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -142,6 +141,12 @@ export function DashboardDetail() {
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
+
+  useEffect(() => {
+    if (updateDashboardIsSuccess) {
+      detailDashboardRefetch()
+    }
+  }, [updateDashboardIsSuccess])
 
   useEffect(() => {
     if (widgetDetailDB != null) {
@@ -346,7 +351,7 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
-                      <GaugeChart data={lastestValueOneDevice} widgetInfo={widgetInfo}/>
+                      <GaugeChart data={lastestValueOneDevice} widgetInfo={widgetList?.[widgetId]}/>
                     ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}

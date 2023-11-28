@@ -553,7 +553,8 @@
         "pick_date_alert": "Vui lòng chọn ngày",
         "org": "Tổ chức",
         "label": "Nhãn",
-        "widget_config": "Cài đặt biểu đồ"
+        "widget_config": "Cài đặt biểu đồ",
+        "max": "Max"
       },
       "detail_dashboard": {
         "add_widget": {

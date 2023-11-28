@@ -47,7 +47,7 @@ export const attrWidgetSchema = z.array(
     label: z.string().optional(),
     color: z.string().optional(),
     unit: z.string().optional(),
-    // decimal: z.string().optional(),
+    max: z.string().optional(),
   }),
 )
 
@@ -229,7 +229,7 @@ export function CreateWidget({
       label: '',
       color: '',
       unit: '',
-      // decimal: '',
+      max: '',
     })
   }, [])
 
@@ -243,7 +243,7 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -329,50 +329,50 @@ export function CreateWidget({
               const historyMessage =
                 values.widgetSetting?.agg === 'SMA'
                   ? {
-                      entityDataCmds: [
-                        {
-                          historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString(),
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
-                            window: values.widgetSetting?.window,
-                          },
-                          id: widgetId,
+                    entityDataCmds: [
+                      {
+                        historyCmd: {
+                          keys: values.attributeConfig.map(
+                            item => item.attribute_key,
+                          ),
+                          startTs: Date.parse(
+                            values.widgetSetting?.startDate?.toISOString(),
+                          ),
+                          endTs: Date.parse(
+                            values.widgetSetting?.endDate?.toISOString() as string,
+                          ),
+                          interval: values.widgetSetting?.interval,
+                          limit: 100,
+                          offset: 0,
+                          agg: values.widgetSetting?.agg,
+                          window: values.widgetSetting?.window,
                         },
-                      ],
-                    }
+                        id: widgetId,
+                      },
+                    ],
+                  }
                   : {
-                      entityDataCmds: [
-                        {
-                          historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString() as string,
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
-                          },
-                          id: widgetId,
+                    entityDataCmds: [
+                      {
+                        historyCmd: {
+                          keys: values.attributeConfig.map(
+                            item => item.attribute_key,
+                          ),
+                          startTs: Date.parse(
+                            values.widgetSetting?.startDate?.toISOString() as string,
+                          ),
+                          endTs: Date.parse(
+                            values.widgetSetting?.endDate?.toISOString() as string,
+                          ),
+                          interval: values.widgetSetting?.interval,
+                          limit: 100,
+                          offset: 0,
+                          agg: values.widgetSetting?.agg,
                         },
-                      ],
-                    }
+                        id: widgetId,
+                      },
+                    ],
+                  }
 
               const widget: z.infer<typeof widgetSchema> = {
                 title: values.title,
@@ -396,28 +396,28 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  max: '100',
+                  max: item.max,
                   label: item.label,
                   unit: item.unit,
                 })),
                 config:
                   widgetType === 'TIMESERIES'
                     ? {
-                        aggregation: values.widgetSetting?.agg,
-                        timewindow: {
-                          interval: values.widgetSetting?.interval,
-                        },
-                        chartsetting: {
-                          start_date: new Date(
-                            values.widgetSetting
-                              ?.startDate as unknown as number,
-                          ).getTime(),
-                          end_date: new Date(
-                            values.widgetSetting?.endDate as unknown as number,
-                          ).getTime(),
-                          data_type: values.widgetSetting?.dataType,
-                        },
-                      }
+                      aggregation: values.widgetSetting?.agg,
+                      timewindow: {
+                        interval: values.widgetSetting?.interval,
+                      },
+                      chartsetting: {
+                        start_date: new Date(
+                          values.widgetSetting
+                            ?.startDate as unknown as number,
+                        ).getTime(),
+                        end_date: new Date(
+                          values.widgetSetting?.endDate as unknown as number,
+                        ).getTime(),
+                        data_type: values.widgetSetting?.dataType,
+                      },
+                    }
                     : null,
               }
 
@@ -435,7 +435,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -481,13 +481,13 @@ export function CreateWidget({
                           deviceData != null
                             ? deviceSelectData
                             : deviceData == null
-                            ? [
+                              ? [
                                 {
                                   label: t('table:no_device'),
                                   value: '',
                                 },
                               ]
-                            : [
+                              : [
                                 {
                                   label: t('loading:device'),
                                   value: '',
@@ -534,7 +534,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -554,7 +554,7 @@ export function CreateWidget({
                             label: '',
                             color: '',
                             unit: '',
-                            // decimal: '',
+                            max: '',
                           })
                         }
                       />
@@ -576,13 +576,13 @@ export function CreateWidget({
                               attrChartData != null
                                 ? attrSelectData
                                 : attrChartData == null
-                                ? [
+                                  ? [
                                     {
                                       label: t('table:no_attr'),
                                       value: '',
                                     },
                                   ]
-                                : [
+                                  : [
                                     {
                                       label: t('loading:attr'),
                                       value: '',
@@ -676,15 +676,18 @@ export function CreateWidget({
                             `attributeConfig.${index}.unit` as const,
                           )}
                         />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.decimal')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.decimal
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.decimal` as const,
-                          )}
-                        /> */}
+                        {widgetCategory === 'GAUGE' && (
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.max')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.max
+                            }
+                            type="number"
+                            registration={register(
+                              `attributeConfig.${index}.max` as const,
+                            )}
+                          />
+                        )}
                       </div>
                       {isMultipleAttr ? (
                         <Button
@@ -709,7 +712,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="w-full rounded-md bg-secondary-700 pl-3"
+                        className="bg-secondary-700 w-full rounded-md pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -743,7 +746,7 @@ export function CreateWidget({
                                         variant="trans"
                                         size="square"
                                         className={cn(
-                                          'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                          'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                           !value && 'text-secondary-700',
                                         )}
                                       >
@@ -788,10 +791,10 @@ export function CreateWidget({
                                                   'widgetSetting.startDate',
                                                 ),
                                               ).setHours(0, 0, 0, 0) +
-                                                e.hour * 60 * 60 * 1000 +
-                                                e.minute * 60 * 1000 +
-                                                e.second * 1000 +
-                                                e.millisecond,
+                                              e.hour * 60 * 60 * 1000 +
+                                              e.minute * 60 * 1000 +
+                                              e.second * 1000 +
+                                              e.millisecond,
                                             ),
                                           )
                                         }
@@ -886,10 +889,10 @@ export function CreateWidget({
                                                   'widgetSetting.endDate',
                                                 ) as unknown as Date,
                                               ).setHours(0, 0, 0, 0) +
-                                                e.hour * 60 * 60 * 1000 +
-                                                e.minute * 60 * 1000 +
-                                                e.second * 1000 +
-                                                e.millisecond,
+                                              e.hour * 60 * 60 * 1000 +
+                                              e.minute * 60 * 1000 +
+                                              e.second * 1000 +
+                                              e.millisecond,
                                             ),
                                           )
                                         }
@@ -927,18 +930,18 @@ export function CreateWidget({
                           options={
                             getValues('widgetSetting.dataType') === 'HISTORY'
                               ? widgetAgg
-                                  .map(agg => ({
-                                    label: agg.label,
-                                    value: agg.value,
-                                  }))
-                                  .concat([
-                                    { label: 'SMA', value: 'SMA' },
-                                    { label: 'FFT', value: 'FFT' },
-                                  ])
-                              : widgetAgg.map(agg => ({
+                                .map(agg => ({
                                   label: agg.label,
                                   value: agg.value,
                                 }))
+                                .concat([
+                                  { label: 'SMA', value: 'SMA' },
+                                  { label: 'FFT', value: 'FFT' },
+                                ])
+                              : widgetAgg.map(agg => ({
+                                label: agg.label,
+                                value: agg.value,
+                              }))
                           }
                         />
                         {watch('widgetSetting.agg') === 'SMA' ? (
@@ -983,7 +986,7 @@ export function CreateWidget({
               startIcon={
                 <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
-              // disabled={!formState.isValid}
+            // disabled={!formState.isValid}
             />
           </div>
         </div>

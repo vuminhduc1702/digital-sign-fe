@@ -12,30 +12,31 @@ import { type widgetSchema } from '../Widget'
 
 const SCALE = 10
 
-const useGaugeChart = (data: number) => {
+const useGaugeChart = (data: number, max: number) => {
   const [value, setValue] = useState(0)
 
   useAnimationFrame(t => {
-    if (value >= 100 * SCALE) return
+    if (value >= 10 * max) return
     setValue(data)
   })
 
   return {
-    value: Math.min(value, 100 * SCALE),
+    value: Math.min(value, 10 * max),
   }
 }
 
 type GaugeProps = {
   value: number
   attrKey: string
+  widgetInfo?: z.infer<typeof widgetSchema>
 }
 
 const START_ANGLE = 90
 const END_ANGLE = 270
 
-function Gauge({ value, attrKey }: GaugeProps) {
+function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
   const gauge = useGauge({
-    domain: [0, 100 * SCALE],
+    domain: [0, 10 * parseInt(widgetInfo?.attribute_config[0]?.max || '')],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 21,
@@ -50,9 +51,9 @@ function Gauge({ value, attrKey }: GaugeProps) {
 
   const arcStroke = useMemo(() => {
     let color = ''
-    if (value <= 40 * SCALE) {
+    if (value <= 4 * parseInt(widgetInfo?.attribute_config[0]?.max || '')) {
       color = `green`
-    } else if (value <= 80 * SCALE) {
+    } else if (value <= 8 * parseInt(widgetInfo?.attribute_config[0]?.max || '')) {
       color = 'yellow'
     } else {
       color = 'red'
@@ -118,7 +119,7 @@ function Gauge({ value, attrKey }: GaugeProps) {
         <g id="ticks">
           {gauge.ticks.map(angle => {
             const asValue = gauge.angleToValue(angle)
-            const showText = asValue % (20 * SCALE) === 0
+            const showText = asValue % (2 * parseInt(widgetInfo?.attribute_config[0]?.max || '')) === 0
 
             return (
               <React.Fragment key={`tick-group-${angle}`}>
@@ -126,10 +127,10 @@ function Gauge({ value, attrKey }: GaugeProps) {
                   className={clsx([
                     'stroke-gray-300',
                     {
-                      'stroke-green-500': asValue <= 20 * SCALE,
+                      'stroke-green-500': asValue <= 2 * parseInt(widgetInfo?.attribute_config[0]?.max || ''),
                       'stroke-yellow-500':
-                        asValue >= 60 * SCALE && asValue <= 80 * SCALE,
-                      'stroke-red-400': asValue >= 80 * SCALE,
+                        asValue >= 6 * parseInt(widgetInfo?.attribute_config[0]?.max || '') && asValue <= 8 * parseInt(widgetInfo?.attribute_config[0]?.max || ''),
+                      'stroke-red-400': asValue >= 8 * parseInt(widgetInfo?.attribute_config[0]?.max || ''),
                     },
                   ])}
                   strokeWidth={2}
@@ -140,10 +141,10 @@ function Gauge({ value, attrKey }: GaugeProps) {
                 />
                 {showText && (
                   <text
-                    className="fill-gray-400 font-medium"
+                    className="fill-gray-400 text-xs font-medium "
                     {...gauge.getLabelProps({ angle, offset: 20 })}
                   >
-                    {asValue}
+                    {asValue} {widgetInfo?.attribute_config[0]?.unit}
                   </text>
                 )}
               </React.Fragment>
@@ -187,8 +188,6 @@ function Gauge({ value, attrKey }: GaugeProps) {
 
 export function GaugeChart({ data, widgetInfo }: { data: LatestData, widgetInfo?: z.infer<typeof widgetSchema> }) {
 
-  // console.log(`new gauge: `, data)
-
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
     value: 0,
@@ -204,7 +203,7 @@ export function GaugeChart({ data, widgetInfo }: { data: LatestData, widgetInfo?
     }
   }, [data])
 
-  const { value } = useGaugeChart(dataTransformedFeedToChart.value)
+  const { value } = useGaugeChart(dataTransformedFeedToChart.value, parseInt(widgetInfo?.attribute_config[0]?.max || ''))
 
   const showSpinner = useSpinDelay(Object.keys(data).length === 0, {
     delay: 150,
@@ -215,7 +214,7 @@ export function GaugeChart({ data, widgetInfo }: { data: LatestData, widgetInfo?
     <>
       {Object.keys(dataTransformedFeedToChart).length > 0 ? (
         <MotionConfig transition={{ type: 'tween', ease: 'linear' }}>
-          <Gauge value={value} attrKey={dataTransformedFeedToChart.key} />
+          <Gauge value={value} attrKey={dataTransformedFeedToChart.key} widgetInfo={widgetInfo} />
         </MotionConfig>
       ) : (
         <div className="flex h-full items-center justify-center">
