@@ -107,27 +107,35 @@ export function LineChart({
   }
 
   function dateTransformation(date: number) {
-    const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
-      defaultDateConfig
+    if (widgetInfo?.config != null) {
+      const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
+        defaultDateConfig
+      const timePeriod = widgetInfo.config.chartsetting.time_period
+      let dateVNFormat = ''
+      if (timePeriod <= 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+            second: '2-digit',
+          },
+        })
+      }
+      if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+          },
+        })
+      }
 
-    return getVNDateFormat({
-      date,
-      config: {
-        ...dateTimeOptionsWithoutYearMonthDay,
-        second: '2-digit',
-        // fractionalSecondDigits: 3,
-      },
-    })
+      return dateVNFormat
+    }
+    return ''
   }
 
-  const [widgetInfoToChart, setWidgetInfoToChart] = useState<z.infer<
-    typeof widgetSchema
-  > | null>()
-  useEffect(() => {
-    if (widgetInfo != null) {
-      setWidgetInfoToChart(widgetInfo)
-    }
-  }, [widgetInfo])
+  // console.log('widgetInfo', widgetInfo)
 
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
@@ -164,15 +172,8 @@ export function LineChart({
                       ? '#f47560'
                       : '#f1e15b'
                   }
-                  fill={
-                    key.includes('SMA') || key.includes('FFT')
-                      ? '#2c2c2c'
-                      : index === 0
-                      ? '#e8c1a0'
-                      : index === 1
-                      ? '#f47560'
-                      : '#f1e15b'
-                  }
+                  activeDot={{ r: 5 }}
+                  dot={false}
                 />
               )
             })}
