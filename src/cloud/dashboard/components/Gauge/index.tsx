@@ -5,8 +5,10 @@ import clsx from 'clsx'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
+import type * as z from 'zod'
 
 import { type LatestData } from '../../types'
+import { type widgetSchema } from '../Widget'
 
 const SCALE = 10
 
@@ -183,7 +185,8 @@ function Gauge({ value, attrKey }: GaugeProps) {
   )
 }
 
-export function GaugeChart({ data }: { data: LatestData }) {
+export function GaugeChart({ data, widgetInfo }: { data: LatestData, widgetInfo?: z.infer<typeof widgetSchema> }) {
+
   // console.log(`new gauge: `, data)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({

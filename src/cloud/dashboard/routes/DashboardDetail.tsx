@@ -346,7 +346,7 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
-                      <GaugeChart data={lastestValueOneDevice} />
+                      <GaugeChart data={lastestValueOneDevice} widgetInfo={widgetInfo}/>
                     ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}

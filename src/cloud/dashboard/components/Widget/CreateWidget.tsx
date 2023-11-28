@@ -397,7 +397,7 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  // decimal: item.decimal,
+                  max: '100',
                   label: item.label,
                   unit: item.unit,
                 })),
