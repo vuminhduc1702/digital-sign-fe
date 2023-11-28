@@ -134,22 +134,30 @@ export function LineChart({
     minDuration: 300,
   })
 
-  // console.log('transform line', dataTransformedFeedToChart)
-  // console.log('data', newValuesRef.current)
-  // console.log('info', widgetInfo)
-  // console.log('config', widgetInfoToChart)
-
   const renderLegend = (props: any) => {
     const { payload } = props;
     return (
-      <div className='text-center pt-3'>
-        {
-          payload.reverse().map((entry: any, index: number) => (
-            <span key={`item-${index}`} className='pr-4'><div style={{marginRight: '3px',display:'inline-block',width:'12px',height:'12px',backgroundColor:entry.color}}></div>{entry.value}</span>
-          ))
-        }
+      <div className="pt-3 text-center">
+        {payload.reverse().map((entry: any, index: number) => (
+          <span key={`item-${index}`} className="pr-4">
+            <div
+              style={{
+                marginRight: '3px',
+                display: 'inline-block',
+                width: '12px',
+                height: '12px',
+                backgroundColor: entry.color,
+              }}
+            ></div>
+            {widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === entry.dataKey) &&
+            widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === entry.dataKey).length > 0 &&
+            widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === entry.dataKey)[0].unit !== ''
+            ? entry.value + ' (' + widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === entry.dataKey)[0].unit + ')'
+            : entry.value}
+          </span>
+        ))}
       </div>
-    );
+    )
   }
 
   return (
@@ -174,15 +182,17 @@ export function LineChart({
                   stroke={
                     key.includes('SMA') || key.includes('FFT')
                       ? '#2c2c2c'
-                      : widgetInfoToChart?.attribute_config[index]?.color != '' ?
-                      widgetInfoToChart?.attribute_config[index]?.color
+                      : widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key) &&
+                      widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key)[0].color !== ''
+                       ? widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key)[0].color
                       : '#e8c1a0'
                   }
                   fill={
                     key.includes('SMA') || key.includes('FFT')
                       ? '#2c2c2c'
-                      : widgetInfoToChart?.attribute_config[index]?.color != '' ?
-                      widgetInfoToChart?.attribute_config[index]?.color
+                      : widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key) &&
+                      widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key)[0].color !== ''
+                      ? widgetInfoToChart?.attribute_config?.filter(obj => obj.attribute_key === key)[0].color
                       : '#e8c1a0'
                   }
                 />
