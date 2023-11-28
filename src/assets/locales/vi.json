@@ -205,7 +205,9 @@
           "district": "Huyện/Quận",
           "ward": "Phường/Xã",
           "success_assign": "Gán người dùng thành công",
-          "assign": "Gán người dùng"
+          "assign": "Gán người dùng",
+          "assign_role": "Gán vai trò",
+          "success_assign_role": "Gán vai trò thành công"
         }
       },
       "device_manage": {
