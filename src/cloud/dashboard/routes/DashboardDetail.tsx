@@ -131,7 +131,6 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -337,7 +336,7 @@ export function DashboardDetail() {
                     {widgetList?.[widgetId]?.description === 'LINE' ? (
                       <LineChart
                         data={realtimeValues}
-                        widgetInfo={widgetInfo}
+                        widgetInfo={widgetList?.[widgetId]}
                       />
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} widgetInfo={widgetInfo} />

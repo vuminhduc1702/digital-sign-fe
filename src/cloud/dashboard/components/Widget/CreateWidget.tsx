@@ -606,7 +606,7 @@ export function CreateWidget({
                             }
                           </p>
                         </div>
-                        <InputField
+                        {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
                             formState?.errors?.attributeConfig?.[index]?.label
@@ -614,7 +614,7 @@ export function CreateWidget({
                           registration={register(
                             `attributeConfig.${index}.label` as const,
                           )}
-                        />
+                        /> */}
                         <div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.color')}
