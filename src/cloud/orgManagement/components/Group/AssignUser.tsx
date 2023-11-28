@@ -1,6 +1,6 @@
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
@@ -14,6 +14,9 @@ import {
   type AssignUserDTO,
 } from '../../api/groupAPI/assignUser'
 import { useGetUsers } from '../../api/userAPI'
+import { useSpinDelay } from 'spin-delay'
+import { Spinner } from '~/components/Spinner'
+import i18n from '~/i18n'
 
 type AssignUserProps = {
   isOpenAssignUser: boolean
@@ -22,7 +25,12 @@ type AssignUserProps = {
 }
 
 export const assignUserSchema = z.object({
-  userId: z.string().optional(),
+  user_id: z.string().min(1, {
+    message: i18n
+      .t('placeholder:select_value')
+      .replace('{{VALUE}}', i18n.t('cloud:org_manage.user_manage.title')),
+  }),
+  group_id: z.string().optional(),
 })
 
 const AssignUser = ({
@@ -31,13 +39,15 @@ const AssignUser = ({
   groupId,
 }: AssignUserProps) => {
   const { t } = useTranslation()
-  const { projectId, orgId } = useParams() || {}
-  const [userId, setUserId] = useState()
+  const { projectId, orgId } = useParams()
 
   const { data: UserData } = useGetUsers({
-    projectId,
-    orgId,
+    projectId: projectId || '',
+    orgId: orgId || '',
     expand: true,
+    config: {
+      suspense: false,
+    },
   })
 
   const { mutate, isLoading, isSuccess } = useAssignUser()
@@ -48,10 +58,14 @@ const AssignUser = ({
     }
   }, [isSuccess, closeAssignUser])
 
-  const { register, formState, handleSubmit, watch, reset, setValue } = useForm<
-    AssignUserDTO['data']
-  >({
+  const { register, formState, handleSubmit } = useForm<AssignUserDTO['data']>({
     resolver: assignUserSchema && zodResolver(assignUserSchema),
+  })
+  console.log('formState.errors', formState.errors)
+
+  const showSpinner = useSpinDelay(isLoading, {
+    delay: 150,
+    minDuration: 300,
   })
 
   return (
@@ -64,7 +78,7 @@ const AssignUser = ({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={closeAssignUser}
               >
                 <span className="sr-only">Close panel</span>
@@ -73,44 +87,45 @@ const AssignUser = ({
             </div>
           </div>
         </div>
-        <div className="mt-4">
-          <form
-            id="assign-user"
-            onSubmit={handleSubmit(values => {
-              console.log(typeof userId, typeof groupId)
-              mutate({
-                data: {
-                  user_id: userId,
-                  group_id: groupId,
-                },
-              })
-            })}
-            className="w-full space-y-6 pr-32"
-          >
-            <SelectField
-              label={t('form:user.list')}
-              error={formState.errors['userId']}
-              registration={register('userId', {
-                onChange: e => {
-                  setUserId(e.target.value)
-                },
+        {!isLoading ? (
+          <div className="mt-4">
+            <form
+              id="assign-user"
+              onSubmit={handleSubmit(values => {
+                mutate({
+                  data: {
+                    user_id: values.user_id,
+                    group_id: groupId,
+                  },
+                })
               })}
-              options={UserData?.users.map(item => {
-                return {
-                  label: item.username
-                    ? item.username
-                    : item.email
-                    ? item.email
-                    : item.phone,
-                  value: item.user_id,
-                }
-              })}
-              classlabel="w-6/12"
-              classchild="w-6/12"
-              classnamefieldwrapper="flex items-center gap-x-3"
-            />
-          </form>
-        </div>
+              className="w-full space-y-6 pr-32"
+            >
+              <SelectField
+                label={t('form:user.list')}
+                error={formState.errors['user_id']}
+                registration={register('user_id')}
+                options={UserData?.users.map(item => {
+                  return {
+                    label: item.name
+                      ? item.name
+                      : item.email
+                      ? item.email
+                      : item.phone,
+                    value: item.user_id,
+                  }
+                })}
+                classlabel="w-6/12"
+                classchild="w-6/12"
+                classnamefieldwrapper="flex items-center gap-x-3"
+              />
+            </form>
+          </div>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Spinner showSpinner={showSpinner} size="xl" />
+          </div>
+        )}
         <div className="mt-4 flex justify-center space-x-2">
           <Button
             isLoading={isLoading}

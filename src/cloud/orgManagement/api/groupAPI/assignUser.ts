@@ -6,18 +6,11 @@ import { useNotificationStore } from '~/stores/notifications'
 import { type z } from 'zod'
 import { type assignUserSchema } from '../../components/Group/AssignUser'
 
-export type AssignUser = {
-  data: {
-    user_id: string
-    group_id: string
-  }
-}
-
 export type AssignUserDTO = {
   data: z.infer<typeof assignUserSchema>
 }
 
-export const assignUser = ({ data }: AssignUser) => {
+export const assignUser = ({ data }: AssignUserDTO) => {
   return axios.put('/api/devices/assignForUser', data)
 }
 
