@@ -203,7 +203,9 @@
           "success_delete": "Xoá người dùng thành công",
           "province": "Tỉnh/TP",
           "district": "Huyện/Quận",
-          "ward": "Phường/Xã"
+          "ward": "Phường/Xã",
+          "success_assign": "Gán người dùng thành công",
+          "assign": "Gán người dùng"
         }
       },
       "device_manage": {
@@ -1054,7 +1056,8 @@
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
       "ddos": "Cập nhật DDOS thành công",
-      "name": "Tên người dùng"
+      "name": "Tên người dùng",
+      "list": "Danh sách người dùng"
     },
     "customer": {
       "success_delete": "Xoá khách hàng thành công",
