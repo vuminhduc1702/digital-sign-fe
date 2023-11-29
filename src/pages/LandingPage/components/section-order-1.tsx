@@ -28,7 +28,6 @@ export function SectionOrder1() {
                     width={25}
                     height={25}
                     viewBox="0 0 25 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                     {t('landingpage:order1.subscription_management')}
@@ -39,7 +38,6 @@ export function SectionOrder1() {
                     width={24}
                     height={25}
                     viewBox="0 0 24 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                     {t('landingpage:order1.contract_management')}
@@ -52,7 +50,6 @@ export function SectionOrder1() {
                     width={25}
                     height={25}
                     viewBox="0 0 25 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                     {t('landingpage:order1.order_management')}
@@ -63,7 +60,6 @@ export function SectionOrder1() {
                     width={24}
                     height={25}
                     viewBox="0 0 24 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                     {t('landingpage:order1.payment_management')}
@@ -82,7 +78,6 @@ export function SectionOrder1() {
                       width={23}
                       height={23}
                       viewBox="0 0 23 23"
-                      className=""
                     ></ArrowRightUpLine>
                   }
                 >

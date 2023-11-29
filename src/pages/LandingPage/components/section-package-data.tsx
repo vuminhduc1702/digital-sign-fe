@@ -139,7 +139,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="border-primary-400 text-primary-400 rounded-r-lg rounded-tl-lg border bg-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                     variant="primary"
                     onClick={open}
                   >
@@ -154,9 +154,9 @@ export function SectionPackageData() {
                     <button
                       key={idx}
                       onClick={() => setCategory(categories[idx])}
-                      className={`hover:text-primary-400 flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider ${
+                      className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 ${
                         category === categories[idx]
-                          ? 'text-primary-400 bg-white'
+                          ? 'bg-white text-primary-400'
                           : ''
                       }`}
                     >
@@ -169,7 +169,6 @@ export function SectionPackageData() {
               <div className="flex w-full justify-center">
                 <div className="w-[1400px] pt-[50px]">
                   <Carousel
-                    className=""
                     containerClass="carousel-container p-[0px]"
                     responsive={responsive}
                     transitionDuration={300}
@@ -189,7 +188,7 @@ export function SectionPackageData() {
                         )
                         .map((item, idx) => (
                           <div className="w-60 rounded-lg shadow-md" key={idx}>
-                            <div className="bg-primary-400 flex justify-center rounded-t-lg py-2 text-center text-xl font-medium text-white">
+                            <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
                               <Checkbox
                                 defaultChecked={
                                   PackofDataRef.current?.find(
@@ -215,7 +214,7 @@ export function SectionPackageData() {
                                     )
                                   }
                                 }}
-                                className={`data-[state=checked]:text-primary-400 mr-4 bg-white data-[state=checked]:bg-white`}
+                                className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
                               />
                               {item.name}
                             </div>
@@ -229,7 +228,6 @@ export function SectionPackageData() {
                                     width={25}
                                     height={25}
                                     viewBox="0 0 25 25"
-                                    className=""
                                   ></CheckboxCircleLine>
                                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                                     {item.discountPromotionData}
@@ -240,7 +238,6 @@ export function SectionPackageData() {
                                     width={25}
                                     height={25}
                                     viewBox="0 0 25 25"
-                                    className=""
                                   ></CheckboxCircleLine>
                                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                                     {t(
@@ -253,7 +250,6 @@ export function SectionPackageData() {
                                     width={25}
                                     height={25}
                                     viewBox="0 0 25 25"
-                                    className=""
                                   ></CheckboxCircleLine>
                                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                                     {t(
@@ -272,7 +268,7 @@ export function SectionPackageData() {
                                       width={23}
                                       height={23}
                                       viewBox="0 0 23 23"
-                                      className=""
+                                      
                                     ></ArrowRightUpLine>
                                   }
                                 >

@@ -256,7 +256,7 @@ export function UpdateDevice({
             error={formState.errors['key']}
             registration={register('key')}
           />
-          <div className="">
+          <div>
             <p className="mx-1 my-2">Heartbeat</p>
             <div className="flex rounded-lg border border-solid p-2">
               <InputField
@@ -269,7 +269,7 @@ export function UpdateDevice({
                 ref={heartbeatIntervalRef}
               />
               <InputField
-                label="Life Cicrle"
+                label="Life circle"
                 type="number"
                 classnamefieldwrapper="flex items-center"
                 classlabel="mx-1"
@@ -278,9 +278,9 @@ export function UpdateDevice({
                 ref={timeoutRef}
               />
             </div>
-            <div className="">
+            <div>
               <Button
-                className="hover:text-primary-400 float-right mx-2 rounded-lg border-none px-1"
+                className="float-right mx-2 rounded-lg border-none px-1 hover:text-primary-400"
                 variant="trans"
                 size="square"
                 onClick={() => {
@@ -300,7 +300,7 @@ export function UpdateDevice({
                 )}
               </Button>
               <Button
-                className="hover:text-primary-400 float-right rounded-lg border-none px-1"
+                className="float-right rounded-lg border-none px-1 hover:text-primary-400"
                 variant="trans"
                 size="square"
                 onClick={() => {

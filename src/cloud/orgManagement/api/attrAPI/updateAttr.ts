@@ -32,7 +32,6 @@ export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['attrs'])
-      // await queryClient.invalidateQueries(['deviceById'])
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.org_manage.add_attr.success_update'),
