@@ -35,6 +35,9 @@ export const useHeartBeat = ({ config }: UseHeartBeatOptions = {}) => {
       await queryClient.invalidateQueries({
         queryKey: ['heartbeat'],
       })
+      queryClient.invalidateQueries({
+        queryKey: ['devices'],
+      })
       addNotification({
         type: 'success',
         title: t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
@@ -54,6 +57,9 @@ export const useUpdateHeartBeat = ({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['heartbeat'],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['devices'],
       })
       addNotification({
         type: 'success',

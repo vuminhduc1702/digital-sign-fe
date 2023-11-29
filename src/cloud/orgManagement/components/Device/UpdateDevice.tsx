@@ -164,7 +164,16 @@ export function UpdateDevice({
       <form
         id="update-device"
         className="w-full space-y-6"
-        onSubmit={handleSubmit(values =>
+        onSubmit={handleSubmit(async values => {
+          const heartbeatInterval = heartbeatIntervalRef.current.value
+          const heartbeatTimeout = timeoutRef.current.value
+          await mutateHeartBeat({
+            data: {
+              interval: Number(heartbeatInterval),
+              timeout: Number(heartbeatTimeout),
+            },
+            deviceId,
+          })
           mutate({
             data: {
               name: values.name,
@@ -174,8 +183,8 @@ export function UpdateDevice({
               template_id: values.template_id,
             },
             deviceId,
-          }),
-        )}
+          })
+        })}
       >
         <>
           <InputField
@@ -274,7 +283,6 @@ export function UpdateDevice({
                 className="hover:text-primary-400 float-right mx-2 rounded-lg border-none px-1"
                 variant="trans"
                 size="square"
-                type="submit"
                 onClick={() => {
                   const heartbeatInterval = heartbeatIntervalRef.current.value
                   const heartbeatTimeout = timeoutRef.current.value

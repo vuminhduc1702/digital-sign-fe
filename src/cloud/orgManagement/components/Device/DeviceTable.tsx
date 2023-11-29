@@ -441,7 +441,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             status,
             additional_info,
           } = info.row.original
-
+          
           const group = {
             label: group_name,
             value: group_id,
