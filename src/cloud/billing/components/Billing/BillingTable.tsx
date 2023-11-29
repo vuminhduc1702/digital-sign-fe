@@ -91,6 +91,14 @@ export function BillingTable({
     setPlan('')
   }, [status, plan])
 
+  const planArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.plan_name === o.plan_name);
+  });
+
+  const statusArr = data?.filter((obj, index) => {
+    return index === data.findIndex(o => obj.status === o.status);
+  });
+
   const handleSearch = (
     e: React.MouseEvent<HTMLInputElement>,
     field: string,
