@@ -33,7 +33,6 @@ export function SectionIntro({
                     width={24}
                     height={25}
                     viewBox="0 0 24 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
                     M2M là công nghệ cho phép cho các thiết bị có thể trao đổi
@@ -45,7 +44,6 @@ export function SectionIntro({
                     width={24}
                     height={25}
                     viewBox="0 0 24 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
                     Dịch vụ data M2M: Là dịch vụ trong đó sim data được sử dụng
@@ -57,7 +55,6 @@ export function SectionIntro({
                     width={24}
                     height={25}
                     viewBox="0 0 24 25"
-                    className=""
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
                     M2M là công nghệ cho phép các thiết bị có thể trao đổi với
@@ -80,7 +77,6 @@ export function SectionIntro({
                       width={23}
                       height={23}
                       viewBox="0 0 23 23"
-                      className=""
                     ></ArrowRightUpLine>
                   }
                   onClick={() => scrollToIntro(solutionRef)}

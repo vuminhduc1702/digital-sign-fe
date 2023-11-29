@@ -44,7 +44,6 @@ export function SectionOrder() {
                       width={25}
                       height={25}
                       viewBox="0 0 25 25"
-                      className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
                       {t('landingpage:order.manage_device')}
@@ -55,7 +54,6 @@ export function SectionOrder() {
                       width={24}
                       height={25}
                       viewBox="0 0 24 25"
-                      className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
                       {t('landingpage:order.business_model')}
@@ -68,7 +66,6 @@ export function SectionOrder() {
                       width={25}
                       height={25}
                       viewBox="0 0 25 25"
-                      className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
                       {t('landingpage:order.data_security')}
@@ -79,7 +76,6 @@ export function SectionOrder() {
                       width={24}
                       height={25}
                       viewBox="0 0 24 25"
-                      className=""
                     ></CheckboxCircleLineWhite>
                     <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-white">
                       {t('landingpage:order.support_protocol')}
@@ -100,7 +96,6 @@ export function SectionOrder() {
                       width={23}
                       height={23}
                       viewBox="0 0 23 23"
-                      className=""
                     ></ArrowRightUpLine>
                   }
                 >

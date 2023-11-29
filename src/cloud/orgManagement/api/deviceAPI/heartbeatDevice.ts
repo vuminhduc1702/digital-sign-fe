@@ -1,16 +1,15 @@
 import { useMutation } from '@tanstack/react-query'
 
 import { useTranslation } from 'react-i18next'
+import { z } from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
+import { type heartBeatSchema } from '../../components/Device/UpdateDevice'
 
 export type HeartBeatDTO = {
-  data: {
-    interval: number
-    timeout: number
-  }
-  deviceId: string
+  data: z.infer<typeof heartBeatSchema>
+  deviceId?: string
 }
 
 export const heartBeat = ({ data, deviceId }: HeartBeatDTO) => {

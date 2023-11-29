@@ -12,45 +12,22 @@ export function SectionSolution() {
     {
       title_1: 'Tiết kiệm',
       title_2: 'Giảm chi phí vận hành',
-      icon: (
-        <Money1
-          width={65}
-          height={65}
-          viewBox="0 0 65 65"
-          className=""
-        ></Money1>
-      ),
+      icon: <Money1 width={65} height={65} viewBox="0 0 65 65"></Money1>,
     },
     {
       title_1: 'Chính xác',
       title_2: 'Cung cấp thông tin chính xác, kịp thời',
-      icon: (
-        <Time1 width={65} height={65} viewBox="0 0 65 65" className=""></Time1>
-      ),
+      icon: <Time1 width={65} height={65} viewBox="0 0 65 65"></Time1>,
     },
     {
       title_1: 'Trải nghiệm',
       title_2: 'Nâng cao trải nghiệm khách hàng',
-      icon: (
-        <Review1
-          width={65}
-          height={65}
-          viewBox="0 0 65 65"
-          className=""
-        ></Review1>
-      ),
+      icon: <Review1 width={65} height={65} viewBox="0 0 65 65"></Review1>,
     },
     {
       title_1: 'An toàn',
       title_2: 'Cải thiện độ an toàn',
-      icon: (
-        <World1
-          width={65}
-          height={65}
-          viewBox="0 0 65 65"
-          className=""
-        ></World1>
-      ),
+      icon: <World1 width={65} height={65} viewBox="0 0 65 65"></World1>,
     },
   ]
   const { t } = useTranslation()
@@ -58,7 +35,7 @@ export function SectionSolution() {
     <>
       <div className="mb-20 flex justify-center">
         <div className="w-[1040px]">
-          <div className="">
+          <div>
             <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
               {t('landingpage:solution.value')}
             </p>
@@ -115,7 +92,6 @@ export function SectionSolution() {
                       width={23}
                       height={23}
                       viewBox="0 0 23 23"
-                      className=""
                     ></ArrowRightUpLine>
                   }
                 >

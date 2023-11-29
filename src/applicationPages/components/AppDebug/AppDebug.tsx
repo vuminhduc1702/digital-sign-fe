@@ -7,7 +7,7 @@ export function AppDebug() {
   return (
     <>
       <ContentLayout title={t('sidebar:application.vsmart_debug')}>
-        <div className="">
+        <div>
           <div className="grid grid-cols-2 rounded-lg p-1">
             <div>
               <img
