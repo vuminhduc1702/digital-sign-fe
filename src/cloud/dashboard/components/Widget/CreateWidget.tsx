@@ -67,10 +67,10 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    label: z.string().optional(),
-    color: z.string().optional(),
-    unit: z.string().optional(),
-    // decimal: z.string().optional(),
+    label: z.string(),
+    color: z.string(),
+    unit: z.string(),
+    max: z.number(),
   }),
 )
 
@@ -284,7 +284,7 @@ export function CreateWidget({
       label: '',
       color: '',
       unit: '',
-      // decimal: '',
+      max: 100,
     })
   }, [])
 
@@ -450,7 +450,7 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  max: '100',
+                  max: item.max,
                   label: item.label,
                   unit: item.unit,
                 })),
@@ -514,12 +514,8 @@ export function CreateWidget({
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                              },
-                            ],
+                          resetField('attributeConfig.0.attribute_key', {
+                            defaultValue: '',
                           })
                         }}
                       />
@@ -569,12 +565,8 @@ export function CreateWidget({
                         }}
                         isLoading={deviceIsLoading}
                         handleClearSelectDropdown={() => {
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                              },
-                            ],
+                          resetField('attributeConfig.0.attribute_key', {
+                            defaultValue: '',
                           })
                         }}
                       />
@@ -609,7 +601,7 @@ export function CreateWidget({
                             label: '',
                             color: '',
                             unit: '',
-                            // decimal: '',
+                            max: 100,
                           })
                         }
                       />
@@ -731,15 +723,19 @@ export function CreateWidget({
                             `attributeConfig.${index}.unit` as const,
                           )}
                         />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.decimal')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.decimal
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.decimal` as const,
-                          )}
-                        /> */}
+                        {widgetCategory === 'GAUGE' && (
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.max')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.max
+                            }
+                            type="number"
+                            registration={register(
+                              `attributeConfig.${index}.max` as const,
+                              { valueAsNumber: true },
+                            )}
+                          />
+                        )}
                       </div>
                       {isMultipleAttr ? (
                         <Button

@@ -92,8 +92,11 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
-  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
-    useUpdateDashboard()
+  const {
+    mutate: mutateUpdateDashboard,
+    isLoading: updateDashboardIsLoading,
+    isSuccess: updateDashboardIsSuccess,
+  } = useUpdateDashboard()
 
   const { data: detailDashboard, refetch: detailDashboardRefetch } =
     useGetDashboardsById({
@@ -105,7 +108,6 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -116,6 +118,12 @@ export function DashboardDetail() {
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
+
+  useEffect(() => {
+    if (updateDashboardIsSuccess) {
+      detailDashboardRefetch()
+    }
+  }, [updateDashboardIsSuccess])
 
   useEffect(() => {
     if (widgetDetailDB != null) {
