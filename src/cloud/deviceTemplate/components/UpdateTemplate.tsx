@@ -155,10 +155,10 @@ export function UpdateTemplate({
                   options={
                     RuleSelectOptions != null
                       ? RuleSelectOptions
-                      : [{ label: t('loading:org'), value: '' }]
+                      : [{ label: t('loading:flow_id'), value: '' }]
                   }
-                  noOptionsMessage={() => t('table:no_in_org')}
-                  placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                   defaultValue={RuleSelectOptions.find(
                     ruchains => ruchains.value === selectedUpdateTemplate.rule_chain_id,
                   )}

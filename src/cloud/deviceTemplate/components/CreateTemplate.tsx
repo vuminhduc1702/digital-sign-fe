@@ -145,11 +145,11 @@ export default function CreateTemplate() {
                   options={
                     RuleSelectOptions != null
                       ? RuleSelectOptions
-                      : [{ label: t('loading:org'), value: ' ' }]
+                      : [{ label: t('loading:flow_id'), value: ' ' }]
                   }
-                  isOptionDisabled={option => option.label === t('loading:org')}
-                  noOptionsMessage={() => t('table:no_in_org')}
-                  placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+                  isOptionDisabled={option => option.label === t('loading:flow_id')}
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                 />
                 <p className="text-body-sm text-primary-400">
                   {formState?.errors?.rule_chain_id?.message}
