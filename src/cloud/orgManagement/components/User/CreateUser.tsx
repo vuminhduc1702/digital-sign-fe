@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 
@@ -14,7 +14,6 @@ import {
 import { type CreateUserDTO, useCreateUser } from '../../api/userAPI'
 import {
   emailSchema,
-  emptySelectSchema,
   nameSchema,
   passwordSchema,
 } from '~/utils/schemaValidation'

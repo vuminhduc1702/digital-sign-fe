@@ -5,7 +5,6 @@ import TitleBar from '~/components/Head/TitleBar'
 import { useTemplateById } from '../api/getTemplateById'
 import { getVNDateFormat } from '~/utils/misc'
 
-//import { useRulechainById } from '../api/getRulechainById'
 
 export function TemplateInfo() {
   const { t } = useTranslation()
@@ -14,11 +13,7 @@ export function TemplateInfo() {
   const templateId = params.templateId as string
 
   const { data } = useTemplateById({ templateId })
-
-  // const params = useParams()
-  // const RulechainId = params.templateId as string
-
-  // const { data } = useRulechainById({ RulechainId })
+  console.log(data)
 
   return (
     <>
@@ -29,7 +24,7 @@ export function TemplateInfo() {
       />
       <div className="flex flex-col gap-y-3 px-9 py-5 shadow-lg">
         <p>
-          {t('cloud:device_template.info.flow')}: {data?.name}
+          {t('cloud:device_template.info.flow')}: {data?.rule_chain_id}
         </p>
         <p>
           {t('cloud:device_template.info.provision_key')}: {data?.provision_key}
