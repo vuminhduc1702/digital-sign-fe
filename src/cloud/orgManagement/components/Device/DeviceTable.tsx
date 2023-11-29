@@ -248,6 +248,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     key: true,
     created_at: true,
     contextMenu: true,
+    heartbeat: false,
   }
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
@@ -276,13 +277,20 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'status',
+      columnHelper.accessor('status', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.status')}</span>
         ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'heartbeat',
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
+        ),
         cell: info => {
-          const { additional_info, status } = info.row.original
+          const { additional_info } = info.row.original
 
           let additionalInfo,
             historyLastHeartbeat,
@@ -314,7 +322,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             <>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>{status}</TooltipTrigger>
+                  <TooltipTrigger>{intervalHeartbeat}</TooltipTrigger>
                   {additionalInfo.heartbeat_interval ? (
                     <>
                       <TooltipContent>
@@ -441,7 +449,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             status,
             additional_info,
           } = info.row.original
-          
+
           const group = {
             label: group_name,
             value: group_id,

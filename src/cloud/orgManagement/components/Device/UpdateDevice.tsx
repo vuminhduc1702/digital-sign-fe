@@ -61,11 +61,14 @@ export function UpdateDevice({
       console.error('Error parsing JSON:', error)
     }
   }
-  const additional_interval = additionalInfo?.heartbeat_interval || 30
-  const additional_timeout = additionalInfo?.timeout_lifecycle || 2
+  const additional_interval = additionalInfo?.heartbeat_interval || 0
+  const additional_timeout = additionalInfo?.timeout_lifecycle || 0
   const heartbeatIntervalRef = useRef(additional_interval)
   const timeoutRef = useRef(additional_timeout)
-
+  let disableUpdateHeartbeat = !additionalInfo?.heartbeat_interval
+    ? true
+    : false
+  console.log(disableUpdateHeartbeat)
   const [offset, setOffset] = useState(0)
 
   const {
@@ -257,7 +260,9 @@ export function UpdateDevice({
             registration={register('key')}
           />
           <div className="">
-            <p className="mx-1 my-2">Heartbeat</p>
+            <p className="mx-1 my-2">
+              {t('cloud:org_manage.device_manage.add_device.heartbeat')}
+            </p>
             <div className="flex rounded-lg border border-solid p-2">
               <InputField
                 label="Heartbeat Interval"
@@ -269,7 +274,7 @@ export function UpdateDevice({
                 ref={heartbeatIntervalRef}
               />
               <InputField
-                label="Life Cicrle"
+                label="Life Circle"
                 type="number"
                 classnamefieldwrapper="flex items-center"
                 classlabel="mx-1"
@@ -278,7 +283,7 @@ export function UpdateDevice({
                 ref={timeoutRef}
               />
             </div>
-            <div className="">
+            <div>
               <Button
                 className="hover:text-primary-400 float-right mx-2 rounded-lg border-none px-1"
                 variant="trans"
@@ -303,13 +308,12 @@ export function UpdateDevice({
                 className="hover:text-primary-400 float-right rounded-lg border-none px-1"
                 variant="trans"
                 size="square"
+                disabled={disableUpdateHeartbeat}
                 onClick={() => {
                   mutateUpdateHeartBeat({ deviceId })
                 }}
               >
-                {t(
-                  'cloud:org_manage.device_manage.add_device.update_heartbeat',
-                )}
+                {t('cloud:org_manage.device_manage.add_device.ping')}
               </Button>
             </div>
           </div>
