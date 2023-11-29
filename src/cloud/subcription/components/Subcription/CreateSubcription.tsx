@@ -140,7 +140,7 @@ export function CreateSubcription() {
       }
 
       result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-      setRegisterValue(result < 0 ? 0 : result)
+      setRegisterValue(result < 0 ? parseNumber(fix_cost) : result)
     }
   }
 
