@@ -12,6 +12,7 @@ export type DeviceAttrLog = {
   entity_id: string
   attribute_key: string
   value: string | number | boolean
+  unit: string
   ts: number
   value_type: 'STR' | 'BOOL' | 'LONG' | 'DBL' | 'JSON'
 }

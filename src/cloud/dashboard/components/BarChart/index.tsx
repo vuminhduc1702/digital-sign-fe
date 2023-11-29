@@ -25,7 +25,7 @@ export const BarChart = ({
   widgetInfo,
 }: {
   data: TimeSeries
-  widgetInfo?: z.infer<typeof widgetSchema>
+  widgetInfo: z.infer<typeof widgetSchema>
 }) => {
   // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -124,6 +124,35 @@ export const BarChart = ({
     minDuration: 300,
   })
 
+  const renderLegend = (props: any) => {
+    const { payload } = props
+    return (
+      <div className="pt-3 text-center">
+        {payload.reverse().map((entry: any, index: number) => {
+          const unitConfig = widgetInfo.attribute_config.filter(
+            obj => obj.attribute_key === entry.dataKey,
+          )
+          return (
+            <span key={`item-${index}`} className="pr-4">
+              <div
+                style={{
+                  marginRight: '3px',
+                  display: 'inline-block',
+                  width: '12px',
+                  height: '12px',
+                  backgroundColor: entry.color,
+                }}
+              ></div>
+              {unitConfig && unitConfig.length > 0 && unitConfig[0].unit !== ''
+                ? entry.value + ' (' + unitConfig[0].unit + ')'
+                : entry.value}
+            </span>
+          )
+        })}
+      </div>
+    )
+  }
+
   // console.log('transform bar', dataTransformedFeedToChart)
 
   return (
@@ -135,9 +164,12 @@ export const BarChart = ({
             <XAxis dataKey="time" />
             <YAxis />
             <Tooltip />
-            <Legend />
+            <Legend content={renderLegend}/>
             <Brush dataKey="time" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
+              const colorConfig = widgetInfo.attribute_config.filter(
+                obj => obj.attribute_key === key,
+              )
               return (
                 <Bar
                   key={index.toString()}
@@ -145,17 +177,13 @@ export const BarChart = ({
                   animationDuration={250}
                   barSize={10}
                   stroke={
-                    index === 0
-                      ? '#e8c1a0'
-                      : index === 1
-                      ? '#f47560'
+                    colorConfig && colorConfig[0].color !== ''
+                      ? colorConfig[0].color
                       : '#f1e15b'
                   }
                   fill={
-                    index === 0
-                      ? '#e8c1a0'
-                      : index === 1
-                      ? '#f47560'
+                    colorConfig && colorConfig[0].color !== ''
+                    ? colorConfig[0].color
                       : '#f1e15b'
                   }
                 />

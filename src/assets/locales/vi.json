@@ -112,6 +112,7 @@
           "attr_type": "Loại thuộc tính",
           "value_type": "Loại giá trị",
           "value": "Giá trị hiện tại",
+          "unit": "Đơn vị",
           "last_update_ts": "Lần cập nhật cuối",
           "logged": "Lưu lịch sử",
           "delete_attr": "Xoá TT",
