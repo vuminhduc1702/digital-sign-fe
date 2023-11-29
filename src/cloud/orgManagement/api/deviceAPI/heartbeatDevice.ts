@@ -1,0 +1,66 @@
+import { useMutation } from '@tanstack/react-query'
+
+import { useTranslation } from 'react-i18next'
+import { axios } from '~/lib/axios'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { useNotificationStore } from '~/stores/notifications'
+
+export type HeartBeatDTO = {
+  data: {
+    interval: number
+    timeout: number
+  }
+  deviceId: string
+}
+
+export const heartBeat = ({ data, deviceId }: HeartBeatDTO) => {
+  return axios.put(`/api/devices/additional/${deviceId}`, data)
+}
+export const updateHeartBeat = ({ deviceId }: { deviceId: string }) => {
+  return axios.get(`/api/devices/heartbeat/${deviceId}`)
+}
+
+type UseHeartBeatOptions = {
+  config?: MutationConfig<typeof heartBeat>
+}
+type UseUpdateHeartBeatOptions = {
+  config?: MutationConfig<typeof updateHeartBeat>
+}
+
+export const useHeartBeat = ({ config }: UseHeartBeatOptions = {}) => {
+  const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
+  return useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['heartbeat'],
+      })
+      addNotification({
+        type: 'success',
+        title: t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
+      })
+    },
+    ...config,
+    mutationFn: heartBeat,
+  })
+}
+
+export const useUpdateHeartBeat = ({
+  config,
+}: UseUpdateHeartBeatOptions = {}) => {
+  const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
+  return useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['heartbeat'],
+      })
+      addNotification({
+        type: 'success',
+        title: t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
+      })
+    },
+    ...config,
+    mutationFn: updateHeartBeat,
+  })
+}

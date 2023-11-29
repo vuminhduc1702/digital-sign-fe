@@ -47,6 +47,7 @@ export function UpdateAttr({
 
   const { mutate: mutateUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
+  
   const { register, formState, control, handleSubmit, watch } = useForm<
     UpdateAttrDTO['data']['attributes'][0]
   >({

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -16,6 +16,10 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import {
+  useHeartBeat,
+  useUpdateHeartBeat,
+} from '../../api/deviceAPI/heartbeatDevice'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -26,6 +30,7 @@ type UpdateDeviceProps = {
   close: () => void
   isOpen: boolean
   template_id: string
+  additional_info?: object
 }
 export function UpdateDevice({
   deviceId,
@@ -36,12 +41,31 @@ export function UpdateDevice({
   close,
   isOpen,
   template_id,
+  additional_info,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
+
+  const { mutate: mutateHeartBeat } = useHeartBeat()
+  const { mutate: mutateUpdateHeartBeat } = useUpdateHeartBeat()
+
+  let additionalInfo
+  if (typeof additional_info === 'string') {
+    try {
+      additionalInfo = JSON.parse(additional_info)
+    } catch (error) {
+      additionalInfo = {}
+      console.error('Error parsing JSON:', error)
+    }
+  }
+  const additional_interval = additionalInfo?.heartbeat_interval || 30
+  const additional_timeout = additionalInfo?.timeout_lifecycle || 2
+  const heartbeatIntervalRef = useRef(additional_interval)
+  const timeoutRef = useRef(additional_timeout)
+
   const [offset, setOffset] = useState(0)
 
   const {
@@ -90,6 +114,7 @@ export function UpdateDevice({
   }))
 
   const { data: templateData } = useGetTemplates({ projectId })
+
   const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,
     value: template?.id,
@@ -222,6 +247,64 @@ export function UpdateDevice({
             error={formState.errors['key']}
             registration={register('key')}
           />
+          <div className="">
+            <p className="mx-1 my-2">Heartbeat</p>
+            <div className="flex rounded-lg border border-solid p-2">
+              <InputField
+                label="Heartbeat Interval"
+                type="number"
+                classnamefieldwrapper="flex items-center"
+                classlabel="mx-1"
+                classchild="mx-1"
+                defaultValue={additional_interval}
+                ref={heartbeatIntervalRef}
+              />
+              <InputField
+                label="Life Cicrle"
+                type="number"
+                classnamefieldwrapper="flex items-center"
+                classlabel="mx-1"
+                classchild="mx-1"
+                defaultValue={additional_timeout}
+                ref={timeoutRef}
+              />
+            </div>
+            <div className="">
+              <Button
+                className="hover:text-primary-400 float-right mx-2 rounded-lg border-none px-1"
+                variant="trans"
+                size="square"
+                type="submit"
+                onClick={() => {
+                  const heartbeatInterval = heartbeatIntervalRef.current.value
+                  const heartbeatTimeout = timeoutRef.current.value
+                  mutateHeartBeat({
+                    data: {
+                      interval: Number(heartbeatInterval),
+                      timeout: Number(heartbeatTimeout),
+                    },
+                    deviceId,
+                  })
+                }}
+              >
+                {t(
+                  'cloud:org_manage.device_manage.add_device.create_heartbeat',
+                )}
+              </Button>
+              <Button
+                className="hover:text-primary-400 float-right rounded-lg border-none px-1"
+                variant="trans"
+                size="square"
+                onClick={() => {
+                  mutateUpdateHeartBeat({ deviceId })
+                }}
+              >
+                {t(
+                  'cloud:org_manage.device_manage.add_device.update_heartbeat',
+                )}
+              </Button>
+            </div>
+          </div>
         </>
       </form>
     </Drawer>
