@@ -224,7 +224,7 @@ export function PackageInfo() {
             quantity_free: data?.data?.quantity_free?.toString() || '',
             plan_lv: data?.data?.plan_lv || [],
             tax: data?.data?.tax?.toString() || '',
-            exprity: data?.data?.exprity?.toString() || '',
+            exprity: ((data?.data?.exprity ? data?.data?.exprity : 0)/( 24 * 60 * 60))?.toString() || '',
           },
         }}
       >
@@ -729,6 +729,7 @@ export function PackageInfo() {
                       )
                       setValue('plan_lv', data?.data?.plan_lv || [])
                       setValue('tax', data?.data?.tax?.toString() || '')
+                      setValue('exprity', ((data?.data?.exprity ? data?.data?.exprity : 0)/( 24 * 60 * 60))?.toString() || '')
                       setEstimates(data?.data?.estimate || '')
                       setIsDisabled(!isDisabled)
                       setExpectedPayment('')
