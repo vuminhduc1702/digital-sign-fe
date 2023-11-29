@@ -203,7 +203,9 @@
           "success_delete": "Xoá người dùng thành công",
           "province": "Tỉnh/TP",
           "district": "Huyện/Quận",
-          "ward": "Phường/Xã"
+          "ward": "Phường/Xã",
+          "success_assign": "Gán người dùng thành công",
+          "assign": "Gán người dùng"
         }
       },
       "device_manage": {
@@ -554,7 +556,8 @@
         "pick_date_alert": "Vui lòng chọn ngày",
         "org": "Tổ chức",
         "label": "Nhãn",
-        "widget_config": "Cài đặt biểu đồ"
+        "widget_config": "Cài đặt biểu đồ",
+        "max": "Max"
       },
       "detail_dashboard": {
         "add_widget": {
@@ -891,16 +894,19 @@
     "connect_error": "Không kết nối WS được, vui lòng refresh lại trang",
     "filter": {
       "date": "Ngày",
-      "interval": "Khoảng thời gian",
+      "group_interval": "Đơn vị thời gian",
+      "choose_group_interval": "Vui lòng chọn đơn vị thời gian",
+      "time_period": "Khoảng thời gian",
+      "choose_time_period": "Vui lòng chọn khoảng thời gian",
       "data_aggregation": "Tổng hợp dữ liệu",
+      "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu",
       "dataType": "Loại biểu đồ",
-      "sma_window": "Số data point",
+      "choose_widgetType": "Vui lòng chọn loại biểu đồ",
+      "sma_window": "Số data point đường SMA",
       "choose_attr": "Vui lòng chọn thuộc tính",
-      "choose_interval": "Vui lòng chọn khoảng thời gian",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
-      "choose_widgetType": "Vui lòng chọn loại biểu đồ",
-      "choose_agg": "Vui lòng chọn cách tổng hợp dữ liệu"
+      "data_point": "Số data point"
     }
   },
   "validate": {
@@ -1057,7 +1063,8 @@
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
       "ddos": "Cập nhật DDOS thành công",
-      "name": "Tên người dùng"
+      "name": "Tên người dùng",
+      "list": "Danh sách người dùng"
     },
     "customer": {
       "success_delete": "Xoá khách hàng thành công",

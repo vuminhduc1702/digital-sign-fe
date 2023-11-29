@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import * as z from 'zod'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
@@ -36,7 +35,6 @@ import { cn } from '~/utils/misc'
 import { useNotificationStore } from '~/stores/notifications'
 
 import {
-  aggSchema,
   type DashboardWS,
   type WidgetType,
   type TimeSeries,
@@ -62,36 +60,12 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { StarFilledIcon } from '@radix-ui/react-icons'
 
-const widgetAggSchema = z.object({
-  label: z.string(),
-  value: aggSchema,
-})
-export type WidgetAgg = z.infer<typeof widgetAggSchema>
 export type WidgetAttrDeviceType = Array<{
   id: string
   attr: string
   deviceName: string
   deviceId: string
 }>
-
-export const wsInterval = [
-  { label: 'Second', value: 1000 },
-  { label: 'Minute', value: 60 * 1000 },
-  { label: 'Hour', value: 60 * 60 * 1000 },
-  { label: 'Day', value: 24 * 60 * 60 * 1000 },
-  { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
-  { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
-  { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
-]
-
-export const widgetAgg: WidgetAgg[] = [
-  { label: 'None', value: 'NONE' },
-  { label: 'Avg', value: 'AVG' },
-  { label: 'Min', value: 'MIN' },
-  { label: 'Max', value: 'MAX' },
-  { label: 'Sum', value: 'SUM' },
-  { label: 'Count', value: 'COUNT' },
-]
 
 const { token } = storage.getToken() as UserStorage
 export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
@@ -118,8 +92,11 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
 
-  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
-    useUpdateDashboard()
+  const {
+    mutate: mutateUpdateDashboard,
+    isLoading: updateDashboardIsLoading,
+    isSuccess: updateDashboardIsSuccess,
+  } = useUpdateDashboard()
 
   const { data: detailDashboard, refetch: detailDashboardRefetch } =
     useGetDashboardsById({
@@ -131,7 +108,6 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -142,6 +118,12 @@ export function DashboardDetail() {
     (message: WebSocketMessage) => sendMessage(message),
     [],
   )
+
+  useEffect(() => {
+    if (updateDashboardIsSuccess) {
+      detailDashboardRefetch()
+    }
+  }, [updateDashboardIsSuccess])
 
   useEffect(() => {
     if (widgetDetailDB != null) {
@@ -277,7 +259,7 @@ export function DashboardDetail() {
           >
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
-                const widgetInfo = widgetDetailDB?.[widgetId]
+                const widgetInfo = widgetList?.[widgetId]
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -346,7 +328,10 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
-                      <GaugeChart data={lastestValueOneDevice} />
+                      <GaugeChart
+                        data={lastestValueOneDevice}
+                        widgetInfo={widgetInfo}
+                      />
                     ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}
@@ -448,7 +433,7 @@ export function DashboardDetail() {
             <Button
               className="ml-2 rounded"
               size="square"
-              variant="trans"
+              variant="muted"
               onClick={() => open()}
               startIcon={
                 <PlusIcon

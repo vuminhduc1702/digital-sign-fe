@@ -3,16 +3,13 @@ import { useEffect } from 'react'
 import { Controller } from 'react-hook-form'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import { FieldWrapper, InputField, SelectField } from '~/components/Form'
 import { numberInput, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
-import {
-  type UpdateAttrDTO,
-  type EntityType,
-  useUpdateAttr,
-} from '../../api/attrAPI'
+import { type EntityType, useUpdateAttr } from '../../api/attrAPI'
 import { Checkbox } from '~/components/Checkbox'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
@@ -45,11 +42,11 @@ export function UpdateAttr({
 }: UpdateAttrProps) {
   const { t } = useTranslation()
 
-  const { mutate: mutateUpdateLogged } = useUpdateLogged({}, false)
+  const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
   
   const { register, formState, control, handleSubmit, watch } = useForm<
-    UpdateAttrDTO['data']['attributes'][0]
+    z.infer<typeof attrSchema>
   >({
     resolver: attrSchema && zodResolver(attrSchema),
     defaultValues: {
@@ -98,7 +95,15 @@ export function UpdateAttr({
       <form
         id="update-attr"
         className="w-full space-y-6"
-        onSubmit={handleSubmit(values => {
+        onSubmit={handleSubmit(async values => {
+          await mutateAsyncUpdateLogged({
+            data: {
+              logged: values.logged,
+            },
+            device_id: entityId,
+            attribute_key: attributeKey,
+            entityType: entityType,
+          })
           mutate({
             data: {
               attributes: [
@@ -162,16 +167,6 @@ export function UpdateAttr({
                         {...field}
                         checked={value}
                         onCheckedChange={onChange}
-                        onClick={() => {
-                          mutateUpdateLogged({
-                            data: {
-                              logged: !value,
-                            },
-                            device_id: entityId,
-                            attribute_key: attributeKey,
-                            entityType: entityType,
-                          })
-                        }}
                       />
                     )
                   }}

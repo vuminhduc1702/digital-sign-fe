@@ -37,8 +37,8 @@ export const useUpdateLogged = (
   const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['attrs'])
       if (addNoti) {
+        await queryClient.invalidateQueries(['attrs'])
         addNotification({
           type: 'success',
           title: t(

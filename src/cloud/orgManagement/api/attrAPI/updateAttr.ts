@@ -8,7 +8,7 @@ import { useNotificationStore } from '~/stores/notifications'
 
 import { type attrListSchema } from '~/utils/schemaValidation'
 
-export type UpdateAttrDTO = {
+type UpdateAttrDTO = {
   data: {
     attributes: z.infer<typeof attrListSchema>
   }
@@ -24,8 +24,7 @@ export type UseUpdateAttrOptions = {
   config?: MutationConfig<typeof updateAttr>
 }
 
-export const 
-useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
+export const useUpdateAttr = ({ config }: UseUpdateAttrOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()

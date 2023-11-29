@@ -53,22 +53,22 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         classchild={classchild}
         className={cn(
           type === 'file' &&
-            'bg-primary-400 w-fit cursor-pointer px-2 py-1 text-white',
+            'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white',
           classnamefieldwrapper,
         )}
       >
         {startIcon}
         <input
-          {...props}
           type={type}
           className={cn(
-            'border-secondary-600 placeholder-secondary-700 focus:outline-focus-400 focus:ring-focus-400 disabled:bg-secondary-500 block w-full appearance-none rounded-md border px-3 py-2 text-black shadow-sm focus:outline-2 disabled:cursor-not-allowed',
+            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
             className,
             { 'pl-8': startIcon, 'pr-8': endIcon },
           )}
           ref={ref}
           placeholder={placeholder ?? t('placeholder:input_text')}
           {...registration}
+          {...props}
         />
         {endIcon}
       </FieldWrapper>

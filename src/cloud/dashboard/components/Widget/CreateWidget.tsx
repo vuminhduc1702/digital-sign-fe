@@ -25,7 +25,6 @@ import { Calendar, TimePicker } from '~/components/Calendar'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
-import { widgetAgg, wsInterval } from '../../routes/DashboardDetail'
 import { useDefaultCombobox } from '~/utils/hooks'
 
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
@@ -39,22 +38,45 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
+const wsInterval = [
+  { label: 'Second', value: 1000 },
+  { label: 'Minute', value: 60 * 1000 },
+  { label: 'Hour', value: 60 * 60 * 1000 },
+  { label: 'Day', value: 24 * 60 * 60 * 1000 },
+  { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
+  { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
+  { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
+]
+
+const widgetAggSchema = z.object({
+  label: z.string(),
+  value: aggSchema,
+})
+type WidgetAgg = z.infer<typeof widgetAggSchema>
+const widgetAgg: WidgetAgg[] = [
+  { label: 'None', value: 'NONE' },
+  { label: 'Average', value: 'AVG' },
+  { label: 'Min', value: 'MIN' },
+  { label: 'Max', value: 'MAX' },
+  { label: 'Sum', value: 'SUM' },
+  { label: 'Count', value: 'COUNT' },
+]
+
 export const attrWidgetSchema = z.array(
   z.object({
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    label: z.string().optional(),
-    color: z.string().optional(),
-    unit: z.string().optional(),
-    // decimal: z.string().optional(),
+    label: z.string(),
+    color: z.string(),
+    unit: z.string(),
+    max: z.number(),
   }),
 )
 
 export const widgetDataTypeSchema = z.enum(['REALTIME', 'HISTORY'] as const, {
   errorMap: () => ({ message: i18n.t('ws:filter.choose_widgetType') }),
 })
-type WidgetDataType = z.infer<typeof widgetDataTypeSchema>
 
 export const widgetTypeSchema = z
   .enum(['TIMESERIES', 'LASTEST'] as const)
@@ -80,6 +102,8 @@ export const widgetSchema = z.object({
         start_date: z.number(),
         end_date: z.number(),
         data_type: widgetDataTypeSchema,
+        data_point: z.number(),
+        time_period: z.number(),
       }),
       timewindow: z.object({
         interval: z.number(),
@@ -113,23 +137,53 @@ export const widgetCreateSchema = z.object({
   attributeConfig: attrWidgetSchema,
   widgetSetting: z
     .object({
-      agg: aggSchema,
-      interval: z.number({
-        required_error: i18n.t('ws:filter.choose_interval'),
-      }),
-      startDate: z.date({
-        required_error: i18n.t('cloud:dashboard.config_chart.pick_date_alert'),
-      }),
-      endDate: z
-        .date({
-          required_error: i18n.t(
-            'cloud:dashboard.config_chart.pick_date_alert',
-          ),
-        })
-        .optional(),
-      dataType: widgetDataTypeSchema,
       window: z.number().optional(),
     })
+    .and(
+      z.discriminatedUnion('agg', [
+        z.object({
+          agg: z.literal('NONE'),
+          data_point: z
+            .number()
+            .min(7, { message: 'Tối thiểu 7 data point' })
+            .max(5000, { message: 'Tối đa 5000 data point' }),
+        }),
+        z.object({
+          agg: z.enum(
+            ['AVG', 'MIN', 'MAX', 'SUM', 'COUNT', 'SMA', 'FFT'] as const,
+            {
+              errorMap: () => ({ message: i18n.t('ws:filter.choose_agg') }),
+            },
+          ),
+          interval: z.number({
+            required_error: i18n.t('ws:filter.choose_group_interval'),
+          }),
+        }),
+      ]),
+    )
+    .and(
+      z.discriminatedUnion('dataType', [
+        z.object({
+          dataType: z.literal('HISTORY'),
+          startDate: z.date({
+            required_error: i18n.t(
+              'cloud:dashboard.config_chart.pick_date_alert',
+            ),
+          }),
+          endDate: z.date({
+            required_error: i18n.t(
+              'cloud:dashboard.config_chart.pick_date_alert',
+            ),
+          }),
+        }),
+        z.object({
+          dataType: z.literal('REALTIME'),
+          time_period: z.number({
+            required_error: i18n.t('ws:filter.choose_time_period'),
+          }),
+        }),
+      ]),
+    )
     .optional(),
   id: z.string().optional(),
 })
@@ -230,7 +284,7 @@ export function CreateWidget({
       label: '',
       color: '',
       unit: '',
-      // decimal: '',
+      max: 100,
     })
   }, [])
 
@@ -257,7 +311,7 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
+              console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -307,45 +361,58 @@ export function CreateWidget({
                 ],
               }
 
-              const realtimeMessage = {
-                entityDataCmds: [
-                  {
-                    tsCmd: {
-                      keys: values.attributeConfig.map(
-                        item => item.attribute_key,
-                      ),
-                      startTs: Date.parse(
-                        values.widgetSetting?.startDate?.toISOString() as string,
-                      ),
-                      interval: values.widgetSetting?.interval,
-                      limit: 10,
-                      offset: 0,
-                      agg: values.widgetSetting?.agg,
-                    },
-                    id: widgetId,
-                  },
-                ],
+              const tsCmd = {
+                keys: values.attributeConfig.map(item => item.attribute_key),
+                interval: values.widgetSetting?.interval,
+                offset: 0,
+                agg: values.widgetSetting?.agg,
               }
+              const realtimeMessage =
+                values.widgetSetting?.agg === 'NONE'
+                  ? {
+                      entityDataCmds: [
+                        {
+                          tsCmd: {
+                            ...tsCmd,
+                            limit: values.widgetSetting?.data_point,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
+                  : {
+                      entityDataCmds: [
+                        {
+                          tsCmd: {
+                            ...tsCmd,
+                            startTs:
+                              Date.now() - values.widgetSetting?.time_period,
+                          },
+                          id: widgetId,
+                        },
+                      ],
+                    }
 
+              const historyCmd = {
+                keys: values.attributeConfig.map(item => item.attribute_key),
+                startTs: Date.parse(
+                  values.widgetSetting?.startDate?.toISOString(),
+                ),
+                endTs: Date.parse(
+                  values.widgetSetting?.endDate?.toISOString() as string,
+                ),
+                interval: values.widgetSetting?.interval,
+                limit: 5000,
+                offset: 0,
+                agg: values.widgetSetting?.agg,
+              }
               const historyMessage =
                 values.widgetSetting?.agg === 'SMA'
                   ? {
                       entityDataCmds: [
                         {
                           historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString(),
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
+                            ...historyCmd,
                             window: values.widgetSetting?.window,
                           },
                           id: widgetId,
@@ -355,21 +422,7 @@ export function CreateWidget({
                   : {
                       entityDataCmds: [
                         {
-                          historyCmd: {
-                            keys: values.attributeConfig.map(
-                              item => item.attribute_key,
-                            ),
-                            startTs: Date.parse(
-                              values.widgetSetting?.startDate?.toISOString() as string,
-                            ),
-                            endTs: Date.parse(
-                              values.widgetSetting?.endDate?.toISOString() as string,
-                            ),
-                            interval: values.widgetSetting?.interval,
-                            limit: 100,
-                            offset: 0,
-                            agg: values.widgetSetting?.agg,
-                          },
+                          historyCmd,
                           id: widgetId,
                         },
                       ],
@@ -397,7 +450,7 @@ export function CreateWidget({
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
-                  // decimal: item.decimal,
+                  max: item.max,
                   label: item.label,
                   unit: item.unit,
                 })),
@@ -410,13 +463,14 @@ export function CreateWidget({
                         },
                         chartsetting: {
                           start_date: new Date(
-                            values.widgetSetting
-                              ?.startDate as unknown as number,
+                            values.widgetSetting?.startDate,
                           ).getTime(),
                           end_date: new Date(
-                            values.widgetSetting?.endDate as unknown as number,
+                            values.widgetSetting?.endDate,
                           ).getTime(),
                           data_type: values.widgetSetting?.dataType,
+                          data_point: values.widgetSetting?.data_point,
+                          time_period: values.widgetSetting?.time_period,
                         },
                       }
                     : null,
@@ -460,12 +514,8 @@ export function CreateWidget({
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                              },
-                            ],
+                          resetField('attributeConfig.0.attribute_key', {
+                            defaultValue: '',
                           })
                         }}
                       />
@@ -515,12 +565,8 @@ export function CreateWidget({
                         }}
                         isLoading={deviceIsLoading}
                         handleClearSelectDropdown={() => {
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                              },
-                            ],
+                          resetField('attributeConfig.0.attribute_key', {
+                            defaultValue: '',
                           })
                         }}
                       />
@@ -555,7 +601,7 @@ export function CreateWidget({
                             label: '',
                             color: '',
                             unit: '',
-                            // decimal: '',
+                            max: 100,
                           })
                         }
                       />
@@ -607,7 +653,7 @@ export function CreateWidget({
                             }
                           </p>
                         </div>
-                        <InputField
+                        {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
                             formState?.errors?.attributeConfig?.[index]?.label
@@ -615,7 +661,7 @@ export function CreateWidget({
                           registration={register(
                             `attributeConfig.${index}.label` as const,
                           )}
-                        />
+                        /> */}
                         <div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.color')}
@@ -677,15 +723,19 @@ export function CreateWidget({
                             `attributeConfig.${index}.unit` as const,
                           )}
                         />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.decimal')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.decimal
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.decimal` as const,
-                          )}
-                        /> */}
+                        {widgetCategory === 'GAUGE' && (
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.max')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.max
+                            }
+                            type="number"
+                            registration={register(
+                              `attributeConfig.${index}.max` as const,
+                              { valueAsNumber: true },
+                            )}
+                          />
+                        )}
                       </div>
                       {isMultipleAttr ? (
                         <Button
@@ -718,6 +768,9 @@ export function CreateWidget({
                           error={formState?.errors?.widgetSetting?.dataType}
                           registration={register(
                             `widgetSetting.dataType` as const,
+                            {
+                              value: 'REALTIME',
+                            },
                           )}
                           options={widgetDataTypeOptions.map(dataType => ({
                             label: dataType.label,
@@ -725,206 +778,40 @@ export function CreateWidget({
                           }))}
                         />
 
-                        <div className="space-y-1">
-                          <FieldWrapper
-                            label={t('cloud:dashboard.config_chart.startDate')}
-                            error={formState?.errors?.widgetSetting?.startDate}
-                          >
-                            <Controller
-                              control={control}
-                              name="widgetSetting.startDate"
-                              render={({
-                                field: { onChange, value, ...field },
-                              }) => {
-                                return (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        id="date"
-                                        variant="trans"
-                                        size="square"
-                                        className={cn(
-                                          'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                                          !value && 'text-secondary-700',
-                                        )}
-                                      >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {value ? (
-                                          <span>
-                                            {format(
-                                              new Date(value),
-                                              'dd/MM/y HH:mm:ss',
-                                            )}
-                                          </span>
-                                        ) : (
-                                          <span>
-                                            {t(
-                                              'cloud:dashboard.config_chart.pick_date',
-                                            )}
-                                          </span>
-                                        )}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        {...field}
-                                        initialFocus
-                                        mode="single"
-                                        defaultMonth={new Date()}
-                                        selected={value}
-                                        onSelect={onChange}
-                                        numberOfMonths={1}
-                                      />
-                                      <TimePicker
-                                        granularity="second"
-                                        onChange={e =>
-                                          setValue(
-                                            'widgetSetting.startDate',
-                                            new Date(
-                                              new Date(
-                                                getValues(
-                                                  'widgetSetting.startDate',
-                                                ),
-                                              ).setHours(0, 0, 0, 0) +
-                                                e.hour * 60 * 60 * 1000 +
-                                                e.minute * 60 * 1000 +
-                                                e.second * 1000 +
-                                                e.millisecond,
-                                            ),
-                                          )
-                                        }
-                                        hourCycle={24}
-                                        isDisabled={
-                                          !watch('widgetSetting.startDate')
-                                        }
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                )
-                              }}
-                            />
-                          </FieldWrapper>
-                        </div>
-
-                        <div className="space-y-1">
-                          <FieldWrapper
-                            label={t('cloud:dashboard.config_chart.endDate')}
-                            error={
-                              getValues('widgetSetting.dataType') === 'REALTIME'
-                                ? ''
-                                : formState?.errors?.widgetSetting?.startDate
-                            }
-                          >
-                            <Controller
-                              control={control}
-                              name="widgetSetting.endDate"
-                              render={({
-                                field: { onChange, value, ...field },
-                              }) => {
-                                return (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        id="date"
-                                        variant="trans"
-                                        size="square"
-                                        className={cn(
-                                          'relative w-full !justify-start rounded-md text-left font-normal',
-                                          !value && 'text-secondary-700',
-                                        )}
-                                        disabled={
-                                          getValues(
-                                            'widgetSetting.dataType',
-                                          ) === 'REALTIME'
-                                        }
-                                      >
-                                        <CalendarIcon className="mr-2 h-4 w-4" />
-                                        {value ? (
-                                          <span>
-                                            {format(
-                                              new Date(value),
-                                              'dd/MM/y HH:mm:ss',
-                                            )}
-                                          </span>
-                                        ) : (
-                                          <span>
-                                            {t(
-                                              'cloud:dashboard.config_chart.pick_date',
-                                            )}
-                                          </span>
-                                        )}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        {...field}
-                                        initialFocus
-                                        mode="single"
-                                        defaultMonth={new Date()}
-                                        selected={value}
-                                        onSelect={onChange}
-                                        numberOfMonths={1}
-                                        disabled={{
-                                          before: watch(
-                                            'widgetSetting.startDate',
-                                          ),
-                                        }}
-                                      />
-                                      <TimePicker
-                                        granularity="second"
-                                        onChange={e =>
-                                          setValue(
-                                            'widgetSetting.endDate',
-                                            new Date(
-                                              new Date(
-                                                getValues(
-                                                  'widgetSetting.endDate',
-                                                ) as unknown as Date,
-                                              ).setHours(0, 0, 0, 0) +
-                                                e.hour * 60 * 60 * 1000 +
-                                                e.minute * 60 * 1000 +
-                                                e.second * 1000 +
-                                                e.millisecond,
-                                            ),
-                                          )
-                                        }
-                                        hourCycle={24}
-                                        isDisabled={
-                                          !watch('widgetSetting.endDate')
-                                        }
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                )
-                              }}
-                            />
-                          </FieldWrapper>
-                        </div>
-
-                        <SelectField
-                          label={t('ws:filter.interval')}
-                          error={formState?.errors?.widgetSetting?.interval}
-                          registration={register(
-                            `widgetSetting.interval` as const,
-                            {
-                              valueAsNumber: true,
-                            },
-                          )}
-                          options={wsInterval.map(interval => ({
-                            label: interval.label,
-                            value: interval.value,
-                          }))}
-                        />
+                        {watch('widgetSetting.agg') === 'NONE' ? (
+                          <InputField
+                            type="number"
+                            label={t('ws:filter.data_point')}
+                            error={formState?.errors?.widgetSetting?.data_point}
+                            registration={register(
+                              `widgetSetting.data_point` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                          />
+                        ) : (
+                          <SelectField
+                            label={t('ws:filter.group_interval')}
+                            error={formState?.errors?.widgetSetting?.interval}
+                            registration={register(
+                              `widgetSetting.interval` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                            options={wsInterval.map(interval => ({
+                              label: interval.label,
+                              value: interval.value,
+                            }))}
+                          />
+                        )}
                         <SelectField
                           label={t('ws:filter.data_aggregation')}
                           error={formState?.errors?.widgetSetting?.agg}
-                          registration={register(`widgetSetting.agg` as const)}
+                          registration={register(`widgetSetting.agg` as const, {
+                            value: 'AVG',
+                          })}
                           options={
                             getValues('widgetSetting.dataType') === 'HISTORY'
                               ? widgetAgg
@@ -942,6 +829,7 @@ export function CreateWidget({
                                 }))
                           }
                         />
+
                         {watch('widgetSetting.agg') === 'SMA' ? (
                           <InputField
                             type="number"
@@ -955,6 +843,217 @@ export function CreateWidget({
                             )}
                           />
                         ) : null}
+
+                        {watch('widgetSetting.dataType') === 'HISTORY' ? (
+                          <div className="space-y-3">
+                            <div className="space-y-1">
+                              <FieldWrapper
+                                label={t(
+                                  'cloud:dashboard.config_chart.startDate',
+                                )}
+                                error={
+                                  formState?.errors?.widgetSetting?.startDate
+                                }
+                              >
+                                <Controller
+                                  control={control}
+                                  name="widgetSetting.startDate"
+                                  render={({
+                                    field: { onChange, value, ...field },
+                                  }) => {
+                                    return (
+                                      <Popover>
+                                        <PopoverTrigger asChild>
+                                          <Button
+                                            id="date"
+                                            variant="trans"
+                                            size="square"
+                                            className={cn(
+                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                              !value && 'text-secondary-700',
+                                            )}
+                                          >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {value ? (
+                                              <span>
+                                                {format(
+                                                  new Date(value),
+                                                  'dd/MM/y HH:mm:ss',
+                                                )}
+                                              </span>
+                                            ) : (
+                                              <span>
+                                                {t(
+                                                  'cloud:dashboard.config_chart.pick_date',
+                                                )}
+                                              </span>
+                                            )}
+                                          </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                          className="w-auto p-0"
+                                          align="start"
+                                        >
+                                          <Calendar
+                                            {...field}
+                                            initialFocus
+                                            mode="single"
+                                            defaultMonth={new Date()}
+                                            selected={value}
+                                            onSelect={onChange}
+                                            numberOfMonths={1}
+                                          />
+                                          <TimePicker
+                                            granularity="second"
+                                            onChange={e =>
+                                              setValue(
+                                                'widgetSetting.startDate',
+                                                new Date(
+                                                  new Date(
+                                                    getValues(
+                                                      'widgetSetting.startDate',
+                                                    ),
+                                                  ).setHours(0, 0, 0, 0) +
+                                                    e.hour * 60 * 60 * 1000 +
+                                                    e.minute * 60 * 1000 +
+                                                    e.second * 1000 +
+                                                    e.millisecond,
+                                                ),
+                                              )
+                                            }
+                                            hourCycle={24}
+                                            isDisabled={
+                                              !watch('widgetSetting.startDate')
+                                            }
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                    )
+                                  }}
+                                />
+                              </FieldWrapper>
+                            </div>
+
+                            <div className="space-y-1">
+                              <FieldWrapper
+                                label={t(
+                                  'cloud:dashboard.config_chart.endDate',
+                                )}
+                                error={
+                                  getValues('widgetSetting.dataType') ===
+                                  'REALTIME'
+                                    ? ''
+                                    : formState?.errors?.widgetSetting
+                                        ?.startDate
+                                }
+                              >
+                                <Controller
+                                  control={control}
+                                  name="widgetSetting.endDate"
+                                  render={({
+                                    field: { onChange, value, ...field },
+                                  }) => {
+                                    return (
+                                      <Popover>
+                                        <PopoverTrigger asChild>
+                                          <Button
+                                            id="date"
+                                            variant="trans"
+                                            size="square"
+                                            className={cn(
+                                              'relative w-full !justify-start rounded-md text-left font-normal',
+                                              !value && 'text-secondary-700',
+                                            )}
+                                            disabled={
+                                              getValues(
+                                                'widgetSetting.dataType',
+                                              ) === 'REALTIME'
+                                            }
+                                          >
+                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            {value ? (
+                                              <span>
+                                                {format(
+                                                  new Date(value),
+                                                  'dd/MM/y HH:mm:ss',
+                                                )}
+                                              </span>
+                                            ) : (
+                                              <span>
+                                                {t(
+                                                  'cloud:dashboard.config_chart.pick_date',
+                                                )}
+                                              </span>
+                                            )}
+                                          </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                          className="w-auto p-0"
+                                          align="start"
+                                        >
+                                          <Calendar
+                                            {...field}
+                                            initialFocus
+                                            mode="single"
+                                            defaultMonth={new Date()}
+                                            selected={value}
+                                            onSelect={onChange}
+                                            numberOfMonths={1}
+                                            disabled={{
+                                              before: watch(
+                                                'widgetSetting.startDate',
+                                              ),
+                                            }}
+                                          />
+                                          <TimePicker
+                                            granularity="second"
+                                            onChange={e =>
+                                              setValue(
+                                                'widgetSetting.endDate',
+                                                new Date(
+                                                  new Date(
+                                                    getValues(
+                                                      'widgetSetting.endDate',
+                                                    ) as unknown as Date,
+                                                  ).setHours(0, 0, 0, 0) +
+                                                    e.hour * 60 * 60 * 1000 +
+                                                    e.minute * 60 * 1000 +
+                                                    e.second * 1000 +
+                                                    e.millisecond,
+                                                ),
+                                              )
+                                            }
+                                            hourCycle={24}
+                                            isDisabled={
+                                              !watch('widgetSetting.endDate')
+                                            }
+                                          />
+                                        </PopoverContent>
+                                      </Popover>
+                                    )
+                                  }}
+                                />
+                              </FieldWrapper>
+                            </div>
+                          </div>
+                        ) : (
+                          <SelectField
+                            label={t('ws:filter.time_period')}
+                            error={
+                              formState?.errors?.widgetSetting?.time_period
+                            }
+                            registration={register(
+                              `widgetSetting.time_period` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                            options={wsInterval.map(interval => ({
+                              label: interval.label,
+                              value: interval.value,
+                            }))}
+                          />
+                        )}
                       </div>
                     </>
                   ) : null}
@@ -993,8 +1092,7 @@ export function CreateWidget({
   )
 }
 
-{
-  /* <div className="space-y-1">
+/* <div className="space-y-1">
   <FieldWrapper
     label={t('cloud:dashboard.config_chart.attr')}
     error={
@@ -1057,4 +1155,3 @@ export function CreateWidget({
     />
   </FieldWrapper>
 </div> */
-}
