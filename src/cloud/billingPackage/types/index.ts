@@ -16,7 +16,7 @@ export type Plan = {
   price: number
   quantity_free: number
   plan_lv: PlanlvList[]
-  exprity: number
+  expiry: number
   project_id: string
   date_created: number
   tax: number

@@ -109,7 +109,7 @@ export function PackageInfo() {
     } else if (estimates === 'unit') {
       result =
         (parseNumber(expected_number) - parseNumber(quantity_free)) *
-        parseNumber(price) +
+          parseNumber(price) +
         parseNumber(fix_cost)
     } else if (estimates === 'mass') {
       plan_lv?.length &&
@@ -117,11 +117,11 @@ export function PackageInfo() {
           if (
             parseNumber(item.level) > parseNumber(expected_number) &&
             (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
-            parseNumber(expected_number)
+              parseNumber(expected_number)
           ) {
             result =
               (parseNumber(expected_number) - parseNumber(item.free)) *
-              parseNumber(item.price) +
+                parseNumber(item.price) +
               parseNumber(fix_cost)
           }
         })
@@ -163,7 +163,7 @@ export function PackageInfo() {
     }
 
     result = parseNumber(result * ((100 + parseNumber(tax)) / 100))
-    setExpectedPayment(result < 0 ? 0 : result)
+    setExpectedPayment(result < 0 ? parseNumber(fix_cost) : result)
   }
 
   return (
@@ -186,8 +186,8 @@ export function PackageInfo() {
               estimate: values.estimate,
             }))
           }
-          const exprityNumber =
-            values?.exprity && parseInt(values?.exprity) * 24 * 60 * 60
+          const expiryNumber =
+            values?.expiry && parseInt(values?.expiry) * 24 * 60 * 60
           mutate({
             data: {
               ...values,
@@ -200,7 +200,7 @@ export function PackageInfo() {
                 (values.quantity_free && parseInt(values.quantity_free)) ||
                 null,
               price: (values.price && parseInt(values.price)) || null,
-              exprity: exprityNumber || null,
+              expiry: expiryNumber || null,
             },
             planId: packageId,
           })
@@ -224,7 +224,11 @@ export function PackageInfo() {
             quantity_free: data?.data?.quantity_free?.toString() || '',
             plan_lv: data?.data?.plan_lv || [],
             tax: data?.data?.tax?.toString() || '',
-            exprity: ((data?.data?.exprity ? data?.data?.exprity : 0)/( 24 * 60 * 60))?.toString() || '',
+            expiry:
+              (
+                (data?.data?.expiry ? data?.data?.expiry : 0) /
+                (24 * 60 * 60)
+              )?.toString() || '',
           },
         }}
       >
@@ -252,7 +256,7 @@ export function PackageInfo() {
                     onChange: e => {
                       setType(e.target.value)
                       setPaymentType('PREPAY')
-                    }
+                    },
                   })}
                   options={[
                     { label: 'Chính thức', value: 'official' },
@@ -298,15 +302,15 @@ export function PackageInfo() {
                       setPaymentType(e.target.value)
                       setValue('payment_type', e.target.value)
                       setPeriodType('PERIODIC')
-                    }
+                    },
                   })}
                   options={
                     type === 'trial'
                       ? [{ label: 'Trả trước', value: 'PREPAY' }]
                       : [
-                        { label: 'Trả trước', value: 'PREPAY' },
-                        { label: 'Trả sau', value: 'POSTPAID' },
-                      ]
+                          { label: 'Trả trước', value: 'PREPAY' },
+                          { label: 'Trả sau', value: 'POSTPAID' },
+                        ]
                   }
                   classnamefieldwrapper="flex items-center gap-x-3"
                   disabled={isDisabled}
@@ -317,8 +321,8 @@ export function PackageInfo() {
                   {paymentType === 'POSTPAID' && (
                     <InputField
                       label={t('billing:package_manage.popup.expiry')}
-                      error={formState.errors['exprity']}
-                      registration={register('exprity', {
+                      error={formState.errors['expiry']}
+                      registration={register('expiry', {
                         onChange: e => {
                           if (
                             parseNumber(e.target.value) >
@@ -327,13 +331,13 @@ export function PackageInfo() {
                               getValues('cal_unit'),
                             )
                           ) {
-                            setError('exprity', {
+                            setError('expiry', {
                               message: t(
                                 'billing:package_manage.popup.choose_expiry',
                               ),
                             })
-                          } else setError('exprity', { message: '' })
-                        }
+                          } else setError('expiry', { message: '' })
+                        },
                       })}
                       type="number"
                       disabled={isDisabled}
@@ -347,14 +351,14 @@ export function PackageInfo() {
                   label={t('billing:package_manage.popup.type_period')}
                   error={formState.errors['type_period']}
                   registration={register('type_period', {
-                    onChange: e => setPeriodType(e.target.value)
+                    onChange: e => setPeriodType(e.target.value),
                   })}
                   options={
                     type === 'official' && paymentType === 'PREPAY'
                       ? [
-                        { label: 'Định kỳ', value: 'PERIODIC' },
-                        { label: 'Một lần', value: 'ONCE' },
-                      ]
+                          { label: 'Định kỳ', value: 'PERIODIC' },
+                          { label: 'Một lần', value: 'ONCE' },
+                        ]
                       : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                   }
                   classnamefieldwrapper="flex items-center gap-x-3"
@@ -410,7 +414,7 @@ export function PackageInfo() {
                     onChange: e => {
                       setExpectedNumber('')
                       setExpectedPayment('')
-                    }
+                    },
                   })}
                   type="number"
                   classnamefieldwrapper="flex items-center gap-x-3"
@@ -454,24 +458,24 @@ export function PackageInfo() {
                         ])
                         setValue('quantity_free', '')
                         setValue('price', '')
-                      }
+                      },
                     })}
                     disabled={isDisabled}
                     options={
                       type === 'official' &&
-                        paymentType === 'POSTPAID' &&
-                        periodType === 'PERIODIC'
+                      paymentType === 'POSTPAID' &&
+                      periodType === 'PERIODIC'
                         ? [
-                          { label: 'Theo khối lượng', value: 'mass' },
-                          { label: 'Cố định', value: 'fix' },
-                          { label: 'Theo đơn vị', value: 'unit' },
-                          { label: 'Theo lũy kế', value: 'accumulated' },
-                          { label: 'Theo bậc thang', value: 'step' },
-                        ]
+                            { label: 'Theo khối lượng', value: 'mass' },
+                            { label: 'Cố định', value: 'fix' },
+                            { label: 'Theo đơn vị', value: 'unit' },
+                            { label: 'Theo lũy kế', value: 'accumulated' },
+                            { label: 'Theo bậc thang', value: 'step' },
+                          ]
                         : [
-                          { label: 'Cố định', value: 'fix' },
-                          { label: 'Theo đơn vị', value: 'unit' },
-                        ]
+                            { label: 'Cố định', value: 'fix' },
+                            { label: 'Theo đơn vị', value: 'unit' },
+                          ]
                     }
                     classnamefieldwrapper="flex items-center gap-x-3"
                     classlabel="w-2/12"
@@ -480,138 +484,141 @@ export function PackageInfo() {
                   {(estimates === 'mass' ||
                     estimates === 'accumulated' ||
                     estimates === 'step') && (
-                      <div className="flex items-center">
-                        <img
-                          onClick={() => {
-                            let arrPlan = getValues('plan_lv')
-                            const index = getValues('plan_lv')?.length - 1
-                            if (arrPlan[index].level) {
-                              planlvAppend({
-                                level: '',
-                                price: '',
-                                free: '',
-                              })
-                            }
-                          }}
-                          src={btnAddIcon}
-                          alt="add-icon"
-                          className="h-5 w-5 cursor-pointer"
-                        />
-                      </div>
-                    )}
+                    <div className="flex items-center">
+                      <img
+                        onClick={() => {
+                          let arrPlan = getValues('plan_lv')
+                          const index = getValues('plan_lv')?.length - 1
+                          if (arrPlan[index].level) {
+                            planlvAppend({
+                              level: '',
+                              price: '',
+                              free: '',
+                            })
+                          }
+                        }}
+                        src={btnAddIcon}
+                        alt="add-icon"
+                        className="h-5 w-5 cursor-pointer"
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="max-h-[122px] overflow-auto">
                   {estimates === 'mass' ||
-                    estimates === 'accumulated' ||
-                    estimates === 'step'
+                  estimates === 'accumulated' ||
+                  estimates === 'step'
                     ? planlvFields.map((field, index) => {
-                      return (
-                        <section className="flex w-full" key={field.id}>
-                          <div
-                            className={cn('grid w-full grid-cols-1 gap-x-4', {
-                              'md:grid-cols-2':
-                                estimates === 'accumulated' ||
-                                estimates === 'step',
-                              'md:grid-cols-3': estimates === 'mass',
-                            })}
-                          >
-                            <InputField
-                              label={
-                                estimates === 'step'
-                                  ? t('billing:package_manage.popup.max')
-                                  : t(
-                                    'billing:package_manage.popup.level',
-                                  ).replace(
-                                    '{{NUMBER}}',
-                                    index >= 1
-                                      ? getValues('plan_lv')?.[
-                                        index - 1
-                                      ].level?.toString()
-                                      : '1',
-                                  )
-                              }
-                              registration={register(
-                                `plan_lv.${index}.level`, {
-                                onChange: e => {
-                                  setExpectedNumber('')
-                                  setExpectedPayment('')
-                                }
-                              }
-                              )}
-                              type="number"
-                              classnamefieldwrapper="flex items-center gap-x-3"
-                              disabled={isDisabled}
-                              classlabel="w-2/12"
-                              classchild="w-10/12"
-                            />
-                            <div>
+                        return (
+                          <section className="flex w-full" key={field.id}>
+                            <div
+                              className={cn('grid w-full grid-cols-1 gap-x-4', {
+                                'md:grid-cols-2':
+                                  estimates === 'accumulated' ||
+                                  estimates === 'step',
+                                'md:grid-cols-3': estimates === 'mass',
+                              })}
+                            >
                               <InputField
                                 label={
                                   estimates === 'step'
-                                    ? t('billing:package_manage.popup.price')
+                                    ? t('billing:package_manage.popup.max')
                                     : t(
-                                      'billing:package_manage.popup.unit_price',
-                                    )
+                                        'billing:package_manage.popup.level',
+                                      ).replace(
+                                        '{{NUMBER}}',
+                                        index >= 1
+                                          ? getValues('plan_lv')?.[
+                                              index - 1
+                                            ].level?.toString()
+                                          : '1',
+                                      )
                                 }
                                 registration={register(
-                                  `plan_lv.${index}.price`, {
-                                  onChange: e => {
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
-                                  }
-                                }
+                                  `plan_lv.${index}.level`,
+                                  {
+                                    onChange: e => {
+                                      setExpectedNumber('')
+                                      setExpectedPayment('')
+                                    },
+                                  },
                                 )}
-                                min="1"
                                 type="number"
-                                disabled={isDisabled}
                                 classnamefieldwrapper="flex items-center gap-x-3"
+                                disabled={isDisabled}
                                 classlabel="w-2/12"
                                 classchild="w-10/12"
                               />
-                              <p className="text-body-sm text-primary-400">
-                                {
-                                  formState?.errors?.plan_lv?.[index]?.price
-                                    ?.message
-                                }
-                              </p>
+                              <div>
+                                <InputField
+                                  label={
+                                    estimates === 'step'
+                                      ? t('billing:package_manage.popup.price')
+                                      : t(
+                                          'billing:package_manage.popup.unit_price',
+                                        )
+                                  }
+                                  registration={register(
+                                    `plan_lv.${index}.price`,
+                                    {
+                                      onChange: e => {
+                                        setExpectedNumber('')
+                                        setExpectedPayment('')
+                                      },
+                                    },
+                                  )}
+                                  min="1"
+                                  type="number"
+                                  disabled={isDisabled}
+                                  classnamefieldwrapper="flex items-center gap-x-3"
+                                  classlabel="w-2/12"
+                                  classchild="w-10/12"
+                                />
+                                <p className="text-body-sm text-primary-400">
+                                  {
+                                    formState?.errors?.plan_lv?.[index]?.price
+                                      ?.message
+                                  }
+                                </p>
+                              </div>
+                              {estimates === 'mass' && (
+                                <InputField
+                                  label={t('billing:package_manage.popup.free')}
+                                  registration={register(
+                                    `plan_lv.${index}.free`,
+                                    {
+                                      onChange: e => {
+                                        setExpectedNumber('')
+                                        setExpectedPayment('')
+                                      },
+                                    },
+                                  )}
+                                  type="number"
+                                  classnamefieldwrapper="flex items-center gap-x-3"
+                                  disabled={isDisabled}
+                                  classlabel="w-2/12"
+                                  classchild="w-10/12"
+                                />
+                              )}
                             </div>
-                            {estimates === 'mass' && (
-                              <InputField
-                                label={t('billing:package_manage.popup.free')}
-                                registration={register(
-                                  `plan_lv.${index}.free`, {
-                                  onChange: e => {
-                                    setExpectedNumber('')
-                                    setExpectedPayment('')
-                                  }
-                                }
-                                )}
-                                type="number"
-                                classnamefieldwrapper="flex items-center gap-x-3"
-                                disabled={isDisabled}
-                                classlabel="w-2/12"
-                                classchild="w-10/12"
-                              />
-                            )}
-                          </div>
-                          <Button
-                            type="button"
-                            size="square"
-                            variant="trans"
-                            disabled={isDisabled}
-                            className="mt-1 border-none shadow-none"
-                            onClick={() => planlvRemove(index)}
-                            startIcon={
-                              <img
-                                src={btnDeleteIcon}
-                                alt="Delete condition"
-                                className="h-6 w-6"
-                              />
-                            }
-                          />
-                        </section>
-                      )
-                    })
+                            <Button
+                              type="button"
+                              size="square"
+                              variant="trans"
+                              disabled={isDisabled}
+                              className="mt-1 border-none shadow-none"
+                              onClick={() => planlvRemove(index)}
+                              startIcon={
+                                <img
+                                  src={btnDeleteIcon}
+                                  alt="Delete condition"
+                                  className="h-6 w-6"
+                                />
+                              }
+                            />
+                          </section>
+                        )
+                      })
                     : null}
                 </div>
                 {(estimates === 'fix' || estimates === 'unit') && (
@@ -620,8 +627,8 @@ export function PackageInfo() {
                       label={t('billing:package_manage.popup.price')}
                       error={formState.errors['price']}
                       registration={register('price', {
-                        onChange: (e) => {
-                          (estimates === 'fix' &&
+                        onChange: e => {
+                          if (estimates === 'fix') {
                             handleOnChange(
                               '',
                               getValues('tax'),
@@ -629,10 +636,12 @@ export function PackageInfo() {
                               getValues('fix_cost'),
                               getValues('quantity_free'),
                               getValues('plan_lv'),
-                            ))
-                          setExpectedNumber('')
-                          setExpectedPayment('')
-                        }
+                            )
+                          } else {
+                            setExpectedNumber('')
+                            setExpectedPayment('')
+                          }
+                        },
                       })}
                       classnamefieldwrapper="flex items-center gap-x-3"
                       type="number"
@@ -648,7 +657,7 @@ export function PackageInfo() {
                           onChange: e => {
                             setExpectedNumber('')
                             setExpectedPayment('')
-                          }
+                          },
                         })}
                         classnamefieldwrapper="flex items-center gap-x-3"
                         type="number"
@@ -699,7 +708,7 @@ export function PackageInfo() {
                   disabled
                   value={expectedPayment}
                   classnamefieldwrapper="flex items-center gap-x-3"
-                  placeholder=''
+                  placeholder=""
                   classlabel="w-2/12"
                   classchild="w-10/12"
                 />
@@ -729,7 +738,13 @@ export function PackageInfo() {
                       )
                       setValue('plan_lv', data?.data?.plan_lv || [])
                       setValue('tax', data?.data?.tax?.toString() || '')
-                      setValue('exprity', ((data?.data?.exprity ? data?.data?.exprity : 0)/( 24 * 60 * 60))?.toString() || '')
+                      setValue(
+                        'expiry',
+                        (
+                          (data?.data?.expiry ? data?.data?.expiry : 0) /
+                          (24 * 60 * 60)
+                        )?.toString() || '',
+                      )
                       setEstimates(data?.data?.estimate || '')
                       setIsDisabled(!isDisabled)
                       setExpectedPayment('')
@@ -770,7 +785,7 @@ export function PackageInfo() {
               )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400 bg-white"
+                  className="hover:text-primary-400 w-full justify-start border-none bg-white"
                   variant="trans"
                   size="square"
                   startIcon={
