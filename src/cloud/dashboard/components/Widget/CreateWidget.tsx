@@ -235,7 +235,7 @@ export function CreateWidget({
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
   })
-  console.log('zod errors', formState.errors)
+  // console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -311,7 +311,6 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              console.log('values: ', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -662,7 +661,10 @@ export function CreateWidget({
                             `attributeConfig.${index}.label` as const,
                           )}
                         /> */}
-                        <div className="space-y-1">
+                        {
+                          !(['GAUGE', 'TABLE', 'MAP', 'CONTROLLER']).find(e => widgetCategory === e) ?
+                          (
+<div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.color')}
                             error={
@@ -714,6 +716,8 @@ export function CreateWidget({
                             />
                           </FieldWrapper>
                         </div>
+                          ) : (<></>)
+                        }
                         <InputField
                           label={t('cloud:dashboard.config_chart.unit')}
                           error={
