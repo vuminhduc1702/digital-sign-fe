@@ -85,8 +85,8 @@ export function SectionProduct() {
 
   return (
     <>
-      <div className="">
-        <div className="">
+      <div>
+        <div>
           <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
             {t('landingpage:section_product.iot')}
           </p>
@@ -99,7 +99,6 @@ export function SectionProduct() {
         <div className="flex w-full justify-center">
           <div className="w-[1200px] pt-[50px]">
             <Carousel
-              className=""
               containerClass="carousel-container p-[0px]"
               responsive={responsive}
               transitionDuration={300}

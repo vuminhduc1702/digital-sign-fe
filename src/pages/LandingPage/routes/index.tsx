@@ -343,12 +343,7 @@ export function LandingPage() {
             className="fixed bottom-[10px] right-[10px]"
             onClick={scrollToTop}
           >
-            <GroupSlideTop
-              width={49}
-              height={49}
-              viewBox="0 0 49 49"
-              className=""
-            />
+            <GroupSlideTop width={49} height={49} viewBox="0 0 49 49" />
           </button>
         )}
       </div>

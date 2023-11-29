@@ -62,13 +62,12 @@ export function SectionClient() {
   return (
     <>
       <div className="h-[100px]"></div>
-      <div className="">
+      <div>
         <div className="pb-[50px] text-center text-[35px] leading-[43px]">
           {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center">
           <Carousel
-            className=""
             containerClass="carousel-container w-[1200px]"
             responsive={responsive}
             transitionDuration={300}

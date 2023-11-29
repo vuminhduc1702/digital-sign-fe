@@ -86,7 +86,7 @@ export function AppSdk() {
               {item.exist === 'true' ? (
                 <div className="mt-2 flex">
                   <div className="w-3/5">
-                    <img className="" src={item.image} alt="" />
+                    <img src={item.image} alt="" />
                   </div>
                   <div className="px-3">
                     <p className="mb-1 text-sm tracking-[.5px]">{item.info}</p>

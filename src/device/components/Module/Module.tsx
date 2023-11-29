@@ -91,7 +91,7 @@ export function Module() {
 
   return (
     <>
-      <div className="">
+      <div>
         <div className="flex p-1">
           <div className="mr-3 h-[84vh] w-1/4 rounded-md bg-[#eceff1] shadow-md">
             <div className="h-[80vh] overflow-auto">
