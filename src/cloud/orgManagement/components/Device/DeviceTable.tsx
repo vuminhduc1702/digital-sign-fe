@@ -43,6 +43,7 @@ function DeviceTableContextMenu({
   template_id,
   token,
   status,
+  additional_info,
 }: {
   id: string
   name: string
@@ -52,6 +53,7 @@ function DeviceTableContextMenu({
   template_id: string
   token: string
   status: string
+  additional_info?: object
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -81,7 +83,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -172,7 +174,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -212,6 +214,7 @@ function DeviceTableContextMenu({
           close={close}
           isOpen={isOpen}
           template_id={template_id}
+          additional_info={additional_info}
         />
       ) : null}
       {isOpen && type === 'update-version' ? (
@@ -273,11 +276,61 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('status', {
+      columnHelper.display({
+        id: 'status',
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.status')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const { additional_info, status } = info.row.original
+
+          let additionalInfo,
+            historyLastHeartbeat,
+            intervalHeartbeat,
+            lifecycleTimeout
+          if (typeof additional_info === 'string') {
+            try {
+              additionalInfo = JSON.parse(additional_info)
+              // Now you can use additionalInfo as an object
+            } catch (error) {
+              console.error('Error parsing JSON:', error)
+            }
+          }
+          if (additionalInfo?.last_heartbeat) {
+            historyLastHeartbeat =
+              'Last heartbeat: ' +
+              getVNDateFormat({
+                date: parseInt(additionalInfo?.last_heartbeat) * 1000,
+              })
+          }
+          if (additionalInfo.heartbeat_interval) {
+            intervalHeartbeat = 'Interval: ' + additionalInfo.heartbeat_interval
+          }
+          if (additionalInfo.timeout_lifecycle) {
+            lifecycleTimeout = 'Lifecycle: ' + additionalInfo.timeout_lifecycle
+          }
+
+          return (
+            <>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>{status}</TooltipTrigger>
+                  {additionalInfo.heartbeat_interval ? (
+                    <>
+                      <TooltipContent>
+                        <p>{historyLastHeartbeat}</p>
+                        <p>{intervalHeartbeat}</p>
+                        <p>{lifecycleTimeout}</p>
+                      </TooltipContent>
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
       // columnHelper.accessor('attributes', {
@@ -382,10 +435,18 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             key,
             org_id,
             group_id,
+            group_name,
             template_id,
             token,
             status,
+            additional_info,
           } = info.row.original
+          
+          const group = {
+            label: group_name,
+            value: group_id,
+          }
+
           return DeviceTableContextMenu({
             name,
             id,
@@ -394,7 +455,9 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             template_id,
             token,
             status,
-            group_id
+            group_id,
+            additional_info,
+            // group_name,
           })
         },
         header: () => null,

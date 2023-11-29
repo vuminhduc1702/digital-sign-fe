@@ -23,11 +23,20 @@ export type FieldWrapperPassThroughProps = Omit<
 >
 
 export const FieldWrapper = (props: FieldWrapperProps) => {
-  const { label, className, error, children, require, classNameError, classlabel, classchild } = props
+  const {
+    label,
+    className,
+    error,
+    children,
+    require,
+    classNameError,
+    classlabel,
+    classchild,
+  } = props
   return (
     <div className="relative w-full">
       <label
-        className={cn('block text-body-sm', { 'space-y-1': label }, className)}
+        className={cn('text-body-sm block', { 'space-y-1': label }, className)}
       >
         {require ? (
           <p>
@@ -42,7 +51,7 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
         <div
           role="alert"
           aria-label={error.message}
-          className={cn('mt-1 text-body-sm text-primary-400', classNameError)}
+          className={cn('text-body-sm text-primary-400 mt-1', classNameError)}
         >
           {error.message}
         </div>

@@ -37,11 +37,11 @@ export function DeviceDetail() {
     <div ref={ref} className="flex grow flex-col">
       <TitleBar className="normal-case" title={<DeviceBreadcrumbs />} />
       <Tab.Group>
-        <Tab.List className="mt-2 flex gap-x-10 bg-secondary-500 px-10">
+        <Tab.List className="bg-secondary-500 mt-2 flex gap-x-10 px-10">
           <Tab
             className={({ selected }) =>
               clsx(
-                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -56,7 +56,7 @@ export function DeviceDetail() {
           <Tab
             className={({ selected }) =>
               clsx(
-                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -75,7 +75,7 @@ export function DeviceDetail() {
           >
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable refComponent={ref}/>
+                <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
                   <ComboBoxSelectAttr
@@ -97,7 +97,7 @@ export function DeviceDetail() {
           >
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable refComponent={ref}/>
+                <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   <ComboBoxAttrLog
                     setFilteredComboboxData={setFilteredAttrLogComboboxData}
