@@ -37,7 +37,7 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
     domain: [0, widgetInfo.attribute_config[0].max],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
-    numTicks: 21,
+    numTicks: 10,
     diameter: 400,
   })
 
@@ -117,8 +117,8 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
         <g id="ticks">
           {gauge.ticks.map(angle => {
             const asValue = gauge.angleToValue(angle)
-            const showText =
-              asValue % (0.2 * widgetInfo?.attribute_config[0]?.max) === 0
+            // const showText =
+            //   asValue % (0.1 * widgetInfo?.attribute_config[0]?.max) === 0
 
             return (
               <React.Fragment key={`tick-group-${angle}`}>
@@ -141,14 +141,12 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
                     length: 8,
                   })}
                 />
-                {showText && (
-                  <text
-                    className="fill-gray-400 text-xs font-medium "
-                    {...gauge.getLabelProps({ angle, offset: 20 })}
-                  >
-                    {asValue} {widgetInfo?.attribute_config[0]?.unit}
-                  </text>
-                )}
+                <text
+                  className="fill-gray-400 text-xs font-medium "
+                  {...gauge.getLabelProps({ angle, offset: 20 })}
+                >
+                  {asValue} {widgetInfo?.attribute_config[0]?.unit}
+                </text>
               </React.Fragment>
             )
           })}

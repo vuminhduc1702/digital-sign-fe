@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 import { cn } from '~/utils/misc'
@@ -45,6 +46,11 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
+    const showSpinner = useSpinDelay(isLoading, {
+      delay: 150,
+      minDuration: 300,
+    })
+
     return (
       <button
         ref={ref}
@@ -55,16 +61,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           sizes[size],
           className,
         )}
-        disabled={isLoading}
+        disabled={showSpinner}
         {...props}
       >
-        {isLoading && (
-          <Spinner size="sm" variant="light" className="text-current" />
+        {showSpinner && (
+          <Spinner
+            showSpinner={showSpinner}
+            size="sm"
+            variant="light"
+            className="text-current"
+          />
         )}
         <span className="flex justify-between gap-x-2">
-          {!isLoading && startIcon}
+          {!showSpinner && startIcon}
           {props.children}
-          {!isLoading && endIcon}
+          {!showSpinner && endIcon}
         </span>
       </button>
     )
