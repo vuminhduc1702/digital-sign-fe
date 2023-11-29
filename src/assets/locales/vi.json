@@ -240,6 +240,7 @@
           "group": "Nhóm",
           "parent": "Trực thuộc tổ chức",
           "device_type": "Mẫu thiết bị",
+          "heartbeat" : "Heartbeat",
           "create_heartbeat": "Tạo Heartbeat",
           "update_heartbeat": "Cập nhật Heartbeat",
           "success_heartbeat" : "Cập nhật heartbeat thành công",
@@ -250,7 +251,8 @@
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
-          "attr_log": "Bản tin thuộc tính"
+          "attr_log": "Bản tin thuộc tính",
+          "additional_info_list": "Thông tin thêm"
         }
       },
       "event_manage": {

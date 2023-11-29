@@ -257,7 +257,9 @@ export function UpdateDevice({
             registration={register('key')}
           />
           <div className="">
-            <p className="mx-1 my-2">Heartbeat</p>
+            <p className="mx-1 my-2">
+              {t('cloud:org_manage.device_manage.add_device.heartbeat')}
+            </p>
             <div className="flex rounded-lg border border-solid p-2">
               <InputField
                 label="Heartbeat Interval"

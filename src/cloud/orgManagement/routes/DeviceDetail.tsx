@@ -68,6 +68,23 @@ export function DeviceDetail() {
               </p>
             </div>
           </Tab>
+          <Tab
+            className={({ selected }) =>
+              clsx(
+                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
+                { 'text-primary-400': selected },
+              )
+            }
+          >
+            <div className="flex items-center gap-x-2">
+              <DeviceListIcon width={16} height={16} viewBox="0 0 20 16" />
+              <p>
+                {t(
+                  'cloud:org_manage.device_manage.device_detail.additional_info_list',
+                )}
+              </p>
+            </div>
+          </Tab>
         </Tab.List>
         <Tab.Panels className="mt-2 flex grow flex-col">
           <Tab.Panel
@@ -109,6 +126,21 @@ export function DeviceDetail() {
                 entityId={deviceId}
                 entityType="DEVICE"
               />
+            </div>
+          </Tab.Panel>
+          <Tab.Panel
+            className={clsx('flex grow flex-col bg-white focus:outline-none')}
+          >
+            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+              <div className="flex justify-between">
+                <ExportTable refComponent={ref} />
+                <div className="flex items-center gap-x-3">
+                  <ComboBoxAttrLog
+                    setFilteredComboboxData={setFilteredAttrLogComboboxData}
+                  />
+                </div>               
+              </div>
+              
             </div>
           </Tab.Panel>
         </Tab.Panels>
