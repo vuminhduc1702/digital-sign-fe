@@ -26,6 +26,7 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
+import AssignGroupRole from './AssignGroupRole'
 
 export type GroupType = {
   id: string
@@ -55,6 +56,12 @@ function GroupTableContextMenu({
     close: closeAssignUser,
     open: openAssignUser,
     isOpen: isOpenAssignUser,
+  } = useDisclosure()
+
+  const {
+    close: closeAssignGroupRole,
+    open: openAssignGroupRole,
+    isOpen: isOpenAssignGroupRole,
   } = useDisclosure()
 
   const { id: projectId } = storage.getProject()
@@ -104,6 +111,20 @@ function GroupTableContextMenu({
                 onClick={openAssignUser}
               >
                 {t('cloud:org_manage.user_manage.add_user.assign')}
+              </MenuItem>
+            )}
+            {props.entity_type === 'USER' && (
+              <MenuItem
+                icon={
+                  <img
+                    src={btnEditIcon}
+                    alt="Assign user"
+                    className="h-5 w-5"
+                  />
+                }
+                onClick={openAssignGroupRole}
+              >
+                {t('cloud:org_manage.user_manage.add_user.assign_role')}
               </MenuItem>
             )}
             <MenuItem
@@ -179,6 +200,14 @@ function GroupTableContextMenu({
         <AssignUser
           closeAssignUser={closeAssignUser}
           isOpenAssignUser={isOpenAssignUser}
+          groupId={id}
+        />
+      )}
+
+      {isOpenAssignGroupRole && (
+        <AssignGroupRole
+          closeAssignGroupRole={closeAssignGroupRole}
+          isOpenAssignGroupRole={isOpenAssignGroupRole}
           groupId={id}
         />
       )}
