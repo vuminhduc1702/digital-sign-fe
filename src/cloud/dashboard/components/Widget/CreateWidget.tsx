@@ -254,7 +254,12 @@ export function CreateWidget({
     'sub_orgs',
   )
   const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData]
+  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData].map(
+    org => ({
+      label: org?.name,
+      value: org?.id,
+    }),
+  )
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id'),
@@ -505,12 +510,13 @@ export function CreateWidget({
                         )}
                         name="org_id"
                         control={control}
-                        options={
-                          orgSelectOptions?.map(org => ({
-                            label: org?.name,
-                            value: org?.id,
-                          })) || [{ label: t('loading:org'), value: '' }]
+                        options={orgSelectOptions}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:org') ||
+                          option.label === t('table:no_org')
                         }
+                        noOptionsMessage={() => t('table:no_org')}
+                        loadingMessage={() => t('loading:org')}
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
@@ -528,27 +534,14 @@ export function CreateWidget({
                         label={t('cloud:dashboard.config_chart.device')}
                         name="device"
                         control={control}
-                        options={
-                          deviceData != null
-                            ? deviceSelectData
-                            : deviceData == null
-                            ? [
-                                {
-                                  label: t('table:no_device'),
-                                  value: '',
-                                },
-                              ]
-                            : [
-                                {
-                                  label: t('loading:device'),
-                                  value: '',
-                                },
-                              ]
-                        }
+                        options={deviceSelectData}
                         isOptionDisabled={option =>
                           option.label === t('loading:device') ||
                           option.label === t('table:no_device')
                         }
+                        noOptionsMessage={() => t('table:no_device')}
+                        loadingMessage={() => t('loading:device')}
+                        isLoading={deviceIsLoading}
                         isMulti={isMultipleDevice}
                         closeMenuOnSelect={!isMultipleDevice}
                         isWrappedArray
@@ -563,7 +556,6 @@ export function CreateWidget({
                             })
                           }
                         }}
-                        isLoading={deviceIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('attributeConfig.0.attribute_key', {
                             defaultValue: '',
@@ -619,32 +611,17 @@ export function CreateWidget({
                             label={t('cloud:dashboard.config_chart.attr')}
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}
-                            options={
-                              attrChartData != null
-                                ? attrSelectData
-                                : attrChartData == null
-                                ? [
-                                    {
-                                      label: t('table:no_attr'),
-                                      value: '',
-                                    },
-                                  ]
-                                : [
-                                    {
-                                      label: t('loading:attr'),
-                                      value: '',
-                                    },
-                                  ]
-                            }
+                            options={attrSelectData}
                             isOptionDisabled={option =>
                               option.label === t('loading:input') ||
                               option.label === t('table:no_attr')
                             }
                             noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
                             placeholder={t(
                               'cloud:org_manage.org_manage.add_attr.choose_attr',
                             )}
-                            isLoading={attrChartIsLoading}
                           />
                           <p className="text-body-sm text-primary-400">
                             {

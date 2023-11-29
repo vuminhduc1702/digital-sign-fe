@@ -14,12 +14,12 @@ const useGaugeChart = (data: number, max: number) => {
   const [value, setValue] = useState(0)
 
   useAnimationFrame(t => {
-    if (value >= 10 * max) return
+    if (value >= max) return
     setValue(data)
   })
 
   return {
-    value: Math.min(value, 10 * max),
+    value: Math.min(value, max),
   }
 }
 
@@ -34,7 +34,7 @@ const END_ANGLE = 270
 
 function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
   const gauge = useGauge({
-    domain: [0, 10 * widgetInfo.attribute_config[0].max],
+    domain: [0, widgetInfo.attribute_config[0].max],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 21,
@@ -49,9 +49,9 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
 
   const arcStroke = useMemo(() => {
     let color = ''
-    if (value <= 4 * widgetInfo?.attribute_config[0]?.max) {
+    if (value <= 0.4 * widgetInfo?.attribute_config[0]?.max) {
       color = `green`
-    } else if (value <= 8 * widgetInfo?.attribute_config[0]?.max) {
+    } else if (value <= 0.8 * widgetInfo?.attribute_config[0]?.max) {
       color = 'yellow'
     } else {
       color = 'red'
@@ -118,7 +118,7 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
           {gauge.ticks.map(angle => {
             const asValue = gauge.angleToValue(angle)
             const showText =
-              asValue % (2 * widgetInfo?.attribute_config[0]?.max) === 0
+              asValue % (0.2 * widgetInfo?.attribute_config[0]?.max) === 0
 
             return (
               <React.Fragment key={`tick-group-${angle}`}>
@@ -127,12 +127,12 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
                     'stroke-gray-300',
                     {
                       'stroke-green-500':
-                        asValue <= 2 * widgetInfo?.attribute_config[0]?.max,
+                        asValue <= 0.2 * widgetInfo?.attribute_config[0]?.max,
                       'stroke-yellow-500':
-                        asValue >= 6 * widgetInfo?.attribute_config[0]?.max &&
-                        asValue <= 8 * widgetInfo?.attribute_config[0]?.max,
+                        asValue >= 0.6 * widgetInfo?.attribute_config[0]?.max &&
+                        asValue <= 0.8 * widgetInfo?.attribute_config[0]?.max,
                       'stroke-red-400':
-                        asValue >= 8 * widgetInfo?.attribute_config[0]?.max,
+                        asValue >= 0.8 * widgetInfo?.attribute_config[0]?.max,
                     },
                   ])}
                   strokeWidth={2}

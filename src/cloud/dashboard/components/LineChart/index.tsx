@@ -121,11 +121,54 @@ export function LineChart({
           },
         })
       }
-      if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
+      if (timePeriod <= 1 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
             ...dateTimeOptionsWithoutYearMonthDay,
+          },
+        })
+      }
+      if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            day,
+            ...dateTimeOptionsWithoutYearMonthDay,
+          },
+        })
+      }
+      if (timePeriod <= 180 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            month,
+            day,
+          },
+        })
+      }
+      if (timePeriod <= 365 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            month,
+          },
+        })
+      }
+      if (timePeriod <= 5 * 365 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            year,
+            month,
+          },
+        })
+      }
+      if (timePeriod > 5 * 365 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            year,
           },
         })
       }
@@ -135,13 +178,12 @@ export function LineChart({
     return ''
   }
 
-  // console.log('widgetInfo', widgetInfo)
-
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
     minDuration: 300,
   })
 
+  // console.log('widgetInfo', widgetInfo)
   const renderLegend = (props: any) => {
     const { payload } = props
     return (
