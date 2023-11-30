@@ -7,6 +7,8 @@ import { BaseTable } from '~/components/Table'
 
 import { type DeviceAttrLog } from '~/cloud/orgManagement/api/attrAPI'
 import { type TimeSeries } from '../../types'
+import { z } from 'zod'
+import { widgetSchema } from '../Widget'
 
 type TableChartDataType = DeviceAttrLog & {
   entity_name: string
@@ -14,9 +16,11 @@ type TableChartDataType = DeviceAttrLog & {
 
 export function TableChart({
   data,
+  widgetInfo,
   ...props
 }: {
-  data: TimeSeries
+  data: TimeSeries,
+  widgetInfo: z.infer<typeof widgetSchema>,
   className?: string
 }) {
   const { t } = useTranslation()
@@ -28,7 +32,7 @@ export function TableChart({
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<
-      Pick<TableChartDataType, 'ts' | 'value' | 'attribute_key' | 'entity_name'>
+      Pick<TableChartDataType, 'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'>
     >
   >([
     {
@@ -36,6 +40,7 @@ export function TableChart({
       value: 0,
       attribute_key: '',
       entity_name: '',
+      unit: ''
     },
   ])
 
@@ -75,11 +80,12 @@ export function TableChart({
     const tableWidgetDataType = Object.entries(
       newValuesRef.current as TimeSeries,
     )
-      .flatMap(([attribute_key, values]) =>
+      .flatMap(([attribute_key, values]) => 
         values.map(({ ts, value }) => ({
           ts: ts,
           attribute_key,
           value,
+          unit: widgetInfo.attribute_config.filter(obj => obj.attribute_key === attribute_key)[0].unit
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
@@ -115,6 +121,13 @@ export function TableChart({
       columnHelper.accessor('attribute_key', {
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('unit', {
+        header: () => (
+          <span>{t('cloud:org_manage.org_manage.table.unit')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,

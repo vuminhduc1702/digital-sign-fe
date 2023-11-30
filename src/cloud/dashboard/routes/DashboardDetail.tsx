@@ -324,7 +324,7 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
                     ) : widgetList?.[widgetId]?.description === 'PIE' ? (
-                      <PieChart data={lastestValues} />
+                      <PieChart data={lastestValues} widgetInfo={widgetInfo}/>
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
@@ -335,6 +335,7 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}
+                        widgetInfo={widgetInfo}
                         className="h-full p-5"
                       />
                     ) : widgetList?.[widgetId]?.description === 'CARD' ? (
