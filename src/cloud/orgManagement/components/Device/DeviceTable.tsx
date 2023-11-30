@@ -273,6 +273,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     created_at: true,
     contextMenu: true,
     heartbeat: false,
+    isdn: false,
   }
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
@@ -286,6 +287,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
@@ -309,6 +311,20 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.display({
+        id: 'isdn',
+        cell: info => {
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
+          )
+          const isdn = additionalInfo.isdn
+          return isdn
+        },
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.isdn')}</span>
+        ),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'heartbeat',
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
@@ -318,27 +334,26 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             info.row.original.additional_info as unknown as string,
           )
 
-          return (
-            additionalInfo?.heartbeat_interval != null ? (<TooltipProvider>
+          return additionalInfo?.heartbeat_interval != null ? (
+            <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
                   {'Interval: ' + additionalInfo.heartbeat_interval}
                 </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {'Last heartbeat: ' +
-                          getVNDateFormat({
-                            date:
-                              parseInt(additionalInfo?.last_heartbeat || 0) *
-                              1000,
-                          })}
-                      </p>
-                      <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
-                      <p>{'Lifecycle: ' + additionalInfo.timeout_lifecycle}</p>
-                    </TooltipContent>
+                <TooltipContent>
+                  <p>
+                    {'Last heartbeat: ' +
+                      getVNDateFormat({
+                        date:
+                          parseInt(additionalInfo?.last_heartbeat || 0) * 1000,
+                      })}
+                  </p>
+                  <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
+                  <p>{'Lifecycle: ' + additionalInfo.timeout_lifecycle}</p>
+                </TooltipContent>
               </Tooltip>
-            </TooltipProvider>) : null
-          )
+            </TooltipProvider>
+          ) : null
         },
         footer: info => info.column.id,
       }),

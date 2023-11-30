@@ -46,6 +46,7 @@ export function UpdateMqttConfig({
   const { mutate, isLoading, isSuccess } = useUpdateMqttConfig()
 
   const additionalInfo = JSON.parse(additional_info)
+  console.log(additionalInfo)
   const MqttConfig = additionalInfo.mqtt_config || {}
   const {
     register,
@@ -61,16 +62,16 @@ export function UpdateMqttConfig({
     defaultValues: {
       clean_session: MqttConfig.clean_session || false,
       dup: MqttConfig.dup || false,
-      keepalive: MqttConfig.keepalive || -1,
-      message_type: MqttConfig.message_type || -1,
+      keepalive: MqttConfig.keepalive,
+      message_type: MqttConfig.message_type,
       protocol_name: MqttConfig.protocol_name || '',
-      protocol_version: MqttConfig.protocol_version || -1,
-      qos: MqttConfig.qos || -1,
-      remaining_length: MqttConfig.remaining_length || -1,
+      protocol_version: MqttConfig.protocol_version,
+      qos: MqttConfig.qos,
+      remaining_length: MqttConfig.remaining_length,
       retain: MqttConfig.retain || false,
       will_flag: MqttConfig.will_flag || false,
       will_message: MqttConfig.will_message || '',
-      will_qos: MqttConfig.will_qos || -1,
+      will_qos: MqttConfig.will_qos,
       will_retain: MqttConfig.will_retain || false,
       will_topic: MqttConfig.will_topic || '',
     },
