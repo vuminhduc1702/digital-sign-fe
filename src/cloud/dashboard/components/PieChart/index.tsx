@@ -5,6 +5,8 @@ import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '~/components/Spinner'
 
 import { type TimeSeries } from '../../types'
+import { z } from 'zod'
+import { widgetSchema } from '../Widget'
 
 type PieWidgetDataType = {
   id: string
@@ -13,7 +15,7 @@ type PieWidgetDataType = {
   [key: string]: string | number
 }
 
-export const PieChart = ({ data }: { data: TimeSeries }) => {
+export const PieChart = ({ data, widgetInfo }: { data: TimeSeries, widgetInfo: z.infer<typeof widgetSchema> }) => {
   // console.log(`new pie: `, data)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
@@ -27,6 +29,11 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
         id: key,
         label: key,
         value: parseFloat(value[0].value),
+        [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
+        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
+        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
+        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
+        '#e8c1a0'
       }))
       setDataTransformedFeedToChart(pieWidgetDataType)
     }
@@ -45,7 +52,7 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
         <ResponsivePie
           data={dataTransformedFeedToChart}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-          colors={{ scheme: 'nivo' }}
+          colors={({id, data}) => data[`${id}Color`]}
           innerRadius={0.5}
           padAngle={0.7}
           cornerRadius={3}
@@ -87,6 +94,11 @@ export const PieChart = ({ data }: { data: TimeSeries }) => {
                   },
                 },
               ],
+              data: widgetInfo.attribute_config.map(item => ({
+                id: item.attribute_key,
+                label: item.unit !== '' ? item.attribute_key + ' (' + item.unit + ')' : item.attribute_key,
+                color: item.color ? item.color : '#e8c1a0'
+              }))
             },
           ]}
         />
