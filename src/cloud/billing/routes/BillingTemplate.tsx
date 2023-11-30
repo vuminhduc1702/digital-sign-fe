@@ -55,7 +55,7 @@ export function BillingTemplate() {
   return (
     <>
       {/* <TitleBar title={t('sidebar:payment.plhd')} /> */}
-      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
         <div className="flex justify-between mb-5">
           <form
             id="search-subcription"
