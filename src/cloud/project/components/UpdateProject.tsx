@@ -289,9 +289,7 @@ export function UpdateProject({
                           alt="restore project"
                         />
                       </div>
-                    ) : (
-                      <></>
-                    )}
+                    ) : null}
                   </div>
                   <p className="text-body-sm text-primary-400">
                     {uploadRestoreProjectErr}

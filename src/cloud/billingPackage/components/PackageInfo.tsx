@@ -4,8 +4,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnEdit from '~/assets/icons/edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
+import { Checkbox } from '~/components/Checkbox'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import {
   FormMultipleFields,
@@ -168,7 +170,7 @@ export function PackageInfo() {
 
   return (
     <>
-      <TitleBar title={t('billing:package_manage.title')} />
+      {/* <TitleBar title={t('billing:package_manage.title')} /> */}
       <FormMultipleFields<UpdatePlanDTO['data'], typeof entityPlanSchema>
         id="update-plan"
         className="flex flex-col justify-between"
@@ -238,16 +240,17 @@ export function PackageInfo() {
         ) => {
           return (
             <>
-              <p className="!mt-1.5">{t('billing:package_manage.title')}</p>
-              <div className="!mt-2 grid grow grid-cols-1 gap-x-4 gap-y-3 rounded-md border px-4 py-3 md:grid-cols-2">
+              {/* <p className="flex p-3 md:p-1 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.title')}</p> */}
+              <p className="flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.title')}</p>
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                 <InputField
                   label={t('billing:package_manage.popup.name')}
                   error={formState.errors['name']}
                   registration={register('name')}
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
                 <SelectField
                   label={t('billing:package_manage.popup.type')}
@@ -262,38 +265,46 @@ export function PackageInfo() {
                     { label: 'Chính thức', value: 'official' },
                     { label: 'Dùng thử', value: 'trial' },
                   ]}
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
                 <TextAreaField
                   label={t('billing:package_manage.popup.description')}
                   error={formState.errors['description']}
                   registration={register('description')}
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
-                <SelectField
-                  label={t('billing:package_manage.popup.status')}
-                  error={formState.errors['status']}
-                  registration={register('status')}
-                  options={[
-                    { label: 'Hiện', value: 'present' },
-                    { label: 'Ẩn', value: 'hidden' },
-                  ]}
-                  classnamefieldwrapper="flex items-center gap-x-3"
-                  disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
-                />
+                <div className="relative w-full">
+                  <label>{t('billing:package_manage.popup.status')}</label>
+                  <div className="items-center mt-1">
+                    {[
+                      { label: 'Hiển thị', value: 'present' },
+                      { label: 'Ẩn', value: 'hidden' },
+                    ].map((option, idx) => (
+                      <div key={idx} className="flex items-center mt-2 mb-2 mr-4 ">
+                        <input
+                          type="radio"
+                          id={`radio-${option.value}`}
+                          {...register('status')}
+                          value={option.value}
+                          disabled={isDisabled}
+                          className="w-4 h-4 mr-3 cursor-pointer"
+                        />
+                        <label htmlFor={`radio-${option.value}`} className="cursor-pointer">{option.label}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <p className="!mt-1.5">
+              <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
                 {t('billing:package_manage.popup.data_plan')}
               </p>
-              <div className="!mt-2 grid grow	grid-cols-1 gap-x-4 gap-y-3 rounded-md border px-4 py-3 md:grid-cols-2">
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                 <SelectField
                   label={t('billing:package_manage.popup.payment_type')}
                   error={formState.errors['payment_type']}
@@ -312,10 +323,10 @@ export function PackageInfo() {
                           { label: 'Trả sau', value: 'POSTPAID' },
                         ]
                   }
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
                 <div className="flex items-center">
                   {paymentType === 'POSTPAID' && (
@@ -341,9 +352,9 @@ export function PackageInfo() {
                       })}
                       type="number"
                       disabled={isDisabled}
-                      classnamefieldwrapper="flex items-center gap-x-3"
-                      classlabel="w-2/12"
-                      classchild="w-10/12"
+                      classnamefieldwrapper=""
+                      classlabel="w-full"
+                      classchild="w-full"
                     />
                   )}
                 </div>
@@ -361,10 +372,10 @@ export function PackageInfo() {
                         ]
                       : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                   }
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
                 {periodType === 'PERIODIC' ? (
                   <div
@@ -372,20 +383,20 @@ export function PackageInfo() {
                       'flex items-center': !formState?.errors?.period?.message,
                     })}
                   >
-                    <div className="grid grow	grid-cols-1 gap-x-4 md:grid-cols-4">
-                      <div className="flex flex-col gap-2 md:col-span-3">
+                    <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
+                      <div className="flex flex-col gap-2 md:col-span-1">
                         <InputField
                           label={t('billing:package_manage.popup.period')}
                           error={formState.errors['period']}
                           registration={register('period')}
-                          classlabel="w-2/12"
-                          classchild="w-10/12"
+                          classlabel="w-full"
+                          classchild="w-full"
                           type="number"
-                          classnamefieldwrapper="flex items-center gap-x-9"
+                          classnamefieldwrapper=""
                           disabled={isDisabled}
                         />
                       </div>
-                      <div className="flex items-start">
+                      <div className="flex flex-col gap-2 md:col-span-1 mt-4">
                         <SelectField
                           error={formState.errors['cal_unit']}
                           registration={register('cal_unit')}
@@ -417,10 +428,10 @@ export function PackageInfo() {
                     },
                   })}
                   type="number"
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
                 <SelectField
                   label={t('billing:package_manage.popup.charging_unit')}
@@ -432,17 +443,17 @@ export function PackageInfo() {
                     { label: 'API', value: 'api' },
                   ]}
                   className="!mt-0"
-                  classnamefieldwrapper="flex items-center gap-x-3"
+                  classnamefieldwrapper=""
                   disabled={isDisabled}
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classlabel="w-full"
+                  classchild="w-full"
                 />
               </div>
-              <p className="!mt-1.5">
+              <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
                 {t('billing:package_manage.popup.estimate')}
               </p>
-              <div className="!mt-2 grid grow gap-y-3 rounded-md border px-4 py-3">
-                <div className="grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+              <div className="!mt-3 grid grow	grid-cols-1 gap-x-10 gap-y-1">
+                <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
                   <SelectField
                     label={t('billing:package_manage.popup.estimate')}
                     error={formState.errors['estimate']}
@@ -477,71 +488,118 @@ export function PackageInfo() {
                             { label: 'Theo đơn vị', value: 'unit' },
                           ]
                     }
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
+                    classnamefieldwrapper=""
+                    classlabel="w-full"
+                    classchild="w-full"
                   />
                   {(estimates === 'mass' ||
                     estimates === 'accumulated' ||
                     estimates === 'step') && (
-                    <div className="flex items-center">
-                      <img
-                        onClick={() => {
-                          let arrPlan = getValues('plan_lv')
-                          const index = getValues('plan_lv')?.length - 1
-                          if (arrPlan[index].level) {
-                            planlvAppend({
-                              level: '',
-                              price: '',
-                              free: '',
-                            })
-                          }
-                        }}
-                        src={btnAddIcon}
-                        alt="add-icon"
-                        className="h-5 w-5 cursor-pointer"
-                      />
-                    </div>
-                  )}
+                      <div className="flex items-center">
+                        <img
+                          onClick={() => {
+                            let arrPlan = getValues('plan_lv')
+                            const index = getValues('plan_lv')?.length - 1
+                            if (arrPlan[index].level) {
+                              planlvAppend({
+                                level: '',
+                                price: '',
+                                free: '',
+                              })
+                            }
+                          }}
+                          src={btnAddIcon}
+                          alt="add-icon"
+                          className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
+                        />
+                      </div>
+                    )}
                 </div>
-                <div className="max-h-[122px] overflow-auto">
+                <div className="max-h-[122px] overflow-auto mr-8">
                   {estimates === 'mass' ||
                   estimates === 'accumulated' ||
                   estimates === 'step'
                     ? planlvFields.map((field, index) => {
-                        return (
-                          <section className="flex w-full" key={field.id}>
-                            <div
-                              className={cn('grid w-full grid-cols-1 gap-x-4', {
-                                'md:grid-cols-2':
-                                  estimates === 'accumulated' ||
-                                  estimates === 'step',
-                                'md:grid-cols-3': estimates === 'mass',
-                              })}
-                            >
+                      return (
+                        <section className="flex w-full" key={field.id}>
+                          <div
+                            className={cn('grid w-full grid-cols-1 gap-x-4', {
+                              'md:grid-cols-3':
+                                    estimates === 'accumulated' ||
+                                    estimates === 'step'||
+                                    estimates === 'mass',
+                            })}
+                          >
+                            <InputField
+                              label={
+                                estimates === 'step'
+                                  ? t('billing:package_manage.popup.max')
+                                  : t(
+                                    'billing:package_manage.popup.level',
+                                  ).replace(
+                                    '{{NUMBER}}',
+                                    index >= 1
+                                      ? getValues('plan_lv')?.[
+                                        index - 1
+                                      ].level?.toString()
+                                      : '1',
+                                  )
+                              }
+                              registration={register(
+                                `plan_lv.${index}.level`, {
+                                onChange: e => {
+                                  setExpectedNumber('')
+                                  setExpectedPayment('')
+                                }
+                              }
+                              )}
+                              type="number"
+                              classnamefieldwrapper="flex items-center gap-x-3"
+                              disabled={isDisabled}
+                              classlabel="w-2/12"
+                              classchild="w-10/12"
+                            />
+                            <div>
                               <InputField
                                 label={
                                   estimates === 'step'
-                                    ? t('billing:package_manage.popup.max')
+                                    ? t('billing:package_manage.popup.price')
                                     : t(
-                                        'billing:package_manage.popup.level',
-                                      ).replace(
-                                        '{{NUMBER}}',
-                                        index >= 1
-                                          ? getValues('plan_lv')?.[
-                                              index - 1
-                                            ].level?.toString()
-                                          : '1',
-                                      )
+                                      'billing:package_manage.popup.unit_price',
+                                    )
                                 }
                                 registration={register(
-                                  `plan_lv.${index}.level`,
-                                  {
-                                    onChange: e => {
-                                      setExpectedNumber('')
-                                      setExpectedPayment('')
-                                    },
-                                  },
+                                  `plan_lv.${index}.price`, {
+                                  onChange: e => {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  }
+                                }
+                                )}
+                                min="1"
+                                type="number"
+                                disabled={isDisabled}
+                                classnamefieldwrapper="flex items-center gap-x-3"
+                                classlabel="w-2/12"
+                                classchild="w-10/12"
+                              />
+                              <p className="text-body-sm text-primary-400">
+                                {
+                                  formState?.errors?.plan_lv?.[index]?.price
+                                    ?.message
+                                }
+                              </p>
+                            </div>
+                            {estimates === 'mass' && (
+                              <InputField
+                                label={t('billing:package_manage.popup.free')}
+                                registration={register(
+                                  `plan_lv.${index}.free`, {
+                                  onChange: e => {
+                                    setExpectedNumber('')
+                                    setExpectedPayment('')
+                                  }
+                                }
                                 )}
                                 type="number"
                                 classnamefieldwrapper="flex items-center gap-x-3"
@@ -549,80 +607,30 @@ export function PackageInfo() {
                                 classlabel="w-2/12"
                                 classchild="w-10/12"
                               />
-                              <div>
-                                <InputField
-                                  label={
-                                    estimates === 'step'
-                                      ? t('billing:package_manage.popup.price')
-                                      : t(
-                                          'billing:package_manage.popup.unit_price',
-                                        )
-                                  }
-                                  registration={register(
-                                    `plan_lv.${index}.price`,
-                                    {
-                                      onChange: e => {
-                                        setExpectedNumber('')
-                                        setExpectedPayment('')
-                                      },
-                                    },
-                                  )}
-                                  min="1"
-                                  type="number"
-                                  disabled={isDisabled}
-                                  classnamefieldwrapper="flex items-center gap-x-3"
-                                  classlabel="w-2/12"
-                                  classchild="w-10/12"
-                                />
-                                <p className="text-body-sm text-primary-400">
-                                  {
-                                    formState?.errors?.plan_lv?.[index]?.price
-                                      ?.message
-                                  }
-                                </p>
-                              </div>
-                              {estimates === 'mass' && (
-                                <InputField
-                                  label={t('billing:package_manage.popup.free')}
-                                  registration={register(
-                                    `plan_lv.${index}.free`,
-                                    {
-                                      onChange: e => {
-                                        setExpectedNumber('')
-                                        setExpectedPayment('')
-                                      },
-                                    },
-                                  )}
-                                  type="number"
-                                  classnamefieldwrapper="flex items-center gap-x-3"
-                                  disabled={isDisabled}
-                                  classlabel="w-2/12"
-                                  classchild="w-10/12"
-                                />
-                              )}
-                            </div>
-                            <Button
-                              type="button"
-                              size="square"
-                              variant="trans"
-                              disabled={isDisabled}
-                              className="mt-1 border-none shadow-none"
-                              onClick={() => planlvRemove(index)}
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete condition"
-                                  className="h-6 w-6"
-                                />
-                              }
-                            />
-                          </section>
-                        )
-                      })
+                            )}
+                          </div>
+                          <Button
+                            type="button"
+                            size="square"
+                            variant="trans"
+                            disabled={isDisabled}
+                            className="border-none shadow-none"
+                            onClick={() => planlvRemove(index)}
+                            startIcon={
+                              <img
+                                src={btnDeleteIcon}
+                                alt="Delete condition"
+                                className="icon-container w-6 h-6 flex items-center justify-center ml-2"
+                              />
+                            }
+                          />
+                        </section>
+                      )
+                    })
                     : null}
                 </div>
                 {(estimates === 'fix' || estimates === 'unit') && (
-                  <div className="grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+                  <div className="grid grow	grid-cols-1 gap-x-2 gap-y-3 md:grid-cols-3">
                     <InputField
                       label={t('billing:package_manage.popup.price')}
                       error={formState.errors['price']}
@@ -646,8 +654,8 @@ export function PackageInfo() {
                       classnamefieldwrapper="flex items-center gap-x-3"
                       type="number"
                       disabled={isDisabled}
-                      classlabel="w-2/12"
-                      classchild="w-10/12"
+                      classlabel="w-1/5"
+                      classchild="w-1/2"
                     />
                     {estimates === 'unit' && (
                       <InputField
@@ -662,27 +670,28 @@ export function PackageInfo() {
                         classnamefieldwrapper="flex items-center gap-x-3"
                         type="number"
                         disabled={isDisabled}
-                        classlabel="w-2/12"
-                        classchild="w-10/12"
-                      />
+                        classlabel="w-1/5"
+                        classchild="w-1/2"
+                      /> 
                     )}
                   </div>
                 )}
               </div>
-              <p className="!mt-1.5">
+              <p className="!mt-3">
                 {t('billing:package_manage.popup.estimated_payment')}
               </p>
-              <div className="!mt-2 grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+              <div className="!mt-2 grid grow	grid-cols-1 gap-x-2 gap-y-3 md:grid-cols-3">
                 <InputField
                   label={t('billing:package_manage.popup.tax')}
                   error={formState.errors['tax']}
                   registration={register('tax')}
                   disabled={isDisabled}
-                  classnamefieldwrapper="flex items-center gap-x-3"
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classnamefieldwrapper="flex items-center"
+                  classlabel="w-2/5"
+                  classchild="w-3/5"
                 />
                 <div className="flex items-center">(mặc định 10%)</div>
+                <div className="flex items-center"></div>
                 {estimates !== 'fix' && (
                   <InputField
                     label={t('billing:package_manage.popup.expected_number')}
@@ -698,23 +707,23 @@ export function PackageInfo() {
                       )
                     }}
                     value={expectedNumber}
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
+                    classnamefieldwrapper="flex items-center"
+                    classlabel="w-2/5"
+                    classchild="w-3/5"
                   />
                 )}
                 <InputField
                   label={t('billing:package_manage.popup.expected_payment')}
                   disabled
                   value={expectedPayment}
-                  classnamefieldwrapper="flex items-center gap-x-3"
-                  placeholder=""
-                  classlabel="w-2/12"
-                  classchild="w-10/12"
+                  classnamefieldwrapper="flex items-center"
+                  placeholder=''
+                  classlabel="w-2/5"
+                  classchild="w-3/5"
                 />
               </div>
               {!isDisabled && (
-                <div className="absolute bottom-3 right-3 flex gap-3">
+                <div className="absolute bottom-3 right-11 flex gap-3">
                   <Button
                     onClick={() => {
                       setValue('name', data?.data?.name || '')
@@ -761,7 +770,7 @@ export function PackageInfo() {
                     form="update-plan"
                     type="submit"
                     size="md"
-                    className="bg-primary-400"
+                    className="rounded-md bg-primary-400"
                   >
                     {t('btn:save')}
                   </Button>
@@ -771,10 +780,9 @@ export function PackageInfo() {
           )
         }}
       </FormMultipleFields>
-
       {isDisabled && (
         <div className="flex">
-          <div className="absolute bottom-3 left-[2/5] rounded-md">
+          <div className="absolute w-[100px] bottom-1 bg-gray-100 rounded-md">
             <ConfirmationDialog
               isDone={isSuccessDelete}
               icon="danger"
@@ -785,7 +793,7 @@ export function PackageInfo() {
               )}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none bg-white"
+                  className="w-full justify-center border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -813,15 +821,22 @@ export function PackageInfo() {
               }
             />
           </div>
+          {/* <div className="absolute bottom-3 right-[2/5] rounded-md"> */}
           <Button
             type="button"
             size="md"
             disabled={!data?.data?.updatable}
-            className="absolute bottom-3 right-2 bg-primary-400"
+            className="absolute bottom-1 right-11 bg-primary-400 rounded-md"
             onClick={() => setIsDisabled(!isDisabled)}
           >
             {t('btn:update')}
+            <img
+              src={btnEdit}
+              alt="Delete thing"
+              className="h-5 w-5"
+            />
           </Button>
+          {/* </div> */}
         </div>
       )}
     </>

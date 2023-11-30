@@ -80,7 +80,7 @@ export function TemplateSidebar() {
                       'text-primary-400': templateId === template.id,
                     })}
                   >
-                    {template.name}
+                    {template?.name}
                   </p>
                 </Button>
                 <div className="flex items-center justify-center rounded-r-md bg-secondary-600">

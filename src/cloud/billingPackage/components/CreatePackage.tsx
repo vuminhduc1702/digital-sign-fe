@@ -279,15 +279,16 @@ export function CreatePackage() {
           ) => {
             return (
               <>
-                <p>{t('billing:package_manage.title')}</p>
-                <div className="!mt-2 grid grow grid-cols-1 gap-x-4 gap-y-3 rounded-md border p-4 md:grid-cols-2">
+                <p className="flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.title')}</p>
+                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                   <InputField
                     label={t('billing:package_manage.popup.name')}
                     error={formState.errors['name']}
                     registration={register('name')}
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
+                    classnamefieldwrapper=""
+                    classlabel="w-full"
+                    classchild="w-full"
+                    placeholder="Nhập tên gói cước"
                   />
                   <SelectField
                     label={t('billing:package_manage.popup.type')}
@@ -302,33 +303,42 @@ export function CreatePackage() {
                       { label: 'Chính thức', value: 'official' },
                       { label: 'Dùng thử', value: 'trial' },
                     ]}
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    classlabel="w-full"
+                    classchild="w-full"
+                    classnamefieldwrapper=""
                   />
                   <TextAreaField
                     label={t('billing:package_manage.popup.description')}
                     error={formState.errors['description']}
                     registration={register('description')}
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
+                    classnamefieldwrapper=""
+                    classlabel="w-full"
+                    classchild="w-full"
+                    placeholder="Nội dung mô tả ngắn"
                   />
-                  <SelectField
-                    label={t('billing:package_manage.popup.status')}
-                    error={formState.errors['status']}
-                    registration={register('status')}
-                    options={[
-                      { label: 'Hiện', value: 'present' },
-                      { label: 'Ẩn', value: 'hidden' },
-                    ]}
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
-                  />
+                  <div className="relative w-full">
+                    <label>{t('billing:package_manage.popup.status')}</label>
+                    <div className="items-center mt-1">
+                      {[
+                        { label: 'Hiển thị', value: 'present' },
+                        { label: 'Ẩn', value: 'hidden' },
+                      ].map((option, idx) => (
+                        <div key={idx} className="flex items-center mt-2 mb-2 mr-4 ">
+                          <input
+                            type="radio"
+                            id={`radio-${option.value}`}
+                            {...register('status')}
+                            value={option.value}
+                            className="w-4 h-4 mr-3 cursor-pointer"
+                          />
+                          <label htmlFor={`radio-${option.value}`} className="cursor-pointer">{option.label}</label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <p>{t('billing:package_manage.popup.data_plan')}</p>
-                <div className="!mt-2 grid grow	grid-cols-1 gap-x-4 gap-y-3 rounded-md border p-4 md:grid-cols-2">
+                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.popup.data_plan')}</p>
+                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                   <SelectField
                     label={t('billing:package_manage.popup.payment_type')}
                     error={formState.errors['payment_type']}
@@ -346,9 +356,9 @@ export function CreatePackage() {
                             { label: 'Trả sau', value: 'POSTPAID' },
                           ]
                     }
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    classlabel="w-full"
+                    classchild="w-full"
+                    classnamefieldwrapper=""
                   />
                   <div className="flex items-center">
                     {paymentType === 'POSTPAID' && (
@@ -373,9 +383,9 @@ export function CreatePackage() {
                           },
                         })}
                         type="number"
-                        classnamefieldwrapper="flex items-center gap-x-3"
-                        classlabel="w-2/12"
-                        classchild="w-10/12"
+                        classnamefieldwrapper=""
+                        classlabel="w-full"
+                        classchild="w-full"
                       />
                     )}
                   </div>
@@ -393,9 +403,9 @@ export function CreatePackage() {
                           ]
                         : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                     }
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    classlabel="w-full"
+                    classchild="w-full"
+                    classnamefieldwrapper=""
                   />
                   {periodType === 'PERIODIC' ? (
                     <div
@@ -404,19 +414,19 @@ export function CreatePackage() {
                           !formState?.errors?.period?.message,
                       })}
                     >
-                      <div className="grid grow	grid-cols-1 gap-x-4 md:grid-cols-4">
-                        <div className="flex flex-col gap-2 md:col-span-3">
+                      <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
+                        <div className="flex flex-col gap-2 md:col-span-1">
                           <InputField
                             label={t('billing:package_manage.popup.period')}
-                            classlabel="w-[78px]"
-                            classchild="w-10/12"
+                            classlabel="w-full"
+                            classchild="w-full"
                             registration={register('period')}
                             type="number"
                             min="1"
-                            classnamefieldwrapper="flex items-center gap-x-3"
+                            classnamefieldwrapper=""
                           />
                         </div>
-                        <div className="flex items-center">
+                        <div className="flex flex-col gap-2 md:col-span-1 mt-4">
                           <SelectField
                             error={formState.errors['cal_unit']}
                             registration={register('cal_unit')}
@@ -426,7 +436,7 @@ export function CreatePackage() {
                               { label: 'Tháng', value: 'month' },
                               { label: 'Năm', value: 'year' },
                             ]}
-                            className="mt-0 px-2"
+                            className="px-2"
                           />
                         </div>
                       </div>
@@ -446,10 +456,11 @@ export function CreatePackage() {
                         setExpectedPayment('')
                       },
                     })}
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
+                    classlabel="w-full"
+                    classchild="w-full"
                     type="number"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    classnamefieldwrapper=""
+                    placeholder="200"
                   />
                   <SelectField
                     label={t('billing:package_manage.popup.charging_unit')}
@@ -460,14 +471,15 @@ export function CreatePackage() {
                       { label: 'Thiết bị', value: 'device' },
                       { label: 'API', value: 'api' },
                     ]}
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    className="!mt-0"
+                    classlabel="w-full"
+                    classchild="w-full"
+                    classnamefieldwrapper=""
                   />
                 </div>
-                <p>{t('billing:package_manage.popup.estimate')}</p>
-                <div className="!mt-2 grid grow gap-y-3 rounded-md border p-4">
-                  <div className="grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.popup.estimate')}</p>
+                <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
+                  <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
                     <SelectField
                       label={t('billing:package_manage.popup.estimate')}
                       error={formState.errors['estimate']}
@@ -501,34 +513,34 @@ export function CreatePackage() {
                               { label: 'Theo đơn vị', value: 'unit' },
                             ]
                       }
-                      classlabel="w-2/12"
-                      classchild="w-10/12"
-                      classnamefieldwrapper="flex items-center gap-x-3"
+                      classlabel="w-full"
+                      classchild="w-full"
+                      classnamefieldwrapper=""
                     />
                     {(estimates === 'mass' ||
                       estimates === 'accumulated' ||
                       estimates === 'step') && (
-                      <div className="flex items-center">
-                        <img
-                          onClick={() => {
-                            let arrPlan = getValues('plan_lv')
-                            const index = getValues('plan_lv')?.length - 1
-                            if (arrPlan[index].level) {
-                              planlvAppend({
-                                level: '',
-                                price: '',
-                                free: '',
-                              })
-                            }
-                          }}
-                          src={btnAddIcon}
-                          alt="add-icon"
-                          className="h-5 w-5 cursor-pointer"
-                        />
-                      </div>
-                    )}
+                        <div className="flex items-center">
+                          <img
+                            onClick={() => {
+                              let arrPlan = getValues('plan_lv')
+                              const index = getValues('plan_lv')?.length - 1
+                              if (arrPlan[index].level) {
+                                planlvAppend({
+                                  level: '',
+                                  price: '',
+                                  free: '',
+                                })
+                              }
+                            }}
+                            src={btnAddIcon}
+                            alt="add-icon"
+                            className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
+                          />
+                        </div>
+                      )}
                   </div>
-                  <div className="max-h-[122px] overflow-auto">
+                  <div className="max-h-[122px] overflow-auto mr-8">
                     {estimates === 'mass' ||
                     estimates === 'accumulated' ||
                     estimates === 'step'
@@ -537,12 +549,12 @@ export function CreatePackage() {
                             <section className="flex w-full" key={field.id}>
                               <div
                                 className={cn(
-                                  'grid w-full grid-cols-1 gap-x-4',
+                                  'relative grid w-full grid-cols-1 gap-x-4',
                                   {
-                                    'md:grid-cols-2':
+                                    'md:grid-cols-3':
                                       estimates === 'accumulated' ||
-                                      estimates === 'step',
-                                    'md:grid-cols-3': estimates === 'mass',
+                                      estimates === 'step'||
+                                      estimates === 'mass',
                                   },
                                 )}
                               >
@@ -562,13 +574,12 @@ export function CreatePackage() {
                                         )
                                   }
                                   registration={register(
-                                    `plan_lv.${index}.level`,
-                                    {
+                                    `plan_lv.${index}.level`, {
                                       onChange: e => {
                                         setExpectedNumber('')
                                         setExpectedPayment('')
-                                      },
-                                    },
+                                      }
+                                    }
                                   )}
                                   onBlur={e => {
                                     if (
@@ -583,8 +594,8 @@ export function CreatePackage() {
                                       })
                                     }
                                   }}
-                                  classlabel="w-2/12"
-                                  classchild="w-10/12"
+                                  classlabel="w-1/4"
+                                  classchild="w-3/4"
                                   type="number"
                                   classnamefieldwrapper="flex items-center gap-x-3"
                                 />
@@ -600,16 +611,15 @@ export function CreatePackage() {
                                           )
                                     }
                                     registration={register(
-                                      `plan_lv.${index}.price`,
-                                      {
+                                      `plan_lv.${index}.price`, {
                                         onChange: e => {
                                           setExpectedNumber('')
                                           setExpectedPayment('')
-                                        },
-                                      },
+                                        }
+                                      }
                                     )}
-                                    classlabel="w-2/12"
-                                    classchild="w-10/12"
+                                    classlabel="w-1/4"
+                                    classchild="w-3/4"
                                     min="1"
                                     type="number"
                                     classnamefieldwrapper="flex items-center gap-x-3"
@@ -627,32 +637,32 @@ export function CreatePackage() {
                                       'billing:package_manage.popup.free',
                                     )}
                                     registration={register(
-                                      `plan_lv.${index}.free`,
-                                      {
+                                      `plan_lv.${index}.free`, {
                                         onChange: e => {
                                           setExpectedNumber('')
                                           setExpectedPayment('')
-                                        },
-                                      },
+                                        }
+                                      }
                                     )}
-                                    classlabel="w-2/12"
-                                    classchild="w-10/12"
+                                    classlabel="w-1/4"
+                                    classchild="w-3/4"
                                     type="number"
                                     classnamefieldwrapper="flex items-center gap-x-3"
                                   />
+                                  
                                 )}
                               </div>
                               <Button
                                 type="button"
                                 size="square"
                                 variant="trans"
-                                className="mt-1 border-none shadow-none"
+                                className="border-none shadow-none"
                                 onClick={() => planlvRemove(index)}
                                 startIcon={
                                   <img
                                     src={btnDeleteIcon}
                                     alt="Delete condition"
-                                    className="h-6 w-6"
+                                    className="icon-container w-6 h-6 flex items-center justify-center ml-2"
                                   />
                                 }
                               />
@@ -662,7 +672,7 @@ export function CreatePackage() {
                       : null}
                   </div>
                   {(estimates === 'fix' || estimates === 'unit') && (
-                    <div className="grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+                    <div className="grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
                       <InputField
                         label={t('billing:package_manage.popup.price')}
                         error={formState.errors['price']}
@@ -684,8 +694,8 @@ export function CreatePackage() {
                           },
                         })}
                         classnamefieldwrapper="flex items-center gap-x-3"
-                        classlabel="w-2/12"
-                        classchild="w-10/12"
+                        classlabel="w-1/5"
+                        classchild="w-full"
                         type="number"
                       />
                       {estimates === 'unit' && (
@@ -701,25 +711,27 @@ export function CreatePackage() {
                             },
                           })}
                           classnamefieldwrapper="flex items-center gap-x-3"
-                          classlabel="w-2/12"
-                          classchild="w-10/12"
+                          classlabel="w-1/5"
+                          classchild="w-full"
                           type="number"
+                          placeholder="Số lượng"
                         />
                       )}
                     </div>
                   )}
                 </div>
-                <p>{t('billing:package_manage.popup.estimated_payment')}</p>
-                <div className="!mt-2 grid grow	grid-cols-1 gap-x-4 gap-y-3 md:grid-cols-2">
+                <p className="!mt-3">{t('billing:package_manage.popup.estimated_payment')}</p>
+                <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
                   <InputField
                     label={t('billing:package_manage.popup.tax')}
                     error={formState.errors['tax']}
                     registration={register('tax')}
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    classlabel="w-3/5"
+                    classchild="w-full"
+                    classnamefieldwrapper="flex items-center gap-x-2"
                   />
                   <div className="flex items-center">(mặc định 10%)</div>
+                  {/* <div className="flex items-center"></div> */}
                   {estimates !== 'fix' && (
                     <InputField
                       label={t('billing:package_manage.popup.expected_number')}
@@ -735,19 +747,20 @@ export function CreatePackage() {
                         )
                       }}
                       value={expectedNumber}
-                      classlabel="w-2/12"
-                      classchild="w-10/12"
-                      classnamefieldwrapper="flex items-center gap-x-3"
+                      classlabel="w-3/5"
+                      classchild="w-full"
+                      classnamefieldwrapper="flex items-center gap-x-2"
+                      placeholder="Nhập số lượng"
                     />
                   )}
                   <InputField
                     label={t('billing:package_manage.popup.expected_payment')}
                     disabled
                     value={expectedPayment}
-                    placeholder=""
-                    classlabel="w-2/12"
-                    classchild="w-10/12"
-                    classnamefieldwrapper="flex items-center gap-x-3"
+                    placeholder="1000000"
+                    classlabel="w-3/5"
+                    classchild="w-full"
+                    classnamefieldwrapper="flex items-center gap-x-2"
                   />
                 </div>
               </>
@@ -763,6 +776,7 @@ export function CreatePackage() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
+
       confirmButton={
         <Button
           isLoading={isLoading}

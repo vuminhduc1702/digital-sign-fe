@@ -120,16 +120,14 @@ export function LineChart({
             second: '2-digit',
           },
         })
-      }
-      if (timePeriod <= 1 * 24 * 60 * 60 * 1000) {
+      } else if (timePeriod <= 1 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
             ...dateTimeOptionsWithoutYearMonthDay,
           },
         })
-      }
-      if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
+      } else if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
@@ -137,8 +135,7 @@ export function LineChart({
             ...dateTimeOptionsWithoutYearMonthDay,
           },
         })
-      }
-      if (timePeriod <= 180 * 24 * 60 * 60 * 1000) {
+      } else if (timePeriod <= 180 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
@@ -146,16 +143,14 @@ export function LineChart({
             day,
           },
         })
-      }
-      if (timePeriod <= 365 * 24 * 60 * 60 * 1000) {
+      } else if (timePeriod <= 365 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
             month,
           },
         })
-      }
-      if (timePeriod <= 5 * 365 * 24 * 60 * 60 * 1000) {
+      } else if (timePeriod <= 5 * 365 * 24 * 60 * 60 * 1000) {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
@@ -163,8 +158,7 @@ export function LineChart({
             month,
           },
         })
-      }
-      if (timePeriod > 5 * 365 * 24 * 60 * 60 * 1000) {
+      } else {
         dateVNFormat = getVNDateFormat({
           date,
           config: {
@@ -175,6 +169,7 @@ export function LineChart({
 
       return dateVNFormat
     }
+
     return ''
   }
 

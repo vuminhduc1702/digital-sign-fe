@@ -48,6 +48,7 @@ export const attrSchema = z.object({
 })
 
 export const attrListSchema = z.array(attrSchema)
+export type AttrList = z.infer<typeof attrListSchema>
 
 export const selectOptionSchema = (valueSchema?: ZodTypeAny) => {
   return z.object({

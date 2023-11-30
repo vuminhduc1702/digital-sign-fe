@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectField } from '~/components/Form'
+import { FieldWrapper, InputField, SelectField, SelectDropdown } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { type UpdateTemplateDTO, useUpdateTemplate } from '../api'
@@ -16,11 +16,12 @@ import { Checkbox } from '~/components/Checkbox'
 
 import { type Template } from '../types'
 import { type Attribute } from '~/types'
-
+import storage from '~/utils/storage'
+import { flattenData } from '~/utils/misc.ts'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-
+import { useGetRulechains } from '../api/getRulechains'
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
   close: () => void
@@ -34,6 +35,19 @@ export function UpdateTemplate({
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
 
+  const { id: projectId } = storage.getProject()
+  const { data: ruchainsData } = useGetRulechains({ projectId })
+
+  const { acc: RuleFlattenData } = flattenData(
+    ruchainsData?.data,
+    ['id', 'name'],
+  )
+  console.log('RuleFlattenData: ', RuleFlattenData)
+  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
+    label: ruchains?.name,
+    value: JSON.parse(ruchains?.id)?.id,
+  }))
+
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
     entityType: 'TEMPLATE',
     entityId: selectedUpdateTemplate?.id,
@@ -46,6 +60,7 @@ export function UpdateTemplate({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
     defaultValues: {
       name: selectedUpdateTemplate?.name,
+      rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
       attributes:
         attrData?.attributes.map((attribute: Attribute) => ({
           attribute_key: attribute.attribute_key,
@@ -78,7 +93,7 @@ export function UpdateTemplate({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud:org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
         <>
           <Button
@@ -115,6 +130,7 @@ export function UpdateTemplate({
           onSubmit={handleSubmit(values => {
             const data = {
               name: values.name,
+              rule_chain_id: values.rule_chain_id,
               attributes:
                 values.attributes && values.attributes.length > 0
                   ? values.attributes
@@ -132,6 +148,26 @@ export function UpdateTemplate({
               error={formState.errors['name']}
               registration={register('name')}
             />
+            <div className="space-y-1">
+                <SelectDropdown
+                  label={t('cloud:device_template.add_template.flow')}
+                  name="rule_chain_id"
+                  control={control}
+                  options={
+                    RuleSelectOptions != null
+                      ? RuleSelectOptions
+                      : [{ label: t('loading:flow_id'), value: '' }]
+                  }
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+                  defaultValue={RuleSelectOptions.find(
+                    ruchains => ruchains.value === selectedUpdateTemplate.rule_chain_id,
+                  )}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.rule_chain_id?.message}
+                </p>   
+            </div>
             {fields.map((field, index) => (
               <section
                 key={field.id}

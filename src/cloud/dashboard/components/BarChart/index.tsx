@@ -16,9 +16,8 @@ import type * as z from 'zod'
 import { Spinner } from '~/components/Spinner'
 import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
-import { type DataItem, type TimeSeries } from '../../types'
+import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
-import { type WidgetAttrDeviceType } from '../../routes/DashboardDetail'
 
 export const BarChart = ({
   data,
@@ -90,7 +89,7 @@ export const BarChart = ({
           }
         })
 
-        return result.sort((a, b) => (a.time as number) - (b.time as number))
+        return result.sort((a, b) => a.time - b.time)
       },
       [],
     )
@@ -99,24 +98,77 @@ export const BarChart = ({
       barWidgetDataType.map(item => {
         return {
           ...item,
-          time: dateTransformation(item.time as number),
+          time: dateTransformation(item.time),
         }
       }),
     )
   }
 
   function dateTransformation(date: number) {
-    const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
-      defaultDateConfig
+    if (widgetInfo?.config != null) {
+      const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
+        defaultDateConfig
+      const timePeriod = widgetInfo.config.chartsetting.time_period
+      let dateVNFormat = ''
+      if (timePeriod <= 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+            second: '2-digit',
+          },
+        })
+      } else if (timePeriod <= 1 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            ...dateTimeOptionsWithoutYearMonthDay,
+          },
+        })
+      } else if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            day,
+            ...dateTimeOptionsWithoutYearMonthDay,
+          },
+        })
+      } else if (timePeriod <= 180 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            month,
+            day,
+          },
+        })
+      } else if (timePeriod <= 365 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            month,
+          },
+        })
+      } else if (timePeriod <= 5 * 365 * 24 * 60 * 60 * 1000) {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            year,
+            month,
+          },
+        })
+      } else {
+        dateVNFormat = getVNDateFormat({
+          date,
+          config: {
+            year,
+          },
+        })
+      }
 
-    return getVNDateFormat({
-      date,
-      config: {
-        ...dateTimeOptionsWithoutYearMonthDay,
-        second: '2-digit',
-        // fractionalSecondDigits: 3,
-      },
-    })
+      return dateVNFormat
+    }
+
+    return ''
   }
 
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
@@ -164,7 +216,7 @@ export const BarChart = ({
             <XAxis dataKey="time" />
             <YAxis />
             <Tooltip />
-            <Legend content={renderLegend}/>
+            <Legend content={renderLegend} />
             <Brush dataKey="time" height={30} stroke="#8884d8" />
             {Object.keys(newValuesRef.current).map((key, index) => {
               const colorConfig = widgetInfo.attribute_config.filter(
@@ -179,12 +231,12 @@ export const BarChart = ({
                   stroke={
                     colorConfig && colorConfig[0].color !== ''
                       ? colorConfig[0].color
-                      : '#f1e15b'
+                      : '#e8c1a0'
                   }
                   fill={
                     colorConfig && colorConfig[0].color !== ''
-                    ? colorConfig[0].color
-                      : '#f1e15b'
+                      ? colorConfig[0].color
+                      : '#e8c1a0'
                   }
                 />
               )
