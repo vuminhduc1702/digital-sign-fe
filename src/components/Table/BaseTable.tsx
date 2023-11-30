@@ -249,7 +249,7 @@ export function BaseTable<T extends Record<string, any>>({
               {table.getRowModel().rows.map(row => {
                 return (
                   <Fragment key={row.id}>
-                    <tr className="border-secondary-70 border-t-2" key={row.id}>
+                    <tr className="border-secondary-70 border-t-2 text-center" key={row.id}>
                       {row.getVisibleCells().map((cell, index) => {
                         if (index === row.getVisibleCells().length - 1) {
                           return (

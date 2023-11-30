@@ -628,7 +628,7 @@
       "delete_plan": "Xoá gói cước",
       "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
       "id": "ID",
-      "description": "Nội dung mô tả gói cước",
+      "description": "Nội dung mô tả gói cước :",
       "popup": {
         "name": "Tên gói cước",
         "type": "Loại gói",
