@@ -48,9 +48,9 @@ export function SubcriptionTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.pldk')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
+      {/* <TitleBar title={t('sidebar:payment.pldk')} /> */}
+      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
+        <div className="flex justify-between mb-5">
           <form
             id="search-subcription"
             className="flex flex-col justify-between space-y-6"

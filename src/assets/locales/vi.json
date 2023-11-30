@@ -347,11 +347,14 @@
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
+        "flow": "Flow ID",
         "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
-        "success_delete": "Xoá mẫu thiết bị thành công"
+        "success_delete": "Xoá mẫu thiết bị thành công",
+        "choose_flow_id": "Vui lòng chọn flow id",
+        "no_flow_id": "Không thuộc flow id"
       },
       "sidebar": {
         "title": "Danh sách mẫu thiết bị",
@@ -621,13 +624,13 @@
       "list_package": "Danh sách gói cước",
       "no_package": "Không có gói cước",
       "title": "Thông tin gói cước",
-      "create": "Tạo gói cước",
+      "create": "Thêm gói cước",
       "delete_plan": "Xoá gói cước",
       "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
       "id": "ID",
-      "description": "Mô tả",
+      "description": "Nội dung mô tả gói cước",
       "popup": {
-        "name": "Tên gói",
+        "name": "Tên gói cước",
         "type": "Loại gói",
         "description": "Mô tả gói",
         "status": "Trạng thái",
@@ -651,7 +654,7 @@
         "choose_expiry": "Thời gian gia hạn phải nhỏ hơn chu kỳ tính tiền",
         "choose_plan_price": "Vui lòng nhập số tiền",
         "expected_number": "Số lượng dự kiến",
-        "expected_payment": "Dự kiến thanh toán",
+        "expected_payment": "Dự kiến thanh toán(VNĐ)",
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
@@ -673,7 +676,7 @@
         "package": "Gói cước",
         "price_method": "Cách định giá",
         "quantity": "Số lượng",
-        "payment_type": "Loại thanh toán",
+        "payment_type": "Thời điểm thanh toán",
         "estimated_payment": "Số tiền thanh toán",
         "period": "Chu kỳ tính tiền",
         "choose_user": "Vui lòng chọn thông tin khách hàng",
@@ -686,7 +689,7 @@
         "sub_code": "Mã đăng ký",
         "start_date": "Ngày bắt đầu đăng ký",
         "cycle_now": "Chu kỳ hiện tại",
-        "status": "Trạng thái"
+        "status": "Trạng thái đăng ký"
       }
     },
     "manage_bill": {
@@ -750,7 +753,7 @@
         "phone": "Số điện thoại",
         "email": "Email",
         "role": "Vai trò",
-        "parent": "Trực thuộc",
+        "parent": "Đơn vị trực thuộc",
         "address": "Địa chỉ",
         "customer_id": "ID khách hàng"
       },
@@ -805,6 +808,7 @@
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
     "no_in_org": "Không trực thuộc tổ chức.",
+    "no_in_flow_id": "Không thuộc flow id.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subscription": "Không có dịch vụ. Vui lòng tạo.",
@@ -820,6 +824,7 @@
     "close": "Đóng",
     "confirm": "Xác nhận",
     "delete": "Xóa",
+    "add": "Thêm",
     "update": "Sửa",
     "save": "Lưu",
     "cancel": "Hủy",
@@ -849,6 +854,7 @@
   "loading": {
     "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
+    "flow_id": "Đang tải danh sách flow id...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",

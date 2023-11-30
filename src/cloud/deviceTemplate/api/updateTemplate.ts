@@ -11,6 +11,7 @@ import { type attrListSchema } from '~/utils/schemaValidation'
 export type UpdateTemplateDTO = {
   data: {
     name: string
+    rule_chain_id: string
     attributes?: z.infer<typeof attrListSchema>
   }
   templateId: string
@@ -22,10 +23,12 @@ export const updateTemplate = ({ data, templateId }: UpdateTemplateDTO) => {
 
 type UseUpdateTemplateOptions = {
   config?: MutationConfig<typeof updateTemplate>
+  isOnCreateTemplate?: boolean
 }
 
 export const useUpdateTemplate = ({
   config,
+  isOnCreateTemplate,
 }: UseUpdateTemplateOptions = {}) => {
   const { t } = useTranslation()
 
@@ -35,6 +38,7 @@ export const useUpdateTemplate = ({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['templates'] })
       await queryClient.invalidateQueries({ queryKey: ['attrs'] })
+      !isOnCreateTemplate &&
       addNotification({
         type: 'success',
         title: t('cloud:device_template.add_template.success_update'),

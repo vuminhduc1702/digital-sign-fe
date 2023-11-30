@@ -54,9 +54,9 @@ export function BillingTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.plhd')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-        <div className="flex justify-between">
+      {/* <TitleBar title={t('sidebar:payment.plhd')} /> */}
+      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
+        <div className="flex justify-between mb-5">
           <form
             id="search-subcription"
             className="flex flex-col justify-between space-y-6"
@@ -81,7 +81,7 @@ export function BillingTemplate() {
                 ]}
               />
               <InputField
-                className="h-[37px]"
+                className="mt-1 h-[37px]"
                 error={formState.errors['value']}
                 registration={register('value')}
               />
@@ -92,7 +92,7 @@ export function BillingTemplate() {
                       id="date"
                       variant="trans"
                       className={cn(
-                        'relative h-[37px] w-[300px] justify-start rounded-md text-left font-normal ',
+                        'relative mt-1 h-[37px] w-[300px] justify-start rounded-md text-left font-normal ',
                         !date && 'text-muted-foreground',
                       )}
                     >

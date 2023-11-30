@@ -2,11 +2,14 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
 import {
   FieldWrapper,
   FormDrawer,
+  SelectDropdown,
   InputField,
   SelectField,
 } from '~/components/Form'
@@ -14,18 +17,19 @@ import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
-} from '../api/createTemplate'
+  useUpdateTemplate,
+} from '../api'
 import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
-
+import { flattenData } from '~/utils/misc.ts'
 import { attrSchema, nameSchema } from '~/utils/schemaValidation'
-
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-
+import { useGetRulechains } from '../api/getRulechains'
 export const templateAttrSchema = z.object({
   name: nameSchema,
+  rule_chain_id: z.string().optional(),
   attributes: z.array(attrSchema),
 })
 
@@ -33,27 +37,42 @@ export default function CreateTemplate() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
+  const { data: ruchainsData } = useGetRulechains({ projectId })
 
-  const { mutate, isLoading, isSuccess } = useCreateTemplate()
+  const { acc: RuleFlattenData } = flattenData(
+    ruchainsData?.data,
+    ['id', 'name'],
+  )
 
-  const { register, formState, handleSubmit, control } = useForm<
+  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
+    label: ruchains?.name,
+    value: JSON.parse(ruchains?.id)?.id,
+  }))
+  const { mutate: mutateUpdateTemplate } = useUpdateTemplate({ isOnCreateTemplate: true })
+
+  const {
+    mutateAsync: mutateAsyncCreateTemplate,
+    isLoading: isLoadingCreateTemplate,
+    isSuccess: isSuccessCreateTemplate,
+  } = useCreateTemplate()
+ 
+  const { register, formState, handleSubmit, control} = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
     defaultValues: {
       name: '',
+      rule_chain_id: '',
       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
     },
   })
-
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
     control,
   })
-
   return (
     <FormDrawer
-      isDone={isSuccess}
+      isDone={isLoadingCreateTemplate}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
@@ -69,7 +88,7 @@ export default function CreateTemplate() {
           form="create-template"
           type="submit"
           size="lg"
-          isLoading={isLoading}
+          isLoading={isSuccessCreateTemplate}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
@@ -79,8 +98,23 @@ export default function CreateTemplate() {
       <form
         className="w-full space-y-5"
         id="create-template"
-        onSubmit={handleSubmit(values => {
-          mutate({ data: { ...values, project_id: projectId } })
+        onSubmit={handleSubmit(async values => {
+          const dataCreateTemplate = await mutateAsyncCreateTemplate({
+            data: {
+              project_id: projectId,
+              rule_chain_id: values.rule_chain_id,
+              name: values.name,
+              attributes: values.attributes
+            },
+          })
+          mutateUpdateTemplate({
+            data: {
+              name: dataCreateTemplate.name,
+              rule_chain_id: dataCreateTemplate.rule_chain_id,
+              attributes: dataCreateTemplate.attributes,
+            },
+            templateId: dataCreateTemplate.id,
+          })
         })}
       >
         <>
@@ -95,7 +129,8 @@ export default function CreateTemplate() {
                 value: '',
                 logged: true,
                 value_t: '',
-              })
+              }
+              )
             }
           />
           <InputField
@@ -103,6 +138,25 @@ export default function CreateTemplate() {
             error={formState.errors['name']}
             registration={register('name')}
           />
+          <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:device_template.add_template.flow')}
+                  name="rule_chain_id"
+                  control={control}
+                  options={
+                    RuleSelectOptions != null
+                      ? RuleSelectOptions
+                      : [{ label: t('loading:flow_id'), value: ' ' }]
+                  }
+                  isOptionDisabled={option => option.label === t('loading:flow_id')}
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.rule_chain_id?.message}
+                </p>   
+          </div>
           {fields.map((field, index) => (
             <section
               key={field.id}

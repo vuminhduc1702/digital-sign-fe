@@ -197,53 +197,61 @@ export function UpdateOrg({
           }
         })}
       >
-        <>
-          <InputField
-            label={t('cloud:org_manage.org_manage.add_org.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
-          />
-          <div className="space-y-1">
-            <SelectDropdown
-              isClearable={false}
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              name="org_id"
-              control={control}
-              options={
-                orgSelectOptions != null
-                  ? orgSelectOptions
-                  : [{ label: t('loading:org'), value: '' }]
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions.find(
-                org => org.value === selectedUpdateOrg.org_id,
-              )}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.org_id?.message}
-            </p>
-          </div>
-          <TextAreaField
-            label={t('cloud:org_manage.org_manage.add_org.desc')}
-            error={formState.errors['description']}
-            registration={register('description')}
-          />
-          <div className="mb-3 space-y-1">
-            <FileField
-              label={t('cloud:project_manager.add_project.avatar')}
-              control={controlUploadImage}
-              name="upload-image"
-              ref={fileInputRef}
-              onChange={event => {
-                setUploadImageErr('')
-                const file = event.target.files[0]
-                const formData = new FormData()
-                formData.append('file', event.target.files[0])
-                setValueUploadImage(
-                  'file',
-                  formData.get('file') as unknown as { file: File },
-                )
+        {({ register, formState, control, setValue }) => {
+          return (
+            <>
+              <InputField
+                label={t('cloud:org_manage.org_manage.add_org.name') ?? 'Name'}
+                error={formState.errors['name']}
+                registration={register('name')}
+              />
+              <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={false}
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={
+                    orgSelectOptions || [{ label: t('loading:org'), value: '' }]
+                  }
+                  onChange={e => {
+                    setOptionOrg(e)
+                    mutateUpdateOrgForOrg({
+                      data: {
+                        ids: [selectedUpdateOrg.id],
+                        org_id: e.value,
+                      },
+                    })
+                    setValue('org_id', e?.value)
+                  }}
+                  value={optionOrg}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.org_id?.message}
+                </p>
+              </div>
+              <TextAreaField
+                label={
+                  t('cloud:org_manage.org_manage.add_org.desc') ?? 'Description'
+                }
+                error={formState.errors['description']}
+                registration={register('description')}
+              />
+              <div className="mb-3 space-y-1">
+                <FileField
+                  label={t('cloud:project_manager.add_project.avatar')}
+                  control={controlUploadImage}
+                  name="upload-image"
+                  ref={fileInputRef}
+                  onChange={event => {
+                    setUploadImageErr('')
+                    const file = event.target.files[0]
+                    const formData = new FormData()
+                    formData.append('file', event.target.files[0])
+                    setValueUploadImage(
+                      'file',
+                      formData.get('file') as unknown as { file: File },
+                    )
 
                 if (file.size > MAX_FILE_SIZE) {
                   setUploadImageErr(t('validate:image_max_size'))

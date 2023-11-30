@@ -94,39 +94,53 @@ export function BaseTable<T extends Record<string, any>>({
         </div>
       ) : (
         <>
-          <table className="mb-10 w-full border-collapse" id="table-ref">
-            <thead className="border-secondary-700 border-b-2">
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => {
-                    return (
-                      <th
-                        className="h-9 text-left"
-                        key={header.id}
-                        colSpan={header.colSpan}
-                      >
-                        {header.isPlaceholder ? null : (
-                          <div
-                            className={`text-table-header flex items-center justify-between ${
-                              header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
-                                : ''
-                            }`}
-                            onClick={header.column.getToggleSortingHandler()}
-                          >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                            <div className="w-2 pr-5 text-xl text-black">
-                              {{
-                                asc: '↑',
-                                desc: '↓',
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>
+          <table className="w-full border-2" id="table-ref">
+          <thead className="border-b-2 bg-gray-200 text-center">
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th
+                      className="h-9 text-center"
+                      key={header.id}
+                      colSpan={header.colSpan}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={`text-table-header ${
+                            header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : ''
+                          }`}
+                          onClick={header.column.getToggleSortingHandler()}
+                        >
+                          {/* <div className='flex items-center justify-center text-table-header'>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                           </div>
-                        )}
-                      </th>
+                          <div className="w-2 pr-5 text-xl text-black">
+                            {{
+                              asc: '↑',
+                              desc: '↓',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div> */}
+                          <div className='relative flex items-center justify-center text-table-header'>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                          <div className="absolute right-1 w-2 text-xl text-black">
+                            {{
+                              asc: '↑',
+                              desc: '↓',
+                            }[header.column.getIsSorted() as string] ?? null}
+                          </div>
+                          </div>
+                        </div>
+                      )}
+                    </th>
                     )
                   })}
                   {popoverClassName !== '' ? (
@@ -275,9 +289,9 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="mt-2 flex items-center justify-between gap-2">
-        <div className="absolute bottom-10 flex gap-3">
-          <span className="text-body-light flex items-center gap-1">
+      <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="flex gap-3">
+          <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',

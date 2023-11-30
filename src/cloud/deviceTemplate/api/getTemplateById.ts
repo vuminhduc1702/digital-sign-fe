@@ -10,6 +10,7 @@ export const getTemplateById = ({
 }: {
   templateId: string
 }): Promise<Template> => {
+
   return axios.get(`/api/templates/${templateId}`)
 }
 
@@ -25,7 +26,7 @@ export const useTemplateById = ({
   config,
 }: UseTemplateByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['templateById', templateId],
+    queryKey: ['templates', templateId],
     queryFn: () => getTemplateById({ templateId }),
     enabled: !!templateId,
     ...config,
