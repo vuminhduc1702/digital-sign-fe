@@ -83,7 +83,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -174,7 +174,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -331,9 +331,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
                         <p>{lifecycleTimeout}</p>
                       </TooltipContent>
                     </>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                 </Tooltip>
               </TooltipProvider>
             </>
@@ -341,13 +339,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('attributes', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.attributes')}</span>
-      //   ),
-      //   cell: info => info.getValue(),
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.accessor('created_by', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
@@ -431,7 +422,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.created_at')}</span>
         ),
         cell: info =>
-          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }), // convert seconds to milliseconds
+          getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
         footer: info => info.column.id,
       }),
       columnHelper.display({

@@ -638,63 +638,63 @@ export function CreateWidget({
                             `attributeConfig.${index}.label` as const,
                           )}
                         /> */}
-                        {
-                          !(['GAUGE', 'TABLE', 'MAP', 'CONTROLLER']).find(e => widgetCategory === e) ?
-                          (
-<div className="space-y-1">
-                          <FieldWrapper
-                            label={t('cloud:dashboard.config_chart.color')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.color
-                            }
-                          >
-                            <Controller
-                              control={control}
-                              name={`attributeConfig.${index}.color`}
-                              render={({
-                                field: { onChange, value, ...field },
-                              }) => {
-                                return (
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button
-                                        className="relative h-9 w-full rounded-md"
-                                        variant="trans"
-                                        size="square"
+                        {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
+                          e => widgetCategory === e,
+                        ) ? (
+                          <div className="space-y-1">
+                            <FieldWrapper
+                              label={t('cloud:dashboard.config_chart.color')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]
+                                  ?.color
+                              }
+                            >
+                              <Controller
+                                control={control}
+                                name={`attributeConfig.${index}.color`}
+                                render={({
+                                  field: { onChange, value, ...field },
+                                }) => {
+                                  return (
+                                    <Popover>
+                                      <PopoverTrigger asChild>
+                                        <Button
+                                          className="relative h-9 w-full rounded-md"
+                                          variant="trans"
+                                          size="square"
+                                        >
+                                          {value}
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto p-0"
+                                        align="start"
                                       >
-                                        {value}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto p-0"
-                                      align="start"
-                                    >
-                                      <ColorPicker
-                                        {...field}
-                                        color={value}
-                                        onChange={(color: {
-                                          rgb: {
-                                            r: number
-                                            g: number
-                                            b: number
-                                            a: number
-                                          }
-                                        }) => {
-                                          const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
-                                          onChange(rgb)
-                                        }}
-                                        // @ts-expect-error: ColorPicker don't have ref prop
-                                        ref={colorPickerRef}
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                )
-                              }}
-                            />
-                          </FieldWrapper>
-                        </div>
-                          ) : (<></>)
-                        }
+                                        <ColorPicker
+                                          {...field}
+                                          color={value}
+                                          onChange={(color: {
+                                            rgb: {
+                                              r: number
+                                              g: number
+                                              b: number
+                                              a: number
+                                            }
+                                          }) => {
+                                            const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
+                                            onChange(rgb)
+                                          }}
+                                          // @ts-expect-error: ColorPicker don't have ref prop
+                                          ref={colorPickerRef}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  )
+                                }}
+                              />
+                            </FieldWrapper>
+                          </div>
+                        ) : null}
                         <InputField
                           label={t('cloud:dashboard.config_chart.unit')}
                           error={

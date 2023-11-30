@@ -95,7 +95,7 @@ export function BaseTable<T extends Record<string, any>>({
       ) : (
         <>
           <table className="mb-10 w-full border-collapse" id="table-ref">
-            <thead className="border-secondary-700 border-b-2">
+            <thead className="border-b-2 border-secondary-700">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
@@ -107,7 +107,7 @@ export function BaseTable<T extends Record<string, any>>({
                       >
                         {header.isPlaceholder ? null : (
                           <div
-                            className={`text-table-header flex items-center justify-between ${
+                            className={`flex items-center justify-between text-table-header ${
                               header.column.getCanSort()
                                 ? 'cursor-pointer select-none'
                                 : ''
@@ -160,7 +160,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -212,7 +212,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -225,9 +225,7 @@ export function BaseTable<T extends Record<string, any>>({
                         </PopoverContent>
                       </Popover>
                     </>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                 </tr>
               ))}
             </thead>
@@ -277,7 +275,7 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="mt-2 flex items-center justify-between gap-2">
         <div className="absolute bottom-10 flex gap-3">
-          <span className="text-body-light flex items-center gap-1">
+          <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',

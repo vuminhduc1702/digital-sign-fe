@@ -20,7 +20,7 @@ import { cn } from '~/utils/misc'
 export const resourcesList: ResourcesType[] = [
   { value: 'users', label: 'Người dùng' },
   { value: 'groups', label: 'Nhóm' },
-  { value: 'templates', label: 'Mãu thiết bị' },
+  { value: 'templates', label: 'Mẫu thiết bị' },
   { value: 'events', label: 'Sự kiện' },
   { value: 'organizations', label: 'Tổ chức' },
   { value: 'roles', label: 'Vai trò' },

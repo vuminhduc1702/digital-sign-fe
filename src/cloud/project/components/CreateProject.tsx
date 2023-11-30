@@ -254,11 +254,10 @@ export function CreateProject() {
                         src={btnRemoveIcon}
                         className="cursor-pointer text-secondary-700 hover:text-primary-400"
                         onClick={handleResetRestoreProject}
+                        alt="import project"
                       />
                     </div>
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                 </div>
                 <p className="text-body-sm text-primary-400">
                   {uploadRestoreProjectErr}
