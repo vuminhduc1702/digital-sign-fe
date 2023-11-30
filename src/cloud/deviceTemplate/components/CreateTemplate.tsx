@@ -25,6 +25,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { useGetRulechains } from '../api/getRulechains'
+
 export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
@@ -35,7 +36,7 @@ export default function CreateTemplate() {
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
-  const { data: ruchainsData } = useGetRulechains({ projectId })
+  const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains({ projectId })
 
   const { acc: RuleFlattenData } = flattenData(
     ruchainsData?.data,
@@ -142,13 +143,11 @@ export default function CreateTemplate() {
                   label={t('cloud:device_template.add_template.flow')}
                   name="rule_chain_id"
                   control={control}
-                  options={
-                    RuleSelectOptions != null
-                      ? RuleSelectOptions
-                      : [{ label: t('loading:flow_id'), value: ' ' }]
-                  }
+                  options={RuleSelectOptions}
                   isOptionDisabled={option => option.label === t('loading:flow_id')}
                   noOptionsMessage={() => t('table:no_in_flow_id')}
+                  loadingMessage={() => t('loading:flow_id')}
+                  isLoading={isLoadingRuchains}
                   placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                 />
                 <p className="text-body-sm text-primary-400">

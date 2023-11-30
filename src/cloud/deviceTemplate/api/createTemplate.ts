@@ -7,21 +7,19 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type Template } from '../types'
-import { type attrListSchema } from '~/utils/schemaValidation'
+import { type AttrList} from '~/utils/schemaValidation'
+
 export type CreateTemplateDTO = {
   data: {
     name: string
     rule_chain_id: string
     project_id: string
-    attributes: z.infer<typeof attrListSchema>
+    attributes: AttrList
   }
 }
 export const createTemplate = ({
   data,
 }: CreateTemplateDTO): Promise<Template> => {
-
-//data.rule_chain_id = "8e3e2070-8ccb-11ee-8f7f-4fb365099215"
-
   return axios.post(`/api/templates`, data)
 }
 

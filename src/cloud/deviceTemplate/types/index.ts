@@ -1,4 +1,5 @@
 import { type BasePagination } from '~/types'
+import { type AttrList } from '~/utils/schemaValidation'
 
 export type Template = {
   id: string
@@ -7,6 +8,7 @@ export type Template = {
   provision_key: string
   provision_secret: string
   created_time: number
+  attributes: AttrList
 }
 
 export type TemplateList = {

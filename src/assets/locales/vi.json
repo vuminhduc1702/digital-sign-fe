@@ -350,6 +350,7 @@
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
+        "update": "Sửa mẫu thiết bị",
         "flow": "Flow ID",
         "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",

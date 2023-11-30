@@ -42,6 +42,7 @@ export function UpdateTemplate({
     ruchainsData?.data,
     ['id', 'name'],
   )
+  console.log('RuleFlattenData: ', RuleFlattenData)
   const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
     label: ruchains?.name,
     value: JSON.parse(ruchains?.id)?.id,
@@ -92,7 +93,7 @@ export function UpdateTemplate({
     <Drawer
       isOpen={isOpen}
       onClose={close}
-      title={t('cloud:org_manage.org_manage.add_attr.edit')}
+      title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
         <>
           <Button

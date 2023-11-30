@@ -7,7 +7,7 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type Attribute } from '~/types'
-import { type attrListSchema } from '~/utils/schemaValidation'
+import { type AttrList} from '~/utils/schemaValidation'
 
 export type EntityType =
   | 'ORGANIZATION'
@@ -21,7 +21,7 @@ export type CreateAttrDTO = {
   data: {
     entity_id: string
     entity_type: EntityType
-    attributes: z.infer<typeof attrListSchema>
+    attributes: AttrList
   }
 }
 

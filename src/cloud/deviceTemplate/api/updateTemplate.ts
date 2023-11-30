@@ -6,13 +6,13 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import { type attrListSchema } from '~/utils/schemaValidation'
+import { type AttrList} from '~/utils/schemaValidation'
 
 export type UpdateTemplateDTO = {
   data: {
     name: string
     rule_chain_id: string
-    attributes?: z.infer<typeof attrListSchema>
+    attributes?: AttrList
   }
   templateId: string
 }
