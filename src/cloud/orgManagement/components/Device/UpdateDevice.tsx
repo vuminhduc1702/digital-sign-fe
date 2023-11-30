@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -74,8 +74,6 @@ export function UpdateDevice({
   }
   const additional_interval = additionalInfo?.heartbeat_interval || 0
   const additional_timeout = additionalInfo?.timeout_lifecycle || 0
-  const heartbeatIntervalRef = useRef(additional_interval)
-  const timeoutRef = useRef(additional_timeout)
   let disableUpdateHeartbeat = !additionalInfo?.heartbeat_interval
     ? true
     : false
@@ -277,8 +275,8 @@ export function UpdateDevice({
         </form>
         <form
           className="mt-6 w-full"
-          onSubmit={handleSubmitHeartBeat(async values => {
-            await mutateHeartBeat({
+          onSubmit={handleSubmitHeartBeat(values => {
+            mutateHeartBeat({
               data: {
                 interval: Number(values.interval),
                 timeout: Number(values.timeout),
@@ -302,7 +300,6 @@ export function UpdateDevice({
               classlabel="mx-1"
               classchild="mx-1"
               defaultValue={additional_interval}
-              ref={heartbeatIntervalRef}
             />
             <InputField
               registration={registerHeartBeat('timeout', {
@@ -315,12 +312,11 @@ export function UpdateDevice({
               classlabel="mx-1"
               classchild="mx-1"
               defaultValue={additional_timeout}
-              ref={timeoutRef}
             />
           </div>
-          <div className="pt-1">
+          <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="bg-secondary-700 float-right mx-2 rounded-lg border-none p-1 text-white"
+              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -329,7 +325,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="bg-secondary-700 float-right rounded-lg border-none p-1 text-white"
+              className="rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}

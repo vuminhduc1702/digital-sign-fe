@@ -244,7 +244,7 @@
           "device_type": "Mẫu thiết bị",
           "heartbeat": "Heartbeat",
           "create_heartbeat": "Tạo Heartbeat",
-          "ping": "Ping",
+          "ping": "Ping thiết bị",
           "mqttconfig": "Sửa mqtt",
           "success_heartbeat": "Cập nhật heartbeat thành công",
           "success_create": "Tạo thiết bị thành công",

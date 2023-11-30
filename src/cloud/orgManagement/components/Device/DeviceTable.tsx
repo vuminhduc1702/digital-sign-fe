@@ -71,7 +71,15 @@ function DeviceTableContextMenu({
   const { mutate: mutateBlockAndActive } = useBlockAndActiveDevice()
 
   const handleCopyId = useCopyId()
-
+  let additionalInfo
+  if (typeof additional_info === 'string') {
+    try {
+      additionalInfo = JSON.parse(additional_info)
+    } catch (error) {
+      additionalInfo = {}
+      console.error('Error parsing JSON:', error)
+    }
+  }
   return (
     <>
       <Dropdown
@@ -236,8 +244,13 @@ function DeviceTableContextMenu({
       {isOpen && type === 'update-version' ? (
         <UpdateVersionFirmWare deviceId={id} close={close} isOpen={isOpen} />
       ) : null}
-      {isOpen && type === 'update-mqtt' ? (
-        <UpdateMqttConfig deviceId={id} close={close} isOpen={isOpen} />
+      {isOpen && additional_info !== undefined && type === 'update-mqtt' ? (
+        <UpdateMqttConfig
+          additional_info={additional_info}
+          deviceId={id}
+          close={close}
+          isOpen={isOpen}
+        />
       ) : null}
     </>
   )

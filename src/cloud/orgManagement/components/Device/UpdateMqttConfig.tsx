@@ -3,7 +3,20 @@ import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-export function UpdateMqttConfig({ deviceId, close, isOpen }) {
+export function UpdateMqttConfig({ deviceId, close, isOpen, additional_info }) {
+  let additionalInfo
+  if (typeof additional_info === 'string') {
+    try {
+      additionalInfo = JSON.parse(additional_info)
+    } catch (error) {
+      additionalInfo = {}
+      console.error('Error parsing JSON:', error)
+    }
+  }
+
+  if (additionalInfo.mqtt_config !== undefined) {
+    console.log(typeof additionalInfo.mqtt_config)
+  }
   return (
     <Drawer
       isOpen={isOpen}
@@ -35,7 +48,9 @@ export function UpdateMqttConfig({ deviceId, close, isOpen }) {
       )}
     >
       <>
-        <form></form>
+        <form>
+          <></>
+        </form>
       </>
     </Drawer>
   )

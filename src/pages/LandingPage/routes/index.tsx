@@ -135,7 +135,7 @@ export function LandingPage() {
                   </div>
                 </div>
               </div>
-              {userInfoIsLoading && userInfoData != null ? (
+              {showSpinner && userInfoData != null ? (
                 <div className="flex items-center justify-center">
                   <Spinner
                     showSpinner={showSpinner}
