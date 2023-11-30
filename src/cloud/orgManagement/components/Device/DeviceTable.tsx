@@ -54,7 +54,7 @@ function DeviceTableContextMenu({
   template_id: string
   token: string
   status: string
-  additional_info?: object
+  additional_info: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -71,15 +71,7 @@ function DeviceTableContextMenu({
   const { mutate: mutateBlockAndActive } = useBlockAndActiveDevice()
 
   const handleCopyId = useCopyId()
-  let additionalInfo
-  if (typeof additional_info === 'string') {
-    try {
-      additionalInfo = JSON.parse(additional_info)
-    } catch (error) {
-      additionalInfo = {}
-      console.error('Error parsing JSON:', error)
-    }
-  }
+
   return (
     <>
       <Dropdown
@@ -244,7 +236,7 @@ function DeviceTableContextMenu({
       {isOpen && type === 'update-version' ? (
         <UpdateVersionFirmWare deviceId={id} close={close} isOpen={isOpen} />
       ) : null}
-      {isOpen && additional_info !== undefined && type === 'update-mqtt' ? (
+      {isOpen && additional_info != null && type === 'update-mqtt' ? (
         <UpdateMqttConfig
           additional_info={additional_info}
           deviceId={id}
@@ -322,53 +314,30 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
         ),
         cell: info => {
-          const { additional_info } = info.row.original
-
-          let additionalInfo,
-            historyLastHeartbeat,
-            intervalHeartbeat,
-            lifecycleTimeout
-          if (typeof additional_info === 'string') {
-            try {
-              additionalInfo = JSON.parse(additional_info)
-              // Now you can use additionalInfo as an object
-            } catch (error) {
-              console.error('Error parsing JSON:', error)
-            }
-          }
-          if (additionalInfo?.last_heartbeat) {
-            historyLastHeartbeat =
-              'Last heartbeat: ' +
-              getVNDateFormat({
-                date: parseInt(additionalInfo?.last_heartbeat) * 1000,
-              })
-          }
-          if (additionalInfo.heartbeat_interval) {
-            intervalHeartbeat = 'Interval: ' + additionalInfo.heartbeat_interval
-          }
-          if (additionalInfo.timeout_lifecycle) {
-            lifecycleTimeout = 'Lifecycle: ' + additionalInfo.timeout_lifecycle
-          }
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
+          )
 
           return (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>{intervalHeartbeat}</TooltipTrigger>
-                  {additionalInfo.heartbeat_interval ? (
-                    <>
-                      <TooltipContent>
-                        <p>{historyLastHeartbeat}</p>
-                        <p>{intervalHeartbeat}</p>
-                        <p>{lifecycleTimeout}</p>
-                      </TooltipContent>
-                    </>
-                  ) : (
-                    <></>
-                  )}
-                </Tooltip>
-              </TooltipProvider>
-            </>
+            additionalInfo?.heartbeat_interval != null ? (<TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  {'Interval: ' + additionalInfo.heartbeat_interval}
+                </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {'Last heartbeat: ' +
+                          getVNDateFormat({
+                            date:
+                              parseInt(additionalInfo?.last_heartbeat || 0) *
+                              1000,
+                          })}
+                      </p>
+                      <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
+                      <p>{'Lifecycle: ' + additionalInfo.timeout_lifecycle}</p>
+                    </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>) : null
           )
         },
         footer: info => info.column.id,
@@ -479,7 +448,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             template_id,
             token,
             status,
-            additional_info,
           } = info.row.original
 
           const group = {
@@ -496,7 +464,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             token,
             status,
             group_id,
-            additional_info,
+            additional_info: info.row.original
+              .additional_info as unknown as string,
             // group_name,
           })
         },

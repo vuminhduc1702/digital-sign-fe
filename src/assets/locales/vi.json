@@ -234,7 +234,24 @@
           "delete_device_full": "Xoá thiết bị",
           "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
         },
-        "mqtt_config": { "title": "Sửa mqtt config" },
+        "mqtt_config": {
+          "update_success": "Cập nhật mqtt thành công",
+          "title": "Sửa mqtt config",
+          "clean_session": "Clean session",
+          "dup": "Dup",
+          "keepalive": "Keepalive",
+          "message_type": "Message type",
+          "protocol_name": "Protocol name",
+          "protocol_version": "Protocol version",
+          "qos": "Qos",
+          "remaining_length": "Remaining length",
+          "retain": "Retain",
+          "will_flag": "Will flag",
+          "will_message": "Will message",
+          "will_qos": "Will qos",
+          "will_retain": "Will retain",
+          "will_topic": "Will topic"
+        },
         "add_device": {
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
