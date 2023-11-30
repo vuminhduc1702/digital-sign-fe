@@ -12,3 +12,19 @@ export type Template = {
 export type TemplateList = {
   templates: Template[]
 } & BasePagination
+
+
+export type RuleChain = {
+  id: {
+    entityType: string
+    id: string
+  }
+  name: string
+}
+
+export type RulechainList = {
+  data: RuleChain[]
+  totalPages: number
+  totalElements: number
+  hasNext: boolean
+}

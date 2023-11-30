@@ -32,7 +32,7 @@ export function CustomerManageTemplate() {
 
   return (
     <>
-      <TitleBar title={t('sidebar:payment.plkh')} />
+      {/* <TitleBar title={t('sidebar:payment.plkh')} /> */}
       <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <form
           id="search-customer"

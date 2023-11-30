@@ -50,28 +50,35 @@ export function InfoCustomer() {
 
   return (
     <div className="relative h-full p-4">
-      <div className="mb-6">
-        <Button
-          className="rounded-md pr-5"
-          variant="trans"
-          size="square"
-          onClick={() => navigate(-1)}
-          startIcon={
-            <img src={narrowLeft} alt="Delete thing" className="h-5 w-5" />
-          }
-        >
-          <span>{t('btn:back')}</span>
-        </Button>
+      <div className='flex mb-5'>
+        <div className="">
+          <Button
+            className="rounded-md pr-5"
+            variant="trans"
+            size="square"
+            onClick={() => navigate(-1)}
+            startIcon={
+              <img src={narrowLeft} alt="Delete thing" className="h-5 w-5" />
+            }
+          >
+            <span>{t('btn:back')}</span>
+          </Button>
+        </div>
+        <div className='flex items-center justify-center ml-5'>
+          <p className="text-2xl font-semibold">
+            {t('billing:subcription.popup.customer_info')}
+          </p>
+        </div>
       </div>
-      <div>
+      <div className='bg-gray-50 rounded-md p-5 shadow-lg mb-2'>
         <div className="flex items-center gap-2">
           <div className="flex gap-3">
-            <p className="text-table-header">
+            <p className="text-xl font-semibold">
               {t('billing:customer_manage.info')}
             </p>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-6 md:grid-cols-3">
           <InputField
             label={t('billing:customer_manage.table.customer_code')}
             value={userById?.customer_code || ''}
@@ -113,14 +120,14 @@ export function InfoCustomer() {
             disabled
           />
         </div>
-        <div className="mt-6 flex items-center gap-2">
+        <div className="mt-5 flex items-center gap-2">
           <div className="flex gap-3">
-            <p className="text-table-header">
+            <p className="text-xl font-semibold">
               {t('billing:customer_manage.plan_used')}
             </p>
           </div>
         </div>
-        <div className="max-h-96 overflow-auto">
+        <div className="mt-3 max-h-96 overflow-auto">
           <PlanTable
             data={data?.data?.data}
             offset={offset}
@@ -130,7 +137,7 @@ export function InfoCustomer() {
           />
         </div>
       </div>
-      <div className="absolute bottom-5 cursor-pointer text-blue-500">
+      <div className="absolute cursor-pointer text-blue-500">
         <div
           onClick={() => {
             open()

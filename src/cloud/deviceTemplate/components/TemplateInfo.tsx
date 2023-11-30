@@ -5,6 +5,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { useTemplateById } from '../api/getTemplateById'
 import { getVNDateFormat } from '~/utils/misc'
 
+
 export function TemplateInfo() {
   const { t } = useTranslation()
 
@@ -12,6 +13,7 @@ export function TemplateInfo() {
   const templateId = params.templateId as string
 
   const { data } = useTemplateById({ templateId })
+  console.log(data)
 
   return (
     <>
