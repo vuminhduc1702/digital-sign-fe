@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { Menu } from '@headlessui/react'
-
+import { cn } from '~/utils/misc'
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -23,11 +23,14 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { TemplateDefault } from './TemplateDefault'
+import { TemplateLwM2M } from './TemplateLwM2M'
 
 export function TemplateSidebar() {
   const { t } = useTranslation()
+  const [type, setType] = useState('Generic')
   const navigate = useNavigate()
-
+  const DeviceType = ['Default', 'LwM2M']
   const { close, open, isOpen } = useDisclosure()
 
   const { templateId } = useParams()
@@ -47,7 +50,7 @@ export function TemplateSidebar() {
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
-        <div className="flex gap-3">
+        {/* <div className="flex gap-3">
           <img
             src={listIcon}
             alt="Template list"
@@ -58,137 +61,44 @@ export function TemplateSidebar() {
         <CreateTemplate />
         <ComboBoxSelectTemplate
           setFilteredComboboxData={setFilteredComboboxData}
-        />
-      </div>
-      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
-        {filteredComboboxData?.length > 0 ? (
-          <div className="space-y-3">
-            {filteredComboboxData?.map((template: Template) => (
-              <div className="flex" key={template.id}>
-                <Button
-                  className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}
-                  key={template.id}
-                  variant="muted"
-                  onClick={() =>
-                    navigate(
-                      `${PATHS.DEVICE_TEMPLATE}/${projectId}/${template.id}`,
-                    )
-                  }
+        /> */}
+        <div className="w-fit rounded-2xl bg-slate-200">
+            {DeviceType.map(item => {
+              return (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => {
+                    setType(item)
+                  }}
+                  className={cn('px-4 py-2 text-slate-400', {
+                    'bg-primary-400 rounded-2xl text-white': type === item,
+                  })}
                 >
-                  <p
-                    className={clsx('my-auto', {
-                      'text-primary-400': templateId === template.id,
-                    })}
-                  >
-                    {template?.name}
-                  </p>
-                </Button>
-                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
-                  <Dropdown
-                    menuClass="h-10 w-6"
-                    icon={
-                      <BtnContextMenuIcon
-                        height={20}
-                        width={3}
-                        viewBox="0 0 3 20"
-                      />
-                    }
-                  >
-                    <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="p-1">
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnEditIcon}
-                              alt="Edit template"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => {
-                            open()
-                            setSelectedUpdateTemplate(template)
-                          }}
-                        >
-                          {t('cloud:device_template.sidebar.edit')}
-                        </MenuItem>
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnCopyIdIcon}
-                              alt="Copy template's ID"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => handleCopyId(template.id)}
-                        >
-                          {t('table:copy_id')}
-                        </MenuItem>
-                        <ConfirmationDialog
-                          isDone={isSuccess}
-                          icon="danger"
-                          title={t(
-                            'cloud:device_template.sidebar.delete_template_full',
-                          )}
-                          body={
-                            t(
-                              'cloud:device_template.sidebar.delete_template_confirm',
-                            ).replace('{{TEMPLATENAME}}', template.name) ??
-                            'Confirm delete?'
-                          }
-                          triggerButton={
-                            <Button
-                              className="w-full justify-start border-none hover:text-primary-400"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete template"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            >
-                              {t(
-                                'cloud:device_template.sidebar.delete_template',
-                              )}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoading}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() => mutate({ id: template.id })}
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            />
-                          }
-                        />
-                      </div>
-                    </Menu.Items>
-                  </Dropdown>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            {t('cloud:device_template.sidebar.no_template')}
-          </div>
-        )}
-        {selectedUpdateTemplate != null ? (
-          <UpdateTemplate
-            close={close}
-            isOpen={isOpen}
-            selectedUpdateTemplate={selectedUpdateTemplate}
-          />
-        ) : null}
+                  {item}
+                </button>
+              )
+            })}
+        </div>
+      </div>
+      <div className="h-[80vh] grow overflow-y-auto bg-secondary-500 p-3">
+      {type === 'Default' ? (
+            <TemplateDefault
+              // data={lastView || []}
+              // offset={offset}
+              // setOffset={setOffset}
+              // total={0}
+              // isPreviousData={isPreviousData}
+            />
+          ) : (
+            <TemplateLwM2M
+              // data={starred || []}
+              // offset={offset}
+              // setOffset={setOffset}
+              // total={0}
+              // isPreviousData={isPreviousData}
+            />
+          )}
       </div>
     </>
   )
