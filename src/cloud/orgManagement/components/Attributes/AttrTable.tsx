@@ -60,7 +60,7 @@ function AttrTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -83,7 +83,7 @@ function AttrTableContextMenu({
               ).replace('{{ATTRNAME}}', attribute_key)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -148,7 +148,7 @@ export function AttrTable({
   const columnHelper = createColumnHelper<Attribute>()
 
   const dataSorted =
-    data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
+    data?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || data
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({
@@ -219,7 +219,7 @@ export function AttrTable({
 
           return (
             <Switch
-              key={attribute_key + STATUS[info.getValue()]}
+              key={attribute_key + +info.getValue()}
               defaultChecked={info.getValue() === 'true' ? true : false}
               onCheckedChange={checked => {
                 debouncedSwitchChange(checked, attribute_key)
