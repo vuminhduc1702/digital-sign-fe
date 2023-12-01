@@ -117,7 +117,7 @@ export function UpdateEvent({
 
   const { id: projectId } = storage.getProject()
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData,  isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
@@ -128,7 +128,7 @@ export function UpdateEvent({
     value: org?.id,
   }))
 
-  const { data: groupData } = useGetGroups({
+  const { data: groupData,  isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id'),
     projectId,
     entity_type: 'EVENT',
@@ -309,16 +309,14 @@ export function UpdateEvent({
                       'cloud:org_manage.device_manage.add_device.parent',
                     )}
                     name="org_id"
-                    control={control}
-                    options={
-                      orgData
-                        ? orgSelectOptions
-                        : [{ label: t('loading:org'), value: '' }]
-                    }
+                    options={orgSelectOptions}
                     isOptionDisabled={option =>
-                      option.label === t('loading:org')
+                      option.label === t('loading:org') ||
+                      option.label === t('table:no_org')
                     }
                     noOptionsMessage={() => t('table:no_org')}
+                    loadingMessage={() => t('loading:org')}
+                    isLoading={orgIsLoading}
                     defaultValue={orgSelectOptions.find(
                       item => item.value === getValues('org_id'),
                     )}
@@ -332,15 +330,14 @@ export function UpdateEvent({
                     label={t('cloud:org_manage.event_manage.add_event.group')}
                     name="group_id"
                     control={control}
-                    options={
-                      groupData
-                        ? groupSelectOptions
-                        : [{ label: t('loading:group'), value: '' }]
-                    }
+                    options={groupSelectOptions}
                     isOptionDisabled={option =>
-                      option.label === t('loading:group')
+                      option.label === t('loading:group') ||
+                      option.label === t('table:no_group')
                     }
                     noOptionsMessage={() => t('table:no_group')}
+                    loadingMessage={() => t('loading:group')}
+                    isLoading={groupIsLoading}
                     defaultValue={groupSelectOptions?.find(
                       item => item.value === getValues('group_id'),
                     )}
@@ -481,14 +478,13 @@ export function UpdateEvent({
                             )}
                             name={`condition.${index}.device_id`}
                             control={control}
-                            options={
-                              deviceData
-                                ? deviceSelectOptions
-                                : [{ label: t('loading:device'), value: '' }]
-                            }
+                            options={deviceSelectOptions}
                             isOptionDisabled={option =>
-                              option.label === t('loading:device')
+                              option.label === t('loading:device') ||
+                              option.label === t('table:no_device')
                             }
+                            noOptionsMessage={() => t('table:no_device')}
+                            loadingMessage={() => t('loading:device')}
                             isLoading={deviceIsLoading}
                             defaultValue={deviceSelectOptions?.find(
                               item =>
@@ -509,16 +505,13 @@ export function UpdateEvent({
                               'cloud:org_manage.event_manage.add_event.condition.attr',
                             )}
                             name={`condition.${index}.attribute_name`}
-                            options={
-                              attrData
-                                ? attrSelectOptions
-                                : [{ label: t('loading:attr'), value: '' }]
-                            }
+                            options={attrSelectOptions}
                             isOptionDisabled={option =>
-                              option.label === t('loading:attr')
+                              option.label === t('loading:attr') ||
+                              option.label === t('table:no_attr')
                             }
                             noOptionsMessage={() => t('table:no_attr')}
-                            control={control}
+                            loadingMessage={() => t('loading:attr')}
                             isLoading={attrIsLoading}
                             onMenuOpen={() => {
                               attrMutate({

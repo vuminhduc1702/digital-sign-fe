@@ -6,11 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import { FieldWrapper, InputField, SelectField, SelectDropdown } from '~/components/Form'
+import { numberInput, valueTypeList } from './CreateTemplate'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { type UpdateTemplateDTO, useUpdateTemplate } from '../api'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
-import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import { templateAttrSchema } from './CreateTemplate'
 import { Checkbox } from '~/components/Checkbox'
 
@@ -24,9 +24,12 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { useGetRulechains } from '../api/getRulechains'
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
+  value: string | number | boolean
+  value_type: Attribute['value_type']
   close: () => void
   isOpen: boolean
 }
+
 
 export function UpdateTemplate({
   selectedUpdateTemplate,
@@ -36,8 +39,11 @@ export function UpdateTemplate({
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
-  const { data: ruchainsData } = useGetRulechains({ projectId })
-
+  const { data: ruchainsData, isLoading: RuleIsLoading  } = useGetRulechains({ projectId })
+  const valueTypeOptions = valueTypeList.map(valueType => ({
+    label: valueType.name,
+    value: valueType.type,
+  }))
   const { acc: RuleFlattenData } = flattenData(
     ruchainsData?.data,
     ['id', 'name'],
@@ -54,7 +60,7 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
-  const { register, formState, handleSubmit, control } = useForm<
+  const { register, formState, watch, handleSubmit, control } = useForm<
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -153,12 +159,14 @@ export function UpdateTemplate({
                   label={t('cloud:device_template.add_template.flow')}
                   name="rule_chain_id"
                   control={control}
-                  options={
-                    RuleSelectOptions != null
-                      ? RuleSelectOptions
-                      : [{ label: t('loading:flow_id'), value: '' }]
+                  options={RuleSelectOptions}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:flow_id') ||
+                    option.label === t('table:no_in_flow_id')
                   }
                   noOptionsMessage={() => t('table:no_in_flow_id')}
+                  loadingMessage={() => t('loading:flow_id')}
+                  isLoading={RuleIsLoading}
                   placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                   defaultValue={RuleSelectOptions.find(
                     ruchains => ruchains.value === selectedUpdateTemplate.rule_chain_id,
@@ -191,19 +199,35 @@ export function UpdateTemplate({
                     registration={register(
                       `attributes.${index}.value_t` as const,
                     )}
-                    options={valueTypeList.map(valueType => ({
-                      label: valueType.name,
-                      value: valueType.type,
-                    }))}
+                    options={valueTypeOptions}
                   />
-                  <InputField
-                    classnamefieldwrapper="mt-2"
+                  {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
+                    <SelectField
+                      className="h-[36px] py-1"
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.attributes?.[index]?.value}
+                      registration={register(
+                        `attributes.${index}.value` as const,
+                      )}
+                      options={[
+                        { label: 'False', value: 'false' },
+                        { label: 'True', value: 'true' },
+                      ]}
+                    />
+                  ) : (
+                    <InputField
                     label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
+                    type={
+                      numberInput.includes(watch(`attributes.${index}.value_t`))
+                        ? 'number'
+                        : 'text'
+                    }
                   />
+                  )}
                   <FieldWrapper
                     className="mt-2 w-fit space-y-2"
                     label={t('cloud:org_manage.org_manage.add_attr.logged')}

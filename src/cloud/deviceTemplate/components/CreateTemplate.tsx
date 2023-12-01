@@ -11,7 +11,6 @@ import {
   InputField,
   SelectField,
 } from '~/components/Form'
-import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
@@ -20,11 +19,17 @@ import {
 import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
+import { type Attribute } from '~/types'
 import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { useGetRulechains } from '../api/getRulechains'
+
+type ValueType = {
+  type: Attribute['value_type']
+  name: string
+}
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -32,8 +37,23 @@ export const templateAttrSchema = z.object({
   attributes: z.array(attrSchema),
 })
 
+export const valueTypeList: ValueType[] = [
+  { type: 'STR', name: 'String' },
+  { type: 'BOOL', name: 'Boolean' },
+  { type: 'LONG', name: 'Long' },
+  { type: 'DBL', name: 'Double' },
+  { type: 'JSON', name: 'JSON' },
+]
+
+export const numberInput = ['DBL', 'LONG']
+
 export default function CreateTemplate() {
   const { t } = useTranslation()
+
+  const valueTypeOptions = valueTypeList.map(valueType => ({
+    label: valueType.name,
+    value: valueType.type,
+  }))
 
   const { id: projectId } = storage.getProject()
   const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains({ projectId })
@@ -54,8 +74,8 @@ export default function CreateTemplate() {
     isLoading: isLoadingCreateTemplate,
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
- 
-  const { register, formState, handleSubmit, control} = useForm<
+
+  const { register, formState, watch, handleSubmit, control} = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -144,7 +164,10 @@ export default function CreateTemplate() {
                   name="rule_chain_id"
                   control={control}
                   options={RuleSelectOptions}
-                  isOptionDisabled={option => option.label === t('loading:flow_id')}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:flow_id') ||
+                    option.label === t('table:no_in_flow_id')
+                  }
                   noOptionsMessage={() => t('table:no_in_flow_id')}
                   loadingMessage={() => t('loading:flow_id')}
                   isLoading={isLoadingRuchains}
@@ -174,19 +197,37 @@ export default function CreateTemplate() {
                   registration={register(
                     `attributes.${index}.value_t` as const,
                   )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
+                  options={valueTypeOptions}
                 />
-                <InputField
-                  classnamefieldwrapper="mt-2"
+                {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
+                  <SelectField
+                    className="h-[36px] py-1"
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                    options={[
+                      { label: 'False', value: 'false' },
+                      { label: 'True', value: 'true' },
+                    ]}
+                  />
+                ) : (
+                  <InputField
                   label={t('cloud:org_manage.org_manage.add_attr.value')}
                   error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
+                  registration={register(
+                    `attributes.${index}.value` as const,
+                  )}
+                  type={
+                    numberInput.includes(watch(`attributes.${index}.value_t`))
+                      ? 'number'
+                      : 'text'
+                  }
                 />
+                )}
                 <FieldWrapper
-                  className="mt-2 w-fit space-y-2"
+                  className="w-fit space-y-2"
                   label={t('cloud:org_manage.org_manage.add_attr.logged')}
                   error={formState?.errors?.attributes?.[index]?.logged}
                 >
@@ -209,7 +250,7 @@ export default function CreateTemplate() {
                 type="button"
                 size="square"
                 variant="trans"
-                className="mt-10 self-start border-none"
+                className="mt-3 border-none"
                 onClick={() => remove(index)}
                 startIcon={
                   <img

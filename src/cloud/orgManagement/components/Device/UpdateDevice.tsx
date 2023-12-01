@@ -107,7 +107,7 @@ export function UpdateDevice({
     resolver: heartBeatSchema && zodResolver(heartBeatSchema),
   })
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
@@ -118,7 +118,7 @@ export function UpdateDevice({
     value: org?.id,
   }))
 
-  const { data: groupData } = useGetGroups({
+  const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id'),
     projectId,
     offset,
@@ -132,7 +132,7 @@ export function UpdateDevice({
     value: groups?.id,
   }))
 
-  const { data: templateData } = useGetTemplates({ projectId })
+  const { data: templateData, isLoading: templateIsLoading} = useGetTemplates({ projectId })
 
   const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,
@@ -211,13 +211,14 @@ export function UpdateDevice({
                 label={t('cloud:org_manage.device_manage.add_device.parent')}
                 name="org_id"
                 control={control}
-                options={
-                  orgSelectOptions != null
-                    ? orgSelectOptions
-                    : [{ label: t('loading:org'), value: '' }]
+                options={orgSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:org') ||
+                  option.label === t('table:no_in_org')
                 }
-                isOptionDisabled={option => option.label === t('loading:org')}
                 noOptionsMessage={() => t('table:no_in_org')}
+                loadingMessage={() => t('loading:org')}
+                isLoading={orgIsLoading}
                 placeholder={t(
                   'cloud:org_manage.org_manage.add_org.choose_org',
                 )}
@@ -236,13 +237,14 @@ export function UpdateDevice({
                 label={t('cloud:org_manage.device_manage.add_device.group')}
                 name="group_id"
                 control={control}
-                options={
-                  groupData !== null
-                    ? groupSelectOptions
-                    : groupData == null
-                    ? [{ label: t('table:no_group'), value: '' }]
-                    : [{ label: t('loading:group'), value: '' }]
+                options={groupSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:group') ||
+                  option.label === t('table:no_group')
                 }
+                noOptionsMessage={() => t('table:no_group')}
+                loadingMessage={() => t('loading:group')}
+                isLoading={groupIsLoading}
                 defaultValue={groupSelectOptions?.find(
                   group => group.value === group_id,
                 )}
@@ -253,11 +255,14 @@ export function UpdateDevice({
                 label={t('cloud:firmware.add_firmware.template')}
                 name="template_id"
                 control={control}
-                options={
-                  templateSelectOptions || [
-                    { label: t('loading:template'), value: '' },
-                  ]
+                options={templateSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:template') ||
+                  option.label === t('table:no_template')
                 }
+                noOptionsMessage={() => t('table:no_template')}
+                loadingMessage={() => t('loading:template')}
+                isLoading={templateIsLoading}
                 defaultValue={templateSelectOptions?.find(
                   template => template.value === template_id,
                 )}
