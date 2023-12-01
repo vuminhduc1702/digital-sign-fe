@@ -62,16 +62,16 @@ export function UpdateMqttConfig({
     defaultValues: {
       clean_session: MqttConfig.clean_session || false,
       dup: MqttConfig.dup || false,
-      keepalive: MqttConfig.keepalive,
-      message_type: MqttConfig.message_type,
+      keepalive: MqttConfig.keepalive || 0,
+      message_type: MqttConfig.message_type || 0,
       protocol_name: MqttConfig.protocol_name || '',
-      protocol_version: MqttConfig.protocol_version,
-      qos: MqttConfig.qos,
-      remaining_length: MqttConfig.remaining_length,
+      protocol_version: MqttConfig.protocol_version || 0,
+      qos: MqttConfig.qos || 0,
+      remaining_length: MqttConfig.remaining_length || 0,
       retain: MqttConfig.retain || false,
       will_flag: MqttConfig.will_flag || false,
       will_message: MqttConfig.will_message || '',
-      will_qos: MqttConfig.will_qos,
+      will_qos: MqttConfig.will_qos || 0,
       will_retain: MqttConfig.will_retain || false,
       will_topic: MqttConfig.will_topic || '',
     },
@@ -248,7 +248,9 @@ export function UpdateMqttConfig({
                 )}
                 type="number"
                 error={formState.errors['keepalive']}
-                registration={register('keepalive')}
+                registration={register('keepalive', {
+                  valueAsNumber: true,
+                })}
               />
               <InputField
                 label={t(
@@ -256,7 +258,9 @@ export function UpdateMqttConfig({
                 )}
                 type="number"
                 error={formState.errors['message_type']}
-                registration={register('message_type')}
+                registration={register('message_type', {
+                  valueAsNumber: true,
+                })}
               />
               <InputField
                 label={t(
@@ -271,12 +275,16 @@ export function UpdateMqttConfig({
                 )}
                 type="number"
                 error={formState.errors['protocol_version']}
-                registration={register('protocol_version')}
+                registration={register('protocol_version', {
+                  valueAsNumber: true,
+                })}
               />
               <InputField
                 label={t('cloud:org_manage.device_manage.mqtt_config.qos')}
                 error={formState.errors['qos']}
-                registration={register('qos')}
+                registration={register('qos', {
+                  valueAsNumber: true,
+                })}
                 type="number"
               />
 
@@ -285,7 +293,9 @@ export function UpdateMqttConfig({
                   'cloud:org_manage.device_manage.mqtt_config.remaining_length',
                 )}
                 error={formState.errors['remaining_length']}
-                registration={register('remaining_length')}
+                registration={register('remaining_length', {
+                  valueAsNumber: true,
+                })}
                 type="number"
               />
 
@@ -299,7 +309,9 @@ export function UpdateMqttConfig({
               <InputField
                 label={t('cloud:org_manage.device_manage.mqtt_config.will_qos')}
                 error={formState.errors['will_qos']}
-                registration={register('will_qos')}
+                registration={register('will_qos', {
+                  valueAsNumber: true,
+                })}
                 type="number"
               />
 
