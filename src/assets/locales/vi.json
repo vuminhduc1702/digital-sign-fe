@@ -215,6 +215,7 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "isdn": "Isdn",
           "select_all": "Chọn tất cả",
           "group_id": "ID Nhóm",
           "org_id": "ID Tổ chức",
@@ -234,6 +235,24 @@
           "delete_device_full": "Xoá thiết bị",
           "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
         },
+        "mqtt_config": {
+          "update_success": "Cập nhật MQTT thành công",
+          "title": "Sửa MQTT config",
+          "clean_session": "Clean session",
+          "dup": "Dup",
+          "keepalive": "Keepalive",
+          "message_type": "Message type",
+          "protocol_name": "Protocol name",
+          "protocol_version": "Protocol version",
+          "qos": "Qos",
+          "remaining_length": "Remaining length",
+          "retain": "Retain",
+          "will_flag": "Will flag",
+          "will_message": "Will message",
+          "will_qos": "Will qos",
+          "will_retain": "Will retain",
+          "will_topic": "Will topic"
+        },
         "add_device": {
           "title": "Tạo mới thiết bị",
           "edit": "Sửa thiết bị",
@@ -245,6 +264,7 @@
           "heartbeat": "Heartbeat",
           "create_heartbeat": "Tạo Heartbeat",
           "ping": "Ping thiết bị",
+          "mqttconfig": "Sửa MQTT",
           "success_heartbeat": "Cập nhật heartbeat thành công",
           "success_create": "Tạo thiết bị thành công",
           "success_update": "Sửa thiết bị thành công",
@@ -253,7 +273,8 @@
         },
         "device_detail": {
           "attr_list": "Danh sách thuộc tính",
-          "attr_log": "Bản tin thuộc tính"
+          "attr_log": "Bản tin thuộc tính",
+          "additional_info_list": "Thông tin thêm"
         }
       },
       "event_manage": {
