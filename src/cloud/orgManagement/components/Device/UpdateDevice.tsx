@@ -32,7 +32,7 @@ type UpdateDeviceProps = {
   close: () => void
   isOpen: boolean
   template_id: string
-  additional_info?: object
+  additional_info: string
 }
 
 export const heartBeatSchema = z.object({
@@ -63,18 +63,9 @@ export function UpdateDevice({
   const { mutate: mutateUpdateHeartBeat, isLoading: isLoadingUpdateHeartBeat } =
     useUpdateHeartBeat()
 
-  let additionalInfo
-  if (typeof additional_info === 'string') {
-    try {
-      additionalInfo = JSON.parse(additional_info)
-    } catch (error) {
-      additionalInfo = {}
-      console.error('Error parsing JSON:', error)
-    }
-  }
-  const additional_interval = additionalInfo?.heartbeat_interval || 0
-  const additional_timeout = additionalInfo?.timeout_lifecycle || 0
-  let disableUpdateHeartbeat = !additionalInfo?.heartbeat_interval
+  const additionalInfo = JSON.parse(additional_info as unknown as string)
+
+  const disableUpdateHeartbeat = !additionalInfo?.heartbeat_interval
     ? true
     : false
   const [offset, setOffset] = useState(0)
@@ -299,7 +290,7 @@ export function UpdateDevice({
               classnamefieldwrapper="flex items-center"
               classlabel="mx-1"
               classchild="mx-1"
-              defaultValue={additional_interval}
+              defaultValue={additionalInfo?.heartbeat_interval || 0}
             />
             <InputField
               registration={registerHeartBeat('timeout', {
@@ -311,12 +302,12 @@ export function UpdateDevice({
               classnamefieldwrapper="flex items-center"
               classlabel="mx-1"
               classchild="mx-1"
-              defaultValue={additional_timeout}
+              defaultValue={additionalInfo?.timeout_lifecycle || 0}
             />
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -325,7 +316,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
