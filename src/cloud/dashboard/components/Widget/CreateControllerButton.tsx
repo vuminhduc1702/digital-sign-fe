@@ -233,20 +233,28 @@ export function CreateControllerButton({
                         label={t('cloud:custom_protocol.thing.id')}
                         name="thing_id"
                         control={control}
-                        options={
-                          thingData?.data?.list
-                            ? thingSelectData
-                            : [
-                                {
-                                  label: t('loading:entity_thing'),
-                                  value: '',
-                                },
-                              ]
-                        }
+                        options={thingSelectData}
                         isOptionDisabled={option =>
-                          option.label === t('loading:entity_thing')
+                          option.label === t('loading:entity_thing') ||
+                          option.label === t('table:no_thing')
                         }
                         noOptionsMessage={() => t('table:no_thing')}
+                        loadingMessage={() => t('loading:entity_thing')}
+                        isLoading={thingIsLoading}
+                        // options={
+                        //   thingData?.data?.list
+                        //     ? thingSelectData
+                        //     : [
+                        //         {
+                        //           label: t('loading:entity_thing'),
+                        //           value: '',
+                        //         },
+                        //       ]
+                        // }
+                        // isOptionDisabled={option =>
+                        //   option.label === t('loading:entity_thing')
+                        // }
+                        // noOptionsMessage={() => t('table:no_thing')}
                         placeholder={t('cloud:custom_protocol.thing.choose')}
                       />
                       <p className="text-body-sm text-primary-400">

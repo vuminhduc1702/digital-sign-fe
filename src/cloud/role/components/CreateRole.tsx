@@ -129,22 +129,22 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
   let projectId = project_id ? project_id : dataStorage?.id
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
-  const { data: groupDataDevice } = useGetGroups({
+  const { data: groupDataDevice, isLoading: groupDataDeviceIsLoading } = useGetGroups({
     projectId,
     entity_type: 'DEVICE',
   })
 
-  const { data: groupDataEvent } = useGetGroups({
+  const { data: groupDataEvent, isLoading: groupDataEventIsLoading } = useGetGroups({
     projectId,
     entity_type: 'EVENT',
   })
 
-  const { data: groupDataUser } = useGetGroups({
+  const { data: groupDataUser, isLoading: groupDataUserIsLoading } = useGetGroups({
     projectId,
     entity_type: 'USER',
   })
 
-  const { data: groupDataOrg } = useGetGroups({
+  const { data: groupDataOrg, isLoading: groupDataOrgIsLoading } = useGetGroups({
     projectId,
     entity_type: 'ORGANIZATION',
   })
@@ -337,14 +337,20 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                       <SelectDropdown
                         label={'Thiết bị'}
                         name={`policies.${index}.devices`}
+                        control={control}
                         options={
                           groupDataDevice?.groups?.map(groups => ({
                             label: groups?.name,
                             value: groups?.id,
-                          })) || [{ label: t('loading:device'), value: '' }]
+                          }))}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:device') ||
+                          option.label === t('table:no_device')
                         }
+                        noOptionsMessage={() => t('table:no_device')}
+                        loadingMessage={() => t('loading:device')}
+                        isLoading={groupDataDeviceIsLoading}
                         isMulti
-                        control={control}
                         closeMenuOnSelect={false}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -359,8 +365,14 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                           groupDataEvent?.groups?.map(groups => ({
                             label: groups?.name,
                             value: groups?.id,
-                          })) || [{ label: t('loading:event'), value: '' }]
+                          }))}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:event') ||
+                          option.label === t('table:no_event')
                         }
+                        noOptionsMessage={() => t('table:no_event')}
+                        loadingMessage={() => t('loading:event')}
+                        isLoading={groupDataEventIsLoading}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
@@ -379,6 +391,13 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                             value: groups?.id,
                           })) || [{ label: t('loading:user'), value: '' }]
                         }
+                        isOptionDisabled={option =>
+                          option.label === t('loading:user') ||
+                          option.label === t('table:no_user')
+                        }
+                        noOptionsMessage={() => t('table:no_user')}
+                        loadingMessage={() => t('loading:user')}
+                        isLoading={groupDataUserIsLoading}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
@@ -397,6 +416,13 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                             value: groups?.id,
                           })) || [{ label: t('loading:org'), value: '' }]
                         }
+                        isOptionDisabled={option =>
+                          option.label === t('loading:org') ||
+                          option.label === t('table:no_org')
+                        }
+                        noOptionsMessage={() => t('table:no_org')}
+                        loadingMessage={() => t('loading:org')}
+                        isLoading={groupDataOrgIsLoading}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}

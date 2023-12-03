@@ -155,7 +155,7 @@ export function CreateAdapter() {
     isSuccess: isSuccessAdapter,
   } = useCreateAdapter()
 
-  const { data: thingData } = useGetEntityThings({
+  const { data: thingData, isLoading: AdapterIsLoading} = useGetEntityThings({
     projectId,
     type: 'thing',
   })
@@ -338,20 +338,14 @@ export function CreateAdapter() {
                 label={t('cloud:custom_protocol.thing.id')}
                 name="thing_id"
                 control={control}
-                options={
-                  thingData
-                    ? thingSelectData
-                    : [
-                        {
-                          label: t('loading:entity_thing'),
-                          value: '',
-                        },
-                      ]
-                }
+                options={thingSelectData}
                 isOptionDisabled={option =>
-                  option.label === t('loading:entity_thing')
+                  option.label === t('loading:entity_thing') ||
+                  option.label === t('table:no_thing')
                 }
                 noOptionsMessage={() => t('table:no_thing')}
+                loadingMessage={() => t('loading:entity_thing')}
+                isLoading={AdapterIsLoading}
                 placeholder={t('cloud:custom_protocol.thing.choose')}
                 // defaultValue={defaultThingValues}
               />

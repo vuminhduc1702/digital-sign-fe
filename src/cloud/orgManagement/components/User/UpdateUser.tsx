@@ -90,7 +90,7 @@ export function UpdateUser({
     })
 
   const { id: projectId } = storage.getProject()
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
@@ -101,7 +101,7 @@ export function UpdateUser({
     value: org?.id,
   }))
 
-  const { data: roleData } = useGetRoles({ projectId })
+  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({ projectId })
   const roleOptions = roleData?.roles?.map(item => ({
     label: item.name,
     value: item.id,
@@ -264,6 +264,14 @@ export function UpdateUser({
               name="org_id"
               control={control}
               options={orgSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:org') ||
+                option.label === t('table:no_in_org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              loadingMessage={() => t('loading:org')}
+              isLoading={orgIsLoading}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               defaultValue={orgSelectOptions.find(
                 item => item.value === getValues('org_id'),
               )}
@@ -278,6 +286,14 @@ export function UpdateUser({
               name="role_id"
               control={control}
               options={roleOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:role') ||
+                option.label === t('table:no_role')
+              }
+              noOptionsMessage={() => t('table:no_role')}
+              loadingMessage={() => t('loading:role')}
+              isLoading={roleIsLoading}
+              placeholder={t('cloud:role_manage.add_role.choose_role')}
               defaultValue={roleOptions?.find(
                 item => item.value === getValues('role_id'),
               )}
