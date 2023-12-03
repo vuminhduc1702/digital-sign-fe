@@ -19,33 +19,24 @@ import {
 import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
-import { type Attribute } from '~/types'
+import { useGetRulechains } from '../api/getRulechains'
+import {
+  booleanSelectOption,
+  numberInput,
+  valueTypeList,
+} from '~/cloud/orgManagement/components/Attributes'
+
 import { attrSchema, nameSchema } from '~/utils/schemaValidation'
+
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { useGetRulechains } from '../api/getRulechains'
-
-type ValueType = {
-  type: Attribute['value_type']
-  name: string
-}
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
   attributes: z.array(attrSchema),
 })
-
-export const valueTypeList: ValueType[] = [
-  { type: 'STR', name: 'String' },
-  { type: 'BOOL', name: 'Boolean' },
-  { type: 'LONG', name: 'Long' },
-  { type: 'DBL', name: 'Double' },
-  { type: 'JSON', name: 'JSON' },
-]
-
-export const numberInput = ['DBL', 'LONG']
 
 export default function CreateTemplate() {
   const { t } = useTranslation()
@@ -56,18 +47,22 @@ export default function CreateTemplate() {
   }))
 
   const { id: projectId } = storage.getProject()
-  const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains({ projectId })
-
-  const { acc: RuleFlattenData } = flattenData(
-    ruchainsData?.data,
-    ['id', 'name'],
+  const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
+    { projectId },
   )
+
+  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
+    'id',
+    'name',
+  ])
 
   const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
     label: ruchains?.name,
     value: JSON.parse(ruchains?.id)?.id,
   }))
-  const { mutate: mutateUpdateTemplate } = useUpdateTemplate({ isOnCreateTemplate: true })
+  const { mutate: mutateUpdateTemplate } = useUpdateTemplate({
+    isOnCreateTemplate: true,
+  })
 
   const {
     mutateAsync: mutateAsyncCreateTemplate,
@@ -75,7 +70,7 @@ export default function CreateTemplate() {
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
 
-  const { register, formState, watch, handleSubmit, control} = useForm<
+  const { register, formState, watch, handleSubmit, control } = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -123,7 +118,7 @@ export default function CreateTemplate() {
               project_id: projectId,
               rule_chain_id: values.rule_chain_id,
               name: values.name,
-              attributes: values.attributes
+              attributes: values.attributes,
             },
           })
           mutateUpdateTemplate({
@@ -148,8 +143,7 @@ export default function CreateTemplate() {
                 value: '',
                 logged: true,
                 value_t: '',
-              }
-              )
+              })
             }
           />
           <InputField
@@ -158,24 +152,26 @@ export default function CreateTemplate() {
             registration={register('name')}
           />
           <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={true}
-                  label={t('cloud:device_template.add_template.flow')}
-                  name="rule_chain_id"
-                  control={control}
-                  options={RuleSelectOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:flow_id') ||
-                    option.label === t('table:no_in_flow_id')
-                  }
-                  noOptionsMessage={() => t('table:no_in_flow_id')}
-                  loadingMessage={() => t('loading:flow_id')}
-                  isLoading={isLoadingRuchains}
-                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.rule_chain_id?.message}
-                </p>   
+            <SelectDropdown
+              isClearable={true}
+              label={t('cloud:device_template.add_template.flow')}
+              name="rule_chain_id"
+              control={control}
+              options={RuleSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:flow_id') ||
+                option.label === t('table:no_in_flow_id')
+              }
+              noOptionsMessage={() => t('table:no_in_flow_id')}
+              loadingMessage={() => t('loading:flow_id')}
+              isLoading={isLoadingRuchains}
+              placeholder={t(
+                'cloud:device_template.add_template.choose_flow_id',
+              )}
+            />
+            <p className="text-body-sm text-primary-400">
+              {formState?.errors?.rule_chain_id?.message}
+            </p>
           </div>
           {fields.map((field, index) => (
             <section
@@ -207,24 +203,21 @@ export default function CreateTemplate() {
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
-                    options={[
-                      { label: 'False', value: 'false' },
-                      { label: 'True', value: 'true' },
-                    ]}
+                    options={booleanSelectOption}
                   />
                 ) : (
                   <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(
-                    `attributes.${index}.value` as const,
-                  )}
-                  type={
-                    numberInput.includes(watch(`attributes.${index}.value_t`))
-                      ? 'number'
-                      : 'text'
-                  }
-                />
+                    label={t('cloud:org_manage.org_manage.add_attr.value')}
+                    error={formState?.errors?.attributes?.[index]?.value}
+                    registration={register(
+                      `attributes.${index}.value` as const,
+                    )}
+                    type={
+                      numberInput.includes(watch(`attributes.${index}.value_t`))
+                        ? 'number'
+                        : 'text'
+                    }
+                  />
                 )}
                 <FieldWrapper
                   className="w-fit space-y-2"

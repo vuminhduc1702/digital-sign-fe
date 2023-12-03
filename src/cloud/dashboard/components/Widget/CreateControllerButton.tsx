@@ -241,20 +241,6 @@ export function CreateControllerButton({
                         noOptionsMessage={() => t('table:no_thing')}
                         loadingMessage={() => t('loading:entity_thing')}
                         isLoading={thingIsLoading}
-                        // options={
-                        //   thingData?.data?.list
-                        //     ? thingSelectData
-                        //     : [
-                        //         {
-                        //           label: t('loading:entity_thing'),
-                        //           value: '',
-                        //         },
-                        //       ]
-                        // }
-                        // isOptionDisabled={option =>
-                        //   option.label === t('loading:entity_thing')
-                        // }
-                        // noOptionsMessage={() => t('table:no_thing')}
                         placeholder={t('cloud:custom_protocol.thing.choose')}
                       />
                       <p className="text-body-sm text-primary-400">

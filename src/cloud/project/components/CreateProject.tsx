@@ -140,12 +140,11 @@ export function CreateProject() {
           })}
         >
           <div className="grid grid-cols-1 md:grid-cols-[60%_40%]">
-            <div>
+            <div className="space-y-3">
               <InputField
                 label={t('cloud:project_manager.add_project.name')}
                 error={formState.errors['name']}
                 registration={register('name')}
-                className="mb-5"
               />
               <TextAreaField
                 label={t('cloud:project_manager.add_project.description')}
