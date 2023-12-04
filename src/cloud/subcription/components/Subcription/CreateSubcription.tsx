@@ -301,9 +301,7 @@ export function CreateSubcription() {
                 value={valuePriceMethod()}
                 disabled
               />
-              {PlanDataById?.data?.type === 'official' &&
-                PlanDataById?.data?.estimate === 'unit' &&
-                PlanDataById?.data?.payment_type === 'PREPAY' && (
+              {PlanDataById?.data?.estimate !== 'fix' && (
                   <InputField
                     label={t('billing:subcription.popup.quantity')}
                     error={formState.errors['register']}

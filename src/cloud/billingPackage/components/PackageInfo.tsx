@@ -57,6 +57,16 @@ export function PackageInfo() {
     setIsDisabled(true)
     setExpectedPayment('')
     setExpectedNumber('')
+    if(data?.data?.estimate === 'fix') {
+      handleOnChange(
+        '',
+        data?.data?.tax?.toString() || '',
+        data?.data?.price?.toString() || '',
+        data?.data?.fix_cost?.toString() || '',
+        data?.data?.quantity_free?.toString() || '',
+        data?.data?.plan_lv || [],
+      )
+    }
   }, [data])
 
   useEffect(() => {
@@ -106,7 +116,7 @@ export function PackageInfo() {
     plan_lv?: PlanlvList[],
   ) => {
     let result: any
-    if (estimates === 'fix') {
+    if ((estimates && data?.data?.estimate) === 'fix') {
       result = parseNumber(price) + parseNumber(fix_cost)
     } else if (estimates === 'unit') {
       result =
@@ -541,7 +551,7 @@ export function PackageInfo() {
                                     index >= 1
                                       ? getValues('plan_lv')?.[
                                         index - 1
-                                      ].level?.toString()
+                                      ].level + 1
                                       : '1',
                                   )
                               }
