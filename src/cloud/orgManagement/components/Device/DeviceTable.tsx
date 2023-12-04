@@ -318,7 +318,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           )
           const isdn = additionalInfo.isdn
           const isdnTrigger =
-            isdn?.length > 20 ? isdn.slice(0, 20) + '...' : isdn
+            isdn?.length > 10 ? isdn.slice(0, 10) + '...' : isdn
           return (
             <>
               {isdn ? (
@@ -378,52 +378,15 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
         ),
-        cell: info => {
-          const created_by = info.getValue()
-          const createdbyTrigger = created_by?.slice(0, 5) + '...'
-          return (
-            <>
-              {created_by ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{createdbyTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{created_by}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
+
         footer: info => info.column.id,
       }),
       columnHelper.accessor('group_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.group_id')}</span>
         ),
-        cell: info => {
-          const group_id = info.getValue()
-          const groupidTrigger = group_id?.slice(0, 5) + '...'
-          return (
-            <>
-              {group_id ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{groupidTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{group_id}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
 
@@ -431,53 +394,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.token')}</span>
         ),
-        cell: info => {
-          // const { token } = info.row.original
-          const token = info.getValue()
-          const tokenTrigger = token?.slice(0, 5) + '...'
-          return (
-            <>
-              {token ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{tokenTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{token}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('org_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.org_id')}</span>
         ),
-        cell: info => {
-          const org_id = info.getValue()
-          const orgidTrigger = org_id?.slice(0, 5) + '...'
-          return (
-            <>
-              {org_id ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{orgidTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{org_id}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
 
@@ -492,26 +416,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
         ),
-        cell: info => {
-          const template_id = info.getValue()
-          const templateidTrigger = template_id?.slice(0, 5) + '...'
-          return (
-            <>
-              {template_id ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{templateidTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{template_id}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
 
