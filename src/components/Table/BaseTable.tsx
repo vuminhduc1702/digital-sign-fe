@@ -300,7 +300,7 @@ export function BaseTable<T extends Record<string, any>>({
         </>
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
-        <div className="flex gap-3">
+        <div className="absolute bottom-10 flex gap-3">
           <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(

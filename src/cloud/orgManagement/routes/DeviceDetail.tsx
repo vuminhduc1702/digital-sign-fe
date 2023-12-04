@@ -80,7 +80,7 @@ export function DeviceDetail() {
               <DeviceListIcon width={16} height={16} viewBox="0 0 20 16" />
               <p>
                 {t(
-                  'cloud:org_manage.device_manage.device_detail.additional_info_list',
+                  'cloud:org_manage.device_manage.device_detail.MQTT_history_info_list',
                 )}
               </p>
             </div>
