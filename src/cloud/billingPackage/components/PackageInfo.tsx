@@ -116,7 +116,7 @@ export function PackageInfo() {
     plan_lv?: PlanlvList[],
   ) => {
     let result: any
-    if (estimates === 'fix') {
+    if ((estimates && data?.data?.estimate) === 'fix') {
       result = parseNumber(price) + parseNumber(fix_cost)
     } else if (estimates === 'unit') {
       result =
