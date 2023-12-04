@@ -38,7 +38,7 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
-const wsInterval = [
+export const wsInterval = [
   { label: 'Second', value: 1000 },
   { label: 'Minute', value: 60 * 1000 },
   { label: 'Hour', value: 60 * 60 * 1000 },
@@ -53,7 +53,7 @@ const widgetAggSchema = z.object({
   value: aggSchema,
 })
 type WidgetAgg = z.infer<typeof widgetAggSchema>
-const widgetAgg: WidgetAgg[] = [
+export const widgetAgg: WidgetAgg[] = [
   { label: 'None', value: 'NONE' },
   { label: 'Average', value: 'AVG' },
   { label: 'Min', value: 'MIN' },
@@ -204,7 +204,7 @@ type CreateWidgetProps = {
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataTypeOptions = [
+export const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -222,6 +222,7 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
   const { id: projectId } = storage.getProject()
+  console.log(widgetCategory)
 
   const {
     register,
@@ -241,6 +242,8 @@ export function CreateWidget({
     name: 'attributeConfig',
     control: control,
   })
+
+  console.log(fields, 'fieldsfieldsfieldsfields')
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,

@@ -551,6 +551,7 @@
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
+        "update": "Sửa biểu đồ",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
