@@ -20,6 +20,13 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../Tooltip'
+import { string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -95,26 +102,26 @@ export function BaseTable<T extends Record<string, any>>({
       ) : (
         <>
           <table className="w-full border-2" id="table-ref">
-          <thead className="border-b-2 bg-gray-200 text-center">
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => {
-                  return (
-                    <th
-                      className="h-9 text-center"
-                      key={header.id}
-                      colSpan={header.colSpan}
-                    >
-                      {header.isPlaceholder ? null : (
-                        <div
-                          className={`text-table-header ${
-                            header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
-                          }`}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {/* <div className='flex items-center justify-center text-table-header'>
+            <thead className="border-b-2 bg-gray-200 text-center">
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <th
+                        className="h-9 text-center"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={`text-table-header ${
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {/* <div className='flex items-center justify-center text-table-header'>
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
@@ -126,21 +133,22 @@ export function BaseTable<T extends Record<string, any>>({
                               desc: '↓',
                             }[header.column.getIsSorted() as string] ?? null}
                           </div> */}
-                          <div className='relative flex items-center justify-center text-table-header'>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          <div className="absolute right-1 w-2 text-xl text-black">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? null}
+                            <div className="text-table-header relative flex items-center justify-center">
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              <div className="absolute right-1 w-2 text-xl text-black">
+                                {{
+                                  asc: '↑',
+                                  desc: '↓',
+                                }[header.column.getIsSorted() as string] ??
+                                  null}
+                              </div>
+                            </div>
                           </div>
-                          </div>
-                        </div>
-                      )}
-                    </th>
+                        )}
+                      </th>
                     )
                   })}
                   {popoverClassName !== '' ? (
@@ -174,7 +182,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -226,7 +234,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -247,7 +255,10 @@ export function BaseTable<T extends Record<string, any>>({
               {table.getRowModel().rows.map(row => {
                 return (
                   <Fragment key={row.id}>
-                    <tr className="border-secondary-70 border-t-2 text-center" key={row.id}>
+                    <tr
+                      className="border-secondary-70 border-t-2 text-center"
+                      key={row.id}
+                    >
                       {row.getVisibleCells().map((cell, index) => {
                         if (index === row.getVisibleCells().length - 1) {
                           return (
@@ -261,6 +272,7 @@ export function BaseTable<T extends Record<string, any>>({
                             </Fragment>
                           )
                         } else {
+                          // const cellStr = cell.getContext().getValue()
                           return (
                             <td className="h-9" key={cell.id}>
                               {flexRender(
@@ -289,7 +301,7 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="flex gap-3">
-          <span className="flex items-center gap-1 text-body-light">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
