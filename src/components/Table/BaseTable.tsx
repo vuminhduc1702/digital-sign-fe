@@ -26,7 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../Tooltip'
-import { string } from 'zod'
+import { nan, string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -272,8 +272,35 @@ export function BaseTable<T extends Record<string, any>>({
                             </Fragment>
                           )
                         } else {
-                          // const cellStr = cell.getContext().getValue()
-                          return (
+                          const cellStr = cell.getContext().getValue()
+                          let cellStrTrigger
+                          if (typeof cellStr == 'string') {
+                            cellStrTrigger =
+                              cellStr?.length > 10
+                                ? cellStr.slice(0, 10) + '...'
+                                : cellStr
+                          }
+
+                          return typeof cellStr == 'string' &&
+                            isNaN(parseInt(cellStr)) ? (
+                            <td className="h-9" key={cell.id}>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger>
+                                    {cellStrTrigger}
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>
+                                      {flexRender(
+                                        cell.column.columnDef.cell,
+                                        cell.getContext(),
+                                      )}
+                                    </p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            </td>
+                          ) : (
                             <td className="h-9" key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
