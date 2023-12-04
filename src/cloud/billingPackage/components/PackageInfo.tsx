@@ -551,7 +551,7 @@ export function PackageInfo() {
                                     index >= 1
                                       ? getValues('plan_lv')?.[
                                         index - 1
-                                      ].level?.toString()
+                                      ].level + 1
                                       : '1',
                                   )
                               }
