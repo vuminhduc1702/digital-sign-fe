@@ -7,7 +7,7 @@ import type * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import { FieldWrapper, InputField, SelectField } from '~/components/Form'
-import { numberInput, valueTypeList } from './CreateAttr'
+import { booleanSelectOption, numberInput, valueTypeList } from './CreateAttr'
 import { Drawer } from '~/components/Drawer'
 import { type EntityType, useUpdateAttr } from '../../api/attrAPI'
 import { Checkbox } from '~/components/Checkbox'
@@ -44,7 +44,7 @@ export function UpdateAttr({
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
-  
+
   const { register, formState, control, handleSubmit, watch } = useForm<
     z.infer<typeof attrSchema>
   >({
@@ -138,10 +138,7 @@ export function UpdateAttr({
                   label={t('cloud:org_manage.org_manage.add_attr.value')}
                   error={formState?.errors?.value}
                   registration={register(`value` as const)}
-                  options={[
-                    { label: 'False', value: 'false' },
-                    { label: 'True', value: 'true' },
-                  ]}
+                  options={booleanSelectOption}
                 />
               ) : (
                 <InputField

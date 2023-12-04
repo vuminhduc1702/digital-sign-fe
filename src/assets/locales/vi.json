@@ -415,6 +415,7 @@
         "name": "Tên vai trò",
         "role_type": "Loại vai trò",
         "actions": "Thao tác",
+        "choose_role": "Vui lòng chọn vai trò",
         "success_create": "Tạo vai trò thành công",
         "success_update": "Sửa vai trò thành công",
         "success_delete": "Xoá vai trò thành công"
@@ -832,6 +833,7 @@
     "no_input": "Không có biến đầu vào. Vui lòng tạo hoặc chọn nghiệp vụ trước.",
     "no_event_service": "Không có Event Service. Vui lòng tạo.",
     "no_dashboard": "Không có bảng điều khiển. Vui lòng tạo.",
+    "no_template": "Không có thiết bị mẫu. Vui lòng tạo.",
     "no_in_org": "Không trực thuộc tổ chức.",
     "no_in_flow_id": "Không thuộc flow id.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
@@ -883,6 +885,7 @@
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
+    "role": "Đang tải danh sách vai trò...",
     "event": "Đang tải danh sách sự kiện...",
     "user": "Đang tải danh sách người dùng...",
     "template": "Đang tải danh sách mẫu thiết bị...",

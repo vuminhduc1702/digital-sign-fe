@@ -5,25 +5,34 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectField, SelectDropdown } from '~/components/Form'
+import {
+  FieldWrapper,
+  InputField,
+  SelectField,
+  SelectDropdown,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { type UpdateTemplateDTO, useUpdateTemplate } from '../api'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
-import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import { templateAttrSchema } from './CreateTemplate'
 import { Checkbox } from '~/components/Checkbox'
+import storage from '~/utils/storage'
+import { useGetRulechains } from '../api/getRulechains'
+import { flattenData } from '~/utils/misc.ts'
 
 import { type Template } from '../types'
 import { type Attribute } from '~/types'
-import storage from '~/utils/storage'
-import { flattenData } from '~/utils/misc.ts'
+import { booleanSelectOption } from '~/cloud/orgManagement/components/Attributes'
+
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { useGetRulechains } from '../api/getRulechains'
+
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
+  value: string | number | boolean
+  value_type: Attribute['value_type']
   close: () => void
   isOpen: boolean
 }
@@ -36,12 +45,17 @@ export function UpdateTemplate({
   const { t } = useTranslation()
 
   const { id: projectId } = storage.getProject()
-  const { data: ruchainsData } = useGetRulechains({ projectId })
-
-  const { acc: RuleFlattenData } = flattenData(
-    ruchainsData?.data,
-    ['id', 'name'],
-  )
+  const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
+    projectId,
+  })
+  const valueTypeOptions = valueTypeList.map(valueType => ({
+    label: valueType.name,
+    value: valueType.type,
+  }))
+  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
+    'id',
+    'name',
+  ])
   console.log('RuleFlattenData: ', RuleFlattenData)
   const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
     label: ruchains?.name,
@@ -54,7 +68,7 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
-  const { register, formState, handleSubmit, control } = useForm<
+  const { register, formState, watch, handleSubmit, control } = useForm<
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -149,24 +163,29 @@ export function UpdateTemplate({
               registration={register('name')}
             />
             <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:device_template.add_template.flow')}
-                  name="rule_chain_id"
-                  control={control}
-                  options={
-                    RuleSelectOptions != null
-                      ? RuleSelectOptions
-                      : [{ label: t('loading:flow_id'), value: '' }]
-                  }
-                  noOptionsMessage={() => t('table:no_in_flow_id')}
-                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
-                  defaultValue={RuleSelectOptions.find(
-                    ruchains => ruchains.value === selectedUpdateTemplate.rule_chain_id,
-                  )}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.rule_chain_id?.message}
-                </p>   
+              <SelectDropdown
+                label={t('cloud:device_template.add_template.flow')}
+                name="rule_chain_id"
+                control={control}
+                options={RuleSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:flow_id') ||
+                  option.label === t('table:no_in_flow_id')
+                }
+                noOptionsMessage={() => t('table:no_in_flow_id')}
+                loadingMessage={() => t('loading:flow_id')}
+                isLoading={RuleIsLoading}
+                placeholder={t(
+                  'cloud:device_template.add_template.choose_flow_id',
+                )}
+                defaultValue={RuleSelectOptions.find(
+                  ruchains =>
+                    ruchains.value === selectedUpdateTemplate.rule_chain_id,
+                )}
+              />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.rule_chain_id?.message}
+              </p>
             </div>
             {fields.map((field, index) => (
               <section
@@ -191,19 +210,34 @@ export function UpdateTemplate({
                     registration={register(
                       `attributes.${index}.value_t` as const,
                     )}
-                    options={valueTypeList.map(valueType => ({
-                      label: valueType.name,
-                      value: valueType.type,
-                    }))}
+                    options={valueTypeOptions}
                   />
-                  <InputField
-                    classnamefieldwrapper="mt-2"
-                    label={t('cloud:org_manage.org_manage.add_attr.value')}
-                    error={formState?.errors?.attributes?.[index]?.value}
-                    registration={register(
-                      `attributes.${index}.value` as const,
-                    )}
-                  />
+                  {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
+                    <SelectField
+                      className="h-[36px] py-1"
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.attributes?.[index]?.value}
+                      registration={register(
+                        `attributes.${index}.value` as const,
+                      )}
+                      options={booleanSelectOption}
+                    />
+                  ) : (
+                    <InputField
+                      label={t('cloud:org_manage.org_manage.add_attr.value')}
+                      error={formState?.errors?.attributes?.[index]?.value}
+                      registration={register(
+                        `attributes.${index}.value` as const,
+                      )}
+                      type={
+                        numberInput.includes(
+                          watch(`attributes.${index}.value_t`),
+                        )
+                          ? 'number'
+                          : 'text'
+                      }
+                    />
+                  )}
                   <FieldWrapper
                     className="mt-2 w-fit space-y-2"
                     label={t('cloud:org_manage.org_manage.add_attr.logged')}

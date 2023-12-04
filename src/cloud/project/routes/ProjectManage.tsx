@@ -1,22 +1,21 @@
 import { useProjects } from '../api'
 import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
+import { useState } from 'react'
 
-import { useProjectIdStore } from '~/stores/project'
 import { ContentLayout } from '~/layout/ContentLayout'
-
-import { BasePaginationSchema } from '~/utils/schemaValidation'
-
 import TitleBar from '~/components/Head/TitleBar'
 import { CreateProject } from '../components/CreateProject'
 import { ComboBoxSelectProject } from '../components/ComboBoxSelectProject'
-import { useState } from 'react'
 import { ListProjectItem } from './../components/ListProjectItem'
+
+import { BasePaginationSchema, nameSchema } from '~/utils/schemaValidation'
+
 import projectBackgroundImage from '~/assets/images/project-background.png'
 
 export const ProjectSchema = z.object({
   id: z.string(),
-  name: z.string(),
+  name: nameSchema,
   image: z.string(),
   description: z.string(),
   app_key: z.string(),
