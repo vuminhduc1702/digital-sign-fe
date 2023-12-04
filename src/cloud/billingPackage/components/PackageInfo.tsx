@@ -57,6 +57,16 @@ export function PackageInfo() {
     setIsDisabled(true)
     setExpectedPayment('')
     setExpectedNumber('')
+    if(data?.data?.estimate === 'fix') {
+      handleOnChange(
+        '',
+        data?.data?.tax?.toString() || '',
+        data?.data?.price?.toString() || '',
+        data?.data?.fix_cost?.toString() || '',
+        data?.data?.quantity_free?.toString() || '',
+        data?.data?.plan_lv || [],
+      )
+    }
   }, [data])
 
   useEffect(() => {
