@@ -75,8 +75,8 @@ type CreateServiceProps = {
   thingServiceData?: ThingService[]
 }
 
-export const numberInput = ['i32', 'i64', 'f32', 'f64']
-export const defaultJSType = [
+const numberInput = ['i32', 'i64', 'f32', 'f64']
+const defaultJSType = [
   'string',
   'number',
   'bigint',

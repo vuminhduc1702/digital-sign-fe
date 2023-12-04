@@ -48,6 +48,11 @@ export const valueTypeList: ValueType[] = [
   { type: 'JSON', name: 'JSON' },
 ]
 
+export const booleanSelectOption = [
+  { label: 'False', value: 'false' },
+  { label: 'True', value: 'true' },
+]
+
 export const numberInput = ['DBL', 'LONG']
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
@@ -168,10 +173,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
-                    options={[
-                      { label: 'False', value: 'false' },
-                      { label: 'True', value: 'true' },
-                    ]}
+                    options={booleanSelectOption}
                   />
                 ) : (
                   <InputField

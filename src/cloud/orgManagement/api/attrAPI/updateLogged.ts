@@ -49,33 +49,5 @@ export const useUpdateLogged = (
     },
     ...config,
     mutationFn: updateLogged,
-
-    // onMutate: async newAttr => {
-    //   await queryClient.cancelQueries({ queryKey: ['attrs'] })
-    //   const prevAttr = queryClient.getQueryData(['attrs'], { exact: false })
-    //   queryClient.setQueryData(['attrs', { exact: false }], newAttr)
-    //   return { newAttr, prevAttr }
-    // },
-    // onError: (err, newAttr, context) => {
-    //   queryClient.setQueryData(
-    //     ['attrs', context?.newAttr.attribute_key],
-    //     context?.prevAttr,
-    //   )
-    // },
-    // onSettled: async (newAttr, error, variables, context) => {
-    //   if (error) {
-    //     queryClient.invalidateQueries(['attrs'])
-    //   } else {
-    //     await queryClient.invalidateQueries(['attrs'])
-    //     if (addNoti) {
-    //       addNotification({
-    //         type: 'success',
-    //         title: t(
-    //           'cloud:org_manage.org_manage.add_attr.success_update_logged',
-    //         ),
-    //       })
-    //     }
-    //   }
-    // },
   })
 }

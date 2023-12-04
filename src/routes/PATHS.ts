@@ -8,7 +8,7 @@ export const BASE_PATH_APPLICATION = '/application/'
 export const BASE_PATH_TENANT = '/tenant'
 export const BASE_PATH_DEV_ROLE = '/dev-role'
 
-export const PATHS: { [key: string]: string } = {
+export const PATHS = {
   // Protected routes
 
   // Project routes
@@ -72,4 +72,4 @@ export const PATHS: { [key: string]: string } = {
   VERSION: `${BASE_PATH}version`,
   MAINTAIN: `${BASE_PATH}maintain`,
   NOTFOUND: `${BASE_PATH}*`,
-}
+} as const satisfies { [key: string]: string }
