@@ -20,6 +20,13 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../Tooltip'
+import { string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -265,6 +272,7 @@ export function BaseTable<T extends Record<string, any>>({
                             </Fragment>
                           )
                         } else {
+                          // const cellStr = cell.getContext().getValue()
                           return (
                             <td className="h-9" key={cell.id}>
                               {flexRender(
