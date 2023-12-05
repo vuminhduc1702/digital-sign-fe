@@ -350,7 +350,7 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        <UpdateWidget widgetInfo={widgetInfo} setWidgetList={setWidgetList} widgetId={widgetId} />
+                        <UpdateWidget widgetInfo={widgetList?.[widgetId]} setWidgetList={setWidgetList} widgetId={widgetId} />
                         <DeleteIcon
                           width={20}
                           height={20}
