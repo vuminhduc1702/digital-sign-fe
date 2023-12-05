@@ -10,7 +10,14 @@ import {
   getExpandedRowModel,
   type VisibilityState,
 } from '@tanstack/react-table'
-import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  Fragment,
+  createElement,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -26,7 +33,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../Tooltip'
-import { nan, string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -133,7 +139,7 @@ export function BaseTable<T extends Record<string, any>>({
                               desc: '↓',
                             }[header.column.getIsSorted() as string] ?? null}
                           </div> */}
-                            <div className="relative flex items-center justify-center text-table-header">
+                            <div className="text-table-header relative flex items-center justify-center">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -182,7 +188,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -234,7 +240,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -272,35 +278,16 @@ export function BaseTable<T extends Record<string, any>>({
                             </Fragment>
                           )
                         } else {
-                          const cellStr = cell.getContext().getValue()
-                          let cellStrTrigger
-                          if (typeof cellStr == 'string') {
-                            cellStrTrigger =
-                              cellStr?.length > 10
-                                ? cellStr.slice(0, 10) + '...'
-                                : cellStr
-                          }
+                          // const cellStr = cell.getContext().getValue()
+                          // let cellStrTrigger
+                          // if (typeof cellStr == 'string') {
+                          //   cellStrTrigger =
+                          //     cellStr?.length > 10
+                          //       ? cellStr.slice(0, 10) + '...'
+                          //       : cellStr
+                          // }
 
-                          return typeof cellStr == 'string' &&
-                            isNaN(parseInt(cellStr)) ? (
-                            <td className="h-9 cursor-default" key={cell.id}>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    {cellStrTrigger}
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>
-                                      {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext(),
-                                      )}
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </td>
-                          ) : (
+                          return (
                             <td className="h-9" key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
@@ -308,6 +295,35 @@ export function BaseTable<T extends Record<string, any>>({
                               )}
                             </td>
                           )
+                          // return typeof cellStr == 'string' &&
+                          //   cellStr != 'true' &&
+                          //   cellStr != 'false' &&
+                          //   isNaN(parseInt(cellStr)) ? (
+                          //   <td className="h-9 cursor-default" key={cell.id}>
+                          //     <TooltipProvider>
+                          //       <Tooltip>
+                          //         <TooltipTrigger>
+                          //           {cellStrTrigger}
+                          //         </TooltipTrigger>
+                          //         <TooltipContent>
+                          //           <p>
+                          //             {flexRender(
+                          //               cell.column.columnDef.cell,
+                          //               cell.getContext(),
+                          //             )}
+                          //           </p>
+                          //         </TooltipContent>
+                          //       </Tooltip>
+                          //     </TooltipProvider>
+                          //   </td>
+                          // ) : (
+                          //   <td className="h-9" key={cell.id}>
+                          //     {flexRender(
+                          //       cell.column.columnDef.cell,
+                          //       cell.getContext(),
+                          //     )}
+                          //   </td>
+                          // )
                         }
                       })}
                     </tr>
@@ -328,7 +344,7 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="absolute bottom-10 flex gap-3">
-          <span className="flex items-center gap-1 text-body-light">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
