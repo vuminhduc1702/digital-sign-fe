@@ -30,3 +30,15 @@ export type RulechainList = {
   totalElements: number
   hasNext: boolean
 }
+
+export type LwM2M = {
+  file_id: string,
+  module_name: string,
+  version: string
+}
+
+export type LwM2MList = {
+  infos: LwM2M[]
+  bucket_name: "publishxml",
+  number_of_files: 324,
+}

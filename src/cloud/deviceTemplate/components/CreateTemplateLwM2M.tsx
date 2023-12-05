@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-
+import { useEffect, useState } from 'react'
 import { Button } from '~/components/Button'
 import {
   FieldWrapper,
@@ -25,7 +25,9 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { useGetRulechains } from '../api/getRulechains'
-
+import LwM2MData from '~/assets/locales/Describe.json';
+import { type LwM2M }   from '../types'
+import { CreateTableXMl } from './CreateTableXMl'
 export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
@@ -34,19 +36,20 @@ export const templateAttrSchema = z.object({
 
 export default function CreateTemplate() {
   const { t } = useTranslation()
-
   const { id: projectId } = storage.getProject()
-  const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains({ projectId })
+  
+  const [items, setItems] = useState<LwM2M[]>([]);
 
-  const { acc: RuleFlattenData } = flattenData(
-    ruchainsData?.data,
-    ['id', 'name'],
-  )
+  useEffect(() => {
+    const LwM2MsData: LwM2M[] = LwM2MData.infos;
+    setItems(LwM2MsData);
+  }, []);
 
-  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
-    label: ruchains?.name,
-    value: JSON.parse(ruchains?.id)?.id,
+  const LwM2MSelectOptions = items?.map(item => ({
+    label: `${item.module_name} #${item.file_id}_${item.version}`,
+    value: `${item.module_name}`
   }))
+
   const { mutate: mutateUpdateTemplate } = useUpdateTemplate({ isOnCreateTemplate: true })
 
   const {
@@ -69,6 +72,7 @@ export default function CreateTemplate() {
     name: 'attributes',
     control,
   })
+
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}
@@ -117,7 +121,7 @@ export default function CreateTemplate() {
         })}
       >
         <>
-          <Button
+          {/* <Button
             className="h-9 w-9 rounded-md"
             variant="trans"
             size="square"
@@ -131,7 +135,7 @@ export default function CreateTemplate() {
               }
               )
             }
-          />
+          /> */}
           <InputField
             label={t('cloud:device_template.add_template.name')}
             error={formState.errors['name']}
@@ -154,25 +158,48 @@ export default function CreateTemplate() {
                   {formState?.errors?.rule_chain_id?.message}
                 </p>   
           </div> */}
-          {/* <div className="space-y-1">
-                    <SelectDropdown
-                      label={
-                        t('cloud:role_manage.add_policy.resources') ??
-                        'Authorization resources'
-                      }
-                      name={`policies.${index}.resources`}
-                      options={resourcesList.map(
-                        resourcesType => resourcesType,
-                      )}
-                      control={control}
-                      isMulti
-                      closeMenuOnSelect={false}
-                    />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.policies?.[index]?.resources?.message}
-                    </p>
-            </div> */}
-          {fields.map((field, index) => (
+           {/* <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:device_template.add_template.flow')}
+                  name="rule_chain_id"
+                  control={control}
+                  options={RuleSelectOptions}
+                  isMulti
+                  closeMenuOnSelect={false}
+                  isOptionDisabled={option => option.label === t('loading:flow_id')}
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  loadingMessage={() => t('loading:flow_id')}
+                  isLoading={isLoadingRuchains}
+                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+                />
+                <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.rule_chain_id?.message}
+                </p>   
+          </div> */}
+          <div className="space-y-1">
+                <SelectDropdown
+                  isClearable={true}
+                  label={t('cloud:device_template.add_template.flow')}
+                  name="rule_chain_id"
+                  control={control}
+                  options={LwM2MSelectOptions}
+                  isMulti={true}
+                  closeMenuOnSelect={false}
+                  isOptionDisabled={option => option.label === t('loading:flow_id')}
+                  noOptionsMessage={() => t('table:no_in_flow_id')}
+                  // loadingMessage={() => t('loading:flow_id')}
+                  // isLoading={true}
+                  // placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+                />
+                {/* <p className="text-body-sm text-primary-400">
+                  {formState?.errors?.rule_chain_id?.message}
+                </p>    */}
+          </div>
+          <div className="space-y-1">
+                <CreateTableXMl/>
+          </div>
+          {/* {fields.map((field, index) => (
             <section
               key={field.id}
               className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
@@ -238,7 +265,8 @@ export default function CreateTemplate() {
                 }
               />
             </section>
-          ))}
+          ))} */}
+          
         </>
       </form>
     </FormDrawer>

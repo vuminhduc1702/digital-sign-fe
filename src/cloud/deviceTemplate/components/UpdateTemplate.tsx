@@ -72,22 +72,26 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
-  const { register, formState, watch, handleSubmit, control } = useForm<
+  const { register, formState, watch, handleSubmit,  reset, control } = useForm<
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-    defaultValues: {
-      name: selectedUpdateTemplate?.name,
-      rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
-      attributes:
-        attrData?.attributes.map((attribute: Attribute) => ({
-          attribute_key: attribute.attribute_key,
-          logged: attribute.logged,
-          value: attribute.value.toString(),
-          value_t: attribute.value_type,
-        })) || [],
-    },
   })
+  useEffect(() => {
+    if (attrData != null) {
+      reset({
+          name: selectedUpdateTemplate?.name,
+          rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
+          attributes:
+            attrData?.attributes.map((attribute: Attribute) => ({
+              attribute_key: attribute.attribute_key,
+              logged: attribute.logged,
+              value: attribute.value.toString(),
+              value_t: attribute.value_type,
+            })),
+        })
+    }
+  }, [attrData])
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
