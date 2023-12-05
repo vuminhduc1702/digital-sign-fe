@@ -45,7 +45,7 @@ function DashboardTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -69,7 +69,7 @@ function DashboardTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -138,11 +138,14 @@ export function DashboardTable({
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('title', {
+      columnHelper.display({
+        id: 'title',
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
         cell: info => (
           <Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>
-            {info.getValue()}
+            <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+              {info.row.original.title}
+            </p>
           </Link>
         ),
         footer: info => info.column.id,
