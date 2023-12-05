@@ -25,17 +25,24 @@ export const PieChart = ({ data, widgetInfo }: { data: TimeSeries, widgetInfo: z
   // const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
-      const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
-        id: key,
-        label: key,
-        value: parseFloat(value[0].value),
-        [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
-        '#e8c1a0'
-      }))
-      setDataTransformedFeedToChart(pieWidgetDataType)
+      if (dataTransformedFeedToChart.length > 0) {
+        for (const [key, value] of Object.entries(data)) {
+          const newData = dataTransformedFeedToChart.map(obj => obj.id === key && value ? { ...obj, value: parseFloat(value[0].value) } : obj)
+          setDataTransformedFeedToChart(newData)
+        }
+      } else if (dataTransformedFeedToChart.length === 0) {
+        const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
+          id: key,
+          label: key,
+          value: parseFloat(value[0].value),
+          [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
+          '#e8c1a0'
+        }))
+        setDataTransformedFeedToChart(pieWidgetDataType)
+      }
     }
   }, [data])
 

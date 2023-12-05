@@ -1,16 +1,21 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import storage from '~/utils/storage'
-
-import { type EntityThing } from '~/cloud/customProtocol'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import {
   ComboBoxSelectThing,
   CreateThing,
   ThingTable,
 } from '../components/Attributes'
+import TitleBar from '~/components/Head/TitleBar'
+
+import { type EntityThing } from '~/cloud/customProtocol'
 
 export function ThingTemplate() {
+  const { t } = useTranslation()
+  const ref = useRef(null)
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     EntityThing[]
   >([])
@@ -27,7 +32,8 @@ export function ThingTemplate() {
   })
 
   return (
-    <>
+    <div ref={ref} className="flex grow flex-col">
+      <TitleBar title={t('cloud:custom_protocol.thing.title')} />
       <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
@@ -49,6 +55,6 @@ export function ThingTemplate() {
           isPreviousData={isPreviousData}
         />
       </div>
-    </>
+    </div>
   )
 }

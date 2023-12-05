@@ -5,24 +5,53 @@ import { type TimeSeries } from '../../types'
 
 export function Map({
   data,
-  isEditMode = false,
+  isEditMode,
 }: {
   data: TimeSeries
   isEditMode: boolean
 }) {
-  const fakeCoor = [
-    [21.0285, 105.8542],
-    [21.0374, 105.8497],
-    [21.0369, 105.8511],
-    [21.04, 105.8311],
-    [21.0402, 105.8475],
-    [21.0245, 105.8473],
-  ]
+  const [dragMode, setDragMode] = useState(true)
+  const [dataForMap, setDataForMap] = useState<Array<any>>([])
+  const [avgLatitude, setAvgLatitude] = useState(0)
+  const [avgLongitude, setAvgLongitude] = useState(0)
 
-  const avgLatitude =
-    fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
-  const avgLongitude =
-    fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
+  // const fakeCoor = [
+  //   [21.0285, 105.8542],
+  //   [21.0374, 105.8497],
+  //   [21.0369, 105.8511],
+  //   [21.04, 105.8311],
+  //   [21.0402, 105.8475],
+  //   [21.0245, 105.8473],
+  // ]
+
+  // const avgLatitude =
+    // fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
+  // const avgLongitude =
+    // fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
+  
+  
+  useEffect(() => {
+    if (isEditMode) {
+      setDragMode(false)
+    } else {
+      setDragMode(true)
+    }
+  }, [isEditMode])
+
+  useEffect(() => {
+    const dataCurrent = []
+    console.log(data)
+    if (Object.keys(data).length !== 0) {
+      let coorCurrent = [];
+      const currentLat = Number(Object.entries(data).filter(([key,]) => key === 'lat')[0]?.[1]?.[0].value)
+      const currentLong = Number(Object.entries(data).filter(([key,]) => key === 'long')[0]?.[1]?.[0].value)
+      coorCurrent = [currentLat, currentLong]
+      setAvgLatitude(currentLat)
+      setAvgLongitude(currentLong)
+      dataCurrent.push(coorCurrent)
+      setDataForMap(dataCurrent)
+    }
+  }, [data])
 
   return (
     <MapContainer
@@ -30,21 +59,23 @@ export function Map({
       center={[avgLatitude, avgLongitude]}
       zoom={10}
       scrollWheelZoom
-      dragging={!isEditMode}
+      dragging={dragMode}
+      attributionControl={false}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {fakeCoor.map((coor, index) => {
+      {dataForMap.map((coor, index) => {
         const [lat, lng] = coor
 
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {`Thiết bị ${index}.`}
+              {/* {`Thiết bị ${index}.`}
               <br />
-              Cảm biến nhiệt độ.
+              Cảm biến nhiệt độ. */}
+              {`Current coor (${lat},${lng})`}
             </Popup>
           </Marker>
         )

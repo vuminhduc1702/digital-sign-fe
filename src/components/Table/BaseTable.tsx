@@ -133,7 +133,7 @@ export function BaseTable<T extends Record<string, any>>({
                               desc: '↓',
                             }[header.column.getIsSorted() as string] ?? null}
                           </div> */}
-                            <div className="text-table-header relative flex items-center justify-center">
+                            <div className="relative flex items-center justify-center text-table-header">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -182,7 +182,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -234,7 +234,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -283,7 +283,7 @@ export function BaseTable<T extends Record<string, any>>({
 
                           return typeof cellStr == 'string' &&
                             isNaN(parseInt(cellStr)) ? (
-                            <td className="h-9" key={cell.id}>
+                            <td className="h-9 cursor-default" key={cell.id}>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger>
@@ -328,7 +328,7 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
         <div className="absolute bottom-10 flex gap-3">
-          <span className="text-body-light flex items-center gap-1">
+          <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',

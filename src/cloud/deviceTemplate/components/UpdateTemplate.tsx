@@ -23,7 +23,11 @@ import { flattenData } from '~/utils/misc.ts'
 
 import { type Template } from '../types'
 import { type Attribute } from '~/types'
-import { booleanSelectOption } from '~/cloud/orgManagement/components/Attributes'
+import {
+  booleanSelectOption,
+  numberInput,
+  valueTypeList,
+} from '~/cloud/orgManagement/components/Attributes'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -133,7 +137,7 @@ export function UpdateTemplate({
         </>
       )}
     >
-      {attrLoading ? (
+      {showSpinner ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
