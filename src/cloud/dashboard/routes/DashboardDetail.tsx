@@ -321,14 +321,8 @@ export function DashboardDetail() {
                             // x: index % 2 === 0 ? 0 : 4,
                             x: index % 2 === 0 ? 0 : 6,
                             y: 0,
-                            w:
-                              widgetList?.[widgetId]?.description === 'CARD'
-                                ? 3
-                                : 6,
-                            h:
-                              widgetList?.[widgetId]?.description === 'CARD'
-                                ? 1
-                                : 3,
+                            w: widgetInfo?.description === 'CARD' ? 3 : 6,
+                            h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
                     className={cn(
@@ -338,43 +332,46 @@ export function DashboardDetail() {
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
-                      {widgetList?.[widgetId]?.title ?? ''}
+                      {widgetInfo?.title ?? ''}
                     </p>
-                    {widgetList?.[widgetId]?.description === 'LINE' ? (
+                    {widgetInfo?.description === 'LINE' ? (
                       <LineChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                       />
-                    ) : widgetList?.[widgetId]?.description === 'BAR' ? (
+                    ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
-                    ) : widgetList?.[widgetId]?.description === 'PIE' ? (
+                    ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
-                    ) : widgetList?.[widgetId]?.description === 'MAP' ? (
+                    ) : widgetInfo?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
-                    ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (
+                    ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
                         widgetInfo={widgetInfo}
                       />
-                    ) : widgetList?.[widgetId]?.description === 'TABLE' ? (
+                    ) : widgetInfo?.description === 'TABLE' ? (
                       <TableChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
                       />
-                    ) : widgetList?.[widgetId]?.description === 'CARD' ? (
+                    ) : widgetInfo?.description === 'CARD' ? (
                       <CardChart data={lastestValueOneDevice} />
-                    ) : widgetList?.[widgetId]?.description === 'CONTROLLER' ? (
+                    ) : widgetInfo?.description === 'CONTROLLER' ? (
                       <ControllerButton
                         data={
-                          widgetList?.[widgetId]?.datasource
-                            ?.controller_message as string
+                          widgetInfo?.datasource?.controller_message as string
                         }
                       />
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        <UpdateWidget widgetInfo={widgetList?.[widgetId]} setWidgetList={setWidgetList} widgetId={widgetId} />
+                        <UpdateWidget
+                          widgetInfo={widgetInfo}
+                          setWidgetList={setWidgetList}
+                          widgetId={widgetId}
+                        />
                         <DeleteIcon
                           width={20}
                           height={20}
