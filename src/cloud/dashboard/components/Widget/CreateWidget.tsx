@@ -222,7 +222,6 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
   const { id: projectId } = storage.getProject()
-  console.log(widgetCategory)
 
   const {
     register,
@@ -242,8 +241,6 @@ export function CreateWidget({
     name: 'attributeConfig',
     control: control,
   })
-
-  console.log(fields, 'fieldsfieldsfieldsfields')
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
