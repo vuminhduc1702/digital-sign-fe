@@ -18,6 +18,7 @@ const formDialogSizes = {
   sm: 'max-w-[32rem]',
   md: 'max-w-[48rem]',
   lg: 'max-w-[60rem]',
+  max: 'max-w-[75rem]',
 }
 
 export type ConfirmationDialogProps = {
