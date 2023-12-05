@@ -435,31 +435,12 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       //   cell: info => info.row.original.org_name || t('table:no_in_org'),
       //   footer: info => info.column.id,
       // }),
-      columnHelper.display({
-        id: 'key',
+      columnHelper.accessor('key', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.key')}</span>
         ),
-        cell: info => {
-          const { key } = info.row.original
-          const keyTrigger = key?.slice(0, 15) + '...'
-          return (
-            <>
-              {key ? (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>{keyTrigger}</TooltipTrigger>
-                    <TooltipContent>
-                      <p>{key}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
-                ''
-              )}
-            </>
-          )
-        },
+        cell: info => info.getValue(),
+
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {

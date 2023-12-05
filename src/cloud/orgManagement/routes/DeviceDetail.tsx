@@ -138,7 +138,6 @@ export function DeviceDetail() {
                   <ComboBoxAttrLog
                     setFilteredComboboxData={setFilteredAttrLogComboboxData}
                   />
-                  
                 </div>
               </div>
             </div>
