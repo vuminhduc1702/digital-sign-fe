@@ -715,6 +715,10 @@ export function CreateWidget({
                               `attributeConfig.${index}.max` as const,
                               { valueAsNumber: true },
                             )}
+                            k
+                            gfge
+                            odkfd
+                            k
                           />
                         )}
                       </div>
@@ -759,34 +763,6 @@ export function CreateWidget({
                           }))}
                         />
 
-                        {watch('widgetSetting.agg') === 'NONE' ? (
-                          <InputField
-                            type="number"
-                            label={t('ws:filter.data_point')}
-                            error={formState?.errors?.widgetSetting?.data_point}
-                            registration={register(
-                              `widgetSetting.data_point` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          />
-                        ) : (
-                          <SelectField
-                            label={t('ws:filter.group_interval')}
-                            error={formState?.errors?.widgetSetting?.interval}
-                            registration={register(
-                              `widgetSetting.interval` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                            options={wsInterval.map(interval => ({
-                              label: interval.label,
-                              value: interval.value,
-                            }))}
-                          />
-                        )}
                         <SelectField
                           label={t('ws:filter.data_aggregation')}
                           error={formState?.errors?.widgetSetting?.agg}
@@ -824,6 +800,35 @@ export function CreateWidget({
                             )}
                           />
                         ) : null}
+
+                        {watch('widgetSetting.agg') === 'NONE' ? (
+                          <InputField
+                            type="number"
+                            label={t('ws:filter.data_point')}
+                            error={formState?.errors?.widgetSetting?.data_point}
+                            registration={register(
+                              `widgetSetting.data_point` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                          />
+                        ) : (
+                          <SelectField
+                            label={t('ws:filter.group_interval')}
+                            error={formState?.errors?.widgetSetting?.interval}
+                            registration={register(
+                              `widgetSetting.interval` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                            options={wsInterval.map(interval => ({
+                              label: interval.label,
+                              value: interval.value,
+                            }))}
+                          />
+                        )}
 
                         {watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <div className="space-y-3">

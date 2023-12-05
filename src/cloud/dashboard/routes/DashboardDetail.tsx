@@ -67,6 +67,8 @@ export type WidgetAttrDeviceType = Array<{
   deviceId: string
 }>
 
+const PINGWSTIME = 30000
+
 const { token } = storage.getToken() as UserStorage
 export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
   `Bearer ${token}`,
@@ -113,7 +115,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-  // console.log('lastJsonMessage', lastJsonMessage)
+  console.log('lastJsonMessage', lastJsonMessage)
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
@@ -138,12 +140,25 @@ export function DashboardDetail() {
   }, [detailDashboard?.dashboard_setting?.starred])
 
   useEffect(() => {
-    if (lastJsonMessage != null && lastJsonMessage?.errorCode !== 0) {
+    if (
+      lastJsonMessage != null &&
+      lastJsonMessage?.errorCode !== 0 &&
+      !lastJsonMessage?.hasOwnProperty('pong')
+    ) {
       addNotification({
         type: 'error',
         title: lastJsonMessage.errorMsg,
       })
     }
+
+    if (lastJsonMessage?.hasOwnProperty('pong')) {
+      const pingWSTimeout = setTimeout(() => {
+        handleSendMessage(JSON.stringify({ ping: 'ping' }))
+      }, PINGWSTIME)
+
+      return () => clearTimeout(pingWSTimeout)
+    }
+
     // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
     //   setWidgetAttrDeviceData(
     //     lastJsonMessage?.data
@@ -172,6 +187,15 @@ export function DashboardDetail() {
     //   )
     // }
   }, [lastJsonMessage])
+
+  // Ping websocket to server to keep widget alive every 30s
+  useEffect(() => {
+    const pingWSTimeout = setTimeout(() => {
+      handleSendMessage(JSON.stringify({ ping: 'ping' }))
+    }, PINGWSTIME)
+
+    return () => clearTimeout(pingWSTimeout)
+  }, [])
 
   useEffect(() => {
     Object.values(widgetList).forEach(widget => {
@@ -324,7 +348,7 @@ export function DashboardDetail() {
                     ) : widgetList?.[widgetId]?.description === 'BAR' ? (
                       <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
                     ) : widgetList?.[widgetId]?.description === 'PIE' ? (
-                      <PieChart data={lastestValues} widgetInfo={widgetInfo}/>
+                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetList?.[widgetId]?.description === 'MAP' ? (
                       <Map data={lastestValues} isEditMode={isEditMode} />
                     ) : widgetList?.[widgetId]?.description === 'GAUGE' ? (

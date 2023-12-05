@@ -70,7 +70,7 @@ export default function CreateTemplate() {
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
 
-  const { register, formState, watch, handleSubmit, control } = useForm<
+  const { register, formState, watch, handleSubmit, control, reset } = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -87,6 +87,7 @@ export default function CreateTemplate() {
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
