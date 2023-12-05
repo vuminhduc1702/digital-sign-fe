@@ -52,7 +52,7 @@ export function UpdateOrg({
 
   const { id: projectId } = storage.getProject()
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
@@ -209,12 +209,14 @@ export function UpdateOrg({
               label={t('cloud:org_manage.device_manage.add_device.parent')}
               name="org_id"
               control={control}
-              options={
-                orgSelectOptions != null
-                  ? orgSelectOptions
-                  : [{ label: t('loading:org'), value: '' }]
+              options={orgSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:org') ||
+                option.label === t('table:no_in_org')
               }
               noOptionsMessage={() => t('table:no_in_org')}
+              loadingMessage={() => t('loading:org')}
+              isLoading={orgIsLoading}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               defaultValue={orgSelectOptions.find(
                 org => org.value === selectedUpdateOrg.org_id,

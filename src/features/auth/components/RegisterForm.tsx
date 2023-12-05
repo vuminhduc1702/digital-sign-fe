@@ -220,6 +220,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
                     updateCountdown()
                   })
                   .catch(error => {
+                    console.log(error)
                     setBtnOtpDisable(false)
                   })
               }
@@ -241,11 +242,11 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             placeholder={t('auth:require_otp')}
             autoComplete="one-time-code"
           />
-          <div className="container mx-auto text-center text-body-xs">
+          <div className="text-body-xs container mx-auto text-center">
             <Button
               isLoading={registerMutation.isLoading}
               type="submit"
-              className="w-full bg-primary-400"
+              className="bg-primary-400 w-full"
             >
               {t('user:register')}
             </Button>

@@ -33,6 +33,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
+import { UpdateMqttConfig } from './UpdateMqttConfig'
 
 function DeviceTableContextMenu({
   id,
@@ -53,7 +54,7 @@ function DeviceTableContextMenu({
   template_id: string
   token: string
   status: string
-  additional_info?: object
+  additional_info: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -83,7 +84,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -113,6 +114,21 @@ function DeviceTableContextMenu({
               }}
             >
               {t('cloud:org_manage.device_manage.add_device.edit')}
+            </MenuItem>
+            <MenuItem
+              icon={
+                <img
+                  src={btnEditIcon}
+                  alt="Edit mqtt config"
+                  className="h-5 w-5"
+                />
+              }
+              onClick={() => {
+                open()
+                setType('update-mqtt')
+              }}
+            >
+              {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
             </MenuItem>
             <MenuItem
               icon={
@@ -174,7 +190,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -220,6 +236,14 @@ function DeviceTableContextMenu({
       {isOpen && type === 'update-version' ? (
         <UpdateVersionFirmWare deviceId={id} close={close} isOpen={isOpen} />
       ) : null}
+      {isOpen && additional_info != null && type === 'update-mqtt' ? (
+        <UpdateMqttConfig
+          additional_info={additional_info}
+          deviceId={id}
+          close={close}
+          isOpen={isOpen}
+        />
+      ) : null}
     </>
   )
 }
@@ -249,6 +273,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     created_at: true,
     contextMenu: true,
     heartbeat: false,
+    isdn: false,
   }
   const columnHelper = createColumnHelper<Device>()
   const columns = useMemo<ColumnDef<Device, any>[]>(
@@ -262,6 +287,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('name', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
@@ -285,57 +311,66 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.display({
+        id: 'isdn',
+        cell: info => {
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
+          )
+          const isdn = additionalInfo.isdn
+          const isdnTrigger =
+            isdn?.length > 10 ? isdn.slice(0, 10) + '...' : isdn
+          return (
+            <>
+              {isdn ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{isdnTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{isdn}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
+        header: () => (
+          <span>{t('cloud:org_manage.device_manage.table.isdn')}</span>
+        ),
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'heartbeat',
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
         ),
         cell: info => {
-          const { additional_info } = info.row.original
-
-          let additionalInfo,
-            historyLastHeartbeat,
-            intervalHeartbeat,
-            lifecycleTimeout
-          if (typeof additional_info === 'string') {
-            try {
-              additionalInfo = JSON.parse(additional_info)
-              // Now you can use additionalInfo as an object
-            } catch (error) {
-              console.error('Error parsing JSON:', error)
-            }
-          }
-          if (additionalInfo?.last_heartbeat) {
-            historyLastHeartbeat =
-              'Last heartbeat: ' +
-              getVNDateFormat({
-                date: parseInt(additionalInfo?.last_heartbeat) * 1000,
-              })
-          }
-          if (additionalInfo.heartbeat_interval) {
-            intervalHeartbeat = 'Interval: ' + additionalInfo.heartbeat_interval
-          }
-          if (additionalInfo.timeout_lifecycle) {
-            lifecycleTimeout = 'Lifecycle: ' + additionalInfo.timeout_lifecycle
-          }
-
-          return (
-            <>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger>{intervalHeartbeat}</TooltipTrigger>
-                  {additionalInfo.heartbeat_interval ? (
-                    <>
-                      <TooltipContent>
-                        <p>{historyLastHeartbeat}</p>
-                        <p>{intervalHeartbeat}</p>
-                        <p>{lifecycleTimeout}</p>
-                      </TooltipContent>
-                    </>
-                  ) : null}
-                </Tooltip>
-              </TooltipProvider>
-            </>
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
           )
+
+          return additionalInfo?.heartbeat_interval != null ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  {'Interval: ' + additionalInfo.heartbeat_interval}
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {'Last heartbeat: ' +
+                      getVNDateFormat({
+                        date:
+                          parseInt(additionalInfo?.last_heartbeat || 0) * 1000,
+                      })}
+                  </p>
+                  <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
+                  <p>{'Lifecycle: ' + additionalInfo.timeout_lifecycle}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : null
         },
         footer: info => info.column.id,
       }),
@@ -344,6 +379,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
         ),
         cell: info => info.getValue(),
+
         footer: info => info.column.id,
       }),
       columnHelper.accessor('group_id', {
@@ -353,6 +389,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+
       columnHelper.accessor('token', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.token')}</span>
@@ -367,6 +404,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+
+      // columnHelper.accessor('template_id', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
+      //   ),
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('template_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
@@ -438,7 +483,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             template_id,
             token,
             status,
-            additional_info,
           } = info.row.original
 
           const group = {
@@ -455,7 +499,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             token,
             status,
             group_id,
-            additional_info,
+            additional_info: info.row.original
+              .additional_info as unknown as string,
             // group_name,
           })
         },

@@ -152,7 +152,7 @@ export function UpdateRole({
       }
     }) || []
 
-  const { register, formState, handleSubmit, control, reset, getValues } =
+  const { register, formState, handleSubmit, control, getValues, watch } =
     useForm<UpdateRoleDTO['data']>({
       resolver: roleSchema && zodResolver(roleSchema),
       defaultValues: {
@@ -161,6 +161,8 @@ export function UpdateRole({
         role_type: type,
       },
     })
+  console.log('formState.errors', formState.errors)
+  console.log('watchhhhhhhh', watch('policies'))
 
   const { fields, append, remove } = useFieldArray({
     name: 'policies',
@@ -173,13 +175,6 @@ export function UpdateRole({
       onClose={close}
       size="lg"
       title={t('cloud:role_manage.add_role.edit')}
-      resetData={() =>
-        reset({
-          name,
-          policies: policiesCurrent,
-          role_type: type,
-        })
-      }
       renderFooter={() => (
         <>
           <Button

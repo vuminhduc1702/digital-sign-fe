@@ -24,11 +24,7 @@ import {
 } from '../../api/thingServiceAPI'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { useThingServiceById } from '../../api/thingServiceAPI/getThingServiceById'
-import {
-  serviceThingSchema,
-  type dataRun,
-  numberInput,
-} from './CreateThingService'
+import { serviceThingSchema, type dataRun } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '~/components/Spinner'
 import { Switch } from '~/components/Switch'

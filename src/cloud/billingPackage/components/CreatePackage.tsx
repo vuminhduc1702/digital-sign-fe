@@ -40,7 +40,7 @@ export const entityPlanSchema = z
     payment_type: z.string(),
     type_period: z.string(),
     cal_unit: z.string(),
-    fix_cost: z.string(),
+    fix_cost: z.string().optional(),
     charging_unit: z.string(),
     quantity_free: z.string().optional(),
     price: z.string().optional(),
@@ -569,7 +569,7 @@ export function CreatePackage() {
                                           index >= 1
                                             ? getValues('plan_lv')?.[
                                                 index - 1
-                                              ].level?.toString()
+                                              ].level + 1
                                             : '1',
                                         )
                                   }

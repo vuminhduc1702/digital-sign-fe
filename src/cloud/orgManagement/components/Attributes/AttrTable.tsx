@@ -148,7 +148,7 @@ export function AttrTable({
   const columnHelper = createColumnHelper<Attribute>()
 
   const dataSorted =
-    data?.sort((a, b) => b.last_update_ts - a.last_update_ts) || data
+    data?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || data
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({
@@ -207,7 +207,7 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.value')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => (info.getValue() !== 'null' ? info.getValue() : ''),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('logged', {
@@ -219,7 +219,7 @@ export function AttrTable({
 
           return (
             <Switch
-              key={attribute_key + STATUS[info.getValue()]}
+              key={attribute_key + +info.getValue()}
               defaultChecked={info.getValue() === 'true' ? true : false}
               onCheckedChange={checked => {
                 debouncedSwitchChange(checked, attribute_key)
