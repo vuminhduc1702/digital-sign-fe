@@ -34,9 +34,15 @@ export function CreateDevice() {
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
-  const { register, formState, control, handleSubmit, watch, reset } = useForm<
-    CreateDeviceDTO['data']
-  >({
+  const {
+    register,
+    formState,
+    control,
+    handleSubmit,
+    watch,
+    reset,
+    resetField,
+  } = useForm<CreateDeviceDTO['data']>({
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
 
@@ -135,6 +141,9 @@ export function CreateDevice() {
               loadingMessage={() => t('loading:org')}
               isLoading={orgIsLoading}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              handleClearSelectDropdown={() => {
+                resetField('group_id')
+              }}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}

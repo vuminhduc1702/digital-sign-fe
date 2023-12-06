@@ -519,9 +519,7 @@ export function CreateWidget({
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
-                          resetField('attributeConfig.0.attribute_key', {
-                            defaultValue: '',
-                          })
+                          resetField('attributeConfig', [{}])
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -556,9 +554,7 @@ export function CreateWidget({
                           }
                         }}
                         handleClearSelectDropdown={() => {
-                          resetField('attributeConfig.0.attribute_key', {
-                            defaultValue: '',
-                          })
+                          resetField('attributeConfig', [{}])
                         }}
                       />
                       <p className="text-body-sm text-primary-400">

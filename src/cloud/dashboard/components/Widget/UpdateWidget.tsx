@@ -356,9 +356,7 @@ export function UpdateWidget({
                       isLoading={orgIsLoading}
                       handleClearSelectDropdown={() => {
                         resetField('device')
-                        resetField('attributeConfig.0.attribute_key', {
-                          defaultValue: '',
-                        })
+                        resetField('attributeConfig', [{}])
                       }}
                       defaultValue={orgSelectOptions?.find(item => !item.value)}
                     />
@@ -402,9 +400,7 @@ export function UpdateWidget({
                         }
                       }}
                       handleClearSelectDropdown={() => {
-                        resetField('attributeConfig.0.attribute_key', {
-                          defaultValue: '',
-                        })
+                        resetField('attributeConfig', [{}])
                       }}
                       defaultValue={deviceSelectData?.find(item =>
                         getValues('device')?.filter(

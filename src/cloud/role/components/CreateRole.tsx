@@ -129,25 +129,30 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
   let projectId = project_id ? project_id : dataStorage?.id
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
-  const { data: groupDataDevice, isLoading: groupDataDeviceIsLoading } = useGetGroups({
-    projectId,
-    entity_type: 'DEVICE',
-  })
+  const { data: groupDataDevice, isLoading: groupDataDeviceIsLoading } =
+    useGetGroups({
+      projectId,
+      entity_type: 'DEVICE',
+    })
 
-  const { data: groupDataEvent, isLoading: groupDataEventIsLoading } = useGetGroups({
-    projectId,
-    entity_type: 'EVENT',
-  })
+  const { data: groupDataEvent, isLoading: groupDataEventIsLoading } =
+    useGetGroups({
+      projectId,
+      entity_type: 'EVENT',
+    })
 
-  const { data: groupDataUser, isLoading: groupDataUserIsLoading } = useGetGroups({
-    projectId,
-    entity_type: 'USER',
-  })
+  const { data: groupDataUser, isLoading: groupDataUserIsLoading } =
+    useGetGroups({
+      projectId,
+      entity_type: 'USER',
+    })
 
-  const { data: groupDataOrg, isLoading: groupDataOrgIsLoading } = useGetGroups({
-    projectId,
-    entity_type: 'ORGANIZATION',
-  })
+  const { data: groupDataOrg, isLoading: groupDataOrgIsLoading } = useGetGroups(
+    {
+      projectId,
+      entity_type: 'ORGANIZATION',
+    },
+  )
 
   const resourceArrRef = useRef<ResourcesType['value'][]>([])
   const actionArrRef = useRef<ActionsType['value'][]>([])
@@ -338,11 +343,10 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                         label={'Thiết bị'}
                         name={`policies.${index}.devices`}
                         control={control}
-                        options={
-                          groupDataDevice?.groups?.map(groups => ({
-                            label: groups?.name,
-                            value: groups?.id,
-                          }))}
+                        options={groupDataDevice?.groups?.map(groups => ({
+                          label: groups?.name,
+                          value: groups?.id,
+                        }))}
                         isOptionDisabled={option =>
                           option.label === t('loading:device') ||
                           option.label === t('table:no_device')
@@ -352,6 +356,9 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                         isLoading={groupDataDeviceIsLoading}
                         isMulti
                         closeMenuOnSelect={false}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.devices`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -361,11 +368,10 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                       <SelectDropdown
                         label={'Sự kiện'}
                         name={`policies.${index}.events`}
-                        options={
-                          groupDataEvent?.groups?.map(groups => ({
-                            label: groups?.name,
-                            value: groups?.id,
-                          }))}
+                        options={groupDataEvent?.groups?.map(groups => ({
+                          label: groups?.name,
+                          value: groups?.id,
+                        }))}
                         isOptionDisabled={option =>
                           option.label === t('loading:event') ||
                           option.label === t('table:no_event')
@@ -376,6 +382,9 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.events`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -401,6 +410,9 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.users`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -426,6 +438,9 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.orgs`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}

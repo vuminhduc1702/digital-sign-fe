@@ -142,6 +142,7 @@ export function UpdateDevice({
     const dataFilter = orgFlattenData.filter(item => item.id === org_id)
     dataFilter.length && setValue('org_id', dataFilter[0]?.id)
   }, [org_id])
+  console.log('first', watch('group_id'))
 
   return (
     <Drawer
@@ -218,11 +219,8 @@ export function UpdateDevice({
                 defaultValue={orgSelectOptions?.find(
                   org => org.value === org_id,
                 )}
-                handleChangeSelect={() =>
-                  resetField('group_id', {
-                    defaultValue: '',
-                  })
-                }
+                handleChangeSelect={() => setValue('group_id', '')}
+                handleClearSelectDropdown={() => setValue('group_id', '')}
               />
             </div>
             <div className="space-y-1">
@@ -241,6 +239,7 @@ export function UpdateDevice({
                 defaultValue={groupSelectOptions?.find(
                   group => group.value === group_id,
                 )}
+                handleClearSelectDropdown={() => setValue('group_id', '')}
               />
             </div>
             <div>
@@ -314,7 +313,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
+              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -323,7 +322,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="bg-secondary-700 rounded-sm p-1 text-white"
+              className="rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
