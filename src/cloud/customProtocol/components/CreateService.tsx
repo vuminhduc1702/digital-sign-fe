@@ -81,7 +81,7 @@ export function CreateService({
       body={
         <form
           id="create-serviceThing"
-          className="flex flex-col justify-between"
+          className="flex flex-col justify-between space-y-6"
           onSubmit={handleSubmit(values => {
             // console.log('service values', values)
             mutateService({

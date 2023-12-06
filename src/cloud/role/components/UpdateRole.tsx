@@ -24,7 +24,7 @@ type UpdateRoleProps = {
   name: string
   close: () => void
   isOpen: boolean
-  policy: Policies[]
+  policy: string
   role_type: string
   project_id: string
 }
@@ -166,8 +166,6 @@ export function UpdateRole({
       role_type: type,
     },
   })
-  console.log('formState.errors', formState.errors)
-  console.log('watchhhhhhhh', watch('policies'))
 
   const { fields, append, remove } = useFieldArray({
     name: 'policies',

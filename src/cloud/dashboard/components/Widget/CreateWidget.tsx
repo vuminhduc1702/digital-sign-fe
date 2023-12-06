@@ -711,10 +711,6 @@ export function CreateWidget({
                               `attributeConfig.${index}.max` as const,
                               { valueAsNumber: true },
                             )}
-                            k
-                            gfge
-                            odkfd
-                            k
                           />
                         )}
                       </div>
