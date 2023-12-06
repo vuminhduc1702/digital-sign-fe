@@ -1,4 +1,8 @@
-import Select, { type Props, type GroupBase, SelectInstance } from 'react-select'
+import Select, {
+  type Props,
+  type GroupBase,
+  type SelectInstance,
+} from 'react-select'
 import { useTranslation } from 'react-i18next'
 import { Controller, type FieldValues } from 'react-hook-form'
 
@@ -25,6 +29,7 @@ type SelectProps<
   refSelect?: React.MutableRefObject<SelectInstance<SelectOption> | null>
   icon?: React.ReactElement
   isWrappedArray?: boolean
+  isErrorSelect?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -50,10 +55,10 @@ export function SelectDropdown<
   handleChangeSelect,
   isWrappedArray,
   refSelect,
+  isErrorSelect,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
-
   return (
     <FieldWrapper
       classlabel={classlabel}
@@ -100,12 +105,14 @@ export function SelectDropdown<
                     handleChangeSelect?.()
                   }
                 }}
-                // styles={{
-                //   control: (baseStyles, state) => ({
-                //     ...baseStyles,
-                //     borderColor: state.isFocused ? 'grey' : 'red',
-                //   }),
-                // }}
+                styles={{
+                  control: (baseStyles, state) => {
+                    return {
+                      ...baseStyles,
+                      borderColor: isErrorSelect ? 'red' : '',
+                    }
+                  },
+                }}
                 {...props}
               />
             )

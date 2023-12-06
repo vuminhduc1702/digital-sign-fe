@@ -247,10 +247,10 @@ export function UpdateRole({
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
-              className="rounded-md text-secondary-700"
+              className="text-secondary-700 rounded-md"
               variant="trans"
               size="square"
               startIcon={
@@ -289,6 +289,10 @@ export function UpdateRole({
                 {type === 'Generic' && (
                   <div className="space-y-1">
                     <SelectDropdown
+                      isErrorSelect={
+                        !!formState?.errors?.policies?.[index]?.resources
+                          ?.message
+                      }
                       label={t('cloud:role_manage.add_policy.resources')}
                       name={`policies.${index}.resources`}
                       options={resourcesList}
@@ -310,6 +314,9 @@ export function UpdateRole({
                   <div>
                     <div className="space-y-1">
                       <SelectDropdown
+                        isErrorSelect={
+                          !!formState?.errors?.policies?.[index]?.root?.message
+                        }
                         label={t('cloud:org_manage.device_manage.title')}
                         name={`policies.${index}.devices`}
                         options={groupDataDeviceOptons}
@@ -331,6 +338,9 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
+                        isErrorSelect={
+                          !!formState?.errors?.policies?.[index]?.root?.message
+                        }
                         label={t('cloud:org_manage.event_manage.title')}
                         name={`policies.${index}.events`}
                         options={groupDataEventOptons}
@@ -352,6 +362,9 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
+                        isErrorSelect={
+                          !!formState?.errors?.policies?.[index]?.root?.message
+                        }
                         label={t('cloud:org_manage.user_manage.title')}
                         name={`policies.${index}.users`}
                         options={groupDataUserOptons}
@@ -373,6 +386,9 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
+                        isErrorSelect={
+                          !!formState?.errors?.policies?.[index]?.root?.message
+                        }
                         label={t('cloud:org_manage.org_manage.title')}
                         name={`policies.${index}.orgs`}
                         options={groupDataOrgOptons}
@@ -396,6 +412,9 @@ export function UpdateRole({
                 )}
                 <div className="space-y-1">
                   <SelectDropdown
+                    isErrorSelect={
+                      !!formState?.errors?.policies?.[index]?.actions?.message
+                    }
                     label={t('cloud:role_manage.add_policy.actions')}
                     name={`policies.${index}.actions`}
                     options={actionsList}
