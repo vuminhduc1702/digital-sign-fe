@@ -26,7 +26,7 @@ type SelectProps<
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
-  refSelect?: React.MutableRefObject<SelectInstance<SelectOption> | null>
+  refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
   isErrorSelect?: boolean
