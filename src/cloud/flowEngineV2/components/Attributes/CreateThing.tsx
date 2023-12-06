@@ -53,7 +53,7 @@ export function CreateThing({
 }) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { register, formState, handleSubmit, control, watch, setValue } =
     useForm<CreateEntityThingDTO['data']>({

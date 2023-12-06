@@ -19,7 +19,7 @@ export function InfoCustomer() {
   const [offset, setOffset] = useState(0)
   const [type, setType] = useState('')
   const [userById, setUserById] = useState<Customer | null>()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const params = useParams()
 
@@ -50,7 +50,7 @@ export function InfoCustomer() {
 
   return (
     <div className="relative h-full p-4">
-      <div className='flex mb-5'>
+      <div className="flex mb-5">
         <div className="">
           <Button
             className="rounded-md pr-5"
@@ -64,13 +64,13 @@ export function InfoCustomer() {
             <span>{t('btn:back')}</span>
           </Button>
         </div>
-        <div className='flex items-center justify-center ml-5'>
+        <div className="flex items-center justify-center ml-5">
           <p className="text-2xl font-semibold">
             {t('billing:subcription.popup.customer_info')}
           </p>
         </div>
       </div>
-      <div className='bg-gray-50 rounded-md p-5 shadow-lg mb-2'>
+      <div className="bg-gray-50 rounded-md p-5 shadow-lg mb-2">
         <div className="flex items-center gap-2">
           <div className="flex gap-3">
             <p className="text-xl font-semibold">

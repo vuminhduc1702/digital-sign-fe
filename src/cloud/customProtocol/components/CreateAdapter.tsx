@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as z from 'zod'
 import i18n from '~/i18n'
+import { type SelectInstance } from 'react-select'
 
 import { Button } from '~/components/Button'
 import {
@@ -11,6 +12,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import {
   type CreateAdapterDTO,
@@ -145,7 +147,7 @@ export const serviceThingSchema = z.object({
 export function CreateAdapter() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [isShow, setIsShow] = useState(true)
 
@@ -155,7 +157,7 @@ export function CreateAdapter() {
     isSuccess: isSuccessAdapter,
   } = useCreateAdapter()
 
-  const { data: thingData, isLoading: AdapterIsLoading} = useGetEntityThings({
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
     projectId,
     type: 'thing',
   })
@@ -192,13 +194,14 @@ export function CreateAdapter() {
     control,
   })
 
-  const { data: serviceData } = useGetServiceThings({
-    thingId: getValues('thing_id'),
-    config: {
-      enabled: !!getValues('thing_id'),
-      suspense: false,
-    },
-  })
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: getValues('thing_id'),
+      config: {
+        enabled: !!getValues('thing_id'),
+        suspense: false,
+      },
+    })
 
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
@@ -216,6 +219,10 @@ export function CreateAdapter() {
       length_byte: 1,
     })
   }
+
+  const selectDropdownService = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   return (
     <FormDrawer
@@ -347,7 +354,12 @@ export function CreateAdapter() {
                 loadingMessage={() => t('loading:entity_thing')}
                 isLoading={AdapterIsLoading}
                 placeholder={t('cloud:custom_protocol.thing.choose')}
-                // defaultValue={defaultThingValues}
+                handleClearSelectDropdown={() =>
+                  selectDropdownService.current?.clearValue()
+                }
+                handleChangeSelect={() =>
+                  selectDropdownService.current?.clearValue()
+                }
               />
               <p className="text-body-sm text-primary-400">
                 {formState?.errors?.thing_id?.message}
@@ -355,30 +367,17 @@ export function CreateAdapter() {
             </div>
             <div className="w-[calc(100%-2.5rem)] space-y-1">
               <SelectDropdown
+                refSelect={selectDropdownService}
                 label={t('cloud:custom_protocol.service.title')}
                 name="handle_service"
                 control={control}
-                options={
-                  serviceData?.data != null
-                    ? serviceSelectData
-                    : serviceData?.data == null
-                    ? [
-                        {
-                          label: t('table:no_service'),
-                          value: '',
-                        },
-                      ]
-                    : [
-                        {
-                          label: t('loading:service_thing'),
-                          value: '',
-                        },
-                      ]
-                }
+                options={serviceSelectData}
                 isOptionDisabled={option =>
                   option.label === t('loading:service_thing') ||
                   option.label === t('table:no_service')
                 }
+                isLoading={isLoadingService}
+                loadingMessage={() => t('loading:service_thing')}
                 noOptionsMessage={() => t('table:no_service')}
                 placeholder={t('cloud:custom_protocol.service.choose')}
               />

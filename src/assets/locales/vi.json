@@ -473,7 +473,7 @@
         "choose_inputValue": "Vui lòng nhập giá trị biến"
       },
       "thing": {
-        "title": "Thing",
+        "title": "Danh sách thing",
         "create": "Tạo thing",
         "success_create": "Tạo thing thành công",
         "success_update": "Sửa thing thành công",
@@ -573,6 +573,7 @@
       },
       "config_chart": {
         "title": "Tạo biểu đồ",
+        "update": "Sửa biểu đồ",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
@@ -806,6 +807,8 @@
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
     "no": "STT",
+    "last_updated": "Cập nhật",
+    "starred": "Yêu thích",
     "excel": "Excel",
     "pdf": "PDF",
     "print": "In",

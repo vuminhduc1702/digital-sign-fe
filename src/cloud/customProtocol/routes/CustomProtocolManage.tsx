@@ -21,7 +21,7 @@ export function CustomProtocolManage() {
   )
   const [offset, setOffset] = useState(0)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: adapterData,
     isPreviousData,

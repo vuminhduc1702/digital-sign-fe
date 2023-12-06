@@ -42,7 +42,7 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
   const { t } = useTranslation()
 
   const { mutate, isLoading, isSuccess } = useCreateDashboard()
-  const { register, formState, handleSubmit } = useForm<
+  const { register, formState, handleSubmit, reset } = useForm<
     CreateDashboardDTO['data']
   >({
     resolver: dashboardSchema && zodResolver(dashboardSchema),
@@ -50,6 +50,7 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
   return (
     <FormDrawer
       isDone={isSuccess}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"

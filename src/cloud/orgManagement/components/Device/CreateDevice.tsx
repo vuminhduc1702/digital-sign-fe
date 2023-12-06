@@ -4,19 +4,24 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { FormDrawer, InputField, SelectDropdown } from '~/components/Form'
+import {
+  FormDrawer,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
 import { flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
-import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useRef, useState } from 'react'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '~/layout/MainLayout/api'
+import { type SelectInstance } from 'react-select'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -30,7 +35,7 @@ export const deviceSchema = z.object({
 export function CreateDevice() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
@@ -65,11 +70,17 @@ export function CreateDevice() {
     value: groups?.id,
   }))
 
-  const { data: templateData, isLoading: templateIsLoading } = useGetTemplates({ projectId })
+  const { data: templateData, isLoading: templateIsLoading } = useGetTemplates({
+    projectId,
+  })
   const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,
     value: template?.id,
   }))
+
+  const selectDropdownGroupId = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   return (
     <FormDrawer
@@ -133,6 +144,9 @@ export function CreateDevice() {
               loadingMessage={() => t('loading:org')}
               isLoading={orgIsLoading}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              handleClearSelectDropdown={() => {
+                selectDropdownGroupId.current?.clearValue()
+              }}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.org_id?.message}
@@ -140,6 +154,7 @@ export function CreateDevice() {
           </div>
           <div className="space-y-1">
             <SelectDropdown
+              refSelect={selectDropdownGroupId}
               label={t('cloud:org_manage.device_manage.add_device.group')}
               name="group_id"
               control={control}

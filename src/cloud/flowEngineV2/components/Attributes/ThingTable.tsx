@@ -2,26 +2,26 @@ import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
-// import { UpdateDevice } from './UpdateDevice'
 import { useDeleteThing } from '../../api/thingAPI'
+import { Link } from '~/components/Link'
+import { UpdateThing } from './UpdateThing'
+import { PATHS } from '~/routes/PATHS'
+import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
+import { type EntityThing } from '~/cloud/customProtocol'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { UpdateThing } from './UpdateThing'
-import { PATHS } from '~/routes/PATHS'
-import storage from '~/utils/storage'
-import { type EntityThing } from '~/cloud/customProtocol'
 
 function ThingTableContextMenu({
   id,
@@ -33,7 +33,6 @@ function ThingTableContextMenu({
   description: string
 }) {
   const { t } = useTranslation()
-  const navigate = useNavigate()
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -51,7 +50,7 @@ function ThingTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -70,7 +69,7 @@ function ThingTableContextMenu({
               ).replace('{{THINGNAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -119,7 +118,7 @@ type ThingTableProps = {
 
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
@@ -140,14 +139,11 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
           const nameThing = info.row.original.name
           const thingId = info.row.original.id
           return (
-            <NavLink
-              to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}
-              className="flex cursor-pointer gap-2"
-            >
+            <Link to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}>
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameThing}
               </p>
-            </NavLink>
+            </Link>
           )
         },
         footer: info => info.column.id,

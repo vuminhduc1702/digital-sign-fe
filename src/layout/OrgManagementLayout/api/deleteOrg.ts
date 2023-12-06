@@ -27,7 +27,7 @@ export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
 
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: projectByIdData } = useProjectById({
     projectId,
     config: { enabled: !!projectId },

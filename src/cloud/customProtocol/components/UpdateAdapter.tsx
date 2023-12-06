@@ -1,10 +1,15 @@
 import { useTranslation } from 'react-i18next'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { InputField, SelectDropdown, SelectField } from '~/components/Form'
+import {
+  InputField,
+  SelectDropdown,
+  SelectField,
+  type SelectOption,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import {
   type UpdateAdapterDTO,
@@ -22,6 +27,7 @@ import { CreateService } from './CreateService'
 
 import { type AdapterTableContextMenuProps } from './AdapterTable'
 import { type FieldsType } from '../types'
+import { type SelectInstance } from 'react-select'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -58,7 +64,7 @@ export function UpdateAdapter({
     }
   }, [isSuccess, close])
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const [isShow, setIsShow] = useState(true)
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
@@ -102,10 +108,11 @@ export function UpdateAdapter({
     control,
   })
 
-  const { data: serviceData } = useGetServiceThings({
-    thingId: getValues('thing_id') || thing_id,
-    config: { enabled: !!getValues('thing_id'), suspense: false },
-  })
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: getValues('thing_id') || thing_id,
+      config: { enabled: !!getValues('thing_id'), suspense: false },
+    })
   const serviceSelectData = serviceData?.data?.map(service => ({
     value: service.name,
     label: service.name,
@@ -125,6 +132,10 @@ export function UpdateAdapter({
       []
     return result
   }
+
+  const selectDropdownService = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   return (
     <Drawer
@@ -264,42 +275,35 @@ export function UpdateAdapter({
                   defaultValue={thingSelectData.find(
                     thing => thing.value === getValues('thing_id'),
                   )}
+                  handleClearSelectDropdown={() =>
+                    selectDropdownService.current?.clearValue()
+                  }
+                  handleChangeSelect={() =>
+                    selectDropdownService.current?.clearValue()
+                  }
                 />
                 <p className="text-body-sm text-primary-400">
                   {formState?.errors?.thing_id?.message}
                 </p>
               </div>
             ) : null}
-            {serviceSelectData != null ? (
+            {!isLoadingService ? (
               <div className="w-[calc(100%-2.5rem)] space-y-1">
                 <SelectDropdown
+                  refSelect={selectDropdownService}
                   label={t('cloud:custom_protocol.service.title')}
                   name="handle_service"
                   control={control}
-                  options={
-                    serviceData?.data != null
-                      ? serviceSelectData
-                      : serviceData?.data == null
-                      ? [
-                          {
-                            label: t('table:no_service'),
-                            value: '',
-                          },
-                        ]
-                      : [
-                          {
-                            label: t('loading:service_thing'),
-                            value: '',
-                          },
-                        ]
-                  }
+                  options={serviceSelectData}
                   isOptionDisabled={option =>
                     option.label === t('loading:service_thing') ||
                     option.label === t('table:no_service')
                   }
+                  isLoading={isLoadingService}
+                  loadingMessage={() => t('loading:service_thing')}
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
-                  defaultValue={serviceSelectData.find(
+                  defaultValue={serviceSelectData?.find(
                     service => service.value === getValues('handle_service'),
                   )}
                 />

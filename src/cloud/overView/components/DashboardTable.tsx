@@ -1,18 +1,17 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NavLink } from 'react-router-dom'
 
 import { BaseTable } from '~/components/Table'
-
-import { type BaseTablePagination } from '~/types'
-
-import { type DashboardRes } from '~/cloud/dashboard/api'
+import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
-import { StarFilledIcon } from '@radix-ui/react-icons'
 import { cn, getVNDateFormat } from '~/utils/misc'
 
+import { type BaseTablePagination } from '~/types'
+import { type DashboardRes } from '~/cloud/dashboard/api'
+
+import { StarFilledIcon } from '@radix-ui/react-icons'
 
 type DashboardTableProps = {
   data: DashboardRes[]
@@ -20,47 +19,46 @@ type DashboardTableProps = {
 
 export function DashboardTable({ data, ...props }: DashboardTableProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+
+  const projectId = storage.getProject()?.id
 
   const columnHelper = createColumnHelper<DashboardRes>()
   const columns = useMemo<ColumnDef<DashboardRes, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
+        header: () => <span>{t('table:starred')}</span>,
         cell: info => {
           const isStar = info.row.original.dashboard_setting.starred
-          return <StarFilledIcon className={cn(
-            'h-5 w-5 cursor-pointer',
-            {
-              'text-amber-300': isStar,
-              'text-white': !isStar
-            }
-          )} />
+          return (
+            <StarFilledIcon
+              className={cn('mx-auto h-5 w-5 cursor-pointer', {
+                'text-amber-300': isStar,
+                'text-white': !isStar,
+              })}
+            />
+          )
         },
-        header: () => <span></span>,
         footer: info => info.column.id,
       }),
       columnHelper.display({
         id: 'name',
-        header: () => <span></span>,
+        header: () => <span>{t('cloud:dashboard.table.name')}</span>,
         cell: info => {
           const { name, id } = info.row.original
           return (
-            <NavLink
-              to={`${PATHS.DASHBOARD}/${projectId}/${id}`}
-              className="flex cursor-pointer gap-2"
-            >
+            <Link to={`${PATHS.DASHBOARD}/${projectId}/${id}`}>
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {name}
               </p>
-            </NavLink>
+            </Link>
           )
         },
         footer: info => info.column.id,
       }),
       columnHelper.display({
         id: 'last_viewed',
-        header: () => <span></span>,
+        header: () => <span>{t('table:last_updated')}</span>,
         cell: info => {
           const lastViewed = info.row.original.dashboard_setting.last_viewed
           return (
@@ -76,8 +74,6 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
   return data != null && data?.length !== 0 ? (
     <BaseTable data={data} columns={columns} {...props} />
   ) : (
-    <div className="flex grow items-center justify-center">
-      {''}
-    </div>
+    <div className="flex grow items-center justify-center">{''}</div>
   )
 }

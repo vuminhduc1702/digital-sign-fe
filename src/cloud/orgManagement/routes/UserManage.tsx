@@ -20,7 +20,7 @@ export function UserManage() {
   const params = useParams()
 
   const orgId = params.orgId as string
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: UserData,
     isPreviousData,

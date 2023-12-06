@@ -35,7 +35,7 @@ export function TemplateSidebar() {
 
   const { templateId } = useParams()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
 

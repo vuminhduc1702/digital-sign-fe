@@ -44,7 +44,7 @@ function OrgManageSidebar() {
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { data: projectByIdData } = useProjectById({
     projectId,

@@ -8,8 +8,8 @@ import { Spinner } from '~/components/Spinner'
 
 export function FlowEngineV2Layout() {
   const { t } = useTranslation()
-  const { pathname } = useLocation()
-  const projectId = pathname.split('/').pop()
+  const location = useLocation()
+  const projectId = location.pathname.split('/').pop()
 
   return (
     <ContentLayout title={t('sidebar:cloud.flow_engine_v2')}>

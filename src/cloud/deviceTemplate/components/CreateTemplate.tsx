@@ -46,7 +46,7 @@ export default function CreateTemplate() {
     value: valueType.type,
   }))
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
     { projectId },
   )
@@ -70,7 +70,7 @@ export default function CreateTemplate() {
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
 
-  const { register, formState, watch, handleSubmit, control } = useForm<
+  const { register, formState, watch, handleSubmit, control, reset } = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -87,6 +87,7 @@ export default function CreateTemplate() {
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
@@ -212,6 +213,7 @@ export default function CreateTemplate() {
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
+                    step={0.01}
                     type={
                       numberInput.includes(watch(`attributes.${index}.value_t`))
                         ? 'number'

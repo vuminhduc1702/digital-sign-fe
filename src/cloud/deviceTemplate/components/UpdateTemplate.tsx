@@ -48,7 +48,7 @@ export function UpdateTemplate({
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
     projectId,
   })
@@ -60,7 +60,6 @@ export function UpdateTemplate({
     'id',
     'name',
   ])
-  console.log('RuleFlattenData: ', RuleFlattenData)
   const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
     label: ruchains?.name,
     value: JSON.parse(ruchains?.id)?.id,
@@ -72,7 +71,11 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
+<<<<<<< HEAD
   const { register, formState, watch, handleSubmit,  reset, control } = useForm<
+=======
+  const { register, formState, watch, handleSubmit, control, reset } = useForm<
+>>>>>>> ab19dd994afef40f87915509d98127a02343e392
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
@@ -105,6 +108,24 @@ export function UpdateTemplate({
       close()
     }
   }, [isSuccess, close])
+
+  useEffect(() => {
+    if (attrData != null) {
+      reset({
+        name: selectedUpdateTemplate?.name,
+        rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
+        attributes: attrData?.attributes.map((attribute: Attribute) => ({
+          attribute_key: attribute.attribute_key,
+          logged: attribute.logged,
+          value:
+            attribute.value != null && attribute.value !== ''
+              ? JSON.stringify(attribute.value)
+              : '',
+          value_t: attribute.value_type,
+        })),
+      })
+    }
+  }, [attrData, selectedUpdateTemplate])
 
   const showSpinner = useSpinDelay(attrLoading, {
     delay: 150,
@@ -219,6 +240,7 @@ export function UpdateTemplate({
                       `attributes.${index}.value_t` as const,
                     )}
                     options={valueTypeOptions}
+                    disabled
                   />
                   {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
                     <SelectField
@@ -229,6 +251,7 @@ export function UpdateTemplate({
                         `attributes.${index}.value` as const,
                       )}
                       options={booleanSelectOption}
+                      disabled
                     />
                   ) : (
                     <InputField
@@ -237,6 +260,7 @@ export function UpdateTemplate({
                       registration={register(
                         `attributes.${index}.value` as const,
                       )}
+                      step={0.01}
                       type={
                         numberInput.includes(
                           watch(`attributes.${index}.value_t`),
@@ -244,10 +268,11 @@ export function UpdateTemplate({
                           ? 'number'
                           : 'text'
                       }
+                      disabled
                     />
                   )}
                   <FieldWrapper
-                    className="mt-2 w-fit space-y-2"
+                    className="w-fit space-y-2"
                     label={t('cloud:org_manage.org_manage.add_attr.logged')}
                     error={formState?.errors?.attributes?.[index]?.logged}
                   >
@@ -260,27 +285,13 @@ export function UpdateTemplate({
                             {...field}
                             checked={value}
                             onCheckedChange={onChange}
+                            disabled
                           />
                         )
                       }}
                     />
                   </FieldWrapper>
                 </div>
-
-                <Button
-                  type="button"
-                  size="square"
-                  variant="trans"
-                  className="mt-10 self-start border-none"
-                  onClick={() => remove(index)}
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete device template"
-                      className="h-8 w-8"
-                    />
-                  }
-                />
               </section>
             ))}
           </>

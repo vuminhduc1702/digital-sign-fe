@@ -1,5 +1,5 @@
 import { ResponsivePie } from '@nivo/pie'
-import { useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
@@ -22,20 +22,62 @@ export const PieChart = ({ data, widgetInfo }: { data: TimeSeries, widgetInfo: z
     PieWidgetDataType[]
   >([])
 
+  function dataManipulation() {
+    const newData = Object.entries(data).reduce(
+      (
+        result: Array<{ id: string; label: string, value: number }>,
+        [key, items],
+      ) => {
+        items.forEach(item => {
+          dataTransformedFeedToChart.forEach((attr) => {
+            const itemId = attr.id
+            const value = parseFloat(item.value)
+            const existingIndex = result.filter(obj => obj.id === itemId)
+            if (existingIndex.length === 0) {
+              result.push({
+                id: key,
+                label: key,
+                value: parseFloat(item.value),
+                [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
+                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
+                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
+                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
+                '#e8c1a0'
+              })
+            } else {
+              result.map(obj => obj.id === itemId ? { ...obj, value: value} : obj)
+            }
+          })
+        })
+
+        const dataResult = result.filter((obj, index) => {
+          return index === result.findIndex(o => obj.id === o.id);
+        });
+        return dataResult
+      },
+      [],
+    )
+    setDataTransformedFeedToChart(newData)
+  }
+
   // const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
-      const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
-        id: key,
-        label: key,
-        value: parseFloat(value[0].value),
-        [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
-        '#e8c1a0'
-      }))
-      setDataTransformedFeedToChart(pieWidgetDataType)
+      if (dataTransformedFeedToChart.length > 0) {
+        dataManipulation()
+      } else if (dataTransformedFeedToChart.length === 0) {
+        const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
+          id: key,
+          label: key,
+          value: parseFloat(value[0].value),
+          [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
+          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
+          '#e8c1a0'
+        }))
+        setDataTransformedFeedToChart(pieWidgetDataType)
+      }
     }
   }, [data])
 

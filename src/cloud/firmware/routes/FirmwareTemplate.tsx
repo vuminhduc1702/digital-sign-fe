@@ -19,7 +19,7 @@ export function FirmwareTemplate() {
     [],
   )
   const [offset, setOffset] = useState(0)
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: firmwareData,
     isPreviousData,

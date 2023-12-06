@@ -38,7 +38,7 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
-const wsInterval = [
+export const wsInterval = [
   { label: 'Second', value: 1000 },
   { label: 'Minute', value: 60 * 1000 },
   { label: 'Hour', value: 60 * 60 * 1000 },
@@ -53,7 +53,7 @@ const widgetAggSchema = z.object({
   value: aggSchema,
 })
 type WidgetAgg = z.infer<typeof widgetAggSchema>
-const widgetAgg: WidgetAgg[] = [
+export const widgetAgg: WidgetAgg[] = [
   { label: 'None', value: 'NONE' },
   { label: 'Average', value: 'AVG' },
   { label: 'Min', value: 'MIN' },
@@ -204,7 +204,7 @@ type CreateWidgetProps = {
   setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
 }
 
-const widgetDataTypeOptions = [
+export const widgetDataTypeOptions = [
   { label: 'Realtime', value: 'REALTIME' },
   { label: 'History', value: 'HISTORY' },
 ]
@@ -221,7 +221,7 @@ export function CreateWidget({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const {
     register,
@@ -519,9 +519,7 @@ export function CreateWidget({
                         isLoading={orgIsLoading}
                         handleClearSelectDropdown={() => {
                           resetField('device')
-                          resetField('attributeConfig.0.attribute_key', {
-                            defaultValue: '',
-                          })
+                          resetField('attributeConfig', [{}])
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -556,9 +554,7 @@ export function CreateWidget({
                           }
                         }}
                         handleClearSelectDropdown={() => {
-                          resetField('attributeConfig.0.attribute_key', {
-                            defaultValue: '',
-                          })
+                          resetField('attributeConfig', [{}])
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -759,34 +755,6 @@ export function CreateWidget({
                           }))}
                         />
 
-                        {watch('widgetSetting.agg') === 'NONE' ? (
-                          <InputField
-                            type="number"
-                            label={t('ws:filter.data_point')}
-                            error={formState?.errors?.widgetSetting?.data_point}
-                            registration={register(
-                              `widgetSetting.data_point` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                          />
-                        ) : (
-                          <SelectField
-                            label={t('ws:filter.group_interval')}
-                            error={formState?.errors?.widgetSetting?.interval}
-                            registration={register(
-                              `widgetSetting.interval` as const,
-                              {
-                                valueAsNumber: true,
-                              },
-                            )}
-                            options={wsInterval.map(interval => ({
-                              label: interval.label,
-                              value: interval.value,
-                            }))}
-                          />
-                        )}
                         <SelectField
                           label={t('ws:filter.data_aggregation')}
                           error={formState?.errors?.widgetSetting?.agg}
@@ -824,6 +792,35 @@ export function CreateWidget({
                             )}
                           />
                         ) : null}
+
+                        {watch('widgetSetting.agg') === 'NONE' ? (
+                          <InputField
+                            type="number"
+                            label={t('ws:filter.data_point')}
+                            error={formState?.errors?.widgetSetting?.data_point}
+                            registration={register(
+                              `widgetSetting.data_point` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                          />
+                        ) : (
+                          <SelectField
+                            label={t('ws:filter.group_interval')}
+                            error={formState?.errors?.widgetSetting?.interval}
+                            registration={register(
+                              `widgetSetting.interval` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                            options={wsInterval.map(interval => ({
+                              label: interval.label,
+                              value: interval.value,
+                            }))}
+                          />
+                        )}
 
                         {watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <div className="space-y-3">

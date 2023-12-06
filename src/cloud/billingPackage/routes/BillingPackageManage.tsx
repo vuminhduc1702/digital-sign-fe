@@ -12,7 +12,7 @@ export function BillingPackageManage() {
 
   const { packageId } = useParams()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   return (
     <ContentLayout title={t('sidebar:payment.plgc')}>

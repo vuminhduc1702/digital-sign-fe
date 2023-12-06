@@ -46,7 +46,7 @@ export function UpdateFirmWare({
   isOpen,
 }: UpdateFirmWareProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const cancelButtonRef = useRef(null)
   const [templateValue, setTemplateValue] = useState<SelectOption>({
     label: template_name,

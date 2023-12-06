@@ -110,7 +110,10 @@ export function LineChart({
     if (widgetInfo?.config != null) {
       const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
         defaultDateConfig
-      const timePeriod = widgetInfo.config.chartsetting.time_period
+      const timePeriod =
+        widgetInfo.config.chartsetting.time_period ||
+        widgetInfo.config.chartsetting.end_date -
+          widgetInfo.config.chartsetting.start_date
       let dateVNFormat = ''
       if (timePeriod <= 60 * 1000) {
         dateVNFormat = getVNDateFormat({

@@ -28,7 +28,7 @@ export function ViewPopup({
   customerName,
 }: ViewPopupProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const cancelButtonRef = useRef(null)
   const [offset, setOffset] = useState(0)
 

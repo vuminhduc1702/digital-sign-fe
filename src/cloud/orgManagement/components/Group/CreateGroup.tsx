@@ -45,7 +45,7 @@ export function CreateGroup() {
     value: entityType.type,
   }))
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,

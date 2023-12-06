@@ -74,7 +74,7 @@ export function CreateControllerButton({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { register, formState, control, handleSubmit, watch } = useForm<
     ControllerBtnCreateDTO['data']

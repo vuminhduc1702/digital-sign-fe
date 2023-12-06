@@ -9,7 +9,7 @@ import storage from '~/utils/storage'
 export function FlowEngine() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { token } = storage.getToken()
 
   return (

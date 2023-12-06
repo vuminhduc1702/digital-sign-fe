@@ -118,7 +118,7 @@ function EventTableContextMenu({
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useDeleteEvent()
 
@@ -218,7 +218,7 @@ function EventTableContextMenu({
 
 export function EventTable({ data, ...props }: { data: EventType[] }) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useTriggerEvent()
 
   const columnHelper = createColumnHelper<EventType>()

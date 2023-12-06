@@ -42,7 +42,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const navigate = useNavigate()
 
   const [type, setType] = useState('Last viewed')

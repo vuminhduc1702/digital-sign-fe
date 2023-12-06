@@ -31,7 +31,7 @@ export function BillingTemplate() {
     from: undefined,
     to: undefined,
   })
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data, isPreviousData } = useGetBillings({
     projectId,
     searchFilter: searchFilter,

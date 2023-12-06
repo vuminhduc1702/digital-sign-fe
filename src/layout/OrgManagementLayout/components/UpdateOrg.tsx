@@ -50,7 +50,7 @@ export function UpdateOrg({
     formStateUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(

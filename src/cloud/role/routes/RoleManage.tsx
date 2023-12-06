@@ -15,7 +15,7 @@ export function RoleManage() {
 
   const { roleId } = useParams()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   return (
     <ContentLayout title={t('sidebar:cloud.role_manage')}>

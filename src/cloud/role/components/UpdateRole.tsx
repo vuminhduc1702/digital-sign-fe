@@ -24,7 +24,7 @@ type UpdateRoleProps = {
   name: string
   close: () => void
   isOpen: boolean
-  policy: Policies[]
+  policy: string
   role_type: string
   project_id: string
 }
@@ -42,9 +42,7 @@ export function UpdateRole({
 
   const [type] = useState(role_type ? 'Group' : 'Generic')
 
-  const dataStorage = storage.getProject()
-
-  let projectId = project_id ? project_id : dataStorage?.id
+  const projectId = project_id || storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useUpdateRole()
 
@@ -152,17 +150,22 @@ export function UpdateRole({
       }
     }) || []
 
-  const { register, formState, handleSubmit, control, getValues, watch } =
-    useForm<UpdateRoleDTO['data']>({
-      resolver: roleSchema && zodResolver(roleSchema),
-      defaultValues: {
-        name,
-        policies: policiesCurrent,
-        role_type: type,
-      },
-    })
-  console.log('formState.errors', formState.errors)
-  console.log('watchhhhhhhh', watch('policies'))
+  const {
+    register,
+    formState,
+    handleSubmit,
+    control,
+    getValues,
+    watch,
+    setValue,
+  } = useForm<UpdateRoleDTO['data']>({
+    resolver: roleSchema && zodResolver(roleSchema),
+    defaultValues: {
+      name,
+      policies: policiesCurrent,
+      role_type: type,
+    },
+  })
 
   const { fields, append, remove } = useFieldArray({
     name: 'policies',
@@ -316,6 +319,9 @@ export function UpdateRole({
                             item.value,
                           ),
                         )}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.devices`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -334,6 +340,9 @@ export function UpdateRole({
                             item.value,
                           ),
                         )}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.events`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -352,6 +361,9 @@ export function UpdateRole({
                             item.value,
                           ),
                         )}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.users`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}
@@ -370,6 +382,9 @@ export function UpdateRole({
                             item.value,
                           ),
                         )}
+                        handleClearSelectDropdown={() =>
+                          setValue(`policies.${index}.orgs`, [])
+                        }
                       />
                       <p className="text-body-sm text-primary-400">
                         {formState?.errors?.policies?.[index]?.root?.message}

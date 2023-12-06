@@ -24,9 +24,10 @@ import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { useGetRulechains } from '../api/getRulechains'
+import { useGetXMLdata } from '../api/getXMLdata'
 import LwM2MData from '~/assets/locales/Describe.json';
 import { type LwM2M }   from '../types'
+import { axios } from '~/lib/axios'
 import { CreateTableXMl } from './CreateTableXMl'
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -34,20 +35,17 @@ export const templateAttrSchema = z.object({
   attributes: z.array(attrSchema),
 })
 
-export default function CreateTemplate() {
+export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
   const { id: projectId } = storage.getProject()
-  
   const [items, setItems] = useState<LwM2M[]>([]);
-
   useEffect(() => {
     const LwM2MsData: LwM2M[] = LwM2MData.infos;
     setItems(LwM2MsData);
   }, []);
-
   const LwM2MSelectOptions = items?.map(item => ({
     label: `${item.module_name} #${item.file_id}_${item.version}`,
-    value: `${item.module_name}`
+    value: `${item.file_id}`
   }))
 
   const { mutate: mutateUpdateTemplate } = useUpdateTemplate({ isOnCreateTemplate: true })
@@ -72,8 +70,48 @@ export default function CreateTemplate() {
     name: 'attributes',
     control,
   })
+//   const [fileidxml, setfileidxml] = useState<string | null>()
+  const [selectedOptions, setSelectedOptions] = useState<{ label: string; value: string }[]>([])
+  const selectedOptionValues = selectedOptions.map(option => option.value)
+//   const [serverData, setServerData] = useState([])
+//   const [loading, setLoading] = useState(false)
+//   useEffect(() => {
+//     const fetchDataFromServer = async () => {
+//       try {
+//         setLoading(true)
+//         const selectedOptionValues = selectedOptions.map(option => option.value)
+//         console.log(selectedOptionValues)
+
+//         const promises = selectedOptionValues.map(async selectedValue => {
+//           const response = await axios.get(`http://api.innoway.vn/file/publishjson/${selectedValue}.json`)
+//           console.log(response)
+//           return response.data
+//         })
+//         const responseData: any[] = await Promise.all(promises)
+//         setServerData(responseData)
+//       } catch (error) {
+//         console.error('Lỗi khi lấy dữ liệu từ server:', error)
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     if (selectedOptions.length > 0) {
+//       fetchDataFromServer()
+//     }
+//   }, [selectedOptions])
+    const {data} = useGetXMLdata({
+        fileId: selectedOptionValues.join(','),
+        config: { enabled: !!selectedOptionValues, suspense: false },
+    })
+    console.log(selectedOptionValues.join(','))
+    // const { acc: XMLFlattenData } = flattenData(
+    //     XMLdata?.data,
+    //     ['id', 'name'],
+    //   )
 
   return (
+    
     <FormDrawer
       isDone={isLoadingCreateTemplate}
       triggerButton={
@@ -141,42 +179,6 @@ export default function CreateTemplate() {
             error={formState.errors['name']}
             registration={register('name')}
           />
-          {/* <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={true}
-                  label={t('cloud:device_template.add_template.flow')}
-                  name="rule_chain_id"
-                  control={control}
-                  options={RuleSelectOptions}
-                  isOptionDisabled={option => option.label === t('loading:flow_id')}
-                  noOptionsMessage={() => t('table:no_in_flow_id')}
-                  loadingMessage={() => t('loading:flow_id')}
-                  isLoading={isLoadingRuchains}
-                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.rule_chain_id?.message}
-                </p>   
-          </div> */}
-           {/* <div className="space-y-1">
-                <SelectDropdown
-                  isClearable={true}
-                  label={t('cloud:device_template.add_template.flow')}
-                  name="rule_chain_id"
-                  control={control}
-                  options={RuleSelectOptions}
-                  isMulti
-                  closeMenuOnSelect={false}
-                  isOptionDisabled={option => option.label === t('loading:flow_id')}
-                  noOptionsMessage={() => t('table:no_in_flow_id')}
-                  loadingMessage={() => t('loading:flow_id')}
-                  isLoading={isLoadingRuchains}
-                  placeholder={t('cloud:device_template.add_template.choose_flow_id')}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.rule_chain_id?.message}
-                </p>   
-          </div> */}
           <div className="space-y-1">
                 <SelectDropdown
                   isClearable={true}
@@ -186,87 +188,31 @@ export default function CreateTemplate() {
                   options={LwM2MSelectOptions}
                   isMulti={true}
                   closeMenuOnSelect={false}
+                  onChange={(selectedOptions) => setSelectedOptions(selectedOptions)}
+                //   onChange={(fileidxml) => setfileidxml(fileidxml)}
                   isOptionDisabled={option => option.label === t('loading:flow_id')}
                   noOptionsMessage={() => t('table:no_in_flow_id')}
                   // loadingMessage={() => t('loading:flow_id')}
                   // isLoading={true}
                   // placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                 />
+                {/* {loading ? (
+                    <p>Đang tải...</p>
+                  ) : (
+                    serverData.length > 0 && (
+                      <div>
+                        <h3>Dữ liệu từ server:</h3>
+                          {serverData}
+                      </div>
+                    )
+                )} */}
                 {/* <p className="text-body-sm text-primary-400">
                   {formState?.errors?.rule_chain_id?.message}
                 </p>    */}
           </div>
-          <div className="space-y-1">
+          {/* <div className="space-y-1">
                 <CreateTableXMl/>
-          </div>
-          {/* {fields.map((field, index) => (
-            <section
-              key={field.id}
-              className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
-            >
-              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
-                <InputField
-                  label={t('cloud:org_manage.org_manage.add_attr.name')}
-                  error={formState?.errors?.attributes?.[index]?.attribute_key}
-                  registration={register(
-                    `attributes.${index}.attribute_key` as const,
-                  )}
-                />
-                <SelectField
-                  className="h-[36px] py-1"
-                  label={t('cloud:org_manage.org_manage.add_attr.value_type')}
-                  error={formState?.errors?.attributes?.[index]?.value_t}
-                  registration={register(
-                    `attributes.${index}.value_t` as const,
-                  )}
-                  options={valueTypeList.map(valueType => ({
-                    label: valueType.name,
-                    value: valueType.type,
-                  }))}
-                />
-                <InputField
-                  classnamefieldwrapper="mt-2"
-                  label={t('cloud:org_manage.org_manage.add_attr.value')}
-                  error={formState?.errors?.attributes?.[index]?.value}
-                  registration={register(`attributes.${index}.value` as const)}
-                />
-                <FieldWrapper
-                  className="mt-2 w-fit space-y-2"
-                  label={t('cloud:org_manage.org_manage.add_attr.logged')}
-                  error={formState?.errors?.attributes?.[index]?.logged}
-                >
-                  <Controller
-                    control={control}
-                    name={`attributes.${index}.logged`}
-                    render={({ field: { onChange, value, ...field } }) => {
-                      return (
-                        <Checkbox
-                          {...field}
-                          checked={value}
-                          onCheckedChange={onChange}
-                        />
-                      )
-                    }}
-                  />
-                </FieldWrapper>
-              </div>
-              <Button
-                type="button"
-                size="square"
-                variant="trans"
-                className="mt-10 self-start border-none"
-                onClick={() => remove(index)}
-                startIcon={
-                  <img
-                    src={btnDeleteIcon}
-                    alt="Delete device template"
-                    className="h-8 w-8"
-                  />
-                }
-              />
-            </section>
-          ))} */}
-          
+          </div> */}
         </>
       </form>
     </FormDrawer>

@@ -10,7 +10,14 @@ import {
   getExpandedRowModel,
   type VisibilityState,
 } from '@tanstack/react-table'
-import { Fragment, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import {
+  Fragment,
+  createElement,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -26,7 +33,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../Tooltip'
-import { nan, string } from 'zod'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -272,35 +278,16 @@ export function BaseTable<T extends Record<string, any>>({
                             </Fragment>
                           )
                         } else {
-                          const cellStr = cell.getContext().getValue()
-                          let cellStrTrigger
-                          if (typeof cellStr == 'string') {
-                            cellStrTrigger =
-                              cellStr?.length > 10
-                                ? cellStr.slice(0, 10) + '...'
-                                : cellStr
-                          }
+                          // const cellStr = cell.getContext().getValue()
+                          // let cellStrTrigger
+                          // if (typeof cellStr == 'string') {
+                          //   cellStrTrigger =
+                          //     cellStr?.length > 10
+                          //       ? cellStr.slice(0, 10) + '...'
+                          //       : cellStr
+                          // }
 
-                          return typeof cellStr == 'string' &&
-                            isNaN(parseInt(cellStr)) ? (
-                            <td className="h-9" key={cell.id}>
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger>
-                                    {cellStrTrigger}
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>
-                                      {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext(),
-                                      )}
-                                    </p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                            </td>
-                          ) : (
+                          return (
                             <td className="h-9" key={cell.id}>
                               {flexRender(
                                 cell.column.columnDef.cell,
@@ -308,6 +295,35 @@ export function BaseTable<T extends Record<string, any>>({
                               )}
                             </td>
                           )
+                          // return typeof cellStr == 'string' &&
+                          //   cellStr != 'true' &&
+                          //   cellStr != 'false' &&
+                          //   isNaN(parseInt(cellStr)) ? (
+                          //   <td className="h-9 cursor-default" key={cell.id}>
+                          //     <TooltipProvider>
+                          //       <Tooltip>
+                          //         <TooltipTrigger>
+                          //           {cellStrTrigger}
+                          //         </TooltipTrigger>
+                          //         <TooltipContent>
+                          //           <p>
+                          //             {flexRender(
+                          //               cell.column.columnDef.cell,
+                          //               cell.getContext(),
+                          //             )}
+                          //           </p>
+                          //         </TooltipContent>
+                          //       </Tooltip>
+                          //     </TooltipProvider>
+                          //   </td>
+                          // ) : (
+                          //   <td className="h-9" key={cell.id}>
+                          //     {flexRender(
+                          //       cell.column.columnDef.cell,
+                          //       cell.getContext(),
+                          //     )}
+                          //   </td>
+                          // )
                         }
                       })}
                     </tr>

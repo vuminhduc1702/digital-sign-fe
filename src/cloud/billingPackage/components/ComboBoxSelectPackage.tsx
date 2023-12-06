@@ -17,7 +17,7 @@ export function ComboBoxSelectPackage({
 }) {
   const [query, setQuery] = useState('')
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data } = useGetPlans({ projectId })
 
   const { acc: planFlattenData, extractedPropertyKeys } = flattenData(

@@ -51,7 +51,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const [showChildren, setShowChildren] = useState(false)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const navigate = useNavigate()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
   const handleCopyId = useCopyId()
   const { orgId } = useParams()

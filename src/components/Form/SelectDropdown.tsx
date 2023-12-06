@@ -1,10 +1,6 @@
-import Select, {
-  type Props,
-  type GroupBase,
-  ClearIndicatorProps,
-} from 'react-select'
+import Select, { type Props, type GroupBase } from 'react-select'
 import { useTranslation } from 'react-i18next'
-import { Control, Controller, type FieldValues } from 'react-hook-form'
+import { Controller, type FieldValues } from 'react-hook-form'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from './FieldWrapper'
 import { cn } from '~/utils/misc'
@@ -26,6 +22,7 @@ type SelectProps<
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
+  refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
@@ -52,6 +49,7 @@ export function SelectDropdown<
   handleClearSelectDropdown,
   handleChangeSelect,
   isWrappedArray,
+  refSelect,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -74,16 +72,11 @@ export function SelectDropdown<
                 {...field}
                 isMulti={isMulti}
                 className="w-full"
+                ref={refSelect}
                 isSearchable
                 isClearable
                 placeholder={placeholder ?? t('placeholder:select')}
                 onChange={(e, { action }) => {
-                  if (action === 'clear' || action === 'remove-value') {
-                    handleClearSelectDropdown?.()
-                  }
-                  if (action === 'select-option') {
-                    handleChangeSelect?.()
-                  }
                   const option =
                     (e as unknown as SelectOption[])?.length > 0
                       ? (e as unknown as SelectOption[]).map(item => {
@@ -95,6 +88,17 @@ export function SelectDropdown<
                   // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)
+                  if (action === 'clear') {
+                    handleClearSelectDropdown?.()
+                  }
+                  if (action === 'remove-value') {
+                    if ((e as unknown as SelectOption[])?.length === 0) {
+                      handleClearSelectDropdown?.()
+                    }
+                  }
+                  if (action === 'select-option') {
+                    handleChangeSelect?.()
+                  }
                 }}
                 // styles={{
                 //   control: (baseStyles, state) => ({

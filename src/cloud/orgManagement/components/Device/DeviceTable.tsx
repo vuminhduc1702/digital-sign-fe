@@ -63,7 +63,7 @@ function DeviceTableContextMenu({
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
@@ -350,7 +350,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           const additionalInfo = JSON.parse(
             info.row.original.additional_info as unknown as string,
           )
-
           return additionalInfo?.heartbeat_interval != null ? (
             <TooltipProvider>
               <Tooltip>
@@ -378,7 +377,29 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const created_by = info.getValue()
+          const createdByTrigger =
+            created_by?.length > 10
+              ? created_by.slice(0, 10) + '...'
+              : created_by
+          return (
+            <>
+              {created_by ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{createdByTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{created_by}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
 
         footer: info => info.column.id,
       }),
@@ -386,7 +407,27 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.group_id')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const group_id = info.getValue()
+          const groupIdTrigger =
+            group_id?.length > 10 ? group_id.slice(0, 10) + '...' : group_id
+          return (
+            <>
+              {group_id ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{groupIdTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{group_id}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
 
@@ -394,14 +435,54 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.token')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const token = info.getValue()
+          const tokenTrigger =
+            token?.length > 10 ? token.slice(0, 10) + '...' : token
+          return (
+            <>
+              {token ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{tokenTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{token}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('org_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.org_id')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const org_id = info.getValue()
+          const orgIdTrigger =
+            org_id?.length > 10 ? org_id.slice(0, 10) + '...' : org_id
+          return (
+            <>
+              {org_id ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{orgIdTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{org_id}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
 
@@ -416,7 +497,29 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const template_id = info.getValue()
+          const templateIdTrigger =
+            template_id?.length > 10
+              ? template_id.slice(0, 10) + '...'
+              : template_id
+          return (
+            <>
+              {template_id ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{templateIdTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{template_id}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
 
@@ -435,14 +538,13 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       //   cell: info => info.row.original.org_name || t('table:no_in_org'),
       //   footer: info => info.column.id,
       // }),
-      columnHelper.display({
-        id: 'key',
+      columnHelper.accessor('key', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.key')}</span>
         ),
         cell: info => {
-          const { key } = info.row.original
-          const keyTrigger = key?.slice(0, 15) + '...'
+          const key = info.getValue()
+          const keyTrigger = key?.length > 10 ? key.slice(0, 10) + '...' : key
           return (
             <>
               {key ? (
@@ -460,6 +562,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             </>
           )
         },
+
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_time', {

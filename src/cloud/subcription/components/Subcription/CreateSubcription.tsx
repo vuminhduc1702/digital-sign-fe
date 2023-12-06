@@ -37,7 +37,7 @@ export const entitySubcriptionSchema = z.object({
 export function CreateSubcription() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const [userValue, setUserValue] = useState<SelectOptionString | null>()
   const [userId, setUserId] = useState('')
   const [planValue, setPlanValue] = useState<string | null>()
@@ -302,13 +302,13 @@ export function CreateSubcription() {
                 disabled
               />
               {PlanDataById?.data?.estimate !== 'fix' && (
-                  <InputField
-                    label={t('billing:subcription.popup.quantity')}
-                    error={formState.errors['register']}
-                    onChange={e => handleOnChange(e.target.value)}
-                    registration={register('register')}
-                  />
-                )}
+                <InputField
+                  label={t('billing:subcription.popup.quantity')}
+                  error={formState.errors['register']}
+                  onChange={e => handleOnChange(e.target.value)}
+                  registration={register('register')}
+                />
+              )}
               <InputField
                 label={t('billing:subcription.popup.payment_type')}
                 value={

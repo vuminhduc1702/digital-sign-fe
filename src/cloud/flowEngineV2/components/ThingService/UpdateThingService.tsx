@@ -117,7 +117,7 @@ export function UpdateThingService({
   const [resultConsoleHeight, setResultConsoleHeight] =
     useState(defaultHeightConsole)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useUpdateService()
   const {
@@ -456,6 +456,7 @@ export function UpdateThingService({
                                         registration={register(
                                           `input.${index}.value` as const,
                                         )}
+                                        step={0.01}
                                         type={
                                           numberInput.includes(
                                             fields[index].type as string,

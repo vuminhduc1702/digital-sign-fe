@@ -12,7 +12,7 @@ export function DashboardManage() {
 
   const ref = useRef(null)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Dashboard[]>(
     [],
@@ -32,10 +32,7 @@ export function DashboardManage() {
             />
           </div>
         </div>
-        <DashboardTable
-          data={filteredComboboxData}
-          projectId={projectId}
-        />
+        <DashboardTable data={filteredComboboxData} projectId={projectId} />
       </div>
     </div>
   )

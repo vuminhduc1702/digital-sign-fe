@@ -37,7 +37,7 @@ export const entityFirmWareSchema = z.object({
 export function CreateFirmWare() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const [templateValue, setTemplateValue] = useState<SelectOption | null>()
 
   const { data } = useGetTemplates({ projectId })

@@ -11,9 +11,10 @@ export function TemplateInfo() {
 
   const params = useParams()
   const templateId = params.templateId as string
+console.log(templateId, 'templateId zzzzzzz');
 
   const { data } = useTemplateById({ templateId })
-  console.log(data)
+  // console.log(data)
 
   return (
     <>

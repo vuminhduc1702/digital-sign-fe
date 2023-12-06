@@ -44,7 +44,7 @@ export function UpdateGroup({
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,

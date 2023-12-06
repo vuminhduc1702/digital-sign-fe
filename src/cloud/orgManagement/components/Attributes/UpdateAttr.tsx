@@ -52,7 +52,7 @@ export function UpdateAttr({
     defaultValues: {
       attribute_key: attributeKey,
       logged: String(logged) === 'true',
-      value: value.toString(),
+      value: value !== 'null' && value !== '' ? JSON.stringify(value) : '',
       value_t: value_type,
     },
   })
@@ -145,13 +145,14 @@ export function UpdateAttr({
                   label={t('cloud:org_manage.org_manage.add_attr.value')}
                   error={formState?.errors?.value}
                   registration={register(`value` as const)}
+                  step={0.01}
                   type={
                     numberInput.includes(watch(`value_t`)) ? 'number' : 'text'
                   }
                 />
               )}
               <FieldWrapper
-                className="mt-2 w-fit space-y-2"
+                className="w-fit space-y-2"
                 label={t('cloud:org_manage.org_manage.add_attr.logged')}
                 error={formState.errors['logged']}
               >
