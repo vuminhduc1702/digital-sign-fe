@@ -8,7 +8,7 @@ import {
   FormDrawer,
   InputField,
   SelectDropdown,
-  SelectOption,
+  type SelectOption,
 } from '~/components/Form'
 import { flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
@@ -16,13 +16,12 @@ import storage from '~/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
 
 import { useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '~/layout/MainLayout/api'
-import { SelectInstance } from 'react-select'
+import { type SelectInstance } from 'react-select'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -40,15 +39,9 @@ export function CreateDevice() {
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
-  const {
-    register,
-    formState,
-    control,
-    handleSubmit,
-    watch,
-    reset,
-    resetField,
-  } = useForm<CreateDeviceDTO['data']>({
+  const { register, formState, control, handleSubmit, watch, reset } = useForm<
+    CreateDeviceDTO['data']
+  >({
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
 
@@ -152,7 +145,6 @@ export function CreateDevice() {
               isLoading={orgIsLoading}
               placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
               handleClearSelectDropdown={() => {
-                // resetField('group_id')
                 selectDropdownGroupId.current?.clearValue()
               }}
             />

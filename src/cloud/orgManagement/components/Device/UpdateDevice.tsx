@@ -40,6 +40,8 @@ type UpdateDeviceProps = {
   additional_info: string
 }
 
+const updateDeviceSchema = deviceSchema.required({ group_id: true })
+
 export const heartBeatSchema = z.object({
   interval: z.number().min(1, { message: 'Tối thiểu là 1 giây' }),
   timeout: z.number().min(1, { message: 'Tối thiểu là 1 giây' }),
@@ -75,30 +77,21 @@ export function UpdateDevice({
     : false
   const [offset, setOffset] = useState(0)
 
-  const {
-    register,
-    formState,
-    control,
-    setValue,
-    handleSubmit,
-    watch,
-    resetField,
-    getValues,
-  } = useForm<UpdateDeviceDTO['data']>({
-    resolver: deviceSchema && zodResolver(deviceSchema),
-    defaultValues: {
-      name,
-      org_id: org_id,
-      group_id: group_id,
-      template_id: template_id,
-      key: keyDevice,
-    },
-  })
+  const { register, formState, control, setValue, handleSubmit, watch } =
+    useForm<UpdateDeviceDTO['data']>({
+      resolver: updateDeviceSchema && zodResolver(updateDeviceSchema),
+      defaultValues: {
+        name,
+        org_id: org_id,
+        group_id: group_id,
+        template_id: template_id,
+        key: keyDevice,
+      },
+    })
   const {
     register: registerHeartBeat,
     formState: formStateHeartBeat,
     handleSubmit: handleSubmitHeartBeat,
-    getValues: getValuesHeartBeat,
   } = useForm<HeartBeatDTO['data']>({
     resolver: heartBeatSchema && zodResolver(heartBeatSchema),
   })
@@ -227,15 +220,18 @@ export function UpdateDevice({
                 defaultValue={orgSelectOptions?.find(
                   org => org.value === org_id,
                 )}
-                handleClearSelectDropdown={() => {
-                  // resetField('group_id')
+                handleClearSelectDropdown={() =>
                   selectDropdownGroupId.current?.clearValue()
-                }}
+                }
+                handleChangeSelect={() =>
+                  selectDropdownGroupId.current?.clearValue()
+                }
               />
             </div>
             <div className="space-y-1">
               <SelectDropdown
                 refSelect={selectDropdownGroupId}
+                isClearable={false}
                 label={t('cloud:org_manage.device_manage.add_device.group')}
                 name="group_id"
                 control={control}
@@ -251,9 +247,13 @@ export function UpdateDevice({
                   group => group.value === group_id,
                 )}
               />
+              <p className="text-body-sm text-primary-400">
+                {formState?.errors?.group_id?.message}
+              </p>
             </div>
             <div>
               <SelectDropdown
+                isClearable={false}
                 label={t('cloud:firmware.add_firmware.template')}
                 name="template_id"
                 control={control}
@@ -323,7 +323,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
+              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -332,7 +332,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="bg-secondary-700 rounded-sm p-1 text-white"
+              className="rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
