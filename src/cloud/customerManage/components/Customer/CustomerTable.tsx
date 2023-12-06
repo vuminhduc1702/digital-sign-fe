@@ -20,7 +20,7 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
   const navigate = useNavigate()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   return (
     <>

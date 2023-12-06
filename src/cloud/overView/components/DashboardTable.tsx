@@ -20,7 +20,7 @@ type DashboardTableProps = {
 export function DashboardTable({ data, ...props }: DashboardTableProps) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const columnHelper = createColumnHelper<DashboardRes>()
   const columns = useMemo<ColumnDef<DashboardRes, any>[]>(

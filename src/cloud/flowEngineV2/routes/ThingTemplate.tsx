@@ -20,7 +20,7 @@ export function ThingTemplate() {
     EntityThing[]
   >([])
   const [offset, setOffset] = useState(0)
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: thingData,
     isPreviousData,

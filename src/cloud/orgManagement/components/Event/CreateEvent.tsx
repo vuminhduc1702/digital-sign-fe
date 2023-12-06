@@ -184,18 +184,16 @@ const eventActionSchema = z
         .object({
           action_type: z.enum(['eventactive', 'delay'] as const),
           message: z.string().optional(),
-          subject: z
-            .string()
-            .min(1, {
-              message: i18n
-                .t('placeholder:input_text_value')
-                .replace(
-                  '{{VALUE}}',
-                  i18n.t(
-                    'cloud:org_manage.event_manage.add_event.action.subject',
-                  ),
+          subject: z.string().min(1, {
+            message: i18n
+              .t('placeholder:input_text_value')
+              .replace(
+                '{{VALUE}}',
+                i18n.t(
+                  'cloud:org_manage.event_manage.add_event.action.subject',
                 ),
-            }),
+              ),
+          }),
         })
         .or(
           z.object({
@@ -206,30 +204,26 @@ const eventActionSchema = z
               'event',
               'email',
             ] as const),
-            message: z
-              .string()
-              .min(1, {
-                message: i18n
-                  .t('placeholder:input_text_value')
-                  .replace(
-                    '{{VALUE}}',
-                    i18n.t(
-                      'cloud:org_manage.event_manage.add_event.action.message',
-                    ),
+            message: z.string().min(1, {
+              message: i18n
+                .t('placeholder:input_text_value')
+                .replace(
+                  '{{VALUE}}',
+                  i18n.t(
+                    'cloud:org_manage.event_manage.add_event.action.message',
                   ),
-              }),
-            subject: z
-              .string()
-              .min(1, {
-                message: i18n
-                  .t('placeholder:input_text_value')
-                  .replace(
-                    '{{VALUE}}',
-                    i18n.t(
-                      'cloud:org_manage.event_manage.add_event.action.subject',
-                    ),
+                ),
+            }),
+            subject: z.string().min(1, {
+              message: i18n
+                .t('placeholder:input_text_value')
+                .replace(
+                  '{{VALUE}}',
+                  i18n.t(
+                    'cloud:org_manage.event_manage.add_event.action.subject',
                   ),
-              }),
+                ),
+            }),
           }),
         ),
     ),
@@ -307,7 +301,7 @@ export function CreateEvent() {
   })
   console.log('formState.errors', formState.errors)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })

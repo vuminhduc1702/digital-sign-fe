@@ -10,7 +10,8 @@ const { ErrorFallback } = lazyImport(
   () => import('~/pages/ErrorPage'),
   'ErrorFallback',
 )
-const { id: projectId } = storage.getProject() || {}
+const projectId = storage.getProject()?.id
+
 export const DeviceRoutes = [
   {
     path: PATHS.DEVKIT,

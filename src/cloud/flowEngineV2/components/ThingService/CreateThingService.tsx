@@ -89,7 +89,7 @@ const defaultJSType = [
 
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const params = useParams()
   const [typeInput, setTypeInput] = useState('')
   const [fullScreen, setFullScreen] = useState(false)

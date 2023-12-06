@@ -145,7 +145,7 @@ export const serviceThingSchema = z.object({
 export function CreateAdapter() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [isShow, setIsShow] = useState(true)
 
@@ -155,7 +155,7 @@ export function CreateAdapter() {
     isSuccess: isSuccessAdapter,
   } = useCreateAdapter()
 
-  const { data: thingData, isLoading: AdapterIsLoading} = useGetEntityThings({
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
     projectId,
     type: 'thing',
   })

@@ -63,7 +63,7 @@ function DeviceTableContextMenu({
 
   const { close, open, isOpen } = useDisclosure()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { orgId } = useParams()
 
   const { mutate, isLoading, isSuccess } = useDeleteDevice()

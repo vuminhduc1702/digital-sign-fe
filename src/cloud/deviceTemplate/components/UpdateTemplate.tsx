@@ -48,7 +48,7 @@ export function UpdateTemplate({
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
     projectId,
   })

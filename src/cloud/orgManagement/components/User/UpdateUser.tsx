@@ -89,7 +89,7 @@ export function UpdateUser({
       },
     })
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
@@ -101,7 +101,9 @@ export function UpdateUser({
     value: org?.id,
   }))
 
-  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({ projectId })
+  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
+    projectId,
+  })
   const roleOptions = roleData?.roles?.map(item => ({
     label: item.name,
     value: item.id,

@@ -17,7 +17,7 @@ export function CustomerManageTemplate() {
   const { t } = useTranslation()
   const [offset, setOffset] = useState(0)
   const [searchFilter, setSearchFilter] = useState<SearchFilter>({})
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data, isPreviousData } = useGetCustomers({
     projectId,
     search_field: searchFilter.search_field,

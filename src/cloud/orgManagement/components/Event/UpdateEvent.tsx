@@ -115,9 +115,9 @@ export function UpdateEvent({
 
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
-  const { data: orgData,  isLoading: orgIsLoading } = useGetOrgs({ projectId })
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],
@@ -128,7 +128,7 @@ export function UpdateEvent({
     value: org?.id,
   }))
 
-  const { data: groupData,  isLoading: groupIsLoading } = useGetGroups({
+  const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id'),
     projectId,
     entity_type: 'EVENT',

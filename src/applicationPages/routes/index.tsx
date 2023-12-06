@@ -11,7 +11,8 @@ const { ErrorFallback } = lazyImport(
   'ErrorFallback',
 )
 
-const { id: projectId } = storage.getProject() || {}
+const projectId = storage.getProject()?.id
+
 export const ApplicationRoutes = [
   {
     path: PATHS.APPSDK,

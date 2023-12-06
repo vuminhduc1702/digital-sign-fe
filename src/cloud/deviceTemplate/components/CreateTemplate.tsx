@@ -46,7 +46,7 @@ export default function CreateTemplate() {
     value: valueType.type,
   }))
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
     { projectId },
   )

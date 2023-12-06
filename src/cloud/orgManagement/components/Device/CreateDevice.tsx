@@ -30,7 +30,7 @@ export const deviceSchema = z.object({
 export function CreateDevice() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
@@ -65,7 +65,9 @@ export function CreateDevice() {
     value: groups?.id,
   }))
 
-  const { data: templateData, isLoading: templateIsLoading } = useGetTemplates({ projectId })
+  const { data: templateData, isLoading: templateIsLoading } = useGetTemplates({
+    projectId,
+  })
   const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,
     value: template?.id,

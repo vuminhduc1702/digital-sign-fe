@@ -58,7 +58,7 @@ export function UpdateAdapter({
     }
   }, [isSuccess, close])
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const [isShow, setIsShow] = useState(true)
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({

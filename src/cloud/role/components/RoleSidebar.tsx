@@ -15,7 +15,7 @@ export function RoleSidebar() {
 
   const [offset, setOffset] = useState(0)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Role[]>([])
 

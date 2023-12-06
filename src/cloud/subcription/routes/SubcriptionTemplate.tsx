@@ -26,7 +26,7 @@ export function SubcriptionTemplate() {
     search_str: '',
   })
   const [searchData, setsearchData] = useState<searchFilter>({})
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data, isPreviousData } = useGetSubcriptons({
     projectId,
     search_field: searchFilter.search_field,
@@ -49,8 +49,8 @@ export function SubcriptionTemplate() {
   return (
     <>
       {/* <TitleBar title={t('sidebar:payment.pldk')} /> */}
-      <div className="flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
-        <div className="flex justify-between mb-5">
+      <div className="flex grow flex-col rounded-md bg-gray-50 px-9 py-3 shadow-lg">
+        <div className="mb-5 flex justify-between">
           <form
             id="search-subcription"
             className="flex flex-col justify-between space-y-6"

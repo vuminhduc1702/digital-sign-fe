@@ -50,7 +50,7 @@ export function UpdateWidget({
   widgetId: string
 }) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const colorPickerRef = useRef()
   const [isDone, setIsDone] = useState(false)
 

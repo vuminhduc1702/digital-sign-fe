@@ -22,7 +22,7 @@ export function GroupManage() {
   const [offset, setOffset] = useState(0)
 
   const { orgId } = useParams()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: groupData,
     isPreviousData,

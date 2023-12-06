@@ -54,7 +54,7 @@ export function UpdateDevice({
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
 
@@ -123,7 +123,9 @@ export function UpdateDevice({
     value: groups?.id,
   }))
 
-  const { data: templateData, isLoading: templateIsLoading} = useGetTemplates({ projectId })
+  const { data: templateData, isLoading: templateIsLoading } = useGetTemplates({
+    projectId,
+  })
 
   const templateSelectOptions = templateData?.templates?.map(template => ({
     label: template?.name,

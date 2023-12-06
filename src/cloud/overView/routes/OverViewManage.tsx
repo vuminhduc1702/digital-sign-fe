@@ -12,7 +12,7 @@ export function OverViewManage() {
 
   const { packageId } = useParams()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   return (
     <ContentLayout title={t('sidebar:overview')}>

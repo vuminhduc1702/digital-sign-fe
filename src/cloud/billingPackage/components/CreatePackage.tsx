@@ -88,7 +88,7 @@ export const entityPlanSchema = z
 export function CreatePackage() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const [estimates, setEstimates] = useState('fix')
   const [type, setType] = useState('official')
   const [paymentType, setPaymentType] = useState('PREPAY')
@@ -279,7 +279,9 @@ export function CreatePackage() {
           ) => {
             return (
               <>
-                <p className="flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.title')}</p>
+                <p className="flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                  {t('billing:package_manage.title')}
+                </p>
                 <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                   <InputField
                     label={t('billing:package_manage.popup.name')}
@@ -323,7 +325,10 @@ export function CreatePackage() {
                         { label: 'Hiển thị', value: 'present' },
                         { label: 'Ẩn', value: 'hidden' },
                       ].map((option, idx) => (
-                        <div key={idx} className="flex items-center mt-2 mb-2 mr-4 ">
+                        <div
+                          key={idx}
+                          className="flex items-center mt-2 mb-2 mr-4 "
+                        >
                           <input
                             type="radio"
                             id={`radio-${option.value}`}
@@ -331,13 +336,20 @@ export function CreatePackage() {
                             value={option.value}
                             className="w-4 h-4 mr-3 cursor-pointer"
                           />
-                          <label htmlFor={`radio-${option.value}`} className="cursor-pointer">{option.label}</label>
+                          <label
+                            htmlFor={`radio-${option.value}`}
+                            className="cursor-pointer"
+                          >
+                            {option.label}
+                          </label>
                         </div>
                       ))}
                     </div>
                   </div>
                 </div>
-                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.popup.data_plan')}</p>
+                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                  {t('billing:package_manage.popup.data_plan')}
+                </p>
                 <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
                   <SelectField
                     label={t('billing:package_manage.popup.payment_type')}
@@ -477,7 +489,9 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                   />
                 </div>
-                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">{t('billing:package_manage.popup.estimate')}</p>
+                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                  {t('billing:package_manage.popup.estimate')}
+                </p>
                 <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
                   <div className="grid grow	grid-cols-1 gap-x-10 md:grid-cols-2">
                     <SelectField
@@ -520,25 +534,25 @@ export function CreatePackage() {
                     {(estimates === 'mass' ||
                       estimates === 'accumulated' ||
                       estimates === 'step') && (
-                        <div className="flex items-center">
-                          <img
-                            onClick={() => {
-                              let arrPlan = getValues('plan_lv')
-                              const index = getValues('plan_lv')?.length - 1
-                              if (arrPlan[index].level) {
-                                planlvAppend({
-                                  level: '',
-                                  price: '',
-                                  free: '',
-                                })
-                              }
-                            }}
-                            src={btnAddIcon}
-                            alt="add-icon"
-                            className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
-                          />
-                        </div>
-                      )}
+                      <div className="flex items-center">
+                        <img
+                          onClick={() => {
+                            let arrPlan = getValues('plan_lv')
+                            const index = getValues('plan_lv')?.length - 1
+                            if (arrPlan[index].level) {
+                              planlvAppend({
+                                level: '',
+                                price: '',
+                                free: '',
+                              })
+                            }
+                          }}
+                          src={btnAddIcon}
+                          alt="add-icon"
+                          className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="max-h-[122px] overflow-auto mr-8">
                     {estimates === 'mass' ||
@@ -553,7 +567,7 @@ export function CreatePackage() {
                                   {
                                     'md:grid-cols-3':
                                       estimates === 'accumulated' ||
-                                      estimates === 'step'||
+                                      estimates === 'step' ||
                                       estimates === 'mass',
                                   },
                                 )}
@@ -567,19 +581,19 @@ export function CreatePackage() {
                                         ).replace(
                                           '{{NUMBER}}',
                                           index >= 1
-                                            ? getValues('plan_lv')?.[
-                                                index - 1
-                                              ].level + 1
+                                            ? getValues('plan_lv')?.[index - 1]
+                                                .level + 1
                                             : '1',
                                         )
                                   }
                                   registration={register(
-                                    `plan_lv.${index}.level`, {
+                                    `plan_lv.${index}.level`,
+                                    {
                                       onChange: e => {
                                         setExpectedNumber('')
                                         setExpectedPayment('')
-                                      }
-                                    }
+                                      },
+                                    },
                                   )}
                                   onBlur={e => {
                                     if (
@@ -611,12 +625,13 @@ export function CreatePackage() {
                                           )
                                     }
                                     registration={register(
-                                      `plan_lv.${index}.price`, {
+                                      `plan_lv.${index}.price`,
+                                      {
                                         onChange: e => {
                                           setExpectedNumber('')
                                           setExpectedPayment('')
-                                        }
-                                      }
+                                        },
+                                      },
                                     )}
                                     classlabel="w-1/4"
                                     classchild="w-3/4"
@@ -637,19 +652,19 @@ export function CreatePackage() {
                                       'billing:package_manage.popup.free',
                                     )}
                                     registration={register(
-                                      `plan_lv.${index}.free`, {
+                                      `plan_lv.${index}.free`,
+                                      {
                                         onChange: e => {
                                           setExpectedNumber('')
                                           setExpectedPayment('')
-                                        }
-                                      }
+                                        },
+                                      },
                                     )}
                                     classlabel="w-1/4"
                                     classchild="w-3/4"
                                     type="number"
                                     classnamefieldwrapper="flex items-center gap-x-3"
                                   />
-                                  
                                 )}
                               </div>
                               <Button
@@ -720,7 +735,9 @@ export function CreatePackage() {
                     </div>
                   )}
                 </div>
-                <p className="!mt-3">{t('billing:package_manage.popup.estimated_payment')}</p>
+                <p className="!mt-3">
+                  {t('billing:package_manage.popup.estimated_payment')}
+                </p>
                 <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-3 md:grid-cols-2">
                   <InputField
                     label={t('billing:package_manage.popup.tax')}
@@ -776,7 +793,6 @@ export function CreatePackage() {
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-
       confirmButton={
         <Button
           isLoading={isLoading}

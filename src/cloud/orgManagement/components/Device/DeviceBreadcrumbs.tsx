@@ -11,7 +11,7 @@ import { BreadcrumbIcon } from '~/components/SVGIcons'
 export function DeviceBreadcrumbs() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const params = useParams()
   const deviceId = params.deviceId as string

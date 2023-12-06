@@ -75,10 +75,9 @@ const AccordionContent = forwardRef<HTMLDivElement, AccordionOtherProps>(
 function SideNavigation() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
   const location = useLocation()
-
   const routerLink = location.pathname?.split('/')
+  const projectId = storage.getProject()?.id
 
   const [value, setValue] = useState('cloud')
 
@@ -229,7 +228,9 @@ function SideNavigation() {
             <div>{t('sidebar:intergration.title')}</div>
           </AccordionTrigger>
           <NavLink to={`${PATHS.AI}`}>
-            <AccordionContent>{t('sidebar:intergration.ai.title')}</AccordionContent>
+            <AccordionContent>
+              {t('sidebar:intergration.ai.title')}
+            </AccordionContent>
           </NavLink>
         </AccordionItem>
       </Accordion.Root>

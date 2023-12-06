@@ -118,7 +118,7 @@ type ThingTableProps = {
 
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(

@@ -24,7 +24,7 @@ export function DeviceManage() {
   const params = useParams()
 
   const orgId = params.orgId as string
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const {
     data: deviceData,
     isPreviousData,

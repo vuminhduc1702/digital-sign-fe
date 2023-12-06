@@ -21,7 +21,7 @@ export function ControllerButton(data: { data: string }) {
   const { t } = useTranslation()
   const { addNotification } = useNotificationStore()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<ControllerWSRes>(WEBSOCKET_URL)

@@ -58,7 +58,7 @@ export function CreateOrg() {
     getValueUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(

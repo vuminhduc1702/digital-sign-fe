@@ -70,7 +70,7 @@ export function CreateUser() {
 
   const { mutate, isLoading, isSuccess } = useCreateUser()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
   const { acc: orgFlattenData } = flattenData(
@@ -83,7 +83,9 @@ export function CreateUser() {
     value: org?.id,
   }))
 
-  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({ projectId })
+  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
+    projectId,
+  })
   const roleOptions = roleData?.roles?.map(item => ({
     label: item.name,
     value: item.id,

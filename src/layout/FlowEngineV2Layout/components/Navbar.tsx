@@ -10,7 +10,7 @@ import { OrgGroupIcon, OrgInfoIcon, OrgUserIcon } from '~/components/SVGIcons'
 function FlowEngineV2Navbar() {
   const { t } = useTranslation()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const params = useParams()
   const orgId = params.orgId || ''
 

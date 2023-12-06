@@ -37,7 +37,7 @@ export function UpdateVersionFirmWare({
   const { t } = useTranslation()
   const [fotaValue, setFotaValue] = useState<SelectOption | null>()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data } = useGetFirmwares({
     projectId,
     config: { suspense: false },

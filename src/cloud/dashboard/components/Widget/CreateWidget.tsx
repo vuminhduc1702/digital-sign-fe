@@ -221,7 +221,7 @@ export function CreateWidget({
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const {
     register,

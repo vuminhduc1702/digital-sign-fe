@@ -50,10 +50,10 @@ export const AppRoutes = () => {
   useEffect(() => {
     if (
       user.data == null &&
-      window.location.pathname !== PATHS.FORGETPASSWORD &&
-      window.location.pathname !== PATHS.REGISTER &&
-      window.location.pathname !== PATHS.LOGIN &&
-      !commonRoutes.some(item => item.path === window.location.pathname)
+      location.pathname !== PATHS.FORGETPASSWORD &&
+      location.pathname !== PATHS.REGISTER &&
+      location.pathname !== PATHS.LOGIN &&
+      !commonRoutes.some(item => item.path === location.pathname)
     ) {
       navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
     }

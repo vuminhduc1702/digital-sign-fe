@@ -25,7 +25,7 @@ export function ComboBoxSelectOrg({
 }: ComboBoxSelectOrgProps) {
   const [query, setQuery] = useState('')
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
   const { data: orgData } = useGetOrgs({ projectId })
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
     orgData?.organizations,

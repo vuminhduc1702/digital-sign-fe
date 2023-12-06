@@ -20,7 +20,7 @@ export function PackageSidebar() {
 
   const { packageId } = useParams()
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     PlanFilter[]
@@ -29,7 +29,7 @@ export function PackageSidebar() {
   return (
     <>
       <div className="flex h-[60px] items-center gap-3 rounded-md bg-secondary-400 px-4 py-3">
-        <div className="flex gap-3">  
+        <div className="flex gap-3">
           <img
             src={listIcon}
             alt="Template list"
@@ -39,9 +39,9 @@ export function PackageSidebar() {
         </div>
         <CreatePackage />
         <div className="w-full">
-        <ComboBoxSelectPackage 
-          setFilteredComboboxData={setFilteredComboboxData}
-        />
+          <ComboBoxSelectPackage
+            setFilteredComboboxData={setFilteredComboboxData}
+          />
         </div>
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">
@@ -49,36 +49,42 @@ export function PackageSidebar() {
           <div className="space-y-3">
             {filteredComboboxData?.map((plan: PlanFilter) => (
               <div className="w-full h-full cursor-pointer" key={plan.id}>
-                  <div
-                    className={clsx('flex items-center w-full rounded-md border', {
+                <div
+                  className={clsx(
+                    'flex items-center w-full rounded-md border',
+                    {
                       'text-white bg-primary-400 ': packageId === plan.id,
-                    })}
-                    key={plan.id}
-                    onClick={() =>
-                      navigate(`${PATHS.BILLING_PACKAGE}/${projectId}/${plan.id}`)
-                    }
-                  >
-                    <div className="icon-container w-10 h-10 flex items-center justify-center bg-gray-200 rounded-md ml-2">
-                      <img
-                        src={dollarIcon}
-                        alt="full_screen"
-                        className="aspect-square w-[24px]"
-                      />
-                    </div>
-                    <div className="ml-3 p-2">
-                      <p
-                        className={clsx('my-auto text-base', {
-                          'text-white bg-primary-400': packageId === plan.id,
-                        })}
-                      >
-                        {plan.name}
-                      </p>
-                      <div className='mt-1'>
-                        {/* <div><span>{t('billing:package_manage.id')}:</span> {plan.id}</div> */}
-                        <div><span>{t('billing:package_manage.description')}</span> {plan.description}</div>
+                    },
+                  )}
+                  key={plan.id}
+                  onClick={() =>
+                    navigate(`${PATHS.BILLING_PACKAGE}/${projectId}/${plan.id}`)
+                  }
+                >
+                  <div className="icon-container w-10 h-10 flex items-center justify-center bg-gray-200 rounded-md ml-2">
+                    <img
+                      src={dollarIcon}
+                      alt="full_screen"
+                      className="aspect-square w-[24px]"
+                    />
+                  </div>
+                  <div className="ml-3 p-2">
+                    <p
+                      className={clsx('my-auto text-base', {
+                        'text-white bg-primary-400': packageId === plan.id,
+                      })}
+                    >
+                      {plan.name}
+                    </p>
+                    <div className="mt-1">
+                      {/* <div><span>{t('billing:package_manage.id')}:</span> {plan.id}</div> */}
+                      <div>
+                        <span>{t('billing:package_manage.description')}</span>{' '}
+                        {plan.description}
                       </div>
                     </div>
-                  </div>  
+                  </div>
+                </div>
               </div>
             ))}
           </div>

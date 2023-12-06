@@ -117,7 +117,7 @@ export function UpdateThingService({
   const [resultConsoleHeight, setResultConsoleHeight] =
     useState(defaultHeightConsole)
 
-  const { id: projectId } = storage.getProject()
+  const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useUpdateService()
   const {
