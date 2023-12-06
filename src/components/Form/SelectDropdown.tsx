@@ -1,4 +1,4 @@
-import Select, { type Props, type GroupBase } from 'react-select'
+import Select, { type Props, type GroupBase, SelectInstance } from 'react-select'
 import { useTranslation } from 'react-i18next'
 import { Controller, type FieldValues } from 'react-hook-form'
 
@@ -22,6 +22,7 @@ type SelectProps<
   customOnChange?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
+  refSelect?: React.MutableRefObject<SelectInstance<SelectOption> | null>
   icon?: React.ReactElement
   isWrappedArray?: boolean
 } & FieldWrapperPassThroughProps &
@@ -48,6 +49,7 @@ export function SelectDropdown<
   handleClearSelectDropdown,
   handleChangeSelect,
   isWrappedArray,
+  refSelect,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
@@ -70,6 +72,7 @@ export function SelectDropdown<
                 {...field}
                 isMulti={isMulti}
                 className="w-full"
+                ref={refSelect}
                 isSearchable
                 isClearable
                 placeholder={placeholder ?? t('placeholder:select')}
