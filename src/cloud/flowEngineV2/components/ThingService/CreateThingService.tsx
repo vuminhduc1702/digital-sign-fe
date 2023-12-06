@@ -428,6 +428,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               registration={register(
                                 `input.${index}.value` as const,
                               )}
+                              step={0.01}
                               type={
                                 numberInput.includes(
                                   fields[index].type as string,

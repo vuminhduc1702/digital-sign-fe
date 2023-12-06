@@ -213,6 +213,7 @@ export default function CreateTemplate() {
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
+                    step={0.01}
                     type={
                       numberInput.includes(watch(`attributes.${index}.value_t`))
                         ? 'number'
