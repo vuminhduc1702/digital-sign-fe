@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
-import { InputField, SelectDropdown } from '~/components/Form'
+import {
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
 import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
@@ -22,6 +26,7 @@ import {
   useUpdateHeartBeat,
 } from '../../api/deviceAPI/heartbeatDevice'
 import { z } from 'zod'
+import { type SelectInstance } from 'react-select'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -142,7 +147,10 @@ export function UpdateDevice({
     const dataFilter = orgFlattenData.filter(item => item.id === org_id)
     dataFilter.length && setValue('org_id', dataFilter[0]?.id)
   }, [org_id])
-  console.log('first', watch('group_id'))
+
+  const selectDropdownGroupId = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   return (
     <Drawer
@@ -219,12 +227,15 @@ export function UpdateDevice({
                 defaultValue={orgSelectOptions?.find(
                   org => org.value === org_id,
                 )}
-                handleChangeSelect={() => setValue('group_id', '')}
-                handleClearSelectDropdown={() => setValue('group_id', '')}
+                handleClearSelectDropdown={() => {
+                  // resetField('group_id')
+                  selectDropdownGroupId.current?.clearValue()
+                }}
               />
             </div>
             <div className="space-y-1">
               <SelectDropdown
+                refSelect={selectDropdownGroupId}
                 label={t('cloud:org_manage.device_manage.add_device.group')}
                 name="group_id"
                 control={control}
@@ -239,7 +250,6 @@ export function UpdateDevice({
                 defaultValue={groupSelectOptions?.find(
                   group => group.value === group_id,
                 )}
-                handleClearSelectDropdown={() => setValue('group_id', '')}
               />
             </div>
             <div>
@@ -313,7 +323,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -322,7 +332,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
