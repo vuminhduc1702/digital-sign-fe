@@ -240,6 +240,7 @@ export function UpdateRole({
       >
         <>
           <InputField
+            className={!!formState.errors['name'] ? 'border-primary-400' : ''}
             label={t('cloud:role_manage.add_role.name')}
             error={formState.errors['name']}
             registration={register('name')}
@@ -277,6 +278,12 @@ export function UpdateRole({
               <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
                 <div className="space-y-1">
                   <InputField
+                    className={
+                      !!formState?.errors?.policies?.[index]?.policy_name
+                        ?.message
+                        ? 'border-primary-400'
+                        : ''
+                    }
                     label={t('cloud:role_manage.add_policy.name')}
                     registration={register(
                       `policies.${index}.policy_name` as const,
