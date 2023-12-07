@@ -1,5 +1,5 @@
 import { ResponsivePie } from '@nivo/pie'
-import { SetStateAction, useEffect, useState } from 'react'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
@@ -21,62 +21,43 @@ export const PieChart = ({ data, widgetInfo }: { data: TimeSeries, widgetInfo: z
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
+  const newValuesRef = useRef<TimeSeries | null>(null)
+  const prevValuesRef = useRef<TimeSeries | null>(null)
 
   function dataManipulation() {
-    const newData = Object.entries(data).reduce(
-      (
-        result: Array<{ id: string; label: string, value: number }>,
-        [key, items],
-      ) => {
-        items.forEach(item => {
-          dataTransformedFeedToChart.forEach((attr) => {
-            const itemId = attr.id
-            const value = parseFloat(item.value)
-            const existingIndex = result.filter(obj => obj.id === itemId)
-            if (existingIndex.length === 0) {
-              result.push({
-                id: key,
-                label: key,
-                value: parseFloat(item.value),
-                [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
-                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
-                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
-                widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
-                '#e8c1a0'
-              })
-            } else {
-              result.map(obj => obj.id === itemId ? { ...obj, value: value} : obj)
-            }
-          })
-        })
-
-        const dataResult = result.filter((obj, index) => {
-          return index === result.findIndex(o => obj.id === o.id);
-        });
-        return dataResult
-      },
-      [],
-    )
-    setDataTransformedFeedToChart(newData)
+    const pieWidgetData = Object.entries(newValuesRef.current as TimeSeries).map(([key, value]) => ({
+      id: key,
+      label: key,
+      value: parseFloat(value[0].value),
+      [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
+      widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
+      widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
+      widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
+      '#e8c1a0'
+    }))
+    setDataTransformedFeedToChart(pieWidgetData)
   }
 
-  // const newDataValue = Object.values(data)?.[0]?.[0]?.value ?? ''
   useEffect(() => {
     if (Object.keys(data).length !== 0) {
-      if (dataTransformedFeedToChart.length > 0) {
+      prevValuesRef.current = newValuesRef.current || data
+      if (
+        newValuesRef.current !== null
+      ) {
+        for (const [key, value] of Object.entries(data)) {
+          if (
+            newValuesRef.current[key] != null &&
+            newValuesRef.current[key] === prevValuesRef.current[key]
+          ) {
+            newValuesRef.current[key] = [...value]
+          } else {
+            prevValuesRef.current = data
+          }
+          dataManipulation()
+        }
+      } else {
+        newValuesRef.current = data
         dataManipulation()
-      } else if (dataTransformedFeedToChart.length === 0) {
-        const pieWidgetDataType = Object.entries(data).map(([key, value]) => ({
-          id: key,
-          label: key,
-          value: parseFloat(value[0].value),
-          [key + 'Color']: widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) && 
-          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key).length > 0 && 
-          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color !== '' ?
-          widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0].color :
-          '#e8c1a0'
-        }))
-        setDataTransformedFeedToChart(pieWidgetDataType)
       }
     }
   }, [data])
