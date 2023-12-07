@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
@@ -39,6 +40,8 @@ export function CreateDevice() {
   const { mutate, isLoading, isSuccess } = useCreateDevice()
   const [offset, setOffset] = useState(0)
 
+  const { orgId } = useParams()
+
   const { register, formState, control, handleSubmit, watch, reset } = useForm<
     CreateDeviceDTO['data']
   >({
@@ -57,7 +60,7 @@ export function CreateDevice() {
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',

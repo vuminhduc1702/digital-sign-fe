@@ -75,7 +75,8 @@ type CreateServiceProps = {
   thingServiceData?: ThingService[]
 }
 
-const numberInput = ['i32', 'i64', 'f32', 'f64']
+export const numberServiceInput = ['i32', 'i64', 'f32', 'f64']
+
 const defaultJSType = [
   'string',
   'number',
@@ -277,7 +278,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 dataRun[item.name] =
                   item.type === 'bool' && item.value === ''
                     ? 'false'
-                    : numberInput.includes(item.type as string)
+                    : numberServiceInput.includes(item.type as string)
                     ? parseInt(item.value)
                     : item.value
               })
@@ -430,7 +431,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               )}
                               step={0.01}
                               type={
-                                numberInput.includes(
+                                numberServiceInput.includes(
                                   fields[index].type as string,
                                 )
                                   ? 'number'

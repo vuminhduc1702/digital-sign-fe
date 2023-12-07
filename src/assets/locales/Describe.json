@@ -3,11 +3,6 @@
   "number_of_files": 324,
   "infos": [
     {
-      "file_id": "0",
-      "module_name": "LWM2M Security",
-      "version": "1.0"
-    },
-    {
       "file_id": "1",
       "module_name": "Lock and Wipe",
       "version": "1.0"

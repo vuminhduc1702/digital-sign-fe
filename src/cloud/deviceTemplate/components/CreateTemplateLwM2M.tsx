@@ -29,6 +29,17 @@ import LwM2MData from '~/assets/locales/Describe.json';
 import { type LwM2M }   from '../types'
 import { axios } from '~/lib/axios'
 import { CreateTableXMl } from './CreateTableXMl'
+import { PATHS } from '~/routes/PATHS'
+import { ChevronDown } from 'lucide-react'
+import dammayIcon from '~/assets/icons/sb-dammay.svg'
+import {
+    Accordion,
+    AccordionItem,
+    AccordionContent,
+    AccordionTrigger,
+  } from '~/components/Accordion'
+import { NavLink } from '~/components/Link'
+import { useLocation } from 'react-router-dom'
 export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
@@ -70,46 +81,50 @@ export default function CreateTemplateLwM2M() {
     name: 'attributes',
     control,
   })
-//   const [fileidxml, setfileidxml] = useState<string | null>()
-  const [selectedOptions, setSelectedOptions] = useState<{ label: string; value: string }[]>([])
-  const selectedOptionValues = selectedOptions.map(option => option.value)
-//   const [serverData, setServerData] = useState([])
-//   const [loading, setLoading] = useState(false)
-//   useEffect(() => {
-//     const fetchDataFromServer = async () => {
-//       try {
-//         setLoading(true)
-//         const selectedOptionValues = selectedOptions.map(option => option.value)
-//         console.log(selectedOptionValues)
+  const [selectedLwM2Mdata, setselectedLwM2Mdata] = useState<{ label: string; value: string }[]>([])
+  const selectedName = selectedLwM2Mdata.map(option => option.label)
+  const selectedOption = selectedLwM2Mdata.map(option => option.value)
+  const lastSelected = (selectedOption.join(',')).length > 0 ? selectedOption[selectedOption.length - 1] : '';
+  const {data: XMLdata, isLoading: isLoadingLwM2M } = useGetXMLdata({
+    fileId: lastSelected,
+    config: { enabled: !!lastSelected, suspense: false },
+  })
+  const { acc: XMLFlattenData } = flattenData(XMLdata?.LWM2M.Object.Resources.Item, [
+    '@ID','Name','Operations',])
 
-//         const promises = selectedOptionValues.map(async selectedValue => {
-//           const response = await axios.get(`http://api.innoway.vn/file/publishjson/${selectedValue}.json`)
-//           console.log(response)
-//           return response.data
-//         })
-//         const responseData: any[] = await Promise.all(promises)
-//         setServerData(responseData)
-//       } catch (error) {
-//         console.error('Lỗi khi lấy dữ liệu từ server:', error)
-//       } finally {
-//         setLoading(false);
-//       }
+//   const [accordionState, setAccordionState] = useState({});
+//   const handleOptionClick = (selectedName: string) => {
+//       setAccordionState((prevState) => ({
+//         ...prevState,
+//         [selectedName]: !prevState[selectedName],
+//       }));
 //     };
+    // const renderSubContent = (selectedName: string) => {
+    //     // Chỉ render nếu accordion được mở
+    //     if (accordionState[selectedName]) {
+    //       return (
+    //         <div>
+    //           {/* Render nội dung dựa trên option */}
+    //           <p>{`Content for ${selectedName}`}</p>
+    //         </div>
+    //       );
+    //     }
+    //     return null;
+    //   };
 
-//     if (selectedOptions.length > 0) {
-//       fetchDataFromServer()
-//     }
-//   }, [selectedOptions])
-    const {data} = useGetXMLdata({
-        fileId: selectedOptionValues.join(','),
-        config: { enabled: !!selectedOptionValues, suspense: false },
-    })
-    console.log(selectedOptionValues.join(','))
-    // const { acc: XMLFlattenData } = flattenData(
-    //     XMLdata?.data,
-    //     ['id', 'name'],
-    //   )
 
+    // const location = useLocation()
+    // const routerLink = location.pathname?.split('/')
+    // const [value, setValue] = useState('cloud')
+    // useEffect(() => {
+    //   setValue(routerLink[1])
+    // }, [routerLink[1]])
+    const [value, setValue] = useState(null)
+    const [isAccordionOpen, setIsAccordionOpen] = useState(false)
+    const handleAccordionChange = (newValue) => {
+        setValue(newValue)
+        setIsAccordionOpen(!isAccordionOpen)
+    }
   return (
     
     <FormDrawer
@@ -188,31 +203,90 @@ export default function CreateTemplateLwM2M() {
                   options={LwM2MSelectOptions}
                   isMulti={true}
                   closeMenuOnSelect={false}
-                  onChange={(selectedOptions) => setSelectedOptions(selectedOptions)}
-                //   onChange={(fileidxml) => setfileidxml(fileidxml)}
-                  isOptionDisabled={option => option.label === t('loading:flow_id')}
-                  noOptionsMessage={() => t('table:no_in_flow_id')}
-                  // loadingMessage={() => t('loading:flow_id')}
-                  // isLoading={true}
-                  // placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+                  onChange={(selectedLwM2Mdata) => setselectedLwM2Mdata(selectedLwM2Mdata)}
+                // isOptionDisabled={option => option.label === t('loading:flow_id')}
+                //   noOptionsMessage={() => t('table:no_in_flow_id')}
+                //   loadingMessage={() => t('loading:flow_id')}
+                //isLoading={true}
+                //   placeholder={t('cloud:device_template.add_template.choose_flow_id')}
                 />
-                {/* {loading ? (
-                    <p>Đang tải...</p>
-                  ) : (
-                    serverData.length > 0 && (
-                      <div>
-                        <h3>Dữ liệu từ server:</h3>
-                          {serverData}
-                      </div>
-                    )
-                )} */}
                 {/* <p className="text-body-sm text-primary-400">
                   {formState?.errors?.rule_chain_id?.message}
                 </p>    */}
           </div>
-          {/* <div className="space-y-1">
-                <CreateTableXMl/>
-          </div> */}
+           {/* <div>{selectedName}</div> */}
+           <Accordion
+                type="single"
+                collapsible
+                value={value}
+                onValueChange={handleAccordionChange}
+                className='bg-gray-100 rounded-md shadow-lg mb-2 '
+                >
+                {selectedName.map((name, index) => (
+                    <AccordionItem key={index} value={name} className="border-none">
+                    <div className='flex items-center ml-3 gap-3 '>
+                    <AccordionTrigger className="mr-3">
+                        <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                    </AccordionTrigger>
+                    {name}
+                    </div>
+                    {isAccordionOpen && value === name && (
+                        <div className="mt-3 gap-3 rounded-md bg-slate-200 px-2 py-4">
+                            <div className='border-b-2 border-gray-300 grid grow	grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-2'>
+                                    <div className="flex mb-2">
+                                    <div className=" flex items-end "> <p>{t('#ID Resource name')}</p> </div>
+                                        <div className=" ml-auto">
+                                        <Checkbox
+                                            className="flex h-5 w-5 ml-5 mb-1"
+                                        />
+                                        {t('Attribute')}
+                                        </div>
+                                    </div>
+                                    <div className='flex items-end mb-2 ml-2'>
+                                        {t('Key name')}
+                                    </div> 
+                            </div>
+                            <div>
+                            {XMLFlattenData?.map((item) => {
+                                if (item.Operations === 'RW' || item.Operations === 'R') {
+                                return (
+                                    <section 
+                                    key={item['@ID']}
+                                    className='mt-3'
+                                    >
+                                    <div className='grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2'>
+                                        <div className="flex">
+                                        <div className="flex items-center justify-center">
+                                            #{item['@ID']} {item.Name}
+                                        </div>
+                                        <Checkbox
+                                            className="flex h-5 w-5 mt-2 mr-3 ml-auto"
+                                        />
+                                        </div>
+                                        <div className='grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1'>
+                                        <InputField
+                                            className=""
+                                            // label={t('cloud:org_manage.org_manage.add_attr.name')}
+                                            // error={formState?.errors?.attributes?.[index]?.attribute_key}
+                                            // registration={register(
+                                            //   `attributes.${index}.attribute_key` as const,
+                                            // )}
+                                        />
+                                        </div> 
+                                    </div>
+                                    </section>
+                                )
+                                }
+                                return null
+                            })}
+                            </div>
+                        </div>
+                    )}
+                    </AccordionItem>
+                ))}
+            </Accordion>
+    
+          
         </>
       </form>
     </FormDrawer>

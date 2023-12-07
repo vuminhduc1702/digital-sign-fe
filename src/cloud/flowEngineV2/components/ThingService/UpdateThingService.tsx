@@ -16,7 +16,6 @@ import {
 } from '~/components/Form'
 
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import {
   useUpdateService,
@@ -24,7 +23,11 @@ import {
 } from '../../api/thingServiceAPI'
 import { useExecuteService } from '../../api/thingServiceAPI/executeService'
 import { useThingServiceById } from '../../api/thingServiceAPI/getThingServiceById'
-import { serviceThingSchema, type dataRun } from './CreateThingService'
+import {
+  serviceThingSchema,
+  type dataRun,
+  numberServiceInput,
+} from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '~/components/Spinner'
 import { Switch } from '~/components/Switch'
@@ -82,7 +85,7 @@ export function UpdateThingService({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
     defaultValues: {
       ...thingServiceData?.data,
-      description: thingServiceData?.data?.description,
+      description: thingServiceData?.data?.description ?? '',
     },
   })
 
@@ -249,7 +252,7 @@ export function UpdateThingService({
                 // value:
                 //   item.type === 'bool' && item.value === ''
                 //     ? 'false'
-                //     : numberInput.includes(item.type as string)
+                //     : numberServiceInput.includes(item.type as string)
                 //     ? parseInt(item.value)
                 //     : item.value,
               }))
@@ -259,7 +262,7 @@ export function UpdateThingService({
                   dataRun[item.name] =
                     item.type === 'bool' && item.value === ''
                       ? 'false'
-                      : numberInput.includes(item.type as string)
+                      : numberServiceInput.includes(item.type as string)
                       ? parseInt(item.value)
                       : item.value
                 })
@@ -458,7 +461,7 @@ export function UpdateThingService({
                                         )}
                                         step={0.01}
                                         type={
-                                          numberInput.includes(
+                                          numberServiceInput.includes(
                                             fields[index].type as string,
                                           )
                                             ? 'number'

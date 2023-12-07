@@ -84,7 +84,7 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -190,7 +190,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -582,16 +582,10 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             key,
             org_id,
             group_id,
-            group_name,
             template_id,
             token,
             status,
           } = info.row.original
-
-          const group = {
-            label: group_name,
-            value: group_id,
-          }
 
           return DeviceTableContextMenu({
             name,
@@ -604,7 +598,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             group_id,
             additional_info: info.row.original
               .additional_info as unknown as string,
-            // group_name,
           })
         },
         header: () => null,

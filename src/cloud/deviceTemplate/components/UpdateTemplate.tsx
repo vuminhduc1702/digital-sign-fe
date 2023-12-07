@@ -71,11 +71,7 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
-<<<<<<< HEAD
   const { register, formState, watch, handleSubmit,  reset, control } = useForm<
-=======
-  const { register, formState, watch, handleSubmit, control, reset } = useForm<
->>>>>>> ab19dd994afef40f87915509d98127a02343e392
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),

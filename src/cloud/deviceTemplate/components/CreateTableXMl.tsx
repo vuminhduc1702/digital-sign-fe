@@ -56,35 +56,6 @@ export const CreateTableXMl: React.FC = () => {
                 {t('Key name')}
             </div> 
       </div>
-      {/* <div className=''>
-      {resources.map(resource => (
-        <section 
-          key={resource.ID}
-          className='mt-3'
-        >
-          <div className='grid grow	grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2'>
-            <div className="flex ">
-              <div className=" flex items-center justify-center">
-                  #{resource.ID} {resource.Name}
-              </div>
-              <Checkbox
-                className="flex h-5 w-5 mt-2 mr-3 ml-auto"
-              />
-            </div>
-            <div className='grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1'>
-            <InputField
-             className=""
-                  // label={t('cloud:org_manage.org_manage.add_attr.name')}
-                  // error={formState?.errors?.attributes?.[index]?.attribute_key}
-                  // registration={register(
-                  //   `attributes.${index}.attribute_key` as const,
-                  // )}
-                />
-            </div> 
-          </div>
-        </section>
-      ))}
-      </div> */}
       <div>
       {resources.map(resource => {
         if (resource.Operations === 'RW' || resource.Operations === 'R') {
