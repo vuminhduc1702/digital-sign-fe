@@ -6,6 +6,7 @@ import ColorPicker from 'react-pick-color'
 import * as z from 'zod'
 import { v4 as uuidv4 } from 'uuid'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 
 import i18n from '~/i18n'
 import { Button } from '~/components/Button'
@@ -221,9 +222,12 @@ export function CreateWidget({
   setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
+
+  const { orgId } = useParams()
+  const projectId = storage.getProject()?.id
+
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
-  const projectId = storage.getProject()?.id
 
   const {
     register,
@@ -264,7 +268,7 @@ export function CreateWidget({
   )
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     config: {
       suspense: false,

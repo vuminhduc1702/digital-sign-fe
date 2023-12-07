@@ -257,7 +257,7 @@ export function UpdateAdapter({
               error={formState.errors['name']}
               registration={register('name')}
             />
-            {thingSelectData != null ? (
+            {!AdapterIsLoading ? (
               <div className="w-[calc(100%-2.5rem)] space-y-1">
                 <SelectDropdown
                   label={t('cloud:custom_protocol.thing.id')}

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useParams } from 'react-router-dom'
 
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { Button } from '~/components/Button'
@@ -264,6 +265,8 @@ export interface IntervalData {
 export function CreateEvent() {
   const { t } = useTranslation()
 
+  const { orgId } = useParams()
+
   const {
     register,
     formState,
@@ -316,7 +319,7 @@ export function CreateEvent() {
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -327,7 +330,7 @@ export function CreateEvent() {
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     config: { suspense: false },
   })

@@ -39,6 +39,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar, TimePicker } from '~/components/Calendar'
+import { useParams } from 'react-router-dom'
 
 export function UpdateWidget({
   widgetInfo,
@@ -50,7 +51,10 @@ export function UpdateWidget({
   widgetId: string
 }) {
   const { t } = useTranslation()
+
   const projectId = storage.getProject()?.id
+  const { orgId } = useParams()
+
   const colorPickerRef = useRef()
   const [isDone, setIsDone] = useState(false)
 
@@ -111,7 +115,7 @@ export function UpdateWidget({
   )
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     config: {
       suspense: false,

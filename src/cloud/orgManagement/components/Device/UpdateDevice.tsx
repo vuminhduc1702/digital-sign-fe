@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
@@ -65,6 +66,8 @@ export function UpdateDevice({
 
   const { mutate, isLoading, isSuccess } = useUpdateDevice()
 
+  const { orgId } = useParams()
+
   const { mutate: mutateHeartBeat, isLoading: isLoadingHeartBeat } =
     useHeartBeat()
   const { mutate: mutateUpdateHeartBeat, isLoading: isLoadingUpdateHeartBeat } =
@@ -108,7 +111,7 @@ export function UpdateDevice({
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',

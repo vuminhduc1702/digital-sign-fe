@@ -4,6 +4,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateAttrChart } from '~/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
+import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
@@ -70,7 +71,7 @@ export function UpdateEvent({
   endTimeProps,
 }: UpdateEventProps) {
   const { t } = useTranslation()
-  // console.log('data', data)
+  const { orgId } = useParams()
 
   const {
     register,
@@ -129,7 +130,7 @@ export function UpdateEvent({
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -140,7 +141,7 @@ export function UpdateEvent({
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id'),
+    orgId: watch('org_id') || orgId,
     projectId,
     config: { suspense: false },
   })
@@ -290,7 +291,7 @@ export function UpdateEvent({
           })
         })}
       >
-        {groupSelectOptions != null ? (
+        {!showSpinner ? (
           <>
             <div className="space-y-3">
               <TitleBar
@@ -309,6 +310,7 @@ export function UpdateEvent({
                       'cloud:org_manage.device_manage.add_device.parent',
                     )}
                     name="org_id"
+                    control={control}
                     options={orgSelectOptions}
                     isOptionDisabled={option =>
                       option.label === t('loading:org') ||
@@ -505,6 +507,7 @@ export function UpdateEvent({
                               'cloud:org_manage.event_manage.add_event.condition.attr',
                             )}
                             name={`condition.${index}.attribute_name`}
+                            control={control}
                             options={attrSelectOptions}
                             isOptionDisabled={option =>
                               option.label === t('loading:attr') ||
