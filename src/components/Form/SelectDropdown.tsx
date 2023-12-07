@@ -107,9 +107,18 @@ export function SelectDropdown<
                 }}
                 styles={{
                   control: (baseStyles, state) => {
+                    const isErr =
+                      isErrorSelect || (isErrorSelect && state.isFocused)
                     return {
                       ...baseStyles,
-                      borderColor: isErrorSelect ? 'red' : '',
+                      borderColor: isErr ? 'red' : '',
+                      boxShadow: isErr ? 'red' : '',
+                      ':hover': {
+                        borderColor: isErr ? 'red' : '',
+                        boxShadow: isErr
+                          ? '0 0 0 1px red'
+                          : '0 0 0 1px #2684FF',
+                      },
                     }
                   },
                 }}

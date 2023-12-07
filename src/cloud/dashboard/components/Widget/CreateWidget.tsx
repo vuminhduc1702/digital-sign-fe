@@ -14,6 +14,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -27,6 +28,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
 import { useDefaultCombobox } from '~/utils/hooks'
 
+import { type SelectInstance } from 'react-select'
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
 import { type ControllerBtn } from './CreateControllerButton'
@@ -67,7 +69,7 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    label: z.string(),
+    // label: z.string(),
     color: z.string(),
     unit: z.string(),
     max: z.number(),
@@ -286,12 +288,16 @@ export function CreateWidget({
   useEffect(() => {
     append({
       attribute_key: '',
-      label: '',
+      // label: '',
       color: '',
       unit: '',
       max: 100,
     })
   }, [])
+
+  const selectDropdownDeviceRef = useRef<SelectInstance<SelectOption[]> | null>(
+    null,
+  )
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -455,7 +461,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
-                  label: item.label,
+                  // label: item.label,
                   unit: item.unit,
                 })),
                 config:
@@ -498,36 +504,49 @@ export function CreateWidget({
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
+                      className={
+                        !!formState?.errors?.title
+                          ? 'border-primary-400 focus:outline-primary-400'
+                          : ''
+                      }
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
                       registration={register('title')}
                     />
+                    <SelectDropdown
+                      isErrorSelect={!!formState?.errors?.org_id?.message}
+                      label={t(
+                        'cloud:org_manage.device_manage.add_device.parent',
+                      )}
+                      error={formState.errors['org_id']}
+                      name="org_id"
+                      control={control}
+                      options={orgSelectOptions}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:org') ||
+                        option.label === t('table:no_org')
+                      }
+                      noOptionsMessage={() => t('table:no_org')}
+                      loadingMessage={() => t('loading:org')}
+                      isLoading={orgIsLoading}
+                      handleClearSelectDropdown={() => {
+                        selectDropdownDeviceRef.current?.clearValue()
+                        resetField('attributeConfig', {
+                          defaultValue: [
+                            {
+                              attribute_key: '',
+                              color: '',
+                              max: 100,
+                              unit: '',
+                            },
+                          ],
+                        })
+                      }}
+                    />
                     <div className="space-y-1">
                       <SelectDropdown
-                        label={t(
-                          'cloud:org_manage.device_manage.add_device.parent',
-                        )}
-                        name="org_id"
-                        control={control}
-                        options={orgSelectOptions}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:org') ||
-                          option.label === t('table:no_org')
-                        }
-                        noOptionsMessage={() => t('table:no_org')}
-                        loadingMessage={() => t('loading:org')}
-                        isLoading={orgIsLoading}
-                        handleClearSelectDropdown={() => {
-                          resetField('device')
-                          resetField('attributeConfig', [{}])
-                        }}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.org_id?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
+                        refSelect={selectDropdownDeviceRef}
+                        isErrorSelect={!!formState?.errors?.device?.message}
                         label={t('cloud:dashboard.config_chart.device')}
                         name="device"
                         control={control}
@@ -554,7 +573,16 @@ export function CreateWidget({
                           }
                         }}
                         handleClearSelectDropdown={() => {
-                          resetField('attributeConfig', [{}])
+                          resetField('attributeConfig', {
+                            defaultValue: [
+                              {
+                                attribute_key: '',
+                                color: '',
+                                max: 100,
+                                unit: '',
+                              },
+                            ],
+                          })
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
@@ -585,7 +613,7 @@ export function CreateWidget({
                         onClick={() =>
                           append({
                             attribute_key: '',
-                            label: '',
+                            // label: '',
                             color: '',
                             unit: '',
                             max: 100,
@@ -601,30 +629,26 @@ export function CreateWidget({
                       key={field.id}
                     >
                       <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                        <div className="w-full space-y-1">
-                          <SelectDropdown
-                            label={t('cloud:dashboard.config_chart.attr')}
-                            name={`attributeConfig.${index}.attribute_key`}
-                            control={control}
-                            options={attrSelectData}
-                            isOptionDisabled={option =>
-                              option.label === t('loading:input') ||
-                              option.label === t('table:no_attr')
-                            }
-                            noOptionsMessage={() => t('table:no_attr')}
-                            loadingMessage={() => t('loading:attr')}
-                            isLoading={attrChartIsLoading}
-                            placeholder={t(
-                              'cloud:org_manage.org_manage.add_attr.choose_attr',
-                            )}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.attributeConfig?.[index]
-                                ?.attribute_key?.message
-                            }
-                          </p>
-                        </div>
+                        <SelectDropdown
+                          label={t('cloud:dashboard.config_chart.attr')}
+                          error={
+                            formState?.errors?.attributeConfig?.[index]
+                              ?.attribute_key
+                          }
+                          name={`attributeConfig.${index}.attribute_key`}
+                          control={control}
+                          options={attrSelectData}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:input') ||
+                            option.label === t('table:no_attr')
+                          }
+                          noOptionsMessage={() => t('table:no_attr')}
+                          loadingMessage={() => t('loading:attr')}
+                          isLoading={attrChartIsLoading}
+                          placeholder={t(
+                            'cloud:org_manage.org_manage.add_attr.choose_attr',
+                          )}
+                        />
                         {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
