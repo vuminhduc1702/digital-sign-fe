@@ -111,7 +111,9 @@ function OrgManageSidebar() {
           if (i === findIndex) {
           } else {
             if (data[i]) {
-              if (getInt(filteredComboboxData[i].level) < getInt(currentLevel)) {
+              if (
+                getInt(filteredComboboxData[i].level) < getInt(currentLevel)
+              ) {
                 data[i].isShow = true
                 if (data[i].level === '1') {
                   break
@@ -159,11 +161,11 @@ function OrgManageSidebar() {
     query === ''
       ? filteredComboboxData
       : filteredComboboxData.filter(person =>
-        person.name
-          .toLowerCase()
-          .replace(/\s+/g, '')
-          .includes(query.toLowerCase().replace(/\s+/g, '')),
-      )
+          person.name
+            .toLowerCase()
+            .replace(/\s+/g, '')
+            .includes(query.toLowerCase().replace(/\s+/g, '')),
+        )
 
   return (
     <>
@@ -216,7 +218,8 @@ function OrgManageSidebar() {
                     <Combobox.Option
                       key={person.id}
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-primary-300 text-white' : 'text-black'
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
+                          active ? 'bg-primary-300 text-white' : 'text-black'
                         }`
                       }
                       value={person}
@@ -224,15 +227,17 @@ function OrgManageSidebar() {
                       {({ selected, active }) => (
                         <>
                           <span
-                            className={`block truncate ${selected ? 'font-medium' : 'font-normal'
-                              }`}
+                            className={`block truncate ${
+                              selected ? 'font-medium' : 'font-normal'
+                            }`}
                           >
                             {person.name}
                           </span>
                           {selected ? (
                             <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-teal-600'
-                                }`}
+                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                                active ? 'text-white' : 'text-teal-600'
+                              }`}
                             >
                               <CheckIcon
                                 className="h-5 w-5"
@@ -281,11 +286,13 @@ function OrgManageSidebar() {
               t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
         </div>
-        <UpdateOrg
-          close={close}
-          isOpen={isOpen}
-          selectedUpdateOrg={selectedUpdateOrg}
-        />
+        {isOpen ? (
+          <UpdateOrg
+            close={close}
+            isOpen={isOpen}
+            selectedUpdateOrg={selectedUpdateOrg}
+          />
+        ) : null}
         <TreeView
           data={convertData(filteredComboboxData)}
           handleEditTreeView={(data: OrgMapType) => handleEdit(data)}

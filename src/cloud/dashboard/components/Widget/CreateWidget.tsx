@@ -49,21 +49,16 @@ export const wsInterval = [
   { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
   { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
   { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
-]
+] as const
 
-const widgetAggSchema = z.object({
-  label: z.string(),
-  value: aggSchema,
-})
-type WidgetAgg = z.infer<typeof widgetAggSchema>
-export const widgetAgg: WidgetAgg[] = [
+export const widgetAgg = [
   { label: 'None', value: 'NONE' },
   { label: 'Average', value: 'AVG' },
   { label: 'Min', value: 'MIN' },
   { label: 'Max', value: 'MAX' },
   { label: 'Sum', value: 'SUM' },
   { label: 'Count', value: 'COUNT' },
-]
+] as const
 
 export const attrWidgetSchema = z.array(
   z.object({

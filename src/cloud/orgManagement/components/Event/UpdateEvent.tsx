@@ -291,7 +291,7 @@ export function UpdateEvent({
           })
         })}
       >
-        {!showSpinner ? (
+        {groupSelectOptions != null ? (
           <>
             <div className="space-y-3">
               <TitleBar
