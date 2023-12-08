@@ -508,11 +508,6 @@ export function CreateWidget({
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
-                      className={
-                        !!formState?.errors?.title
-                          ? 'border-primary-400 focus:outline-primary-400'
-                          : ''
-                      }
                       label={t('cloud:dashboard.config_chart.name')}
                       error={formState.errors['title']}
                       registration={register('title')}
