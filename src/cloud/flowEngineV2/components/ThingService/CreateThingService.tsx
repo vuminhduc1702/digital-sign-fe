@@ -43,19 +43,21 @@ import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 
+export const inputSchema = z.array(
+  z.object({
+    name: z
+      .string()
+      .min(1, { message: 'Tên biến quá ngắn' })
+      .max(64, { message: 'Tên biến quá dài' }),
+    type: z.string(),
+    value: z.string().optional().or(z.boolean()),
+  }),
+)
+
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
   description: z.string(),
-  input: z.array(
-    z.object({
-      name: z
-        .string()
-        .min(1, { message: 'Tên biến quá ngắn' })
-        .max(64, { message: 'Tên biến quá dài' }),
-      type: z.string(),
-      value: z.string().optional().or(z.boolean()),
-    }),
-  ),
+  input: inputSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
 })
 
@@ -103,6 +105,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
+
   // Resize console window
   const resizerWidth = 8
   const minWidthCode = 126

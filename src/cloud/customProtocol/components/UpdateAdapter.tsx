@@ -133,7 +133,7 @@ export function UpdateAdapter({
     return result
   }
 
-  const selectDropdownService = useRef<SelectInstance<SelectOption> | null>(
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
 
@@ -276,10 +276,10 @@ export function UpdateAdapter({
                     thing => thing.value === getValues('thing_id'),
                   )}
                   handleClearSelectDropdown={() =>
-                    selectDropdownService.current?.clearValue()
+                    selectDropdownServiceRef.current?.clearValue()
                   }
                   handleChangeSelect={() =>
-                    selectDropdownService.current?.clearValue()
+                    selectDropdownServiceRef.current?.clearValue()
                   }
                 />
                 <p className="text-body-sm text-primary-400">
@@ -290,7 +290,7 @@ export function UpdateAdapter({
             {!isLoadingService ? (
               <div className="w-[calc(100%-2.5rem)] space-y-1">
                 <SelectDropdown
-                  refSelect={selectDropdownService}
+                  refSelect={selectDropdownServiceRef}
                   label={t('cloud:custom_protocol.service.title')}
                   name="handle_service"
                   control={control}

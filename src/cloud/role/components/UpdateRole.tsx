@@ -150,22 +150,15 @@ export function UpdateRole({
       }
     }) || []
 
-  const {
-    register,
-    formState,
-    handleSubmit,
-    control,
-    getValues,
-    watch,
-    setValue,
-  } = useForm<UpdateRoleDTO['data']>({
-    resolver: roleSchema && zodResolver(roleSchema),
-    defaultValues: {
-      name,
-      policies: policiesCurrent,
-      role_type: type,
-    },
-  })
+  const { register, formState, handleSubmit, control, getValues, setValue } =
+    useForm<UpdateRoleDTO['data']>({
+      resolver: roleSchema && zodResolver(roleSchema),
+      defaultValues: {
+        name,
+        policies: policiesCurrent,
+        role_type: type,
+      },
+    })
 
   const { fields, append, remove } = useFieldArray({
     name: 'policies',
