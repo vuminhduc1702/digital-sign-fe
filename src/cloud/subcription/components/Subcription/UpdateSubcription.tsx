@@ -325,13 +325,15 @@ export function UpdateSubcription({
               >
                 {t('btn:close')}
               </Button>
-              <Button
-                onClick={() => setIsUpdate(true)}
-                size="md"
-                className="bg-primary-400 w-[100px] rounded-md"
-              >
-                {t('btn:update')}
-              </Button>
+              {data?.data?.s_status !== 'Cancelled' &&
+                <Button
+                  onClick={() => setIsUpdate(true)}
+                  size="md"
+                  className="bg-primary-400 w-[100px] rounded-md"
+                >
+                  {t('btn:update')}
+                </Button>
+              }
             </>
           ) : (
             <Button
