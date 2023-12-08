@@ -337,7 +337,7 @@ export function BaseTable<T extends Record<string, any>>({
         </>
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
-        <div className="flex gap-3">
+        <div className="absolute bottom-10 flex gap-3">
           <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
@@ -349,7 +349,7 @@ export function BaseTable<T extends Record<string, any>>({
               .replace('{{TOTAL}}', totalAttrs?.toString())}
           </span>
         </div>
-        <div className="absolute right-6 flex gap-x-2">
+        <div className="absolute bottom-10 right-6 flex gap-x-2">
           <Button
             className="rounded-l-md border-none"
             onClick={() => {
