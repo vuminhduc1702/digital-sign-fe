@@ -220,7 +220,7 @@ export function CreateAdapter() {
     })
   }
 
-  const selectDropdownService = useRef<SelectInstance<SelectOption> | null>(
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
 
@@ -355,10 +355,10 @@ export function CreateAdapter() {
                 isLoading={AdapterIsLoading}
                 placeholder={t('cloud:custom_protocol.thing.choose')}
                 handleClearSelectDropdown={() =>
-                  selectDropdownService.current?.clearValue()
+                  selectDropdownServiceRef.current?.clearValue()
                 }
                 handleChangeSelect={() =>
-                  selectDropdownService.current?.clearValue()
+                  selectDropdownServiceRef.current?.clearValue()
                 }
               />
               <p className="text-body-sm text-primary-400">
@@ -367,7 +367,7 @@ export function CreateAdapter() {
             </div>
             <div className="w-[calc(100%-2.5rem)] space-y-1">
               <SelectDropdown
-                refSelect={selectDropdownService}
+                refSelect={selectDropdownServiceRef}
                 label={t('cloud:custom_protocol.service.title')}
                 name="handle_service"
                 control={control}

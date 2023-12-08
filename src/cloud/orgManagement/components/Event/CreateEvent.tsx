@@ -1,35 +1,41 @@
-import * as z from 'zod'
-import { useTranslation } from 'react-i18next'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import * as z from 'zod'
 import { useParams } from 'react-router-dom'
 
-import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useCreateAttrChart } from '~/cloud/dashboard/api'
 import { Button } from '~/components/Button'
+import { Checkbox } from '~/components/Checkbox'
 import {
+  FieldWrapper,
   FormDrawer,
   InputField,
-  SelectField,
   SelectDropdown,
-  FieldWrapper,
+  SelectField,
+  type SelectOption,
 } from '~/components/Form'
+import TitleBar from '~/components/Head/TitleBar'
+import i18n from '~/i18n'
+import { useGetOrgs } from '~/layout/MainLayout/api'
+import { cn, flattenData } from '~/utils/misc'
+import { nameSchema } from '~/utils/schemaValidation'
+import storage from '~/utils/storage'
+import { useGetDevices } from '../../api/deviceAPI'
 import { useCreateEvent, type CreateEventDTO } from '../../api/eventAPI'
 import { useGetGroups } from '../../api/groupAPI'
-import { useGetDevices } from '../../api/deviceAPI'
-import { cn, flattenData } from '~/utils/misc'
-import TitleBar from '~/components/Head/TitleBar'
-import storage from '~/utils/storage'
-import { Checkbox } from '~/components/Checkbox'
-import i18n from '~/i18n'
-import { useCreateAttrChart } from '~/cloud/dashboard/api'
-
-import { nameSchema } from '~/utils/schemaValidation'
 import { initialTodos } from './EventTable'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
+import { inputSchema } from '~/cloud/flowEngineV2/components/ThingService'
+import { type SelectInstance } from 'react-select'
+
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
 export const logicalOperatorOption = [
   {
@@ -125,6 +131,10 @@ export const actionTypeOptions = [
     ),
     value: 'delay',
   },
+  {
+    label: 'Execute service',
+    value: 'report',
+  },
 ]
 
 export const eventTypeOptions = [
@@ -180,11 +190,39 @@ const eventIntervalSchema = z.object({
 
 const eventActionSchema = z
   .array(
-    z.object({ receiver: z.string() }).and(
-      z
-        .object({
-          action_type: z.enum(['eventactive', 'delay'] as const),
-          message: z.string().optional(),
+    z
+      .object({
+        action_type: z.enum(['eventactive', 'delay'] as const),
+        message: z.string().optional(),
+        subject: z.string().min(1, {
+          message: i18n
+            .t('placeholder:input_text_value')
+            .replace(
+              '{{VALUE}}',
+              i18n.t('cloud:org_manage.event_manage.add_event.action.subject'),
+            ),
+        }),
+        receiver: z.string(),
+      })
+      .or(
+        z.object({
+          action_type: z.enum([
+            'sms',
+            'mqtt',
+            'fcm',
+            'event',
+            'email',
+          ] as const),
+          message: z.string().min(1, {
+            message: i18n
+              .t('placeholder:input_text_value')
+              .replace(
+                '{{VALUE}}',
+                i18n.t(
+                  'cloud:org_manage.event_manage.add_event.action.message',
+                ),
+              ),
+          }),
           subject: z.string().min(1, {
             message: i18n
               .t('placeholder:input_text_value')
@@ -195,41 +233,36 @@ const eventActionSchema = z
                 ),
               ),
           }),
-        })
-        .or(
-          z.object({
-            action_type: z.enum([
-              'sms',
-              'mqtt',
-              'fcm',
-              'event',
-              'email',
-            ] as const),
-            message: z.string().min(1, {
-              message: i18n
-                .t('placeholder:input_text_value')
-                .replace(
-                  '{{VALUE}}',
-                  i18n.t(
-                    'cloud:org_manage.event_manage.add_event.action.message',
-                  ),
-                ),
-            }),
-            subject: z.string().min(1, {
-              message: i18n
-                .t('placeholder:input_text_value')
-                .replace(
-                  '{{VALUE}}',
-                  i18n.t(
-                    'cloud:org_manage.event_manage.add_event.action.subject',
-                  ),
-                ),
-            }),
-          }),
-        ),
-    ),
+          receiver: z.string(),
+        }),
+      )
+      .or(
+        z.object({
+          action_type: z.enum(['report'] as const),
+        }),
+      ),
   )
   .optional()
+
+const cmdSchema = z.object({
+  thing_id: z.string().min(1, {
+    message: i18n
+      .t('placeholder:input_text_value')
+      .replace(
+        '{{VALUE}}',
+        i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+      ),
+  }),
+  handle_service: z.string().min(1, {
+    message: i18n
+      .t('placeholder:input_text_value')
+      .replace(
+        '{{VALUE}}',
+        i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+      ),
+  }),
+  input: inputSchema,
+})
 
 export const createEventSchema = z
   .object({
@@ -241,6 +274,7 @@ export const createEventSchema = z
     status: z.boolean().optional(),
     retry: z.number().optional(),
     onClick: z.boolean(),
+    cmd: cmdSchema,
   })
   .and(
     z.discriminatedUnion('type', [
@@ -266,7 +300,6 @@ export function CreateEvent() {
   const { t } = useTranslation()
 
   const { orgId } = useParams()
-
   const {
     register,
     formState,
@@ -276,6 +309,7 @@ export function CreateEvent() {
     setValue,
     getValues,
     reset,
+    resetField,
   } = useForm<CreateEventDTO['data']>({
     resolver: createEventSchema && zodResolver(createEventSchema),
     defaultValues: {
@@ -302,8 +336,8 @@ export function CreateEvent() {
     name: 'action',
     control,
   })
+  // console.log(actionFields, 'actionFields')
   console.log('formState.errors', formState.errors)
-
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
@@ -351,6 +385,33 @@ export function CreateEvent() {
 
   const [todos, setTodos] = useState(initialTodos)
 
+  const [actionType, setActionType] = useState('')
+
+  const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: watch('cmd.thing_id'),
+      config: {
+        suspense: false,
+        enabled: !!watch('cmd.thing_id'),
+      },
+    })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  const serviceInput = serviceData?.data?.find(
+    item => item.name === watch('cmd.handle_service'),
+  )?.input
+
   const clearData = () => {
     reset()
     setTodos(initialTodos)
@@ -365,6 +426,17 @@ export function CreateEvent() {
       ),
     )
   }
+
+  useEffect(() => {
+    serviceInput?.forEach((element, idx) => {
+      setValue(`cmd.input.${idx}.name`, element.name)
+      setValue(`cmd.input.${idx}.type`, element.type)
+    })
+  }, [serviceInput])
+
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   return (
     <FormDrawer
@@ -397,6 +469,7 @@ export function CreateEvent() {
         id="create-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
+          // console.log('check values submit form:', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -426,12 +499,17 @@ export function CreateEvent() {
                 logical_operator: item.logical_operator,
               }))) ||
             []
-          const actionArr = values.action?.map(item => ({
-            action_type: item.action_type,
-            receiver: item.receiver,
-            message: item.message,
-            subject: item.subject,
-          }))
+          const actionArr = values.action?.map(item => {
+            if (item.action_type !== 'report') {
+              return {
+                action_type: item.action_type,
+                receiver: item.receiver,
+                message: item.message,
+                subject: item.subject,
+              }
+            }
+            return { action_type: item.action_type }
+          })
 
           mutate({
             data: {
@@ -448,6 +526,15 @@ export function CreateEvent() {
               schedule: scheduleValue,
               interval,
               type: getValues('type'),
+              cmd: {
+                thing_id: values.cmd.thing_id,
+                service_name: values.cmd.handle_service,
+                project_id: projectId,
+                input: values.cmd.input.reduce((accumulator, currentValue) => {
+                  accumulator[currentValue.name] = currentValue.value
+                  return accumulator
+                }, {}),
+              },
             },
           })
         })}
@@ -772,15 +859,19 @@ export function CreateEvent() {
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
               className="w-full rounded-md bg-secondary-700 pl-3"
             />
-            <Button
-              className="rounded-md"
-              variant="trans"
-              size="square"
-              startIcon={
-                <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-              }
-              onClick={() => actionAppend([{}])}
-            />
+            {actionType !== 'report' && (
+              <Button
+                className="rounded-md"
+                variant="trans"
+                size="square"
+                startIcon={
+                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                }
+                onClick={() => {
+                  actionAppend([{}])
+                }}
+              />
+            )}
           </div>
           {actionFields.map((field, index) => {
             return (
@@ -791,10 +882,46 @@ export function CreateEvent() {
                       'cloud:org_manage.event_manage.add_event.action.action_type.title',
                     )}
                     error={formState?.errors?.action?.[index]?.action_type}
-                    registration={register(`action.${index}.action_type`)}
-                    options={actionTypeOptions}
+                    registration={register(`action.${index}.action_type`, {
+                      onChange: e => {
+                        setActionType(e.target.value)
+                      },
+                    })}
+                    options={
+                      actionFields.length < 2
+                        ? actionTypeOptions
+                        : actionTypeOptions.filter(
+                            item => item.value !== 'report',
+                          )
+                    }
                   />
-                  <div className="space-y-1">
+                  {actionType === 'report' ? (
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        label={t('cloud:custom_protocol.thing.id')}
+                        name="cmd.thing_id"
+                        control={control}
+                        options={thingSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:entity_thing') ||
+                          option.label === t('table:no_thing')
+                        }
+                        noOptionsMessage={() => t('table:no_thing')}
+                        loadingMessage={() => t('loading:entity_thing')}
+                        isLoading={isLoadingThing}
+                        placeholder={t('cloud:custom_protocol.thing.choose')}
+                        handleClearSelectDropdown={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                        handleChangeSelect={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {formState?.errors?.cmd?.thing_id?.message}
+                      </p>
+                    </div>
+                  ) : (
                     <InputField
                       label={t(
                         'cloud:org_manage.event_manage.add_event.action.address',
@@ -802,8 +929,32 @@ export function CreateEvent() {
                       registration={register(`action.${index}.receiver`)}
                       error={formState?.errors?.action?.[index]?.receiver}
                     />
-                  </div>
-                  <div className="space-y-1">
+                  )}
+                  {actionType === 'report' ? (
+                    <div className="space-y-1">
+                      <SelectDropdown
+                        refSelect={selectDropdownServiceRef}
+                        label={t('cloud:custom_protocol.service.title')}
+                        name="cmd.handle_service"
+                        control={control}
+                        options={serviceSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:service_thing') ||
+                          option.label === t('table:no_service')
+                        }
+                        isLoading={isLoadingService}
+                        loadingMessage={() => t('loading:service_thing')}
+                        noOptionsMessage={() => t('table:no_service')}
+                        placeholder={t('cloud:custom_protocol.service.choose')}
+                        customOnChange={() =>
+                          resetField(`cmd.input.${index}.value`)
+                        }
+                      />
+                      <p className="text-body-sm text-primary-400">
+                        {formState?.errors?.cmd?.handle_service?.message}
+                      </p>
+                    </div>
+                  ) : (
                     <InputField
                       label={t(
                         'cloud:org_manage.event_manage.add_event.action.subject',
@@ -811,21 +962,120 @@ export function CreateEvent() {
                       registration={register(`action.${index}.subject`)}
                       error={formState?.errors?.action?.[index]?.subject}
                     />
-                  </div>
+                  )}
                   <div className="flex justify-end">
-                    <InputField
-                      label={t(
-                        'cloud:org_manage.event_manage.add_event.action.message',
-                      )}
-                      registration={register(`action.${index}.message`)}
-                      error={formState?.errors?.action?.[index]?.message}
-                    />
+                    {actionType === 'report' ? (
+                      <div className="max-h-44 overflow-auto">
+                        {serviceInput?.map((element, index) => {
+                          return (
+                            <div
+                              key={`key-${index}`}
+                              className="mb-3 space-y-3 border-b-4 pb-3"
+                            >
+                              <InputField
+                                require={true}
+                                label={t(
+                                  'cloud:custom_protocol.service.service_input.name',
+                                )}
+                                error={
+                                  formState?.errors?.cmd?.input?.[index]?.name
+                                }
+                                registration={register(
+                                  `cmd.input.${index}.name` as const,
+                                )}
+                                defaultValue={element.name}
+                              />
+                              <SelectField
+                                label={t(
+                                  'cloud:custom_protocol.service.service_input.type',
+                                )}
+                                require={true}
+                                error={
+                                  formState.errors.cmd?.input?.[index]?.type
+                                }
+                                registration={register(
+                                  `cmd.input.${index}.type` as const,
+                                  {
+                                    onChange: () =>
+                                      resetField(`cmd.input.${index}.value`),
+                                  },
+                                )}
+                                options={outputList}
+                                className="h-9 px-2"
+                                defaultValue={element.type}
+                              />
+                              {watch(`cmd.input.${index}.type`) === 'bool' ? (
+                                <FieldWrapper
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.value',
+                                  )}
+                                  error={
+                                    formState?.errors?.cmd?.input?.[index]
+                                      ?.value
+                                  }
+                                  className="w-fit"
+                                >
+                                  <Controller
+                                    control={control}
+                                    name={`cmd.input.${index}.value`}
+                                    render={({
+                                      field: { onChange, value, ...field },
+                                    }) => {
+                                      return (
+                                        <Checkbox
+                                          {...field}
+                                          checked={value as boolean}
+                                          onCheckedChange={onChange}
+                                          defaultChecked
+                                        />
+                                      )
+                                    }}
+                                  />
+                                  <span className="pl-3">True</span>
+                                </FieldWrapper>
+                              ) : (
+                                <InputField
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.value',
+                                  )}
+                                  error={
+                                    formState?.errors?.cmd?.input?.[index]
+                                      ?.value
+                                  }
+                                  registration={register(
+                                    `cmd.input.${index}.value` as const,
+                                  )}
+                                  type={
+                                    ['json', 'str'].includes(
+                                      watch(`cmd.input.${index}.type`),
+                                    )
+                                      ? 'text'
+                                      : 'number'
+                                  }
+                                />
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ) : (
+                      <InputField
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.action.message',
+                        )}
+                        registration={register(`action.${index}.message`)}
+                        error={formState?.errors?.action?.[index]?.message}
+                      />
+                    )}
                     <Button
                       type="button"
                       size="square"
                       variant="trans"
-                      className="ml-5 mt-3 border-none"
-                      onClick={() => actionRemove(index)}
+                      className="mt-3 border-none"
+                      onClick={() => {
+                        setActionType('')
+                        actionRemove(index)
+                      }}
                       startIcon={
                         <img
                           src={btnDeleteIcon}

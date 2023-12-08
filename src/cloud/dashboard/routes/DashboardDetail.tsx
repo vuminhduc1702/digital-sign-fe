@@ -115,7 +115,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL)
-  console.log('lastJsonMessage', lastJsonMessage)
+  // console.log('lastJsonMessage', lastJsonMessage)
   const handleSendMessage = useCallback(
     (message: WebSocketMessage) => sendMessage(message),
     [],
