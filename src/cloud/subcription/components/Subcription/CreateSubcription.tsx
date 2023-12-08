@@ -9,11 +9,7 @@ import { useGetPlans } from '~/cloud/billingPackage/api'
 import { usePlanById } from '~/cloud/billingPackage/api/getPackageById'
 import { useGetUsers } from '~/cloud/orgManagement/api/userAPI'
 import { Button } from '~/components/Button'
-import {
-  InputField,
-  SelectDropdown,
-  type SelectOptionString,
-} from '~/components/Form'
+import { InputField, SelectDropdown } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
 import i18n from '~/i18n'
@@ -38,7 +34,6 @@ export function CreateSubcription() {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
-  const [userValue, setUserValue] = useState<SelectOptionString | null>()
   const [userId, setUserId] = useState('')
   const [planValue, setPlanValue] = useState<string | null>()
   const [customerName, setCustomerName] = useState('')
@@ -56,7 +51,6 @@ export function CreateSubcription() {
 
   const { mutate, isLoading, isSuccess } = useCreateSubcription()
   const resetData = () => {
-    setUserValue(null)
     setPlanValue(null)
     setCustomerCode('')
     setCustomerName('')
@@ -247,7 +241,6 @@ export function CreateSubcription() {
                   )
                   setCustomerCode(arrValue[0])
                   setUserId(arrValue[1])
-                  // setUserValue(e)
                 }}
                 options={
                   UserData?.users?.map(user => ({

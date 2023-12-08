@@ -11,12 +11,6 @@ export type SelectOption = {
   selected?: boolean
 }
 
-export type SelectOptionString = {
-  label: string
-  value: string
-  selected?: boolean
-}
-
 type SelectFieldProps = FieldWrapperPassThroughProps & {
   options?: SelectOption[]
   className?: string
