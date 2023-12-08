@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { useProjectById } from '~/cloud/project/api'
 import { Button } from '~/components/Button'
@@ -28,6 +28,7 @@ export type OrgMapType = {
   image: string
   children: OrgMapType[]
   isSearch?: boolean
+  isShow?: boolean
 }
 
 export type EntityTypeURL =
@@ -45,6 +46,7 @@ function OrgManageSidebar() {
   const { close, open, isOpen } = useDisclosure()
 
   const projectId = storage.getProject()?.id
+  const { orgId } = useParams()
 
   const { data: projectByIdData } = useProjectById({
     projectId,
@@ -99,6 +101,30 @@ function OrgManageSidebar() {
       data = arr
     }
 
+    if (orgId) {
+      const findIndex = filteredComboboxData.findIndex(
+        item => item.id === orgId,
+      )
+      if (findIndex !== -1) {
+        let currentLevel = data[findIndex]?.level
+        for (let i = findIndex; i >= 0; i--) {
+          if (i === findIndex) {
+          } else {
+            if (data[i]) {
+              if (getInt(filteredComboboxData[i].level) < getInt(currentLevel)) {
+                data[i].isShow = true
+                if (data[i].level === '1') {
+                  break
+                }
+              } else {
+                data[i].isShow = false
+              }
+            }
+          }
+        }
+      }
+    }
+
     data.forEach(node => {
       node.children = []
     })
@@ -133,11 +159,11 @@ function OrgManageSidebar() {
     query === ''
       ? filteredComboboxData
       : filteredComboboxData.filter(person =>
-          person.name
-            .toLowerCase()
-            .replace(/\s+/g, '')
-            .includes(query.toLowerCase().replace(/\s+/g, '')),
-        )
+        person.name
+          .toLowerCase()
+          .replace(/\s+/g, '')
+          .includes(query.toLowerCase().replace(/\s+/g, '')),
+      )
 
   return (
     <>
@@ -190,8 +216,7 @@ function OrgManageSidebar() {
                     <Combobox.Option
                       key={person.id}
                       className={({ active }) =>
-                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${
-                          active ? 'bg-primary-300 text-white' : 'text-black'
+                        `relative cursor-pointer select-none py-2 pl-10 pr-4 ${active ? 'bg-primary-300 text-white' : 'text-black'
                         }`
                       }
                       value={person}
@@ -199,17 +224,15 @@ function OrgManageSidebar() {
                       {({ selected, active }) => (
                         <>
                           <span
-                            className={`block truncate ${
-                              selected ? 'font-medium' : 'font-normal'
-                            }`}
+                            className={`block truncate ${selected ? 'font-medium' : 'font-normal'
+                              }`}
                           >
                             {person.name}
                           </span>
                           {selected ? (
                             <span
-                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                                active ? 'text-white' : 'text-teal-600'
-                              }`}
+                              className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-teal-600'
+                                }`}
                             >
                               <CheckIcon
                                 className="h-5 w-5"
