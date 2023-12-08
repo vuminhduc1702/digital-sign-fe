@@ -162,11 +162,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   )}
                 />
                 <SelectField
-                  className={`h-[36px] py-1 ${
-                    !!formState?.errors?.attributes?.[index]?.value_t
-                      ? 'border-primary-400 focus:outline-primary-400'
-                      : ''
-                  }`}
+                  className={`h-[36px] py-1`}
                   label={t('cloud:org_manage.org_manage.add_attr.value_type')}
                   error={formState?.errors?.attributes?.[index]?.value_t}
                   registration={register(
@@ -176,11 +172,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 />
                 {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
                   <SelectField
-                    className={`h-[36px] py-1 ${
-                      !!formState?.errors?.attributes?.[index]?.value
-                        ? 'border-primary-400 focus:outline-primary-400'
-                        : ''
-                    }`}
+                    className={`h-[36px] py-1`}
                     label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(
@@ -190,11 +182,6 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   />
                 ) : (
                   <InputField
-                    className={
-                      !!formState?.errors?.attributes?.[index]?.value
-                        ? 'border-primary-400 focus:outline-primary-400'
-                        : ''
-                    }
                     label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(

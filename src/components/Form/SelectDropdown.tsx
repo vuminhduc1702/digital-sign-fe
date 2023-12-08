@@ -59,6 +59,8 @@ export function SelectDropdown<
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
+  // console.log(name)
+  // console.log('control:', control?._formState?.errors)
   return (
     <FieldWrapper
       classlabel={classlabel}
@@ -107,7 +109,7 @@ export function SelectDropdown<
                 }}
                 styles={{
                   control: (baseStyles, state) => {
-                    const isErr =
+                    let isErr =
                       isErrorSelect || (isErrorSelect && state.isFocused)
                     return {
                       ...baseStyles,

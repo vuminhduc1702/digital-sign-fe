@@ -238,11 +238,6 @@ export function UpdateRole({
       >
         <>
           <InputField
-            className={
-              !!formState.errors['name']
-                ? 'border-primary-400 focus:outline-primary-400'
-                : ''
-            }
             label={t('cloud:role_manage.add_role.name')}
             error={formState.errors['name']}
             registration={register('name')}
@@ -250,10 +245,10 @@ export function UpdateRole({
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
-              className="rounded-md text-secondary-700"
+              className="text-secondary-700 rounded-md"
               variant="trans"
               size="square"
               startIcon={
@@ -280,12 +275,7 @@ export function UpdateRole({
               <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
                 <div className="space-y-1">
                   <InputField
-                    className={
-                      !!formState?.errors?.policies?.[index]?.policy_name
-                        ?.message
-                        ? 'border-primary-400 focus:outline-primary-400'
-                        : ''
-                    }
+                  
                     label={t('cloud:role_manage.add_policy.name')}
                     registration={register(
                       `policies.${index}.policy_name` as const,
