@@ -8,6 +8,13 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type EntityType } from '../../api/attrAPI'
 import { type MQTTMessage } from '../../api/attrAPI/getMQTTLog'
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
+
 export function MQTTMessageLogTable({
   data,
   entityId,
@@ -44,20 +51,87 @@ export function MQTTMessageLogTable({
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('created_by', {
+      columnHelper.accessor('payload_as_string', {
         header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.payload_as_string')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const value = info.getValue()
+          const valueTrigger =
+            value?.length > 10 ? value.slice(0, 10) + '...' : value
+          return (
+            <>
+              {value ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+                    <TooltipContent>
+                      <p>{value}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                ''
+              )}
+            </>
+          )
+        },
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('owner', {
-        header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.owner')}</span>
-        ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('created_by', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
+      //   ),
+      //   cell: info => {
+      //     const value = info.getValue()
+      //     const valueTrigger =
+      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
+      //     return (
+      //       <>
+      //         {value ? (
+      //           <TooltipProvider>
+      //             <Tooltip>
+      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+      //               <TooltipContent>
+      //                 <p>{value}</p>
+      //               </TooltipContent>
+      //             </Tooltip>
+      //           </TooltipProvider>
+      //         ) : (
+      //           ''
+      //         )}
+      //       </>
+      //     )
+      //   },
+      //   footer: info => info.column.id,
+      // }),
+      // columnHelper.accessor('owner', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.owner')}</span>
+      //   ),
+      //   cell: info => {
+      //     const value = info.getValue()
+      //     const valueTrigger =
+      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
+      //     return (
+      //       <>
+      //         {value ? (
+      //           <TooltipProvider>
+      //             <Tooltip>
+      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+      //               <TooltipContent>
+      //                 <p>{value}</p>
+      //               </TooltipContent>
+      //             </Tooltip>
+      //           </TooltipProvider>
+      //         ) : (
+      //           ''
+      //         )}
+      //       </>
+      //     )
+      //   },
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('topic', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.topic')}</span>
@@ -65,13 +139,33 @@ export function MQTTMessageLogTable({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('project_id', {
-        header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.project')}</span>
-        ),
-        cell: info => info.getValue(),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('project_id', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.project')}</span>
+      //   ),
+      //   cell: info => {
+      //     const value = info.getValue()
+      //     const valueTrigger =
+      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
+      //     return (
+      //       <>
+      //         {value ? (
+      //           <TooltipProvider>
+      //             <Tooltip>
+      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+      //               <TooltipContent>
+      //                 <p>{value}</p>
+      //               </TooltipContent>
+      //             </Tooltip>
+      //           </TooltipProvider>
+      //         ) : (
+      //           ''
+      //         )}
+      //       </>
+      //     )
+      //   },
+      //   footer: info => info.column.id,
+      // }),
     ],
     [entityId, entityType],
   )

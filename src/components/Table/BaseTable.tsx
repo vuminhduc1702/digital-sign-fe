@@ -27,12 +27,6 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../Tooltip'
 
 export function BaseTable<T extends Record<string, any>>({
   data,
@@ -95,35 +89,39 @@ export function BaseTable<T extends Record<string, any>>({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <div className={cn('mt-2 flex grow flex-col justify-between', className)}>
+    <div
+      className={cn(
+        'mt-2 flex grow flex-col justify-between overflow-x-auto',
+        className,
+      )}
+    >
       {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
         <>
-          <div className="h-full overflow-auto">
-            <table className="w-full border-2" id="table-ref">
-              <thead className="border-b-2 bg-gray-200 text-center">
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => {
-                      return (
-                        <th
-                          className="h-9 text-center"
-                          key={header.id}
-                          colSpan={header.colSpan}
-                        >
-                          {header.isPlaceholder ? null : (
-                            <div
-                              className={`text-table-header ${
-                                header.column.getCanSort()
-                                  ? 'cursor-pointer select-none'
-                                  : ''
-                              }`}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {/* <div className='flex items-center justify-center text-table-header'>
+          <table className="w-full border-2" id="table-ref">
+            <thead className="border-b-2 bg-gray-200 text-center">
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => {
+                    return (
+                      <th
+                        className="h-9 text-center"
+                        key={header.id}
+                        colSpan={header.colSpan}
+                      >
+                        {header.isPlaceholder ? null : (
+                          <div
+                            className={`text-table-header ${
+                              header.column.getCanSort()
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
+                            onClick={header.column.getToggleSortingHandler()}
+                          >
+                            {/* <div className='flex items-center justify-center text-table-header'>
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
@@ -135,211 +133,207 @@ export function BaseTable<T extends Record<string, any>>({
                               desc: '↓',
                             }[header.column.getIsSorted() as string] ?? null}
                           </div> */}
-                              <div className="text-table-header relative flex items-center justify-center">
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-                                <div className="absolute right-1 w-2 text-xl text-black">
-                                  {{
-                                    asc: '↑',
-                                    desc: '↓',
-                                  }[header.column.getIsSorted() as string] ??
-                                    null}
-                                </div>
+                            <div className="text-table-header relative flex items-center justify-center">
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                              <div className="absolute right-1 w-2 text-xl text-black">
+                                {{
+                                  asc: '↑',
+                                  desc: '↓',
+                                }[header.column.getIsSorted() as string] ??
+                                  null}
                               </div>
                             </div>
-                          )}
-                        </th>
-                      )
-                    })}
-                    {popoverClassName !== '' ? (
-                      <>
-                        <Popover>
-                          <PopoverTrigger
-                            onClick={e => e.stopPropagation()}
-                            className={popoverClassName}
-                            asChild
-                          >
-                            <Button
-                              className="border-none shadow-none"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <SettingIcon
-                                  className="h-9"
-                                  height={24}
-                                  width={24}
-                                  viewBox="0 0 48 48"
-                                />
-                              }
-                            />
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="h-72 w-40 overflow-auto"
-                            align="start"
-                          >
-                            <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
-                              <label htmlFor="checkAll">
-                                <input
-                                  type="checkbox"
-                                  id="checkAll"
-                                  className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
-                                  checked={table.getIsAllColumnsVisible()}
-                                  onChange={table.getToggleAllColumnsVisibilityHandler()}
-                                />
-                                {t(
-                                  'cloud:org_manage.device_manage.table.select_all',
-                                )}
-                              </label>
-                            </div>
+                          </div>
+                        )}
+                      </th>
+                    )
+                  })}
+                  {popoverClassName !== '' ? (
+                    <>
+                      <Popover>
+                        <PopoverTrigger
+                          onClick={e => e.stopPropagation()}
+                          className={popoverClassName}
+                          asChild
+                        >
+                          <Button
+                            className="border-none shadow-none"
+                            variant="trans"
+                            size="square"
+                            startIcon={
+                              <SettingIcon
+                                className="h-9"
+                                height={24}
+                                width={24}
+                                viewBox="0 0 48 48"
+                              />
+                            }
+                          />
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="h-72 w-40 overflow-auto"
+                          align="start"
+                        >
+                          <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
+                            <label htmlFor="checkAll">
+                              <input
+                                type="checkbox"
+                                id="checkAll"
+                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                checked={table.getIsAllColumnsVisible()}
+                                onChange={table.getToggleAllColumnsVisibilityHandler()}
+                              />
+                              {t(
+                                'cloud:org_manage.device_manage.table.select_all',
+                              )}
+                            </label>
+                          </div>
 
-                            <div className="mt-4">
-                              {table
-                                .getAllLeafColumns()
-                                .filter(
-                                  column =>
-                                    column.id !== 'contextMenu' &&
-                                    column.id !== 'stt',
-                                )
-                                .map(column => {
-                                  let title_column
+                          <div className="mt-4">
+                            {table
+                              .getAllLeafColumns()
+                              .filter(
+                                column =>
+                                  column.id !== 'contextMenu' &&
+                                  column.id !== 'stt',
+                              )
+                              .map(column => {
+                                let title_column
 
+                                if (
+                                  column.columnDef &&
+                                  typeof column.columnDef.header === 'function'
+                                ) {
+                                  const headerResult = column.columnDef.header()
                                   if (
-                                    column.columnDef &&
-                                    typeof column.columnDef.header ===
-                                      'function'
+                                    typeof headerResult.props?.children ===
+                                    'string'
                                   ) {
-                                    const headerResult =
-                                      column.columnDef.header()
-                                    if (
-                                      typeof headerResult.props?.children ===
-                                      'string'
-                                    ) {
-                                      title_column =
-                                        headerResult.props?.children
-                                    } else if (
-                                      typeof headerResult.props?.children ===
-                                      'object'
-                                    ) {
-                                      title_column =
-                                        headerResult.props?.children[0].props
-                                          ?.children
-                                    } else {
-                                      title_column = ''
-                                    }
-                                    // console.log(title_column)
+                                    title_column = headerResult.props?.children
+                                  } else if (
+                                    typeof headerResult.props?.children ===
+                                    'object'
+                                  ) {
+                                    title_column =
+                                      headerResult.props?.children[0].props
+                                        ?.children
                                   } else {
                                     title_column = ''
                                   }
+                                  // console.log(title_column)
+                                } else {
+                                  title_column = ''
+                                }
 
-                                  return (
-                                    <div key={column.id} className="p-1">
-                                      <label htmlFor={column.id}>
-                                        <input
-                                          type="checkbox"
-                                          id={column.id}
-                                          className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
-                                          checked={column.getIsVisible()}
-                                          onChange={column.getToggleVisibilityHandler()}
-                                        />
-                                        {title_column}
-                                      </label>
-                                    </div>
-                                  )
-                                })}
-                            </div>
-                          </PopoverContent>
-                        </Popover>
-                      </>
-                    ) : null}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {table.getRowModel().rows.map(row => {
-                  return (
-                    <Fragment key={row.id}>
-                      <tr
-                        className="border-secondary-70 border-t-2 text-center"
-                        key={row.id}
-                      >
-                        {row.getVisibleCells().map((cell, index) => {
-                          if (index === row.getVisibleCells().length - 1) {
-                            return (
-                              <Fragment key={cell.id}>
-                                <td className="h-9" key={cell.id}>
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext(),
-                                  )}
-                                </td>
-                              </Fragment>
-                            )
-                          } else {
-                            // const cellStr = cell.getContext().getValue()
-                            // let cellStrTrigger
-                            // if (typeof cellStr == 'string') {
-                            //   cellStrTrigger =
-                            //     cellStr?.length > 10
-                            //       ? cellStr.slice(0, 10) + '...'
-                            //       : cellStr
-                            // }
-
-                            return (
+                                return (
+                                  <div key={column.id} className="p-1">
+                                    <label htmlFor={column.id}>
+                                      <input
+                                        type="checkbox"
+                                        id={column.id}
+                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        checked={column.getIsVisible()}
+                                        onChange={column.getToggleVisibilityHandler()}
+                                      />
+                                      {title_column}
+                                    </label>
+                                  </div>
+                                )
+                              })}
+                          </div>
+                        </PopoverContent>
+                      </Popover>
+                    </>
+                  ) : null}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => {
+                return (
+                  <Fragment key={row.id}>
+                    <tr
+                      className="border-secondary-70 border-t-2 text-center"
+                      key={row.id}
+                    >
+                      {row.getVisibleCells().map((cell, index) => {
+                        if (index === row.getVisibleCells().length - 1) {
+                          return (
+                            <Fragment key={cell.id}>
                               <td className="h-9" key={cell.id}>
                                 {flexRender(
                                   cell.column.columnDef.cell,
                                   cell.getContext(),
                                 )}
                               </td>
-                            )
-                            // return typeof cellStr == 'string' &&
-                            //   cellStr != 'true' &&
-                            //   cellStr != 'false' &&
-                            //   isNaN(parseInt(cellStr)) ? (
-                            //   <td className="h-9 cursor-default" key={cell.id}>
-                            //     <TooltipProvider>
-                            //       <Tooltip>
-                            //         <TooltipTrigger>
-                            //           {cellStrTrigger}
-                            //         </TooltipTrigger>
-                            //         <TooltipContent>
-                            //           <p>
-                            //             {flexRender(
-                            //               cell.column.columnDef.cell,
-                            //               cell.getContext(),
-                            //             )}
-                            //           </p>
-                            //         </TooltipContent>
-                            //       </Tooltip>
-                            //     </TooltipProvider>
-                            //   </td>
-                            // ) : (
-                            //   <td className="h-9" key={cell.id}>
-                            //     {flexRender(
-                            //       cell.column.columnDef.cell,
-                            //       cell.getContext(),
-                            //     )}
-                            //   </td>
-                            // )
-                          }
-                        })}
+                            </Fragment>
+                          )
+                        } else {
+                          // const cellStr = cell.getContext().getValue()
+                          // let cellStrTrigger
+                          // if (typeof cellStr == 'string') {
+                          //   cellStrTrigger =
+                          //     cellStr?.length > 10
+                          //       ? cellStr.slice(0, 10) + '...'
+                          //       : cellStr
+                          // }
+
+                          return (
+                            <td className="h-9" key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                          )
+                          // return typeof cellStr == 'string' &&
+                          //   cellStr != 'true' &&
+                          //   cellStr != 'false' &&
+                          //   isNaN(parseInt(cellStr)) ? (
+                          //   <td className="h-9 cursor-default" key={cell.id}>
+                          //     <TooltipProvider>
+                          //       <Tooltip>
+                          //         <TooltipTrigger>
+                          //           {cellStrTrigger}
+                          //         </TooltipTrigger>
+                          //         <TooltipContent>
+                          //           <p>
+                          //             {flexRender(
+                          //               cell.column.columnDef.cell,
+                          //               cell.getContext(),
+                          //             )}
+                          //           </p>
+                          //         </TooltipContent>
+                          //       </Tooltip>
+                          //     </TooltipProvider>
+                          //   </td>
+                          // ) : (
+                          //   <td className="h-9" key={cell.id}>
+                          //     {flexRender(
+                          //       cell.column.columnDef.cell,
+                          //       cell.getContext(),
+                          //     )}
+                          //   </td>
+                          // )
+                        }
+                      })}
+                    </tr>
+                    {row.getIsExpanded() && (
+                      <tr>
+                        {/* 2nd row is a custom 1 cell row */}
+                        <td colSpan={row.getVisibleCells().length}>
+                          {renderSubComponent?.({ row })}
+                        </td>
                       </tr>
-                      {row.getIsExpanded() && (
-                        <tr>
-                          {/* 2nd row is a custom 1 cell row */}
-                          <td colSpan={row.getVisibleCells().length}>
-                            {renderSubComponent?.({ row })}
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  )
-                })}
-              </tbody>
-            </table>
-          </div>
+                    )}
+                  </Fragment>
+                )
+              })}
+            </tbody>
+          </table>
         </>
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
@@ -355,7 +349,7 @@ export function BaseTable<T extends Record<string, any>>({
               .replace('{{TOTAL}}', totalAttrs?.toString())}
           </span>
         </div>
-        <div className="flex gap-x-2">
+        <div className="absolute right-6 flex gap-x-2">
           <Button
             className="rounded-l-md border-none"
             onClick={() => {
