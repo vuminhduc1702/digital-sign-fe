@@ -215,6 +215,10 @@
         "title": "Thiết bị",
         "header": "Quản lý thiết bị",
         "table": {
+          "project": "Dự án",
+          "topic": "Topic",
+          "owner": "Sở hữu",
+          "last_update_ts":"Lần cập nhật cuối",
           "isdn": "Isdn",
           "select_all": "Chọn tất cả",
           "group_id": "ID Nhóm",

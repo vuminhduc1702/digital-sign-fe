@@ -37,35 +37,37 @@ export function MQTTMessageLogTable({
       }),
       columnHelper.accessor('ts', {
         header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
+          <span>
+            {t('cloud:org_manage.device_manage.table.last_update_ts')}
+          </span>
         ),
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('created_by', {
         header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('owner', {
         header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.owner')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('topic', {
         header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.topic')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('project_id', {
         header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.value')}</span>
+          <span>{t('cloud:org_manage.device_manage.table.project')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,

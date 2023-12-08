@@ -95,14 +95,14 @@ export function BaseTable<T extends Record<string, any>>({
   // TODO: Pagination Previous button is not working correctly
 
   return (
-    <div className={cn('mt-2 flex grow flex-col justify-between ', className)}>
+    <div className={cn('mt-2 flex grow flex-col justify-between', className)}>
       {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          <div className="h-full overflow-auto">
             <table className="w-full border-2" id="table-ref">
               <thead className="border-b-2 bg-gray-200 text-center">
                 {table.getHeaderGroups().map(headerGroup => (
