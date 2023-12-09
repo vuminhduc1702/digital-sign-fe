@@ -508,7 +508,6 @@ export function CreateWidget({
                       registration={register('title')}
                     />
                     <SelectDropdown
-                      isErrorSelect={!!formState?.errors?.org_id?.message}
                       label={t(
                         'cloud:org_manage.device_manage.add_device.parent',
                       )}
@@ -540,8 +539,8 @@ export function CreateWidget({
                     <div className="space-y-1">
                       <SelectDropdown
                         refSelect={selectDropdownDeviceRef}
-                        isErrorSelect={!!formState?.errors?.device?.message}
                         label={t('cloud:dashboard.config_chart.device')}
+                        error={formState?.errors['device']}
                         name="device"
                         control={control}
                         options={deviceSelectData}
@@ -580,8 +579,7 @@ export function CreateWidget({
                         }}
                       />
                       <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.device?.message ??
-                          formState?.errors?.device?.[0]?.message}
+                        {formState?.errors?.device?.[0]?.message}
                       </p>
                     </div>
                   </div>

@@ -29,7 +29,6 @@ type SelectProps<
   refSelect?: any
   icon?: React.ReactElement
   isWrappedArray?: boolean
-  isErrorSelect?: boolean
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues> &
   Props<Option, IsMulti, Group>
@@ -55,12 +54,10 @@ export function SelectDropdown<
   handleChangeSelect,
   isWrappedArray,
   refSelect,
-  isErrorSelect,
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
-  // console.log(name)
-  // console.log('control:', control?._formState?.errors)
+
   return (
     <FieldWrapper
       classlabel={classlabel}
@@ -109,8 +106,8 @@ export function SelectDropdown<
                 }}
                 styles={{
                   control: (baseStyles, state) => {
-                    let isErr =
-                      isErrorSelect || (isErrorSelect && state.isFocused)
+                    const isErr =
+                      error != null || (error != null && state.isFocused)
                     return {
                       ...baseStyles,
                       borderColor: isErr ? 'red' : '',

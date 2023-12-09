@@ -39,8 +39,7 @@ export const SelectField = ({
   ...props
 }: SelectFieldProps) => {
   const { t } = useTranslation()
-  const redBorderError =
-    error?.message != null ? 'border-primary-400 focus:outline-primary-400' : ''
+
   return (
     <FieldWrapper
       classlabel={classlabel}
@@ -53,8 +52,11 @@ export const SelectField = ({
       <select
         value={value}
         className={cn(
-          'border-secondary-600 text-body-sm focus:outline-focus-400 focus:ring-focus-400 disabled:bg-secondary-500 mt-1 block w-full rounded-md border py-2 pl-3 pr-10 focus:outline-2 disabled:cursor-not-allowed',
-          redBorderError,
+          'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+          {
+            'border-primary-400 focus:outline-primary-400':
+              error?.message != null,
+          },
           className,
         )}
         {...registration}

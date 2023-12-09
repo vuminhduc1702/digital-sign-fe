@@ -828,6 +828,7 @@
     "no_device": "Không có thiết bị. Vui lòng tạo.",
     "no_group": "Không có nhóm. Vui lòng tạo.",
     "no_log_attr": "Không có bản tin thuộc tính",
+    "no_mqtt_hist": "Không có lịch sử MQTT",
     "no_bill": "Không có hóa đơn",
     "no_user": "Không có người dùng. Vui lòng tạo.",
     "no_policy": "Không có chính sách. Vui lòng tạo.",
