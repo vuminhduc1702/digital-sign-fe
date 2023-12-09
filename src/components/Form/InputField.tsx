@@ -20,7 +20,7 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   classchild?: string
 } & IconProps &
   React.InputHTMLAttributes<HTMLInputElement>
-
+//
 export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   function InputField(
     {
@@ -42,6 +42,10 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ref,
   ) {
     const { t } = useTranslation()
+    const redBorderError =
+      error?.message != null
+        ? 'border-primary-400 focus:outline-primary-400'
+        : ''
 
     return (
       <FieldWrapper
@@ -62,6 +66,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           type={type}
           className={cn(
             'border-secondary-600 placeholder-secondary-700 focus:outline-focus-400 focus:ring-focus-400 disabled:bg-secondary-500 block w-full appearance-none rounded-md border px-3 py-2 text-black shadow-sm focus:outline-2 disabled:cursor-not-allowed',
+            redBorderError,
             className,
             { 'pl-8': startIcon, 'pr-8': endIcon },
           )}

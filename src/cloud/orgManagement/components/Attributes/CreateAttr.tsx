@@ -118,7 +118,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.org_manage.attr_list')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
               className="rounded-md"
@@ -144,6 +144,11 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
             >
               <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2">
                 <InputField
+                  className={
+                    !!formState?.errors?.attributes?.[index]?.attribute_key
+                      ? 'border-primary-400 focus:outline-primary-400'
+                      : ''
+                  }
                   label={t('cloud:org_manage.org_manage.add_attr.name')}
                   error={formState?.errors?.attributes?.[index]?.attribute_key}
                   registration={register(
@@ -151,7 +156,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   )}
                 />
                 <SelectField
-                  className="h-[36px] py-1"
+                  className={`h-[36px] py-1`}
                   label={t('cloud:org_manage.org_manage.add_attr.value_type')}
                   error={formState?.errors?.attributes?.[index]?.value_t}
                   registration={register(
@@ -161,7 +166,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 />
                 {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
                   <SelectField
-                    className="h-[36px] py-1"
+                    className={`h-[36px] py-1`}
                     label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(
