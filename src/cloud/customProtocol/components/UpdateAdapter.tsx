@@ -136,6 +136,7 @@ export function UpdateAdapter({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
+  console.log('formState.isDirty', formState.isDirty)
 
   return (
     <Drawer
@@ -159,6 +160,7 @@ export function UpdateAdapter({
             type="submit"
             size="lg"
             isLoading={isLoading}
+            disabled={!formState.isDirty}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }

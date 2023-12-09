@@ -85,7 +85,6 @@ export function UpdateRole({
 
   const policiesCurrent: Policies[] =
     JSON.parse(policy).map((policy: Policies) => {
-      console.log('policy', policy)
       if (role_type) {
         const groups = policy?.group_resources?.groups
         const deviceArr = groupDataDeviceOptions
@@ -169,6 +168,7 @@ export function UpdateRole({
             type="submit"
             size="lg"
             isLoading={isLoading}
+            disabled={!formState.isDirty}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }

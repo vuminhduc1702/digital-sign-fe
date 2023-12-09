@@ -118,7 +118,12 @@ export function UpdateEvent({
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
+  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
+    projectId,
+    config: {
+      suspense: false,
+    },
+  })
   const { acc: orgFlattenData } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name'],

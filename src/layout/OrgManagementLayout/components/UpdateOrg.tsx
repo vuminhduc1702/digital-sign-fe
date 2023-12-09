@@ -141,7 +141,7 @@ export function UpdateOrg({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            // disabled={!formState.isDirty && !formStateUploadImage.isDirty}
+            // disabled={!formState.isDirty}
           />
         </>
       )}

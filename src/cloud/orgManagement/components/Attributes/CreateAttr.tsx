@@ -18,17 +18,11 @@ import {
 import { Checkbox } from '~/components/Checkbox'
 import TitleBar from '~/components/Head/TitleBar'
 
-import { type Attribute } from '~/types'
 import { attrListSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-
-type ValueType = {
-  type: Attribute['value_type']
-  name: string
-}
 
 type CreateAttrProps = {
   entityId: string
