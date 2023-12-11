@@ -91,6 +91,8 @@ export function DashboardDetail() {
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
+  // const [widgetAttrDeviceData, setWidgetAttrDeviceData] =
+  //   useState<WidgetAttrDeviceType>()
 
   const {
     mutate: mutateUpdateDashboard,
@@ -293,7 +295,13 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-
+                const deviceInfo = lastJsonMessage?.id === widgetId
+                ? combinedObject(
+                    lastJsonMessage?.data?.map(
+                      device => device.latest.ENTITY_FIELD as LatestData,
+                    ),
+                  )
+                : {}
                 return (
                   <div
                     key={widgetId}
@@ -332,7 +340,7 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map data={lastestValues} isEditMode={isEditMode} />
+                      <Map data={lastestValues} widgetInfo={widgetInfo} isEditMode={isEditMode} deviceInfo={deviceInfo}/>
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}

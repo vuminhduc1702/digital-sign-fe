@@ -176,7 +176,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                     registration={register(
                       `attributes.${index}.value` as const,
                     )}
-                    step={0.01}
+                    step={0.000001}
                     type={
                       numberInput.includes(watch(`attributes.${index}.value_t`))
                         ? 'number'
