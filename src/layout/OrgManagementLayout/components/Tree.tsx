@@ -57,7 +57,11 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const { orgId } = useParams()
 
   useEffect(() => {
-    setShowChildren(isShow)
+    if (isShow) {
+      setShowChildren(isShow)
+    } else {
+      setShowChildren(data?.isShow)
+    }
   }, [isShow])
 
   if (!data) return null

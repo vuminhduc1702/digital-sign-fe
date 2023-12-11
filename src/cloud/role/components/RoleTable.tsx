@@ -119,7 +119,7 @@ function RoleTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      {selectedUpdateRole != null ? (
+      {selectedUpdateRole != null && isOpen ? (
         <UpdateRole
           project_id={project_id}
           close={close}

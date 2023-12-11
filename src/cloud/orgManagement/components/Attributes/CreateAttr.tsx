@@ -18,17 +18,11 @@ import {
 import { Checkbox } from '~/components/Checkbox'
 import TitleBar from '~/components/Head/TitleBar'
 
-import { type Attribute } from '~/types'
 import { attrListSchema } from '~/utils/schemaValidation'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-
-type ValueType = {
-  type: Attribute['value_type']
-  name: string
-}
 
 type CreateAttrProps = {
   entityId: string
@@ -40,20 +34,20 @@ export const attrListCreateSchema = z.object({
   attributes: attrListSchema,
 })
 
-export const valueTypeList: ValueType[] = [
+export const valueTypeList = [
   { type: 'STR', name: 'String' },
   { type: 'BOOL', name: 'Boolean' },
   { type: 'LONG', name: 'Long' },
   { type: 'DBL', name: 'Double' },
   { type: 'JSON', name: 'JSON' },
-]
+] as const
 
 export const booleanSelectOption = [
   { label: 'False', value: 'false' },
   { label: 'True', value: 'true' },
-]
+] as const
 
-export const numberInput = ['DBL', 'LONG']
+export const numberInput = ['DBL', 'LONG'] as const
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
@@ -157,7 +151,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                   )}
                 />
                 <SelectField
-                  className="h-[36px] py-1"
+                  className={`h-[36px] py-1`}
                   label={t('cloud:org_manage.org_manage.add_attr.value_type')}
                   error={formState?.errors?.attributes?.[index]?.value_t}
                   registration={register(
@@ -167,7 +161,7 @@ export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
                 />
                 {watch(`attributes.${index}.value_t`) === 'BOOL' ? (
                   <SelectField
-                    className="h-[36px] py-1"
+                    className={`h-[36px] py-1`}
                     label={t('cloud:org_manage.org_manage.add_attr.value')}
                     error={formState?.errors?.attributes?.[index]?.value}
                     registration={register(

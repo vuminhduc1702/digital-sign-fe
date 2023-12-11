@@ -11,12 +11,6 @@ export type SelectOption = {
   selected?: boolean
 }
 
-export type SelectOptionString = {
-  label: string
-  value: string
-  selected?: boolean
-}
-
 type SelectFieldProps = FieldWrapperPassThroughProps & {
   options?: SelectOption[]
   className?: string
@@ -59,6 +53,10 @@ export const SelectField = ({
         value={value}
         className={cn(
           'mt-1 block w-full rounded-md border border-secondary-600 py-2 pl-3 pr-10 text-body-sm focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+          {
+            'border-primary-400 focus:outline-primary-400':
+              error?.message != null,
+          },
           className,
         )}
         {...registration}

@@ -33,10 +33,11 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
     classlabel,
     classchild,
   } = props
+
   return (
     <div className="relative w-full">
       <label
-        className={cn('text-body-sm block', { 'space-y-1': label }, className)}
+        className={cn('block text-body-sm', { 'space-y-1': label }, className)}
       >
         {require ? (
           <p>
@@ -51,7 +52,7 @@ export const FieldWrapper = (props: FieldWrapperProps) => {
         <div
           role="alert"
           aria-label={error.message}
-          className={cn('text-body-sm text-primary-400 mt-1', classNameError)}
+          className={cn('mt-1 text-body-sm text-primary-400', classNameError)}
         >
           {error.message}
         </div>

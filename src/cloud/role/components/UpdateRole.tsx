@@ -46,57 +46,36 @@ export function UpdateRole({
 
   const { mutate, isLoading, isSuccess } = useUpdateRole()
 
-  const { data: groupDataDevice } = useGetGroups({
+  const { data: groupData } = useGetGroups({
     projectId,
-    entity_type: 'DEVICE',
     config: {
       suspense: false,
     },
   })
-
-  const { data: groupDataEvent } = useGetGroups({
-    projectId,
-    entity_type: 'EVENT',
-    config: {
-      suspense: false,
-    },
-  })
-
-  const { data: groupDataUser } = useGetGroups({
-    projectId,
-    entity_type: 'USER',
-    config: {
-      suspense: false,
-    },
-  })
-
-  const { data: groupDataOrg } = useGetGroups({
-    projectId,
-    entity_type: 'ORGANIZATION',
-    config: {
-      suspense: false,
-    },
-  })
-
-  const groupDataDeviceOptons = groupDataDevice?.groups?.map(groups => ({
-    label: groups?.name,
-    value: groups?.id,
-  })) || [{ label: t('loading:group'), value: '' }]
-
-  const groupDataEventOptons = groupDataEvent?.groups?.map(groups => ({
-    label: groups?.name,
-    value: groups?.id,
-  })) || [{ label: t('loading:group'), value: '' }]
-
-  const groupDataUserOptons = groupDataUser?.groups?.map(groups => ({
-    label: groups?.name,
-    value: groups?.id,
-  })) || [{ label: t('loading:group'), value: '' }]
-
-  const groupDataOrgOptons = groupDataOrg?.groups?.map(groups => ({
-    label: groups?.name,
-    value: groups?.id,
-  })) || [{ label: t('loading:group'), value: '' }]
+  const groupDataDeviceOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'DEVICE')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataEventOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'EVENT')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataUserOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'USER')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataOrgOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'ORGANIZATION')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
 
   useEffect(() => {
     if (isSuccess) {
@@ -108,17 +87,17 @@ export function UpdateRole({
     JSON.parse(policy).map((policy: Policies) => {
       if (role_type) {
         const groups = policy?.group_resources?.groups
-        const deviceArr = groupDataDeviceOptons
-          .filter(devices => groups?.includes(devices.value))
+        const deviceArr = groupDataDeviceOptions
+          ?.filter(devices => groups?.includes(devices.value))
           .map(item => item.value)
-        const userArr = groupDataUserOptons
-          .filter(users => groups?.includes(users.value))
+        const userArr = groupDataUserOptions
+          ?.filter(users => groups?.includes(users.value))
           .map(item => item.value)
-        const eventArr = groupDataEventOptons
-          .filter(events => groups?.includes(events.value))
+        const eventArr = groupDataEventOptions
+          ?.filter(events => groups?.includes(events.value))
           .map(item => item.value)
-        const orgArr = groupDataOrgOptons
-          .filter(orgs => groups?.includes(orgs.value))
+        const orgArr = groupDataOrgOptions
+          ?.filter(orgs => groups?.includes(orgs.value))
           .map(item => item.value)
         return {
           policy_name: policy.policy_name,
@@ -171,6 +150,7 @@ export function UpdateRole({
       onClose={close}
       size="lg"
       title={t('cloud:role_manage.add_role.edit')}
+      // resetData={() => }
       renderFooter={() => (
         <>
           <Button
@@ -188,6 +168,7 @@ export function UpdateRole({
             type="submit"
             size="lg"
             isLoading={isLoading}
+            disabled={!formState.isDirty}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
@@ -280,10 +261,6 @@ export function UpdateRole({
                 {type === 'Generic' && (
                   <div className="space-y-1">
                     <SelectDropdown
-                      isErrorSelect={
-                        !!formState?.errors?.policies?.[index]?.resources
-                          ?.message
-                      }
                       label={t('cloud:role_manage.add_policy.resources')}
                       name={`policies.${index}.resources`}
                       options={resourcesList}
@@ -305,16 +282,13 @@ export function UpdateRole({
                   <div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isErrorSelect={
-                          !!formState?.errors?.policies?.[index]?.root?.message
-                        }
                         label={t('cloud:org_manage.device_manage.title')}
                         name={`policies.${index}.devices`}
-                        options={groupDataDeviceOptons}
+                        options={groupDataDeviceOptions}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
-                        defaultValue={groupDataDeviceOptons.filter(item =>
+                        defaultValue={groupDataDeviceOptions?.filter(item =>
                           getValues(`policies.${index}.devices`)?.includes(
                             item.value,
                           ),
@@ -329,16 +303,13 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isErrorSelect={
-                          !!formState?.errors?.policies?.[index]?.root?.message
-                        }
                         label={t('cloud:org_manage.event_manage.title')}
                         name={`policies.${index}.events`}
-                        options={groupDataEventOptons}
+                        options={groupDataEventOptions}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
-                        defaultValue={groupDataEventOptons.filter(item =>
+                        defaultValue={groupDataEventOptions?.filter(item =>
                           getValues(`policies.${index}.events`)?.includes(
                             item.value,
                           ),
@@ -353,16 +324,13 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isErrorSelect={
-                          !!formState?.errors?.policies?.[index]?.root?.message
-                        }
                         label={t('cloud:org_manage.user_manage.title')}
                         name={`policies.${index}.users`}
-                        options={groupDataUserOptons}
+                        options={groupDataUserOptions}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
-                        defaultValue={groupDataUserOptons.filter(item =>
+                        defaultValue={groupDataUserOptions?.filter(item =>
                           getValues(`policies.${index}.users`)?.includes(
                             item.value,
                           ),
@@ -377,16 +345,13 @@ export function UpdateRole({
                     </div>
                     <div className="space-y-1">
                       <SelectDropdown
-                        isErrorSelect={
-                          !!formState?.errors?.policies?.[index]?.root?.message
-                        }
                         label={t('cloud:org_manage.org_manage.title')}
                         name={`policies.${index}.orgs`}
-                        options={groupDataOrgOptons}
+                        options={groupDataOrgOptions}
                         isMulti
                         control={control}
                         closeMenuOnSelect={false}
-                        defaultValue={groupDataOrgOptons.filter(item =>
+                        defaultValue={groupDataOrgOptions?.filter(item =>
                           getValues(`policies.${index}.orgs`)?.includes(
                             item.value,
                           ),
@@ -403,9 +368,6 @@ export function UpdateRole({
                 )}
                 <div className="space-y-1">
                   <SelectDropdown
-                    isErrorSelect={
-                      !!formState?.errors?.policies?.[index]?.actions?.message
-                    }
                     label={t('cloud:role_manage.add_policy.actions')}
                     name={`policies.${index}.actions`}
                     options={actionsList}

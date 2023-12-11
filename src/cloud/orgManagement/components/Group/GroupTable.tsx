@@ -44,7 +44,7 @@ function GroupTableContextMenu({
 }: {
   id: string
   name: string
-  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
+  entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
   organization: string
 }) {
   const { t } = useTranslation()

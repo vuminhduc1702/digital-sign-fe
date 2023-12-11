@@ -30,7 +30,7 @@ export const useUpdateMqttConfig = ({
       await queryClient.invalidateQueries({
         queryKey: ['mqttconfig'],
       })
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
       addNotification({

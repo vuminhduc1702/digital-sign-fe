@@ -19,6 +19,9 @@ import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { type Attribute } from '~/types'
 
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
+import { ComboBoxMQTTLog } from '../components/Attributes/ComboBoxSelectMQTTLog'
+import { type MQTTMessage } from '../api/attrAPI/getMQTTLog'
+import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -32,6 +35,8 @@ export function DeviceDetail() {
   >([])
   const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
     useState<DeviceAttrLog[]>([])
+  const [filteredMQTTLogComboboxData, setFilteredMQTTLogComboboxData] =
+    useState<MQTTMessage[]>([])
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -135,11 +140,16 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  <ComboBoxAttrLog
-                    setFilteredComboboxData={setFilteredAttrLogComboboxData}
+                  <ComboBoxMQTTLog
+                    setFilteredComboboxData={setFilteredMQTTLogComboboxData}
                   />
                 </div>
               </div>
+              <MQTTMessageLogTable
+                data={filteredMQTTLogComboboxData}
+                entityId={deviceId}
+                entityType="DEVICE"
+              />
             </div>
           </Tab.Panel>
         </Tab.Panels>

@@ -209,7 +209,7 @@ export default function CreateTemplateLwM2M() {
                 >
                   <AccordionTrigger className="ml-3 justify-start hover:no-underline">
                     <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
-                    <p className="ml-2">{lw2m2.LWM2M.Object.Name}</p>
+                    <p className="ml-2">{lw2m2.LWM2M.Object.Name} #{lw2m2.LWM2M.Object.ObjectID}</p>
                   </AccordionTrigger>
                   <AccordionContent className="overflow-hidden bg-slate-200 px-4 py-2">
                     <div className="grid grow grid-cols-1 gap-2	border-b-2 border-gray-300 md:grid-cols-2">

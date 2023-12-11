@@ -11,6 +11,22 @@ export type Template = {
   attributes: AttrList
 }
 
+type TransportConfig = {
+  protocol: string
+  config: { [key: string]: string }
+  info: null | undefined
+}
+
+export type TemplateLwM2M = {
+  id: string
+  name: string
+  rule_chain_id: string
+  provision_key: string
+  provision_secret: string
+  created_time: number
+  transport_config: TransportConfig
+}
+
 export type TemplateList = {
   templates: Template[]
 } & BasePagination

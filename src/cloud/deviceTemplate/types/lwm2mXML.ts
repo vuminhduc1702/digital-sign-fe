@@ -4,7 +4,7 @@ export const LWM2MData = {
   infos: [
     {
       file_id: '1',
-      module_name: 'Lock and Wipe',
+      module_name: 'LwM2M Server',
       version: '1.0',
     },
     {

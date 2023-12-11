@@ -39,7 +39,7 @@ export type Group = {
   organization: string
   org_name: string
   project_id: string
-  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
+  entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
   attributes: Attribute[]
   parent_name?: string
 }
