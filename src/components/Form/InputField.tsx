@@ -46,7 +46,6 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       error?.message != null
         ? 'border-primary-400 focus:outline-primary-400'
         : ''
-
     return (
       <FieldWrapper
         label={label}
