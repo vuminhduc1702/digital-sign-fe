@@ -8,7 +8,7 @@ export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
 
-type EntityId = {
+export type EntityId = {
   entityType: 'DEVICE'
   entityName: string
   id: string

@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { type TimeSeries } from '../../types'
+import { DataItem, EntityId, type TimeSeries } from '../../types'
+import { z } from 'zod'
+import { widgetSchema } from '../Widget'
 
 export function Map({
   data,
+  widgetInfo,
   isEditMode,
+  deviceInfo
 }: {
   data: TimeSeries
+  widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
+  deviceInfo?: any
 }) {
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<any>>([])
@@ -65,9 +71,9 @@ export function Map({
 
   return (
     <MapContainer
-      className="h-full"
+      className="h-[90%] mt-10 mx-2"
       center={[avgLatitude, avgLongitude]}
-      zoom={10}
+      zoom={15}
       scrollWheelZoom
       dragging={dragMode}
       attributionControl={false}
@@ -75,7 +81,7 @@ export function Map({
     >
       <TileLayer
         // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga"
       />
       {dataForMap.map((coor, index) => {
         const [lat, lng] = coor
@@ -83,9 +89,8 @@ export function Map({
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {/* {`Thiết bị ${index}.`}
-              <br />
-              Cảm biến nhiệt độ. */}
+              {`Thiết bị ${deviceInfo?.name?.[0]?.value}`}
+              <br /> 
               {`Current coor (${lat},${lng})`}
             </Popup>
           </Marker>
