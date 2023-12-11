@@ -1,4 +1,4 @@
-import { type Control, type Path } from 'react-hook-form'
+import { type FieldValues, type Control, type Path } from 'react-hook-form'
 import type * as z from 'zod'
 
 import { type BasePaginationSchema } from '~/utils/schemaValidation'
