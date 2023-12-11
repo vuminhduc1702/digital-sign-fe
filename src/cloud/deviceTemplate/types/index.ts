@@ -15,7 +15,6 @@ export type TemplateList = {
   templates: Template[]
 } & BasePagination
 
-
 export type RuleChain = {
   id: {
     entityType: string
@@ -32,50 +31,50 @@ export type RulechainList = {
 }
 
 export type LwM2M = {
-  file_id: string,
-  module_name: string,
+  file_id: string
+  module_name: string
   version: string
 }
 
 export type LwM2MList = {
   infos: LwM2M[]
-  bucket_name: "publishxml",
-  number_of_files: 324,
+  bucket_name: 'publishxml'
+  number_of_files: 324
 }
 export type ResourceItem = {
-  "@ID": string
-  "Name": string
-  "Operations": string
-  "MultipleInstances": string
-  "Mandatory": string
-  "Type": string
-  "RangeEnumeration"?: string | null
-  "Units"?: string | null
-  "Description": string
-};
+  '@ID': string
+  Name: string
+  Operations: string
+  MultipleInstances: string
+  Mandatory: string
+  Type: string
+  RangeEnumeration?: string | null
+  Units?: string | null
+  Description: string
+}
 
 export type Resources = {
-  "Item": ResourceItem[]
+  Item: ResourceItem[]
 }
 
 export type ObjectDefinition = {
-  "@ObjectType": string
-  "Name": string
-  "Description1": string
-  "ObjectID": string
-  "ObjectURN": string
-  "LWM2MVersion": string
-  "ObjectVersion": string
-  "MultipleInstances": string
-  "Mandatory": string
-  "Resources": Resources
-  "Description2": string | null
+  '@ObjectType': string
+  Name: string
+  Description1: string
+  ObjectID: string
+  ObjectURN: string
+  LWM2MVersion: string
+  ObjectVersion: string
+  MultipleInstances: string
+  Mandatory: string
+  Resources: Resources
+  Description2: string | null
 }
 
 export type LWM2MData = {
-  "@xmlns:xsi": string
-  "@xsi:noNamespaceSchemaLocation": string
-  "Object": ObjectDefinition
+  '@xmlns:xsi': string
+  '@xsi:noNamespaceSchemaLocation': string
+  Object: ObjectDefinition
 }
 
 export type LWM2MResponse = {

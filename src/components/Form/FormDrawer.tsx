@@ -66,7 +66,10 @@ export const FormDrawer = ({
       })}
       <Drawer
         isOpen={isOpen}
-        onClose={close}
+        onClose={() => {
+          resetData?.()
+          close()
+        }}
         title={title}
         size={size}
         renderFooter={() => (
@@ -75,7 +78,10 @@ export const FormDrawer = ({
               className="rounded border-none"
               variant="secondary"
               size="lg"
-              onClick={close}
+              onClick={() => {
+                resetData?.()
+                close()
+              }}
               startIcon={
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
@@ -83,6 +89,7 @@ export const FormDrawer = ({
             {submitButton}
           </>
         )}
+        resetData={resetData}
         {...props}
       >
         {children}
