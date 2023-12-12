@@ -55,7 +55,9 @@ export const Notification = ({
       static
       className="fixed inset-0 z-50 overflow-hidden flex flex-col items-end space-y-4 px-4 py-6 sm:items-start sm:p-6"
       open={true}
-      onClose={() => null}
+      onClose={() => {
+        onDismiss(id)
+      }}
     >
       <div className="flex w-full flex-col items-center space-y-4 sm:items-end z-50">
         <Transition

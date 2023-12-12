@@ -16,7 +16,7 @@ import {
   useUpdateAdapter,
   usePingMQTT,
 } from '../api/adapter'
-import { adapterSchema, contentTypeList, protocolList } from './CreateAdapter'
+import { adapterSchema, contentTypeList, protocolList, contentTypeFTPList } from './CreateAdapter'
 import storage from '~/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
 import { useGetServiceThings } from '../api/serviceThing'
@@ -320,12 +320,22 @@ export function UpdateAdapter({
               registration={register('protocol')}
               options={protocolList}
             />
-            <SelectField
-              label={t('cloud:custom_protocol.adapter.content_type.title')}
-              error={formState.errors['content_type']}
-              registration={register('content_type')}
-              options={contentTypeList}
-            />
+            {watch('protocol') === 'ftp' ? (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeFTPList}
+                value="Text"
+              />
+            ) : (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeList}
+              />
+            )}
             {watch('content_type') != null &&
             watch('content_type') !== '' &&
             watch('content_type') !== 'json' ? (

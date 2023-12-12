@@ -520,7 +520,8 @@
         "protocol": {
           "mqtt": "MQTT",
           "tcp": "TCP",
-          "udp": "UDP"
+          "udp": "UDP", 
+          "ftp": "FTP"
         },
         "content_type": {
           "title": "Content type",

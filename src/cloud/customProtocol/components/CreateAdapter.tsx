@@ -47,6 +47,10 @@ export const protocolList = [
     label: i18n.t('cloud:custom_protocol.adapter.protocol.udp'),
     value: 'udp',
   },
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.protocol.ftp'),
+    value: 'ftp',
+  },
 ] as const
 
 export const contentTypeList = [
@@ -58,6 +62,13 @@ export const contentTypeList = [
     label: i18n.t('cloud:custom_protocol.adapter.content_type.hex'),
     value: 'hex',
   },
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
+    value: 'text',
+  },
+] as const
+
+export const contentTypeFTPList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
@@ -105,7 +116,7 @@ export const adapterSchema = z
         }),
       }),
       z.object({
-        protocol: z.enum(['tcp', 'udp'] as const),
+        protocol: z.enum(['tcp', 'udp', 'ftp'] as const),
       }),
     ]),
   )
@@ -391,12 +402,21 @@ export function CreateAdapter() {
               registration={register('protocol')}
               options={protocolList}
             />
-            <SelectField
-              label={t('cloud:custom_protocol.adapter.content_type.title')}
-              error={formState.errors['content_type']}
-              registration={register('content_type')}
-              options={contentTypeList}
-            />
+            {watch('protocol') === 'ftp' ? (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeFTPList}
+              />
+            ) : (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeList}
+              />
+            )}
             {watch('content_type') != null &&
             watch('content_type') !== '' &&
             watch('content_type') !== 'json' ? (
