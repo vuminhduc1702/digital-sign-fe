@@ -13,7 +13,7 @@ type TransportConfig = {
   config: { [key: string]: string }
   info: null | undefined
 }
-export type CreateTemplateDTO = {
+export type CreateTemplatelwm2mDTO = {
   data: {
     name: string
     rule_chain_id: string
@@ -21,19 +21,19 @@ export type CreateTemplateDTO = {
     transport_config: TransportConfig
   }
 }
-export const createTemplate = ({
+export const createTemplatelwm2m = ({
   data,
-}: CreateTemplateDTO): Promise<TemplateLwM2M> => {
+}: CreateTemplatelwm2mDTO): Promise<TemplateLwM2M> => {
   return axios.post(`/api/templates`, data)
 }
 
-type UseCreateTemplateOptions = {
-  config?: MutationConfig<typeof createTemplate>
+type UseCreateTemplatelwm2mOptions = {
+  config?: MutationConfig<typeof createTemplatelwm2m>
 }
 
-export const useCreateTemplate = ({
+export const useCreateTemplatelwm2m = ({
   config,
-}: UseCreateTemplateOptions = {}) => {
+}: UseCreateTemplatelwm2mOptions = {}) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -49,6 +49,6 @@ export const useCreateTemplate = ({
       })
     },
     ...config,
-    mutationFn: createTemplate,
+    mutationFn: createTemplatelwm2m,
   })
 }

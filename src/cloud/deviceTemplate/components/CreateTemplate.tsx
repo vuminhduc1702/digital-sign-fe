@@ -84,6 +84,7 @@ export default function CreateTemplate() {
     name: 'attributes',
     control,
   })
+  console.log('fields', fields)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}

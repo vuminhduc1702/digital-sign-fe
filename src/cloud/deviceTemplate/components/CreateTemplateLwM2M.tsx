@@ -20,9 +20,9 @@ import {
 } from '~/components/Form'
 import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import {
-  useCreateTemplate,
-  type CreateTemplateDTO,
-  useUpdateTemplate,
+  useCreateTemplatelwm2m,
+  type CreateTemplatelwm2mDTO,
+  useUpdateTemplatelwm2m,
 } from '../api'
 import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
@@ -38,12 +38,16 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDown } from 'lucide-react'
-import dammayIcon from '~/assets/icons/sb-dammay.svg'
 
-export const templateAttrSchema = z.object({
+
+export const templatelwm2mSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
-  attributes: z.array(attrSchema),
+  transport_config: z.object({
+    protocol: z.string(),
+    config: z.record(z.string(), z.string()),
+    info: z.object({}).nullable(),
+    }),
 })
 
 export default function CreateTemplateLwM2M() {
@@ -53,28 +57,28 @@ export default function CreateTemplateLwM2M() {
     label: `${item.module_name} #${item.file_id}_${item.version}`,
     value: `${item.file_id}`,
   }))
-  const { mutate: mutateUpdateTemplate } = useUpdateTemplate({
+  const { mutate: mutateUpdateTemplatelwm2m } = useUpdateTemplatelwm2m({
     isOnCreateTemplate: true,
   })
   const {
-    mutateAsync: mutateAsyncCreateTemplate,
-    isLoading: isLoadingCreateTemplate,
-    isSuccess: isSuccessCreateTemplate,
-  } = useCreateTemplate()
+    mutateAsync: mutateAsyncCreateTemplatelwm2m,
+    isLoading: isLoadingCreateTemplatelwm2m,
+    isSuccess: isSuccessCreateTemplatelwm2m,
+  } = useCreateTemplatelwm2m()
   const { register, formState, handleSubmit, control, watch, reset } = useForm<
-    CreateTemplateDTO['data']
+    CreateTemplatelwm2mDTO['data']
   >({
-    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+    resolver: templatelwm2mSchema && zodResolver(templatelwm2mSchema),
     defaultValues: {
       name: '',
       rule_chain_id: '',
-      attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
+      transport_config: { protocol: 'lwm2m', config: {}, info: null },
     },
   })
-  const { fields, append, remove } = useFieldArray({
-    name: 'attributes',
-    control,
-  })
+  // const { fields, append, remove } = useFieldArray({
+  //   name: 'attributes',
+  //   control,
+  // })
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
@@ -102,9 +106,29 @@ export default function CreateTemplateLwM2M() {
     setOpenAccordion(value)
   }
 
+  //const [clickedItemId, setClickedItemId] = useState({});
+  // const { fields, append, remove } = useFieldArray({
+  //   name: 'attributes',
+  //   control,
+  // })
+  // console.log('fields', fields)
+  const [clickedItemIds, setClickedItemIds] = useState([]);
+  const handleCheckboxChange = (itemId) => {
+    // Toggle the presence of itemId in the array
+    setClickedItemIds((prevIds) => {
+      if (prevIds.includes(itemId)) {
+        // If itemId is already in the array, remove it
+        return prevIds.filter((id) => id !== itemId);
+      } else {
+        // If itemId is not in the array, add it
+        return [...prevIds, itemId];
+      }
+    });
+  };
+
   return (
     <FormDrawer
-      isDone={isLoadingCreateTemplate}
+      isDone={isLoadingCreateTemplatelwm2m}
       triggerButton={
         <Button
           className="h-9 w-9 rounded-md"
@@ -120,7 +144,7 @@ export default function CreateTemplateLwM2M() {
           form="create-template"
           type="submit"
           size="lg"
-          isLoading={isSuccessCreateTemplate}
+          isLoading={isSuccessCreateTemplatelwm2m}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
@@ -135,45 +159,32 @@ export default function CreateTemplateLwM2M() {
         className="w-full space-y-5"
         id="create-template"
         onSubmit={handleSubmit(async values => {
-          const dataCreateTemplate = await mutateAsyncCreateTemplate({
-            data: {
-              project_id: projectId,
-              rule_chain_id: values.rule_chain_id,
-              name: values.name,
-              attributes: values.attributes,
-            },
-          })
-          mutateUpdateTemplate({
-            data: {
-              name: dataCreateTemplate.name,
-              rule_chain_id: dataCreateTemplate.rule_chain_id,
-              attributes: dataCreateTemplate.attributes,
-            },
-            templateId: dataCreateTemplate.id,
-          })
+          console.log(values, 'check submit values');
+
+          // const dataCreateTemplatelwm2m = await mutateAsyncCreateTemplatelwm2m({
+          //   data: {
+          //     project_id: projectId,
+          //     rule_chain_id: values.rule_chain_id,
+          //     name: values.name,
+          //     transport_config: values.transport_config,
+          //   },
+          // })
+          // mutateUpdateTemplatelwm2m({
+          //   data: {
+          //     name: dataCreateTemplatelwm2m.name,
+          //     rule_chain_id: dataCreateTemplatelwm2m.rule_chain_id,
+          //     transport_config: dataCreateTemplatelwm2m.transport_config,
+          //   },
+          //   templateId: dataCreateTemplatelwm2m.id,
+          // })
         })}
       >
         <>
-          {/* <Button
-            className="h-9 w-9 rounded-md"
-            variant="trans"
-            size="square"
-            startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-            onClick={() =>
-              append({
-                attribute_key: '',
-                value: '',
-                logged: true,
-                value_t: '',
-              }
-              )
-            }
-          /> */}
-          <InputField
+          {/* <InputField
             label={t('cloud:device_template.add_template.name')}
             error={formState.errors['name']}
             registration={register('name')}
-          />
+          /> */}
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -239,7 +250,42 @@ export default function CreateTemplateLwM2M() {
                                   <div className="flex items-center justify-center">
                                     #{item['@ID']} {item.Name}
                                   </div>
-                                  <Checkbox className="ml-auto mr-3 mt-2 flex h-5 w-5" />
+                                  {/* <Checkbox 
+                                    className="ml-auto mr-3 mt-2 flex h-5 w-5" 
+                                  /> */}
+                                   <Controller
+                                    control={control}
+                                    name={`transport_config.config.${lw2m2.LWM2M.Object.Name}`}
+                                    render={({ field: { onChange, config, ...field } }) => {
+                                    //   const handleCheckboxChange = (e) => {
+
+                                         const id = item['@ID']
+                                    //     // Cập nhật giá trị biến state nếu cần
+                                    //     setClickedItemId(prevIds => `${prevIds}/${itemId}`);
+                                    //     onChange(e);
+                                    //     console.log('Clicked on checkbox with ID:', itemId);
+              
+                                    //   };
+                                    //   return (
+                                    //     <Checkbox
+                                    //       {...field}
+                                    //       checked={value}
+                                    //       onCheckedChange={handleCheckboxChange}
+                                    //     />
+                                    //   );
+                                    return (
+                                      <Checkbox
+                                        className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                        {...field}
+                                        checked={config}
+                                        onCheckedChange={(e) => {
+                                          handleCheckboxChange(id);
+                                          onChange(e);
+                                        }}
+                                      />
+                                    );
+                                     }}
+                                  />
                                 </div>
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
@@ -257,6 +303,11 @@ export default function CreateTemplateLwM2M() {
                         }
                         return null
                       })}
+                      {clickedItemIds.length > 0 && (
+                        <div>
+                          <p>{`${lw2m2.LWM2M.Object.ObjectID}/0/${clickedItemIds.join('/')}: ${lw2m2.LWM2M.Object.Name}`}</p>
+                        </div>
+                      )}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

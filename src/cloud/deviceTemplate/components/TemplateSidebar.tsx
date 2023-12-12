@@ -75,7 +75,6 @@ export function TemplateSidebar() {
                     'bg-primary-400 rounded-2xl text-white': type === item,
                   })}
                 >
-<<<<<<< HEAD
                   {item}
                 </button>
               )
@@ -100,122 +99,6 @@ export function TemplateSidebar() {
               // isPreviousData={isPreviousData}
             />
           )}
-=======
-                  <p
-                    className={clsx('my-auto', {
-                      'text-primary-400': templateId === template.id,
-                    })}
-                  >
-                    {template?.name}
-                  </p>
-                </Button>
-                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
-                  <Dropdown
-                    menuClass="h-10 w-6"
-                    icon={
-                      <BtnContextMenuIcon
-                        height={20}
-                        width={3}
-                        viewBox="0 0 3 20"
-                      />
-                    }
-                  >
-                    <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="p-1">
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnEditIcon}
-                              alt="Edit template"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => {
-                            open()
-                            setSelectedUpdateTemplate(template)
-                          }}
-                        >
-                          {t('cloud:device_template.sidebar.edit')}
-                        </MenuItem>
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnCopyIdIcon}
-                              alt="Copy template's ID"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => handleCopyId(template.id)}
-                        >
-                          {t('table:copy_id')}
-                        </MenuItem>
-                        <ConfirmationDialog
-                          isDone={isSuccess}
-                          icon="danger"
-                          title={t(
-                            'cloud:device_template.sidebar.delete_template_full',
-                          )}
-                          body={
-                            t(
-                              'cloud:device_template.sidebar.delete_template_confirm',
-                            ).replace('{{TEMPLATENAME}}', template.name) ??
-                            'Confirm delete?'
-                          }
-                          triggerButton={
-                            <Button
-                              className="w-full justify-start border-none hover:text-primary-400"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete template"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            >
-                              {t(
-                                'cloud:device_template.sidebar.delete_template',
-                              )}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoading}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() => mutate({ id: template.id })}
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            />
-                          }
-                        />
-                      </div>
-                    </Menu.Items>
-                  </Dropdown>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            {t('cloud:device_template.sidebar.no_template')}
-          </div>
-        )}
-        {selectedUpdateTemplate != null && isOpen ? (
-          <UpdateTemplate
-            close={close}
-            isOpen={isOpen}
-            selectedUpdateTemplate={selectedUpdateTemplate}
-          />
-        ) : null}
->>>>>>> c301086ed0a90266b124f0ccad4b436dce76085c
       </div>
     </>
   )
