@@ -543,7 +543,7 @@
         },
         "topic": "Topic",
         "ping_MQTT": {
-          "title": "Test MQTT connection",
+          "title": "Kiểm tra kết nối",
           "success": "MQTT connection khả dụng",
           "failure": "MQTT connection không tồn tại"
         }

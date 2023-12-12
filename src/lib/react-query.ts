@@ -25,20 +25,20 @@ export const queryClient = new QueryClient({
   defaultOptions: queryConfig,
   queryCache: new QueryCache({
     onError: error => {
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: i18n.t('error:server_res.title'),
-        message: (error as AxiosError).message,
-      })
+      // useNotificationStore.getState().addNotification({
+      //   type: 'error',
+      //   title: i18n.t('error:server_res.title'),
+      //   message: (error as AxiosError).message,
+      // })
     },
   }),
   mutationCache: new MutationCache({
     onError: error => {
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: i18n.t('error:server_res.title'),
-        message: (error as AxiosError).message,
-      })
+      // useNotificationStore.getState().addNotification({
+      //   type: 'error',
+      //   title: i18n.t('error:server_res.title'),
+      //   message: (error as AxiosError).message,
+      // })
     },
   }),
 })
