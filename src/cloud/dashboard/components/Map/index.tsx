@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { DataItem, EntityId, type TimeSeries } from '../../types'
+import { DataItem, EntityId, WSWidgetData, type TimeSeries } from '../../types'
 import { z } from 'zod'
 import { widgetSchema } from '../Widget'
 
@@ -46,28 +46,39 @@ export function Map({
   }, [isEditMode])
 
   useEffect(() => {
-    const dataCurrent = []
-    let coorCurrent = []
+    const dataCurrent: string[][] = []
+    let coorCurrent: string[] = []
+
+    // const fakeData = [
+    //   ['lat', [
+    //     {'ts': 123123123, 'value': '34'},
+    //     {'ts': 234234234, 'value': '21'}
+    //   ]],
+    //   ['long', [
+    //     {'ts': 123123123, 'value': '142'},
+    //     {'ts': 234234234, 'value': '231'}
+    //   ]]
+    // ]
     if (Object.keys(data).length !== 0) {
-      let currentLat = 0
-      let currentLong = 0
-      if (dataForMap.length > 0) {
-        const dataLat = Object.entries(data).filter(([key]) => key === 'lat')
-        const dataLong = Object.entries(data).filter(([key]) => key === 'long')
-        currentLat = dataLat.length > 0 ? parseFloat(Object.entries(data).filter(([key]) => key === 'lat')[0]?.[1]?.[0].value) : dataForMap[0][0]
-        currentLong = dataLong.length > 0 ? parseFloat(Object.entries(data).filter(([key]) => key === 'long')[0]?.[1]?.[0].value) : dataForMap[0][1]
-      } else {
-        currentLat = parseFloat(Object.entries(data).filter(([key]) => key === 'lat')[0]?.[1]?.[0].value)
-        currentLong = parseFloat(Object.entries(data).filter(([key]) => key === 'long')[0]?.[1]?.[0].value)
-      }
-      coorCurrent = [currentLat, currentLong]
-      setAvgLatitude(currentLat)
-      setAvgLongitude(currentLong)
-      dataCurrent.push(coorCurrent)
-      map.current?.setView([currentLat, currentLong])
+      Object.keys(data).forEach(() => {
+        const dataLat = Object.entries(data).filter(([key]) => key === 'lat')[0]?.[1]
+        const dataLong = Object.entries(data).filter(([key]) => key === 'long')[0]?.[1]
+        Object.entries(dataLat).map((latKey, index) => {
+          coorCurrent = [latKey[1].value, dataLong[index]?.value]
+          const coorIndex = dataCurrent.findIndex(item => item[0] === coorCurrent[0])
+          if (coorIndex === -1) {
+            dataCurrent.push(coorCurrent)
+          }
+        })
+      })
+
       setDataForMap(dataCurrent)
     }
   }, [data])
+
+  // useEffect(() => {
+  //   console.log(deviceInfo)
+  // }, [deviceInfo])
 
   return (
     <MapContainer
@@ -89,7 +100,7 @@ export function Map({
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {`Thiết bị ${deviceInfo?.name?.[0]?.value}`}
+              {`Thiết bị ${index}`}
               <br /> 
               {`Current coor (${lat},${lng})`}
             </Popup>
