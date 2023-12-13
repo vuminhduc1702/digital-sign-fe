@@ -112,19 +112,17 @@ export default function CreateTemplateLwM2M() {
   //   control,
   // })
   // console.log('fields', fields)
-  const [clickedItemIds, setClickedItemIds] = useState([]);
+  const [clickedItemIds, setClickedItemIds] = useState([])
+  const idToNameMap = {};
   const handleCheckboxChange = (itemId) => {
-    // Toggle the presence of itemId in the array
     setClickedItemIds((prevIds) => {
       if (prevIds.includes(itemId)) {
-        // If itemId is already in the array, remove it
-        return prevIds.filter((id) => id !== itemId);
+        return prevIds.filter((id) => id !== itemId)
       } else {
-        // If itemId is not in the array, add it
-        return [...prevIds, itemId];
+        return [...prevIds, itemId]
       }
-    });
-  };
+    })
+  }
 
   return (
     <FormDrawer
@@ -242,7 +240,7 @@ export default function CreateTemplateLwM2M() {
                         if (
                           item.Operations === 'RW' ||
                           item.Operations === 'R'
-                        ) {
+                        ) { idToNameMap[item['@ID']] = item.Name
                           return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
@@ -255,10 +253,10 @@ export default function CreateTemplateLwM2M() {
                                   /> */}
                                    <Controller
                                     control={control}
-                                    name={`transport_config.config.${lw2m2.LWM2M.Object.Name}`}
-                                    render={({ field: { onChange, config, ...field } }) => {
+                                    name={`transport_config.config`}
+                                    render={({ field: { onChange, ...field } }) => {
                                     //   const handleCheckboxChange = (e) => {
-
+                                          
                                          const id = item['@ID']
                                     //     // Cập nhật giá trị biến state nếu cần
                                     //     setClickedItemId(prevIds => `${prevIds}/${itemId}`);
@@ -277,10 +275,10 @@ export default function CreateTemplateLwM2M() {
                                       <Checkbox
                                         className="ml-auto mr-3 mt-2 flex h-5 w-5"
                                         {...field}
-                                        checked={config}
+                                        //checked={value}
                                         onCheckedChange={(e) => {
-                                          handleCheckboxChange(id);
-                                          onChange(e);
+                                          handleCheckboxChange(id)
+                                          onChange(e)
                                         }}
                                       />
                                     );
@@ -303,11 +301,16 @@ export default function CreateTemplateLwM2M() {
                         }
                         return null
                       })}
-                      {clickedItemIds.length > 0 && (
+                      {/* {clickedItemIds.length > 0 && (
                         <div>
                           <p>{`${lw2m2.LWM2M.Object.ObjectID}/0/${clickedItemIds.join('/')}: ${lw2m2.LWM2M.Object.Name}`}</p>
                         </div>
-                      )}
+                      )} */}
+                      {clickedItemIds.map((itemId) => (
+                        <p key={itemId}>
+                          {`${lw2m2.LWM2M.Object.ObjectID}/0/${itemId}: ${idToNameMap[itemId]}`}
+                        </p>
+                      ))}
                     </div>
                   </AccordionContent>
                 </AccordionItem>

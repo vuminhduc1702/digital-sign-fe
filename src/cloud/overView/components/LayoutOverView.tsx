@@ -138,6 +138,10 @@ export function LayoutOverView() {
       link: `${PATHS.DEVICE_TEMPLATE}/${projectId}`,
     },
     {
+      content: t('sidebar:cloud.device_template'),
+      link: `${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}`,
+    },
+    {
       content: t('sidebar:cloud.flow_engine'),
       link: `${PATHS.FLOW_ENGINE}/${projectId}`,
     },

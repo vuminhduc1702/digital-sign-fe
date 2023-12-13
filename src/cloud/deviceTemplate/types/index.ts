@@ -1,20 +1,30 @@
 import { type BasePagination } from '~/types'
 import { type AttrList } from '~/utils/schemaValidation'
 
-export type Template = {
+
+export type TransportConfigAttribute = {
+  action: string
   id: string
+  kind: string
   name: string
-  rule_chain_id: string
-  provision_key: string
-  provision_secret: string
-  created_time: number
-  attributes: AttrList
+  type: string
 }
 
-type TransportConfig = {
+export type ModuleConfig = {
+  Observe: boolean
+  attribute_info: TransportConfigAttribute[]
+  module_name: string;
+  numberOfAttributes: number
+}
+
+export type TransportConfigInfo = {
+  module_config: ModuleConfig[]
+}
+
+export type TransportConfig = {
   protocol: string
-  config: { [key: string]: string }
-  info: null | undefined
+  config: { [key: string]: string | null }
+  info: TransportConfigInfo
 }
 
 export type TemplateLwM2M = {
@@ -26,6 +36,19 @@ export type TemplateLwM2M = {
   created_time: number
   transport_config: TransportConfig
 }
+
+export type Template = {
+  id: string
+  name: string
+  rule_chain_id: string
+  provision_key: string
+  provision_secret: string
+  created_time: number
+  attributes: AttrList
+}
+export type TemplateLwM2MList = {
+  templates: TemplateLwM2M[]
+} & BasePagination
 
 export type TemplateList = {
   templates: Template[]

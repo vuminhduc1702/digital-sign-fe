@@ -12,7 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
-import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplate'
+import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
 import { type Template } from '../types'

@@ -12,7 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
-import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplate'
+import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
 import { type Template } from '../types'
@@ -66,12 +66,12 @@ export function TemplateLwM2M() {
             {filteredComboboxData?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
-                  className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}
+                  className={clsx('')}
                   key={template.id}
                   variant="muted"
                   onClick={() =>
                     navigate(
-                      `${PATHS.DEVICE_TEMPLATE}/${projectId}/${template.id}`,
+                      `${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${template.id}`,
                     )
                   }
                 >
@@ -186,7 +186,7 @@ export function TemplateLwM2M() {
           <UpdateTemplate
             close={close}
             isOpen={isOpen}
-            selectedUpdateTemplate={selectedUpdateTemplate}
+            //selectedUpdateTemplate={selectedUpdateTemplate}
           />
         ) : null}
       </div>

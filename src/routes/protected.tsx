@@ -23,9 +23,13 @@ import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
 
-const { DeviceTemplateManage } = lazyImport(
+// const { DeviceTemplateManage } = lazyImport(
+//   () => import('~/cloud/deviceTemplate'),
+//   'DeviceTemplateManage',
+// )
+const { DeviceTemplatelwm2mManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
-  'DeviceTemplateManage',
+  'DeviceTemplatelwm2mManage',
 )
 const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
@@ -59,11 +63,20 @@ export const protectedRoutes = [
       ...ApplicationRoutes,
       ...AiRoutes,
       ...CustomerManageRoutes,
+      // {
+      //   path: PATHS.DEVICE_TEMPLATE,
+      //   element: (
+      //     <ErrorBoundary FallbackComponent={ErrorFallback}>
+      //       <DeviceTemplateManage />
+      //     </ErrorBoundary>
+      //   ),
+      //   children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
+      // },
       {
-        path: PATHS.DEVICE_TEMPLATE,
+        path: PATHS.DEVICE_TEMPLATELWM2M,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DeviceTemplateManage />
+            <DeviceTemplatelwm2mManage />
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
