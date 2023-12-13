@@ -152,28 +152,24 @@ export default function CreateTemplate() {
             error={formState.errors['name']}
             registration={register('name')}
           />
-          <div className="space-y-1">
-            <SelectDropdown
-              isClearable={true}
-              label={t('cloud:device_template.add_template.flow')}
-              name="rule_chain_id"
-              control={control}
-              options={RuleSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:flow_id') ||
-                option.label === t('table:no_in_flow_id')
-              }
-              noOptionsMessage={() => t('table:no_in_flow_id')}
-              loadingMessage={() => t('loading:flow_id')}
-              isLoading={isLoadingRuchains}
-              placeholder={t(
-                'cloud:device_template.add_template.choose_flow_id',
-              )}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.rule_chain_id?.message}
-            </p>
-          </div>
+
+          <SelectDropdown
+            isClearable={true}
+            label={t('cloud:device_template.add_template.flow')}
+            name="rule_chain_id"
+            control={control}
+            options={RuleSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:flow_id') ||
+              option.label === t('table:no_in_flow_id')
+            }
+            noOptionsMessage={() => t('table:no_in_flow_id')}
+            loadingMessage={() => t('loading:flow_id')}
+            isLoading={isLoadingRuchains}
+            placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+            error={formState?.errors?.rule_chain_id}
+          />
+
           {fields.map((field, index) => (
             <section
               key={field.id}

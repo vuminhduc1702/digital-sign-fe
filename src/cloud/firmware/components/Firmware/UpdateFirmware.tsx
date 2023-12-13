@@ -83,7 +83,7 @@ export function UpdateFirmWare({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -108,21 +108,18 @@ export function UpdateFirmWare({
             })}
           >
             <>
-              <div>
-                <SelectDropdown
-                  isClearable={false}
-                  label={t('cloud:firmware.add_firmware.template')}
-                  name="template_id"
-                  control={control}
-                  options={firmwareData}
-                  defaultValue={firmwareData.find(
-                    firm => firm.value === getValues('template_id'),
-                  )}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.template_id?.message}
-                </p>
-              </div>
+              <SelectDropdown
+                isClearable={false}
+                label={t('cloud:firmware.add_firmware.template')}
+                name="template_id"
+                control={control}
+                options={firmwareData}
+                defaultValue={firmwareData.find(
+                  firm => firm.value === getValues('template_id'),
+                )}
+                error={formState?.errors?.template_id}
+              />
+
               <InputField
                 label={t('cloud:firmware.add_firmware.name')}
                 error={formState.errors['name']}
@@ -150,7 +147,7 @@ export function UpdateFirmWare({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

@@ -102,23 +102,19 @@ export function UpdateVersionFirmWare({
           })
         })}
       >
-        <div className="space-y-1">
-          <SelectDropdown
-            isClearable={false}
-            label={t('cloud:firmware.fota')}
-            name="version"
-            control={control}
-            options={
-              data?.data?.map(fota => ({
-                label: `${fota.name} (${fota.version})`,
-                value: `${fota.name} (${fota.version})`,
-              })) || [{ label: '', value: '' }]
-            }
-          />
-          <p className="text-body-sm text-primary-400">
-            {formState?.errors?.version?.message}
-          </p>
-        </div>
+        <SelectDropdown
+          isClearable={false}
+          label={t('cloud:firmware.fota')}
+          name="version"
+          control={control}
+          options={
+            data?.data?.map(fota => ({
+              label: `${fota.name} (${fota.version})`,
+              value: `${fota.name} (${fota.version})`,
+            })) || [{ label: '', value: '' }]
+          }
+          error={formState?.errors?.version}
+        />
       </form>
     </Drawer>
   )

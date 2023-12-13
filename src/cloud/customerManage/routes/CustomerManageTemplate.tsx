@@ -55,6 +55,7 @@ export function CustomerManageTemplate() {
                   { label: 'Mã khách hàng', value: 'customer_code' },
                   { label: 'Số điện thoại', value: 'phone' },
                 ]}
+                // error={formState?.errors?.key}
               />
             </div>
             <InputField

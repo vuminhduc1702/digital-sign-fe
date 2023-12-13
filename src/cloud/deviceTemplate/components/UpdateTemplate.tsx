@@ -170,31 +170,28 @@ export function UpdateTemplate({
               error={formState.errors['name']}
               registration={register('name')}
             />
-            <div className="space-y-1">
-              <SelectDropdown
-                label={t('cloud:device_template.add_template.flow')}
-                name="rule_chain_id"
-                control={control}
-                options={RuleSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:flow_id') ||
-                  option.label === t('table:no_in_flow_id')
-                }
-                noOptionsMessage={() => t('table:no_in_flow_id')}
-                loadingMessage={() => t('loading:flow_id')}
-                isLoading={RuleIsLoading}
-                placeholder={t(
-                  'cloud:device_template.add_template.choose_flow_id',
-                )}
-                defaultValue={RuleSelectOptions.find(
-                  ruchains =>
-                    ruchains.value === selectedUpdateTemplate.rule_chain_id,
-                )}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.rule_chain_id?.message}
-              </p>
-            </div>
+
+            <SelectDropdown
+              label={t('cloud:device_template.add_template.flow')}
+              name="rule_chain_id"
+              control={control}
+              options={RuleSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:flow_id') ||
+                option.label === t('table:no_in_flow_id')
+              }
+              noOptionsMessage={() => t('table:no_in_flow_id')}
+              loadingMessage={() => t('loading:flow_id')}
+              isLoading={RuleIsLoading}
+              placeholder={t(
+                'cloud:device_template.add_template.choose_flow_id',
+              )}
+              defaultValue={RuleSelectOptions.find(
+                ruchains =>
+                  ruchains.value === selectedUpdateTemplate.rule_chain_id,
+              )}
+              error={formState?.errors?.rule_chain_id}
+            />
             {fields.map((field, index) => (
               <section
                 key={field.id}
