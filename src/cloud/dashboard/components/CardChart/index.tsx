@@ -14,7 +14,7 @@ export function CardChart({ data }: { data: LatestData }) {
   })
 
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (data != null && Object.keys(data).length !== 0) {
       const dataDataType = {
         key: Object.keys(data)[0],
         value: Object.values(data)?.[0]?.value,
@@ -22,11 +22,6 @@ export function CardChart({ data }: { data: LatestData }) {
       setDataTransformedFeedToChart(dataDataType)
     }
   }, [data])
-
-  const showSpinner = useSpinDelay(Object.keys(data).length === 0, {
-    delay: 150,
-    minDuration: 300,
-  })
 
   return (
     <>
@@ -41,7 +36,7 @@ export function CardChart({ data }: { data: LatestData }) {
         </div>
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
+          <Spinner showSpinner size="xl" />
         </div>
       )}
     </>

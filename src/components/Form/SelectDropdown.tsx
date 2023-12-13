@@ -1,8 +1,4 @@
-import Select, {
-  type Props,
-  type GroupBase,
-  type SelectInstance,
-} from 'react-select'
+import Select, { type Props, type GroupBase } from 'react-select'
 import { useTranslation } from 'react-i18next'
 import { Controller, type FieldValues } from 'react-hook-form'
 
@@ -11,7 +7,6 @@ import { cn } from '~/utils/misc'
 
 import { type SelectOption } from './SelectField'
 import { type ControllerPassThroughProps } from '~/types'
-import { nativeEnum } from 'zod'
 
 type SelectProps<
   TFormValues extends FieldValues,
@@ -58,23 +53,7 @@ export function SelectDropdown<
   ...props
 }: SelectProps<TFormValues, Option, IsMulti, Group>) {
   const { t } = useTranslation()
-  // const listAttr = name.split('.')
-  // let message: any = control?._formState?.errors
 
-  // for (const j in listAttr) {
-  //   if (typeof j === 'number') {
-  //     message = message[listAttr[j]]
-  //     continue
-  //   } else {
-  //     if (listAttr[j] in message) {
-  //       message = message[listAttr[j]]
-  //     }
-  //   }
-  // }
-  // const redBorderError =
-  //   message?.message != null
-  //     ? 'border-primary-400 focus:outline-primary-400'
-  //     : ''
   return (
     <FieldWrapper
       classlabel={classlabel}

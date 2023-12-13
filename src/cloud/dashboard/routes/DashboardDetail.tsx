@@ -113,7 +113,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL, handleSendMessage)
-  console.log('lastJsonMessage', lastJsonMessage)
+  // console.log('lastJsonMessage', lastJsonMessage)
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -132,7 +132,6 @@ export function DashboardDetail() {
       setIsStar(detailDashboard?.dashboard_setting?.starred)
     }
   }, [detailDashboard?.dashboard_setting?.starred])
-  console.log('detailDashboard', detailDashboard)
 
   useEffect(() => {
     if (lastJsonMessage != null) {

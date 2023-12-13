@@ -199,7 +199,7 @@ export function GaugeChart({
   })
 
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (data != null && Object.keys(data).length !== 0) {
       const gaugeDataType = {
         key: Object.keys(data)[0],
         value: parseFloat(Object.values(data)?.[0]?.value),
@@ -213,11 +213,6 @@ export function GaugeChart({
     widgetInfo.attribute_config[0].max,
   )
 
-  const showSpinner = useSpinDelay(Object.keys(data).length === 0, {
-    delay: 150,
-    minDuration: 300,
-  })
-
   return (
     <>
       {Object.keys(dataTransformedFeedToChart).length > 0 ? (
@@ -230,7 +225,7 @@ export function GaugeChart({
         </MotionConfig>
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
+          <Spinner showSpinner size="xl" />
         </div>
       )}
     </>
