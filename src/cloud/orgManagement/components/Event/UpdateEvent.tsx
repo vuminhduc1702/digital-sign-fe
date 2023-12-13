@@ -301,7 +301,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -309,50 +309,43 @@ export function UpdateEvent({
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-                <div className="space-y-1">
-                  <SelectDropdown
-                    label={t(
-                      'cloud:org_manage.device_manage.add_device.parent',
-                    )}
-                    name="org_id"
-                    control={control}
-                    options={orgSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:org') ||
-                      option.label === t('table:no_org')
-                    }
-                    noOptionsMessage={() => t('table:no_org')}
-                    loadingMessage={() => t('loading:org')}
-                    isLoading={orgIsLoading}
-                    defaultValue={orgSelectOptions.find(
-                      item => item.value === getValues('org_id'),
-                    )}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.org_id?.message}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <SelectDropdown
-                    label={t('cloud:org_manage.event_manage.add_event.group')}
-                    name="group_id"
-                    control={control}
-                    options={groupSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:group') ||
-                      option.label === t('table:no_group')
-                    }
-                    noOptionsMessage={() => t('table:no_group')}
-                    loadingMessage={() => t('loading:group')}
-                    isLoading={groupIsLoading}
-                    defaultValue={groupSelectOptions?.find(
-                      item => item.value === getValues('group_id'),
-                    )}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.group_id?.message}
-                  </p>
-                </div>
+
+                <SelectDropdown
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={orgSelectOptions}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:org') ||
+                    option.label === t('table:no_org')
+                  }
+                  noOptionsMessage={() => t('table:no_org')}
+                  loadingMessage={() => t('loading:org')}
+                  isLoading={orgIsLoading}
+                  defaultValue={orgSelectOptions.find(
+                    item => item.value === getValues('org_id'),
+                  )}
+                  error={formState?.errors?.org_id}
+                />
+
+                <SelectDropdown
+                  label={t('cloud:org_manage.event_manage.add_event.group')}
+                  name="group_id"
+                  control={control}
+                  options={groupSelectOptions}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:group') ||
+                    option.label === t('table:no_group')
+                  }
+                  noOptionsMessage={() => t('table:no_group')}
+                  loadingMessage={() => t('loading:group')}
+                  isLoading={groupIsLoading}
+                  defaultValue={groupSelectOptions?.find(
+                    item => item.value === getValues('group_id'),
+                  )}
+                  error={formState?.errors?.group_id}
+                />
+
                 <FieldWrapper
                   label={t('cloud:org_manage.event_manage.add_event.status')}
                   error={formState?.errors['status']}
@@ -421,7 +414,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -460,7 +453,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+                  className="bg-secondary-700 w-full rounded-md pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -478,76 +471,69 @@ export function UpdateEvent({
                   return (
                     <section className="!mt-3 space-y-2" key={field.id}>
                       <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.device',
-                            )}
-                            name={`condition.${index}.device_id`}
-                            control={control}
-                            options={deviceSelectOptions}
-                            isOptionDisabled={option =>
-                              option.label === t('loading:device') ||
-                              option.label === t('table:no_device')
-                            }
-                            noOptionsMessage={() => t('table:no_device')}
-                            loadingMessage={() => t('loading:device')}
-                            isLoading={deviceIsLoading}
-                            defaultValue={deviceSelectOptions?.find(
-                              item =>
-                                item.value ===
-                                getValues(`condition.${index}.device_id`),
-                            )}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]?.device_id
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.attr',
-                            )}
-                            name={`condition.${index}.attribute_name`}
-                            control={control}
-                            options={attrSelectOptions}
-                            isOptionDisabled={option =>
-                              option.label === t('loading:attr') ||
-                              option.label === t('table:no_attr')
-                            }
-                            noOptionsMessage={() => t('table:no_attr')}
-                            loadingMessage={() => t('loading:attr')}
-                            isLoading={attrIsLoading}
-                            onMenuOpen={() => {
-                              attrMutate({
-                                data: {
-                                  entity_ids: [
-                                    watch(`condition.${index}.device_id`),
-                                  ],
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.device',
+                          )}
+                          name={`condition.${index}.device_id`}
+                          control={control}
+                          options={deviceSelectOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:device') ||
+                            option.label === t('table:no_device')
+                          }
+                          noOptionsMessage={() => t('table:no_device')}
+                          loadingMessage={() => t('loading:device')}
+                          isLoading={deviceIsLoading}
+                          defaultValue={deviceSelectOptions?.find(
+                            item =>
+                              item.value ===
+                              getValues(`condition.${index}.device_id`),
+                          )}
+                          error={
+                            formState?.errors?.condition?.[index]?.device_id
+                          }
+                        />
 
-                                  entity_type: 'DEVICE',
-                                },
-                              })
-                            }}
-                            defaultValue={{
-                              label: getValues(
-                                `condition.${index}.attribute_name`,
-                              ),
-                              value: getValues(
-                                `condition.${index}.attribute_name`,
-                              ),
-                            }}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]
-                                ?.attribute_name?.message
-                            }
-                          </p>
-                        </div>
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.attr',
+                          )}
+                          name={`condition.${index}.attribute_name`}
+                          control={control}
+                          options={attrSelectOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:attr') ||
+                            option.label === t('table:no_attr')
+                          }
+                          noOptionsMessage={() => t('table:no_attr')}
+                          loadingMessage={() => t('loading:attr')}
+                          isLoading={attrIsLoading}
+                          onMenuOpen={() => {
+                            attrMutate({
+                              data: {
+                                entity_ids: [
+                                  watch(`condition.${index}.device_id`),
+                                ],
+
+                                entity_type: 'DEVICE',
+                              },
+                            })
+                          }}
+                          defaultValue={{
+                            label: getValues(
+                              `condition.${index}.attribute_name`,
+                            ),
+                            value: getValues(
+                              `condition.${index}.attribute_name`,
+                            ),
+                          }}
+                          error={
+                            formState?.errors?.condition?.[index]
+                              ?.attribute_name
+                          }
+                        />
+
                         <SelectField
                           label={t(
                             'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
@@ -623,7 +609,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <Button
                 className="rounded-md"

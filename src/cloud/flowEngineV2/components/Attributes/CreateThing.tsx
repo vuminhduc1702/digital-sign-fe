@@ -139,41 +139,29 @@ export function CreateThing({
               disabled
             />
             {watch('type') === 'thing' ? (
-              <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:custom_protocol.thing.base_template')}
-                  name="base_template"
-                  control={control}
-                  options={thingSelectData}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:base')
-                  }
-                  noOptionsMessage={() => t('table:no_base_template')}
-                  isLoading={isLoadingThing}
-                  maxMenuHeight={150}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.base_template?.message}
-                </p>
-              </div>
+              <SelectDropdown
+                label={t('cloud:custom_protocol.thing.base_template')}
+                name="base_template"
+                control={control}
+                options={thingSelectData}
+                isOptionDisabled={option => option.label === t('loading:base')}
+                noOptionsMessage={() => t('table:no_base_template')}
+                isLoading={isLoadingThing}
+                maxMenuHeight={150}
+                error={formState?.errors?.base_template}
+              />
             ) : watch('type') === 'template' ? (
-              <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:custom_protocol.thing.base_shapes')}
-                  name="base_shapes"
-                  control={control}
-                  options={thingSelectData}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:base')
-                  }
-                  noOptionsMessage={() => t('table:no_base_shapes')}
-                  isLoading={isLoadingThing}
-                  maxMenuHeight={150}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.base_shapes?.message}
-                </p>
-              </div>
+              <SelectDropdown
+                label={t('cloud:custom_protocol.thing.base_shapes')}
+                name="base_shapes"
+                control={control}
+                options={thingSelectData}
+                isOptionDisabled={option => option.label === t('loading:base')}
+                noOptionsMessage={() => t('table:no_base_shapes')}
+                isLoading={isLoadingThing}
+                maxMenuHeight={150}
+                error={formState?.errors?.base_shapes}
+              />
             ) : null}
             <InputField
               label={t('cloud:custom_protocol.thing.description')}

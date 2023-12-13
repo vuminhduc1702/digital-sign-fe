@@ -35,6 +35,7 @@ export type DataItem = {
     TIME_SERIES: null
     ENTITY_FIELD: null
   }
+  message?: string
 }
 
 export type DashboardWS = {

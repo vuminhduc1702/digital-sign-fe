@@ -543,7 +543,7 @@ export function CreateEvent() {
           <div className="space-y-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               <InputField
@@ -551,42 +551,37 @@ export function CreateEvent() {
                 error={formState.errors['name']}
                 registration={register('name')}
               />
-              <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:org_manage.device_manage.add_device.parent')}
-                  name="org_id"
-                  control={control}
-                  options={orgSelectOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:org') ||
-                    option.label === t('table:no_org')
-                  }
-                  noOptionsMessage={() => t('table:no_org')}
-                  loadingMessage={() => t('loading:org')}
-                  isLoading={orgIsLoading}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.org_id?.message}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <SelectDropdown
-                  label={t('cloud:org_manage.event_manage.add_event.group')}
-                  name="group_id"
-                  control={control}
-                  options={groupSelectOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:group') ||
-                    option.label === t('table:no_group')
-                  }
-                  noOptionsMessage={() => t('table:no_group')}
-                  loadingMessage={() => t('loading:group')}
-                  isLoading={groupIsLoading}
-                />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.group_id?.message}
-                </p>
-              </div>
+
+              <SelectDropdown
+                label={t('cloud:org_manage.device_manage.add_device.parent')}
+                name="org_id"
+                control={control}
+                options={orgSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:org') ||
+                  option.label === t('table:no_org')
+                }
+                noOptionsMessage={() => t('table:no_org')}
+                loadingMessage={() => t('loading:org')}
+                isLoading={orgIsLoading}
+                error={formState?.errors?.org_id}
+              />
+
+              <SelectDropdown
+                label={t('cloud:org_manage.event_manage.add_event.group')}
+                name="group_id"
+                control={control}
+                options={groupSelectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:group') ||
+                  option.label === t('table:no_group')
+                }
+                noOptionsMessage={() => t('table:no_group')}
+                loadingMessage={() => t('loading:group')}
+                isLoading={groupIsLoading}
+                error={formState?.errors?.group_id}
+              />
+
               <FieldWrapper
                 label={t('cloud:org_manage.event_manage.add_event.status')}
                 error={formState?.errors['status']}
@@ -653,7 +648,7 @@ export function CreateEvent() {
               title={t(
                 'cloud:org_manage.event_manage.add_event.test_condition_time',
               )}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               {todos.map(todo => (
@@ -716,7 +711,7 @@ export function CreateEvent() {
                 title={t(
                   'cloud:org_manage.event_manage.add_event.condition.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <Button
                 className="rounded-md"
@@ -734,63 +729,53 @@ export function CreateEvent() {
                 return (
                   <section className="!mt-3 space-y-2" key={field.id}>
                     <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.condition.device',
-                          )}
-                          name={`condition.${index}.device_id`}
-                          control={control}
-                          options={deviceSelectData}
-                          isOptionDisabled={option =>
-                            option.label === t('loading:device') ||
-                            option.label === t('table:no_device')
-                          }
-                          noOptionsMessage={() => t('table:no_device')}
-                          loadingMessage={() => t('loading:device')}
-                          isLoading={deviceIsLoading}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.condition?.[index]?.device_id
-                              ?.message
-                          }
-                        </p>
-                      </div>
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          label={t(
-                            'cloud:org_manage.event_manage.add_event.condition.attr',
-                          )}
-                          name={`condition.${index}.attribute_name`}
-                          control={control}
-                          options={attrSelectData}
-                          isOptionDisabled={option =>
-                            option.label === t('loading:attr') ||
-                            option.label === t('table:no_attr')
-                          }
-                          noOptionsMessage={() => t('table:no_attr')}
-                          loadingMessage={() => t('loading:attr')}
-                          isLoading={attrIsLoading}
-                          onMenuOpen={() => {
-                            attrMutate({
-                              data: {
-                                entity_ids: [
-                                  watch(`condition.${index}.device_id`),
-                                ],
+                      <SelectDropdown
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.condition.device',
+                        )}
+                        name={`condition.${index}.device_id`}
+                        control={control}
+                        options={deviceSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:device') ||
+                          option.label === t('table:no_device')
+                        }
+                        noOptionsMessage={() => t('table:no_device')}
+                        loadingMessage={() => t('loading:device')}
+                        isLoading={deviceIsLoading}
+                        error={formState?.errors?.condition?.[index]?.device_id}
+                      />
 
-                                entity_type: 'DEVICE',
-                              },
-                            })
-                          }}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
-                            formState?.errors?.condition?.[index]
-                              ?.attribute_name?.message
-                          }
-                        </p>
-                      </div>
+                      <SelectDropdown
+                        label={t(
+                          'cloud:org_manage.event_manage.add_event.condition.attr',
+                        )}
+                        name={`condition.${index}.attribute_name`}
+                        control={control}
+                        options={attrSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:attr') ||
+                          option.label === t('table:no_attr')
+                        }
+                        noOptionsMessage={() => t('table:no_attr')}
+                        loadingMessage={() => t('loading:attr')}
+                        isLoading={attrIsLoading}
+                        onMenuOpen={() => {
+                          attrMutate({
+                            data: {
+                              entity_ids: [
+                                watch(`condition.${index}.device_id`),
+                              ],
+
+                              entity_type: 'DEVICE',
+                            },
+                          })
+                        }}
+                        error={
+                          formState?.errors?.condition?.[index]?.attribute_name
+                        }
+                      />
+
                       <SelectField
                         label={t(
                           'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
@@ -857,7 +842,7 @@ export function CreateEvent() {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             {actionType !== 'report' && (
               <Button
@@ -896,31 +881,27 @@ export function CreateEvent() {
                     }
                   />
                   {actionType === 'report' ? (
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:custom_protocol.thing.id')}
-                        name="cmd.thing_id"
-                        control={control}
-                        options={thingSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:entity_thing') ||
-                          option.label === t('table:no_thing')
-                        }
-                        noOptionsMessage={() => t('table:no_thing')}
-                        loadingMessage={() => t('loading:entity_thing')}
-                        isLoading={isLoadingThing}
-                        placeholder={t('cloud:custom_protocol.thing.choose')}
-                        handleClearSelectDropdown={() =>
-                          selectDropdownServiceRef.current?.clearValue()
-                        }
-                        handleChangeSelect={() =>
-                          selectDropdownServiceRef.current?.clearValue()
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.cmd?.thing_id?.message}
-                      </p>
-                    </div>
+                    <SelectDropdown
+                      label={t('cloud:custom_protocol.thing.id')}
+                      name="cmd.thing_id"
+                      control={control}
+                      options={thingSelectData}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:entity_thing') ||
+                        option.label === t('table:no_thing')
+                      }
+                      noOptionsMessage={() => t('table:no_thing')}
+                      loadingMessage={() => t('loading:entity_thing')}
+                      isLoading={isLoadingThing}
+                      placeholder={t('cloud:custom_protocol.thing.choose')}
+                      handleClearSelectDropdown={() =>
+                        selectDropdownServiceRef.current?.clearValue()
+                      }
+                      handleChangeSelect={() =>
+                        selectDropdownServiceRef.current?.clearValue()
+                      }
+                      error={formState?.errors?.cmd?.thing_id}
+                    />
                   ) : (
                     <InputField
                       label={t(
@@ -931,29 +912,25 @@ export function CreateEvent() {
                     />
                   )}
                   {actionType === 'report' ? (
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        refSelect={selectDropdownServiceRef}
-                        label={t('cloud:custom_protocol.service.title')}
-                        name="cmd.handle_service"
-                        control={control}
-                        options={serviceSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:service_thing') ||
-                          option.label === t('table:no_service')
-                        }
-                        isLoading={isLoadingService}
-                        loadingMessage={() => t('loading:service_thing')}
-                        noOptionsMessage={() => t('table:no_service')}
-                        placeholder={t('cloud:custom_protocol.service.choose')}
-                        customOnChange={() =>
-                          resetField(`cmd.input.${index}.value`)
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.cmd?.handle_service?.message}
-                      </p>
-                    </div>
+                    <SelectDropdown
+                      refSelect={selectDropdownServiceRef}
+                      label={t('cloud:custom_protocol.service.title')}
+                      name="cmd.handle_service"
+                      control={control}
+                      options={serviceSelectData}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:service_thing') ||
+                        option.label === t('table:no_service')
+                      }
+                      isLoading={isLoadingService}
+                      loadingMessage={() => t('loading:service_thing')}
+                      noOptionsMessage={() => t('table:no_service')}
+                      placeholder={t('cloud:custom_protocol.service.choose')}
+                      customOnChange={() =>
+                        resetField(`cmd.input.${index}.value`)
+                      }
+                      error={formState?.errors?.cmd?.handle_service}
+                    />
                   ) : (
                     <InputField
                       label={t(

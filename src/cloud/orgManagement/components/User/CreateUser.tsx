@@ -238,44 +238,38 @@ export function CreateUser() {
               )
             }
           />
-          <div className="space-y-1">
-            <SelectDropdown
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              name="org_id"
-              control={control}
-              options={orgSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:org') ||
-                option.label === t('table:no_in_org')
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              loadingMessage={() => t('loading:org')}
-              isLoading={orgIsLoading}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.org_id?.message}
-            </p>
-          </div>
-          <div className="space-y-1">
-            <SelectDropdown
-              label={t('cloud:org_manage.user_manage.add_user.role')}
-              name="role_id"
-              control={control}
-              options={roleOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:role') ||
-                option.label === t('table:no_role')
-              }
-              noOptionsMessage={() => t('table:no_role')}
-              loadingMessage={() => t('loading:role')}
-              isLoading={roleIsLoading}
-              placeholder={t('cloud:role_manage.add_role.choose_role')}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.role_id?.message}
-            </p>
-          </div>
+
+          <SelectDropdown
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            name="org_id"
+            control={control}
+            options={orgSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:org') ||
+              option.label === t('table:no_in_org')
+            }
+            noOptionsMessage={() => t('table:no_in_org')}
+            loadingMessage={() => t('loading:org')}
+            isLoading={orgIsLoading}
+            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+            error={formState?.errors?.org_id}
+          />
+
+          <SelectDropdown
+            label={t('cloud:org_manage.user_manage.add_user.role')}
+            name="role_id"
+            control={control}
+            options={roleOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:role') ||
+              option.label === t('table:no_role')
+            }
+            noOptionsMessage={() => t('table:no_role')}
+            loadingMessage={() => t('loading:role')}
+            isLoading={roleIsLoading}
+            placeholder={t('cloud:role_manage.add_role.choose_role')}
+            error={formState?.errors?.role_id}
+          />
 
           <div className="grid grid-cols-3 gap-x-2">
             <div className="col-start-1 col-end-4">

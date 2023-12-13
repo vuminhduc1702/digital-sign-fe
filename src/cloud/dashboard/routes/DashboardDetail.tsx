@@ -67,8 +67,6 @@ export type WidgetAttrDeviceType = Array<{
   deviceId: string
 }>
 
-const PINGWSTIME = 30000
-
 const { token } = storage.getToken() as UserStorage
 export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
   `Bearer ${token}`,
@@ -114,12 +112,8 @@ export function DashboardDetail() {
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WEBSOCKET_URL)
-  // console.log('lastJsonMessage', lastJsonMessage)
-  const handleSendMessage = useCallback(
-    (message: WebSocketMessage) => sendMessage(message),
-    [],
-  )
+    useWS<DashboardWS>(WEBSOCKET_URL, handleSendMessage)
+  console.log('lastJsonMessage', lastJsonMessage)
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -138,25 +132,16 @@ export function DashboardDetail() {
       setIsStar(detailDashboard?.dashboard_setting?.starred)
     }
   }, [detailDashboard?.dashboard_setting?.starred])
+  console.log('detailDashboard', detailDashboard)
 
   useEffect(() => {
-    if (
-      lastJsonMessage != null &&
-      lastJsonMessage?.errorCode !== 0 &&
-      !lastJsonMessage?.hasOwnProperty('pong')
-    ) {
-      addNotification({
-        type: 'error',
-        title: lastJsonMessage.errorMsg,
-      })
-    }
-
-    if (lastJsonMessage?.hasOwnProperty('pong')) {
-      const pingWSTimeout = setTimeout(() => {
-        handleSendMessage(JSON.stringify({ ping: 'ping' }))
-      }, PINGWSTIME)
-
-      return () => clearTimeout(pingWSTimeout)
+    if (lastJsonMessage != null) {
+      if (lastJsonMessage?.errorCode !== 0) {
+        addNotification({
+          type: 'error',
+          title: lastJsonMessage.errorMsg,
+        })
+      }
     }
 
     // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
@@ -188,41 +173,36 @@ export function DashboardDetail() {
     // }
   }, [lastJsonMessage])
 
-  // Ping websocket to server to keep widget alive every 30s
-  useEffect(() => {
-    const pingWSTimeout = setTimeout(() => {
-      handleSendMessage(JSON.stringify({ ping: 'ping' }))
-    }, PINGWSTIME)
-
-    return () => clearTimeout(pingWSTimeout)
-  }, [])
-
-  useEffect(() => {
+  function handleSendMessage() {
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
       if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-        handleSendMessage(dataSource.init_message)
+        sendMessage(dataSource.init_message)
       }
       if (
         dataSource?.realtime_message !== '' &&
         dataSource?.realtime_message != null
       ) {
-        handleSendMessage(dataSource?.realtime_message)
+        sendMessage(dataSource?.realtime_message)
       }
       if (
         dataSource?.history_message !== '' &&
         dataSource?.history_message != null
       ) {
-        handleSendMessage(dataSource?.history_message)
+        sendMessage(dataSource?.history_message)
       }
       if (
         dataSource?.lastest_message !== '' &&
         dataSource?.lastest_message != null
       ) {
-        handleSendMessage(dataSource?.lastest_message)
+        sendMessage(dataSource?.lastest_message)
       }
     })
-  }, [handleSendMessage, widgetList, Object.keys(widgetList).length])
+  }
+
+  useEffect(() => {
+    handleSendMessage()
+  }, [sendMessage, widgetList])
 
   function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}
@@ -363,6 +343,8 @@ export function DashboardDetail() {
                         data={
                           widgetInfo?.datasource?.controller_message as string
                         }
+                        sendMessage={sendMessage}
+                        lastJsonMessage={lastJsonMessage}
                       />
                     ) : null}
                     {isEditMode ? (

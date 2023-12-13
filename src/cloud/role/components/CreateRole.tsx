@@ -320,28 +320,19 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     registration={register(
                       `policies.${index}.policy_name` as const,
                     )}
+                    error={formState?.errors?.policies?.[index]?.policy_name}
                   />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.policies?.[index]?.policy_name?.message}
-                  </p>
                 </div>
                 {type === 'Generic' && (
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      label={
-                        t('cloud:role_manage.add_policy.resources') ??
-                        'Authorization resources'
-                      }
-                      name={`policies.${index}.resources`}
-                      options={resourcesList.map(
-                        resourcesType => resourcesType,
-                      )}
-                      control={control}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      error={formState?.errors?.policies?.[index]?.resources}
-                    />
-                  </div>
+                  <SelectDropdown
+                    label={t('cloud:role_manage.add_policy.resources')}
+                    error={formState?.errors?.policies?.[index]?.resources}
+                    name={`policies.${index}.resources`}
+                    options={resourcesList.map(resourcesType => resourcesType)}
+                    control={control}
+                    isMulti
+                    closeMenuOnSelect={false}
+                  />
                 )}
                 {type === 'Group' && (
                   <div className="space-y-3">

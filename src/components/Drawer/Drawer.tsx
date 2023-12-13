@@ -19,7 +19,6 @@ export type DrawerProps = {
   children: React.ReactNode
   renderFooter: () => React.ReactNode
   size?: keyof typeof sizes
-  resetData?: () => void
 }
 
 export const Drawer = ({
@@ -29,7 +28,6 @@ export const Drawer = ({
   onClose,
   renderFooter,
   size = 'md',
-  resetData,
 }: DrawerProps) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>

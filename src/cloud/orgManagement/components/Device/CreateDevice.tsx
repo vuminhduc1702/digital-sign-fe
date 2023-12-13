@@ -153,22 +153,21 @@ export function CreateDevice() {
             }}
           />
 
-          <div className="space-y-1">
-            <SelectDropdown
-              refSelect={selectDropdownGroupId}
-              label={t('cloud:org_manage.device_manage.add_device.group')}
-              name="group_id"
-              control={control}
-              options={groupSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:group') ||
-                option.label === t('table:no_group')
-              }
-              noOptionsMessage={() => t('table:no_group')}
-              loadingMessage={() => t('loading:group')}
-              isLoading={groupIsLoading}
-            />
-          </div>
+          <SelectDropdown
+            refSelect={selectDropdownGroupId}
+            label={t('cloud:org_manage.device_manage.add_device.group')}
+            name="group_id"
+            control={control}
+            options={groupSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:group') ||
+              option.label === t('table:no_group')
+            }
+            noOptionsMessage={() => t('table:no_group')}
+            loadingMessage={() => t('loading:group')}
+            isLoading={groupIsLoading}
+            error={formState?.errors?.group_id}
+          />
 
           <SelectDropdown
             error={formState?.errors?.template_id}

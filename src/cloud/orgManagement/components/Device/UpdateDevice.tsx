@@ -204,78 +204,69 @@ export function UpdateDevice({
               error={formState.errors['name']}
               registration={register('name')}
             />
-            <div className="space-y-1">
-              <SelectDropdown
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
-                name="org_id"
-                control={control}
-                options={orgSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:org') ||
-                  option.label === t('table:no_in_org')
-                }
-                noOptionsMessage={() => t('table:no_in_org')}
-                loadingMessage={() => t('loading:org')}
-                isLoading={orgIsLoading}
-                placeholder={t(
-                  'cloud:org_manage.org_manage.add_org.choose_org',
-                )}
-                defaultValue={orgSelectOptions?.find(
-                  org => org.value === org_id,
-                )}
-                handleClearSelectDropdown={() =>
-                  selectDropdownGroupId.current?.clearValue()
-                }
-                handleChangeSelect={() =>
-                  selectDropdownGroupId.current?.clearValue()
-                }
-              />
-            </div>
-            <div className="space-y-1">
-              <SelectDropdown
-                refSelect={selectDropdownGroupId}
-                isClearable={false}
-                label={t('cloud:org_manage.device_manage.add_device.group')}
-                name="group_id"
-                control={control}
-                options={groupSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:group') ||
-                  option.label === t('table:no_group')
-                }
-                noOptionsMessage={() => t('table:no_group')}
-                loadingMessage={() => t('loading:group')}
-                isLoading={groupIsLoading}
-                defaultValue={groupSelectOptions?.find(
-                  group => group.value === group_id,
-                )}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.group_id?.message}
-              </p>
-            </div>
-            <div>
-              <SelectDropdown
-                isClearable={false}
-                label={t('cloud:firmware.add_firmware.template')}
-                name="template_id"
-                control={control}
-                options={templateSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:template') ||
-                  option.label === t('table:no_template')
-                }
-                noOptionsMessage={() => t('table:no_template')}
-                loadingMessage={() => t('loading:template')}
-                isLoading={templateIsLoading}
-                defaultValue={templateSelectOptions?.find(
-                  template => template.value === template_id,
-                )}
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.template_id?.message}
-              </p>
-            </div>
+
+            <SelectDropdown
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
+              name="org_id"
+              control={control}
+              options={orgSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:org') ||
+                option.label === t('table:no_in_org')
+              }
+              noOptionsMessage={() => t('table:no_in_org')}
+              loadingMessage={() => t('loading:org')}
+              isLoading={orgIsLoading}
+              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+              defaultValue={orgSelectOptions?.find(org => org.value === org_id)}
+              handleClearSelectDropdown={() =>
+                selectDropdownGroupId.current?.clearValue()
+              }
+              handleChangeSelect={() =>
+                selectDropdownGroupId.current?.clearValue()
+              }
+              error={formState?.errors?.org_id}
+            />
+
+            <SelectDropdown
+              refSelect={selectDropdownGroupId}
+              isClearable={false}
+              label={t('cloud:org_manage.device_manage.add_device.group')}
+              name="group_id"
+              control={control}
+              options={groupSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:group') ||
+                option.label === t('table:no_group')
+              }
+              noOptionsMessage={() => t('table:no_group')}
+              loadingMessage={() => t('loading:group')}
+              isLoading={groupIsLoading}
+              defaultValue={groupSelectOptions?.find(
+                group => group.value === group_id,
+              )}
+              error={formState?.errors?.group_id}
+            />
+
+            <SelectDropdown
+              isClearable={false}
+              label={t('cloud:firmware.add_firmware.template')}
+              name="template_id"
+              control={control}
+              options={templateSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:template') ||
+                option.label === t('table:no_template')
+              }
+              noOptionsMessage={() => t('table:no_template')}
+              loadingMessage={() => t('loading:template')}
+              isLoading={templateIsLoading}
+              defaultValue={templateSelectOptions?.find(
+                template => template.value === template_id,
+              )}
+              error={formState?.errors?.template_id}
+            />
+
             <InputField
               label={t('cloud:org_manage.device_manage.add_device.key')}
               error={formState.errors['key']}
@@ -326,7 +317,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -335,7 +326,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}

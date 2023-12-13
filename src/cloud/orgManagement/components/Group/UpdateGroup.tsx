@@ -148,29 +148,26 @@ export function UpdateGroup({
               value: entityType.type,
             }))}
           />
-          <div className="space-y-1">
-            <SelectDropdown
-              isClearable={false}
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              name="org_id"
-              control={control}
-              options={orgSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:org') ||
-                option.label === t('table:no_in_org')
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              loadingMessage={() => t('loading:org')}
-              isLoading={orgIsLoading}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions.find(
-                org => org.value === getValues('org_id'),
-              )}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.org_id?.message}
-            </p>
-          </div>
+
+          <SelectDropdown
+            isClearable={false}
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            name="org_id"
+            control={control}
+            options={orgSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:org') ||
+              option.label === t('table:no_in_org')
+            }
+            noOptionsMessage={() => t('table:no_in_org')}
+            loadingMessage={() => t('loading:org')}
+            isLoading={orgIsLoading}
+            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+            defaultValue={orgSelectOptions.find(
+              org => org.value === getValues('org_id'),
+            )}
+            error={formState?.errors?.org_id}
+          />
         </>
       </form>
     </Drawer>

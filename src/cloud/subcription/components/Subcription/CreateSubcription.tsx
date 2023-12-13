@@ -226,6 +226,7 @@ export function CreateSubcription() {
                 isClearable={false}
                 label={t('billing:subcription.popup.search_customer_with')}
                 name="user_id"
+                // error={formState?.errors?.user_id}
                 classnamefieldwrapper="flex items-center gap-x-3"
                 classlabel="w-3/12"
                 classchild="w-9/12"
@@ -276,6 +277,7 @@ export function CreateSubcription() {
                 isClearable={false}
                 label={t('billing:subcription.popup.package')}
                 name="plan_id"
+                // error={formState?.errors?.plan_id}
                 control={control}
                 // value={planValue}
                 customOnChange={e => {
