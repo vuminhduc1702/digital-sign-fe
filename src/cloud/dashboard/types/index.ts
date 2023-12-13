@@ -42,6 +42,7 @@ export type DashboardWS = {
   data: DataItem[]
   id: string
   update: any[]
+  requestType?: 'INIT' | 'REALTIME' | 'LASTEST' | 'HISTORY'
 } & BaseWSRes
 
 export const aggSchema = z.enum(

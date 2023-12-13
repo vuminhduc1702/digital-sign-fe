@@ -108,11 +108,15 @@ export function DashboardDetail() {
   const widgetDetailDB = detailDashboard?.configuration?.widgets
 
   const [widgetList, setWidgetList] = useState<Widget>({})
+  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WEBSOCKET_URL, handleSendMessage)
+    useWS<DashboardWS>(WEBSOCKET_URL, () => {
+      handleSendInitMessage()
+      handleSendMessage()
+    })
   // console.log('lastJsonMessage', lastJsonMessage)
 
   useEffect(() => {
@@ -171,46 +175,94 @@ export function DashboardDetail() {
     //   )
     // }
   }, [lastJsonMessage])
-  console.log('lastJsonMessage', lastJsonMessage)
+  // console.log('lastJsonMessage', lastJsonMessage)
 
-  async function handleSendMessage() {
-    const sendMessagePromises = Object.values(widgetList)
-      .filter(widget => {
-        const dataSource = widget?.datasource
-        return (
-          dataSource?.init_message !== '' && dataSource?.init_message != null
-        )
-      })
-      .map(widget => sendMessage(widget.datasource.init_message))
-
-    await Promise.all(sendMessagePromises)
-
+  function handleSendInitMessage() {
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
-      if (
-        dataSource?.realtime_message !== '' &&
-        dataSource?.realtime_message != null
-      ) {
-        sendMessage(dataSource?.realtime_message)
-      }
-      if (
-        dataSource?.history_message !== '' &&
-        dataSource?.history_message != null
-      ) {
-        sendMessage(dataSource?.history_message)
-      }
-      if (
-        dataSource?.lastest_message !== '' &&
-        dataSource?.lastest_message != null
-      ) {
-        sendMessage(dataSource?.lastest_message)
+      if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
+        sendMessage(dataSource.init_message)
       }
     })
   }
 
   useEffect(() => {
+    console.log('handleSendInitMessage')
+    handleSendInitMessage()
+  }, [widgetList])
+
+  function handleSendMessage() {
+    // const sendMessagePromises = Object.values(widgetList)
+    //   .filter(widget => {
+    //     const dataSource = widget?.datasource
+    //     return (
+    //       dataSource?.init_message !== '' && dataSource?.init_message != null
+    //     )
+    //   })
+    //   .map(widget => sendMessage(widget.datasource.init_message))
+
+    // await Promise.all(sendMessagePromises)
+
+    if (
+      lastJsonMessage?.requestType != null &&
+      lastJsonMessage?.requestType !== 'INIT'
+      // && lastJsonMessage?.data[0]?.latest?.ENTITY_FIELD === null
+    ) {
+      Object.values(widgetList).forEach(widget => {
+        const dataSource = widget?.datasource
+        if (
+          dataSource?.realtime_message !== '' &&
+          dataSource?.realtime_message != null
+        ) {
+          sendMessage(dataSource?.realtime_message)
+        }
+        if (
+          dataSource?.history_message !== '' &&
+          dataSource?.history_message != null
+        ) {
+          sendMessage(dataSource?.history_message)
+        }
+        if (
+          dataSource?.lastest_message !== '' &&
+          dataSource?.lastest_message != null
+        ) {
+          sendMessage(dataSource?.lastest_message)
+        }
+      })
+    }
+  }
+
+  // function handleSendMessage() {
+  //   Object.values(widgetList).forEach(widget => {
+  //     const dataSource = widget?.datasource
+  //     if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
+  //       sendMessage(dataSource.init_message)
+  //     }
+  //     if (
+  //       dataSource?.realtime_message !== '' &&
+  //       dataSource?.realtime_message != null
+  //     ) {
+  //       sendMessage(dataSource?.realtime_message)
+  //     }
+  //     if (
+  //       dataSource?.history_message !== '' &&
+  //       dataSource?.history_message != null
+  //     ) {
+  //       sendMessage(dataSource?.history_message)
+  //     }
+  //     if (
+  //       dataSource?.lastest_message !== '' &&
+  //       dataSource?.lastest_message != null
+  //     ) {
+  //       sendMessage(dataSource?.lastest_message)
+  //     }
+  //   })
+  // }
+
+  useEffect(() => {
+    console.log('handleSendMessage')
     handleSendMessage()
-  }, [sendMessage, widgetList])
+  }, [widgetList, lastJsonMessage?.requestType === 'INIT'])
 
   function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}

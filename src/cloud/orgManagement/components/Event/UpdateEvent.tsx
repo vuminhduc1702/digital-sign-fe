@@ -82,8 +82,6 @@ export function UpdateEvent({
   const serviceNameOptionProp = JSON.parse(data.cmd).service_name
   const inputDataProp = JSON.parse(data.cmd).input
 
-  console.log(JSON.parse(data.cmd), 'data cmd')
-  console.log(inputDataProp, 'inputDataProp')
   const [actionType, setActionType] = useState('')
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
@@ -219,7 +217,6 @@ export function UpdateEvent({
         },
       },
     })
-  console.log(serviceData, 'serviceData')
 
   const todoClicked = (e: any) => {
     setTodos(
@@ -302,7 +299,7 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
-          console.log('check values submit', values)
+          // console.log('check values submit', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -338,7 +335,6 @@ export function UpdateEvent({
             message: item.message,
             subject: item.subject,
           }))
-          console.log(interval, 'check interval123')
           mutate({
             data: {
               project_id: projectId,
@@ -373,7 +369,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -486,7 +482,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -525,7 +521,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -681,7 +677,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               {actionType !== 'report' && (
                 <Button
@@ -803,7 +799,6 @@ export function UpdateEvent({
                       {actionType === 'report' ? (
                         <div className="max-h-44 overflow-auto">
                           {serviceData?.serviceInput?.map((element, index) => {
-                            console.log(element, 'check element')
                             return (
                               <div
                                 key={`key-${index}`}
