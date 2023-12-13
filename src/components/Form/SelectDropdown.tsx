@@ -1,8 +1,4 @@
-import Select, {
-  type Props,
-  type GroupBase,
-  type SelectInstance,
-} from 'react-select'
+import Select, { type Props, type GroupBase } from 'react-select'
 import { useTranslation } from 'react-i18next'
 import { Controller, type FieldValues } from 'react-hook-form'
 

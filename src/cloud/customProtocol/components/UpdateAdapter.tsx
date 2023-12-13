@@ -16,7 +16,7 @@ import {
   useUpdateAdapter,
   usePingMQTT,
 } from '../api/adapter'
-import { adapterSchema, contentTypeList, protocolList } from './CreateAdapter'
+import { adapterSchema, contentTypeList, protocolList, contentTypeFTPList } from './CreateAdapter'
 import storage from '~/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
 import { useGetServiceThings } from '../api/serviceThing'
@@ -260,7 +260,7 @@ export function UpdateAdapter({
               registration={register('name')}
             />
             {!AdapterIsLoading ? (
-              <div className="w-[calc(100%-2.5rem)] space-y-1">
+              <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
                   label={t('cloud:custom_protocol.thing.id')}
                   name="thing_id"
@@ -283,14 +283,12 @@ export function UpdateAdapter({
                   handleChangeSelect={() =>
                     selectDropdownServiceRef.current?.clearValue()
                   }
+                  error={formState?.errors?.thing_id}
                 />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.thing_id?.message}
-                </p>
               </div>
             ) : null}
             {!isLoadingService ? (
-              <div className="w-[calc(100%-2.5rem)] space-y-1">
+              <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
                   refSelect={selectDropdownServiceRef}
                   label={t('cloud:custom_protocol.service.title')}
@@ -308,10 +306,8 @@ export function UpdateAdapter({
                   defaultValue={serviceSelectData?.find(
                     service => service.value === getValues('handle_service'),
                   )}
+                  error={formState?.errors?.handle_service}
                 />
-                <p className="text-body-sm text-primary-400">
-                  {formState?.errors?.handle_service?.message}
-                </p>
               </div>
             ) : null}
             <SelectField
@@ -320,12 +316,22 @@ export function UpdateAdapter({
               registration={register('protocol')}
               options={protocolList}
             />
-            <SelectField
-              label={t('cloud:custom_protocol.adapter.content_type.title')}
-              error={formState.errors['content_type']}
-              registration={register('content_type')}
-              options={contentTypeList}
-            />
+            {watch('protocol') === 'ftp' ? (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeFTPList}
+                value="Text"
+              />
+            ) : (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeList}
+              />
+            )}
             {watch('content_type') != null &&
             watch('content_type') !== '' &&
             watch('content_type') !== 'json' ? (
@@ -454,7 +460,7 @@ export function UpdateAdapter({
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <Button
                     className="rounded-md"

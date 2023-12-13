@@ -47,6 +47,10 @@ export const protocolList = [
     label: i18n.t('cloud:custom_protocol.adapter.protocol.udp'),
     value: 'udp',
   },
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.protocol.ftp'),
+    value: 'ftp',
+  },
 ] as const
 
 export const contentTypeList = [
@@ -58,6 +62,13 @@ export const contentTypeList = [
     label: i18n.t('cloud:custom_protocol.adapter.content_type.hex'),
     value: 'hex',
   },
+  {
+    label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
+    value: 'text',
+  },
+] as const
+
+export const contentTypeFTPList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
@@ -105,7 +116,7 @@ export const adapterSchema = z
         }),
       }),
       z.object({
-        protocol: z.enum(['tcp', 'udp'] as const),
+        protocol: z.enum(['tcp', 'udp', 'ftp'] as const),
       }),
     ]),
   )
@@ -340,7 +351,7 @@ export function CreateAdapter() {
               error={formState.errors['name']}
               registration={register('name')}
             />
-            <div className="w-[calc(100%-2.5rem)] space-y-1">
+            <div className="w-[calc(100%-2.5rem)]">
               <SelectDropdown
                 label={t('cloud:custom_protocol.thing.id')}
                 name="thing_id"
@@ -360,12 +371,10 @@ export function CreateAdapter() {
                 handleChangeSelect={() =>
                   selectDropdownServiceRef.current?.clearValue()
                 }
+                error={formState?.errors?.thing_id}
               />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.thing_id?.message}
-              </p>
             </div>
-            <div className="w-[calc(100%-2.5rem)] space-y-1">
+            <div className="w-[calc(100%-2.5rem)]">
               <SelectDropdown
                 refSelect={selectDropdownServiceRef}
                 label={t('cloud:custom_protocol.service.title')}
@@ -380,10 +389,8 @@ export function CreateAdapter() {
                 loadingMessage={() => t('loading:service_thing')}
                 noOptionsMessage={() => t('table:no_service')}
                 placeholder={t('cloud:custom_protocol.service.choose')}
+                error={formState?.errors?.handle_service}
               />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.handle_service?.message}
-              </p>
             </div>
             <SelectField
               label={t('cloud:custom_protocol.protocol')}
@@ -391,12 +398,21 @@ export function CreateAdapter() {
               registration={register('protocol')}
               options={protocolList}
             />
-            <SelectField
-              label={t('cloud:custom_protocol.adapter.content_type.title')}
-              error={formState.errors['content_type']}
-              registration={register('content_type')}
-              options={contentTypeList}
-            />
+            {watch('protocol') === 'ftp' ? (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeFTPList}
+              />
+            ) : (
+              <SelectField
+                label={t('cloud:custom_protocol.adapter.content_type.title')}
+                error={formState.errors['content_type']}
+                registration={register('content_type')}
+                options={contentTypeList}
+              />
+            )}
             {watch('content_type') != null &&
             watch('content_type') !== '' &&
             watch('content_type') !== 'json' ? (
@@ -525,7 +541,7 @@ export function CreateAdapter() {
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <Button
                     className="rounded-md"

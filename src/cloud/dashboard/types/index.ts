@@ -8,7 +8,7 @@ export type WSWidgetData = { ts: number; value: string }
 
 export type WidgetType = 'TIMESERIES' | 'LASTEST'
 
-type EntityId = {
+export type EntityId = {
   entityType: 'DEVICE'
   entityName: string
   id: string
@@ -35,12 +35,14 @@ export type DataItem = {
     TIME_SERIES: null
     ENTITY_FIELD: null
   }
+  message?: string
 }
 
 export type DashboardWS = {
   data: DataItem[]
   id: string
   update: any[]
+  requestType?: 'INIT' | 'REALTIME' | 'LASTEST' | 'HISTORY'
 } & BaseWSRes
 
 export const aggSchema = z.enum(

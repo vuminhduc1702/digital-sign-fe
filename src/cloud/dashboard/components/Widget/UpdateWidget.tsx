@@ -335,7 +335,7 @@ export function UpdateWidget({
               <>
                 <TitleBar
                   title={t('cloud:dashboard.config_chart.show')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+                  className="bg-secondary-700 w-full rounded-md pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                   <InputField
@@ -343,31 +343,29 @@ export function UpdateWidget({
                     error={formState.errors['title']}
                     registration={register('title')}
                   />
-                  <div className="space-y-1">
-                    <SelectDropdown
-                      label={t(
-                        'cloud:org_manage.device_manage.add_device.parent',
-                      )}
-                      name="org_id"
-                      control={control}
-                      options={orgSelectOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:org') ||
-                        option.label === t('table:no_org')
-                      }
-                      noOptionsMessage={() => t('table:no_org')}
-                      loadingMessage={() => t('loading:org')}
-                      isLoading={orgIsLoading}
-                      handleClearSelectDropdown={() => {
-                        resetField('device')
-                        resetField('attributeConfig', [{}])
-                      }}
-                      defaultValue={orgSelectOptions?.find(item => !item.value)}
-                    />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.org_id?.message}
-                    </p>
-                  </div>
+
+                  <SelectDropdown
+                    label={t(
+                      'cloud:org_manage.device_manage.add_device.parent',
+                    )}
+                    name="org_id"
+                    control={control}
+                    options={orgSelectOptions}
+                    isOptionDisabled={option =>
+                      option.label === t('loading:org') ||
+                      option.label === t('table:no_org')
+                    }
+                    noOptionsMessage={() => t('table:no_org')}
+                    loadingMessage={() => t('loading:org')}
+                    isLoading={orgIsLoading}
+                    handleClearSelectDropdown={() => {
+                      resetField('device')
+                      resetField('attributeConfig', [{}])
+                    }}
+                    defaultValue={orgSelectOptions?.find(item => !item.value)}
+                    error={formState?.errors?.org_id}
+                  />
+
                   <div className="space-y-1">
                     <SelectDropdown
                       label={t('cloud:dashboard.config_chart.device')}
@@ -423,7 +421,7 @@ export function UpdateWidget({
                     title={t(
                       'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                     )}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   {!(
                     widgetInfo?.description === 'GAUGE' ||
@@ -455,7 +453,7 @@ export function UpdateWidget({
                     key={field.id}
                   >
                     <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                      <div className="w-full space-y-1">
+                      <div className="w-full">
                         <SelectDropdown
                           label={t('cloud:dashboard.config_chart.attr')}
                           name={`attributeConfig.${index}.attribute_key`}
@@ -476,13 +474,11 @@ export function UpdateWidget({
                               widgetInfo?.attribute_config[index]
                                 ?.attribute_key === item.value,
                           )}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {
+                          error={
                             formState?.errors?.attributeConfig?.[index]
-                              ?.attribute_key?.message
+                              ?.attribute_key
                           }
-                        </p>
+                        />
                       </div>
                       {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                         e => widgetInfo?.description === e,
@@ -589,7 +585,7 @@ export function UpdateWidget({
                   <>
                     <TitleBar
                       title={t('cloud:dashboard.config_chart.widget_config')}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                       <SelectField
@@ -698,7 +694,7 @@ export function UpdateWidget({
                                           variant="trans"
                                           size="square"
                                           className={cn(
-                                            'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                            'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                             !value && 'text-secondary-700',
                                           )}
                                         >
@@ -888,7 +884,7 @@ export function UpdateWidget({
       }
       triggerButton={
         <Button
-          className="h-5 w-5 hover:text-primary-400"
+          className="hover:text-primary-400 h-5 w-5"
           variant="none"
           size="square"
           startIcon={<EditBtnIcon width={20} height={17} viewBox="0 0 20 17" />}
@@ -899,7 +895,7 @@ export function UpdateWidget({
           form="update-widget"
           type="submit"
           size="md"
-          className="rounded-md border bg-primary-400"
+          className="bg-primary-400 rounded-md border"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }

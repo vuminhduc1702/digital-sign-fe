@@ -354,6 +354,7 @@ export function CreateWidget({
                       ],
                       latestValues: attrData,
                     },
+                    requestType: 'INIT',
                     id: widgetId,
                   },
                 ],
@@ -385,6 +386,7 @@ export function CreateWidget({
                             ...tsCmd,
                             limit: values.widgetSetting?.data_point,
                           },
+                          requestType: 'REALTIME',
                           id: widgetId,
                         },
                       ],
@@ -397,6 +399,7 @@ export function CreateWidget({
                             startTs:
                               Date.now() - values.widgetSetting?.time_period,
                           },
+                          requestType: 'REALTIME',
                           id: widgetId,
                         },
                       ],
@@ -424,6 +427,7 @@ export function CreateWidget({
                             ...historyCmd,
                             window: values.widgetSetting?.window,
                           },
+                          requestType: 'HISTORY',
                           id: widgetId,
                         },
                       ],
@@ -432,6 +436,7 @@ export function CreateWidget({
                       entityDataCmds: [
                         {
                           historyCmd,
+                          requestType: 'HISTORY',
                           id: widgetId,
                         },
                       ],
@@ -536,52 +541,48 @@ export function CreateWidget({
                         })
                       }}
                     />
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        refSelect={selectDropdownDeviceRef}
-                        label={t('cloud:dashboard.config_chart.device')}
-                        error={formState?.errors['device']}
-                        name="device"
-                        control={control}
-                        options={deviceSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:device') ||
-                          option.label === t('table:no_device')
-                        }
-                        noOptionsMessage={() => t('table:no_device')}
-                        loadingMessage={() => t('loading:device')}
-                        isLoading={deviceIsLoading}
-                        isMulti={isMultipleDevice}
-                        closeMenuOnSelect={!isMultipleDevice}
-                        isWrappedArray
-                        customOnChange={option => {
-                          if (option != null) {
-                            attrChartMutate({
-                              data: {
-                                entity_ids: option,
-                                entity_type: 'DEVICE',
-                                // time_series: true,
-                              },
-                            })
-                          }
-                        }}
-                        handleClearSelectDropdown={() => {
-                          resetField('attributeConfig', {
-                            defaultValue: [
-                              {
-                                attribute_key: '',
-                                color: '',
-                                max: 100,
-                                unit: '',
-                              },
-                            ],
+
+                    <SelectDropdown
+                      refSelect={selectDropdownDeviceRef}
+                      label={t('cloud:dashboard.config_chart.device')}
+                      error={formState?.errors?.device?.[0]}
+                      name="device"
+                      control={control}
+                      options={deviceSelectData}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:device') ||
+                        option.label === t('table:no_device')
+                      }
+                      noOptionsMessage={() => t('table:no_device')}
+                      loadingMessage={() => t('loading:device')}
+                      isLoading={deviceIsLoading}
+                      isMulti={isMultipleDevice}
+                      closeMenuOnSelect={!isMultipleDevice}
+                      isWrappedArray
+                      customOnChange={option => {
+                        if (option != null) {
+                          attrChartMutate({
+                            data: {
+                              entity_ids: option,
+                              entity_type: 'DEVICE',
+                              // time_series: true,
+                            },
                           })
-                        }}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.device?.[0]?.message}
-                      </p>
-                    </div>
+                        }
+                      }}
+                      handleClearSelectDropdown={() => {
+                        resetField('attributeConfig', {
+                          defaultValue: [
+                            {
+                              attribute_key: '',
+                              color: '',
+                              max: 100,
+                              unit: '',
+                            },
+                          ],
+                        })
+                      }}
+                    />
                   </div>
                   <div className="flex justify-between space-x-3">
                     <TitleBar

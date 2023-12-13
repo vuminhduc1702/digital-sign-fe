@@ -40,6 +40,7 @@ export function BaseTable<T extends Record<string, any>>({
   getRowCanExpand,
   colsVisibility = {},
   popoverClassName = 'absolute right-0 top-1 hidden',
+  isAbsoluteBtn = true,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -52,6 +53,7 @@ export function BaseTable<T extends Record<string, any>>({
   getRowCanExpand?: (row: Row<T>) => boolean
   colsVisibility?: VisibilityState
   popoverClassName?: string
+  isAbsoluteBtn?: boolean
 }) {
   const { t } = useTranslation()
 
@@ -133,7 +135,7 @@ export function BaseTable<T extends Record<string, any>>({
                               desc: '↓',
                             }[header.column.getIsSorted() as string] ?? null}
                           </div> */}
-                            <div className="text-table-header relative flex items-center justify-center">
+                            <div className="relative flex items-center justify-center text-table-header">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -182,7 +184,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -234,7 +236,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -337,8 +339,12 @@ export function BaseTable<T extends Record<string, any>>({
         </>
       )}
       <div className="mt-4 flex items-center justify-between gap-2">
-        <div className="absolute bottom-10 flex gap-3">
-          <span className="text-body-light flex items-center gap-1">
+        <div
+          className={cn('flex gap-3', {
+            'absolute bottom-5': isAbsoluteBtn,
+          })}
+        >
+          <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
@@ -349,7 +355,11 @@ export function BaseTable<T extends Record<string, any>>({
               .replace('{{TOTAL}}', totalAttrs?.toString())}
           </span>
         </div>
-        <div className="absolute bottom-10 right-6 flex gap-x-2">
+        <div
+          className={cn('flex gap-x-2', {
+            'absolute bottom-5 right-6': isAbsoluteBtn,
+          })}
+        >
           <Button
             className="rounded-l-md border-none"
             onClick={() => {

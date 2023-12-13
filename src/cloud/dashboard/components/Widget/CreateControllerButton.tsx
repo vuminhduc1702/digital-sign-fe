@@ -148,7 +148,7 @@ export function CreateControllerButton({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -219,7 +219,7 @@ export function CreateControllerButton({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <div className="grid grid-cols-3 gap-x-2 px-2">
                     <InputField
@@ -228,58 +228,52 @@ export function CreateControllerButton({
                       registration={register('title')}
                       placeholder={t('cloud:dashboard.config_chart.name')}
                     />
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:custom_protocol.thing.id')}
-                        name="thing_id"
-                        control={control}
-                        options={thingSelectData}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:entity_thing') ||
-                          option.label === t('table:no_thing')
-                        }
-                        noOptionsMessage={() => t('table:no_thing')}
-                        loadingMessage={() => t('loading:entity_thing')}
-                        isLoading={thingIsLoading}
-                        placeholder={t('cloud:custom_protocol.thing.choose')}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.thing_id?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={t('cloud:custom_protocol.service.title')}
-                        name="handle_service"
-                        control={control}
-                        options={
-                          serviceData?.data != null
-                            ? serviceSelectData
-                            : serviceData?.data == null
-                            ? [
-                                {
-                                  label: t('table:no_service'),
-                                  value: '',
-                                },
-                              ]
-                            : [
-                                {
-                                  label: t('loading:service_thing'),
-                                  value: '',
-                                },
-                              ]
-                        }
-                        isOptionDisabled={option =>
-                          option.label === t('loading:service_thing') ||
-                          option.label === t('table:no_service')
-                        }
-                        noOptionsMessage={() => t('table:no_service')}
-                        placeholder={t('cloud:custom_protocol.service.choose')}
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.handle_service?.message}
-                      </p>
-                    </div>
+
+                    <SelectDropdown
+                      label={t('cloud:custom_protocol.thing.id')}
+                      name="thing_id"
+                      control={control}
+                      options={thingSelectData}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:entity_thing') ||
+                        option.label === t('table:no_thing')
+                      }
+                      noOptionsMessage={() => t('table:no_thing')}
+                      loadingMessage={() => t('loading:entity_thing')}
+                      isLoading={thingIsLoading}
+                      placeholder={t('cloud:custom_protocol.thing.choose')}
+                      error={formState?.errors?.thing_id}
+                    />
+
+                    <SelectDropdown
+                      label={t('cloud:custom_protocol.service.title')}
+                      name="handle_service"
+                      control={control}
+                      options={
+                        serviceData?.data != null
+                          ? serviceSelectData
+                          : serviceData?.data == null
+                          ? [
+                              {
+                                label: t('table:no_service'),
+                                value: '',
+                              },
+                            ]
+                          : [
+                              {
+                                label: t('loading:service_thing'),
+                                value: '',
+                              },
+                            ]
+                      }
+                      isOptionDisabled={option =>
+                        option.label === t('loading:service_thing') ||
+                        option.label === t('table:no_service')
+                      }
+                      noOptionsMessage={() => t('table:no_service')}
+                      placeholder={t('cloud:custom_protocol.service.choose')}
+                      error={formState?.errors?.handle_service}
+                    />
                   </div>
 
                   <div className="flex justify-between space-x-3">
@@ -287,7 +281,7 @@ export function CreateControllerButton({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.controller.input_list',
                       )}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     <Button
                       className="rounded-md"
@@ -310,7 +304,7 @@ export function CreateControllerButton({
                       key={field.id}
                     >
                       <div className="flex w-2/3 gap-x-2">
-                        <div className="w-full space-y-1">
+                        <div className="w-full">
                           <SelectDropdown
                             label={t('cloud:custom_protocol.service.input')}
                             name={`input.${index}.name`}
@@ -342,10 +336,8 @@ export function CreateControllerButton({
                             placeholder={t(
                               'cloud:custom_protocol.service.choose_input',
                             )}
+                            error={formState?.errors?.input?.[index]?.name}
                           />
-                          <p className="text-body-sm text-primary-400">
-                            {formState?.errors?.input?.[index]?.name?.message}
-                          </p>
                         </div>
                         <InputField
                           label={t(

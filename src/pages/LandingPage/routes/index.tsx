@@ -181,7 +181,7 @@ export function LandingPage() {
                               : defaultUserIcon
                           }`}
                           alt="User's avatar"
-                          className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300 dark:ring-gray-500"
+                          className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300"
                           onError={e => {
                             const target = e.target as HTMLImageElement
                             target.onerror = null

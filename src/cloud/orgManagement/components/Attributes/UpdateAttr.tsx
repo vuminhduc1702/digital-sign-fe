@@ -49,6 +49,12 @@ export function UpdateAttr({
     z.infer<typeof attrSchema>
   >({
     resolver: attrSchema && zodResolver(attrSchema),
+    defaultValues: {
+      attribute_key: attributeKey,
+      logged: String(logged) === 'true',
+      value: value !== 'null' && value !== '' ? JSON.parse(JSON.stringify(value)) : '',
+      value_t: value_type,
+    },
   })
 
   useEffect(
@@ -151,7 +157,7 @@ export function UpdateAttr({
                   label={t('cloud:org_manage.org_manage.add_attr.value')}
                   error={formState?.errors?.value}
                   registration={register(`value` as const)}
-                  step={0.01}
+                  step={0.000001}
                   type={
                     numberInput.includes(watch(`value_t`)) ? 'number' : 'text'
                   }

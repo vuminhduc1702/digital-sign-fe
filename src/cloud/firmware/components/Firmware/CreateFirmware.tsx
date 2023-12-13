@@ -71,23 +71,20 @@ export function CreateFirmWare() {
           })}
         >
           <>
-            <div className="space-y-1">
-              <SelectDropdown
-                isClearable={false}
-                label={t('cloud:firmware.add_firmware.template')}
-                name="template_id"
-                control={control}
-                options={
-                  data?.templates?.map(template => ({
-                    label: template?.name,
-                    value: template?.id,
-                  })) || [{ label: '', value: '' }]
-                }
-              />
-              <p className="text-body-sm text-primary-400">
-                {formState?.errors?.template_id?.message}
-              </p>
-            </div>
+            <SelectDropdown
+              isClearable={false}
+              label={t('cloud:firmware.add_firmware.template')}
+              name="template_id"
+              control={control}
+              options={
+                data?.templates?.map(template => ({
+                  label: template?.name,
+                  value: template?.id,
+                })) || [{ label: '', value: '' }]
+              }
+              error={formState?.errors?.template_id}
+            />
+
             <InputField
               label={t('cloud:firmware.add_firmware.name')}
               error={formState.errors['name']}

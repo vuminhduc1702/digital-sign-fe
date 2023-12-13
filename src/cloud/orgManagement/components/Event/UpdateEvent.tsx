@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateAttrChart } from '~/cloud/dashboard/api'
 import { useSpinDelay } from 'spin-delay'
 import { useParams } from 'react-router-dom'
-
+import { type SelectInstance } from 'react-select'
 import { Button } from '~/components/Button'
 import {
   FieldWrapper,
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { cn, flattenData } from '~/utils/misc'
@@ -26,7 +27,7 @@ import {
 import { Checkbox } from '~/components/Checkbox'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { Spinner } from '~/components/Spinner'
-
+import { outputList } from '~/cloud/customProtocol/components/CreateService'
 import { type Action, type Condition, type EventType } from '../../types'
 import {
   conditionTypeOptions,
@@ -42,6 +43,8 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 
 type UpdateEventProps = {
   eventId: string
@@ -72,6 +75,27 @@ export function UpdateEvent({
 }: UpdateEventProps) {
   const { t } = useTranslation()
   const { orgId } = useParams()
+  const projectId = storage.getProject()?.id
+
+  const actionTypeProp = JSON.parse(data.action)[0].action_type
+  const thingIdOptionProp = JSON.parse(data.cmd).thing_id
+  const serviceNameOptionProp = JSON.parse(data.cmd).service_name
+  const inputDataProp = JSON.parse(data.cmd).input
+
+  const [actionType, setActionType] = useState('')
+
+  const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+
+  useEffect(() => {
+    setActionType(actionTypeProp)
+  }, [actionTypeProp])
 
   const {
     register,
@@ -81,6 +105,7 @@ export function UpdateEvent({
     watch,
     getValues,
     setValue,
+    resetField,
   } = useForm<UpdateEventDTO['data']>({
     resolver: createEventSchema && zodResolver(createEventSchema),
     defaultValues: {
@@ -94,6 +119,10 @@ export function UpdateEvent({
       type,
       org_id: data.org_id,
       group_id: data.group_id,
+      cmd: {
+        thing_id: thingIdOptionProp,
+        handle_service: serviceNameOptionProp,
+      },
     },
   })
   const {
@@ -112,11 +141,9 @@ export function UpdateEvent({
     name: 'action',
     control,
   })
-  console.log('formState.errors', formState.errors)
+  // console.log('formState.errors', formState.errors)
 
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
-
-  const projectId = storage.getProject()?.id
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
@@ -167,6 +194,30 @@ export function UpdateEvent({
 
   const [todos, setTodos] = useState(dateArr)
 
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: watch('cmd.thing_id') || thingIdOptionProp,
+      config: {
+        suspense: false,
+        enabled: !!watch('cmd.thing_id') || !!thingIdOptionProp,
+        select: value => {
+          if (value.message === 'success') {
+            const serviceSelectData = value?.data.map(item => ({
+              value: item.name,
+              label: item.name,
+            }))
+            const serviceInput = value?.data.find(item => {
+              if (serviceNameOptionProp) {
+                return item.name === serviceNameOptionProp
+              }
+              return item.name === watch('cmd.handle_service')
+            })?.input
+            return { serviceSelectData, serviceInput }
+          }
+        },
+      },
+    })
+
   const todoClicked = (e: any) => {
     setTodos(
       todos.map(todo =>
@@ -176,6 +227,16 @@ export function UpdateEvent({
       ),
     )
   }
+  useEffect(() => {
+    serviceData?.serviceInput?.forEach((element, idx) => {
+      setValue(`cmd.input.${idx}.name`, element.name)
+      setValue(`cmd.input.${idx}.type`, element.type)
+    })
+  }, [serviceData?.serviceInput])
+
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
 
   function renderInterval() {
     const dataFilter = dateArr.filter(item => item.selected)
@@ -238,7 +299,7 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
-          console.log('values', values)
+          // console.log('check values submit', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -274,8 +335,6 @@ export function UpdateEvent({
             message: item.message,
             subject: item.subject,
           }))
-          console.log('conditionArr', conditionArr)
-
           mutate({
             data: {
               project_id: projectId,
@@ -291,6 +350,15 @@ export function UpdateEvent({
               schedule: scheduleValue,
               interval,
               type: getValues('type'),
+              cmd: {
+                thing_id: values.cmd.thing_id,
+                service_name: values.cmd.handle_service,
+                project_id: projectId,
+                input: values.cmd.input.reduce((accumulator, currentValue) => {
+                  accumulator[currentValue.name] = currentValue.value
+                  return accumulator
+                }, {}),
+              },
             },
             eventId,
           })
@@ -309,50 +377,43 @@ export function UpdateEvent({
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-                <div className="space-y-1">
-                  <SelectDropdown
-                    label={t(
-                      'cloud:org_manage.device_manage.add_device.parent',
-                    )}
-                    name="org_id"
-                    control={control}
-                    options={orgSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:org') ||
-                      option.label === t('table:no_org')
-                    }
-                    noOptionsMessage={() => t('table:no_org')}
-                    loadingMessage={() => t('loading:org')}
-                    isLoading={orgIsLoading}
-                    defaultValue={orgSelectOptions.find(
-                      item => item.value === getValues('org_id'),
-                    )}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.org_id?.message}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <SelectDropdown
-                    label={t('cloud:org_manage.event_manage.add_event.group')}
-                    name="group_id"
-                    control={control}
-                    options={groupSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:group') ||
-                      option.label === t('table:no_group')
-                    }
-                    noOptionsMessage={() => t('table:no_group')}
-                    loadingMessage={() => t('loading:group')}
-                    isLoading={groupIsLoading}
-                    defaultValue={groupSelectOptions?.find(
-                      item => item.value === getValues('group_id'),
-                    )}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.group_id?.message}
-                  </p>
-                </div>
+
+                <SelectDropdown
+                  label={t('cloud:org_manage.device_manage.add_device.parent')}
+                  name="org_id"
+                  control={control}
+                  options={orgSelectOptions}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:org') ||
+                    option.label === t('table:no_org')
+                  }
+                  noOptionsMessage={() => t('table:no_org')}
+                  loadingMessage={() => t('loading:org')}
+                  isLoading={orgIsLoading}
+                  defaultValue={orgSelectOptions.find(
+                    item => item.value === getValues('org_id'),
+                  )}
+                  error={formState?.errors?.org_id}
+                />
+
+                <SelectDropdown
+                  label={t('cloud:org_manage.event_manage.add_event.group')}
+                  name="group_id"
+                  control={control}
+                  options={groupSelectOptions}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:group') ||
+                    option.label === t('table:no_group')
+                  }
+                  noOptionsMessage={() => t('table:no_group')}
+                  loadingMessage={() => t('loading:group')}
+                  isLoading={groupIsLoading}
+                  defaultValue={groupSelectOptions?.find(
+                    item => item.value === getValues('group_id'),
+                  )}
+                  error={formState?.errors?.group_id}
+                />
+
                 <FieldWrapper
                   label={t('cloud:org_manage.event_manage.add_event.status')}
                   error={formState?.errors['status']}
@@ -478,76 +539,69 @@ export function UpdateEvent({
                   return (
                     <section className="!mt-3 space-y-2" key={field.id}>
                       <div className="grid grid-cols-1 gap-x-4 md:grid-cols-3">
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.device',
-                            )}
-                            name={`condition.${index}.device_id`}
-                            control={control}
-                            options={deviceSelectOptions}
-                            isOptionDisabled={option =>
-                              option.label === t('loading:device') ||
-                              option.label === t('table:no_device')
-                            }
-                            noOptionsMessage={() => t('table:no_device')}
-                            loadingMessage={() => t('loading:device')}
-                            isLoading={deviceIsLoading}
-                            defaultValue={deviceSelectOptions?.find(
-                              item =>
-                                item.value ===
-                                getValues(`condition.${index}.device_id`),
-                            )}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]?.device_id
-                                ?.message
-                            }
-                          </p>
-                        </div>
-                        <div className="space-y-1">
-                          <SelectDropdown
-                            label={t(
-                              'cloud:org_manage.event_manage.add_event.condition.attr',
-                            )}
-                            name={`condition.${index}.attribute_name`}
-                            control={control}
-                            options={attrSelectOptions}
-                            isOptionDisabled={option =>
-                              option.label === t('loading:attr') ||
-                              option.label === t('table:no_attr')
-                            }
-                            noOptionsMessage={() => t('table:no_attr')}
-                            loadingMessage={() => t('loading:attr')}
-                            isLoading={attrIsLoading}
-                            onMenuOpen={() => {
-                              attrMutate({
-                                data: {
-                                  entity_ids: [
-                                    watch(`condition.${index}.device_id`),
-                                  ],
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.device',
+                          )}
+                          name={`condition.${index}.device_id`}
+                          control={control}
+                          options={deviceSelectOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:device') ||
+                            option.label === t('table:no_device')
+                          }
+                          noOptionsMessage={() => t('table:no_device')}
+                          loadingMessage={() => t('loading:device')}
+                          isLoading={deviceIsLoading}
+                          defaultValue={deviceSelectOptions?.find(
+                            item =>
+                              item.value ===
+                              getValues(`condition.${index}.device_id`),
+                          )}
+                          error={
+                            formState?.errors?.condition?.[index]?.device_id
+                          }
+                        />
 
-                                  entity_type: 'DEVICE',
-                                },
-                              })
-                            }}
-                            defaultValue={{
-                              label: getValues(
-                                `condition.${index}.attribute_name`,
-                              ),
-                              value: getValues(
-                                `condition.${index}.attribute_name`,
-                              ),
-                            }}
-                          />
-                          <p className="text-body-sm text-primary-400">
-                            {
-                              formState?.errors?.condition?.[index]
-                                ?.attribute_name?.message
-                            }
-                          </p>
-                        </div>
+                        <SelectDropdown
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.condition.attr',
+                          )}
+                          name={`condition.${index}.attribute_name`}
+                          control={control}
+                          options={attrSelectOptions}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:attr') ||
+                            option.label === t('table:no_attr')
+                          }
+                          noOptionsMessage={() => t('table:no_attr')}
+                          loadingMessage={() => t('loading:attr')}
+                          isLoading={attrIsLoading}
+                          onMenuOpen={() => {
+                            attrMutate({
+                              data: {
+                                entity_ids: [
+                                  watch(`condition.${index}.device_id`),
+                                ],
+
+                                entity_type: 'DEVICE',
+                              },
+                            })
+                          }}
+                          defaultValue={{
+                            label: getValues(
+                              `condition.${index}.attribute_name`,
+                            ),
+                            value: getValues(
+                              `condition.${index}.attribute_name`,
+                            ),
+                          }}
+                          error={
+                            formState?.errors?.condition?.[index]
+                              ?.attribute_name
+                          }
+                        />
+
                         <SelectField
                           label={t(
                             'cloud:org_manage.event_manage.add_event.condition.condition_type.title',
@@ -625,15 +679,19 @@ export function UpdateEvent({
                 )}
                 className="w-full rounded-md bg-secondary-700 pl-3"
               />
-              <Button
-                className="rounded-md"
-                variant="trans"
-                size="square"
-                startIcon={
-                  <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-                onClick={() => actionAppend([{}])}
-              />
+              {actionType !== 'report' && (
+                <Button
+                  className="rounded-md"
+                  variant="trans"
+                  size="square"
+                  startIcon={
+                    <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
+                  }
+                  onClick={() => {
+                    actionAppend([{}])
+                  }}
+                />
+              )}
             </div>
             {actionFields.map((field, index) => {
               return (
@@ -644,41 +702,215 @@ export function UpdateEvent({
                         'cloud:org_manage.event_manage.add_event.action.action_type.title',
                       )}
                       error={formState?.errors?.action?.[index]?.action_type}
-                      registration={register(`action.${index}.action_type`)}
-                      options={actionTypeOptions}
+                      registration={register(`action.${index}.action_type`, {
+                        onChange: e => {
+                          setActionType(e.target.value)
+                        },
+                      })}
+                      options={
+                        actionFields.length < 2
+                          ? actionTypeOptions
+                          : actionTypeOptions.filter(
+                              item => item.value !== 'report',
+                            )
+                      }
                     />
-                    <div className="space-y-1">
-                      <InputField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.action.address',
-                        )}
-                        registration={register(`action.${index}.receiver`)}
-                        error={formState?.errors?.action?.[index]?.receiver}
-                      />
-                    </div>
-                    <div className="space-y-1">
-                      <InputField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.action.subject',
-                        )}
-                        registration={register(`action.${index}.subject`)}
-                        error={formState?.errors?.action?.[index]?.subject}
-                      />
-                    </div>
+                    {actionType === 'report' ? (
+                      <div className="space-y-1">
+                        <SelectDropdown
+                          label={t('cloud:custom_protocol.thing.id')}
+                          name="cmd.thing_id"
+                          control={control}
+                          options={thingSelectData}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:entity_thing') ||
+                            option.label === t('table:no_thing')
+                          }
+                          noOptionsMessage={() => t('table:no_thing')}
+                          loadingMessage={() => t('loading:entity_thing')}
+                          isLoading={isLoadingThing}
+                          placeholder={t('cloud:custom_protocol.thing.choose')}
+                          handleClearSelectDropdown={() =>
+                            selectDropdownServiceRef.current?.clearValue()
+                          }
+                          handleChangeSelect={() =>
+                            selectDropdownServiceRef.current?.clearValue()
+                          }
+                          defaultValue={thingSelectData.find(
+                            ele => ele.value === thingIdOptionProp,
+                          )}
+                        />
+                        <p className="text-body-sm text-primary-400">
+                          {formState?.errors?.cmd?.thing_id?.message}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <InputField
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.action.address',
+                          )}
+                          registration={register(`action.${index}.receiver`)}
+                          error={formState?.errors?.action?.[index]?.receiver}
+                        />
+                      </div>
+                    )}
+                    {actionType === 'report' ? (
+                      <div className="space-y-1">
+                        <SelectDropdown
+                          refSelect={selectDropdownServiceRef}
+                          label={t('cloud:custom_protocol.service.title')}
+                          name="cmd.handle_service"
+                          control={control}
+                          options={serviceData?.serviceSelectData}
+                          isOptionDisabled={option =>
+                            option.label === t('loading:service_thing') ||
+                            option.label === t('table:no_service')
+                          }
+                          isLoading={isLoadingService}
+                          loadingMessage={() => t('loading:service_thing')}
+                          noOptionsMessage={() => t('table:no_service')}
+                          placeholder={t(
+                            'cloud:custom_protocol.service.choose',
+                          )}
+                          customOnChange={() =>
+                            resetField(`cmd.input.${index}.value`)
+                          }
+                          defaultValue={serviceData?.serviceSelectData?.find(
+                            ele => ele.label === serviceNameOptionProp,
+                          )}
+                        />
+                        <p className="text-body-sm text-primary-400">
+                          {formState?.errors?.cmd?.handle_service?.message}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-1">
+                        <InputField
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.action.subject',
+                          )}
+                          registration={register(`action.${index}.subject`)}
+                          error={formState?.errors?.action?.[index]?.subject}
+                        />
+                      </div>
+                    )}
                     <div className="flex justify-end">
-                      <InputField
-                        label={t(
-                          'cloud:org_manage.event_manage.add_event.action.message',
-                        )}
-                        registration={register(`action.${index}.message`)}
-                        error={formState?.errors?.action?.[index]?.message}
-                      />
+                      {actionType === 'report' ? (
+                        <div className="max-h-44 overflow-auto">
+                          {serviceData?.serviceInput?.map((element, index) => {
+                            return (
+                              <div
+                                key={`key-${index}`}
+                                className="mb-3 space-y-3 border-b-4 pb-3"
+                              >
+                                <InputField
+                                  disabled
+                                  require={true}
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.name',
+                                  )}
+                                  error={
+                                    formState?.errors?.cmd?.input?.[index]?.name
+                                  }
+                                  registration={register(
+                                    `cmd.input.${index}.name` as const,
+                                  )}
+                                  defaultValue={element.name}
+                                />
+                                <SelectField
+                                  disabled
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.type',
+                                  )}
+                                  require={true}
+                                  error={
+                                    formState.errors.cmd?.input?.[index]?.type
+                                  }
+                                  registration={register(
+                                    `cmd.input.${index}.type` as const,
+                                    {
+                                      onChange: () =>
+                                        resetField(`cmd.input.${index}.value`),
+                                    },
+                                  )}
+                                  options={outputList}
+                                  className="h-9 px-2"
+                                  defaultValue={element.type}
+                                />
+                                {watch(`cmd.input.${index}.type`) === 'bool' ? (
+                                  <FieldWrapper
+                                    label={t(
+                                      'cloud:custom_protocol.service.service_input.value',
+                                    )}
+                                    error={
+                                      formState?.errors?.cmd?.input?.[index]
+                                        ?.value
+                                    }
+                                    className="w-fit"
+                                  >
+                                    <Controller
+                                      control={control}
+                                      name={`cmd.input.${index}.value`}
+                                      render={({
+                                        field: { onChange, value, ...field },
+                                      }) => {
+                                        return (
+                                          <Checkbox
+                                            {...field}
+                                            checked={value as boolean}
+                                            onCheckedChange={onChange}
+                                            defaultChecked
+                                          />
+                                        )
+                                      }}
+                                    />
+                                    <span className="pl-3">True</span>
+                                  </FieldWrapper>
+                                ) : (
+                                  <InputField
+                                    defaultValue={inputDataProp[element.name]}
+                                    label={t(
+                                      'cloud:custom_protocol.service.service_input.value',
+                                    )}
+                                    error={
+                                      formState?.errors?.cmd?.input?.[index]
+                                        ?.value
+                                    }
+                                    registration={register(
+                                      `cmd.input.${index}.value` as const,
+                                    )}
+                                    type={
+                                      ['json', 'str'].includes(
+                                        watch(`cmd.input.${index}.type`),
+                                      )
+                                        ? 'text'
+                                        : 'number'
+                                    }
+                                  />
+                                )}
+                              </div>
+                            )
+                          })}
+                        </div>
+                      ) : (
+                        <InputField
+                          label={t(
+                            'cloud:org_manage.event_manage.add_event.action.message',
+                          )}
+                          registration={register(`action.${index}.message`)}
+                          error={formState?.errors?.action?.[index]?.message}
+                        />
+                      )}
                       <Button
                         type="button"
                         size="square"
                         variant="trans"
                         className="ml-5 mt-3 border-none"
-                        onClick={() => actionRemove(index)}
+                        onClick={() => {
+                          setActionType('')
+                          actionRemove(index)
+                        }}
                         startIcon={
                           <img
                             src={btnDeleteIcon}

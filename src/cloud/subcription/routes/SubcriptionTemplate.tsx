@@ -72,6 +72,7 @@ export function SubcriptionTemplate() {
                     { label: 'Mã khách hàng', value: 'customer_code' },
                     { label: 'Tên khách hàng', value: 'name' },
                   ]}
+                  // error={formState?.errors?.key}
                 />
               </div>
               <InputField

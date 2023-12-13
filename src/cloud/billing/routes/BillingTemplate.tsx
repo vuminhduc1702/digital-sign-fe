@@ -79,6 +79,7 @@ export function BillingTemplate() {
                   { label: 'Số hóa đơn', value: 'id' },
                   { label: 'Tên khách hàng', value: 'customer_name' },
                 ]}
+                // error={formState?.errors?.key}
               />
               <InputField
                 className="mt-1 h-[37px]"

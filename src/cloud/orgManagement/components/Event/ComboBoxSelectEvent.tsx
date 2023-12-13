@@ -32,6 +32,7 @@ export function ComboBoxSelectEvent({
       'condition',
       'org_id',
       'group_id',
+      'cmd',
     ],
   )
 

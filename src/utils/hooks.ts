@@ -46,7 +46,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T>(url: string) => {
+export const useWS = <T>(url: string, sendMessageCallback: () => void) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
@@ -68,6 +68,17 @@ export const useWS = <T>(url: string) => {
     // attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
     reconnectInterval: attemptNumber =>
       Math.min(Math.pow(2, attemptNumber) * 1000, 10000),
+    onClose: () => {
+      if (window.location.pathname.split('/')[4] != null) {
+        sendMessageCallback()
+      }
+    },
+    heartbeat: {
+      message: JSON.stringify({ ping: 'ping' }),
+      returnMessage: JSON.stringify({ pong: 'ok' }), // If a returnMessage is defined, it will be ignored so that it won't be set as the lastJsonMessage
+      timeout: 60 * 1000, // 1 minute, if no response is received, the connection will be closed
+      interval: 25 * 1000, // every 25 seconds, a ping message will be sent
+    },
   })
 
   type ConnectionStatus =
