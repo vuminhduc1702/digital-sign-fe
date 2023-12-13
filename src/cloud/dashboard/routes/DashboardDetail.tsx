@@ -172,12 +172,20 @@ export function DashboardDetail() {
     // }
   }, [lastJsonMessage])
 
-  function handleSendMessage() {
+  async function handleSendMessage() {
+    const sendMessagePromises = Object.values(widgetList)
+      .filter(widget => {
+        const dataSource = widget?.datasource
+        return (
+          dataSource?.init_message !== '' && dataSource?.init_message != null
+        )
+      })
+      .map(widget => sendMessage(widget.datasource.init_message))
+
+    await Promise.all(sendMessagePromises)
+
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
-      if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-        sendMessage(dataSource.init_message)
-      }
       if (
         dataSource?.realtime_message !== '' &&
         dataSource?.realtime_message != null
