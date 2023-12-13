@@ -590,8 +590,13 @@ export function PackageInfo() {
                                   estimates === 'step'
                                     ? t('billing:package_manage.popup.price')
                                     : t(
-                                      'billing:package_manage.popup.unit_price',
-                                    )
+                                        'billing:package_manage.popup.level',
+                                      ).replace(
+                                        '{{NUMBER}}',
+                                        index >= 1
+                                          ? (typeof(getValues('plan_lv')?.[index - 1]?.level) === 'string' ? parseInt(getValues('plan_lv')?.[index - 1].level) : getValues('plan_lv')?.[index - 1].level) + 1
+                                          : '1',
+                                      )
                                 }
                                 registration={register(
                                   `plan_lv.${index}.price`,
