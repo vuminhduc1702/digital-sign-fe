@@ -283,6 +283,7 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
+<<<<<<< HEAD
                 const deviceInfo =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -291,6 +292,26 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
+=======
+                // const deviceInfo = lastJsonMessage?.id === widgetId
+                // ? combinedObject(
+                //     lastJsonMessage?.data?.map(
+                //       device => device.latest.ENTITY_FIELD as LatestData,
+                //     ),
+                //   )
+                // : {}
+                const lastestValuesForMap: TimeSeries = 
+                  lastJsonMessage?.id === widgetId
+                      ? combinedObject(
+                          lastJsonMessage?.data?.map(
+                            device => ({
+                              data: device.latest.TIME_SERIES as LatestData,
+                              device: device.latest.ENTITY_FIELD
+                            })
+                          ),
+                        )
+                      : {}
+>>>>>>> ac97dd4 (Update dashboard)
                 return (
                   <div
                     key={widgetId}
@@ -326,12 +347,16 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
+<<<<<<< HEAD
                       <Map
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
                         deviceInfo={deviceInfo}
                       />
+=======
+                      <Map data={lastestValuesForMap} widgetInfo={widgetInfo} isEditMode={isEditMode}/>
+>>>>>>> ac97dd4 (Update dashboard)
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
