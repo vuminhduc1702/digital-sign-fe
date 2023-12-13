@@ -386,7 +386,7 @@ export function CreateWidget({
                             ...tsCmd,
                             limit: values.widgetSetting?.data_point,
                           },
-                          requestType: 'REALTIME',
+                          requestType: 'FIRST_REALTIME',
                           id: widgetId,
                         },
                       ],
@@ -399,7 +399,7 @@ export function CreateWidget({
                             startTs:
                               Date.now() - values.widgetSetting?.time_period,
                           },
-                          requestType: 'REALTIME',
+                          requestType: 'FIRST_REALTIME',
                           id: widgetId,
                         },
                       ],

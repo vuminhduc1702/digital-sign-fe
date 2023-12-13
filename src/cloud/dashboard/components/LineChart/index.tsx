@@ -176,10 +176,11 @@ export function LineChart({
     return ''
   }
 
-  const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
-    delay: 150,
-    minDuration: 300,
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === '', {
+    delay: 400,
+    minDuration: 500,
   })
+  console.log('showSpinner', showSpinner)
 
   // console.log('widgetInfo', widgetInfo)
   const renderLegend = (props: any) => {
@@ -213,7 +214,7 @@ export function LineChart({
 
   return (
     <>
-      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
+      {!showSpinner && newValuesRef.current != null ? (
         <ResponsiveContainer width="98%" height="90%" className="pt-8">
           <LineWidget data={dataTransformedFeedToChart}>
             <CartesianGrid strokeDasharray="3 3" />

@@ -174,9 +174,9 @@ export const BarChart = ({
     return ''
   }
 
-  const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
-    delay: 150,
-    minDuration: 300,
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].time === '', {
+    delay: 400,
+    minDuration: 500,
   })
 
   const renderLegend = (props: any) => {
@@ -212,7 +212,7 @@ export const BarChart = ({
 
   return (
     <>
-      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
+      {!showSpinner && newValuesRef.current != null ? (
         <ResponsiveContainer width="98%" height="90%" className="pt-8">
           <BarReChart data={dataTransformedFeedToChart}>
             <CartesianGrid strokeDasharray="3 3" />

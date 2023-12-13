@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Spinner } from '~/components/Spinner'
@@ -116,7 +116,7 @@ export function DashboardDetail() {
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL, () => {
-      handleSendInitMessage()
+      // handleSendInitMessage()
       handleSendMessage()
     })
   // console.log('lastJsonMessage', lastJsonMessage)
@@ -189,82 +189,47 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    console.log('handleSendInitMessage')
     handleSendInitMessage()
   }, [widgetList])
 
-  function handleSendMessage() {
-    // const sendMessagePromises = Object.values(widgetList)
-    //   .filter(widget => {
-    //     const dataSource = widget?.datasource
-    //     return (
-    //       dataSource?.init_message !== '' && dataSource?.init_message != null
-    //     )
-    //   })
-    //   .map(widget => sendMessage(widget.datasource.init_message))
+  const isSendMessageSubRef = useRef(true)
+  async function handleSendMessage() {
+    setTimeout(() => {
+      if (
+        lastJsonMessage?.requestType != null &&
+        lastJsonMessage?.requestType === 'INIT' &&
+        isSendMessageSubRef.current
+      ) {
+        Object.values(widgetList).forEach(widget => {
+          const dataSource = widget?.datasource
+          if (
+            dataSource?.realtime_message !== '' &&
+            dataSource?.realtime_message != null
+          ) {
+            sendMessage(dataSource?.realtime_message)
+          }
+          if (
+            dataSource?.history_message !== '' &&
+            dataSource?.history_message != null
+          ) {
+            sendMessage(dataSource?.history_message)
+          }
+          if (
+            dataSource?.lastest_message !== '' &&
+            dataSource?.lastest_message != null
+          ) {
+            sendMessage(dataSource?.lastest_message)
+          }
 
-    // await Promise.all(sendMessagePromises)
-
-    if (
-      lastJsonMessage?.requestType != null &&
-      lastJsonMessage?.requestType !== 'INIT'
-      // && lastJsonMessage?.data[0]?.latest?.ENTITY_FIELD === null
-    ) {
-      Object.values(widgetList).forEach(widget => {
-        const dataSource = widget?.datasource
-        if (
-          dataSource?.realtime_message !== '' &&
-          dataSource?.realtime_message != null
-        ) {
-          sendMessage(dataSource?.realtime_message)
-        }
-        if (
-          dataSource?.history_message !== '' &&
-          dataSource?.history_message != null
-        ) {
-          sendMessage(dataSource?.history_message)
-        }
-        if (
-          dataSource?.lastest_message !== '' &&
-          dataSource?.lastest_message != null
-        ) {
-          sendMessage(dataSource?.lastest_message)
-        }
-      })
-    }
+          isSendMessageSubRef.current = false
+        })
+      }
+    }, 150)
   }
 
-  // function handleSendMessage() {
-  //   Object.values(widgetList).forEach(widget => {
-  //     const dataSource = widget?.datasource
-  //     if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-  //       sendMessage(dataSource.init_message)
-  //     }
-  //     if (
-  //       dataSource?.realtime_message !== '' &&
-  //       dataSource?.realtime_message != null
-  //     ) {
-  //       sendMessage(dataSource?.realtime_message)
-  //     }
-  //     if (
-  //       dataSource?.history_message !== '' &&
-  //       dataSource?.history_message != null
-  //     ) {
-  //       sendMessage(dataSource?.history_message)
-  //     }
-  //     if (
-  //       dataSource?.lastest_message !== '' &&
-  //       dataSource?.lastest_message != null
-  //     ) {
-  //       sendMessage(dataSource?.lastest_message)
-  //     }
-  //   })
-  // }
-
   useEffect(() => {
-    console.log('handleSendMessage')
     handleSendMessage()
-  }, [widgetList, lastJsonMessage?.requestType === 'INIT'])
+  }, [lastJsonMessage])
 
   function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}
@@ -347,13 +312,14 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const deviceInfo = lastJsonMessage?.id === widgetId
-                ? combinedObject(
-                    lastJsonMessage?.data?.map(
-                      device => device.latest.ENTITY_FIELD as LatestData,
-                    ),
-                  )
-                : {}
+                const deviceInfo =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(
+                          device => device.latest.ENTITY_FIELD as LatestData,
+                        ),
+                      )
+                    : {}
                 return (
                   <div
                     key={widgetId}
@@ -392,7 +358,12 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map data={lastestValues} widgetInfo={widgetInfo} isEditMode={isEditMode} deviceInfo={deviceInfo}/>
+                      <Map
+                        data={lastestValues}
+                        widgetInfo={widgetInfo}
+                        isEditMode={isEditMode}
+                        deviceInfo={deviceInfo}
+                      />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
