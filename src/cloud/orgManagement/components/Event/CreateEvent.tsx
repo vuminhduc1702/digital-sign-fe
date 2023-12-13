@@ -950,6 +950,7 @@ export function CreateEvent() {
                               className="mb-3 space-y-3 border-b-4 pb-3"
                             >
                               <InputField
+                                disabled
                                 require={true}
                                 label={t(
                                   'cloud:custom_protocol.service.service_input.name',
@@ -963,6 +964,7 @@ export function CreateEvent() {
                                 defaultValue={element.name}
                               />
                               <SelectField
+                                disabled
                                 label={t(
                                   'cloud:custom_protocol.service.service_input.type',
                                 )}
