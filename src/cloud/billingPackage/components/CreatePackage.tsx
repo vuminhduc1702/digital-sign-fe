@@ -581,8 +581,7 @@ export function CreatePackage() {
                                         ).replace(
                                           '{{NUMBER}}',
                                           index >= 1
-                                            ? getValues('plan_lv')?.[index - 1]
-                                                .level + 1
+                                            ? (typeof(getValues('plan_lv')?.[index - 1]?.level) === 'string' ? parseInt(getValues('plan_lv')?.[index - 1].level) : getValues('plan_lv')?.[index - 1].level) + 1
                                             : '1',
                                         )
                                   }
