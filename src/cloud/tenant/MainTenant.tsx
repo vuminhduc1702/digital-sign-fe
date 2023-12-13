@@ -21,7 +21,6 @@ const MainTenant = () => {
   const navigate = useNavigate()
 
   const handleSearch = () => {
-    console.log(key, value)
     setSearchFilter({
       search_field: key,
       search_str: value,
@@ -30,7 +29,7 @@ const MainTenant = () => {
 
   const { data: customerData, isPreviousData } = useCustomerList({
     data: {
-      limit: 10 || 10,
+      limit: 10,
       offset: offset || 0,
       search_field: searchFilter.search_field,
       search_str: searchFilter.search_str,
@@ -40,12 +39,12 @@ const MainTenant = () => {
     },
   })
 
-  console.log(customerData, 'check data')
   const formatData = (data: any) => {
     return data.map((item: any) => {
       return {
         name: item.name,
         phone: item.phone,
+
         email: item.email,
         system_role: item.system_role,
         company: item.profile.company,
@@ -58,7 +57,7 @@ const MainTenant = () => {
   return (
     <div className="flex grow flex-col px-9 py-3 shadow-lg">
       <div
-        className="border-secondary-700 mb-6 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
+        className="mb-6 mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
         onClick={() => navigate(-1)}
       >
         <img src={narrowLeft} alt="left" className="aspect-square w-[20px]" />

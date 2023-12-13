@@ -31,7 +31,7 @@ type UpdateGroupProps = {
   close: () => void
   isOpen: boolean
   organization: string
-  entity_type: Omit<EntityType, 'GROUP' | 'TEMPLATE'>
+  entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
 }
 
 export function UpdateGroup({

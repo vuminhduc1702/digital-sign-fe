@@ -1,6 +1,6 @@
 import { type BasePagination } from '~/types'
 
-type PolicyResources =
+export type PolicyResources =
   | 'groups'
   | 'devices'
   | 'devicetokens'
@@ -13,22 +13,7 @@ type PolicyResources =
   | 'templates'
   | 'pricing'
 
-type PolicyActions = 'read' | 'create' | 'modify' | 'delete'
-
-export type ResourcesType = {
-  value: PolicyResources
-  label: string
-}
-
-export type ActionsType = {
-  value: PolicyActions
-  label: string
-}
-
-export type SelectType = {
-  value: string
-  label: string
-}
+export type PolicyActions = 'read' | 'create' | 'modify' | 'delete'
 
 export type Role = {
   id: string
@@ -41,12 +26,12 @@ export type Role = {
 
 export type Policies = {
   policy_name: string
-  resources?: ResourcesType[]
-  actions: ActionsType[]
-  devices?: SelectType[]
-  users?: SelectType[]
-  orgs?: SelectType[]
-  events?: SelectType[]
+  resources: PolicyResources[]
+  actions: PolicyActions[]
+  devices: string[]
+  users: string[]
+  orgs: string[]
+  events: string[]
 }
 
 export type RoleList = {

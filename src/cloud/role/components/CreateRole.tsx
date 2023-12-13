@@ -3,21 +3,23 @@ import { useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
+
 import { Button } from '~/components/Button'
 import { FormDrawer, InputField, SelectDropdown } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
-import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateRole, type CreateRoleDTO } from '../api'
-import { type ActionsType, type ResourcesType } from '../types'
+import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
+import { cn } from '~/utils/misc'
+
+import { nameSchema } from '~/utils/schemaValidation'
+import { type PolicyActions, type PolicyResources } from '../types'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetGroups } from '~/cloud/orgManagement/api/groupAPI'
 import { PlusIcon } from '~/components/SVGIcons'
-import { cn } from '~/utils/misc'
 
-export const resourcesList: ResourcesType[] = [
+export const resourcesList = [
   { value: 'users', label: 'Người dùng' },
   { value: 'groups', label: 'Nhóm' },
   { value: 'templates', label: 'Mẫu thiết bị' },
@@ -26,14 +28,14 @@ export const resourcesList: ResourcesType[] = [
   { value: 'roles', label: 'Vai trò' },
   { value: 'projects', label: 'Dự án' },
   { value: 'devices', label: 'Thiết bị' },
-]
+] as const
 
-export const actionsList: ActionsType[] = [
+export const actionsList = [
   { value: 'read', label: 'Xem' },
   { value: 'create', label: 'Tạo mới' },
   { value: 'modify', label: 'Chỉnh sửa' },
   { value: 'delete', label: 'Xoá' },
-]
+] as const
 
 export const roleSchema = z
   .object({
@@ -129,33 +131,40 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
   let projectId = project_id ? project_id : dataStorage?.id
 
   const { mutate, isLoading, isSuccess } = useCreateRole()
-  const { data: groupDataDevice, isLoading: groupDataDeviceIsLoading } =
-    useGetGroups({
-      projectId,
-      entity_type: 'DEVICE',
-    })
 
-  const { data: groupDataEvent, isLoading: groupDataEventIsLoading } =
-    useGetGroups({
-      projectId,
-      entity_type: 'EVENT',
-    })
-
-  const { data: groupDataUser, isLoading: groupDataUserIsLoading } =
-    useGetGroups({
-      projectId,
-      entity_type: 'USER',
-    })
-
-  const { data: groupDataOrg, isLoading: groupDataOrgIsLoading } = useGetGroups(
-    {
-      projectId,
-      entity_type: 'ORGANIZATION',
+  const { data: groupData, isLoading: isLoadingGroup } = useGetGroups({
+    projectId,
+    config: {
+      suspense: false,
     },
-  )
+  })
+  const groupDataDeviceOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'DEVICE')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataEventOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'EVENT')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataUserOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'USER')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
+  const groupDataOrgOptions = groupData?.groups
+    ?.filter(item => item.entity_type === 'ORGANIZATION')
+    ?.map(groups => ({
+      label: groups.name,
+      value: groups.id,
+    }))
 
-  const resourceArrRef = useRef<ResourcesType['value'][]>([])
-  const actionArrRef = useRef<ActionsType['value'][]>([])
+  const resourceArrRef = useRef<PolicyResources[]>([])
+  const actionArrRef = useRef<PolicyActions[]>([])
 
   const resetData = () => {
     reset()
@@ -330,140 +339,106 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                       control={control}
                       isMulti
                       closeMenuOnSelect={false}
+                      error={formState?.errors?.policies?.[index]?.resources}
                     />
-                    <p className="text-body-sm text-primary-400">
-                      {formState?.errors?.policies?.[index]?.resources?.message}
-                    </p>
                   </div>
                 )}
                 {type === 'Group' && (
                   <div className="space-y-3">
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={'Thiết bị'}
-                        name={`policies.${index}.devices`}
-                        control={control}
-                        options={groupDataDevice?.groups?.map(groups => ({
-                          label: groups?.name,
-                          value: groups?.id,
-                        }))}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:device') ||
-                          option.label === t('table:no_device')
-                        }
-                        noOptionsMessage={() => t('table:no_device')}
-                        loadingMessage={() => t('loading:device')}
-                        isLoading={groupDataDeviceIsLoading}
-                        isMulti
-                        closeMenuOnSelect={false}
-                        handleClearSelectDropdown={() =>
-                          setValue(`policies.${index}.devices`, [])
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.policies?.[index]?.root?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={'Sự kiện'}
-                        name={`policies.${index}.events`}
-                        options={groupDataEvent?.groups?.map(groups => ({
-                          label: groups?.name,
-                          value: groups?.id,
-                        }))}
-                        isOptionDisabled={option =>
-                          option.label === t('loading:event') ||
-                          option.label === t('table:no_event')
-                        }
-                        noOptionsMessage={() => t('table:no_event')}
-                        loadingMessage={() => t('loading:event')}
-                        isLoading={groupDataEventIsLoading}
-                        isMulti
-                        control={control}
-                        closeMenuOnSelect={false}
-                        handleClearSelectDropdown={() =>
-                          setValue(`policies.${index}.events`, [])
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.policies?.[index]?.root?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={'Người dùng'}
-                        name={`policies.${index}.users`}
-                        options={
-                          groupDataUser?.groups?.map(groups => ({
-                            label: groups?.name,
-                            value: groups?.id,
-                          })) || [{ label: t('loading:user'), value: '' }]
-                        }
-                        isOptionDisabled={option =>
-                          option.label === t('loading:user') ||
-                          option.label === t('table:no_user')
-                        }
-                        noOptionsMessage={() => t('table:no_user')}
-                        loadingMessage={() => t('loading:user')}
-                        isLoading={groupDataUserIsLoading}
-                        isMulti
-                        control={control}
-                        closeMenuOnSelect={false}
-                        handleClearSelectDropdown={() =>
-                          setValue(`policies.${index}.users`, [])
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.policies?.[index]?.root?.message}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <SelectDropdown
-                        label={'Tổ chức'}
-                        name={`policies.${index}.orgs`}
-                        options={
-                          groupDataOrg?.groups?.map(groups => ({
-                            label: groups?.name,
-                            value: groups?.id,
-                          })) || [{ label: t('loading:org'), value: '' }]
-                        }
-                        isOptionDisabled={option =>
-                          option.label === t('loading:org') ||
-                          option.label === t('table:no_org')
-                        }
-                        noOptionsMessage={() => t('table:no_org')}
-                        loadingMessage={() => t('loading:org')}
-                        isLoading={groupDataOrgIsLoading}
-                        isMulti
-                        control={control}
-                        closeMenuOnSelect={false}
-                        handleClearSelectDropdown={() =>
-                          setValue(`policies.${index}.orgs`, [])
-                        }
-                      />
-                      <p className="text-body-sm text-primary-400">
-                        {formState?.errors?.policies?.[index]?.root?.message}
-                      </p>
-                    </div>
+                    <SelectDropdown
+                      label={'Thiết bị'}
+                      name={`policies.${index}.devices`}
+                      control={control}
+                      options={groupDataDeviceOptions}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:device') ||
+                        option.label === t('table:no_device')
+                      }
+                      noOptionsMessage={() => t('table:no_device')}
+                      loadingMessage={() => t('loading:device')}
+                      isLoading={isLoadingGroup}
+                      isMulti
+                      closeMenuOnSelect={false}
+                      handleClearSelectDropdown={() =>
+                        setValue(`policies.${index}.devices`, [])
+                      }
+                      error={formState?.errors?.policies?.[index]?.root}
+                    />
+
+                    <SelectDropdown
+                      label={'Sự kiện'}
+                      name={`policies.${index}.events`}
+                      options={groupDataEventOptions}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:event') ||
+                        option.label === t('table:no_event')
+                      }
+                      noOptionsMessage={() => t('table:no_event')}
+                      loadingMessage={() => t('loading:event')}
+                      isLoading={isLoadingGroup}
+                      isMulti
+                      control={control}
+                      closeMenuOnSelect={false}
+                      handleClearSelectDropdown={() =>
+                        setValue(`policies.${index}.events`, [])
+                      }
+                      error={formState?.errors?.policies?.[index]?.root}
+                    />
+
+                    <SelectDropdown
+                      label={'Người dùng'}
+                      name={`policies.${index}.users`}
+                      options={groupDataUserOptions}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:user') ||
+                        option.label === t('table:no_user')
+                      }
+                      noOptionsMessage={() => t('table:no_user')}
+                      loadingMessage={() => t('loading:user')}
+                      isLoading={isLoadingGroup}
+                      isMulti
+                      control={control}
+                      closeMenuOnSelect={false}
+                      handleClearSelectDropdown={() =>
+                        setValue(`policies.${index}.users`, [])
+                      }
+                      error={formState?.errors?.policies?.[index]?.root}
+                    />
+
+                    <SelectDropdown
+                      label={'Tổ chức'}
+                      name={`policies.${index}.orgs`}
+                      options={groupDataOrgOptions}
+                      isOptionDisabled={option =>
+                        option.label === t('loading:org') ||
+                        option.label === t('table:no_org')
+                      }
+                      noOptionsMessage={() => t('table:no_org')}
+                      loadingMessage={() => t('loading:org')}
+                      isLoading={isLoadingGroup}
+                      isMulti
+                      control={control}
+                      closeMenuOnSelect={false}
+                      handleClearSelectDropdown={() =>
+                        setValue(`policies.${index}.orgs`, [])
+                      }
+                      error={formState?.errors?.policies?.[index]?.root}
+                    />
                   </div>
                 )}
-                <div className="space-y-1">
-                  <SelectDropdown
-                    label={
-                      t('cloud:role_manage.add_policy.actions') ??
-                      'Authorization actions'
-                    }
-                    name={`policies.${index}.actions`}
-                    options={actionsList.map(actionsType => actionsType)}
-                    control={control}
-                    isMulti
-                    closeMenuOnSelect={false}
-                  />
-                  <p className="text-body-sm text-primary-400">
-                    {formState?.errors?.policies?.[index]?.actions?.message}
-                  </p>
-                </div>
+
+                <SelectDropdown
+                  label={
+                    t('cloud:role_manage.add_policy.actions') ??
+                    'Authorization actions'
+                  }
+                  name={`policies.${index}.actions`}
+                  options={actionsList.map(actionsType => actionsType)}
+                  control={control}
+                  isMulti
+                  closeMenuOnSelect={false}
+                  error={formState?.errors?.policies?.[index]?.actions}
+                />
               </div>
               <Button
                 type="button"

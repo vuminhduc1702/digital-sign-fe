@@ -42,10 +42,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
     ref,
   ) {
     const { t } = useTranslation()
-    const redBorderError =
-      error?.message != null
-        ? 'border-primary-400 focus:outline-primary-400'
-        : ''
+
     return (
       <FieldWrapper
         label={label}
@@ -56,7 +53,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         classchild={classchild}
         className={cn(
           type === 'file' &&
-            'bg-primary-400 w-fit cursor-pointer px-2 py-1 text-white',
+            'w-fit cursor-pointer bg-primary-400 px-2 py-1 text-white',
           classnamefieldwrapper,
         )}
       >
@@ -64,10 +61,14 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
         <input
           type={type}
           className={cn(
-            'border-secondary-600 placeholder-secondary-700 focus:outline-focus-400 focus:ring-focus-400 disabled:bg-secondary-500 block w-full appearance-none rounded-md border px-3 py-2 text-black shadow-sm focus:outline-2 disabled:cursor-not-allowed',
-            redBorderError,
+            'block w-full appearance-none rounded-md border border-secondary-600 px-3 py-2 text-black placeholder-secondary-700 shadow-sm focus:outline-2 focus:outline-focus-400 focus:ring-focus-400 disabled:cursor-not-allowed disabled:bg-secondary-500',
+            {
+              'pl-8': startIcon,
+              'pr-8': endIcon,
+              'border-primary-400 focus:outline-primary-400':
+                error?.message != null,
+            },
             className,
-            { 'pl-8': startIcon, 'pr-8': endIcon },
           )}
           ref={ref}
           placeholder={placeholder ?? t('placeholder:input_text')}

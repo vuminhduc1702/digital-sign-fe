@@ -19,17 +19,12 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
-type EntityTypeGroup = {
-  type: 'ORGANIZATION' | 'DEVICE' | 'USER' | 'EVENT'
-  name: string
-}
-
-export const entityTypeList: EntityTypeGroup[] = [
+export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
   { type: 'DEVICE', name: 'Thiết bị' },
   { type: 'USER', name: 'Người dùng' },
   { type: 'EVENT', name: 'Sự kiện' },
-]
+] as const
 
 const groupCreateSchema = z.object({
   name: nameSchema,

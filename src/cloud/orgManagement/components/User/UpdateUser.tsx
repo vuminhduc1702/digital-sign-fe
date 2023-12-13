@@ -136,6 +136,7 @@ export function UpdateUser({
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev)
   }
+  console.log('formState.isDirty', formState.isDirty)
 
   return (
     <Drawer
@@ -162,7 +163,7 @@ export function UpdateUser({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            // disabled={!formState.isDirty}
+            disabled={!formState.isDirty}
           />
         </>
       )}

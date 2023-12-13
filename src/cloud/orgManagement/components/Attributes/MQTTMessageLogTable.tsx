@@ -53,7 +53,9 @@ export function MQTTMessageLogTable({
       }),
       columnHelper.accessor('payload_as_string', {
         header: () => (
-          <span>{t('cloud:org_manage.device_manage.table.payload_as_string')}</span>
+          <span>
+            {t('cloud:org_manage.device_manage.table.payload_as_string')}
+          </span>
         ),
         cell: info => {
           const value = info.getValue()
@@ -78,60 +80,6 @@ export function MQTTMessageLogTable({
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('created_by', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.create_by')}</span>
-      //   ),
-      //   cell: info => {
-      //     const value = info.getValue()
-      //     const valueTrigger =
-      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
-      //     return (
-      //       <>
-      //         {value ? (
-      //           <TooltipProvider>
-      //             <Tooltip>
-      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
-      //               <TooltipContent>
-      //                 <p>{value}</p>
-      //               </TooltipContent>
-      //             </Tooltip>
-      //           </TooltipProvider>
-      //         ) : (
-      //           ''
-      //         )}
-      //       </>
-      //     )
-      //   },
-      //   footer: info => info.column.id,
-      // }),
-      // columnHelper.accessor('owner', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.owner')}</span>
-      //   ),
-      //   cell: info => {
-      //     const value = info.getValue()
-      //     const valueTrigger =
-      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
-      //     return (
-      //       <>
-      //         {value ? (
-      //           <TooltipProvider>
-      //             <Tooltip>
-      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
-      //               <TooltipContent>
-      //                 <p>{value}</p>
-      //               </TooltipContent>
-      //             </Tooltip>
-      //           </TooltipProvider>
-      //         ) : (
-      //           ''
-      //         )}
-      //       </>
-      //     )
-      //   },
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.accessor('topic', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.topic')}</span>
@@ -139,33 +87,6 @@ export function MQTTMessageLogTable({
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('project_id', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.project')}</span>
-      //   ),
-      //   cell: info => {
-      //     const value = info.getValue()
-      //     const valueTrigger =
-      //       value?.length > 10 ? value.slice(0, 10) + '...' : value
-      //     return (
-      //       <>
-      //         {value ? (
-      //           <TooltipProvider>
-      //             <Tooltip>
-      //               <TooltipTrigger>{valueTrigger}</TooltipTrigger>
-      //               <TooltipContent>
-      //                 <p>{value}</p>
-      //               </TooltipContent>
-      //             </Tooltip>
-      //           </TooltipProvider>
-      //         ) : (
-      //           ''
-      //         )}
-      //       </>
-      //     )
-      //   },
-      //   footer: info => info.column.id,
-      // }),
     ],
     [entityId, entityType],
   )
@@ -179,7 +100,7 @@ export function MQTTMessageLogTable({
     />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_log_attr')}
+      {t('table:no_mqtt_hist')}
     </div>
   )
 }

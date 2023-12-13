@@ -46,7 +46,6 @@ export function UpdateMqttConfig({
   const { mutate, isLoading, isSuccess } = useUpdateMqttConfig()
 
   const additionalInfo = JSON.parse(additional_info)
-  console.log(additionalInfo)
   const MqttConfig = additionalInfo.mqtt_config || {}
   const {
     register,

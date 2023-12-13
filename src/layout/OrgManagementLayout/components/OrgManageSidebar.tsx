@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Fragment, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { useProjectById } from '~/cloud/project/api'
 import { Button } from '~/components/Button'
@@ -28,6 +28,7 @@ export type OrgMapType = {
   image: string
   children: OrgMapType[]
   isSearch?: boolean
+  isShow?: boolean
 }
 
 export type EntityTypeURL =
@@ -45,6 +46,7 @@ function OrgManageSidebar() {
   const { close, open, isOpen } = useDisclosure()
 
   const projectId = storage.getProject()?.id
+  const { orgId } = useParams()
 
   const { data: projectByIdData } = useProjectById({
     projectId,
@@ -97,6 +99,32 @@ function OrgManageSidebar() {
         }
       }
       data = arr
+    }
+
+    if (orgId) {
+      const findIndex = filteredComboboxData.findIndex(
+        item => item.id === orgId,
+      )
+      if (findIndex !== -1) {
+        let currentLevel = data[findIndex]?.level
+        for (let i = findIndex; i >= 0; i--) {
+          if (i === findIndex) {
+          } else {
+            if (data[i]) {
+              if (
+                getInt(filteredComboboxData[i].level) < getInt(currentLevel)
+              ) {
+                data[i].isShow = true
+                if (data[i].level === '1') {
+                  break
+                }
+              } else {
+                data[i].isShow = false
+              }
+            }
+          }
+        }
+      }
     }
 
     data.forEach(node => {
@@ -258,11 +286,13 @@ function OrgManageSidebar() {
               t('cloud:org_manage.org_manage.overview.choose_project')}
           </Button>
         </div>
-        <UpdateOrg
-          close={close}
-          isOpen={isOpen}
-          selectedUpdateOrg={selectedUpdateOrg}
-        />
+        {isOpen ? (
+          <UpdateOrg
+            close={close}
+            isOpen={isOpen}
+            selectedUpdateOrg={selectedUpdateOrg}
+          />
+        ) : null}
         <TreeView
           data={convertData(filteredComboboxData)}
           handleEditTreeView={(data: OrgMapType) => handleEdit(data)}

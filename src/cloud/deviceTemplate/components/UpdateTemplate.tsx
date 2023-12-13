@@ -35,8 +35,6 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
-  value: string | number | boolean
-  value_type: Attribute['value_type']
   close: () => void
   isOpen: boolean
 }
@@ -143,7 +141,7 @@ export function UpdateTemplate({
         </>
       )}
     >
-      {showSpinner ? (
+      {attrLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>

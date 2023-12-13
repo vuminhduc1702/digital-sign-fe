@@ -5,29 +5,14 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
-import {
-  type ResourcesType,
-  type Role,
-  type ActionsType,
-  type SelectType,
-} from '../types'
+import { type Role, type Policies } from '../types'
 import { type RoleTypes } from '~/lib/authorization'
-
-export type PoliciesReq = {
-  policy_name: string
-  resources: ResourcesType['value'][]
-  actions: ActionsType['value'][]
-  devices: SelectType['value'][]
-  users: SelectType['value'][]
-  events: SelectType['value'][]
-  orgs: SelectType['value'][]
-}
 
 export type CreateRoleDTO = {
   data: {
     name: string
     project_id: string
-    policies: PoliciesReq[]
+    policies: Policies[]
     role_type: string
     applicable_to: RoleTypes
   }

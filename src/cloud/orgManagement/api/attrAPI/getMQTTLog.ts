@@ -4,7 +4,6 @@ import { axios } from '~/lib/axios'
 import { limitPagination } from '~/utils/const'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type BasePagination } from '~/types'
 
 type GetMQTTLog = {
   project_id: string
@@ -26,7 +25,7 @@ export type MQTTMessage = {
   ts: number
 }
 
-export type MQTTLog = {
+type MQTTLog = {
   limit: number
   before: string
   after: string

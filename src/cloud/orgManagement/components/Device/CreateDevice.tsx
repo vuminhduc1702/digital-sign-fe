@@ -133,28 +133,26 @@ export function CreateDevice() {
             error={formState.errors['name']}
             registration={register('name')}
           />
-          <div className="space-y-1">
-            <SelectDropdown
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
-              name="org_id"
-              control={control}
-              options={orgSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:org') ||
-                option.label === t('table:no_in_org')
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              loadingMessage={() => t('loading:org')}
-              isLoading={orgIsLoading}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              handleClearSelectDropdown={() => {
-                selectDropdownGroupId.current?.clearValue()
-              }}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.org_id?.message}
-            </p>
-          </div>
+
+          <SelectDropdown
+            error={formState?.errors?.org_id}
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            name="org_id"
+            control={control}
+            options={orgSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:org') ||
+              option.label === t('table:no_in_org')
+            }
+            noOptionsMessage={() => t('table:no_in_org')}
+            loadingMessage={() => t('loading:org')}
+            isLoading={orgIsLoading}
+            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+            handleClearSelectDropdown={() => {
+              selectDropdownGroupId.current?.clearValue()
+            }}
+          />
+
           <div className="space-y-1">
             <SelectDropdown
               refSelect={selectDropdownGroupId}
@@ -171,24 +169,22 @@ export function CreateDevice() {
               isLoading={groupIsLoading}
             />
           </div>
-          <div className="space-y-1">
-            <SelectDropdown
-              label={t('cloud:firmware.add_firmware.template')}
-              name="template_id"
-              control={control}
-              options={templateSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:template') ||
-                option.label === t('table:no_template')
-              }
-              noOptionsMessage={() => t('table:no_template')}
-              loadingMessage={() => t('loading:template')}
-              isLoading={templateIsLoading}
-            />
-            <p className="text-body-sm text-primary-400">
-              {formState?.errors?.template_id?.message}
-            </p>
-          </div>
+
+          <SelectDropdown
+            error={formState?.errors?.template_id}
+            label={t('cloud:firmware.add_firmware.template')}
+            name="template_id"
+            control={control}
+            options={templateSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:template') ||
+              option.label === t('table:no_template')
+            }
+            noOptionsMessage={() => t('table:no_template')}
+            loadingMessage={() => t('loading:template')}
+            isLoading={templateIsLoading}
+          />
+
           <InputField
             label={t('cloud:org_manage.device_manage.add_device.key')}
             error={formState.errors['key']}

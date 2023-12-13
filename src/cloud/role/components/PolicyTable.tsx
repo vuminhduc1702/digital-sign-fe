@@ -6,7 +6,11 @@ import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useRoleById } from '../api/getRoleById'
 import { BaseTable } from '~/components/Table'
 
-import { type ResourcesType, type Policies, type ActionsType } from '../types'
+import {
+  type PolicyResources,
+  type Policies,
+  type PolicyActions,
+} from '../types'
 
 export function PolicyTable({ ...props }) {
   const { t } = useTranslation()
@@ -40,7 +44,7 @@ export function PolicyTable({ ...props }) {
           info
             .getValue()
             .map(
-              (value: ResourcesType['value'][]) =>
+              (value: PolicyResources[]) =>
                 value[0].toUpperCase() + value.slice(1),
             )
             .join(', '),
@@ -52,7 +56,7 @@ export function PolicyTable({ ...props }) {
           info
             .getValue()
             .map(
-              (value: ActionsType['value'][]) =>
+              (value: PolicyActions[]) =>
                 value[0].toUpperCase() + value.slice(1),
             )
             .join(', '),
@@ -63,7 +67,12 @@ export function PolicyTable({ ...props }) {
   )
 
   return data != null && data?.policies.length !== 0 ? (
-    <BaseTable popoverClassName="absolute right-0 top-1 block" data={data.policies} columns={columns} {...props} />
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={data.policies}
+      columns={columns}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_policy')}

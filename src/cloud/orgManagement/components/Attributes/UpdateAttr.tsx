@@ -23,7 +23,7 @@ type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
   attributeKey: string
-  value: string | number | boolean
+  value: string
   value_type: Attribute['value_type']
   logged: boolean
   close: () => void
@@ -45,17 +45,23 @@ export function UpdateAttr({
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
 
-  const { register, formState, control, handleSubmit, watch } = useForm<
+  const { register, formState, control, handleSubmit, watch, reset } = useForm<
     z.infer<typeof attrSchema>
   >({
     resolver: attrSchema && zodResolver(attrSchema),
-    defaultValues: {
-      attribute_key: attributeKey,
-      logged: String(logged) === 'true',
-      value: value !== 'null' && value !== '' ? JSON.stringify(value) : '',
-      value_t: value_type,
-    },
   })
+
+  useEffect(
+    () =>
+      reset({
+        attribute_key: attributeKey,
+        logged: String(logged) === 'true',
+        value: value !== 'null' && value !== '' ? value : '',
+        value_t: value_type,
+      }),
+    [],
+  )
+
   useEffect(() => {
     if (isSuccess) {
       close()
