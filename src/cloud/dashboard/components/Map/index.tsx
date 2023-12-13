@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { DataItem, EntityId, WSWidgetData, type TimeSeries } from '../../types'
+import { type TimeSeries } from '../../types'
 import { z } from 'zod'
 import { widgetSchema } from '../Widget'
 
@@ -11,7 +11,7 @@ export function Map({
   isEditMode,
   deviceInfo
 }: {
-  data: TimeSeries
+  data: any
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
   deviceInfo?: any
@@ -20,6 +20,8 @@ export function Map({
   const [dataForMap, setDataForMap] = useState<Array<any>>([])
   const [avgLatitude, setAvgLatitude] = useState(0)
   const [avgLongitude, setAvgLongitude] = useState(0)
+  const newValuesRef = useRef<TimeSeries | null>(null)
+  const prevValuesRef = useRef<TimeSeries | null>(null)
   const map = useRef(null)
 
   // const fakeCoor = [
@@ -31,12 +33,6 @@ export function Map({
   //   [21.0245, 105.8473],
   // ]
 
-  // const avgLatitude =
-    // fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
-  // const avgLongitude =
-    // fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
-  
-  
   useEffect(() => {
     if (isEditMode) {
       setDragMode(false)
@@ -45,40 +41,69 @@ export function Map({
     }
   }, [isEditMode])
 
-  useEffect(() => {
-    const dataCurrent: string[][] = []
-    let coorCurrent: string[] = []
+  function dataManipulation() {
+    const dataCurrent: number[][] = []
+    let coorCurrent: number[] = []
+    const test: { data: number[]; id: string }[] = []
 
-    // const fakeData = [
-    //   ['lat', [
-    //     {'ts': 123123123, 'value': '34'},
-    //     {'ts': 234234234, 'value': '21'}
-    //   ]],
-    //   ['long', [
-    //     {'ts': 123123123, 'value': '142'},
-    //     {'ts': 234234234, 'value': '231'}
-    //   ]]
-    // ]
-    if (Object.keys(data).length !== 0) {
-      Object.keys(data).forEach(() => {
-        const dataLat = Object.entries(data).filter(([key]) => key === 'lat')[0]?.[1]
-        const dataLong = Object.entries(data).filter(([key]) => key === 'long')[0]?.[1]
-        Object.entries(dataLat).map((latKey, index) => {
-          coorCurrent = [latKey[1].value, dataLong[index]?.value]
-          const coorIndex = dataCurrent.findIndex(item => item[0] === coorCurrent[0])
-          if (coorIndex === -1) {
-            dataCurrent.push(coorCurrent)
-          }
-        })
+    if (newValuesRef.current) {
+      Object.entries(newValuesRef.current).forEach(dataItem => {
+        const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'lat')
+        const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'long')
+        const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex].value
+        const dataLong = Object.values(Object.values(dataItem)[1])[dataLongIndex].value
+        coorCurrent = [parseFloat(dataLat), parseFloat(dataLong)]
+        const coorIndex = dataCurrent.findIndex(item => item[0] === coorCurrent[0])
+        if (coorIndex === -1) {
+          const mapping = {id: deviceInfo?.name?.[0]?.value}
+          test.push({...mapping, data: coorCurrent})
+          dataCurrent.push(coorCurrent)
+        }
       })
-
       setDataForMap(dataCurrent)
+    }
+  }
+
+  useEffect(() => {
+    console.log(data)
+    if (data.data) {
+      prevValuesRef.current = newValuesRef.current || data.data
+      if (
+        newValuesRef.current !== null
+      ) {
+        // console.log(data)
+        // data.data.forEach((item: any, index: number) => {
+        //   // console.log(key)
+        //   // console.log(value)
+        //   if (
+        //     newValuesRef.current[key] != null &&
+        //     newValuesRef.current[key] === prevValuesRef.current?.[key]
+        //   ) {
+        //     newValuesRef.current[key] = [...value]
+        //   } else {
+        //     prevValuesRef.current = data
+        //   }
+        //   dataManipulation()
+        // })
+      } else {
+        newValuesRef.current = data.data
+        // console.log('data: ', newValuesRef.current)
+        dataManipulation()
+      }
     }
   }, [data])
 
-  // useEffect(() => {
-  //   console.log(deviceInfo)
-  // }, [deviceInfo])
+  useEffect(() => {
+    const avgLat = dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
+    const avgLong = dataForMap.reduce((sum, [, lng]) => sum + lng, 0) / dataForMap.length
+    setAvgLatitude(avgLat)
+    setAvgLongitude(avgLong)
+    if (dataForMap.length >= 2) {
+      map.current?.setView([avgLat, avgLong], 3)
+    } else {
+      map.current?.setView([avgLat, avgLong], 15)
+    }
+  }, [dataForMap])
 
   return (
     <MapContainer
@@ -96,11 +121,11 @@ export function Map({
       />
       {dataForMap.map((coor, index) => {
         const [lat, lng] = coor
-
+        const deviceName = data.device?.[index].name.value
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {`Thiết bị ${index}`}
+              {data.device?.[index] && data ? `Thiết bị ${data.device?.[index].name.value}` : `Thiết bị ${deviceName}`}
               <br /> 
               {`Current coor (${lat},${lng})`}
             </Popup>

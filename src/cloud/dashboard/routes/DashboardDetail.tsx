@@ -307,13 +307,24 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const deviceInfo = lastJsonMessage?.id === widgetId
-                ? combinedObject(
-                    lastJsonMessage?.data?.map(
-                      device => device.latest.ENTITY_FIELD as LatestData,
-                    ),
-                  )
-                : {}
+                // const deviceInfo = lastJsonMessage?.id === widgetId
+                // ? combinedObject(
+                //     lastJsonMessage?.data?.map(
+                //       device => device.latest.ENTITY_FIELD as LatestData,
+                //     ),
+                //   )
+                // : {}
+                const lastestValuesForMap: TimeSeries = 
+                  lastJsonMessage?.id === widgetId
+                      ? combinedObject(
+                          lastJsonMessage?.data?.map(
+                            device => ({
+                              data: device.latest.TIME_SERIES as LatestData,
+                              device: device.latest.ENTITY_FIELD
+                            })
+                          ),
+                        )
+                      : {}
                 return (
                   <div
                     key={widgetId}
@@ -352,7 +363,7 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map data={lastestValues} widgetInfo={widgetInfo} isEditMode={isEditMode} deviceInfo={deviceInfo}/>
+                      <Map data={lastestValuesForMap} widgetInfo={widgetInfo} isEditMode={isEditMode}/>
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
