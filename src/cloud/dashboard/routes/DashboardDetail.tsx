@@ -171,6 +171,7 @@ export function DashboardDetail() {
     //   )
     // }
   }, [lastJsonMessage])
+  console.log('lastJsonMessage', lastJsonMessage)
 
   async function handleSendMessage() {
     const sendMessagePromises = Object.values(widgetList)

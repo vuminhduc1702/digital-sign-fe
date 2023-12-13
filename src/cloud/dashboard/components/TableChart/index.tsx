@@ -7,8 +7,8 @@ import { BaseTable } from '~/components/Table'
 
 import { type DeviceAttrLog } from '~/cloud/orgManagement/api/attrAPI'
 import { type TimeSeries } from '../../types'
-import { z } from 'zod'
-import { widgetSchema } from '../Widget'
+import { type z } from 'zod'
+import { type widgetSchema } from '../Widget'
 
 type TableChartDataType = DeviceAttrLog & {
   entity_name: string
@@ -19,8 +19,8 @@ export function TableChart({
   widgetInfo,
   ...props
 }: {
-  data: TimeSeries,
-  widgetInfo: z.infer<typeof widgetSchema>,
+  data: TimeSeries
+  widgetInfo: z.infer<typeof widgetSchema>
   className?: string
 }) {
   const { t } = useTranslation()
@@ -32,7 +32,10 @@ export function TableChart({
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<
-      Pick<TableChartDataType, 'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'>
+      Pick<
+        TableChartDataType,
+        'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'
+      >
     >
   >([
     {
@@ -40,7 +43,7 @@ export function TableChart({
       value: 0,
       attribute_key: '',
       entity_name: '',
-      unit: ''
+      unit: '',
     },
   ])
 
@@ -80,12 +83,14 @@ export function TableChart({
     const tableWidgetDataType = Object.entries(
       newValuesRef.current as TimeSeries,
     )
-      .flatMap(([attribute_key, values]) => 
+      .flatMap(([attribute_key, values]) =>
         values.map(({ ts, value }) => ({
           ts: ts,
           attribute_key,
           value,
-          unit: widgetInfo.attribute_config.filter(obj => obj.attribute_key === attribute_key)[0].unit
+          unit: widgetInfo.attribute_config.filter(
+            obj => obj.attribute_key === attribute_key,
+          )[0].unit,
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
@@ -145,7 +150,12 @@ export function TableChart({
 
   return dataTransformedFeedToChart != null &&
     dataTransformedFeedToChart?.length !== 0 ? (
-    <BaseTable data={dataTransformedFeedToChart} columns={columns} {...props} />
+    <BaseTable
+      data={dataTransformedFeedToChart}
+      columns={columns}
+      isAbsoluteBtn={false}
+      {...props}
+    />
   ) : (
     <div className="flex grow items-center justify-center">
       {t('table:no_log_attr')}
