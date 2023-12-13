@@ -28,7 +28,7 @@ type UsePingMQTTOptions = {
 export const usePingMQTT = ({ config }: UsePingMQTTOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
+  const { addNotification, dismissNotification, notifications } = useNotificationStore()
 
   return useMutation({
     onSuccess: async () => {
@@ -38,6 +38,7 @@ export const usePingMQTT = ({ config }: UsePingMQTTOptions = {}) => {
       })
     },
     onError: async () => {
+      dismissNotification(notifications[0].id)
       addNotification({
         type: 'error',
         title: t('cloud:custom_protocol.adapter.ping_MQTT.failure'),

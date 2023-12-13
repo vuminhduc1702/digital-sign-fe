@@ -1,6 +1,6 @@
 import { type BasePagination } from '~/types'
 
-export type ProtocolType = 'mqtt' | 'tcp' | 'udp'
+export type ProtocolType = 'mqtt' | 'tcp' | 'udp' | 'ftp'
 export type ContentType = 'json' | 'hex' | 'text'
 export type Configuration = {
   credentials: {
