@@ -4,7 +4,6 @@ import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
@@ -17,12 +16,11 @@ import {
   ControllerButton,
   GaugeChart,
   LineChart,
-  Map,
+  MapChart,
   PieChart,
   TableChart,
 } from '../components'
 import {
-  type ControllerBtn,
   CreateWidget,
   type Widget,
   type WidgetCategoryType,
@@ -59,6 +57,8 @@ import {
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { StarFilledIcon } from '@radix-ui/react-icons'
+import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import clsx from 'clsx'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -307,20 +307,13 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                // const deviceInfo = lastJsonMessage?.id === widgetId
-                // ? combinedObject(
-                //     lastJsonMessage?.data?.map(
-                //       device => device.latest.ENTITY_FIELD as LatestData,
-                //     ),
-                //   )
-                // : {}
                 const lastestValuesForMap: TimeSeries = 
                   lastJsonMessage?.id === widgetId
                       ? combinedObject(
                           lastJsonMessage?.data?.map(
                             device => ({
                               data: device.latest.TIME_SERIES as LatestData,
-                              device: device.latest.ENTITY_FIELD
+                              device: device.entityId
                             })
                           ),
                         )
@@ -363,7 +356,7 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map data={lastestValuesForMap} widgetInfo={widgetInfo} isEditMode={isEditMode}/>
+                      <MapChart data={lastestValuesForMap} widgetInfo={widgetInfo} isEditMode={isEditMode}/>
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
