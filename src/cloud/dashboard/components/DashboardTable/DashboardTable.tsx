@@ -189,7 +189,7 @@ export function DashboardTable({
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return data != null && data?.length > 0 ? (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}

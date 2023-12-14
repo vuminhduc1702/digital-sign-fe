@@ -58,7 +58,7 @@ function FireWareTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -90,7 +90,7 @@ function FireWareTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -219,16 +219,13 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
       data={data}
       columns={columns}
+      onDataText={t('table:no_firmware')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_firmware')}
-    </div>
   )
 }

@@ -14,7 +14,7 @@ export function CardChart({ data }: { data: LatestData }) {
   })
 
   useEffect(() => {
-    if (data != null && Object.keys(data).length !== 0) {
+    if (data != null && Object.keys(data).length > 0) {
       const dataDataType = {
         key: Object.keys(data)[0],
         value: Object.values(data)?.[0]?.value,

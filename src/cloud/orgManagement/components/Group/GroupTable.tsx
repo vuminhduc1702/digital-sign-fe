@@ -272,16 +272,13 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
       data={data}
       columns={columns}
+      onDataText={t('table:no_group')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_group')}
-    </div>
   )
 }

@@ -525,7 +525,7 @@
         "protocol": {
           "mqtt": "MQTT",
           "tcp": "TCP",
-          "udp": "UDP", 
+          "udp": "UDP",
           "ftp": "FTP"
         },
         "content_type": {
@@ -857,7 +857,9 @@
     "no_customer": "Không có thông tin khách hàng",
     "no_sign_history": "Không có lịch sử đăng ký",
     "no_payment_history": "Không có lịch sử thanh toán",
-    "no_plan_used": "Không có gói cước đang sử dụng"
+    "no_plan_used": "Không có gói cước đang sử dụng",
+    "no_tenant": "Không có tenant. Vui lòng tạo.",
+    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo."
   },
   "btn": {
     "create": "Tạo mới",
@@ -879,6 +881,7 @@
     "error_page": {
       "title": "Bạn vui lòng click nút Refresh để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
     },
+    "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
       "title": "Lỗi",
       "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",

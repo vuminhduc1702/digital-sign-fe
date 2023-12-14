@@ -82,8 +82,11 @@ export function UpdateEvent({
   const serviceNameOptionProp = JSON.parse(data.cmd).service_name
   const inputDataProp = JSON.parse(data.cmd).input
 
-  const [actionType, setActionType] = useState('')
-
+  const [actionType, setActionType] = useState(actionTypeProp)
+  const [serviceNameOption, setServiceNameOption] = useState(
+    serviceNameOptionProp,
+  )
+  const [inputData, setInputData] = useState(inputDataProp)
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
     type: 'thing',
@@ -92,10 +95,6 @@ export function UpdateEvent({
     value: thing.id,
     label: thing.name,
   }))
-
-  useEffect(() => {
-    setActionType(actionTypeProp)
-  }, [actionTypeProp])
 
   const {
     register,
@@ -121,10 +120,11 @@ export function UpdateEvent({
       group_id: data.group_id,
       cmd: {
         thing_id: thingIdOptionProp,
-        handle_service: serviceNameOptionProp,
+        handle_service: serviceNameOption,
       },
     },
   })
+
   const {
     append: conditionAppend,
     fields: conditionFields,
@@ -196,10 +196,10 @@ export function UpdateEvent({
 
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
-      thingId: watch('cmd.thing_id') || thingIdOptionProp,
+      thingId: watch('cmd.thing_id'),
       config: {
         suspense: false,
-        enabled: !!watch('cmd.thing_id') || !!thingIdOptionProp,
+        enabled: !!watch('cmd.thing_id'),
         select: value => {
           if (value.message === 'success') {
             const serviceSelectData = value?.data.map(item => ({
@@ -207,10 +207,7 @@ export function UpdateEvent({
               label: item.name,
             }))
             const serviceInput = value?.data.find(item => {
-              if (serviceNameOptionProp) {
-                return item.name === serviceNameOptionProp
-              }
-              return item.name === watch('cmd.handle_service')
+              return item.name === serviceNameOption
             })?.input
             return { serviceSelectData, serviceInput }
           }
@@ -227,10 +224,20 @@ export function UpdateEvent({
       ),
     )
   }
+
+  useEffect(() => {
+    setServiceNameOption(watch('cmd.handle_service'))
+    setInputData({})
+  }, [watch('cmd.handle_service')])
+
   useEffect(() => {
     serviceData?.serviceInput?.forEach((element, idx) => {
       setValue(`cmd.input.${idx}.name`, element.name)
-      setValue(`cmd.input.${idx}.type`, element.type)
+      setValue(
+        `cmd.input.${idx}.type`,
+        element.type === 'string' ? 'str' : element.type,
+      )
+      setValue(`cmd.input.${idx}.value`, inputData[element.name])
     })
   }, [serviceData?.serviceInput])
 
@@ -299,7 +306,6 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
-          // console.log('check values submit', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -369,7 +375,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -482,7 +488,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -521,7 +527,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+                  className="bg-secondary-700 w-full rounded-md pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -677,7 +683,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               {actionType !== 'report' && (
                 <Button
@@ -776,8 +782,8 @@ export function UpdateEvent({
                           customOnChange={() =>
                             resetField(`cmd.input.${index}.value`)
                           }
-                          defaultValue={serviceData?.serviceSelectData?.find(
-                            ele => ele.label === serviceNameOptionProp,
+                          defaultValue={serviceData?.serviceSelectData.find(
+                            ele => ele.label === serviceNameOption,
                           )}
                         />
                         <p className="text-body-sm text-primary-400">
@@ -829,14 +835,14 @@ export function UpdateEvent({
                                   }
                                   registration={register(
                                     `cmd.input.${index}.type` as const,
-                                    {
-                                      onChange: () =>
-                                        resetField(`cmd.input.${index}.value`),
-                                    },
                                   )}
                                   options={outputList}
                                   className="h-9 px-2"
-                                  defaultValue={element.type}
+                                  defaultValue={
+                                    element.type === 'string'
+                                      ? 'str'
+                                      : element.type
+                                  }
                                 />
                                 {watch(`cmd.input.${index}.type`) === 'bool' ? (
                                   <FieldWrapper
@@ -869,7 +875,11 @@ export function UpdateEvent({
                                   </FieldWrapper>
                                 ) : (
                                   <InputField
-                                    defaultValue={inputDataProp[element.name]}
+                                    defaultValue={
+                                      inputData[element.name]
+                                        ? inputData[element.name]
+                                        : ''
+                                    }
                                     label={t(
                                       'cloud:custom_protocol.service.service_input.value',
                                     )}

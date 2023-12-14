@@ -13,7 +13,10 @@ type PaymentHistoryTableProps = {
   data?: Billing[]
 } & BaseTablePagination
 
-export function PaymentHistoryTable({ data, ...props }: PaymentHistoryTableProps) {
+export function PaymentHistoryTable({
+  data,
+  ...props
+}: PaymentHistoryTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<Billing>()
@@ -25,9 +28,7 @@ export function PaymentHistoryTable({ data, ...props }: PaymentHistoryTableProps
         footer: info => info.column.id,
       }),
       columnHelper.accessor('date_request', {
-        header: () => (
-          <span>{t('billing:manage_bill.table.date_start')}</span>
-        ),
+        header: () => <span>{t('billing:manage_bill.table.date_start')}</span>,
         cell: info =>
           info.getValue()
             ? getVNDateFormat({ date: parseInt(info.getValue()) * 1000 })
@@ -86,11 +87,12 @@ export function PaymentHistoryTable({ data, ...props }: PaymentHistoryTableProps
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_payment_history')}
-    </div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_payment_history')}
+      {...props}
+    />
   )
 }

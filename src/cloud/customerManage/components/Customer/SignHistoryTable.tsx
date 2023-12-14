@@ -137,11 +137,12 @@ export function SignHistoryTable({ data, ...props }: SignHistoryTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_sign_history')}
-    </div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_sign_history')}
+      {...props}
+    />
   )
 }

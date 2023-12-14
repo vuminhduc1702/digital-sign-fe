@@ -1361,3 +1361,21 @@ export function SettingIcon({ ...props }: SVGIconProps) {
     </SVGIcon>
   )
 }
+
+export function DragIcon({ ...props }: SVGIconProps) {
+  return (
+    <SVGIcon {...props}>
+      <g clip-path="url(#clip0_1_3)">
+        <path
+          d="M10 0.524902L8.41675 4.0625H9.38843V9.38843H4.0625V8.41675L0.524902 10L4.0625 11.5833V10.6116H9.38843V15.9375H8.41675L10 19.4751L11.5833 15.9375H10.6116V10.6116H15.9375V11.5833L19.4751 10L15.9375 8.41675V9.38843H10.6116V4.0625H11.5833L10 0.524902Z"
+          fill="currentColor"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_1_3">
+          <rect width="20" height="20" fill="white" />
+        </clipPath>
+      </defs>
+    </SVGIcon>
+  )
+}

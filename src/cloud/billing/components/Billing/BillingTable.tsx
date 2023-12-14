@@ -92,12 +92,12 @@ export function BillingTable({
   }, [status, plan])
 
   const planArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.plan_name === o.plan_name);
-  });
+    return index === data.findIndex(o => obj.plan_name === o.plan_name)
+  })
 
   const statusArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.status === o.status);
-  });
+    return index === data.findIndex(o => obj.status === o.status)
+  })
 
   const handleSearch = (
     e: React.MouseEvent<HTMLInputElement>,
@@ -320,16 +320,13 @@ export function BillingTable({
     [plan, status, data],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return (
     <BaseTable
       popoverClassName="absolute right-0 top-2 block"
       data={data}
       columns={columns}
+      onDataText={t('table:no_bill')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_bill')}
-    </div>
   )
 }
