@@ -974,10 +974,6 @@ export function CreateEvent() {
                                 }
                                 registration={register(
                                   `cmd.input.${index}.type` as const,
-                                  {
-                                    onChange: () =>
-                                      resetField(`cmd.input.${index}.value`),
-                                  },
                                 )}
                                 options={outputList}
                                 className="h-9 px-2"
