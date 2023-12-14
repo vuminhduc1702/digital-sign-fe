@@ -55,6 +55,7 @@ import {
   ChartTableData,
   EditBtnIcon,
   PlusIcon,
+  DragIcon,
 } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -254,6 +255,7 @@ export function DashboardDetail() {
           <ReactGridLayout
             margin={[20, 20]}
             isDraggable={isEditMode}
+            draggableHandle=".drag-handle"
             isResizable={isEditMode}
             onLayoutChange={e => setLayoutDashboard(e)}
           >
@@ -308,10 +310,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn(
-                      'relative bg-secondary-500',
-                      isEditMode && 'cursor-grab',
-                    )}
+                    className={cn('relative bg-secondary-500')}
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
@@ -362,6 +361,12 @@ export function DashboardDetail() {
                           setWidgetList={setWidgetList}
                           widgetId={widgetId}
                         /> */}
+                        <DragIcon
+                          width={20}
+                          height={20}
+                          viewBox="0 0 20 20"
+                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
+                        />
                         <DeleteIcon
                           width={20}
                           height={20}
