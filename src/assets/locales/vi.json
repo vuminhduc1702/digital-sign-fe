@@ -876,6 +876,7 @@
     "error_page": {
       "title": "Bạn vui lòng click nút Refresh để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
     },
+    "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
       "title": "Lỗi",
       "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",

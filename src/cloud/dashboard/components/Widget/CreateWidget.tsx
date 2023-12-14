@@ -536,6 +536,19 @@ export function CreateWidget({
                           ],
                         })
                       }}
+                      handleChangeSelect={() => {
+                        selectDropdownDeviceRef.current?.clearValue()
+                        resetField('attributeConfig', {
+                          defaultValue: [
+                            {
+                              attribute_key: '',
+                              color: '',
+                              max: 100,
+                              unit: '',
+                            },
+                          ],
+                        })
+                      }}
                     />
 
                     <SelectDropdown
