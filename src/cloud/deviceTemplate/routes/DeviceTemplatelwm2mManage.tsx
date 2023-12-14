@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ComboBoxSelectModuleConfig, TemplateInfo, TemplateSidebar } from '../components'
+import { TemplateInfo, TemplateSidebar } from '../components'
 import {
   AttrTable,
   ComboBoxSelectAttr,
@@ -22,6 +22,7 @@ import storage from '~/utils/storage'
 import { type TemplateLwM2M, type ModuleConfig } from '../types'
 import { useTemplateLwM2MById } from '../api'
 import { LwM2MTable } from '../components/LwM2MTable'
+import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'
 
 export function DeviceTemplatelwm2mManage() {
   const { t } = useTranslation()
@@ -38,7 +39,7 @@ export function DeviceTemplatelwm2mManage() {
     data: LwM2MDataById,
     isPreviousData,
     isSuccess,} = useTemplateLwM2MById ({ templateId })
-  console.log('data123', LwM2MDataById)
+  console.log('data12', LwM2MDataById)
   console.log('filteredComboboxData', filteredComboboxData)
   return (
     <ContentLayout title={t('sidebar:cloud.device_template')}>
@@ -68,20 +69,19 @@ export function DeviceTemplatelwm2mManage() {
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
                     <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                    {/* {isSuccess ? (
+                    {isSuccess ? (
                         <ComboBoxSelectModuleConfig
-                        data={LwM2MDataById.transport_config.info}
+                        data={LwM2MDataById?.transport_config?.info}
                         setFilteredComboboxData={setFilteredComboboxData}
                         offset={offset}
                         />
-                    ) : null} */}
+                    ) : null}
                   </div>
                 </div>
                 <LwM2MTable
                   module_config={filteredComboboxData}
                   //offset={offset}
                   //setOffset={setOffset}
-          
                   //isPreviousData={isPreviousData}
                 />
               </div>

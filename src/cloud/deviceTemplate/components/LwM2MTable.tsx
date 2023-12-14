@@ -3,7 +3,7 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-
+import { getVNDateFormat } from '~/utils/misc'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
@@ -136,20 +136,39 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
       }),
       columnHelper.display({
         id: 'name',
-        header: () => <span>{t('cloud:custom_protocol.thing.name')}</span>,
+        header: () => <span>{t('cloud:device_template.listLwM2M.name')}</span>,
         cell: info => {
-          const nameThing = info.row.original.module_name
+          const nameLwM2M = info.row.original.module_name
           //const thingId = info.row.original.id
           return (
             //<Link to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}>
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameThing}
+                {nameLwM2M}
               </p>
             //</Link>
           )
         },
         footer: info => info.column.id,
       }),
+      columnHelper.display({
+        id: 'numberAttr',
+        header: () => <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>,
+        cell: info => {
+          const numberAttr = info.row.original.numberOfAttributes
+          //const thingId = info.row.original.id
+          return numberAttr
+              
+          
+        },
+        footer: info => info.column.id,
+      }),
+      // columnHelper.accessor('last_update_ts', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
+      //   ),
+      //   cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+      //   footer: info => info.column.id,
+      // }),
     //   columnHelper.accessor('attribute_info', {
     //     header: () => (
     //       <span>{t('cloud:custom_protocol.thing.template_name')}</span>
@@ -193,7 +212,7 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
     />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_thing')}
+      {t('table:no_template')}
     </div>
   )
 }
