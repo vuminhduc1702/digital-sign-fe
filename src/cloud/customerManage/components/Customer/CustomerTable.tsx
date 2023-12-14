@@ -119,11 +119,12 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_customer')}
-    </div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_customer')}
+      {...props}
+    />
   )
 }

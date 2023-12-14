@@ -82,16 +82,16 @@ export function SubcriptionTable({
   }, [estimate, plan, calUnit])
 
   const planArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.p_name === o.p_name);
-  });
+    return index === data.findIndex(o => obj.p_name === o.p_name)
+  })
 
   const estimateArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.p_estimate === o.p_estimate);
-  });
+    return index === data.findIndex(o => obj.p_estimate === o.p_estimate)
+  })
 
   const calUnitArr = data?.filter((obj, index) => {
-    return index === data.findIndex(o => obj.p_cal_unit === o.p_cal_unit);
-  });
+    return index === data.findIndex(o => obj.p_cal_unit === o.p_cal_unit)
+  })
 
   const handleSearch = (
     e: React.MouseEvent<HTMLInputElement>,
@@ -433,11 +433,12 @@ export function SubcriptionTable({
     [plan, estimate, calUnit, data],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_subscription')}
-    </div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_subscription')}
+      {...props}
+    />
   )
 }

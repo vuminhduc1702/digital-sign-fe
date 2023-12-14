@@ -38,9 +38,8 @@ export function LineChart({
     },
   ])
 
-  // const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (Object.keys(data).length > 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
@@ -180,9 +179,7 @@ export function LineChart({
     delay: 400,
     minDuration: 500,
   })
-  console.log('showSpinner', showSpinner)
 
-  // console.log('widgetInfo', widgetInfo)
   const renderLegend = (props: any) => {
     const { payload } = props
     return (

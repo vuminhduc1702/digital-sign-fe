@@ -386,7 +386,6 @@ export function CreateWidget({
                             ...tsCmd,
                             limit: values.widgetSetting?.data_point,
                           },
-                          requestType: 'FIRST_REALTIME',
                           id: widgetId,
                         },
                       ],
@@ -399,7 +398,6 @@ export function CreateWidget({
                             startTs:
                               Date.now() - values.widgetSetting?.time_period,
                           },
-                          requestType: 'FIRST_REALTIME',
                           id: widgetId,
                         },
                       ],
@@ -427,7 +425,6 @@ export function CreateWidget({
                             ...historyCmd,
                             window: values.widgetSetting?.window,
                           },
-                          requestType: 'HISTORY',
                           id: widgetId,
                         },
                       ],
@@ -436,7 +433,6 @@ export function CreateWidget({
                       entityDataCmds: [
                         {
                           historyCmd,
-                          requestType: 'HISTORY',
                           id: widgetId,
                         },
                       ],

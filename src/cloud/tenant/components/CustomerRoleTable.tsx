@@ -167,11 +167,12 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('error:no_data')}
-    </div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_tenant_role')}
+      {...props}
+    />
   )
 }

@@ -29,7 +29,7 @@ import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 
 export function BaseTable<T extends Record<string, any>>({
-  data,
+  data = [],
   columns,
   offset = 0,
   setOffset,
@@ -41,6 +41,7 @@ export function BaseTable<T extends Record<string, any>>({
   colsVisibility = {},
   popoverClassName = 'absolute right-0 top-1 hidden',
   isAbsoluteBtn = true,
+  onDataText,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -54,15 +55,15 @@ export function BaseTable<T extends Record<string, any>>({
   colsVisibility?: VisibilityState
   popoverClassName?: string
   isAbsoluteBtn?: boolean
+  onDataText?: string
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
-  const defaultData = useMemo(() => [], [])
 
   const table = useReactTable({
-    data: data ?? defaultData,
+    data,
     columns,
     state: {
       sorting,
@@ -103,7 +104,10 @@ export function BaseTable<T extends Record<string, any>>({
         </div>
       ) : (
         <>
-          <table className="w-full border-2" id="table-ref">
+          <table
+            className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
+            id="table-ref"
+          >
             <thead className="border-b-2 bg-gray-200 text-center">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
@@ -123,18 +127,6 @@ export function BaseTable<T extends Record<string, any>>({
                             }`}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            {/* <div className='flex items-center justify-center text-table-header'>
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                          </div>
-                          <div className="w-2 pr-5 text-xl text-black">
-                            {{
-                              asc: '↑',
-                              desc: '↓',
-                            }[header.column.getIsSorted() as string] ?? null}
-                          </div> */}
                             <div className="relative flex items-center justify-center text-table-header">
                               {flexRender(
                                 header.column.columnDef.header,
@@ -225,7 +217,6 @@ export function BaseTable<T extends Record<string, any>>({
                                   } else {
                                     title_column = ''
                                   }
-                                  // console.log(title_column)
                                 } else {
                                   title_column = ''
                                 }
@@ -254,86 +245,92 @@ export function BaseTable<T extends Record<string, any>>({
               ))}
             </thead>
             <tbody>
-              {table.getRowModel().rows.map(row => {
-                return (
-                  <Fragment key={row.id}>
-                    <tr
-                      className="border-secondary-70 border-t-2 text-center"
-                      key={row.id}
-                    >
-                      {row.getVisibleCells().map((cell, index) => {
-                        if (index === row.getVisibleCells().length - 1) {
-                          return (
-                            <Fragment key={cell.id}>
+              {totalAttrs > 0 ? (
+                table.getRowModel().rows.map(row => {
+                  return (
+                    <Fragment key={row.id}>
+                      <tr
+                        className="border-secondary-70 border-t-2 text-center"
+                        key={row.id}
+                      >
+                        {row.getVisibleCells().map((cell, index) => {
+                          if (index === row.getVisibleCells().length - 1) {
+                            return (
+                              <Fragment key={cell.id}>
+                                <td className="h-9" key={cell.id}>
+                                  {flexRender(
+                                    cell.column.columnDef.cell,
+                                    cell.getContext(),
+                                  )}
+                                </td>
+                              </Fragment>
+                            )
+                          } else {
+                            // const cellStr = cell.getContext().getValue()
+                            // let cellStrTrigger
+                            // if (typeof cellStr == 'string') {
+                            //   cellStrTrigger =
+                            //     cellStr?.length > 10
+                            //       ? cellStr.slice(0, 10) + '...'
+                            //       : cellStr
+                            // }
+
+                            return (
                               <td className="h-9" key={cell.id}>
                                 {flexRender(
                                   cell.column.columnDef.cell,
                                   cell.getContext(),
                                 )}
                               </td>
-                            </Fragment>
-                          )
-                        } else {
-                          // const cellStr = cell.getContext().getValue()
-                          // let cellStrTrigger
-                          // if (typeof cellStr == 'string') {
-                          //   cellStrTrigger =
-                          //     cellStr?.length > 10
-                          //       ? cellStr.slice(0, 10) + '...'
-                          //       : cellStr
-                          // }
-
-                          return (
-                            <td className="h-9" key={cell.id}>
-                              {flexRender(
-                                cell.column.columnDef.cell,
-                                cell.getContext(),
-                              )}
-                            </td>
-                          )
-                          // return typeof cellStr == 'string' &&
-                          //   cellStr != 'true' &&
-                          //   cellStr != 'false' &&
-                          //   isNaN(parseInt(cellStr)) ? (
-                          //   <td className="h-9 cursor-default" key={cell.id}>
-                          //     <TooltipProvider>
-                          //       <Tooltip>
-                          //         <TooltipTrigger>
-                          //           {cellStrTrigger}
-                          //         </TooltipTrigger>
-                          //         <TooltipContent>
-                          //           <p>
-                          //             {flexRender(
-                          //               cell.column.columnDef.cell,
-                          //               cell.getContext(),
-                          //             )}
-                          //           </p>
-                          //         </TooltipContent>
-                          //       </Tooltip>
-                          //     </TooltipProvider>
-                          //   </td>
-                          // ) : (
-                          //   <td className="h-9" key={cell.id}>
-                          //     {flexRender(
-                          //       cell.column.columnDef.cell,
-                          //       cell.getContext(),
-                          //     )}
-                          //   </td>
-                          // )
-                        }
-                      })}
-                    </tr>
-                    {row.getIsExpanded() && (
-                      <tr>
-                        {/* 2nd row is a custom 1 cell row */}
-                        <td colSpan={row.getVisibleCells().length}>
-                          {renderSubComponent?.({ row })}
-                        </td>
+                            )
+                            // return typeof cellStr == 'string' &&
+                            //   cellStr != 'true' &&
+                            //   cellStr != 'false' &&
+                            //   isNaN(parseInt(cellStr)) ? (
+                            //   <td className="h-9 cursor-default" key={cell.id}>
+                            //     <TooltipProvider>
+                            //       <Tooltip>
+                            //         <TooltipTrigger>
+                            //           {cellStrTrigger}
+                            //         </TooltipTrigger>
+                            //         <TooltipContent>
+                            //           <p>
+                            //             {flexRender(
+                            //               cell.column.columnDef.cell,
+                            //               cell.getContext(),
+                            //             )}
+                            //           </p>
+                            //         </TooltipContent>
+                            //       </Tooltip>
+                            //     </TooltipProvider>
+                            //   </td>
+                            // ) : (
+                            //   <td className="h-9" key={cell.id}>
+                            //     {flexRender(
+                            //       cell.column.columnDef.cell,
+                            //       cell.getContext(),
+                            //     )}
+                            //   </td>
+                            // )
+                          }
+                        })}
                       </tr>
-                    )}
-                  </Fragment>
-                )
-              })}
+                      {row.getIsExpanded() && (
+                        <tr>
+                          {/* 2nd row is a custom 1 cell row */}
+                          <td colSpan={row.getVisibleCells().length}>
+                            {renderSubComponent?.({ row })}
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
+                  )
+                })
+              ) : (
+                <td colSpan={999} className="text-center">
+                  {onDataText || t('error:no_data')}
+                </td>
+              )}
             </tbody>
           </table>
         </>

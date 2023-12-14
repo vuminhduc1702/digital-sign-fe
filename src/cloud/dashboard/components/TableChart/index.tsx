@@ -30,26 +30,18 @@ export function TableChart({
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
-  const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
-    Array<
-      Pick<
-        TableChartDataType,
-        'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'
+  const [dataTransformedFeedToChart, setDataTransformedFeedToChart] =
+    useState<
+      Array<
+        Pick<
+          TableChartDataType,
+          'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'
+        >
       >
-    >
-  >([
-    {
-      ts: 0,
-      value: 0,
-      attribute_key: '',
-      entity_name: '',
-      unit: '',
-    },
-  ])
+    >()
 
-  // const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (Object.keys(data).length > 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
@@ -91,6 +83,7 @@ export function TableChart({
           unit: widgetInfo.attribute_config.filter(
             obj => obj.attribute_key === attribute_key,
           )[0].unit,
+          entity_name: '',
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
@@ -148,17 +141,13 @@ export function TableChart({
     [],
   )
 
-  return dataTransformedFeedToChart != null &&
-    dataTransformedFeedToChart?.length !== 0 ? (
+  return (
     <BaseTable
       data={dataTransformedFeedToChart}
       columns={columns}
       isAbsoluteBtn={false}
+      onDataText={t('table:no_log_attr')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_log_attr')}
-    </div>
   )
 }

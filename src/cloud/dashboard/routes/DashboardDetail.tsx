@@ -91,8 +91,6 @@ export function DashboardDetail() {
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
-  // const [widgetAttrDeviceData, setWidgetAttrDeviceData] =
-  //   useState<WidgetAttrDeviceType>()
 
   const {
     mutate: mutateUpdateDashboard,
@@ -114,9 +112,14 @@ export function DashboardDetail() {
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
+  const isSendInitMessageRef = useRef(true)
+  const isSendMessageSubscribeRef = useRef(true)
+
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL, () => {
-      // handleSendInitMessage()
+      isSendInitMessageRef.current = true
+      isSendMessageSubscribeRef.current = true
+      handleSendInitMessage()
       handleSendMessage()
     })
   // console.log('lastJsonMessage', lastJsonMessage)
@@ -148,36 +151,7 @@ export function DashboardDetail() {
         })
       }
     }
-
-    // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
-    //   setWidgetAttrDeviceData(
-    //     lastJsonMessage?.data
-    //       ?.map(item => {
-    //         const {
-    //           entityId: { entityName, id },
-    //           timeseries,
-    //         } = item
-    //         if (timeseries != null) {
-    //           const attributes = Object.keys(timeseries).filter(
-    //             attr => timeseries[attr] !== null,
-    //           )
-    //           return attributes.map(attr => {
-    //             const attrId = uuidv4()
-    //             return {
-    //               id: attrId,
-    //               attr,
-    //               deviceName: entityName,
-    //               deviceId: id,
-    //             }
-    //           })
-    //         }
-    //         return []
-    //       })
-    //       .flat(),
-    //   )
-    // }
   }, [lastJsonMessage])
-  // console.log('lastJsonMessage', lastJsonMessage)
 
   function handleSendInitMessage() {
     Object.values(widgetList).forEach(widget => {
@@ -189,47 +163,42 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    handleSendInitMessage()
+    if (isSendInitMessageRef.current) {
+      handleSendInitMessage()
+    }
+    isSendInitMessageRef.current = true
   }, [widgetList])
 
-  const isSendMessageSubRef = useRef(true)
   async function handleSendMessage() {
     setTimeout(() => {
       if (
         lastJsonMessage?.requestType != null &&
         lastJsonMessage?.requestType === 'INIT' &&
-        isSendMessageSubRef.current
+        isSendMessageSubscribeRef.current
       ) {
         Object.values(widgetList).forEach(widget => {
-          const dataSource = widget?.datasource
-          if (
-            dataSource?.realtime_message !== '' &&
-            dataSource?.realtime_message != null
-          ) {
-            sendMessage(dataSource?.realtime_message)
+          const realtimeMessage = widget?.datasource?.realtime_message
+          const historyMessage = widget?.datasource?.history_message
+          const lastestMessage = widget?.datasource?.lastest_message
+          if (realtimeMessage !== '' && realtimeMessage != null) {
+            sendMessage(realtimeMessage)
           }
-          if (
-            dataSource?.history_message !== '' &&
-            dataSource?.history_message != null
-          ) {
-            sendMessage(dataSource?.history_message)
+          if (historyMessage !== '' && historyMessage != null) {
+            sendMessage(historyMessage)
           }
-          if (
-            dataSource?.lastest_message !== '' &&
-            dataSource?.lastest_message != null
-          ) {
-            sendMessage(dataSource?.lastest_message)
+          if (lastestMessage !== '' && lastestMessage != null) {
+            sendMessage(lastestMessage)
           }
-
-          isSendMessageSubRef.current = false
         })
       }
     }, 150)
+
+    isSendMessageSubscribeRef.current = true
   }
 
   useEffect(() => {
     handleSendMessage()
-  }, [lastJsonMessage])
+  }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}
@@ -388,11 +357,11 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        <UpdateWidget
+                        {/* <UpdateWidget
                           widgetInfo={widgetInfo}
                           setWidgetList={setWidgetList}
                           widgetId={widgetId}
-                        />
+                        /> */}
                         <DeleteIcon
                           width={20}
                           height={20}
@@ -400,6 +369,8 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
+                              isSendInitMessageRef.current = false
+                              isSendMessageSubscribeRef.current = false
                               const { [widgetId]: deletedKey, ...newObject } =
                                 widgetList
                               setWidgetList(newObject)

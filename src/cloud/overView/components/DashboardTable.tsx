@@ -71,9 +71,13 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
-    <BaseTable data={data} columns={columns} isAbsoluteBtn={false} {...props} />
-  ) : (
-    <div className="flex grow items-center justify-center">{''}</div>
+  return (
+    <BaseTable
+      data={data}
+      columns={columns}
+      isAbsoluteBtn={false}
+      onDataText={t('table:no_dashboard')}
+      {...props}
+    />
   )
 }

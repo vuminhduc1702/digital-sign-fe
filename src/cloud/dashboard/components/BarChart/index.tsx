@@ -38,9 +38,8 @@ export const BarChart = ({
     },
   ])
 
-  const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (Object.keys(data).length > 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
