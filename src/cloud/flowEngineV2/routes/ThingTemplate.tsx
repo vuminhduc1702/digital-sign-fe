@@ -30,7 +30,6 @@ export function ThingTemplate() {
     type: 'thing',
     config: { keepPreviousData: true },
   })
-
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar title={t('cloud:custom_protocol.thing.title')} />

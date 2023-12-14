@@ -28,7 +28,6 @@ import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
-import { CreateTableXMl } from './CreateTableXMl'
 
 import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 import { type LWM2MResponse } from '../types'

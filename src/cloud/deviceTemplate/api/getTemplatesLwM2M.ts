@@ -19,7 +19,7 @@ export const getTemplatesLwM2M = ({
 }: GetTemplates): Promise<TemplateLwM2MList> => {
   return axios.get(`/api/templates`, {
     params: {
-      project_id: projectId,
+      project_id: projectId, 
       offset,
       limit,
     },

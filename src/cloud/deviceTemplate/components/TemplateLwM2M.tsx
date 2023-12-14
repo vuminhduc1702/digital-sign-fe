@@ -12,7 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
-import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplateLwM2M'
+import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
 import { type Template } from '../types'
@@ -56,7 +56,7 @@ export function TemplateLwM2M() {
           <p>{t('cloud:device_template.sidebar.title')}</p>
         </div> */}
         <CreateTemplateLwM2M />
-        <ComboBoxSelectTemplate
+        <ComboBoxSelectTemplateLwM2M
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
@@ -182,13 +182,13 @@ export function TemplateLwM2M() {
             {t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {selectedUpdateTemplate != null ? (
+        {/* {selectedUpdateTemplate != null ? (
           <UpdateTemplate
             close={close}
             isOpen={isOpen}
             //selectedUpdateTemplate={selectedUpdateTemplate}
           />
-        ) : null}
+        ) : null} */}
       </div>
     </>
   )

@@ -12,7 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
 import { useDeleteTemplate } from '../api'
 import { UpdateTemplate } from './UpdateTemplate'
-import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplateLwM2M'
+//import { ComboBoxSelectTemplate } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
 import { type Template } from '../types'
@@ -56,9 +56,9 @@ export function TemplateDefault() {
           <p>{t('cloud:device_template.sidebar.title')}</p>
         </div> */}
         <CreateTemplate />
-        <ComboBoxSelectTemplate
-          //setFilteredComboboxData={setFilteredComboboxData}
-        />
+        {/* <ComboBoxSelectTemplate
+          setFilteredComboboxData={setFilteredComboboxData}
+        /> */}
       </div>
       <div className="h-[50vh] grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData?.length > 0 ? (
