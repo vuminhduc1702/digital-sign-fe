@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useSpinDelay } from 'spin-delay'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 
 import { Spinner } from '~/components/Spinner'
@@ -55,6 +55,7 @@ import {
   ChartTableData,
   EditBtnIcon,
   PlusIcon,
+  DragIcon,
 } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -91,8 +92,6 @@ export function DashboardDetail() {
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
-  // const [widgetAttrDeviceData, setWidgetAttrDeviceData] =
-  //   useState<WidgetAttrDeviceType>()
 
   const {
     mutate: mutateUpdateDashboard,
@@ -114,8 +113,13 @@ export function DashboardDetail() {
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
+  const isSendInitMessageRef = useRef(true)
+  const isSendMessageSubscribeRef = useRef(true)
+
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
     useWS<DashboardWS>(WEBSOCKET_URL, () => {
+      isSendInitMessageRef.current = true
+      isSendMessageSubscribeRef.current = true
       handleSendInitMessage()
       handleSendMessage()
     })
@@ -148,36 +152,7 @@ export function DashboardDetail() {
         })
       }
     }
-
-    // if (lastJsonMessage != null && lastJsonMessage?.data?.length > 1) {
-    //   setWidgetAttrDeviceData(
-    //     lastJsonMessage?.data
-    //       ?.map(item => {
-    //         const {
-    //           entityId: { entityName, id },
-    //           timeseries,
-    //         } = item
-    //         if (timeseries != null) {
-    //           const attributes = Object.keys(timeseries).filter(
-    //             attr => timeseries[attr] !== null,
-    //           )
-    //           return attributes.map(attr => {
-    //             const attrId = uuidv4()
-    //             return {
-    //               id: attrId,
-    //               attr,
-    //               deviceName: entityName,
-    //               deviceId: id,
-    //             }
-    //           })
-    //         }
-    //         return []
-    //       })
-    //       .flat(),
-    //   )
-    // }
   }, [lastJsonMessage])
-  // console.log('lastJsonMessage', lastJsonMessage)
 
   function handleSendInitMessage() {
     Object.values(widgetList).forEach(widget => {
@@ -189,82 +164,42 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    console.log('handleSendInitMessage')
-    handleSendInitMessage()
+    if (isSendInitMessageRef.current) {
+      handleSendInitMessage()
+    }
+    isSendInitMessageRef.current = true
   }, [widgetList])
 
-  function handleSendMessage() {
-    // const sendMessagePromises = Object.values(widgetList)
-    //   .filter(widget => {
-    //     const dataSource = widget?.datasource
-    //     return (
-    //       dataSource?.init_message !== '' && dataSource?.init_message != null
-    //     )
-    //   })
-    //   .map(widget => sendMessage(widget.datasource.init_message))
+  async function handleSendMessage() {
+    setTimeout(() => {
+      if (
+        lastJsonMessage?.requestType != null &&
+        lastJsonMessage?.requestType === 'INIT' &&
+        isSendMessageSubscribeRef.current
+      ) {
+        Object.values(widgetList).forEach(widget => {
+          const realtimeMessage = widget?.datasource?.realtime_message
+          const historyMessage = widget?.datasource?.history_message
+          const lastestMessage = widget?.datasource?.lastest_message
+          if (realtimeMessage !== '' && realtimeMessage != null) {
+            sendMessage(realtimeMessage)
+          }
+          if (historyMessage !== '' && historyMessage != null) {
+            sendMessage(historyMessage)
+          }
+          if (lastestMessage !== '' && lastestMessage != null) {
+            sendMessage(lastestMessage)
+          }
+        })
+      }
+    }, 150)
 
-    // await Promise.all(sendMessagePromises)
-
-    if (
-      lastJsonMessage?.requestType != null &&
-      lastJsonMessage?.requestType !== 'INIT'
-      // && lastJsonMessage?.data[0]?.latest?.ENTITY_FIELD === null
-    ) {
-      Object.values(widgetList).forEach(widget => {
-        const dataSource = widget?.datasource
-        if (
-          dataSource?.realtime_message !== '' &&
-          dataSource?.realtime_message != null
-        ) {
-          sendMessage(dataSource?.realtime_message)
-        }
-        if (
-          dataSource?.history_message !== '' &&
-          dataSource?.history_message != null
-        ) {
-          sendMessage(dataSource?.history_message)
-        }
-        if (
-          dataSource?.lastest_message !== '' &&
-          dataSource?.lastest_message != null
-        ) {
-          sendMessage(dataSource?.lastest_message)
-        }
-      })
-    }
+    isSendMessageSubscribeRef.current = true
   }
 
-  // function handleSendMessage() {
-  //   Object.values(widgetList).forEach(widget => {
-  //     const dataSource = widget?.datasource
-  //     if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-  //       sendMessage(dataSource.init_message)
-  //     }
-  //     if (
-  //       dataSource?.realtime_message !== '' &&
-  //       dataSource?.realtime_message != null
-  //     ) {
-  //       sendMessage(dataSource?.realtime_message)
-  //     }
-  //     if (
-  //       dataSource?.history_message !== '' &&
-  //       dataSource?.history_message != null
-  //     ) {
-  //       sendMessage(dataSource?.history_message)
-  //     }
-  //     if (
-  //       dataSource?.lastest_message !== '' &&
-  //       dataSource?.lastest_message != null
-  //     ) {
-  //       sendMessage(dataSource?.lastest_message)
-  //     }
-  //   })
-  // }
-
   useEffect(() => {
-    console.log('handleSendMessage')
     handleSendMessage()
-  }, [widgetList, lastJsonMessage?.requestType === 'INIT'])
+  }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {
     let combinedObject: TimeSeries = {}
@@ -320,6 +255,7 @@ export function DashboardDetail() {
           <ReactGridLayout
             margin={[20, 20]}
             isDraggable={isEditMode}
+            draggableHandle=".drag-handle"
             isResizable={isEditMode}
             onLayoutChange={e => setLayoutDashboard(e)}
           >
@@ -347,13 +283,14 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const deviceInfo = lastJsonMessage?.id === widgetId
-                ? combinedObject(
-                    lastJsonMessage?.data?.map(
-                      device => device.latest.ENTITY_FIELD as LatestData,
-                    ),
-                  )
-                : {}
+                const deviceInfo =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(
+                          device => device.latest.ENTITY_FIELD as LatestData,
+                        ),
+                      )
+                    : {}
                 return (
                   <div
                     key={widgetId}
@@ -373,10 +310,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn(
-                      'relative bg-secondary-500',
-                      isEditMode && 'cursor-grab',
-                    )}
+                    className={cn('relative bg-secondary-500')}
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
@@ -392,7 +326,12 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map data={lastestValues} widgetInfo={widgetInfo} isEditMode={isEditMode} deviceInfo={deviceInfo}/>
+                      <Map
+                        data={lastestValues}
+                        widgetInfo={widgetInfo}
+                        isEditMode={isEditMode}
+                        deviceInfo={deviceInfo}
+                      />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
                         data={lastestValueOneDevice}
@@ -417,10 +356,16 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        <UpdateWidget
+                        {/* <UpdateWidget
                           widgetInfo={widgetInfo}
                           setWidgetList={setWidgetList}
                           widgetId={widgetId}
+                        /> */}
+                        <DragIcon
+                          width={20}
+                          height={20}
+                          viewBox="0 0 20 20"
+                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
                         />
                         <DeleteIcon
                           width={20}
@@ -429,6 +374,8 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
+                              isSendInitMessageRef.current = false
+                              isSendMessageSubscribeRef.current = false
                               const { [widgetId]: deletedKey, ...newObject } =
                                 widgetList
                               setWidgetList(newObject)

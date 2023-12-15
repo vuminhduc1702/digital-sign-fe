@@ -256,16 +256,13 @@ export function AttrTable({
     [entityId, entityType],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}
       columns={columns}
+      onDataText={t('table:no_attr')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_attr')}
-    </div>
   )
 }

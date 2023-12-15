@@ -77,7 +77,7 @@ export function Module() {
     setSelectedItem(idx)
   }
   useEffect(() => {
-    if (selectedItem !== 0) {
+    if (selectedItem > 0) {
       setFilteredModuleDevices(
         ModuleDevices.filter(
           item =>

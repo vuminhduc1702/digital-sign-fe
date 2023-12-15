@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
 import { DataItem, EntityId, WSWidgetData, type TimeSeries } from '../../types'
-import { z } from 'zod'
-import { widgetSchema } from '../Widget'
+import { type z } from 'zod'
+import { type widgetSchema } from '../Widget'
 
 export function Map({
   data,
   widgetInfo,
   isEditMode,
-  deviceInfo
+  deviceInfo,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
@@ -32,11 +32,10 @@ export function Map({
   // ]
 
   // const avgLatitude =
-    // fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
+  // fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
   // const avgLongitude =
-    // fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
-  
-  
+  // fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
+
   useEffect(() => {
     if (isEditMode) {
       setDragMode(false)
@@ -59,13 +58,19 @@ export function Map({
     //     {'ts': 234234234, 'value': '231'}
     //   ]]
     // ]
-    if (Object.keys(data).length !== 0) {
+    if (Object.keys(data).length > 0) {
       Object.keys(data).forEach(() => {
-        const dataLat = Object.entries(data).filter(([key]) => key === 'lat')[0]?.[1]
-        const dataLong = Object.entries(data).filter(([key]) => key === 'long')[0]?.[1]
+        const dataLat = Object.entries(data).filter(
+          ([key]) => key === 'lat',
+        )[0]?.[1]
+        const dataLong = Object.entries(data).filter(
+          ([key]) => key === 'long',
+        )[0]?.[1]
         Object.entries(dataLat).map((latKey, index) => {
           coorCurrent = [latKey[1].value, dataLong[index]?.value]
-          const coorIndex = dataCurrent.findIndex(item => item[0] === coorCurrent[0])
+          const coorIndex = dataCurrent.findIndex(
+            item => item[0] === coorCurrent[0],
+          )
           if (coorIndex === -1) {
             dataCurrent.push(coorCurrent)
           }
@@ -82,7 +87,7 @@ export function Map({
 
   return (
     <MapContainer
-      className="h-[90%] mt-10 mx-2"
+      className="mx-2 mt-10 h-[90%]"
       center={[avgLatitude, avgLongitude]}
       zoom={15}
       scrollWheelZoom
@@ -101,7 +106,7 @@ export function Map({
           <Marker position={[lat, lng]} key={index}>
             <Popup>
               {`Thiết bị ${index}`}
-              <br /> 
+              <br />
               {`Current coor (${lat},${lng})`}
             </Popup>
           </Marker>

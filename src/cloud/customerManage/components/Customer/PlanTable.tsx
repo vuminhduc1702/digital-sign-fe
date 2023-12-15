@@ -149,17 +149,14 @@ export function PlanTable({ data, ...props }: CustomerTableProps) {
     [],
   )
 
-  return data != null && data?.length !== 0 ? (
+  return (
     <BaseTable
       getRowCanExpand={() => true}
       renderSubComponent={renderSubComponent}
       data={data}
       columns={columns}
+      onDataText={t('table:no_plan_used')}
       {...props}
     />
-  ) : (
-    <div className="flex grow items-center justify-center">
-      {t('table:no_plan_used')}
-    </div>
   )
 }

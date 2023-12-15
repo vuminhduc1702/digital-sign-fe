@@ -38,9 +38,8 @@ export function LineChart({
     },
   ])
 
-  // const newDataValue = data?.[Object.keys(data)?.[0]]?.[0].value ?? ''
   useEffect(() => {
-    if (Object.keys(data).length !== 0) {
+    if (Object.keys(data).length > 0) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current != null &&
@@ -176,12 +175,11 @@ export function LineChart({
     return ''
   }
 
-  const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
-    delay: 150,
-    minDuration: 300,
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === '', {
+    delay: 400,
+    minDuration: 500,
   })
 
-  // console.log('widgetInfo', widgetInfo)
   const renderLegend = (props: any) => {
     const { payload } = props
     return (
@@ -213,7 +211,7 @@ export function LineChart({
 
   return (
     <>
-      {dataTransformedFeedToChart.length > 0 && newValuesRef.current != null ? (
+      {!showSpinner && newValuesRef.current != null ? (
         <ResponsiveContainer width="98%" height="90%" className="pt-8">
           <LineWidget data={dataTransformedFeedToChart}>
             <CartesianGrid strokeDasharray="3 3" />

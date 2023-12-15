@@ -199,7 +199,7 @@ export function GaugeChart({
   })
 
   useEffect(() => {
-    if (data != null && Object.keys(data).length !== 0) {
+    if (data != null && Object.keys(data).length > 0) {
       const gaugeDataType = {
         key: Object.keys(data)[0],
         value: parseFloat(Object.values(data)?.[0]?.value),
