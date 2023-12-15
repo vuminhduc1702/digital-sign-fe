@@ -373,6 +373,11 @@
         "provision_secret": "Provision secret",
         "created_at": "Ngày tạo",
         "create_by": "Người tạo"
+      }, 
+      "listLwM2M": {
+        "name": "Tên thiết bị",
+        "numberAttr": "Số lượng",
+        "id": "ID"
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
