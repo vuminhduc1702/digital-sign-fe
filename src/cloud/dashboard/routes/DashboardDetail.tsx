@@ -1,15 +1,18 @@
-import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
-import { Spinner } from '~/components/Spinner'
-import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
+import { Drawer } from '~/components/Drawer'
+import TitleBar from '~/components/Head/TitleBar'
+import { Spinner } from '~/components/Spinner'
+import { useNotificationStore } from '~/stores/notifications'
 import { useDisclosure, useWS } from '~/utils/hooks'
+import { cn } from '~/utils/misc'
+import storage, { type UserStorage } from '~/utils/storage'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
@@ -22,29 +25,25 @@ import {
   TableChart,
 } from '../components'
 import {
-  type ControllerBtn,
+  CreateControllerButton,
   CreateWidget,
+  UpdateWidget,
   type Widget,
   type WidgetCategoryType,
-  CreateControllerButton,
-  UpdateWidget,
 } from '../components/Widget'
-import { Drawer } from '~/components/Drawer'
-import storage, { type UserStorage } from '~/utils/storage'
-import { cn } from '~/utils/misc'
-import { useNotificationStore } from '~/stores/notifications'
 
+import { WS_URL } from '~/config'
 import {
   type DashboardWS,
-  type WidgetType,
-  type TimeSeries,
   type LatestData,
+  type TimeSeries,
+  type WidgetType,
 } from '../types'
-import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-import { WS_URL } from '~/config'
 
+import { StarFilledIcon } from '@radix-ui/react-icons'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
-  DeleteIcon,
   ChartCircle,
   ChartControl,
   ChartData,
@@ -53,13 +52,11 @@ import {
   ChartLine,
   ChartMap,
   ChartTableData,
+  DeleteIcon,
+  DragIcon,
   EditBtnIcon,
   PlusIcon,
-  DragIcon,
 } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { StarFilledIcon } from '@radix-ui/react-icons'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -242,11 +239,11 @@ export function DashboardDetail() {
           }
         }}
       />
-      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
+      <div className="bg-secondary-500 flex grow flex-col justify-between shadow-lg">
         {widgetDetailDB == null &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
-          <div className="grid grow place-content-center text-h1">
+          <div className="text-h1 grid grow place-content-center">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
         ) : null}
@@ -310,7 +307,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('relative bg-secondary-500')}
+                    className={cn('bg-secondary-500 relative')}
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
@@ -356,21 +353,21 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        {/* <UpdateWidget
+                        <UpdateWidget
                           widgetInfo={widgetInfo}
                           setWidgetList={setWidgetList}
                           widgetId={widgetId}
-                        /> */}
+                        />
                         <DragIcon
                           width={20}
                           height={20}
                           viewBox="0 0 20 20"
-                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
+                          className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
                         />
                         <DeleteIcon
                           width={20}
                           height={20}
-                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
@@ -510,7 +507,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -531,7 +528,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -552,7 +549,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -577,7 +574,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -601,7 +598,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -622,7 +619,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -645,7 +642,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -666,7 +663,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()

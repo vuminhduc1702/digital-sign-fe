@@ -75,7 +75,9 @@ export function UpdateWidget({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
     values: {
       title: widgetInfo?.title,
-      org_id: '',
+      org_id: widgetInfo?.datasource?.org_id
+        ? JSON.parse(widgetInfo?.datasource?.org_id)
+        : '',
       device: initParse?.entityDataCmds[0]?.query?.entityFilter?.entityIds,
       attributeConfig: widgetInfo?.attribute_config,
       widgetSetting: {
@@ -292,6 +294,7 @@ export function UpdateWidget({
                   values.widgetSetting?.dataType === 'HISTORY'
                     ? JSON.stringify(historyMessage)
                     : '',
+                org_id: JSON.stringify(values.org_id),
               },
               attribute_config: values.attributeConfig.map(item => ({
                 attribute_key: item.attribute_key,
@@ -362,7 +365,11 @@ export function UpdateWidget({
                       resetField('device')
                       resetField('attributeConfig', [{}])
                     }}
-                    defaultValue={orgSelectOptions?.find(item => !item.value)}
+                    defaultValue={orgSelectOptions?.find(
+                      item =>
+                        item.value ===
+                        JSON.parse(widgetInfo?.datasource?.org_id),
+                    )}
                     error={formState?.errors?.org_id}
                   />
 
@@ -404,10 +411,8 @@ export function UpdateWidget({
                       handleClearSelectDropdown={() => {
                         resetField('attributeConfig', [{}])
                       }}
-                      defaultValue={deviceSelectData?.find(item =>
-                        getValues('device')?.filter(
-                          data => data === item.value,
-                        ),
+                      defaultValue={deviceSelectData?.filter(item =>
+                        getValues('device')?.includes(item.value),
                       )}
                     />
                     <p className="text-body-sm text-primary-400">
