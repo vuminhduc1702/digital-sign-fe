@@ -1,26 +1,28 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { DataItem, EntityId, WSWidgetData, type TimeSeries } from '../../types'
+import { type MapSeries, type TimeSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
+import { type Map } from 'leaflet'
 
-export function Map({
+export function MapChart({
   data,
   widgetInfo,
-  isEditMode,
-  deviceInfo,
+  isEditMode
 }: {
-  data: TimeSeries
+  data: any
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
-  deviceInfo?: any
 }) {
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<any>>([])
   const [avgLatitude, setAvgLatitude] = useState(0)
   const [avgLongitude, setAvgLongitude] = useState(0)
-  const map = useRef(null)
+  const [deviceDetailInfo, setDeviceDetailInfo] = useState([])
+  const newValuesRef = useRef<MapSeries | null>(null)
+  const prevValuesRef = useRef<MapSeries | null>(null)
+  const map = useRef<Map>(null)
 
   // const fakeCoor = [
   //   [21.0285, 105.8542],
@@ -31,11 +33,6 @@ export function Map({
   //   [21.0245, 105.8473],
   // ]
 
-  // const avgLatitude =
-  // fakeCoor.reduce((sum, [lat]) => sum + lat, 0) / fakeCoor.length
-  // const avgLongitude =
-  // fakeCoor.reduce((sum, [, lng]) => sum + lng, 0) / fakeCoor.length
-
   useEffect(() => {
     if (isEditMode) {
       setDragMode(false)
@@ -44,52 +41,72 @@ export function Map({
     }
   }, [isEditMode])
 
-  useEffect(() => {
-    const dataCurrent: string[][] = []
-    let coorCurrent: string[] = []
+  function dataManipulation() {
+    let dataCurrent: number[][] = []
+    let coorCurrent: number[] = []
+    const coorDataWithId: { data: number[]; id: string; name: string }[] = []
 
-    // const fakeData = [
-    //   ['lat', [
-    //     {'ts': 123123123, 'value': '34'},
-    //     {'ts': 234234234, 'value': '21'}
-    //   ]],
-    //   ['long', [
-    //     {'ts': 123123123, 'value': '142'},
-    //     {'ts': 234234234, 'value': '231'}
-    //   ]]
-    // ]
-    if (Object.keys(data).length > 0) {
-      Object.keys(data).forEach(() => {
-        const dataLat = Object.entries(data).filter(
-          ([key]) => key === 'lat',
-        )[0]?.[1]
-        const dataLong = Object.entries(data).filter(
-          ([key]) => key === 'long',
-        )[0]?.[1]
-        Object.entries(dataLat).map((latKey, index) => {
-          coorCurrent = [latKey[1].value, dataLong[index]?.value]
-          const coorIndex = dataCurrent.findIndex(
-            item => item[0] === coorCurrent[0],
-          )
-          if (coorIndex === -1) {
-            dataCurrent.push(coorCurrent)
-          }
-        })
+    if (newValuesRef.current?.data) {
+      Object.entries(newValuesRef.current.data).forEach((dataItem, index) => {
+        const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'lat')
+        const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'long')
+        const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex].value
+        const dataLong = Object.values(Object.values(dataItem)[1])[dataLongIndex].value
+        coorCurrent = [parseFloat(dataLat), parseFloat(dataLong)]
+        coorDataWithId.push({id: data?.device?.[index].id, name: data?.device?.[index].entityName, data: coorCurrent})
+        dataCurrent = coorDataWithId.map((item) => item.data)
       })
-
       setDataForMap(dataCurrent)
+    }
+  }
+
+  useEffect(() => {
+    if (data.data) {
+      prevValuesRef.current = newValuesRef.current || data
+      if (
+        newValuesRef.current !== null
+      ) {
+          // const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
+          // if (deviceIndex !== -1) {
+                
+          //       for (const [key, value] of Object.entries(data.data[0])) {
+          //         newValuesRef.current?.data.map(([key, value]) => ({
+          //           value = 'asdf'
+          //           // index === deviceIndex ? {
+          //           //   ts: data.data[0].[item]
+          //           // }
+          //         }))
+          //       }
+          // } else {
+            prevValuesRef.current = data
+          // }
+      } else {
+        newValuesRef.current = data
+        dataManipulation()
+      }
+      if (data.device && data.device.length !== 0) {
+        setDeviceDetailInfo(data.device)
+      }
     }
   }, [data])
 
-  // useEffect(() => {
-  //   console.log(deviceInfo)
-  // }, [deviceInfo])
+  useEffect(() => {
+    const avgLat = dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
+    const avgLong = dataForMap.reduce((sum, [, lng]) => sum + lng, 0) / dataForMap.length
+    setAvgLatitude(avgLat)
+    setAvgLongitude(avgLong)
+    if (dataForMap.length >= 2) {
+      map.current?.setView([avgLat, avgLong], 3)
+    } else {
+      map.current?.setView([avgLat, avgLong], 15)
+    }
+  }, [dataForMap])
 
   return (
     <MapContainer
-      className="mx-2 mt-10 h-[90%]"
+      className="mx-2 mt-12 h-[90%]"
       center={[avgLatitude, avgLongitude]}
-      zoom={15}
+      zoom={0}
       scrollWheelZoom
       dragging={dragMode}
       attributionControl={false}
@@ -101,12 +118,19 @@ export function Map({
       />
       {dataForMap.map((coor, index) => {
         const [lat, lng] = coor
-
+        // const deviceName = deviceDetailInfo?.[index].name.value
+        const deviceNameArray = deviceDetailInfo?.map((item: TimeSeries) => {
+          const deviceData = JSON.parse(widgetInfo.datasource.init_message).entityDataCmds[0].query.entityFilter.entityIds
+          const deviceFilter = deviceData.filter((device: any) => device === item.id)
+          if (deviceFilter.length != 0) {
+            return item.entityName
+          }
+        })
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {`Thiết bị ${index}`}
-              <br />
+              {deviceDetailInfo && deviceDetailInfo.length > 0 ? `Thiết bị ${deviceNameArray[index]}` : `Thiết bị ${index}`}
+              <br /> 
               {`Current coor (${lat},${lng})`}
             </Popup>
           </Marker>
