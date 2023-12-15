@@ -11,7 +11,7 @@ export const getTemplateLwM2MById = ({
   templateId: string
 }): Promise<TemplateLwM2M> => {
 
-  return axios.get(`/api/templates/fe2d394f-9e8c-45bf-9b83-f4eafef49355`)
+  return axios.get(`/api/templates/6d1f5217-47f3-4bec-ad14-d82d71e8d263`)
 }
 
 type QueryFnType = typeof getTemplateLwM2MById

@@ -49,6 +49,11 @@ const { CustomProtocolManage } = lazyImport(
   'CustomProtocolManage',
 )
 
+const { AttrLwM2MTemplate } = lazyImport(
+  () => import('~/cloud/deviceTemplate'),
+  'AttrLwM2MTemplate',
+)
+
 export const protectedRoutes = [
   {
     element: <MainLayout />,
@@ -79,7 +84,11 @@ export const protectedRoutes = [
             <DeviceTemplatelwm2mManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
+        children: [{ path: ':projectId', children: [{ path: ':templateId'}, { path: ':id', element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <AttrLwM2MTemplate />
+          </ErrorBoundary>
+        ),  }] }],
       },
       {
         path: PATHS.FLOW_ENGINE,

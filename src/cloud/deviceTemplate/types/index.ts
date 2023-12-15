@@ -13,6 +13,8 @@ export type TransportConfigAttribute = {
 export type ModuleConfig = {
   Observe: boolean
   attribute_info: TransportConfigAttribute[]
+  created_time: string
+  id: string
   module_name: string
   numberOfAttributes: number
 }

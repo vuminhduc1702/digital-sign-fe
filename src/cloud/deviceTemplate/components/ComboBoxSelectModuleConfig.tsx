@@ -28,6 +28,8 @@ export function ComboBoxSelectModuleConfig({
   const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
     data?.module_config,
     [
+      'id',
+      'created_time',
       'module_name',
       'numberOfAttributes',
     ],
