@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { type TimeSeries } from '../../types'
-import { z } from 'zod'
-import { widgetSchema } from '../Widget'
-import { Map } from 'leaflet'
+import { type MapSeries, type TimeSeries } from '../../types'
+import { type z } from 'zod'
+import { type widgetSchema } from '../Widget'
+import { type Map } from 'leaflet'
 
 export function MapChart({
   data,
@@ -20,8 +20,8 @@ export function MapChart({
   const [avgLatitude, setAvgLatitude] = useState(0)
   const [avgLongitude, setAvgLongitude] = useState(0)
   const [deviceDetailInfo, setDeviceDetailInfo] = useState([])
-  const newValuesRef = useRef<TimeSeries | null>(null)
-  const prevValuesRef = useRef<TimeSeries | null>(null)
+  const newValuesRef = useRef<MapSeries | null>(null)
+  const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
 
   // const fakeCoor = [
@@ -42,23 +42,19 @@ export function MapChart({
   }, [isEditMode])
 
   function dataManipulation() {
-    const dataCurrent: number[][] = []
+    let dataCurrent: number[][] = []
     let coorCurrent: number[] = []
-    const coorDataWithId: { data: number[]; id: string }[] = []
+    const coorDataWithId: { data: number[]; id: string; name: string }[] = []
 
-    if (newValuesRef.current) {
-      Object.entries(newValuesRef.current).forEach((dataItem, index) => {
+    if (newValuesRef.current?.data) {
+      Object.entries(newValuesRef.current.data).forEach((dataItem, index) => {
         const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'lat')
         const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'long')
         const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex].value
         const dataLong = Object.values(Object.values(dataItem)[1])[dataLongIndex].value
         coorCurrent = [parseFloat(dataLat), parseFloat(dataLong)]
-        const coorIndex = dataCurrent.findIndex(item => item === coorCurrent)
-        if (coorIndex === -1) {
-          coorDataWithId.push({id: data?.device?.[index].id, data: coorCurrent})
-          console.log(coorDataWithId)
-          dataCurrent.push(coorCurrent)
-        }
+        coorDataWithId.push({id: data?.device?.[index].id, name: data?.device?.[index].entityName, data: coorCurrent})
+        dataCurrent = coorDataWithId.map((item) => item.data)
       })
       setDataForMap(dataCurrent)
     }
@@ -66,28 +62,29 @@ export function MapChart({
 
   useEffect(() => {
     if (data.data) {
-      prevValuesRef.current = newValuesRef.current || data.data
+      prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current !== null
       ) {
-        // data.data.forEach((item: any, index: number) => {
-        //   // console.log(key)
-        //   // console.log(value)
-        //   if (
-        //     newValuesRef.current[key] != null &&
-        //     newValuesRef.current[key] === prevValuesRef.current?.[key]
-        //   ) {
-        //     newValuesRef.current[key] = [...value]
-        //   } else {
-        //     prevValuesRef.current = data
-        //   }
-        //   dataManipulation()
-        // })
+          // const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
+          // if (deviceIndex !== -1) {
+                
+          //       for (const [key, value] of Object.entries(data.data[0])) {
+          //         newValuesRef.current?.data.map(([key, value]) => ({
+          //           value = 'asdf'
+          //           // index === deviceIndex ? {
+          //           //   ts: data.data[0].[item]
+          //           // }
+          //         }))
+          //       }
+          // } else {
+            prevValuesRef.current = data
+          // }
       } else {
-        newValuesRef.current = data.data
+        newValuesRef.current = data
         dataManipulation()
       }
-      if (data.device && data.device.length != 0) {
+      if (data.device && data.device.length !== 0) {
         setDeviceDetailInfo(data.device)
       }
     }
@@ -107,7 +104,7 @@ export function MapChart({
 
   return (
     <MapContainer
-      className="h-[90%] mt-12 mx-2"
+      className="mx-2 mt-12 h-[90%]"
       center={[avgLatitude, avgLongitude]}
       zoom={0}
       scrollWheelZoom
