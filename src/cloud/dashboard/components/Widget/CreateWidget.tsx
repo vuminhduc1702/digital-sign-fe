@@ -686,6 +686,12 @@ export function CreateWidget({
                                           variant="trans"
                                           size="square"
                                         >
+                                          <div
+                                            className="w-[10px] "
+                                            style={{
+                                              backgroundColor: `${value}`,
+                                            }}
+                                          ></div>
                                           {value}
                                         </Button>
                                       </PopoverTrigger>
