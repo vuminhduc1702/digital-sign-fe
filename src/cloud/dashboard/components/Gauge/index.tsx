@@ -14,7 +14,7 @@ const useGaugeChart = (data: number, max: number) => {
   const [value, setValue] = useState(0)
 
   useAnimationFrame(t => {
-    if (value >= max) return
+    // if (value >= max) return
     setValue(data)
   })
 
