@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
@@ -66,20 +67,16 @@ export function MapChart({
       if (
         newValuesRef.current !== null
       ) {
-          // const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
-          // if (deviceIndex !== -1) {
-                
-          //       for (const [key, value] of Object.entries(data.data[0])) {
-          //         newValuesRef.current?.data.map(([key, value]) => ({
-          //           value = 'asdf'
-          //           // index === deviceIndex ? {
-          //           //   ts: data.data[0].[item]
-          //           // }
-          //         }))
-          //       }
-          // } else {
+          const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
+          if (deviceIndex !== -1) {
+            for (const [key, device] of Object.entries(data.device[0])) {
+              if (key === Object.keys(newValuesRef.current.data[deviceIndex])[0]) {
+                Object.assign(newValuesRef.current.data?.[deviceIndex], device)
+              }
+            }
+          } else {
             prevValuesRef.current = data
-          // }
+          }
       } else {
         newValuesRef.current = data
         dataManipulation()
