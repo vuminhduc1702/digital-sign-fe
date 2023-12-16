@@ -14,7 +14,7 @@ import { Link } from '~/components/Link'
 import { UpdateThing } from './UpdateThing'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
-
+import { useParams } from 'react-router-dom'
 import { type BaseTablePagination } from '~/types'
 import { type EntityThing } from '~/cloud/customProtocol'
 
@@ -120,6 +120,8 @@ type LwM2MTableProps = {
 export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+  const params = useParams()
+  const templateId = params.templateId as string
   console.log('module_config', module_config)
   const columnHelper = createColumnHelper<ModuleConfig>()
   console.log('columnHelper', columnHelper)
@@ -139,14 +141,23 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
         header: () => <span>{t('cloud:device_template.listLwM2M.name')}</span>,
         cell: info => {
           const nameLwM2M = info.row.original.module_name
-          //const thingId = info.row.original.id
+          const attrId = info.row.original.id
           return (
-            //<Link to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}>
+            <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${attrId}`}>
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameLwM2M}
               </p>
-            //</Link>
+            </Link>
           )
+        },
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
+        id: 'idLwM2M',
+        header: () => <span>{t('cloud:device_template.listLwM2M.id')}</span>,
+        cell: info => {
+          const idLwM2M = info.row.original.id
+          return idLwM2M
         },
         footer: info => info.column.id,
       }),
@@ -157,48 +168,16 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
           const numberAttr = info.row.original.numberOfAttributes
           //const thingId = info.row.original.id
           return numberAttr
-              
-          
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('last_update_ts', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
-      //   ),
-      //   cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
-      //   footer: info => info.column.id,
-      // }),
-    //   columnHelper.accessor('attribute_info', {
-    //     header: () => (
-    //       <span>{t('cloud:custom_protocol.thing.template_name')}</span>
-    //     ),
-    //     cell: info => info.getValue(),
-    //     footer: info => info.column.id,
-    //   }),
-    //   columnHelper.accessor('total_service', {
-    //     header: () => (
-    //       <span>{t('cloud:custom_protocol.thing.number_thing')}</span>
-    //     ),
-    //     cell: info => info.getValue(),
-    //     footer: info => info.column.id,
-    //   }),
-    //   columnHelper.accessor('description', {
-    //     header: () => (
-    //       <span>{t('cloud:custom_protocol.thing.description')}</span>
-    //     ),
-    //     cell: info => info.getValue(),
-    //     footer: info => info.column.id,
-    //   }),
-    //   columnHelper.display({
-    //     id: 'contextMenu',
-    //     cell: info => {
-    //       const { name, id, description } = info.row.original
-    //       return ThingTableContextMenu({ name, id, description })
-    //     },
-    //     header: () => null,
-    //     footer: info => info.column.id,
-    //   }),
+      columnHelper.accessor('created_time', {
+        header: () => (
+          <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
+        ),
+        cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+        footer: info => info.column.id,
+      }),
     ],
     [],
   )

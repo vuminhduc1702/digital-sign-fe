@@ -368,6 +368,7 @@
       "title": "Mẫu thiết bị",
       "info": {
         "title": "Thông tin mẫu thiết bị",
+        "attr": "Danh sách nhóm thuộc tính",
         "flow": "Flow",
         "provision_key": "Provision key",
         "provision_secret": "Provision secret",
@@ -375,8 +376,8 @@
         "create_by": "Người tạo"
       }, 
       "listLwM2M": {
-        "name": "Tên thiết bị",
-        "numberAttr": "Số lượng",
+        "name": "Nhóm thuộc tính",
+        "numberAttr": "Số lượng thuộc tính",
         "id": "ID"
       },
       "add_template": {
