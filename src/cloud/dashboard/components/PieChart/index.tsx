@@ -15,14 +15,7 @@ type PieWidgetDataType = {
   [key: string]: string | number
 }
 
-export const PieChart = ({
-  data,
-  widgetInfo,
-}: {
-  data: TimeSeries
-  widgetInfo: z.infer<typeof widgetSchema>
-}) => {
-  // console.log(`new pie: `, data)
+export const PieChart = ({ data, widgetInfo }: { data: TimeSeries, widgetInfo: z.infer<typeof widgetSchema> }) => {
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]

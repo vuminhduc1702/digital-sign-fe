@@ -456,6 +456,7 @@ export function CreateWidget({
                     values.widgetSetting?.dataType === 'HISTORY'
                       ? JSON.stringify(historyMessage)
                       : '',
+                  org_id: JSON.stringify(values.org_id),
                 },
                 attribute_config: values.attributeConfig.map(item => ({
                   attribute_key: item.attribute_key,
@@ -685,6 +686,12 @@ export function CreateWidget({
                                           variant="trans"
                                           size="square"
                                         >
+                                          <div
+                                            className="w-10"
+                                            style={{
+                                              backgroundColor: `${value}`,
+                                            }}
+                                          ></div>
                                           {value}
                                         </Button>
                                       </PopoverTrigger>
