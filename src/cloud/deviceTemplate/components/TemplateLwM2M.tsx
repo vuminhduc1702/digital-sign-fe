@@ -43,7 +43,6 @@ export function TemplateLwM2M() {
   )
 
   const handleCopyId = useCopyId()
-
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">

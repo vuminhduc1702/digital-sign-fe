@@ -368,7 +368,8 @@
       "title": "Mẫu thiết bị",
       "info": {
         "title": "Thông tin mẫu thiết bị",
-        "attr": "Danh sách nhóm thuộc tính",
+        "listattr": "Danh sách nhóm thuộc tính",
+        "attr": "Danh sách thuộc tính",
         "flow": "Flow",
         "provision_key": "Provision key",
         "provision_secret": "Provision secret",
