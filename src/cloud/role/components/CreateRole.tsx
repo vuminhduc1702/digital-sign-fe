@@ -28,14 +28,14 @@ export const resourcesList = [
   { value: 'roles', label: 'Vai trò' },
   { value: 'projects', label: 'Dự án' },
   { value: 'devices', label: 'Thiết bị' },
-] as const
+]
 
 export const actionsList = [
   { value: 'read', label: 'Xem' },
   { value: 'create', label: 'Tạo mới' },
   { value: 'modify', label: 'Chỉnh sửa' },
   { value: 'delete', label: 'Xoá' },
-] as const
+]
 
 export const roleSchema = z
   .object({
@@ -286,7 +286,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"
