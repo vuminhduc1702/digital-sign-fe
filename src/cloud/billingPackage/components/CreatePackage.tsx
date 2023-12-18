@@ -21,13 +21,13 @@ import { useCreatePlan, type CreatePlanDTO } from '../api'
 import { type PlanlvList } from '../types'
 import i18n from '~/i18n'
 
-export const planlvSchema = z.array(
+const planlvSchema = z.array(
   z.object({
-    level: z.string(),
-    price: z.string().nonempty({
+    level: z.number().or(z.string()),
+    price: z.number().min(1, {
       message: i18n.t('billing:package_manage.popup.choose_plan_price'),
     }),
-    free: z.string(),
+    free: z.number().optional(),
   }),
 )
 
@@ -78,7 +78,7 @@ export const entityPlanSchema = z
       }),
       z.object({
         type_period: z.literal('PERIODIC'),
-        period: z.string().nonempty({
+        period: z.string().min(1, {
           message: i18n.t('billing:package_manage.popup.choose_period'),
         }),
       }),
@@ -144,10 +144,12 @@ export function CreatePackage() {
       result = parseNumber(price) + parseNumber(fix_cost)
     }
     if (estimates === 'unit') {
-      result = (parseNumber(expected_number) - parseNumber(quantity_free)) < 0 ? parseNumber(fix_cost) :
-        (parseNumber(expected_number) - parseNumber(quantity_free)) *
-        parseNumber(price) +
-        parseNumber(fix_cost)
+      result =
+        parseNumber(expected_number) - parseNumber(quantity_free) < 0
+          ? parseNumber(fix_cost)
+          : (parseNumber(expected_number) - parseNumber(quantity_free)) *
+              parseNumber(price) +
+            parseNumber(fix_cost)
     }
     if (estimates === 'mass') {
       plan_lv?.length &&
@@ -156,12 +158,14 @@ export function CreatePackage() {
             (parseNumber(item.level) >= parseNumber(expected_number) ||
               parseNumber(item.level) === 0) &&
             (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
-            parseNumber(expected_number)
+              parseNumber(expected_number)
           ) {
-            result = (parseNumber(expected_number) - parseNumber(item.free)) < 0 ? parseNumber(fix_cost) :
-              (parseNumber(expected_number) - parseNumber(item.free)) *
-              parseNumber(item.price) +
-              parseNumber(fix_cost)
+            result =
+              parseNumber(expected_number) - parseNumber(item.free) < 0
+                ? parseNumber(fix_cost)
+                : (parseNumber(expected_number) - parseNumber(item.free)) *
+                    parseNumber(item.price) +
+                  parseNumber(fix_cost)
           }
         })
     }
@@ -266,15 +270,15 @@ export function CreatePackage() {
               plan_lv: [
                 {
                   level: '',
-                  price: '',
-                  free: '',
+                  price: 0,
+                  free: 0,
                 },
               ],
             },
           }}
         >
           {(
-            { register, formState, getValues, setValue, setError },
+            { register, formState, getValues, setValue, setError, watch },
             {
               append: planlvAppend,
               fields: planlvFields,
@@ -283,7 +287,7 @@ export function CreatePackage() {
           ) => {
             return (
               <>
-                <p className="flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                <p className="flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
                   {t('billing:package_manage.title')}
                 </p>
                 <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
@@ -324,21 +328,18 @@ export function CreatePackage() {
                   />
                   <div className="relative w-full">
                     <label>{t('billing:package_manage.popup.status')}</label>
-                    <div className="items-center mt-1">
+                    <div className="mt-1 items-center">
                       {[
                         { label: 'Hiển thị', value: 'present' },
                         { label: 'Ẩn', value: 'hidden' },
                       ].map((option, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center mt-2 mb-2 mr-4 "
-                        >
+                        <div key={idx} className="my-2 mr-4 flex items-center">
                           <input
                             type="radio"
                             id={`radio-${option.value}`}
                             {...register('status')}
                             value={option.value}
-                            className="w-4 h-4 mr-3 cursor-pointer"
+                            className="mr-3 h-4 w-4 cursor-pointer"
                           />
                           <label
                             htmlFor={`radio-${option.value}`}
@@ -351,7 +352,7 @@ export function CreatePackage() {
                     </div>
                   </div>
                 </div>
-                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
                   {t('billing:package_manage.popup.data_plan')}
                 </p>
                 <div className="!mt-2 grid grow	grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-2">
@@ -368,9 +369,9 @@ export function CreatePackage() {
                       type === 'trial'
                         ? [{ label: 'Trả trước', value: 'PREPAY' }]
                         : [
-                          { label: 'Trả trước', value: 'PREPAY' },
-                          { label: 'Trả sau', value: 'POSTPAID' },
-                        ]
+                            { label: 'Trả trước', value: 'PREPAY' },
+                            { label: 'Trả sau', value: 'POSTPAID' },
+                          ]
                     }
                     classlabel="w-full"
                     classchild="w-full"
@@ -414,9 +415,9 @@ export function CreatePackage() {
                     options={
                       type === 'official' && paymentType === 'PREPAY'
                         ? [
-                          { label: 'Định kỳ', value: 'PERIODIC' },
-                          { label: 'Một lần', value: 'ONCE' },
-                        ]
+                            { label: 'Định kỳ', value: 'PERIODIC' },
+                            { label: 'Một lần', value: 'ONCE' },
+                          ]
                         : [{ label: 'Định kỳ', value: 'PERIODIC' }]
                     }
                     classlabel="w-full"
@@ -442,7 +443,7 @@ export function CreatePackage() {
                             classnamefieldwrapper=""
                           />
                         </div>
-                        <div className="flex flex-col gap-2 md:col-span-1 mt-4">
+                        <div className="mt-4 flex flex-col gap-2 md:col-span-1">
                           <SelectField
                             error={formState.errors['cal_unit']}
                             registration={register('cal_unit')}
@@ -493,7 +494,7 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                   />
                 </div>
-                <p className="!mt-2 flex md:p-2 items-start rounded-md border bg-gray-200 text-lg font-semibold">
+                <p className="!mt-2 flex items-start rounded-md border bg-gray-200 text-lg font-semibold md:p-2">
                   {t('billing:package_manage.popup.estimate')}
                 </p>
                 <div className="!mt-3 grid grow	grid-cols-1 gap-y-1">
@@ -507,8 +508,8 @@ export function CreatePackage() {
                           setValue('plan_lv', [
                             {
                               level: '',
-                              price: '',
-                              free: '',
+                              price: 0,
+                              free: 0,
                             },
                           ])
                           setValue('quantity_free', '')
@@ -517,19 +518,19 @@ export function CreatePackage() {
                       })}
                       options={
                         type === 'official' &&
-                          paymentType === 'POSTPAID' &&
-                          periodType === 'PERIODIC'
+                        paymentType === 'POSTPAID' &&
+                        periodType === 'PERIODIC'
                           ? [
-                            { label: 'Theo khối lượng', value: 'mass' },
-                            { label: 'Cố định', value: 'fix' },
-                            { label: 'Theo đơn vị', value: 'unit' },
-                            { label: 'Theo lũy kế', value: 'accumulated' },
-                            { label: 'Theo bậc thang', value: 'step' },
-                          ]
+                              { label: 'Theo khối lượng', value: 'mass' },
+                              { label: 'Cố định', value: 'fix' },
+                              { label: 'Theo đơn vị', value: 'unit' },
+                              { label: 'Theo lũy kế', value: 'accumulated' },
+                              { label: 'Theo bậc thang', value: 'step' },
+                            ]
                           : [
-                            { label: 'Cố định', value: 'fix' },
-                            { label: 'Theo đơn vị', value: 'unit' },
-                          ]
+                              { label: 'Cố định', value: 'fix' },
+                              { label: 'Theo đơn vị', value: 'unit' },
+                            ]
                       }
                       classlabel="w-full"
                       classchild="w-full"
@@ -538,100 +539,91 @@ export function CreatePackage() {
                     {(estimates === 'mass' ||
                       estimates === 'accumulated' ||
                       estimates === 'step') && (
-                        <div className="flex items-center">
-                          <img
-                            onClick={() => {
-                              let arrPlan = getValues('plan_lv')
-                              const index = getValues('plan_lv')?.length - 1
-                              if (arrPlan[index].level) {
-                                planlvAppend({
-                                  level: '',
-                                  price: '',
-                                  free: '',
-                                })
-                              }
-                            }}
-                            src={btnAddIcon}
-                            alt="add-icon"
-                            className="icon-container w-7 h-7 flex items-center justify-center cursor-pointer mt-5"
-                          />
-                        </div>
-                      )}
+                      <div className="flex items-center">
+                        <img
+                          onClick={() => {
+                            let arrPlan = getValues('plan_lv')
+                            const index = getValues('plan_lv')?.length - 1
+                            if (arrPlan[index]?.level) {
+                              planlvAppend({
+                                level: '',
+                                price: 0,
+                                free: 0,
+                              })
+                            }
+                          }}
+                          src={btnAddIcon}
+                          alt="add-icon"
+                          className="icon-container mt-5 flex h-7 w-7 cursor-pointer items-center justify-center"
+                        />
+                      </div>
+                    )}
                   </div>
-                  <div className="max-h-[122px] overflow-auto mr-8">
+                  <div className="mr-8 max-h-[122px] overflow-auto">
                     {estimates === 'mass' ||
-                      estimates === 'accumulated' ||
-                      estimates === 'step'
+                    estimates === 'accumulated' ||
+                    estimates === 'step'
                       ? planlvFields.map((field, index) => {
-                        return (
-                          <section className="flex w-full" key={field.id}>
-                            <div
-                              className={cn(
-                                'relative grid w-full grid-cols-1 gap-x-4',
-                                {
-                                  'md:grid-cols-3':
-                                    estimates === 'accumulated' ||
-                                    estimates === 'step' ||
-                                    estimates === 'mass',
-                                },
-                              )}
-                            >
-                              <InputField
-                                label={
-                                  estimates === 'step'
-                                    ? t('billing:package_manage.popup.max')
-                                    : t(
-                                      'billing:package_manage.popup.level',
-                                    ).replace(
-                                      '{{NUMBER}}',
-                                      index >= 1
-                                        ? getValues('plan_lv')?.[index - 1]
-                                          .level + 1
-                                        : '1',
-                                    )
-                                }
-                                registration={register(
-                                  `plan_lv.${index}.level`,
+                          return (
+                            <section className="flex w-full" key={field.id}>
+                              <div
+                                className={cn(
+                                  'relative grid w-full grid-cols-1 gap-x-4',
                                   {
-                                    onChange: e => {
-                                      setExpectedNumber('')
-                                      setExpectedPayment('')
-                                    },
+                                    'md:grid-cols-3':
+                                      estimates === 'accumulated' ||
+                                      estimates === 'step' ||
+                                      estimates === 'mass',
                                   },
                                 )}
-                                onBlur={e => {
-                                  if (
-                                    index ===
-                                    getValues('plan_lv').length - 1 &&
-                                    e.target.value
-                                  ) {
-                                    planlvAppend({
-                                      level: '',
-                                      price: '',
-                                      free: '',
-                                    })
-                                  }
-                                }}
-                                classlabel="w-1/4"
-                                classchild="w-3/4"
-                                type="number"
-                                classnamefieldwrapper="flex items-center gap-x-3"
-                              />
-                              <div>
+                              >
                                 <InputField
                                   label={
                                     estimates === 'step'
-                                      ? t(
-                                        'billing:package_manage.popup.price',
-                                      )
+                                      ? t('billing:package_manage.popup.max')
                                       : t(
                                           'billing:package_manage.popup.level',
                                         ).replace(
                                           '{{NUMBER}}',
                                           index >= 1
-                                            ? (typeof(getValues('plan_lv')?.[index - 1]?.level) === 'string' ? parseInt(getValues('plan_lv')?.[index - 1].level) : getValues('plan_lv')?.[index - 1].level) + 1
+                                            ? (typeof getValues('plan_lv')?.[
+                                                index - 1
+                                              ]?.level === 'string'
+                                                ? parseInt(
+                                                    getValues('plan_lv')?.[
+                                                      index - 1
+                                                    ].level,
+                                                  )
+                                                : getValues('plan_lv')?.[
+                                                    index - 1
+                                                  ].level) + 1
                                             : '1',
                                         )
+                                  }
+                                  error={
+                                    formState?.errors?.plan_lv?.[index]?.level
+                                  }
+                                  registration={register(
+                                    `plan_lv.${index}.level`,
+                                    {
+                                      onChange: e => {
+                                        setExpectedNumber('')
+                                        setExpectedPayment('')
+                                      },
+                                      valueAsNumber: true,
+                                    },
+                                  )}
+                                  classlabel="w-1/4"
+                                  classchild="w-3/4"
+                                  type="number"
+                                  classnamefieldwrapper="flex items-center gap-x-3"
+                                />
+                                <InputField
+                                  label={t(
+                                    'billing:package_manage.popup.price',
+                                  )}
+                                  error={
+                                    formState?.errors?.plan_lv?.[index]?.price
                                   }
                                   registration={register(
                                     `plan_lv.${index}.price`,
@@ -640,59 +632,66 @@ export function CreatePackage() {
                                         setExpectedNumber('')
                                         setExpectedPayment('')
                                       },
+                                      valueAsNumber: true,
                                     },
                                   )}
                                   classlabel="w-1/4"
                                   classchild="w-3/4"
-                                  min="1"
                                   type="number"
                                   classnamefieldwrapper="flex items-center gap-x-3"
                                 />
-                                <p className="text-body-sm text-primary-400">
-                                  {
-                                    formState?.errors?.plan_lv?.[index]?.price
-                                      ?.message
-                                  }
-                                </p>
-                              </div>
-                              {estimates === 'mass' && (
-                                <InputField
-                                  label={t(
-                                    'billing:package_manage.popup.free',
-                                  )}
-                                  registration={register(
-                                    `plan_lv.${index}.free`,
-                                    {
-                                      onChange: e => {
-                                        setExpectedNumber('')
-                                        setExpectedPayment('')
+                                {estimates === 'mass' && (
+                                  <InputField
+                                    label={t(
+                                      'billing:package_manage.popup.free',
+                                    )}
+                                    registration={register(
+                                      `plan_lv.${index}.free`,
+                                      {
+                                        onChange: e => {
+                                          setExpectedNumber('')
+                                          setExpectedPayment('')
+                                        },
+                                        valueAsNumber: true,
                                       },
-                                    },
-                                  )}
-                                  classlabel="w-1/4"
-                                  classchild="w-3/4"
-                                  type="number"
-                                  classnamefieldwrapper="flex items-center gap-x-3"
-                                />
-                              )}
-                            </div>
-                            <Button
-                              type="button"
-                              size="square"
-                              variant="trans"
-                              className="border-none shadow-none"
-                              onClick={() => planlvRemove(index)}
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete condition"
-                                  className="icon-container w-6 h-6 flex items-center justify-center ml-2"
-                                />
-                              }
-                            />
-                          </section>
-                        )
-                      })
+                                    )}
+                                    onBlur={e => {
+                                      if (
+                                        index ===
+                                          getValues('plan_lv').length - 1 &&
+                                        e.target.value
+                                      ) {
+                                        planlvAppend({
+                                          level: '',
+                                          price: 0,
+                                          free: 0,
+                                        })
+                                      }
+                                    }}
+                                    classlabel="w-1/4"
+                                    classchild="w-3/4"
+                                    type="number"
+                                    classnamefieldwrapper="flex items-center gap-x-3"
+                                  />
+                                )}
+                              </div>
+                              <Button
+                                type="button"
+                                size="square"
+                                variant="trans"
+                                className="border-none shadow-none"
+                                onClick={() => planlvRemove(index)}
+                                startIcon={
+                                  <img
+                                    src={btnDeleteIcon}
+                                    alt="Delete condition"
+                                    className="icon-container ml-2 flex h-6 w-6 items-center justify-center"
+                                  />
+                                }
+                              />
+                            </section>
+                          )
+                        })
                       : null}
                   </div>
                   {(estimates === 'fix' || estimates === 'unit') && (

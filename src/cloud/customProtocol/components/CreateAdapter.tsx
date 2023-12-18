@@ -51,7 +51,7 @@ export const protocolList = [
     label: i18n.t('cloud:custom_protocol.adapter.protocol.ftp'),
     value: 'ftp',
   },
-] as const
+]
 
 export const contentTypeList = [
   {
@@ -66,14 +66,14 @@ export const contentTypeList = [
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
   },
-] as const
+]
 
 export const contentTypeFTPList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
   },
-] as const
+]
 
 export const thingTypeList = [
   {
@@ -88,7 +88,7 @@ export const thingTypeList = [
     label: i18n.t('cloud:custom_protocol.thing.shape'),
     value: 'shape',
   },
-] as const
+]
 
 export const adapterSchema = z
   .object({
@@ -541,7 +541,7 @@ export function CreateAdapter() {
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
