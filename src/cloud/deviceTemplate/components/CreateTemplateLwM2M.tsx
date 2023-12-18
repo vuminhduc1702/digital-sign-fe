@@ -29,7 +29,7 @@ import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
 
-import { attrSchema, nameSchema } from '~/utils/schemaValidation'
+import { transportConfigSchema, nameSchema } from '~/utils/schemaValidation'
 import { type LWM2MResponse } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
@@ -42,11 +42,7 @@ import { ChevronDown } from 'lucide-react'
 export const templatelwm2mSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
-  transport_config: z.object({
-    protocol: z.string(),
-    config: z.record(z.string(), z.string()),
-    info: z.object({}).nullable(),
-    }),
+  transport_config: transportConfigSchema,
 })
 
 export default function CreateTemplateLwM2M() {
@@ -70,21 +66,15 @@ export default function CreateTemplateLwM2M() {
     resolver: templatelwm2mSchema && zodResolver(templatelwm2mSchema),
     defaultValues: {
       name: '',
-      rule_chain_id: '',
-      transport_config: { protocol: 'lwm2m', config: {}, info: null },
+      transport_config: { protocol: 'lwm2m', config: {}, info: {} },
     },
   })
-  // const { fields, append, remove } = useFieldArray({
-  //   name: 'attributes',
-  //   control,
-  // })
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
       suspense: false,
     },
   })
-
   const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
   useEffect(() => {
@@ -105,24 +95,11 @@ export default function CreateTemplateLwM2M() {
     setOpenAccordion(value)
   }
 
-  //const [clickedItemId, setClickedItemId] = useState({});
-  // const { fields, append, remove } = useFieldArray({
-  //   name: 'attributes',
-  //   control,
-  // })
-  // console.log('fields', fields)
-  const [clickedItemIds, setClickedItemIds] = useState([])
-  const idToNameMap = {};
-  const handleCheckboxChange = (itemId) => {
-    setClickedItemIds((prevIds) => {
-      if (prevIds.includes(itemId)) {
-        return prevIds.filter((id) => id !== itemId)
-      } else {
-        return [...prevIds, itemId]
-      }
-    })
-  }
-
+  const { fields, append, remove } = useFieldArray({
+    name: 'transport_config.info.module_config',
+    control,
+  })
+  console.log('fields', fields)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -177,11 +154,11 @@ export default function CreateTemplateLwM2M() {
         })}
       >
         <>
-          {/* <InputField
+          <InputField
             label={t('cloud:device_template.add_template.name')}
             error={formState.errors['name']}
             registration={register('name')}
-          /> */}
+          />
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -235,53 +212,31 @@ export default function CreateTemplateLwM2M() {
                       </div>
                     </div>
                     <div>
-                      {lw2m2.LWM2M.Object.Resources.Item.map(item => {
+                      {lw2m2.LWM2M.Object.Resources.Item.map(item => { 
                         if (
                           item.Operations === 'RW' ||
                           item.Operations === 'R'
-                        ) { idToNameMap[item['@ID']] = item.Name
-                          return (
+                        )  
+                        return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
                                 <div className="flex">
                                   <div className="flex items-center justify-center">
                                     #{item['@ID']} {item.Name}
                                   </div>
-                                  {/* <Checkbox 
-                                    className="ml-auto mr-3 mt-2 flex h-5 w-5" 
-                                  /> */}
-                                   <Controller
+                                  <Controller
                                     control={control}
-                                    name={`transport_config.config`}
-                                    render={({ field: { onChange, ...field } }) => {
-                                    //   const handleCheckboxChange = (e) => {
-                                          
-                                         const id = item['@ID']
-                                    //     // Cập nhật giá trị biến state nếu cần
-                                    //     setClickedItemId(prevIds => `${prevIds}/${itemId}`);
-                                    //     onChange(e);
-                                    //     console.log('Clicked on checkbox with ID:', itemId);
-              
-                                    //   };
-                                    //   return (
-                                    //     <Checkbox
-                                    //       {...field}
-                                    //       checked={value}
-                                    //       onCheckedChange={handleCheckboxChange}
-                                    //     />
-                                    //   );
-                                    return (
-                                      <Checkbox
-                                        className="ml-auto mr-3 mt-2 flex h-5 w-5"
-                                        {...field}
-                                        //checked={value}
-                                        onCheckedChange={(e) => {
-                                          handleCheckboxChange(id)
-                                          onChange(e)
-                                        }}
-                                      />
-                                    );
-                                     }}
+                                    name={`attributes.${index}.logged`}
+                                    render={({ field: { onChange, value, ...field } }) => {
+                                      return (
+                                        <Checkbox 
+                                          className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                          {...field}
+                                          checked={value}
+                                          onCheckedChange={onChange} 
+                                        />
+                                      )
+                                    }}
                                   />
                                 </div>
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
@@ -296,25 +251,13 @@ export default function CreateTemplateLwM2M() {
                                 </div>
                               </div>
                             </section>
-                          )
-                        }
-                        return null
+                         )
                       })}
-                      {/* {clickedItemIds.length > 0 && (
-                        <div>
-                          <p>{`${lw2m2.LWM2M.Object.ObjectID}/0/${clickedItemIds.join('/')}: ${lw2m2.LWM2M.Object.Name}`}</p>
-                        </div>
-                      )} */}
-                      {clickedItemIds.map((itemId) => (
-                        <p key={itemId}>
-                          {`${lw2m2.LWM2M.Object.ObjectID}/0/${itemId}: ${idToNameMap[itemId]}`}
-                        </p>
-                      ))}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
               ))}
-            </Accordion>
+            </Accordion> 
           </div>
         </>
       </form>

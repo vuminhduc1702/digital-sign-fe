@@ -5,14 +5,9 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
-
 import { type TemplateLwM2M } from '../types'
+import { type TransportConfig} from '~/utils/schemaValidation'
 
-type TransportConfig = {
-  protocol: string
-  config: { [key: string]: string }
-  info: null | undefined
-}
 export type CreateTemplatelwm2mDTO = {
   data: {
     name: string

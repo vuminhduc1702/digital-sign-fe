@@ -33,6 +33,7 @@ export function ComboBoxSelectAttrLwM2M({
       'id',
       'kind',
       'name',
+      'type',
     ],
   )
   console.log('data12', selectedAttributes)

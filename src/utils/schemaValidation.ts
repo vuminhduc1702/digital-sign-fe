@@ -77,3 +77,31 @@ export const emptyInputSchema = z
 export const emptySelectSchema = z
   .string()
   .min(1, { message: 'Vui lòng chọn mục này' })
+
+export const attributeInfoSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    kind: z.string(),
+    type: z.string(),
+    action: z.string(),
+  })
+  
+export const moduleConfigSchema = z.object({
+    Observe: z.boolean(),
+    attribute_info: z.array(attributeInfoSchema),
+    created_time: z.number(),
+    id: z.string(),
+    module_name: z.string(),
+    numberOfAttributes: z.number(),
+  })
+export const ConfigItem = z.object({
+    [z.string()]: z.string(),
+  })
+export const transportConfigSchema = z.object({
+    protocol: z.string(),
+    config: z.record(ConfigItem),
+    info: z.object({
+      module_config: z.array(moduleConfigSchema).nullable(),
+    }),
+  })
+export type TransportConfig = z.infer<typeof transportConfigSchema>

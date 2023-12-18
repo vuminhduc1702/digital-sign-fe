@@ -87,7 +87,7 @@ export type ResourceItem = {
   Name: string
   Operations: string
   MultipleInstances: string
-  Mandatory: string
+  Mandatory: string 
   Type: string
   RangeEnumeration?: string | null
   Units?: string | null

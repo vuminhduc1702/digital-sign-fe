@@ -253,7 +253,7 @@ export default function CreateTemplate() {
                 }
               />
             </section>
-          ))}
+          ))} 
         </>
       </form>
     </FormDrawer>

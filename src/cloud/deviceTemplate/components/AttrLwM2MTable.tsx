@@ -1,4 +1,5 @@
 import { Menu } from '@headlessui/react'
+import { useDebouncedCallback } from 'use-debounce'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -15,7 +16,7 @@ import storage from '~/utils/storage'
 import { useParams } from 'react-router-dom'
 import { type BaseTablePagination } from '~/types'
 import { type EntityThing } from '~/cloud/customProtocol'
-
+import { Switch } from '~/components/Switch'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -117,11 +118,9 @@ type AttrLwM2MTableProps = {
 
 export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps) {
   const { t } = useTranslation()
-  const projectId = storage.getProject()?.id
-  const params = useParams()
-  const templateId = params.templateId as string
   console.log('attribute_info', attribute_info)
   const columnHelper = createColumnHelper<TransportConfigAttribute>()
+  //const debouncedSwitchChange = useDebouncedCallback(handleSwitchChange, 500)
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({
@@ -135,10 +134,9 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
       }),
       columnHelper.display({
         id: 'name',
-        header: () => <span>{t('cloud:device_template.listLwM2M.name')}</span>,
+        header: () => <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>,
         cell: info => {
           const nameAttrLwM2M = info.row.original.name
-          const attrId = info.row.original.id
           return (
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameAttrLwM2M}
@@ -148,17 +146,8 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
         footer: info => info.column.id,
       }),
       columnHelper.display({
-        id: 'idAttrLwM2M',
-        header: () => <span>{t('cloud:device_template.listLwM2M.id')}</span>,
-        cell: info => {
-          const idLwM2M = info.row.original.id
-          return idLwM2M
-        },
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
         id: 'typeAttr',
-        header: () => <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>,
+        header: () => <span>{t('cloud:org_manage.org_manage.table.value_type')}</span>,
         cell: info => {
           const numberAttr = info.row.original.type
           //const thingId = info.row.original.id
@@ -166,11 +155,32 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.accessor('created_time', {
+      columnHelper.display({
+        id: 'idAttrLwM2M',
+        header: () => <span>{t('cloud:org_manage.org_manage.table.id')}</span>,
+        cell: info => {
+          const idLwM2M = info.row.original.id
+          return idLwM2M
+        },
+        footer: info => info.column.id,
+      }),
+      // columnHelper.accessor('logged', {
       //   header: () => (
-      //     <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
+      //     <span>{t('cloud:org_manage.org_manage.table.logged')}</span>
       //   ),
-      //   cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+      //   cell: info => {
+      //     const { attribute_key } = info.row.original
+
+      //     return (
+      //       <Switch
+      //         key={attribute_key + +info.getValue()}
+      //         defaultChecked={info.getValue() === 'true' ? true : false}
+      //         onCheckedChange={checked => {
+      //           debouncedSwitchChange(checked, attribute_key)
+      //         }}
+      //       />
+      //     )
+      //   },
       //   footer: info => info.column.id,
       // }),
     ],
