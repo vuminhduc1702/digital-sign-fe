@@ -39,6 +39,7 @@ import {
   type WidgetType,
   type TimeSeries,
   type LatestData,
+  WSWidgetData,
 } from '../types'
 import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
 import { WS_URL } from '~/config'
@@ -60,6 +61,7 @@ import {
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { StarFilledIcon } from '@radix-ui/react-icons'
+import { string } from 'zod'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -92,6 +94,7 @@ export function DashboardDetail() {
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
+  const [refetchDataState, setRefetchDataState] = useState(false)
 
   const {
     mutate: mutateUpdateDashboard,
@@ -122,8 +125,7 @@ export function DashboardDetail() {
       isSendMessageSubscribeRef.current = true
       handleSendInitMessage()
       handleSendMessage()
-    })
-  // console.log('lastJsonMessage', lastJsonMessage)
+    }, refetchDataState)
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -225,6 +227,10 @@ export function DashboardDetail() {
     minDuration: 300,
   })
 
+  function refetchData() {
+    setRefetchDataState(prev => !prev)
+  }
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -262,6 +268,10 @@ export function DashboardDetail() {
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
+                const unitValue: string =
+                  lastJsonMessage?.id === widgetId
+                    ? widgetInfo?.attribute_config[0]?.unit
+                    : ''
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -342,9 +352,13 @@ export function DashboardDetail() {
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
+                        refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'CARD' ? (
-                      <CardChart data={lastestValueOneDevice} />
+                      <CardChart
+                        data={lastestValueOneDevice}
+                        unit={unitValue}
+                      />
                     ) : widgetInfo?.description === 'CONTROLLER' ? (
                       <ControllerButton
                         data={

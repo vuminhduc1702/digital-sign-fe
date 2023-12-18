@@ -46,10 +46,16 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T>(url: string, sendMessageCallback: () => void) => {
+export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: boolean) => {
   const { t } = useTranslation()
 
   const { addNotification } = useNotificationStore()
+
+  useEffect(() => {
+    if (rerun) {
+      sendMessageCallback()
+    }
+  }, [rerun])
 
   const {
     sendMessage,

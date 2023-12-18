@@ -5,13 +5,15 @@ import { Spinner } from '~/components/Spinner'
 
 import { type LatestData } from '../../types'
 
-export function CardChart({ data }: { data: LatestData }) {
-  // console.log('new card: ', data)
+export function CardChart({ data, unit }: { data: LatestData, unit: string }) {
+  console.log('new card: ', data)
+  console.log('unit: ', unit)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
     value: '',
   })
+  const [unitData, setUnitData] = useState<string>("")
 
   useEffect(() => {
     if (data != null && Object.keys(data).length > 0) {
@@ -20,6 +22,7 @@ export function CardChart({ data }: { data: LatestData }) {
         value: Object.values(data)?.[0]?.value,
       }
       setDataTransformedFeedToChart(dataDataType)
+      setUnitData(unit)
     }
   }, [data])
 
@@ -29,6 +32,9 @@ export function CardChart({ data }: { data: LatestData }) {
         <div className="flex h-full flex-col items-center justify-center border border-secondary-400 bg-white shadow hover:bg-gray-100">
           <p className="mb-2 text-body-sm opacity-70">
             {dataTransformedFeedToChart.key}
+            {" ("}
+            {unitData}
+            {")"}
           </p>
           <h2 className="text-4xl font-bold">
             {dataTransformedFeedToChart.value}
