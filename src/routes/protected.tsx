@@ -23,6 +23,7 @@ import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
 
+
 // const { DeviceTemplateManage } = lazyImport(
 //   () => import('~/cloud/deviceTemplate'),
 //   'DeviceTemplateManage',
@@ -53,7 +54,6 @@ const { AttrLwM2MTemplate } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'AttrLwM2MTemplate',
 )
-
 export const protectedRoutes = [
   {
     element: <MainLayout />,
@@ -78,17 +78,13 @@ export const protectedRoutes = [
       //   children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
       // },
       {
-        path: PATHS.DEVICE_TEMPLATELWM2M,
+        path: PATHS.DEVICE_TEMPLATE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <DeviceTemplatelwm2mManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId', children: [{ path: ':templateId'}, { path: ':id', element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <AttrLwM2MTemplate />
-          </ErrorBoundary>
-        ),  }] }],
+        children: [{ path: ':projectId', children: [{ path: ':templateId' }, { path: ':templateId/:id' }] }],
       },
       {
         path: PATHS.FLOW_ENGINE,

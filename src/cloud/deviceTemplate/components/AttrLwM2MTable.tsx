@@ -20,7 +20,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { type ModuleConfig } from '../types'
+import { type TransportConfigAttribute } from '../types'
 
 // function ThingTableContextMenu({
 //   id,
@@ -111,18 +111,18 @@ import { type ModuleConfig } from '../types'
 //   )
 // }
 
-type LwM2MTableProps = {
-    module_config: ModuleConfig[]
+type AttrLwM2MTableProps = {
+  attribute_info: TransportConfigAttribute[]
   } 
 
-export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
+export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const params = useParams()
   const templateId = params.templateId as string
-  console.log('module_config', module_config)
-  const columnHelper = createColumnHelper<ModuleConfig>()
-  const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
+  console.log('attribute_info', attribute_info)
+  const columnHelper = createColumnHelper<TransportConfigAttribute>()
+  const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -137,21 +137,18 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
         id: 'name',
         header: () => <span>{t('cloud:device_template.listLwM2M.name')}</span>,
         cell: info => {
-          const nameLwM2M = info.row.original.module_name
-          const id = info.row.original.id
+          const nameAttrLwM2M = info.row.original.name
+          const attrId = info.row.original.id
           return (
-            <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/${id}`}>
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400"
-                  onClick={() => console.log(`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/${id}`)}>
-                {nameLwM2M}
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {nameAttrLwM2M}
               </p>
-            </Link>
           )
         },
         footer: info => info.column.id,
       }),
       columnHelper.display({
-        id: 'idLwM2M',
+        id: 'idAttrLwM2M',
         header: () => <span>{t('cloud:device_template.listLwM2M.id')}</span>,
         cell: info => {
           const idLwM2M = info.row.original.id
@@ -160,29 +157,29 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.display({
-        id: 'numberAttr',
+        id: 'typeAttr',
         header: () => <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>,
         cell: info => {
-          const numberAttr = info.row.original.numberOfAttributes
+          const numberAttr = info.row.original.type
           //const thingId = info.row.original.id
           return numberAttr
         },
         footer: info => info.column.id,
       }),
-      columnHelper.accessor('created_time', {
-        header: () => (
-          <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
-        ),
-        cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
-        footer: info => info.column.id,
-      }),
+      // columnHelper.accessor('created_time', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
+      //   ),
+      //   cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
+      //   footer: info => info.column.id,
+      // }),
     ],
     [],
   )
-  return module_config != null && module_config?.length !== 0 ? (
+  return attribute_info != null && attribute_info?.length !== 0 ? (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={module_config}
+      data={attribute_info}
       columns={columns}
       {...props}
     />

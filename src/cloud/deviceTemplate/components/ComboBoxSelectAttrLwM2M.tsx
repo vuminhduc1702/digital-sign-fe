@@ -4,42 +4,45 @@ import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
 import { useTemplateLwM2MById } from '../api'
 import storage from '~/utils/storage'
-import { type TransportConfigInfo, type ModuleConfig } from '../types'
+import { type TransportConfigAttribute } from '../types'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
 
 type ComboBoxSelectDeviceProps = {
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<ModuleConfig[]>>
+  setFilteredComboboxDataAttr?: React.Dispatch<React.SetStateAction<TransportConfigAttribute[]>>
   offset?: number
 } & FieldWrapperPassThroughProps
 
-export function ComboBoxSelectModuleConfig({
-  setFilteredComboboxData,
+export function ComboBoxSelectAttrLwM2M({
+  setFilteredComboboxDataAttr,
   ...props
 }: ComboBoxSelectDeviceProps) {
   const [query, setQuery] = useState('')
   const params = useParams()
   const templateId = params.templateId as string
+  const id = params.id as string
   const { data: LwM2MDataById } = useTemplateLwM2MById ({ templateId })
-  //console.log('data12', LwM2MDataById)
-  // console.log('filteredComboboxData', filteredComboboxData)
+  const selectedModuleId = id
+  const selectedModule = LwM2MDataById?.transport_config?.info.module_config
+  .find((module) => module.id === selectedModuleId)
+  const selectedAttributes = selectedModule?.attribute_info || [];
   const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
-    LwM2MDataById?.transport_config?.info.module_config,
+    selectedAttributes,
     [
-      'module_name',
-      'numberOfAttributes',
+      'action',
       'id',
-      'created_time',
+      'kind',
+      'name',
     ],
   )
-
+  console.log('data12', selectedAttributes)
   const filteredData = filteredComboboxData(
     query,
     templateLwM2MFlattenData,
     extractedPropertyKeys,
   )
   useEffect(() => {
-    setFilteredComboboxData?.(filteredData)
+    setFilteredComboboxDataAttr?.(filteredData)
   }, [query, LwM2MDataById])
 
   return (
@@ -48,7 +51,7 @@ export function ComboBoxSelectModuleConfig({
       extractedPropertyKeys={extractedPropertyKeys}
       query={query}
       setQuery={setQuery}
-      setFilteredComboboxData={setFilteredComboboxData}
+      setFilteredComboboxData={setFilteredComboboxDataAttr}
       startIcon={<SearchIcon width={16} height={16} viewBox="0 0 16 16" />}
       {...props}
     />
