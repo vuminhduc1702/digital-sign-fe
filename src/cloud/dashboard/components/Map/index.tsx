@@ -43,25 +43,24 @@ export function MapChart({
   }, [isEditMode])
 
   function dataManipulation() {
-    let dataCurrent: number[][] = []
-    let coorCurrent: number[] = []
-
     if (newValuesRef.current?.data) {
-      console.log(newValuesRef.current.data)
-      Object.entries(newValuesRef.current.data).map((dataItem) => {
-        const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'lat')
-        const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'long')
-        const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex].value
-        const dataLong = Object.values(Object.values(dataItem)[1])[dataLongIndex].value
-        coorCurrent = [parseFloat(dataLat), parseFloat(dataLong)]
-        dataCurrent.push(coorCurrent)
-      })
+      const dataForMapChart = Object.entries(newValuesRef.current.data).reduce((result: Array<number[]>, [,dataItem]) => {
+        const dataLatIndex = Object.keys(dataItem).findIndex(key => key === 'lat')
+        const dataLongIndex = Object.keys(dataItem).findIndex(key => key === 'long')
+        let dataLat = Object.values(dataItem)[dataLatIndex].value
+        let dataLong = Object.values(dataItem)[dataLongIndex].value
+        if (dataLat !== null && dataLong !== null) {
+          const coor = [parseFloat(Object.values(dataItem)[dataLatIndex].value), parseFloat(Object.values(dataItem)[dataLongIndex].value)]
+          result.push(coor)
+        }
+        return result
+      }, [])
+      setDataForMap(dataForMapChart)
     }
-    setDataForMap(dataCurrent)
   }
 
   useEffect(() => {
-    if (data) {
+    if (data.data) {
       prevValuesRef.current = newValuesRef.current || data
       if (
         newValuesRef.current !== null
@@ -78,17 +77,16 @@ export function MapChart({
         } else {
           prevValuesRef.current = data
         }
-        console.log(newValuesRef.current)
         dataManipulation()
       } else {
         newValuesRef.current = data
         dataManipulation()
       }
     }
-    if (data.device && data.device.length !== 0) {
+    if (data.device && data.device.length !== 0 && data.device.length === newValuesRef.current?.device.length) {
       setDeviceDetailInfo(data.device)
     }
-  }, [data.data])
+  }, [data])
 
   useEffect(() => {
     const avgLat = dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
