@@ -369,6 +369,10 @@ export function DashboardDetail() {
                         lastJsonMessage={lastJsonMessage}
                       />
                     ) : null}
+                    {/* <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                      <ComboBoxSelectDeviceDashboard data={null}>
+                      </ComboBoxSelectDeviceDashboard>
+                    </div> */}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
                         {/* <UpdateWidget
