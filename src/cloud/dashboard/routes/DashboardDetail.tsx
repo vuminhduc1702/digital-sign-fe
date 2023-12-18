@@ -1,15 +1,18 @@
-import { useTranslation } from 'react-i18next'
-import { useParams } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
+import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 import { useSpinDelay } from 'spin-delay'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { v4 as uuidv4 } from 'uuid'
 
-import { Spinner } from '~/components/Spinner'
-import TitleBar from '~/components/Head/TitleBar'
 import { Button } from '~/components/Button/Button'
+import { Drawer } from '~/components/Drawer'
+import TitleBar from '~/components/Head/TitleBar'
+import { Spinner } from '~/components/Spinner'
+import { useNotificationStore } from '~/stores/notifications'
 import { useDisclosure, useWS } from '~/utils/hooks'
+import { cn } from '~/utils/misc'
+import storage, { type UserStorage } from '~/utils/storage'
 import { useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
@@ -17,35 +20,31 @@ import {
   ControllerButton,
   GaugeChart,
   LineChart,
-  Map,
+  MapChart,
   PieChart,
   TableChart,
 } from '../components'
 import {
-  type ControllerBtn,
+  CreateControllerButton,
   CreateWidget,
+  UpdateWidget,
   type Widget,
   type WidgetCategoryType,
-  CreateControllerButton,
-  UpdateWidget,
 } from '../components/Widget'
-import { Drawer } from '~/components/Drawer'
-import storage, { type UserStorage } from '~/utils/storage'
-import { cn } from '~/utils/misc'
-import { useNotificationStore } from '~/stores/notifications'
+import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
 
+import { WS_URL } from '~/config'
 import {
   type DashboardWS,
-  type WidgetType,
-  type TimeSeries,
   type LatestData,
-  WSWidgetData,
+  type TimeSeries,
+  type WidgetType,
 } from '../types'
-import { type WebSocketMessage } from 'react-use-websocket/dist/lib/types'
-import { WS_URL } from '~/config'
 
+import { StarFilledIcon } from '@radix-ui/react-icons'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
-  DeleteIcon,
   ChartCircle,
   ChartControl,
   ChartData,
@@ -54,14 +53,11 @@ import {
   ChartLine,
   ChartMap,
   ChartTableData,
+  DeleteIcon,
+  DragIcon,
   EditBtnIcon,
   PlusIcon,
-  DragIcon,
 } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { StarFilledIcon } from '@radix-ui/react-icons'
-import { string } from 'zod'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -293,12 +289,13 @@ export function DashboardDetail() {
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const deviceInfo =
+                const lastestValuesForMap: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.latest.ENTITY_FIELD as LatestData,
-                        ),
+                        lastJsonMessage?.data?.map(device => ({
+                          data: device.latest.TIME_SERIES as LatestData,
+                          device: device.entityId,
+                        })),
                       )
                     : {}
                 return (
@@ -336,11 +333,10 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
-                      <Map
-                        data={lastestValues}
+                      <MapChart
+                        data={lastestValuesForMap}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
-                        deviceInfo={deviceInfo}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
