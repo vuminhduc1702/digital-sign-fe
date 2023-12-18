@@ -262,7 +262,6 @@ export function AttrTable({
       data={dataSorted}
       columns={columns}
       onDataText={t('table:no_attr')}
-      refreshBtn={true}
       {...props}
     />
   )

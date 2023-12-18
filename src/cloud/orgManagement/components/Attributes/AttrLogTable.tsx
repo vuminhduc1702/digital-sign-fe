@@ -6,7 +6,6 @@ import { BaseTable } from '~/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type DeviceAttrLog, type EntityType } from '../../api/attrAPI'
-import tableRefresh from '~/assets/images/table-refresh.svg'
 
 export function AttrLogTable({
   data,
@@ -66,7 +65,6 @@ export function AttrLogTable({
       data={dataSorted}
       columns={columns}
       onDataText={t('table:no_log_attr')}
-      refreshBtn={true}
       {...props}
     />
   )

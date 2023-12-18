@@ -71,7 +71,7 @@ export function TableChart({
         dataManipulation()
       }
     }
-  }, [data, refetchData])
+  }, [data])
 
   function dataManipulation() {
     const tableWidgetDataType = Object.entries(
@@ -95,7 +95,6 @@ export function TableChart({
 
   function signalParent() {
     refetchData();
-    console.log(data)
   }
 
   const columns = useMemo<ColumnDef<TableChartDataType, any>[]>(

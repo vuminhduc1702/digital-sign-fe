@@ -52,9 +52,7 @@ export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: b
   const { addNotification } = useNotificationStore()
 
   useEffect(() => {
-    if (rerun) {
-      sendMessageCallback()
-    }
+    sendMessageCallback()
   }, [rerun])
 
   const {
