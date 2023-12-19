@@ -18,13 +18,16 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
+import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export const BarChart = ({
   data,
   widgetInfo,
+  refetchData = () => {},
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
+  refetchData?: () => void
 }) => {
   // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -37,6 +40,7 @@ export const BarChart = ({
       time: '',
     },
   ])
+  const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
@@ -207,45 +211,61 @@ export const BarChart = ({
     )
   }
 
+  function refresh() {
+    setIsRefresh(true)
+    refetchData()
+    setInterval(() => {
+      setIsRefresh(false)
+    }, 1000)
+  }
+
   // console.log('transform bar', dataTransformedFeedToChart)
 
   return (
     <>
-      {!showSpinner && newValuesRef.current != null ? (
-        <ResponsiveContainer width="98%" height="90%" className="pt-8">
-          <BarReChart data={dataTransformedFeedToChart}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="time" />
-            <YAxis />
-            <Tooltip />
-            <Legend content={renderLegend} />
-            <Brush dataKey="time" height={30} stroke="#8884d8" />
-            {Object.keys(newValuesRef.current).map((key, index) => {
-              const colorConfig = widgetInfo.attribute_config.filter(
-                obj => obj.attribute_key === key,
-              )
-              return (
-                <Bar
-                  key={index.toString()}
-                  dataKey={key}
-                  animationDuration={250}
-                  barSize={10}
-                  stroke={
-                    colorConfig && colorConfig[0].color !== ''
-                      ? colorConfig[0].color
-                      : '#e8c1a0'
-                  }
-                  fill={
-                    colorConfig && colorConfig[0].color !== ''
-                      ? colorConfig[0].color
-                      : '#e8c1a0'
-                  }
-                />
-              )
-            })}
-            {/* stackId="a" */}
-          </BarReChart>
-        </ResponsiveContainer>
+      {!showSpinner && newValuesRef.current != null && !isRefresh ? (
+        <>
+          <div
+            className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+            onClick={refresh}
+          >
+            <img src={refreshIcon} alt="" />
+          </div>
+          <ResponsiveContainer width="98%" height="90%" className="pt-8">
+            <BarReChart data={dataTransformedFeedToChart}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="time" />
+              <YAxis />
+              <Tooltip />
+              <Legend content={renderLegend} />
+              <Brush dataKey="time" height={30} stroke="#8884d8" />
+              {Object.keys(newValuesRef.current).map((key, index) => {
+                const colorConfig = widgetInfo.attribute_config.filter(
+                  obj => obj.attribute_key === key,
+                )
+                return (
+                  <Bar
+                    key={index.toString()}
+                    dataKey={key}
+                    animationDuration={250}
+                    barSize={10}
+                    stroke={
+                      colorConfig && colorConfig[0].color !== ''
+                        ? colorConfig[0].color
+                        : '#e8c1a0'
+                    }
+                    fill={
+                      colorConfig && colorConfig[0].color !== ''
+                        ? colorConfig[0].color
+                        : '#e8c1a0'
+                    }
+                  />
+                )
+              })}
+              {/* stackId="a" */}
+            </BarReChart>
+          </ResponsiveContainer>
+        </>
       ) : (
         <div className="flex h-full items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />

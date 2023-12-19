@@ -116,12 +116,16 @@ export function DashboardDetail() {
   const isSendMessageSubscribeRef = useRef(true)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WEBSOCKET_URL, () => {
-      isSendInitMessageRef.current = true
-      isSendMessageSubscribeRef.current = true
-      handleSendInitMessage()
-      handleSendMessage()
-    }, refetchDataState)
+    useWS<DashboardWS>(
+      WEBSOCKET_URL,
+      () => {
+        isSendInitMessageRef.current = true
+        isSendMessageSubscribeRef.current = true
+        handleSendInitMessage()
+        handleSendMessage()
+      },
+      refetchDataState,
+    )
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -327,9 +331,14 @@ export function DashboardDetail() {
                       <LineChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
+                        refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
-                      <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
+                      <BarChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        refetchData={refetchData}
+                      />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
