@@ -379,6 +379,16 @@ export default function CreateTemplateLwM2M() {
                             }
                               return null
                       })}
+                            {/* {clickedItemIds.length > 0 && (
+                              <div>
+                                <p>{`${lw2m2.LWM2M.Object.ObjectID}/0/${clickedItemIds.join('/')}: ${lw2m2.LWM2M.Object.Name}`}</p>
+                              </div>
+                            )} */}
+                      {/* {accordionStates.map((itemId) => (
+                        <p key={itemId}>
+                          {`${lw2m2.LWM2M.Object.ObjectID}/0/${itemId}: ${idToNameMap[itemId]}`}
+                        </p>
+                      ))} */}
                     </div>
                   </AccordionContent>
                 </AccordionItem>
