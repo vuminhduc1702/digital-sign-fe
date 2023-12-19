@@ -64,6 +64,7 @@ export function PackageInfo() {
         data?.data?.fix_cost?.toString() || '',
         data?.data?.quantity_free?.toString() || '',
         data?.data?.plan_lv || [],
+        true,
       )
     }
   }, [data])
@@ -113,12 +114,13 @@ export function PackageInfo() {
     fix_cost?: string,
     quantity_free?: string,
     plan_lv?: PlanlvList[],
+    first?: boolean,
   ) => {
     let result: any
-    if ((estimates && data?.data?.estimate) === 'fix') {
+    if (estimates === 'fix' || (first && data?.data?.estimate === 'fix')) {
       result = parseNumber(price) + parseNumber(fix_cost)
     }
-    if (estimates === 'unit') {
+    if (estimates === 'unit' && !first) {
       result =
         parseNumber(expected_number) - parseNumber(quantity_free) < 0
           ? parseNumber(fix_cost)
@@ -126,11 +128,11 @@ export function PackageInfo() {
               parseNumber(price) +
             parseNumber(fix_cost)
     }
-    if (estimates === 'mass') {
+    if (estimates === 'mass' && !first) {
       plan_lv?.length &&
         plan_lv.forEach((item: PlanlvList, i: number) => {
           if (
-            parseNumber(item.level) > parseNumber(expected_number) &&
+            parseNumber(item.level) >= parseNumber(expected_number) &&
             (i > 0 ? parseNumber(plan_lv[i - 1].level) : 1) <
               parseNumber(expected_number)
           ) {
@@ -143,18 +145,18 @@ export function PackageInfo() {
           }
         })
     }
-    if (estimates === 'step') {
+    if (estimates === 'step' && !first) {
       let arr: PlanlvList[] = []
       plan_lv?.length &&
         plan_lv.forEach((item: PlanlvList, i: number) => {
-          if (parseNumber(item.level) > parseNumber(expected_number)) {
+          if (parseNumber(item.level) >= parseNumber(expected_number)) {
             arr.length < 1 && arr.push(item)
           }
         })
       result =
         (arr.length ? parseNumber(arr[0].price) : 0) + parseNumber(fix_cost)
     }
-    if (estimates === 'accumulated') {
+    if (estimates === 'accumulated' && !first) {
       let start = 0
       let end = 0
       let original = parseNumber(expected_number)
@@ -588,6 +590,19 @@ export function PackageInfo() {
                                       setExpectedPayment('')
                                     },
                                     valueAsNumber: true,
+                                    onBlur: e => {
+                                      if (
+                                        index ===
+                                          getValues('plan_lv').length - 1 &&
+                                        e.target.value
+                                      ) {
+                                        planlvAppend({
+                                          level: '',
+                                          price: 0,
+                                          free: 0,
+                                        })
+                                      }
+                                    },
                                   },
                                 )}
                                 classlabel="w-1/4"
@@ -630,19 +645,6 @@ export function PackageInfo() {
                                       valueAsNumber: true,
                                     },
                                   )}
-                                  onBlur={e => {
-                                    if (
-                                      index ===
-                                        getValues('plan_lv').length - 1 &&
-                                      e.target.value
-                                    ) {
-                                      planlvAppend({
-                                        level: '',
-                                        price: 0,
-                                        free: 0,
-                                      })
-                                    }
-                                  }}
                                   type="number"
                                   classnamefieldwrapper="flex items-center gap-x-3"
                                   disabled={isDisabled}
@@ -817,7 +819,7 @@ export function PackageInfo() {
                     form="update-plan"
                     type="submit"
                     size="md"
-                    className="rounded-md bg-primary-400"
+                    className="bg-primary-400 rounded-md"
                   >
                     {t('btn:save')}
                   </Button>
@@ -840,7 +842,7 @@ export function PackageInfo() {
               )}
               triggerButton={
                 <Button
-                  className="w-full justify-center border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-center border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -873,7 +875,7 @@ export function PackageInfo() {
             type="button"
             size="md"
             disabled={!data?.data?.updatable}
-            className="absolute bottom-1 right-11 rounded-md bg-primary-400"
+            className="bg-primary-400 absolute bottom-1 right-11 rounded-md"
             onClick={() => setIsDisabled(!isDisabled)}
           >
             {t('btn:update')}
