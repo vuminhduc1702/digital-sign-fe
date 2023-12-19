@@ -116,12 +116,16 @@ export function DashboardDetail() {
   const isSendMessageSubscribeRef = useRef(true)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WEBSOCKET_URL, () => {
-      isSendInitMessageRef.current = true
-      isSendMessageSubscribeRef.current = true
-      handleSendInitMessage()
-      handleSendMessage()
-    }, refetchDataState)
+    useWS<DashboardWS>(
+      WEBSOCKET_URL,
+      () => {
+        isSendInitMessageRef.current = true
+        isSendMessageSubscribeRef.current = true
+        handleSendInitMessage()
+        handleSendMessage()
+      },
+      refetchDataState,
+    )
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -264,10 +268,6 @@ export function DashboardDetail() {
             {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
-                const unitValue: string =
-                  lastJsonMessage?.id === widgetId
-                    ? widgetInfo?.attribute_config[0]?.unit
-                    : ''
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -353,7 +353,7 @@ export function DashboardDetail() {
                     ) : widgetInfo?.description === 'CARD' ? (
                       <CardChart
                         data={lastestValueOneDevice}
-                        unit={unitValue}
+                        widgetInfo={widgetInfo}
                       />
                     ) : widgetInfo?.description === 'CONTROLLER' ? (
                       <ControllerButton
