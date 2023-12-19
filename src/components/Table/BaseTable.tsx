@@ -27,6 +27,7 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export function BaseTable<T extends Record<string, any>>({
   data = [],
@@ -42,6 +43,8 @@ export function BaseTable<T extends Record<string, any>>({
   popoverClassName = 'absolute right-0 top-1 hidden',
   isAbsoluteBtn = true,
   onDataText,
+  refreshBtn,
+  callbackParent,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -56,11 +59,14 @@ export function BaseTable<T extends Record<string, any>>({
   popoverClassName?: string
   isAbsoluteBtn?: boolean
   onDataText?: string
+  refreshBtn?: boolean
+  callbackParent?: () => void
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
+  const [isRefresh, setIsRefresh] = useState(false)
 
   const table = useReactTable({
     data,
@@ -88,6 +94,14 @@ export function BaseTable<T extends Record<string, any>>({
 
   const pageIndexRef = useRef(0)
   const countLimitPaginationRef = useRef(1)
+
+  function refresh() {
+    setIsRefresh(true)
+    callbackParent?.()
+    setTimeout(() => {
+      setIsRefresh(false)
+    }, 1000)
+  }
 
   // TODO: Pagination Previous button is not working correctly
 
@@ -145,6 +159,11 @@ export function BaseTable<T extends Record<string, any>>({
                       </th>
                     )
                   })}
+                  {refreshBtn ? (
+                    <th className="flex h-9 cursor-pointer items-center justify-center">
+                      <img src={refreshIcon} onClick={refresh} />
+                    </th>
+                  ) : null}
                   {popoverClassName !== '' ? (
                     <>
                       <Popover>
@@ -245,7 +264,13 @@ export function BaseTable<T extends Record<string, any>>({
               ))}
             </thead>
             <tbody>
-              {totalAttrs > 0 ? (
+              {isRefresh ? (
+                <td colSpan={999} rowSpan={0}>
+                  <div className="flex h-full items-center justify-center">
+                    <Spinner size="lg" />
+                  </div>
+                </td>
+              ) : totalAttrs > 0 ? (
                 table.getRowModel().rows.map(row => {
                   return (
                     <Fragment key={row.id}>
