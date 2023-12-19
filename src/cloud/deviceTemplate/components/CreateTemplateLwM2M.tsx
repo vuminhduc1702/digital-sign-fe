@@ -41,7 +41,6 @@ import { ChevronDown } from 'lucide-react'
 
 export const templatelwm2mSchema = z.object({
   name: nameSchema,
-  rule_chain_id: z.string().optional(),
   transport_config: transportConfigSchema,
 })
 
@@ -89,17 +88,131 @@ export default function CreateTemplateLwM2M() {
     }
   }, [XMLData, watch('rule_chain_id')])
   console.log('filterLWM2M', filterLWM2M)
-
-  const [openAccordion, setOpenAccordion] = useState()
-  const handleAccordionChange = value => {
-    setOpenAccordion(value)
+  function formatString(str) {
+    // Chuyển đổi chuỗi thành chữ thường (lowercase)
+    const lowercasedStr = str.toLowerCase();
+  
+    // Thay thế dấu cách bằng dấu gạch dưới (underscore)
+    const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
+  
+    return formattedStr;
   }
 
-  const { fields, append, remove } = useFieldArray({
-    name: 'transport_config.info.module_config',
-    control,
-  })
-  console.log('fields', fields)
+  const [openAccordion, setOpenAccordion] = useState()
+  // const handleAccordionChange = value => {
+  //   setOpenAccordion(value)
+  // }
+
+    //const [clickedItemId, setClickedItemId] = useState({});
+  // const { fields, append, remove } = useFieldArray({
+  //   name: 'attributes',
+  //   control,
+  // })
+  // console.log('fields', fields)
+  // const [clickedItemIds, setClickedItemIds] = useState([])
+  // const idToNameMap = {};
+  // const handleCheckboxChange = (itemId) => {
+  //   setClickedItemIds((prevIds) => {
+  //     if (prevIds.includes(itemId)) {
+  //       return prevIds.filter((id) => id !== itemId)
+  //     } else {
+  //       return [...prevIds, itemId]
+  //     }
+  //   })
+  // }
+  const [itemName, setItemName] = useState('')
+  // const [accordionStates, setAccordionStates] = useState({});
+  
+  // const handleAccordionChange = (accordionIndex) => {
+  //   setAccordionStates((prevStates) => {
+  //     // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
+  //     const newStates = { ...prevStates };
+  //     if (newStates[accordionIndex]) {
+  //       newStates[accordionIndex] = [];
+  //     } else {
+  //       // Nếu accordion chưa được mở, tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
+  //       newStates[accordionIndex] = [];
+  //     }
+  //     // Đảm bảo rằng mỗi lần mở một accordion, ta tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
+  //     //newStates[accordionIndex] = newStates[accordionIndex] || [];
+
+  //     return newStates;
+  //   })
+    
+  // };
+
+  // const handleCheckboxChange = ((accordionIndex, itemId) => {
+  //   setAccordionStates((prevStates) => {
+  //     // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
+  //     const newStates = { ...prevStates };
+
+  //     if (!newStates[accordionIndex]) {
+  //       newStates[accordionIndex] = [];
+  //     }
+
+  //     if (newStates[accordionIndex].includes(itemId)) {
+  //       newStates[accordionIndex] = newStates[accordionIndex].filter((id) => id !== itemId);
+  //     } else {
+  //       newStates[accordionIndex].push({itemId});
+  //     }
+
+  //     return newStates;
+  //   });
+  // });
+
+  const [accordionStates, setAccordionStates] = useState({});
+  
+  const handleAccordionChange = (accordionIndex) => {
+    setAccordionStates((prevStates) => {
+      // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
+      const newStates = { ...prevStates };
+      if (newStates[accordionIndex]) {
+        newStates[accordionIndex] = [];
+      } else {
+        // Nếu accordion chưa được mở, tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
+        newStates[accordionIndex] = [];
+      }
+      // Đảm bảo rằng mỗi lần mở một accordion, ta tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
+      //newStates[accordionIndex] = newStates[accordionIndex] || [];
+
+      return newStates;
+    })
+    
+  };
+
+  const handleCheckboxChange = (accordionIndex, item) => {
+    setAccordionStates((prevStates) => {
+      // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
+      const newStates = { ...prevStates };
+
+      if (!newStates[accordionIndex]) {
+        newStates[accordionIndex] = [];
+      }
+
+      const itemId = item.id
+
+      if (newStates[accordionIndex].some((obj) => obj.id === itemId)) {
+        newStates[accordionIndex] = newStates[accordionIndex].filter((obj) => obj.id !== itemId);
+      } else {
+        newStates[accordionIndex].push(item);
+      }
+  
+      return newStates;
+    });
+  }; 
+
+
+
+  useEffect(() => {
+    // Khi accordionStates thay đổi, bạn có thể thực hiện xử lý tại đây
+    // Ví dụ: hiển thị thông báo, gửi dữ liệu lên server, etc.
+    console.log('Accordion States:', accordionStates);
+  }, [accordionStates]);
+
+  // const { fields, append, remove } = useFieldArray({
+  //   name: 'transport_config.info.module_config',
+  //   control,
+  // })
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -186,9 +299,9 @@ export default function CreateTemplateLwM2M() {
               onValueChange={handleAccordionChange}
               className="mb-2 rounded-md bg-gray-100 shadow-lg"
             >
-              {filterLWM2M.map((lw2m2, index) => (
+              {filterLWM2M.map((lw2m2, accordionIndex) => (
                 <AccordionItem
-                  key={index}
+                  key={accordionIndex}
                   value={lw2m2.LWM2M.Object.Name}
                   className="border-none"
                 >
@@ -216,7 +329,9 @@ export default function CreateTemplateLwM2M() {
                         if (
                           item.Operations === 'RW' ||
                           item.Operations === 'R'
-                        )  
+                        ) { 
+                          const attributeId = item['@ID']
+                          const defaultItemName = item.Name
                         return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
@@ -226,32 +341,43 @@ export default function CreateTemplateLwM2M() {
                                   </div>
                                   <Controller
                                     control={control}
-                                    name={`attributes.${index}.logged`}
-                                    render={({ field: { onChange, value, ...field } }) => {
-                                      return (
-                                        <Checkbox 
-                                          className="ml-auto mr-3 mt-2 flex h-5 w-5"
-                                          {...field}
-                                          checked={value}
-                                          onCheckedChange={onChange} 
-                                        />
-                                      )
-                                    }}
+                                    name={`transport_config.config`}
+                                    render={({ field: { onChange, ...field } }) => {
+                                    //   const handleCheckboxChange = (e) => {
+                                    return (
+                                      <Checkbox
+                                        className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                        {...field}
+                                        onCheckedChange={(e) => {
+                                        const formattedName = formatString(defaultItemName)
+                                        //handleCheckboxChange(accordionIndex, attributeId)
+                                        const itemObject = {
+                                          action: item.Operations,
+                                          id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
+                                          kind: item.MultipleInstances,
+                                          name: item.Name,
+                                          type: item.Type,
+                                        };
+                                        handleCheckboxChange(accordionIndex, itemObject)
+                                        onChange(e)
+                                        }}
+                                      />
+                                    )
+                                  }}
                                   />
                                 </div>
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
                                     className=""
-                                    // label={t('cloud:org_manage.org_manage.add_attr.name')}
-                                    // error={formState?.errors?.attributes?.[index]?.attribute_key}
-                                    // registration={register(
-                                    //   `attributes.${index}.attribute_key` as const,
-                                    // )}
+                                    value={itemName || formatString(defaultItemName)}
+                                    onChange={(e) => setItemName(e.target.value)}
                                   />
                                 </div>
                               </div>
                             </section>
-                         )
+                              )
+                            }
+                              return null
                       })}
                     </div>
                   </AccordionContent>
