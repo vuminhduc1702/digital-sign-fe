@@ -10,7 +10,8 @@ import { type Map } from 'leaflet'
 export function MapChart({
   data,
   widgetInfo,
-  isEditMode
+  isEditMode,
+
 }: {
   data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
@@ -50,7 +51,7 @@ export function MapChart({
         let dataLat = Object.values(dataItem)[dataLatIndex].value
         let dataLong = Object.values(dataItem)[dataLongIndex].value
         if (dataLat !== null && dataLong !== null) {
-          const coor = [parseFloat(Object.values(dataItem)[dataLatIndex].value), parseFloat(Object.values(dataItem)[dataLongIndex].value)]
+          const coor = [parseFloat(dataLat), parseFloat(dataLong)]
           result.push(coor)
         }
         return result
@@ -66,12 +67,10 @@ export function MapChart({
         newValuesRef.current !== null
       ) {
         const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
-        if (deviceIndex !== -1) {
+        if (deviceIndex !== -1 && data.data[0]) {
           for (const [key, newData] of Object.entries(data.data[0])) {
-            if (key !== null && newValuesRef.current.data?.[deviceIndex]?.[key] === prevValuesRef.current.data?.[deviceIndex]?.[key]) {
-              setTimeout(() => {
-                Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
-              }, 150)
+            if (key !== null && newData !== null && newValuesRef.current?.data?.[deviceIndex]?.[key] === prevValuesRef.current?.data?.[deviceIndex]?.[key]) {
+              Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
             }
           }
         } else {
@@ -127,9 +126,7 @@ export function MapChart({
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {deviceDetailInfo && deviceDetailInfo.length > 0 ? `Thiết bị ${deviceNameArray[index]}` : `Thiết bị ${index}`}
-              <br /> 
-              {`Current coor (${lat},${lng})`}
+              {deviceDetailInfo && deviceDetailInfo.length > 0 ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})` : `Thiết bị ${index} (${lat},${lng})`}
             </Popup>
           </Marker>
         )
