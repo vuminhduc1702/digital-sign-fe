@@ -17,10 +17,12 @@ type TableChartDataType = DeviceAttrLog & {
 export function TableChart({
   data,
   widgetInfo,
+  refetchData = () => {},
   ...props
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
+  refetchData?: () => void
   className?: string
 }) {
   const { t } = useTranslation()
@@ -91,6 +93,10 @@ export function TableChart({
     setDataTransformedFeedToChart(tableWidgetDataType)
   }
 
+  function signalParent() {
+    refetchData();
+  }
+
   const columns = useMemo<ColumnDef<TableChartDataType, any>[]>(
     () => [
       columnHelper.display({
@@ -147,6 +153,8 @@ export function TableChart({
       columns={columns}
       isAbsoluteBtn={false}
       onDataText={t('table:no_log_attr')}
+      refreshBtn={true}
+      callbackParent={signalParent}
       {...props}
     />
   )
