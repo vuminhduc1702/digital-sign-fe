@@ -267,7 +267,10 @@ export function LineChart({
         </>
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
+          <Spinner
+            // showSpinner={showSpinner}
+            size="xl"
+          />
         </div>
       )}
     </>

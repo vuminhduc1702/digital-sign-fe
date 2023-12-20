@@ -10,7 +10,7 @@ import type * as z from 'zod'
 import { type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'
 
-const useGaugeChart = (data: number, max: number) => {
+const useGaugeChart = (data: number, max: number, min: number) => {
   const [value, setValue] = useState(0)
 
   useAnimationFrame(t => {
@@ -19,7 +19,7 @@ const useGaugeChart = (data: number, max: number) => {
   })
 
   return {
-    value: Math.min(value, max),
+    value: Math.max(Math.min(value, max), min),
   }
 }
 
@@ -211,6 +211,7 @@ export function GaugeChart({
   const { value } = useGaugeChart(
     dataTransformedFeedToChart.value,
     widgetInfo.attribute_config[0].max,
+    widgetInfo.attribute_config[0].min
   )
 
   return (
