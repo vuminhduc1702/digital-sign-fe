@@ -327,9 +327,14 @@ export function DashboardDetail() {
                       <LineChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
+                        refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
-                      <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
+                      <BarChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        refetchData={refetchData}
+                      />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (

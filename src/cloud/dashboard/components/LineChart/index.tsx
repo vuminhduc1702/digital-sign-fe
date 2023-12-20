@@ -18,13 +18,16 @@ import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
 
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
+import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export function LineChart({
   data,
   widgetInfo,
+  refetchData = () => {},
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
+  refetchData?: () => void
 }) {
   // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -37,6 +40,7 @@ export function LineChart({
       ts: '',
     },
   ])
+  const [isRefresh, setIsRefresh] = useState<boolean>(false)
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
@@ -209,42 +213,58 @@ export function LineChart({
     )
   }
 
+  function refresh() {
+    setIsRefresh(true)
+    refetchData()
+    setInterval(() => {
+      setIsRefresh(false)
+    }, 1000)
+  }
+
   return (
     <>
-      {!showSpinner && newValuesRef.current != null ? (
-        <ResponsiveContainer width="98%" height="90%" className="pt-8">
-          <LineWidget data={dataTransformedFeedToChart}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="ts" allowDuplicatedCategory={false} />
-            <YAxis />
-            <Tooltip />
-            <Legend content={renderLegend} />
-            <Brush dataKey="ts" height={30} stroke="#8884d8" />
-            {Object.keys(newValuesRef.current).map((key, index) => {
-              const colorConfig = widgetInfo.attribute_config.filter(
-                obj => obj.attribute_key === key,
-              )
-              return (
-                <Line
-                  key={index.toString()}
-                  connectNulls
-                  type="monotone"
-                  dataKey={key}
-                  animationDuration={250}
-                  stroke={
-                    key.includes('SMA') || key.includes('FFT')
-                      ? '#2c2c2c'
-                      : colorConfig && colorConfig[0].color !== ''
-                      ? colorConfig[0].color
-                      : '#e8c1a0'
-                  }
-                  activeDot={{ r: 5 }}
-                  dot={false}
-                />
-              )
-            })}
-          </LineWidget>
-        </ResponsiveContainer>
+      {!showSpinner && newValuesRef.current != null && !isRefresh ? (
+        <>
+          <div
+            className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+            onClick={refresh}
+          >
+            <img src={refreshIcon} alt="" />
+          </div>
+          <ResponsiveContainer width="98%" height="90%" className="pt-8">
+            <LineWidget data={dataTransformedFeedToChart}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="ts" allowDuplicatedCategory={false} />
+              <YAxis />
+              <Tooltip />
+              <Legend content={renderLegend} />
+              <Brush dataKey="ts" height={30} stroke="#8884d8" />
+              {Object.keys(newValuesRef.current).map((key, index) => {
+                const colorConfig = widgetInfo.attribute_config.filter(
+                  obj => obj.attribute_key === key,
+                )
+                return (
+                  <Line
+                    key={index.toString()}
+                    connectNulls
+                    type="monotone"
+                    dataKey={key}
+                    animationDuration={250}
+                    stroke={
+                      key.includes('SMA') || key.includes('FFT')
+                        ? '#2c2c2c'
+                        : colorConfig && colorConfig[0].color !== ''
+                        ? colorConfig[0].color
+                        : '#e8c1a0'
+                    }
+                    activeDot={{ r: 5 }}
+                    dot={false}
+                  />
+                )
+              })}
+            </LineWidget>
+          </ResponsiveContainer>
+        </>
       ) : (
         <div className="flex h-full items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
