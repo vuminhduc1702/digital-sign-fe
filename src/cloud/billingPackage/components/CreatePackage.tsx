@@ -21,9 +21,19 @@ import { useCreatePlan, type CreatePlanDTO } from '../api'
 import { type PlanlvList } from '../types'
 import i18n from '~/i18n'
 
+export const numericString = (schema: z.ZodTypeAny) => z.preprocess((a) => {
+  if (typeof a === 'string') {
+    return parseInt(a)
+  } else if (typeof a === 'number' && !isNaN(a)) {
+    return a;
+  } else {
+    return undefined;
+  }
+}, schema);
+
 const planlvSchema = z.array(
   z.object({
-    level: z.number().or(z.string()),
+    level: numericString(z.number().optional()),
     price: z.number().min(1, {
       message: i18n.t('billing:package_manage.popup.choose_plan_price'),
     }),
@@ -95,6 +105,7 @@ export function CreatePackage() {
   const [periodType, setPeriodType] = useState('PERIODIC')
   const [expectedPayment, setExpectedPayment] = useState('')
   const [expectedNumber, setExpectedNumber] = useState('')
+  const [status, setStatus] = useState('')
 
   const { mutate, isLoading, isSuccess } = useCreatePlan()
   const resetData = () => {
@@ -104,6 +115,7 @@ export function CreatePackage() {
     setPeriodType('PERIODIC')
     setExpectedPayment('')
     setExpectedNumber('')
+    setStatus('')
   }
 
   const parseNumber = (value: any) => {
@@ -337,9 +349,14 @@ export function CreatePackage() {
                           <input
                             type="radio"
                             id={`radio-${option.value}`}
-                            {...register('status')}
+                            {...register('status', {
+                              onChange: e => {
+                                setStatus(e.target.value)
+                              },
+                            })}
                             value={option.value}
                             className="mr-3 h-4 w-4 cursor-pointer"
+                            checked={status === option.value}
                           />
                           <label
                             htmlFor={`radio-${option.value}`}
@@ -611,6 +628,19 @@ export function CreatePackage() {
                                         setExpectedPayment('')
                                       },
                                       valueAsNumber: true,
+                                      onBlur: e => {
+                                        if (
+                                          index ===
+                                            getValues('plan_lv').length - 1 &&
+                                          e.target.value
+                                        ) {
+                                          planlvAppend({
+                                            level: '',
+                                            price: 0,
+                                            free: 0,
+                                          })
+                                        }
+                                      },
                                     },
                                   )}
                                   classlabel="w-1/4"
@@ -655,19 +685,6 @@ export function CreatePackage() {
                                         valueAsNumber: true,
                                       },
                                     )}
-                                    onBlur={e => {
-                                      if (
-                                        index ===
-                                          getValues('plan_lv').length - 1 &&
-                                        e.target.value
-                                      ) {
-                                        planlvAppend({
-                                          level: '',
-                                          price: 0,
-                                          free: 0,
-                                        })
-                                      }
-                                    }}
                                     classlabel="w-1/4"
                                     classchild="w-3/4"
                                     type="number"
