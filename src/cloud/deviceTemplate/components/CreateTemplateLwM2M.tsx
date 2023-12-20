@@ -3,7 +3,7 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useEffect, useRef, useState } from 'react'
-
+import { axios } from '~/lib/axios'
 import { Button } from '~/components/Button'
 import {
   Accordion,
@@ -120,7 +120,7 @@ export default function CreateTemplateLwM2M() {
   //     }
   //   })
   // }
-  const [itemName, setItemName] = useState('')
+  
   // const [accordionStates, setAccordionStates] = useState({});
   
   // const handleAccordionChange = (accordionIndex) => {
@@ -159,60 +159,92 @@ export default function CreateTemplateLwM2M() {
   //     return newStates;
   //   });
   // });
-
+  const [name, setName] = useState<string>('')
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
   const [accordionStates, setAccordionStates] = useState({});
-  
+  const [configData, setConfigData] = useState({})
+  const [itemNames, setItemNames] = useState({})
   const handleAccordionChange = (accordionIndex) => {
     setAccordionStates((prevStates) => {
-      // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
-      const newStates = { ...prevStates };
+      const newStates = { ...prevStates }
       if (newStates[accordionIndex]) {
-        newStates[accordionIndex] = [];
+        newStates[accordionIndex] = []
       } else {
-        // Nếu accordion chưa được mở, tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
-        newStates[accordionIndex] = [];
+        newStates[accordionIndex] = []
       }
-      // Đảm bảo rằng mỗi lần mở một accordion, ta tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
-      //newStates[accordionIndex] = newStates[accordionIndex] || [];
-
-      return newStates;
+      return newStates
     })
-    
-  };
-
-  const handleCheckboxChange = (accordionIndex, item) => {
+  }
+  const handleCheckboxChange = (accordionIndex, module, item) => {
     setAccordionStates((prevStates) => {
-      // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
-      const newStates = { ...prevStates };
-
+      const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
-        newStates[accordionIndex] = [];
+        newStates[accordionIndex] = []
       }
-
-      const itemId = item.id
-
-      if (newStates[accordionIndex].some((obj) => obj.id === itemId)) {
-        newStates[accordionIndex] = newStates[accordionIndex].filter((obj) => obj.id !== itemId);
-      } else {
-        newStates[accordionIndex].push(item);
-      }
+      const moduleId = module.id
+      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
   
-      return newStates;
-    });
-  }; 
-
-
+      if (moduleIndex === -1) {
+        newStates[accordionIndex].push({
+          id: module.id,
+          module_name: module.name,
+          attribute_info: [item], 
+          numberOfAttributes: 1,
+        })
+      } else {
+        const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
+          (attribute) => attribute.id === item.id
+        )
+        if (attributeIndex === -1) {
+          newStates[accordionIndex][moduleIndex].attribute_info.push(item)
+          newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
+        } else {
+          newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
+          newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
+        }
+      }
+      return newStates
+    })
+  }
 
   useEffect(() => {
-    // Khi accordionStates thay đổi, bạn có thể thực hiện xử lý tại đây
-    // Ví dụ: hiển thị thông báo, gửi dữ liệu lên server, etc.
-    console.log('Accordion States:', accordionStates);
-  }, [accordionStates]);
+    const accordionArray = Object.values(accordionStates).flat()
+    console.log('Accordion States:', accordionArray);
+    const newConfigData = {}
+    accordionArray.forEach((accordionItem) => {
+      accordionItem.attribute_info.forEach((attribute) => {
+        newConfigData[attribute.id] = attribute.name
+      })
+    })
+    setConfigData(newConfigData)
+    console.log('newConfigData:', newConfigData)
+}, [accordionStates])
 
-  // const { fields, append, remove } = useFieldArray({
-  //   name: 'transport_config.info.module_config',
-  //   control,
-  // })
+const transportConfig = {
+  protocol: 'lwm2m',
+  config: configData,
+  info: {
+    module_config: Object.values(accordionStates).flat()
+  }
+}
+const data = {
+  name: name,
+  project_id: projectId,
+  transport_config: transportConfig
+}
+
+const handleSubmitform = async () => {
+  console.log('Data before sending:', data)
+  try {
+    const response = await axios.post(`/api/templates`, JSON.stringify(data))
+
+    // Xử lý kết quả từ server
+    console.log('Server Response:', response.data);
+  } catch (error) {
+    // Xử lý lỗi nếu có
+    console.error('Error:', error);
+  }
+}
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -269,8 +301,8 @@ export default function CreateTemplateLwM2M() {
         <>
           <InputField
             label={t('cloud:device_template.add_template.name')}
-            error={formState.errors['name']}
-            registration={register('name')}
+            value={name}
+            onChange={handleNameChange}
           />
           <div className="space-y-1">
             <SelectDropdown
@@ -330,7 +362,6 @@ export default function CreateTemplateLwM2M() {
                           item.Operations === 'RW' ||
                           item.Operations === 'R'
                         ) { 
-                          const attributeId = item['@ID']
                           const defaultItemName = item.Name
                         return (
                             <section key={item['@ID']} className="mt-3">
@@ -350,15 +381,19 @@ export default function CreateTemplateLwM2M() {
                                         {...field}
                                         onCheckedChange={(e) => {
                                         const formattedName = formatString(defaultItemName)
-                                        //handleCheckboxChange(accordionIndex, attributeId)
+
+                                        const moduleObject ={
+                                          id: lw2m2.LWM2M.Object.ObjectID,
+                                          name: lw2m2.LWM2M.Object.Name,
+                                        }
                                         const itemObject = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
                                           kind: item.MultipleInstances,
-                                          name: item.Name,
+                                          name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
                                           type: item.Type,
                                         };
-                                        handleCheckboxChange(accordionIndex, itemObject)
+                                        handleCheckboxChange(accordionIndex, moduleObject ,itemObject)
                                         onChange(e)
                                         }}
                                       />
@@ -369,8 +404,8 @@ export default function CreateTemplateLwM2M() {
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
                                     className=""
-                                    value={itemName || formatString(defaultItemName)}
-                                    onChange={(e) => setItemName(e.target.value)}
+                                    value={itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formatString(defaultItemName)}
+                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`]: e.target.value }))}
                                   />
                                 </div>
                               </div>
@@ -397,6 +432,7 @@ export default function CreateTemplateLwM2M() {
           </div>
         </>
       </form>
+      <button onClick={handleSubmitform}>Submit</button>
     </FormDrawer>
   )
 }
