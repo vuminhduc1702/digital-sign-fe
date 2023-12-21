@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
@@ -25,15 +24,6 @@ export function MapChart({
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
-
-  // const fakeCoor = [
-  //   [21.0285, 105.8542],
-  //   [21.0374, 105.8497],
-  //   [21.0369, 105.8511],
-  //   [21.04, 105.8311],
-  //   [21.0402, 105.8475],
-  //   [21.0245, 105.8473],
-  // ]
 
   useEffect(() => {
     if (isEditMode) {
@@ -105,7 +95,7 @@ export function MapChart({
 
   return (
     <MapContainer
-      className="mx-2 mt-12 h-[90%]"
+      className="mx-2 mt-12 h-[90%] z-0"
       center={[avgLatitude, avgLongitude]}
       zoom={0}
       scrollWheelZoom
@@ -114,12 +104,10 @@ export function MapChart({
       ref={map}
     >
       <TileLayer
-        // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga"
       />
       {dataForMap.map((coor, index) => {
         const [lat, lng] = coor
-        // const deviceName = deviceDetailInfo?.[index].name.value
         const deviceNameArray = deviceDetailInfo?.map((item: any) => {
           const deviceData = JSON.parse(widgetInfo.datasource.init_message).entityDataCmds[0].query.entityFilter.entityIds
           const deviceFilter = deviceData.filter((device: any) => device === item.id)
