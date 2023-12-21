@@ -381,7 +381,7 @@ export function DashboardDetail() {
                       widgetInfo?.description === 'MAP' ? (
                         <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
                           <ComboBoxSelectDeviceDashboard setFilteredComboboxData={setFilteredComboboxData} 
-                            data={filterDeviceData}>
+                            data={undefined}>
                           </ComboBoxSelectDeviceDashboard>
                         </div>
                       ) : (<></>)
