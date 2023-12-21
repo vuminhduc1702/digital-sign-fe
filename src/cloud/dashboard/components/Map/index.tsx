@@ -44,20 +44,22 @@ export function MapChart({
   }, [isEditMode])
 
   function dataManipulation() {
-    if (newValuesRef.current?.data) {
-      const dataForMapChart = Object.entries(newValuesRef.current.data).reduce((result: Array<number[]>, [,dataItem]) => {
-        const dataLatIndex = Object.keys(dataItem).findIndex(key => key === 'lat')
-        const dataLongIndex = Object.keys(dataItem).findIndex(key => key === 'long')
-        let dataLat = Object.values(dataItem)[dataLatIndex].value
-        let dataLong = Object.values(dataItem)[dataLongIndex].value
-        if (dataLat !== null && dataLong !== null) {
-          const coor = [parseFloat(dataLat), parseFloat(dataLong)]
-          result.push(coor)
-        }
-        return result
-      }, [])
-      setDataForMap(dataForMapChart)
-    }
+    setTimeout(() => {
+      if (newValuesRef.current?.data) {
+        const dataForMapChart = Object.entries(newValuesRef.current.data).reduce((result: Array<number[]>, [,dataItem]) => {
+          const dataLatIndex = Object.keys(dataItem).findIndex(key => key === 'lat')
+          const dataLongIndex = Object.keys(dataItem).findIndex(key => key === 'long')
+          let dataLat = Object.values(dataItem)[dataLatIndex].value
+          let dataLong = Object.values(dataItem)[dataLongIndex].value
+          if (dataLat !== null && dataLong !== null) {
+            const coor = [parseFloat(dataLat), parseFloat(dataLong)]
+            result.push(coor)
+          }
+          return result
+        }, [])
+        setDataForMap(dataForMapChart)
+      }
+    }, 100)
   }
 
   useEffect(() => {
@@ -70,7 +72,9 @@ export function MapChart({
         if (deviceIndex !== -1 && data.data[0]) {
           for (const [key, newData] of Object.entries(data.data[0])) {
             if (key !== null && newData !== null && newValuesRef.current?.data?.[deviceIndex]?.[key] === prevValuesRef.current?.data?.[deviceIndex]?.[key]) {
-              Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
+              setTimeout(() => {
+                Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
+              }, 100)
             }
           }
         } else {
