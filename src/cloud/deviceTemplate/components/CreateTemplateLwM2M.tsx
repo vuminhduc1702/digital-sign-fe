@@ -39,10 +39,17 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDown } from 'lucide-react'
 
 
-export const templatelwm2mSchema = z.object({
-  name: nameSchema,
-  transport_config: transportConfigSchema,
-})
+// export const templatelwm2mSchema = z.object({
+//   name: nameSchema,
+//   transport_config: z.object({
+//     protocol: z.string(),
+//     config: z.record(ConfigItem),
+//     info: z.object({
+//       module_config: z.array(moduleConfigSchema).nullable(),
+//     }),
+//   }),
+// })
+export type TransportConfig = z.infer<typeof transportConfigSchema>
 
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
@@ -59,15 +66,8 @@ export default function CreateTemplateLwM2M() {
     isLoading: isLoadingCreateTemplatelwm2m,
     isSuccess: isSuccessCreateTemplatelwm2m,
   } = useCreateTemplatelwm2m()
-  const { register, formState, handleSubmit, control, watch, reset } = useForm<
-    CreateTemplatelwm2mDTO['data']
-  >({
-    resolver: templatelwm2mSchema && zodResolver(templatelwm2mSchema),
-    defaultValues: {
-      name: '',
-      transport_config: { protocol: 'lwm2m', config: {}, info: {} },
-    },
-  })
+  const { register, formState, handleSubmit, control, watch, reset } = useForm()
+  console.log('formState errors', formState.errors)
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
@@ -185,11 +185,13 @@ export default function CreateTemplateLwM2M() {
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
   
       if (moduleIndex === -1) {
+        const currentTimestamp = Date.now();
         newStates[accordionIndex].push({
           id: module.id,
           module_name: module.name,
           attribute_info: [item], 
           numberOfAttributes: 1,
+          last_update_ts: currentTimestamp,
         })
       } else {
         const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
@@ -277,17 +279,7 @@ const handleSubmitform = async () => {
       <form
         className="w-full space-y-5"
         id="create-template"
-        onSubmit={handleSubmit(async values => {
-          console.log(values, 'check submit values');
-
-          // const dataCreateTemplatelwm2m = await mutateAsyncCreateTemplatelwm2m({
-          //   data: {
-          //     project_id: projectId,
-          //     rule_chain_id: values.rule_chain_id,
-          //     name: values.name,
-          //     transport_config: values.transport_config,
-          //   },
-          // })
+        onSubmit={handleSubmit(async () => {await mutateAsyncCreateTemplatelwm2m({data})
           // mutateUpdateTemplatelwm2m({
           //   data: {
           //     name: dataCreateTemplatelwm2m.name,
