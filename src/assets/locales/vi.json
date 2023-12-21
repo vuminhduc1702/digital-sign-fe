@@ -595,7 +595,8 @@
         "org": "Tổ chức",
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
-        "max": "Max"
+        "max": "Max", 
+        "min": "Min"
       },
       "detail_dashboard": {
         "add_widget": {

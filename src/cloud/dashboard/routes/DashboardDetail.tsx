@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, useCallback } from 'react'
 import type RGL from 'react-grid-layout'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { useTranslation } from 'react-i18next'
@@ -58,7 +58,6 @@ import {
   EditBtnIcon,
   PlusIcon,
 } from '~/components/SVGIcons'
-import { ListProjectItem } from '~/cloud/project/components/ListProjectItem'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -195,15 +194,12 @@ export function DashboardDetail() {
           const historyMessage = widget?.datasource?.history_message
           const lastestMessage = widget?.datasource?.lastest_message
           if (realtimeMessage !== '' && realtimeMessage != null) {
-            // console.log('realtimeMessage', realtimeMessage)
             sendMessage(realtimeMessage)
           }
           if (historyMessage !== '' && historyMessage != null) {
-            // console.log('historyMessage', historyMessage)
             sendMessage(historyMessage)
           }
           if (lastestMessage !== '' && lastestMessage != null) {
-            // console.log('lastestMessage', lastestMessage)
             sendMessage(lastestMessage)
           }
         })

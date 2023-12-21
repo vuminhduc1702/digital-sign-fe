@@ -10,15 +10,17 @@ import type * as z from 'zod'
 import { type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'
 
-const useGaugeChart = (data: number, max: number) => {
+const useGaugeChart = (data: number, max: number, min?: number) => {
   const [value, setValue] = useState(0)
-  const min = 0
 
   useAnimationFrame(t => {
     // if (value >= max) return
     setValue(data)
   })
 
+  if (min === undefined) {
+    min = 0
+  }
   return {
     value: Math.max(Math.min(value, max), min),
   }
@@ -35,7 +37,7 @@ const END_ANGLE = 270
 
 function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
   const gauge = useGauge({
-    domain: [0, widgetInfo.attribute_config[0].max],
+    domain: [ widgetInfo.attribute_config[0].min || 0, widgetInfo.attribute_config[0].max],
     startAngle: START_ANGLE,
     endAngle: END_ANGLE,
     numTicks: 10,
@@ -50,9 +52,14 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
 
   const arcStroke = useMemo(() => {
     let color = ''
-    if (value <= 0.4 * widgetInfo?.attribute_config[0]?.max) {
+    if (value <= 0.4 * (widgetInfo?.attribute_config[0]?.max - (widgetInfo?.attribute_config[0]?.min || 0))) {
       color = `green`
-    } else if (value <= 0.8 * widgetInfo?.attribute_config[0]?.max) {
+    } else if (
+      value <=
+      0.8 *
+        (widgetInfo?.attribute_config[0]?.max -
+          (widgetInfo?.attribute_config[0]?.min || 0))
+    ) {
       color = 'yellow'
     } else {
       color = 'red'
@@ -128,12 +135,24 @@ function Gauge({ value, attrKey, widgetInfo }: GaugeProps) {
                     'stroke-gray-300',
                     {
                       'stroke-green-500':
-                        asValue <= 0.2 * widgetInfo?.attribute_config[0]?.max,
+                        asValue <=
+                        0.2 *
+                          (widgetInfo?.attribute_config[0]?.max -
+                            (widgetInfo?.attribute_config[0]?.min || 0)),
                       'stroke-yellow-500':
-                        asValue >= 0.6 * widgetInfo?.attribute_config[0]?.max &&
-                        asValue <= 0.8 * widgetInfo?.attribute_config[0]?.max,
+                        asValue >=
+                          0.6 *
+                            (widgetInfo?.attribute_config[0]?.max -
+                              (widgetInfo?.attribute_config[0]?.min || 0)) &&
+                        asValue <=
+                          0.8 *
+                            (widgetInfo?.attribute_config[0]?.max -
+                              (widgetInfo?.attribute_config[0]?.min || 0)),
                       'stroke-red-400':
-                        asValue >= 0.8 * widgetInfo?.attribute_config[0]?.max,
+                        asValue >=
+                        0.8 *
+                          (widgetInfo?.attribute_config[0]?.max -
+                            (widgetInfo?.attribute_config[0]?.min || 0)),
                     },
                   ])}
                   strokeWidth={2}
@@ -211,7 +230,8 @@ export function GaugeChart({
 
   const { value } = useGaugeChart(
     dataTransformedFeedToChart.value,
-    widgetInfo.attribute_config[0].max
+    widgetInfo.attribute_config[0].max, 
+    widgetInfo.attribute_config[0].min
   )
 
   return (

@@ -69,6 +69,7 @@ export const attrWidgetSchema = z.array(
     color: z.string(),
     unit: z.string(),
     max: z.number(),
+    min: z.number().optional(),
   }),
 )
 
@@ -291,6 +292,7 @@ export function CreateWidget({
       color: '',
       unit: '',
       max: 100,
+      min: 0,
     })
   }, [])
 
@@ -462,6 +464,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
+                  min: item.min,
                   // label: item.label,
                   unit: item.unit,
                 })),
@@ -532,6 +535,7 @@ export function CreateWidget({
                               attribute_key: '',
                               color: '',
                               max: 100,
+                              min: 0,
                               unit: '',
                             },
                           ],
@@ -545,6 +549,7 @@ export function CreateWidget({
                               attribute_key: '',
                               color: '',
                               max: 100,
+                              min: 0,
                               unit: '',
                             },
                           ],
@@ -587,6 +592,7 @@ export function CreateWidget({
                               attribute_key: '',
                               color: '',
                               max: 100,
+                              min: 0,
                               unit: '',
                             },
                           ],
@@ -620,6 +626,7 @@ export function CreateWidget({
                             color: '',
                             unit: '',
                             max: 100,
+                            min: 0,
                           })
                         }
                       />
@@ -734,17 +741,30 @@ export function CreateWidget({
                           )}
                         />
                         {widgetCategory === 'GAUGE' && (
-                          <InputField
-                            label={t('cloud:dashboard.config_chart.max')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.max
-                            }
-                            type="number"
-                            registration={register(
-                              `attributeConfig.${index}.max` as const,
-                              { valueAsNumber: true },
-                            )}
-                          />
+                          <>
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.min')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]?.min
+                              }
+                              type="number"
+                              registration={register(
+                                `attributeConfig.${index}.min` as const,
+                                { valueAsNumber: true },
+                              )}
+                            />
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.max')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]?.max
+                              }
+                              type="number"
+                              registration={register(
+                                `attributeConfig.${index}.max` as const,
+                                { valueAsNumber: true },
+                              )}
+                            />
+                          </>
                         )}
                       </div>
                       {isMultipleAttr ? (

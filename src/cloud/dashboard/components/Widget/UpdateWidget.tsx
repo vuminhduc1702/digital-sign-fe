@@ -300,6 +300,7 @@ export function UpdateWidget({
                 attribute_key: item.attribute_key,
                 color: item.color,
                 max: item.max,
+                min: item.min,
                 label: item.label,
                 unit: item.unit,
               })),
@@ -446,6 +447,7 @@ export function UpdateWidget({
                           color: '',
                           unit: '',
                           max: 100,
+                          min: 0, 
                         })
                       }
                     />
