@@ -22,7 +22,7 @@ export function ComboBoxSelectDeviceDashboard({
 }: ComboBoxSelectDeviceDashboardProps) {
   const [query, setQuery] = useState('')
 
-  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(data?.devices,[],)
+  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(data, [])
 
   const filteredData = filteredComboboxData(
     query,

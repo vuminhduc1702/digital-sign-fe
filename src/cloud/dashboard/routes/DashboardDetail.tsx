@@ -295,6 +295,8 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
+                const filterDeviceData = lastJsonMessage?.id === widgetId
+                    ? widgetInfo.attribute_config : {}
                 return (
                   <div
                     key={widgetId}
@@ -361,7 +363,9 @@ export function DashboardDetail() {
                     {
                       widgetInfo?.description === 'MAP' ? (
                         <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
-                          <ComboBoxSelectDeviceDashboard setFilteredComboboxData={setFilteredComboboxData} data={undefined}>
+                          <ComboBoxSelectDeviceDashboard setFilteredComboboxData={setFilteredComboboxData} 
+                          data={undefined}
+                          >
                           </ComboBoxSelectDeviceDashboard>
                         </div>
                       ) : (<></>)
