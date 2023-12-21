@@ -216,7 +216,7 @@ export const BarChart = ({
     refetchData?.()
     setInterval(() => {
       setIsRefresh(false)
-    }, 100)
+    }, 1000)
   }
 
   // console.log('transform bar', dataTransformedFeedToChart)

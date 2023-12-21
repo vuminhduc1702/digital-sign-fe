@@ -218,7 +218,7 @@ export function LineChart({
     refetchData?.()
     setInterval(() => {
       setIsRefresh(false)
-    }, 100)
+    }, 1000)
   }
 
   return (
