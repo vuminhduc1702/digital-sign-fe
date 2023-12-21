@@ -90,6 +90,7 @@ export function DashboardDetail() {
     useState(false)
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
+  const [refetchDataState, setRefetchDataState] = useState(false)
 
   const {
     mutate: mutateUpdateDashboard,
@@ -115,13 +116,16 @@ export function DashboardDetail() {
   const isSendMessageSubscribeRef = useRef(true)
 
   const [{ sendMessage, lastJsonMessage, readyState }, connectionStatus] =
-    useWS<DashboardWS>(WEBSOCKET_URL, () => {
-      isSendInitMessageRef.current = true
-      isSendMessageSubscribeRef.current = true
-      handleSendInitMessage()
-      handleSendMessage()
-    })
-  // console.log('lastJsonMessage', lastJsonMessage)
+    useWS<DashboardWS>(
+      WEBSOCKET_URL,
+      () => {
+        isSendInitMessageRef.current = true
+        isSendMessageSubscribeRef.current = true
+        handleSendInitMessage()
+        handleSendMessage()
+      },
+      refetchDataState,
+    )
 
   useEffect(() => {
     if (updateDashboardIsSuccess) {
@@ -223,6 +227,10 @@ export function DashboardDetail() {
     minDuration: 300,
   })
 
+  function refetchData() {
+    setRefetchDataState(prev => !prev)
+  }
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -319,9 +327,14 @@ export function DashboardDetail() {
                       <LineChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
+                        refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
-                      <BarChart data={realtimeValues} widgetInfo={widgetInfo} />
+                      <BarChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        refetchData={refetchData}
+                      />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
@@ -340,9 +353,13 @@ export function DashboardDetail() {
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
+                        refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'CARD' ? (
-                      <CardChart data={lastestValueOneDevice} />
+                      <CardChart
+                        data={lastestValueOneDevice}
+                        widgetInfo={widgetInfo}
+                      />
                     ) : widgetInfo?.description === 'CONTROLLER' ? (
                       <ControllerButton
                         data={

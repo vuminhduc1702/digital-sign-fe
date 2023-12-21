@@ -12,7 +12,7 @@ export type SelectOption = {
 }
 
 type SelectFieldProps = FieldWrapperPassThroughProps & {
-  options?: SelectOption[]
+  options?: Readonly<SelectOption[]>
   className?: string
   placeholder?: string
   noDataPlaceholder?: string
