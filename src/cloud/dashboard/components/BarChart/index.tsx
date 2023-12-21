@@ -23,7 +23,7 @@ import refreshIcon from '~/assets/icons/table-refresh.svg'
 export const BarChart = ({
   data,
   widgetInfo,
-  refetchData = () => {},
+  refetchData,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
@@ -213,10 +213,10 @@ export const BarChart = ({
 
   function refresh() {
     setIsRefresh(true)
-    refetchData()
+    refetchData?.()
     setInterval(() => {
       setIsRefresh(false)
-    }, 1000)
+    }, 100)
   }
 
   // console.log('transform bar', dataTransformedFeedToChart)

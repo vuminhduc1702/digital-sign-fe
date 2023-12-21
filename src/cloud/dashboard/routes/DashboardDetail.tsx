@@ -135,7 +135,7 @@ export function DashboardDetail() {
     setTimeout(() => {
       setRerenderLayout(false)
       refetchData()
-    }, 1000)
+    }, 100)
   }
 
   useEffect(() => {
@@ -168,16 +168,11 @@ export function DashboardDetail() {
   }, [lastJsonMessage])
 
   function handleSendInitMessage() {
-    const list = []
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
       if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-        // sendMessage(dataSource.init_message)
-        list.push(dataSource.init_message)
+        sendMessage(dataSource.init_message)
       }
-    })
-    list.map(message => {
-      sendMessage(message)
     })
   }
 
@@ -189,7 +184,6 @@ export function DashboardDetail() {
   }, [widgetList])
 
   async function handleSendMessage() {
-    const list: string[] = []
     setTimeout(() => {
       if (
         lastJsonMessage?.requestType != null &&
@@ -201,32 +195,19 @@ export function DashboardDetail() {
           const historyMessage = widget?.datasource?.history_message
           const lastestMessage = widget?.datasource?.lastest_message
           if (realtimeMessage !== '' && realtimeMessage != null) {
-            // sendMessage(realtimeMessage)
-            // console.log("Realtime Message" + realtimeMessage)
-            if (!list.includes(realtimeMessage)) {
-              list.push(realtimeMessage)
-            }
+            // console.log('realtimeMessage', realtimeMessage)
+            sendMessage(realtimeMessage)
           }
           if (historyMessage !== '' && historyMessage != null) {
-            // sendMessage(historyMessage)
-            // console.log("History Message" + historyMessage)
-            if (!list.includes(historyMessage)) {
-              list.push(historyMessage)
-            }
+            // console.log('historyMessage', historyMessage)
+            sendMessage(historyMessage)
           }
           if (lastestMessage !== '' && lastestMessage != null) {
-            // sendMessage(lastestMessage)
-            // console.log("Lastest Message" + lastestMessage)
-            if (!list.includes(lastestMessage)) {
-              list.push(lastestMessage)
-            }
+            // console.log('lastestMessage', lastestMessage)
+            sendMessage(lastestMessage)
           }
         })
       }
-      // console.log("List" + list)
-      list.forEach(message => {
-        sendMessage(message)
-      })
     }, 150)
 
     isSendMessageSubscribeRef.current = true
@@ -308,10 +289,6 @@ export function DashboardDetail() {
               {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
                 Object.keys(widgetList).map((widgetId, index) => {
                   const widgetInfo = widgetList?.[widgetId]
-                  const unitValue: string =
-                    lastJsonMessage?.id === widgetId
-                      ? widgetInfo?.attribute_config[0]?.unit
-                      : ''
                   const realtimeValues: TimeSeries =
                     lastJsonMessage?.id === widgetId
                       ? combinedObject(
@@ -406,7 +383,7 @@ export function DashboardDetail() {
                       ) : widgetInfo?.description === 'CARD' ? (
                         <CardChart
                           data={lastestValueOneDevice}
-                          unit={unitValue}
+                          widgetInfo={widgetInfo}
                         />
                       ) : widgetInfo?.description === 'CONTROLLER' ? (
                         <ControllerButton
@@ -419,11 +396,6 @@ export function DashboardDetail() {
                       ) : null}
                       {isEditMode ? (
                         <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                          {/* <UpdateWidget
-                          widgetInfo={widgetInfo}
-                          setWidgetList={setWidgetList}
-                          widgetId={widgetId}
-                        /> */}
                           <DragIcon
                             width={20}
                             height={20}

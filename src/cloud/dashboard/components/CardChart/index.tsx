@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
+import { type z } from 'zod'
 
 import { Spinner } from '~/components/Spinner'
 
 import { type LatestData } from '../../types'
+import { type widgetSchema } from '../Widget'
 
-export function CardChart({ data, unit }: { data: LatestData, unit: string }) {
+export function CardChart({
+  data,
+  widgetInfo,
+}: {
+  data: LatestData
+  widgetInfo: z.infer<typeof widgetSchema>
+}) {
   // console.log('new card: ', data)
-  // console.log('unit: ', unit)
-
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
     value: '',
   })
-  const [unitData, setUnitData] = useState<string>("")
 
   useEffect(() => {
     if (data != null && Object.keys(data).length > 0) {
@@ -22,7 +27,6 @@ export function CardChart({ data, unit }: { data: LatestData, unit: string }) {
         value: Object.values(data)?.[0]?.value,
       }
       setDataTransformedFeedToChart(dataDataType)
-      setUnitData(unit)
     }
   }, [data])
 
@@ -32,9 +36,9 @@ export function CardChart({ data, unit }: { data: LatestData, unit: string }) {
         <div className="flex h-full flex-col items-center justify-center border border-secondary-400 bg-white shadow hover:bg-gray-100">
           <p className="mb-2 text-body-sm opacity-70">
             {dataTransformedFeedToChart.key}
-            {" ("}
-            {unitData}
-            {")"}
+            {' ('}
+            {widgetInfo?.attribute_config[0]?.unit}
+            {')'}
           </p>
           <h2 className="text-4xl font-bold">
             {dataTransformedFeedToChart.value}

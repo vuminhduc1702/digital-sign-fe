@@ -23,7 +23,7 @@ import refreshIcon from '~/assets/icons/table-refresh.svg'
 export function LineChart({
   data,
   widgetInfo,
-  refetchData = () => {},
+  refetchData,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
@@ -215,10 +215,10 @@ export function LineChart({
 
   function refresh() {
     setIsRefresh(true)
-    refetchData()
+    refetchData?.()
     setInterval(() => {
       setIsRefresh(false)
-    }, 1000)
+    }, 100)
   }
 
   return (

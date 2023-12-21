@@ -44,7 +44,7 @@ export function BaseTable<T extends Record<string, any>>({
   isAbsoluteBtn = true,
   onDataText,
   refreshBtn,
-  callbackParent = () => {},
+  callbackParent,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -97,7 +97,7 @@ export function BaseTable<T extends Record<string, any>>({
 
   function refresh() {
     setIsRefresh(true)
-    callbackParent()
+    callbackParent?.()
     setTimeout(() => {
       setIsRefresh(false)
     }, 1000)
@@ -160,7 +160,7 @@ export function BaseTable<T extends Record<string, any>>({
                     )
                   })}
                   {refreshBtn ? (
-                    <th className="h-9 flex items-center justify-center cursor-pointer">
+                    <th className="flex h-9 cursor-pointer items-center justify-center">
                       <img src={refreshIcon} onClick={refresh} />
                     </th>
                   ) : null}
@@ -265,9 +265,9 @@ export function BaseTable<T extends Record<string, any>>({
             </thead>
             <tbody>
               {isRefresh ? (
-                <td colSpan={999}>
-                  <div className="flex justify-center">
-                    <Spinner size="md" />
+                <td colSpan={999} rowSpan={0}>
+                  <div className="flex h-full items-center justify-center">
+                    <Spinner size="lg" />
                   </div>
                 </td>
               ) : totalAttrs > 0 ? (
@@ -360,11 +360,13 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="mt-4 flex items-center justify-between gap-2">
+      <div className="mt-4 flex items-center justify-between gap-2 relative">
         <div
-          className={cn('flex gap-3', {
+          className={cn('flex gap-3', 
+          {
             'absolute bottom-5': isAbsoluteBtn,
-          })}
+          }
+          )}
         >
           <span className="flex items-center gap-1 text-body-light">
             {t('table:show_in')
@@ -378,9 +380,11 @@ export function BaseTable<T extends Record<string, any>>({
           </span>
         </div>
         <div
-          className={cn('flex gap-x-2', {
+          className={cn('flex gap-x-2', 
+          {
             'absolute bottom-5 right-6': isAbsoluteBtn,
-          })}
+          }
+          )}
         >
           <Button
             className="rounded-l-md border-none"
