@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { axios } from '~/lib/axios'
 import { Button } from '~/components/Button'
 import {
@@ -35,21 +35,7 @@ import { LWM2MData } from '../types/lwm2mXML'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { ChevronDown } from 'lucide-react'
-
-
-// export const templatelwm2mSchema = z.object({
-//   name: nameSchema,
-//   transport_config: z.object({
-//     protocol: z.string(),
-//     config: z.record(ConfigItem),
-//     info: z.object({
-//       module_config: z.array(moduleConfigSchema).nullable(),
-//     }),
-//   }),
-// })
-export type TransportConfig = z.infer<typeof transportConfigSchema>
 
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
@@ -89,79 +75,15 @@ export default function CreateTemplateLwM2M() {
   }, [XMLData, watch('rule_chain_id')])
   console.log('filterLWM2M', filterLWM2M)
   function formatString(str) {
-    // Chuyển đổi chuỗi thành chữ thường (lowercase)
     const lowercasedStr = str.toLowerCase();
-  
-    // Thay thế dấu cách bằng dấu gạch dưới (underscore)
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
-  
-    return formattedStr;
+    return formattedStr
   }
-
   const [openAccordion, setOpenAccordion] = useState()
-  // const handleAccordionChange = value => {
-  //   setOpenAccordion(value)
-  // }
-
-    //const [clickedItemId, setClickedItemId] = useState({});
-  // const { fields, append, remove } = useFieldArray({
-  //   name: 'attributes',
-  //   control,
-  // })
-  // console.log('fields', fields)
-  // const [clickedItemIds, setClickedItemIds] = useState([])
-  // const idToNameMap = {};
-  // const handleCheckboxChange = (itemId) => {
-  //   setClickedItemIds((prevIds) => {
-  //     if (prevIds.includes(itemId)) {
-  //       return prevIds.filter((id) => id !== itemId)
-  //     } else {
-  //       return [...prevIds, itemId]
-  //     }
-  //   })
-  // }
-  
-  // const [accordionStates, setAccordionStates] = useState({});
-  
-  // const handleAccordionChange = (accordionIndex) => {
-  //   setAccordionStates((prevStates) => {
-  //     // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
-  //     const newStates = { ...prevStates };
-  //     if (newStates[accordionIndex]) {
-  //       newStates[accordionIndex] = [];
-  //     } else {
-  //       // Nếu accordion chưa được mở, tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
-  //       newStates[accordionIndex] = [];
-  //     }
-  //     // Đảm bảo rằng mỗi lần mở một accordion, ta tạo một mảng rỗng để lưu trữ trạng thái checkbox của nó
-  //     //newStates[accordionIndex] = newStates[accordionIndex] || [];
-
-  //     return newStates;
-  //   })
-    
-  // };
-
-  // const handleCheckboxChange = ((accordionIndex, itemId) => {
-  //   setAccordionStates((prevStates) => {
-  //     // Tạo một bản sao của trạng thái trước đó để không làm thay đổi trực tiếp trạng thái trước đó
-  //     const newStates = { ...prevStates };
-
-  //     if (!newStates[accordionIndex]) {
-  //       newStates[accordionIndex] = [];
-  //     }
-
-  //     if (newStates[accordionIndex].includes(itemId)) {
-  //       newStates[accordionIndex] = newStates[accordionIndex].filter((id) => id !== itemId);
-  //     } else {
-  //       newStates[accordionIndex].push({itemId});
-  //     }
-
-  //     return newStates;
-  //   });
-  // });
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
-  const [accordionStates, setAccordionStates] = useState({});
+  const [accordionStates, setAccordionStates] = useState({})
+  const [checkboxStates, setCheckboxStates] = useState({})
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState({})
   const handleAccordionChange = (accordionIndex) => {
@@ -221,7 +143,15 @@ export default function CreateTemplateLwM2M() {
     setConfigData(newConfigData)
     console.log('newConfigData:', newConfigData)
 }, [accordionStates])
-
+const resetAllStates = () => {
+  setCheckboxStates({})
+  setItemNames({})
+  setAccordionStates([])
+}
+const handleClearSelectDropdown = () => {
+  resetAllStates();
+  setFilterLWM2M([]);
+};
 const transportConfig = {
   protocol: 'lwm2m',
   config: configData,
@@ -307,10 +237,10 @@ const handleSubmitform = async () => {
               closeMenuOnSelect={false}
               isOptionDisabled={option => option.label === t('loading:flow_id')}
               noOptionsMessage={() => t('table:no_in_flow_id')}
+              handleClearSelectDropdown={handleClearSelectDropdown}
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
-              handleClearSelectDropdown={() => setFilterLWM2M([])}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.rule_chain_id?.message}
@@ -355,6 +285,7 @@ const handleSubmitform = async () => {
                           item.Operations === 'R'
                         ) { 
                           const defaultItemName = item.Name
+                          const itemId = `${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`
                         return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
@@ -366,14 +297,14 @@ const handleSubmitform = async () => {
                                     control={control}
                                     name={`transport_config.config`}
                                     render={({ field: { onChange, ...field } }) => {
-                                    //   const handleCheckboxChange = (e) => {
+                                    
                                     return (
                                       <Checkbox
                                         className="ml-auto mr-3 mt-2 flex h-5 w-5"
                                         {...field}
+                                        checked={checkboxStates[itemId]}
                                         onCheckedChange={(e) => {
                                         const formattedName = formatString(defaultItemName)
-
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
                                           name: lw2m2.LWM2M.Object.Name,
@@ -385,6 +316,13 @@ const handleSubmitform = async () => {
                                           name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
                                           type: item.Type,
                                         };
+                                        if (typeof e === 'boolean') {
+                                          // Nếu là boolean, cập nhật trực tiếp
+                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e }));
+                                        } else {
+                                          // Nếu là CheckedState, sử dụng e.target.checked
+                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e.target.checked }));
+                                        }
                                         handleCheckboxChange(accordionIndex, moduleObject ,itemObject)
                                         onChange(e)
                                         }}
@@ -424,7 +362,6 @@ const handleSubmitform = async () => {
           </div>
         </>
       </form>
-      <button onClick={handleSubmitform}>Submit</button>
     </FormDrawer>
   )
 }

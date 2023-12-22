@@ -46,6 +46,7 @@ export type Template = {
   provision_key: string
   provision_secret: string
   created_time: number
+  transport_config: TransportConfig
   attributes: AttrList
 }
 export type TemplateLwM2MList = {
