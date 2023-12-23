@@ -49,11 +49,6 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
-
-const { AttrLwM2MTemplate } = lazyImport(
-  () => import('~/cloud/deviceTemplate'),
-  'AttrLwM2MTemplate',
-)
 export const protectedRoutes = [
   {
     element: <MainLayout />,

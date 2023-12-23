@@ -9,7 +9,7 @@ import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
 import storage from '~/utils/storage'
 
-import { TransportConfigAttribute, type ModuleConfig } from '../types'
+import { type TransportConfigAttribute, type ModuleConfig } from '../types'
 import { useTemplateLwM2MById } from '../api'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'

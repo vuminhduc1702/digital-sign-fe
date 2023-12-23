@@ -13,7 +13,7 @@ export type TransportConfigAttribute = {
 export type ModuleConfig = {
   Observe: boolean
   attribute_info: TransportConfigAttribute[]
-  created_time: string
+  last_update_ts: number
   id: string
   module_name: string
   numberOfAttributes: number
@@ -46,6 +46,7 @@ export type Template = {
   provision_key: string
   provision_secret: string
   created_time: number
+  transport_config: TransportConfig
   attributes: AttrList
 }
 export type TemplateLwM2MList = {
