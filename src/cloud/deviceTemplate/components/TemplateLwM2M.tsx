@@ -11,7 +11,7 @@ import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
-import { UpdateTemplate } from './UpdateTemplate'
+//import { UpdateTemplate } from './UpdateTemplate'
 import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
@@ -23,6 +23,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { UpdateTemplateLwM2M } from './UpdateTemplateLwM2M'
 
 export function TemplateLwM2M() {
   const { t } = useTranslation()
@@ -181,13 +182,13 @@ export function TemplateLwM2M() {
             {t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {/* {selectedUpdateTemplate != null ? (
-          <UpdateTemplate
+        {selectedUpdateTemplate != null ? (
+          <UpdateTemplateLwM2M
             close={close}
             isOpen={isOpen}
-            //selectedUpdateTemplate={selectedUpdateTemplate}
+            selectedUpdateTemplate={selectedUpdateTemplate}
           />
-        ) : null} */}
+        ) : null}
       </div>
     </>
   )

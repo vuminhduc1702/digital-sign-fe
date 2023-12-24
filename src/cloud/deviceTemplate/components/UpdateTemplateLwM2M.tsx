@@ -1,9 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { axios } from '~/lib/axios'
+import { useSpinDelay } from 'spin-delay'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '~/components/Button'
 import {
   Accordion,
@@ -13,44 +12,60 @@ import {
 } from '~/components/Accordion'
 import {
   FieldWrapper,
-  FormDrawer,
-  SelectDropdown,
   InputField,
   SelectField,
+  SelectDropdown,
 } from '~/components/Form'
-import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
-import {
-  useCreateTemplate,
-  useUpdateTemplate,
-} from '../api'
-import storage from '~/utils/storage'
+import { Drawer } from '~/components/Drawer'
+import { Spinner } from '~/components/Spinner'
+import { type UpdateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
+import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
+import { templateAttrSchema } from './CreateTemplate'
 import { Checkbox } from '~/components/Checkbox'
-import { flattenData } from '~/utils/misc.ts'
+import storage from '~/utils/storage'
 import { useGetXMLdata } from '../api/getXMLdata'
-
-import { transportConfigSchema, nameSchema } from '~/utils/schemaValidation'
+import { useGetRulechains } from '../api/getRulechains'
+import { flattenData } from '~/utils/misc.ts'
 import { type LWM2MResponse } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ChevronDown } from 'lucide-react'
 
-export default function CreateTemplateLwM2M() {
+import { ChevronDown } from 'lucide-react'
+import { type Template } from '../types'
+import { type Attribute } from '~/types'
+import {
+  booleanSelectOption,
+  numberInput,
+  valueTypeList,
+} from '~/cloud/orgManagement/components/Attributes'
+
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+
+type UpdateTemplateProps = {
+  selectedUpdateTemplate: Template
+  close: () => void
+  isOpen: boolean
+}
+
+export function UpdateTemplateLwM2M({
+  selectedUpdateTemplate,
+  close,
+  isOpen,
+}: UpdateTemplateProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
     label: `${item.module_name} #${item.file_id}_${item.version}`,
     value: `${item.file_id}`,
   }))
-  const { mutate: mutateUpdateTemplatelwm2m } = useUpdateTemplate({
-    isOnCreateTemplate: true,
-  })
-  const {
-    mutateAsync: mutateAsyncCreateTemplatelwm2m,
-    isLoading: isLoadingCreateTemplatelwm2m,
-    isSuccess: isSuccessCreateTemplatelwm2m,
-  } = useCreateTemplate()
+
+  // const {
+  //   mutateAsync: mutateAsyncCreateTemplatelwm2m,
+  //   isLoading: isLoadingCreateTemplatelwm2m,
+  //   isSuccess: isSuccessCreateTemplatelwm2m,
+  // } = useCreateTemplate()
   const { register, formState, handleSubmit, control, watch, reset } = useForm()
   console.log('formState errors', formState.errors)
   const { data: XMLData } = useGetXMLdata({
@@ -144,15 +159,15 @@ export default function CreateTemplateLwM2M() {
     setConfigData(newConfigData)
     console.log('newConfigData:', newConfigData)
 }, [accordionStates])
-const resetAllStates = () => {
-  setCheckboxStates({})
-  setItemNames({})
-  setAccordionStates([])
-  setFilterLWM2M([])
-}
-const handleClearSelectDropdown = () => {
-  resetAllStates()
-}
+// const resetAllStates = () => {
+//   setCheckboxStates({})
+//   setItemNames({})
+//   setAccordionStates([])
+//   setFilterLWM2M([])
+// }
+// const handleClearSelectDropdown = () => {
+//   resetAllStates()
+// }
 const transportConfig = {
   protocol: 'lwm2m',
   config: configData,
@@ -165,55 +180,86 @@ const data = {
   project_id: projectId,
   transport_config: transportConfig
 }
+  
+  const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateLwM2MById({
+    templateId: selectedUpdateTemplate?.id,
+    config: { suspense: false },
+  })
+  console.log('LwM2MData', LwM2MData)
+
+  const { mutate, isLoading, isSuccess } = useUpdateTemplate()
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
+
+  useEffect(() => {
+    if (LwM2MData != null) {
+      reset({
+        name: selectedUpdateTemplate?.name,
+      })
+    }
+  }, [LwM2MData, selectedUpdateTemplate])
+
+  const showSpinner = useSpinDelay(LwM2MLoading, {
+    delay: 150,
+    minDuration: 300,
+  })
+
   return (
-    <FormDrawer
-      isDone={isLoadingCreateTemplatelwm2m}
-      triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
-      }
-      title={t('cloud:device_template.add_template.title')}
-      submitButton={
-        <Button
-          className="rounded border-none"
-          form="create-template"
-          type="submit"
-          size="lg"
-          isLoading={isSuccessCreateTemplatelwm2m}
-          startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-          }
-        />
-      }
-      resetData={() => {
-        reset()
-        setName('')
-        resetAllStates()
-      }}
-    >
-      <form
-        className="w-full space-y-5"
-        id="create-template"
-        onSubmit={handleSubmit(async () => {await mutateAsyncCreateTemplatelwm2m({data})
-          // mutateUpdateTemplatelwm2m({
-          //   data: {
-          //     name: dataCreateTemplatelwm2m.name,
-          //     rule_chain_id: dataCreateTemplatelwm2m.rule_chain_id,
-          //     transport_config: dataCreateTemplatelwm2m.transport_config,
-          //   },
-          //   templateId: dataCreateTemplatelwm2m.id,
-          // })
-        })}
-      >
+    <Drawer
+      isOpen={isOpen}
+      onClose={close}
+      title={t('cloud:device_template.add_template.update')}
+      renderFooter={() => (
         <>
+          <Button
+            className="rounded border-none"
+            variant="secondary"
+            size="lg"
+            onClick={close}
+            startIcon={
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+            }
+          />
+          <Button
+            className="rounded border-none"
+            form="update-template"
+            type="submit"
+            size="lg"
+            isLoading={isLoading}
+            startIcon={
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            }
+            disabled={!formState.isDirty}
+          />
+        </>
+      )}
+    >
+      {LwM2MLoading ? (
+        <div className="flex grow items-center justify-center">
+          <Spinner showSpinner={showSpinner} size="xl" />
+        </div>
+      ) : (
+        <form
+          className="w-full space-y-5"
+          id="update-template"
+          onSubmit={handleSubmit(() => {data
+            
+          mutate({
+            data,
+            templateId: selectedUpdateTemplate?.id,
+          })
+          })}
+        >
+          <>
           <InputField
             label={t('cloud:device_template.add_template.name')}
             value={name}
             onChange={handleNameChange}
+            registration={register('name')}
           />
           <div className="space-y-1">
             <SelectDropdown
@@ -226,7 +272,7 @@ const data = {
               closeMenuOnSelect={false}
               isOptionDisabled={option => option.label === t('loading:flow_id')}
               noOptionsMessage={() => t('table:no_in_flow_id')}
-              handleClearSelectDropdown={handleClearSelectDropdown}
+              //handleClearSelectDropdown={handleClearSelectDropdown}
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
@@ -339,8 +385,9 @@ const data = {
               ))}
             </Accordion> 
           </div>
-        </>
-      </form>
-    </FormDrawer>
+          </>
+        </form>
+      )}
+    </Drawer>
   )
 }

@@ -1,5 +1,6 @@
 export * from './CreateTemplate'
 export * from './UpdateTemplate'
+export * from './UpdateTemplateLwM2M'
 //export * from './ComboBoxSelectTemplate'
 export * from './ComboBoxSelectTemplateLwM2M'
 export * from './TemplateSidebar'

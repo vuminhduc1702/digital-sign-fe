@@ -113,7 +113,7 @@ import { type ModuleConfig } from '../types'
 
 type LwM2MTableProps = {
     module_config: ModuleConfig[]
-  } 
+} 
 
 export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()

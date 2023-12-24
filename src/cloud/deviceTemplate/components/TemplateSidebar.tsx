@@ -28,7 +28,7 @@ import { TemplateLwM2M } from './TemplateLwM2M'
 
 export function TemplateSidebar() {
   const { t } = useTranslation()
-  const [type, setType] = useState('Generic')
+  const [type, setType] = useState('Default')
   const navigate = useNavigate()
   const DeviceType = ['Default', 'LwM2M']
   const { close, open, isOpen } = useDisclosure()
