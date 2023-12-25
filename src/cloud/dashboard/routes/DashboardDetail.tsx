@@ -237,6 +237,11 @@ export function DashboardDetail() {
     minDuration: 300,
   })
 
+  const showSpinnerResetLayout = useSpinDelay(rerenderLayout, {
+    delay: 150,
+    minDuration: 300,
+  })
+
   function refetchData() {
     setRefetchDataState(prev => !prev)
   }
@@ -270,7 +275,7 @@ export function DashboardDetail() {
         {connectionStatus === 'Open' ? (
           rerenderLayout ? (
             <div className="flex grow items-center justify-center">
-              <Spinner size="xl" />
+              <Spinner showSpinner={showSpinnerResetLayout} size="xl" />
             </div>
           ) : (
             <ReactGridLayout

@@ -9,7 +9,7 @@ import { type Map } from 'leaflet'
 export function MapChart({
   data,
   widgetInfo,
-  isEditMode
+  isEditMode,
 }: {
   data: any
   widgetInfo: z.infer<typeof widgetSchema>
@@ -23,15 +23,6 @@ export function MapChart({
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
-
-  // const fakeCoor = [
-  //   [21.0285, 105.8542],
-  //   [21.0374, 105.8497],
-  //   [21.0369, 105.8511],
-  //   [21.04, 105.8311],
-  //   [21.0402, 105.8475],
-  //   [21.0245, 105.8473],
-  // ]
 
   useEffect(() => {
     if (isEditMode) {
@@ -48,13 +39,24 @@ export function MapChart({
 
     if (newValuesRef.current?.data) {
       Object.entries(newValuesRef.current.data).forEach((dataItem, index) => {
-        const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'lat')
-        const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(key => key === 'long')
-        const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex].value
-        const dataLong = Object.values(Object.values(dataItem)[1])[dataLongIndex].value
+        const dataLatIndex = Object.keys(Object.values(dataItem)[1]).findIndex(
+          key => key === 'lat',
+        )
+        const dataLongIndex = Object.keys(Object.values(dataItem)[1]).findIndex(
+          key => key === 'long',
+        )
+        const dataLat = Object.values(Object.values(dataItem)[1])[dataLatIndex]
+          .value
+        const dataLong = Object.values(Object.values(dataItem)[1])[
+          dataLongIndex
+        ].value
         coorCurrent = [parseFloat(dataLat), parseFloat(dataLong)]
-        coorDataWithId.push({id: data?.device?.[index].id, name: data?.device?.[index].entityName, data: coorCurrent})
-        dataCurrent = coorDataWithId.map((item) => item.data)
+        coorDataWithId.push({
+          id: data?.device?.[index].id,
+          name: data?.device?.[index].entityName,
+          data: coorCurrent,
+        })
+        dataCurrent = coorDataWithId.map(item => item.data)
       })
       setDataForMap(dataCurrent)
     }
@@ -63,23 +65,21 @@ export function MapChart({
   useEffect(() => {
     if (data.data) {
       prevValuesRef.current = newValuesRef.current || data
-      if (
-        newValuesRef.current !== null
-      ) {
-          // const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
-          // if (deviceIndex !== -1) {
-                
-          //       for (const [key, value] of Object.entries(data.data[0])) {
-          //         newValuesRef.current?.data.map(([key, value]) => ({
-          //           value = 'asdf'
-          //           // index === deviceIndex ? {
-          //           //   ts: data.data[0].[item]
-          //           // }
-          //         }))
-          //       }
-          // } else {
-            prevValuesRef.current = data
-          // }
+      if (newValuesRef.current !== null) {
+        // const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
+        // if (deviceIndex !== -1) {
+
+        //       for (const [key, value] of Object.entries(data.data[0])) {
+        //         newValuesRef.current?.data.map(([key, value]) => ({
+        //           value = 'asdf'
+        //           // index === deviceIndex ? {
+        //           //   ts: data.data[0].[item]
+        //           // }
+        //         }))
+        //       }
+        // } else {
+        prevValuesRef.current = data
+        // }
       } else {
         newValuesRef.current = data
         dataManipulation()
@@ -91,8 +91,10 @@ export function MapChart({
   }, [data])
 
   useEffect(() => {
-    const avgLat = dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
-    const avgLong = dataForMap.reduce((sum, [, lng]) => sum + lng, 0) / dataForMap.length
+    const avgLat =
+      dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
+    const avgLong =
+      dataForMap.reduce((sum, [, lng]) => sum + lng, 0) / dataForMap.length
     setAvgLatitude(avgLat)
     setAvgLongitude(avgLong)
     if (dataForMap.length >= 2) {
@@ -120,8 +122,11 @@ export function MapChart({
         const [lat, lng] = coor
         // const deviceName = deviceDetailInfo?.[index].name.value
         const deviceNameArray = deviceDetailInfo?.map((item: TimeSeries) => {
-          const deviceData = JSON.parse(widgetInfo.datasource.init_message).entityDataCmds[0].query.entityFilter.entityIds
-          const deviceFilter = deviceData.filter((device: any) => device === item.id)
+          const deviceData = JSON.parse(widgetInfo.datasource.init_message)
+            .entityDataCmds[0].query.entityFilter.entityIds
+          const deviceFilter = deviceData.filter(
+            (device: any) => device === item.id,
+          )
           if (deviceFilter.length != 0) {
             return item.entityName
           }
@@ -129,8 +134,10 @@ export function MapChart({
         return (
           <Marker position={[lat, lng]} key={index}>
             <Popup>
-              {deviceDetailInfo && deviceDetailInfo.length > 0 ? `Thiết bị ${deviceNameArray[index]}` : `Thiết bị ${index}`}
-              <br /> 
+              {deviceDetailInfo && deviceDetailInfo.length > 0
+                ? `Thiết bị ${deviceNameArray[index]}`
+                : `Thiết bị ${index}`}
+              <br />
               {`Current coor (${lat},${lng})`}
             </Popup>
           </Marker>
