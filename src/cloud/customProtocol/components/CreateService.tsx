@@ -49,7 +49,7 @@ export const outputList = [
     label: i18n.t('cloud:custom_protocol.service.bool'),
     value: 'bool',
   },
-] as const
+]
 
 export function CreateService({
   thingId,
