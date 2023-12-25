@@ -52,7 +52,7 @@ export default function CreateTemplateLwM2M() {
     isSuccess: isSuccessCreateTemplatelwm2m,
   } = useCreateTemplate()
   const { register, formState, handleSubmit, control, watch, reset } = useForm()
-  console.log('formState errors', formState.errors)
+  //console.log('formState errors', formState.errors)
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
@@ -72,7 +72,7 @@ export default function CreateTemplateLwM2M() {
       setFilterLWM2M(Array.from(new Set(filterArr)))
     }
   }, [XMLData, watch('rule_chain_id')])
-  console.log('filterLWM2M', filterLWM2M)
+  //console.log('filterLWM2M', filterLWM2M)
   function formatString(str) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')

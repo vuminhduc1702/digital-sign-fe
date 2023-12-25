@@ -66,28 +66,28 @@ export function UpdateTemplateLwM2M({
   //   isLoading: isLoadingCreateTemplatelwm2m,
   //   isSuccess: isSuccessCreateTemplatelwm2m,
   // } = useCreateTemplate()
-  const { register, formState, handleSubmit, control, watch, reset } = useForm()
-  console.log('formState errors', formState.errors)
-  const { data: XMLData } = useGetXMLdata({
-    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-    config: {
-      suspense: false,
-    },
-  })
-  const XMLDataRef = useRef<LWM2MResponse[]>([])
-  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  useEffect(() => {
-    if (XMLData != null) {
-      XMLDataRef.current = [...XMLDataRef.current, XMLData]
-    }
-    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-      const filterArr = XMLDataRef.current.filter(item => {
-        return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
-      })
-      setFilterLWM2M(Array.from(new Set(filterArr)))
-    }
-  }, [XMLData, watch('rule_chain_id')])
-  console.log('filterLWM2M', filterLWM2M)
+  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm()
+  //console.log('formState errors', formState.errors)
+  // const { data: XMLData } = useGetXMLdata({
+  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+  //   config: {
+  //     suspense: false,
+  //   },
+  // })
+  // const XMLDataRef = useRef<LWM2MResponse[]>([])
+  // const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  // useEffect(() => {
+  //   if (XMLData != null) {
+  //     XMLDataRef.current = [...XMLDataRef.current, XMLData]
+  //   }
+  //   if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
+  //     const filterArr = XMLDataRef.current.filter(item => {
+  //       return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
+  //     })
+  //     setFilterLWM2M(Array.from(new Set(filterArr)))
+  //   }
+  // }, [XMLData, watch('rule_chain_id')])
+  //console.log('filterLWM2M', filterLWM2M)
   function formatString(str) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
@@ -149,7 +149,7 @@ export function UpdateTemplateLwM2M({
 
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
-    console.log('Accordion States:', accordionArray);
+    //console.log('Accordion States:', accordionArray);
     const newConfigData = {}
     accordionArray.forEach((accordionItem) => {
       accordionItem.attribute_info.forEach((attribute) => {
@@ -157,7 +157,7 @@ export function UpdateTemplateLwM2M({
       })
     })
     setConfigData(newConfigData)
-    console.log('newConfigData:', newConfigData)
+    //console.log('newConfigData:', newConfigData)
 }, [accordionStates])
 // const resetAllStates = () => {
 //   setCheckboxStates({})
@@ -228,7 +228,7 @@ const data = {
       //     newCheckboxStates[attribute.id] = /* logic để xác định trạng thái của checkbox */;
       //   });
       })
-      console.log('newAccordionStates', newAccordionStates)
+      //console.log('newAccordionStates', newAccordionStates)
       setAccordionStates(newAccordionStates)
       // setCheckboxStates(newCheckboxStates);
       const allid = (Object.values(newAccordionStates) as { id: string }[][])
@@ -241,11 +241,37 @@ const data = {
     // Lựa chọn tất cả các module_name làm giá trị mặc định
     }
   }, [LwM2MData])
-  console.log('selectedModuleNames', selectedModuleNames)
-  console.log('defaultValue', LwM2MSelectOptions.filter(
-    (item) => selectedModuleNames.includes(item.value),
-  ))
+  //console.log('selectedModuleNames', selectedModuleNames)
+  // console.log('defaultValue', LwM2MSelectOptions.filter(
+  //   (item) => selectedModuleNames.includes(item.value),
+  // ))
+  //console.log('Giá trị của rule_chain_id:', watch('rule_chain_id', selectedModuleNames))
+  const filterLWM2Mfinal = watch('rule_chain_id', selectedModuleNames)
+  const { data: XMLData } = useGetXMLdata({
+    fileId: filterLWM2Mfinal?.[filterLWM2Mfinal?.length - 1] ?? '',
+    config: {
+      suspense: false,
+    },
+  })
+  const XMLDataRef = useRef<LWM2MResponse[]>([])
+  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  useEffect(() => {
+    if (XMLData != null) {
+      XMLDataRef.current = [...XMLDataRef.current, XMLData]
+    }
+    if (XMLDataRef.current.length > 0 && filterLWM2Mfinal != null) {
+      const filterArr = XMLDataRef.current.filter(item => {
+        return filterLWM2Mfinal.includes(item.LWM2M.Object.ObjectID)
+      })
+      setFilterLWM2M(Array.from(new Set(filterArr)))
+    } 
+    
+  }, [XMLData, filterLWM2Mfinal])
 
+  console.log('selectedModuleNames', selectedModuleNames)
+  console.log('filterLWM2M', filterLWM2M)
+  console.log('filterLWM2Mfinal', filterLWM2Mfinal)
+    
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -322,7 +348,6 @@ const data = {
               defaultValue={LwM2MSelectOptions.filter(
                 (item) => selectedModuleNames.includes(item.value),
               )}
-               getOptionLabel={(option) => option.label}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.rule_chain_id?.message}
