@@ -58,6 +58,7 @@ import {
   EditBtnIcon,
   PlusIcon,
 } from '~/components/SVGIcons'
+import { type Device } from '~/cloud/orgManagement'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -246,6 +247,8 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -320,6 +323,14 @@ export function DashboardDetail() {
                           })),
                         )
                       : {}
+                  const filterDeviceData =
+                    widgetInfo &&
+                    widgetInfo.attribute_config &&
+                    widgetInfo.attribute_config.length > 0
+                      ? widgetInfo.attribute_config
+                      : {}
+                  console.log(widgetInfo.attribute_config)
+
                   return (
                     <div
                       key={widgetId}
@@ -368,6 +379,7 @@ export function DashboardDetail() {
                           data={lastestValuesForMap}
                           widgetInfo={widgetInfo}
                           isEditMode={isEditMode}
+                          filter={filteredComboboxData}
                         />
                       ) : widgetInfo?.description === 'GAUGE' ? (
                         <GaugeChart
@@ -394,6 +406,14 @@ export function DashboardDetail() {
                           sendMessage={sendMessage}
                           lastJsonMessage={lastJsonMessage}
                         />
+                      ) : null}
+                      {widgetInfo?.description === 'MAP' ? (
+                        <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                          <ComboBoxSelectDeviceDashboard
+                            setFilteredComboboxData={setFilteredComboboxData}
+                            data={undefined}
+                          />
+                        </div>
                       ) : null}
                       {isEditMode ? (
                         <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">

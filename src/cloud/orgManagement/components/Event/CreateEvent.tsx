@@ -337,7 +337,7 @@ export function CreateEvent() {
     control,
   })
   // console.log('formState.errors', formState.errors)
-  
+
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useCreateEvent()
 
