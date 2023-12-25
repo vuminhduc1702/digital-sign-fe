@@ -49,7 +49,7 @@ export const wsInterval = [
   { label: 'Week', value: 7 * 24 * 60 * 60 * 1000 },
   { label: 'Month', value: 30 * 24 * 60 * 60 * 1000 },
   { label: 'Year', value: 365 * 24 * 60 * 60 * 1000 },
-]
+] as const
 
 export const widgetAgg = [
   { label: 'None', value: 'NONE' },
@@ -58,7 +58,7 @@ export const widgetAgg = [
   { label: 'Max', value: 'MAX' },
   { label: 'Sum', value: 'SUM' },
   { label: 'Count', value: 'COUNT' },
-]
+] as const
 
 export const attrWidgetSchema = z.array(
   z.object({
@@ -734,17 +734,30 @@ export function CreateWidget({
                           )}
                         />
                         {widgetCategory === 'GAUGE' && (
-                          <InputField
-                            label={t('cloud:dashboard.config_chart.max')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.max
-                            }
-                            type="number"
-                            registration={register(
-                              `attributeConfig.${index}.max` as const,
-                              { valueAsNumber: true },
-                            )}
-                          />
+                          <>
+                            {/* <InputField
+                              label={t('cloud:dashboard.config_chart.min')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]?.min
+                              }
+                              type="number"
+                              registration={register(
+                                `attributeConfig.${index}.min` as const,
+                                { valueAsNumber: true },
+                              )}
+                            /> */}
+                            <InputField
+                              label={t('cloud:dashboard.config_chart.max')}
+                              error={
+                                formState?.errors?.attributeConfig?.[index]?.max
+                              }
+                              type="number"
+                              registration={register(
+                                `attributeConfig.${index}.max` as const,
+                                { valueAsNumber: true },
+                              )}
+                            />
+                          </>
                         )}
                       </div>
                       {isMultipleAttr ? (

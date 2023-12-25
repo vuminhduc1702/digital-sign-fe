@@ -23,7 +23,7 @@ import refreshIcon from '~/assets/icons/table-refresh.svg'
 export const BarChart = ({
   data,
   widgetInfo,
-  refetchData = () => {},
+  refetchData,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
@@ -213,7 +213,7 @@ export const BarChart = ({
 
   function refresh() {
     setIsRefresh(true)
-    refetchData()
+    refetchData?.()
     setInterval(() => {
       setIsRefresh(false)
     }, 1000)
@@ -268,7 +268,10 @@ export const BarChart = ({
         </>
       ) : (
         <div className="flex h-full items-center justify-center">
-          <Spinner showSpinner={showSpinner} size="xl" />
+          <Spinner
+            //  showSpinner={showSpinner}
+            size="xl"
+          />
         </div>
       )}
     </>

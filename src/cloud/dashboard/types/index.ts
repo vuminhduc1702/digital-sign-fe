@@ -25,7 +25,7 @@ export type TimeSeries = {
 export type WSWidgetMapData = { id: string; name: string; value: string }
 
 export type MapSeries = {
-  data: TimeSeries[]
+  data: TimeSeries
   device: WSWidgetMapData[]
 }
 
