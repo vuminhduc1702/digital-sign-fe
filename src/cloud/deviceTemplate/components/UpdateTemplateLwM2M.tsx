@@ -101,7 +101,7 @@ export function UpdateTemplateLwM2M({
   const [checkboxStates, setCheckboxStates] = useState({})
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState({})
-
+  const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
   const handleAccordionChange = (accordionIndex) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
@@ -195,13 +195,56 @@ const data = {
     }
   }, [isSuccess, close])
 
+  // useEffect(() => {
+  //   if (LwM2MData != null) {
+  //     reset({
+  //       name: selectedUpdateTemplate?.name,
+
+  //     })
+  //   }
+  // }, [LwM2MData, selectedUpdateTemplate])
   useEffect(() => {
     if (LwM2MData != null) {
-      reset({
-        name: selectedUpdateTemplate?.name,
+      const { name, transport_config } = LwM2MData
+      const { module_config } = transport_config.info
+      setName(name);
+      const newAccordionStates = {}
+      const newCheckboxStates = {}
+      module_config.forEach((moduleItem, accordionIndex) => {
+  
+        if (!newAccordionStates[accordionIndex]) {
+          newAccordionStates[accordionIndex] = []
+        }
+  
+        newAccordionStates[accordionIndex].push({
+          id: moduleItem.id,
+          module_name: moduleItem.module_name,
+          attribute_info: moduleItem.attribute_info,
+          numberOfAttributes: moduleItem.numberOfAttributes,
+          last_update_ts: moduleItem.last_update_ts,
+        })
+  
+      //   moduleItem.attribute_info.forEach((attribute) => {
+      //     newCheckboxStates[attribute.id] = /* logic để xác định trạng thái của checkbox */;
+      //   });
       })
+      console.log('newAccordionStates', newAccordionStates)
+      setAccordionStates(newAccordionStates)
+      // setCheckboxStates(newCheckboxStates);
+      const allid = (Object.values(newAccordionStates) as { id: string }[][])
+      .flat()
+      .map((moduleItem) => moduleItem.id);
+
+    // Lựa chọn tất cả các module_name làm giá trị mặc định
+    setSelectedModuleNames(allid)
+    console.log('allModuleNames', allid)
+    // Lựa chọn tất cả các module_name làm giá trị mặc định
     }
-  }, [LwM2MData, selectedUpdateTemplate])
+  }, [LwM2MData])
+  console.log('selectedModuleNames', selectedModuleNames)
+  console.log('defaultValue', LwM2MSelectOptions.filter(
+    (item) => selectedModuleNames.includes(item.value),
+  ))
 
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
@@ -276,6 +319,10 @@ const data = {
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
+              defaultValue={LwM2MSelectOptions.filter(
+                (item) => selectedModuleNames.includes(item.value),
+              )}
+               getOptionLabel={(option) => option.label}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.rule_chain_id?.message}
