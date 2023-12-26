@@ -29,9 +29,9 @@ export function ComboBoxSelectTemplateLwM2M({
       'provision_key',
       'provision_secret',
       'created_time',
+      'transport_config',
     ],
   )
-
   const filteredData = filteredComboboxData(
     query,
     templateFlattenData,

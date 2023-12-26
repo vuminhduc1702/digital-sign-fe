@@ -134,7 +134,7 @@ export default function CreateTemplateLwM2M() {
 
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
-    console.log('Accordion States:', accordionArray);
+    //console.log('Accordion States:', accordionArray);
     const newConfigData = {}
     accordionArray.forEach((accordionItem) => {
       accordionItem.attribute_info.forEach((attribute) => {
@@ -142,8 +142,9 @@ export default function CreateTemplateLwM2M() {
       })
     })
     setConfigData(newConfigData)
-    console.log('newConfigData:', newConfigData)
 }, [accordionStates])
+// console.log('checkboxStates:', checkboxStates)
+// console.log('accordionStates', accordionStates)
 const resetAllStates = () => {
   setCheckboxStates({})
   setItemNames({})
@@ -276,7 +277,7 @@ const data = {
                           item.Operations === 'R'
                         ) { 
                           const defaultItemName = item.Name
-                          const itemId = `${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`
+                          const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
                         return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">

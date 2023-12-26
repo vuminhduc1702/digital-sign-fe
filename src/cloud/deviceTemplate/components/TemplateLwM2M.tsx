@@ -187,6 +187,7 @@ export function TemplateLwM2M() {
             close={close}
             isOpen={isOpen}
             selectedUpdateTemplate={selectedUpdateTemplate}
+            
           />
         ) : null}
       </div>
