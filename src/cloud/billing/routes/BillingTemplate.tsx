@@ -38,7 +38,7 @@ export function BillingTemplate() {
     start_time: startTime,
     searchData: searchData,
     end_time: endTime,
-    config: { keepPreviousData: true, staleTime: 0 },
+    config: { keepPreviousData: true, staleTime: 1000 },
   })
 
   const handleField = (field: string, value: any) => {
@@ -55,8 +55,8 @@ export function BillingTemplate() {
   return (
     <>
       {/* <TitleBar title={t('sidebar:payment.plhd')} /> */}
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg rounded-md bg-gray-50">
-        <div className="flex justify-between mb-5">
+      <div className="relative flex grow flex-col rounded-md bg-gray-50 px-9 py-3 shadow-lg">
+        <div className="mb-5 flex justify-between">
           <form
             id="search-subcription"
             className="flex flex-col justify-between space-y-6"
