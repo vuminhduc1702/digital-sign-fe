@@ -182,35 +182,69 @@ export function DashboardDetail() {
     isSendInitMessageRef.current = true
   }, [widgetList])
 
-  async function handleSendMessage() {
-    setTimeout(() => {
-      if (
-        lastJsonMessage?.requestType != null &&
-        lastJsonMessage?.requestType === 'INIT' &&
-        isSendMessageSubscribeRef.current
-      ) {
-        Object.values(widgetList).forEach(widget => {
-          const realtimeMessage = widget?.datasource?.realtime_message
-          const historyMessage = widget?.datasource?.history_message
-          const lastestMessage = widget?.datasource?.lastest_message
-          if (realtimeMessage !== '' && realtimeMessage != null) {
-            sendMessage(realtimeMessage)
-          }
-          if (historyMessage !== '' && historyMessage != null) {
-            sendMessage(historyMessage)
-          }
-          if (lastestMessage !== '' && lastestMessage != null) {
-            sendMessage(lastestMessage)
-          }
-        })
-      }
-    }, 150)
+  // async function handleSendMessage() {
+  //   setTimeout(() => {
+  //     if (
+  //       lastJsonMessage?.requestType != null &&
+  //       lastJsonMessage?.requestType === 'INIT' &&
+  //       isSendMessageSubscribeRef.current
+  //     ) {
+  //       Object.values(widgetList).forEach(widget => {
+  //         const realtimeMessage = widget?.datasource?.realtime_message
+  //         const historyMessage = widget?.datasource?.history_message
+  //         const lastestMessage = widget?.datasource?.lastest_message
+  //         if (realtimeMessage !== '' && realtimeMessage != null) {
+  //           sendMessage(realtimeMessage)
+  //         }
+  //         if (historyMessage !== '' && historyMessage != null) {
+  //           sendMessage(historyMessage)
+  //         }
+  //         if (lastestMessage !== '' && lastestMessage != null) {
+  //           sendMessage(lastestMessage)
+  //         }
+  //       })
+  //     }
+  //   }, 150)
+  //   isSendMessageSubscribeRef.current = true
+  // }
 
-    isSendMessageSubscribeRef.current = true
+  // useEffect(() => {
+  //   handleSendMessage()
+  // }, [widgetList, lastJsonMessage])
+
+  async function handleSendMessage() {
+    if (
+      lastJsonMessage?.requestType != null &&
+      lastJsonMessage?.requestType === 'INIT' &&
+      isSendMessageSubscribeRef.current
+    ) {
+      Object.values(widgetList).forEach(widget => {
+        const realtimeMessage = widget?.datasource?.realtime_message
+        const historyMessage = widget?.datasource?.history_message
+        const lastestMessage = widget?.datasource?.lastest_message
+        if (realtimeMessage !== '' && realtimeMessage != null) {
+          sendMessage(realtimeMessage)
+        }
+        if (historyMessage !== '' && historyMessage != null) {
+          sendMessage(historyMessage)
+        }
+        if (lastestMessage !== '' && lastestMessage != null) {
+          sendMessage(lastestMessage)
+        }
+      })
+    }
   }
 
   useEffect(() => {
-    handleSendMessage()
+    const timeoutId = setTimeout(() => {
+      handleSendMessage()
+    }, 150)
+
+    isSendMessageSubscribeRef.current = true
+
+    return () => {
+      clearTimeout(timeoutId)
+    }
   }, [widgetList, lastJsonMessage])
 
   function combinedObject(data: any[]) {

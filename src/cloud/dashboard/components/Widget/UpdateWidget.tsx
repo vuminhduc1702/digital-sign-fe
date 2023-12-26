@@ -300,6 +300,7 @@ export function UpdateWidget({
                 attribute_key: item.attribute_key,
                 color: item.color,
                 max: item.max,
+                min: item.min,
                 label: item.label,
                 unit: item.unit,
               })),
@@ -446,6 +447,7 @@ export function UpdateWidget({
                           color: '',
                           unit: '',
                           max: 100,
+                          min: 0,
                         })
                       }
                     />
@@ -557,17 +559,30 @@ export function UpdateWidget({
                         )}
                       />
                       {widgetInfo?.description === 'GAUGE' && (
-                        <InputField
-                          label={t('cloud:dashboard.config_chart.max')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.max
-                          }
-                          type="number"
-                          registration={register(
-                            `attributeConfig.${index}.max` as const,
-                            { valueAsNumber: true },
-                          )}
-                        />
+                        <>
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.min')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.min
+                            }
+                            type="number"
+                            registration={register(
+                              `attributeConfig.${index}.min` as const,
+                              { valueAsNumber: true },
+                            )}
+                          />
+                          <InputField
+                            label={t('cloud:dashboard.config_chart.max')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.max
+                            }
+                            type="number"
+                            registration={register(
+                              `attributeConfig.${index}.max` as const,
+                              { valueAsNumber: true },
+                            )}
+                          />
+                        </>
                       )}
                     </div>
                     {!(
