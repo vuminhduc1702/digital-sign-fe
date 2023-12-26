@@ -22,7 +22,7 @@ export function CustomerManageTemplate() {
     projectId,
     search_field: searchFilter.search_field,
     search_str: searchFilter.search_str,
-    config: { keepPreviousData: true, staleTime: 0 },
+    config: { keepPreviousData: true, staleTime: 1000 },
   })
 
   const { register, formState, control, handleSubmit } = useForm({

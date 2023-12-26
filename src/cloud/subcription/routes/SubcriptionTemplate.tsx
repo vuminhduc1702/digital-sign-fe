@@ -32,7 +32,7 @@ export function SubcriptionTemplate() {
     search_field: searchFilter.search_field,
     search_str: searchFilter.search_str,
     searchData: searchData,
-    config: { keepPreviousData: true, staleTime: 0 },
+    config: { keepPreviousData: true, staleTime: 1000 },
   })
 
   const handleField = (field: string, value: any) => {

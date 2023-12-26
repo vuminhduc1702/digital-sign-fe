@@ -286,7 +286,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"
