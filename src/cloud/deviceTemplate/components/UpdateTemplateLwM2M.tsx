@@ -26,7 +26,7 @@ import storage from '~/utils/storage'
 import { useGetXMLdata } from '../api/getXMLdata'
 import { useGetRulechains } from '../api/getRulechains'
 import { flattenData } from '~/utils/misc.ts'
-import { type LWM2MResponse, type TransportConfigAttribute } from '../types'
+import { type LWM2MResponse, type TransportConfig } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
 
@@ -195,69 +195,46 @@ const data = {
       close()
     }
   }, [isSuccess, close])
-  const transportConfigString = selectedUpdateTemplate?.transport_config;
-  console.log('Module ID:', transportConfigString);
 
-  const transportConfig = JSON.parse(transportConfigString);
-  console.log('transportConfig ID:', transportConfig);
+  const transport_Config = selectedUpdateTemplate?.transport_config
+  const transportConfigdata = JSON.parse(transport_Config)
+  const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
+  console.log('Mảng giá trị id:', idArray)
 
-  // useEffect(() => {
-  //   if (LwM2MData != null) {
-  //     const transportConfig = selectedUpdateTemplate?.transport_config
-  //     console.log('transportConfig', transportConfig)
-  //     if (transportConfig) {
-  //       const moduleConfig = transportConfig.info.module_config
-  //       console.log('moduleConfig', moduleConfig)
-  //     }}
-  // }, [LwM2MData, selectedUpdateTemplate])
-  // useEffect(() => {
-  //   if (LwM2MData && Object.keys(LwM2MData).length > 0) {
-  //     console.log('check in useEffectzzzz' );
-  //     const { name, transport_config } = LwM2MData
-  //     const { module_config } = transport_config.info
-  //     setName(name)
-  //     console.log('Updated name:', name)
-  //     const newAccordionStates = {}
-  //     const newCheckboxStates = {}
-  //     module_config.forEach((moduleItem, accordionIndex) => {
-  //       if (!newAccordionStates[accordionIndex]) {
-  //         newAccordionStates[accordionIndex] = []
-  //       }
-  //       newAccordionStates[accordionIndex].push({
-  //         id: moduleItem.id,
-  //         module_name: moduleItem.module_name,
-  //         attribute_info: moduleItem.attribute_info,
-  //         numberOfAttributes: moduleItem.numberOfAttributes,
-  //         last_update_ts: moduleItem.last_update_ts,
-  //       })
-  //       moduleItem.attribute_info.forEach((attribute) => {
-  //         newCheckboxStates[attribute.id] = true
-  //       })
-  //     })
-  //     setAccordionStates(newAccordionStates)
-  //     setCheckboxStates(newCheckboxStates);
-  //     const allid = (Object.values(newAccordionStates) as { id: string }[][])
-  //     .flat()
-  //     .map((moduleItem) => moduleItem.id);
-  //     setSelectedModuleNames(allid)
-  //     console.log('Updated allid:', allid)
-  //     setValue('rule_chain_id', allid)
-  //     reset({
-  //       name: name,
-  //       //selectedModuleNames:allid
-  //     })
-  //     //console.log('newCheckboxStates', newCheckboxStates)
-  //   }
-  // }, [LwM2MData])
-  // console.log('LwM2MData', LwM2MData)
-  // console.log('checkboxStates', checkboxStates)
-  //console.log('newAccordionStates', accordionStates)
-  
+  useEffect(() => {
+    if (LwM2MData != null) {
+      const { name, transport_config } = LwM2MData
+      const { module_config } = transport_config.info
+      setName(name)
+      const newAccordionStates = {}
+      const newCheckboxStates = {}
+      module_config.forEach((moduleItem, accordionIndex) => {
+        if (!newAccordionStates[accordionIndex]) {
+          newAccordionStates[accordionIndex] = []
+        }
+        newAccordionStates[accordionIndex].push({
+          id: moduleItem.id,
+          module_name: moduleItem.module_name,
+          attribute_info: moduleItem.attribute_info,
+          numberOfAttributes: moduleItem.numberOfAttributes,
+          last_update_ts: moduleItem.last_update_ts,
+        })
+        moduleItem.attribute_info.forEach((attribute) => {
+          newCheckboxStates[attribute.id] = true
+        })
+      })
+      setAccordionStates(newAccordionStates)
+      setCheckboxStates(newCheckboxStates);
+      const allid = (Object.values(newAccordionStates) as { id: string }[][])
+      .flat()
+      .map((moduleItem) => moduleItem.id);
+      setSelectedModuleNames(allid)
+      reset({
+        name: name,
+      })
+    }
+  }, [LwM2MData])
 
-  // console.log('defaultValue', LwM2MSelectOptions.filter(
-  //   (item) => selectedModuleNames.includes(item.value),
-  // ))
-  //console.log('Giá trị của rule_chain_id:', watch('rule_chain_id', selectedModuleNames))
   const filterLWM2Mfinal = watch('rule_chain_id', selectedModuleNames)
   const { data: XMLData } = useGetXMLdata({
     fileId: filterLWM2Mfinal?.[filterLWM2Mfinal?.length - 1] ?? '',
@@ -356,14 +333,14 @@ const data = {
                 'cloud:device_template.add_template.choose_flow_id',
               )}
               defaultValue={LwM2MSelectOptions.filter(
-                (item) => selectedModuleNames.includes(item.value),
+                (item) => idArray.includes(item.value),
               )}
             />
             <p className="text-body-sm text-primary-400">
               {formState?.errors?.rule_chain_id?.message}
             </p>
           </div>
-          {/* <div>
+          <div>
             <Accordion
               type="multiple"
               value={openAccordion}
@@ -466,7 +443,7 @@ const data = {
                 </AccordionItem>
               ))}
             </Accordion> 
-          </div> */}
+          </div>
           </>
         </form>
       )}
