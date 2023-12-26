@@ -93,20 +93,20 @@ export function DashboardDetail() {
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
 
-  const {
-    mutate: mutateUpdateDashboard,
-    isLoading: updateDashboardIsLoading,
-    isSuccess: updateDashboardIsSuccess,
-  } = useUpdateDashboard()
+  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
+    useUpdateDashboard()
 
   const { data: detailDashboard, refetch: detailDashboardRefetch } =
     useGetDashboardsById({
       id: dashboardId,
       config: {
-        staleTime: 0,
+        staleTime: 1000,
       },
     })
-  const widgetDetailDB = detailDashboard?.configuration?.widgets
+  const widgetDetailDB = useMemo(
+    () => detailDashboard?.configuration?.widgets ?? {},
+    [detailDashboard?.configuration?.widgets],
+  )
 
   const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
@@ -139,13 +139,7 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    if (updateDashboardIsSuccess) {
-      detailDashboardRefetch()
-    }
-  }, [updateDashboardIsSuccess])
-
-  useEffect(() => {
-    if (widgetDetailDB != null) {
+    if (Object.keys(widgetDetailDB).length !== 0) {
       setWidgetList(widgetDetailDB)
     }
   }, [widgetDetailDB])
@@ -234,7 +228,7 @@ export function DashboardDetail() {
   }
 
   const showSpinner = useSpinDelay(connectionStatus === 'Connecting', {
-    delay: 150,
+    delay: 500,
     minDuration: 300,
   })
 
@@ -267,7 +261,7 @@ export function DashboardDetail() {
         }}
       />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {widgetDetailDB == null &&
+        {Object.keys(widgetDetailDB).length === 0 &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
@@ -275,180 +269,175 @@ export function DashboardDetail() {
           </div>
         ) : null}
 
-        {connectionStatus === 'Open' ? (
-          rerenderLayout ? (
-            <div className="flex grow items-center justify-center">
-              <Spinner showSpinner={showSpinnerResetLayout} size="xl" />
-            </div>
-          ) : (
-            <ReactGridLayout
-              margin={[20, 20]}
-              isDraggable={isEditMode}
-              draggableHandle=".drag-handle"
-              isResizable={isEditMode}
-              onLayoutChange={e => {
-                setLayoutDashboard(e)
-              }}
-            >
-              {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
-                Object.keys(widgetList).map((widgetId, index) => {
-                  const widgetInfo = widgetList?.[widgetId]
-                  const realtimeValues: TimeSeries =
-                    lastJsonMessage?.id === widgetId
-                      ? combinedObject(
-                          lastJsonMessage?.data?.map(
-                            device => device.timeseries as TimeSeries,
-                          ),
-                        )
-                      : {}
-                  const lastestValues: TimeSeries =
-                    lastJsonMessage?.id === widgetId
-                      ? combinedObject(
-                          lastJsonMessage?.data?.map(
-                            device => device.latest.TIME_SERIES as LatestData,
-                          ),
-                        )
-                      : {}
-                  const lastestValueOneDevice: LatestData =
-                    lastJsonMessage?.id === widgetId
-                      ? (lastJsonMessage?.data?.[0]?.latest
-                          ?.TIME_SERIES as LatestData)
-                      : {}
-                  const lastestValuesForMap: TimeSeries =
-                    lastJsonMessage?.id === widgetId
-                      ? combinedObject(
-                          lastJsonMessage?.data?.map(device => ({
-                            data: device.latest.TIME_SERIES as LatestData,
-                            device: device.entityId,
-                          })),
-                        )
-                      : {}
-                  const filterDeviceData =
-                    widgetInfo &&
-                    widgetInfo.attribute_config &&
-                    widgetInfo.attribute_config.length > 0
-                      ? widgetInfo.attribute_config
-                      : {}
-                  console.log(widgetInfo.attribute_config)
-
-                  return (
-                    <div
-                      key={widgetId}
-                      data-grid={
-                        detailDashboard?.dashboard_setting?.layout != null &&
-                        detailDashboard?.dashboard_setting?.layout?.length >
-                          0 &&
-                        Object.keys(widgetDetailDB).length ===
-                          Object.keys(widgetList).length
-                          ? detailDashboard?.dashboard_setting?.layout?.find(
-                              layout => layout.i === widgetId,
-                            )
-                          : {
-                              // x: index % 2 === 0 ? 0 : 4,
-                              x: index % 2 === 0 ? 0 : 6,
-                              y: 0,
-                              w: widgetInfo?.description === 'CARD' ? 3 : 6,
-                              h: widgetInfo?.description === 'CARD' ? 1 : 3,
-                            }
-                      }
-                      className={cn('relative bg-secondary-500')}
-                      data-iseditmode={isEditMode}
-                    >
-                      <p className="absolute ml-2 mt-2">
-                        {widgetInfo?.title ?? ''}
-                      </p>
-                      {widgetInfo?.description === 'LINE' ? (
-                        <LineChart
-                          data={realtimeValues}
-                          widgetInfo={widgetInfo}
-                          refetchData={refetchData}
-                        />
-                      ) : widgetInfo?.description === 'BAR' ? (
-                        <BarChart
-                          data={realtimeValues}
-                          widgetInfo={widgetInfo}
-                          refetchData={refetchData}
-                        />
-                      ) : widgetInfo?.description === 'PIE' ? (
-                        <PieChart
-                          data={lastestValues}
-                          widgetInfo={widgetInfo}
-                        />
-                      ) : widgetInfo?.description === 'MAP' ? (
-                        <MapChart
-                          data={lastestValuesForMap}
-                          widgetInfo={widgetInfo}
-                          isEditMode={isEditMode}
-                          filter={filteredComboboxData}
-                        />
-                      ) : widgetInfo?.description === 'GAUGE' ? (
-                        <GaugeChart
-                          data={lastestValueOneDevice}
-                          widgetInfo={widgetInfo}
-                        />
-                      ) : widgetInfo?.description === 'TABLE' ? (
-                        <TableChart
-                          data={realtimeValues}
-                          widgetInfo={widgetInfo}
-                          className="h-full p-5"
-                          refetchData={refetchData}
-                        />
-                      ) : widgetInfo?.description === 'CARD' ? (
-                        <CardChart
-                          data={lastestValueOneDevice}
-                          widgetInfo={widgetInfo}
-                        />
-                      ) : widgetInfo?.description === 'CONTROLLER' ? (
-                        <ControllerButton
-                          data={
-                            widgetInfo?.datasource?.controller_message as string
-                          }
-                          sendMessage={sendMessage}
-                          lastJsonMessage={lastJsonMessage}
-                        />
-                      ) : null}
-                      {widgetInfo?.description === 'MAP' ? (
-                        <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
-                          <ComboBoxSelectDeviceDashboard
-                            setFilteredComboboxData={setFilteredComboboxData}
-                            data={undefined}
-                          />
-                        </div>
-                      ) : null}
-                      {isEditMode ? (
-                        <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                          <DragIcon
-                            width={20}
-                            height={20}
-                            viewBox="0 0 20 20"
-                            className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
-                          />
-                          <DeleteIcon
-                            width={20}
-                            height={20}
-                            className="cursor-pointer text-secondary-700 hover:text-primary-400"
-                            viewBox="0 0 20 20"
-                            onClick={() => {
-                              if (widgetList?.hasOwnProperty(widgetId)) {
-                                isSendInitMessageRef.current = false
-                                isSendMessageSubscribeRef.current = false
-                                const { [widgetId]: deletedKey, ...newObject } =
-                                  widgetList
-                                setWidgetList(newObject)
-                              }
-                            }}
-                          />
-                        </div>
-                      ) : null}
-                    </div>
-                  )
-                })}
-            </ReactGridLayout>
-          )
-        ) : (
+        {showSpinner ? (
           <div className="flex grow items-center justify-center">
             <Spinner showSpinner={showSpinner} size="xl" />
           </div>
+        ) : rerenderLayout ? (
+          <div className="flex grow items-center justify-center">
+            <Spinner showSpinner={showSpinnerResetLayout} size="xl" />
+          </div>
+        ) : (
+          <ReactGridLayout
+            margin={[20, 20]}
+            isDraggable={isEditMode}
+            draggableHandle=".drag-handle"
+            isResizable={isEditMode}
+            onLayoutChange={e => {
+              setLayoutDashboard(e)
+            }}
+          >
+            {(Object.keys(widgetDetailDB).length !== 0 ||
+              Object.keys(widgetList).length > 0) &&
+              Object.keys(widgetList).map((widgetId, index) => {
+                const widgetInfo = widgetList?.[widgetId]
+                const realtimeValues: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(
+                          device => device.timeseries as TimeSeries,
+                        ),
+                      )
+                    : {}
+                const lastestValues: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(
+                          device => device.latest.TIME_SERIES as LatestData,
+                        ),
+                      )
+                    : {}
+                const lastestValueOneDevice: LatestData =
+                  lastJsonMessage?.id === widgetId
+                    ? (lastJsonMessage?.data?.[0]?.latest
+                        ?.TIME_SERIES as LatestData)
+                    : {}
+                const lastestValuesForMap: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => ({
+                          data: device.latest.TIME_SERIES as LatestData,
+                          device: device.entityId,
+                        })),
+                      )
+                    : {}
+                const filterDeviceData =
+                  widgetInfo &&
+                  widgetInfo.attribute_config &&
+                  widgetInfo.attribute_config.length > 0
+                    ? widgetInfo.attribute_config
+                    : {}
+                console.log(widgetInfo.attribute_config)
+
+                return (
+                  <div
+                    key={widgetId}
+                    data-grid={
+                      detailDashboard?.dashboard_setting?.layout != null &&
+                      detailDashboard?.dashboard_setting?.layout?.length > 0 &&
+                      Object.keys(widgetDetailDB).length ===
+                        Object.keys(widgetList).length
+                        ? detailDashboard?.dashboard_setting?.layout?.find(
+                            layout => layout.i === widgetId,
+                          )
+                        : {
+                            // x: index % 2 === 0 ? 0 : 4,
+                            x: index % 2 === 0 ? 0 : 6,
+                            y: 0,
+                            w: widgetInfo?.description === 'CARD' ? 3 : 6,
+                            h: widgetInfo?.description === 'CARD' ? 1 : 3,
+                          }
+                    }
+                    className={cn('relative bg-secondary-500')}
+                    data-iseditmode={isEditMode}
+                  >
+                    <p className="absolute ml-2 mt-2">
+                      {widgetInfo?.title ?? ''}
+                    </p>
+                    {widgetInfo?.description === 'LINE' ? (
+                      <LineChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        refetchData={refetchData}
+                      />
+                    ) : widgetInfo?.description === 'BAR' ? (
+                      <BarChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        refetchData={refetchData}
+                      />
+                    ) : widgetInfo?.description === 'PIE' ? (
+                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
+                    ) : widgetInfo?.description === 'MAP' ? (
+                      <MapChart
+                        data={lastestValuesForMap}
+                        widgetInfo={widgetInfo}
+                        isEditMode={isEditMode}
+                        filter={filteredComboboxData}
+                      />
+                    ) : widgetInfo?.description === 'GAUGE' ? (
+                      <GaugeChart
+                        data={lastestValueOneDevice}
+                        widgetInfo={widgetInfo}
+                      />
+                    ) : widgetInfo?.description === 'TABLE' ? (
+                      <TableChart
+                        data={realtimeValues}
+                        widgetInfo={widgetInfo}
+                        className="h-full p-5"
+                        refetchData={refetchData}
+                      />
+                    ) : widgetInfo?.description === 'CARD' ? (
+                      <CardChart
+                        data={lastestValueOneDevice}
+                        widgetInfo={widgetInfo}
+                      />
+                    ) : widgetInfo?.description === 'CONTROLLER' ? (
+                      <ControllerButton
+                        data={
+                          widgetInfo?.datasource?.controller_message as string
+                        }
+                        sendMessage={sendMessage}
+                        lastJsonMessage={lastJsonMessage}
+                      />
+                    ) : null}
+                    {widgetInfo?.description === 'MAP' ? (
+                      <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                        <ComboBoxSelectDeviceDashboard
+                          setFilteredComboboxData={setFilteredComboboxData}
+                          data={undefined}
+                        />
+                      </div>
+                    ) : null}
+                    {isEditMode ? (
+                      <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                        <DragIcon
+                          width={20}
+                          height={20}
+                          viewBox="0 0 20 20"
+                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
+                        />
+                        <DeleteIcon
+                          width={20}
+                          height={20}
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          viewBox="0 0 20 20"
+                          onClick={() => {
+                            if (widgetList?.hasOwnProperty(widgetId)) {
+                              isSendInitMessageRef.current = false
+                              isSendMessageSubscribeRef.current = false
+                              const { [widgetId]: deletedKey, ...newObject } =
+                                widgetList
+                              setWidgetList(newObject)
+                            }
+                          }}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                )
+              })}
+          </ReactGridLayout>
         )}
 
         {isEditMode ? (
@@ -458,7 +447,7 @@ export function DashboardDetail() {
               variant="secondary"
               size="square"
               onClick={() => {
-                setWidgetList(widgetDetailDB ?? {})
+                setWidgetList(widgetDetailDB)
                 detailDashboardRefetch()
                 setLayoutDashboard(
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
