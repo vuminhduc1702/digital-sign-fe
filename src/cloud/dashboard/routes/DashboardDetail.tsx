@@ -35,6 +35,7 @@ import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDevic
 
 import { WS_URL } from '~/config'
 import {
+  DataItem,
   type DashboardWS,
   type LatestData,
   type TimeSeries,
@@ -59,6 +60,7 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { Device } from '~/cloud/orgManagement'
+import { SelectOption } from '~/components/Form'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -92,6 +94,10 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const dataFilter = useRef<SelectOption>({
+    label: '',
+    value: ''
+  })
 
   const {
     mutate: mutateUpdateDashboard,
@@ -154,6 +160,10 @@ export function DashboardDetail() {
           title: lastJsonMessage.errorMsg,
         })
       }
+      dataFilter.current = lastJsonMessage.data.map(device => ({
+        label: device.entityId.entityName,
+        value: device.entityId.id
+      }))
     }
   }, [lastJsonMessage])
 
@@ -231,6 +241,8 @@ export function DashboardDetail() {
   function refetchData() {
     setRefetchDataState(prev => !prev)
   }
+
+
   const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>(
     [],
   )
@@ -302,9 +314,7 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                const filterDeviceData = widgetInfo && widgetInfo.attribute_config && widgetInfo.attribute_config.length > 0
-                    ? widgetInfo.attribute_config : {}
-                console.log(widgetInfo.attribute_config)
+                
                 return (
                   <div
                     key={widgetId}
