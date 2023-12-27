@@ -51,7 +51,7 @@ export const protocolList = [
     label: i18n.t('cloud:custom_protocol.adapter.protocol.ftp'),
     value: 'ftp',
   },
-]
+] as const
 
 export const contentTypeList = [
   {
@@ -66,14 +66,14 @@ export const contentTypeList = [
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
   },
-]
+] as const
 
 export const contentTypeFTPList = [
   {
     label: i18n.t('cloud:custom_protocol.adapter.content_type.text'),
     value: 'text',
   },
-]
+] as const
 
 export const thingTypeList = [
   {
@@ -88,7 +88,7 @@ export const thingTypeList = [
     label: i18n.t('cloud:custom_protocol.thing.shape'),
     value: 'shape',
   },
-]
+] as const
 
 export const adapterSchema = z
   .object({

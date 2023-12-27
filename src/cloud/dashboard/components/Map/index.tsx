@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 
-import { WSWidgetMapData, type MapSeries, type TimeSeries } from '../../types'
+import {
+  type WSWidgetMapData,
+  type MapSeries,
+  type TimeSeries,
+} from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 import { LatLngTuple, type Map } from 'leaflet'
@@ -56,13 +60,18 @@ export function MapChart({
   useEffect(() => {
     if (data.data) {
       prevValuesRef.current = newValuesRef.current || data
-      if (
-        newValuesRef.current !== null
-      ) {
-        const deviceIndex = newValuesRef.current.device.findIndex(device => device.id === data.device[0].id)
+      if (newValuesRef.current !== null) {
+        const deviceIndex = newValuesRef.current.device.findIndex(
+          device => device.id === data.device[0].id,
+        )
         if (deviceIndex !== -1 && data.data[0]) {
           for (const [key, newData] of Object.entries(data.data[0])) {
-            if (key !== null && newData !== null && newValuesRef.current?.data?.[deviceIndex]?.[key] === prevValuesRef.current?.data?.[deviceIndex]?.[key]) {
+            if (
+              key !== null &&
+              newData !== null &&
+              newValuesRef.current?.data?.[deviceIndex]?.[key] ===
+                prevValuesRef.current?.data?.[deviceIndex]?.[key]
+            ) {
               setTimeout(() => {
                 Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
               }, 200)
@@ -77,7 +86,11 @@ export function MapChart({
         dataManipulation()
       }
     }
-    if (data.device && data.device.length !== 0 && data.device.length === newValuesRef.current?.device.length) {
+    if (
+      data.device &&
+      data.device.length !== 0 &&
+      data.device.length === newValuesRef.current?.device.length
+    ) {
       setDeviceDetailInfo(data.device)
     }
   }, [data])

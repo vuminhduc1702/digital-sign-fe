@@ -99,20 +99,20 @@ export function DashboardDetail() {
     value: ''
   })
 
-  const {
-    mutate: mutateUpdateDashboard,
-    isLoading: updateDashboardIsLoading,
-    isSuccess: updateDashboardIsSuccess,
-  } = useUpdateDashboard()
+  const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
+    useUpdateDashboard()
 
   const { data: detailDashboard, refetch: detailDashboardRefetch } =
     useGetDashboardsById({
       id: dashboardId,
       config: {
-        staleTime: 0,
+        staleTime: 1000,
       },
     })
-  const widgetDetailDB = detailDashboard?.configuration?.widgets
+  const widgetDetailDB = useMemo(
+    () => detailDashboard?.configuration?.widgets ?? {},
+    [detailDashboard?.configuration?.widgets],
+  )
 
   const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
@@ -134,14 +134,18 @@ export function DashboardDetail() {
       refetchDataState,
     )
 
-  useEffect(() => {
-    if (updateDashboardIsSuccess) {
-      detailDashboardRefetch()
-    }
-  }, [updateDashboardIsSuccess])
+  const [rerenderLayout, setRerenderLayout] = useState(false)
+
+  function triggerRerenderLayout() {
+    setRerenderLayout(true)
+    setTimeout(() => {
+      setRerenderLayout(false)
+      refetchData()
+    }, 100)
+  }
 
   useEffect(() => {
-    if (widgetDetailDB != null) {
+    if (Object.keys(widgetDetailDB).length !== 0) {
       setWidgetList(widgetDetailDB)
     }
   }, [widgetDetailDB])
@@ -234,6 +238,11 @@ export function DashboardDetail() {
   }
 
   const showSpinner = useSpinDelay(connectionStatus === 'Connecting', {
+    delay: 500,
+    minDuration: 300,
+  })
+
+  const showSpinnerResetLayout = useSpinDelay(rerenderLayout, {
     delay: 150,
     minDuration: 300,
   })
@@ -265,7 +274,7 @@ export function DashboardDetail() {
         }}
       />
       <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
-        {widgetDetailDB == null &&
+        {Object.keys(widgetDetailDB).length === 0 &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
           <div className="grid grow place-content-center text-h1">
@@ -273,15 +282,26 @@ export function DashboardDetail() {
           </div>
         ) : null}
 
-        {connectionStatus === 'Open' ? (
+        {showSpinner ? (
+          <div className="flex grow items-center justify-center">
+            <Spinner showSpinner={showSpinner} size="xl" />
+          </div>
+        ) : rerenderLayout ? (
+          <div className="flex grow items-center justify-center">
+            <Spinner showSpinner={showSpinnerResetLayout} size="xl" />
+          </div>
+        ) : (
           <ReactGridLayout
             margin={[20, 20]}
             isDraggable={isEditMode}
             draggableHandle=".drag-handle"
             isResizable={isEditMode}
-            onLayoutChange={e => setLayoutDashboard(e)}
+            onLayoutChange={e => {
+              setLayoutDashboard(e)
+            }}
           >
-            {(widgetDetailDB != null || Object.keys(widgetList).length > 0) &&
+            {(Object.keys(widgetDetailDB).length !== 0 ||
+              Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
                 const realtimeValues: TimeSeries =
@@ -387,22 +407,16 @@ export function DashboardDetail() {
                         lastJsonMessage={lastJsonMessage}
                       />
                     ) : null}
-                    {
-                      widgetInfo?.description === 'MAP' ? (
-                        <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
-                          <ComboBoxSelectDeviceDashboard setFilteredComboboxData={setFilteredComboboxData} 
-                            data={undefined}>
-                          </ComboBoxSelectDeviceDashboard>
-                        </div>
-                      ) : (<></>)
-                    }
+                    {widgetInfo?.description === 'MAP' ? (
+                      <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                        <ComboBoxSelectDeviceDashboard
+                          setFilteredComboboxData={setFilteredComboboxData}
+                          data={undefined}
+                        />
+                      </div>
+                    ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
-                        {/* <UpdateWidget
-                          widgetInfo={widgetInfo}
-                          setWidgetList={setWidgetList}
-                          widgetId={widgetId}
-                        /> */}
                         <DragIcon
                           width={20}
                           height={20}
@@ -430,10 +444,6 @@ export function DashboardDetail() {
                 )
               })}
           </ReactGridLayout>
-        ) : (
-          <div className="flex grow items-center justify-center">
-            <Spinner showSpinner={showSpinner} size="xl" />
-          </div>
         )}
 
         {isEditMode ? (
@@ -443,13 +453,14 @@ export function DashboardDetail() {
               variant="secondary"
               size="square"
               onClick={() => {
-                setWidgetList(widgetDetailDB ?? {})
+                setWidgetList(widgetDetailDB)
                 detailDashboardRefetch()
                 setLayoutDashboard(
                   detailDashboard?.dashboard_setting?.layout as RGL.Layout[],
                 )
                 setIsEditMode(false)
                 setIsStar(detailDashboard?.dashboard_setting?.starred || false)
+                triggerRerenderLayout()
               }}
               startIcon={
                 <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

@@ -24,7 +24,7 @@ export const entityTypeList = [
   { type: 'DEVICE', name: 'Thiết bị' },
   { type: 'USER', name: 'Người dùng' },
   { type: 'EVENT', name: 'Sự kiện' },
-]
+] as const
 
 const groupCreateSchema = z.object({
   name: nameSchema,

@@ -29,7 +29,7 @@ function EventServiceTableContextMenu({
   const { mutate, isLoading, isSuccess } = useDeleteThingService()
 
   return (
-    <>
+    <div className="flex justify-center">
       <BtnContextMenuIcon
         height={20}
         width={10}
@@ -46,7 +46,7 @@ function EventServiceTableContextMenu({
           {...props}
         />
       ) : null}
-    </>
+    </div>
   )
 }
 
@@ -113,6 +113,7 @@ export function EventServiceTable({ data, ...props }: EventServiceTableProps) {
     <BaseTable
       data={data}
       columns={columns}
+      isAbsoluteBtn={false}
       onDataText={t('table:no_event_service')}
       {...props}
     />

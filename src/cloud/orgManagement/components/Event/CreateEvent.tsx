@@ -50,7 +50,7 @@ export const logicalOperatorOption = [
     ),
     value: 'or',
   },
-]
+] as const
 
 export const operatorOptions = [
   {
@@ -71,7 +71,7 @@ export const operatorOptions = [
     ),
     value: '!=',
   },
-]
+] as const
 
 export const conditionTypeOptions = [
   {
@@ -86,7 +86,7 @@ export const conditionTypeOptions = [
     ),
     value: 'delay',
   },
-]
+] as const
 
 export const actionTypeOptions = [
   {
@@ -135,7 +135,7 @@ export const actionTypeOptions = [
     label: 'Execute service',
     value: 'report',
   },
-]
+] as const
 
 export const eventTypeOptions = [
   {
@@ -146,7 +146,7 @@ export const eventTypeOptions = [
     value: 'event',
     label: i18n.t('cloud:org_manage.event_manage.add_event.event_type'),
   },
-]
+] as const
 
 const eventConditionSchema = z.array(
   z.object({

@@ -31,12 +31,12 @@ export function InfoCustomer() {
       status: 'Active',
       user_id: customerId,
     },
-    config: { keepPreviousData: true, staleTime: 0 },
+    config: { keepPreviousData: true, staleTime: 1000 },
   })
 
   const { data: dataUsers } = useGetCustomers({
     projectId,
-    config: { keepPreviousData: true, staleTime: 0 },
+    config: { keepPreviousData: true, staleTime: 1000 },
   })
 
   const { close, open, isOpen } = useDisclosure()

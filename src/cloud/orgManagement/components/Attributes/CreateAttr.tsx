@@ -40,14 +40,14 @@ export const valueTypeList = [
   { type: 'LONG', name: 'Long' },
   { type: 'DBL', name: 'Double' },
   { type: 'JSON', name: 'JSON' },
-]
+] as const
 
 export const booleanSelectOption = [
   { label: 'False', value: 'false' },
   { label: 'True', value: 'true' },
-]
+] as const
 
-export const numberInput = ['DBL', 'LONG']
+export const numberInput = ['DBL', 'LONG'] as const
 
 export function CreateAttr({ entityId, entityType }: CreateAttrProps) {
   const { t } = useTranslation()
