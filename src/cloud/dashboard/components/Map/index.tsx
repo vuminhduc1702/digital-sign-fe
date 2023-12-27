@@ -8,26 +8,26 @@ import {
 } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
-import { type Map } from 'leaflet'
+import { LatLngTuple, type Map } from 'leaflet'
+import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export function MapChart({
   data,
   widgetInfo,
   isEditMode,
+  refetchData = () => {},
 }: {
   data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
+  refetchData?: () => void
 }) {
   const [dragMode, setDragMode] = useState(true)
-  const [dataForMap, setDataForMap] = useState<Array<number[]>>([])
-  const [avgLatitude, setAvgLatitude] = useState(0)
-  const [avgLongitude, setAvgLongitude] = useState(0)
-  const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>(
-    [],
-  )
+  const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
+  const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>([])
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
+  const [isRefresh, setIsRefresh] = useState<boolean>(false)
   const map = useRef<Map>(null)
 
   useEffect(() => {
@@ -41,26 +41,20 @@ export function MapChart({
   function dataManipulation() {
     setTimeout(() => {
       if (newValuesRef.current?.data) {
-        const dataForMapChart = Object.entries(
-          newValuesRef.current.data,
-        ).reduce((result: Array<number[]>, [, dataItem]) => {
-          const dataLatIndex = Object.keys(dataItem).findIndex(
-            key => key === 'lat',
-          )
-          const dataLongIndex = Object.keys(dataItem).findIndex(
-            key => key === 'long',
-          )
+        const dataForMapChart = Object.entries(newValuesRef.current.data).reduce((result: Array<LatLngTuple>, [,dataItem]) => {
+          const dataLatIndex = Object.keys(dataItem).findIndex(key => key === 'lat')
+          const dataLongIndex = Object.keys(dataItem).findIndex(key => key === 'long')
           let dataLat = Object.values(dataItem)[dataLatIndex].value
           let dataLong = Object.values(dataItem)[dataLongIndex].value
           if (dataLat !== null && dataLong !== null) {
-            const coor = [parseFloat(dataLat), parseFloat(dataLong)]
+            const coor: LatLngTuple = [parseFloat(dataLat), parseFloat(dataLong)]
             result.push(coor)
           }
           return result
         }, [])
         setDataForMap(dataForMapChart)
       }
-    }, 100)
+    }, 200)
   }
 
   useEffect(() => {
@@ -79,11 +73,8 @@ export function MapChart({
                 prevValuesRef.current?.data?.[deviceIndex]?.[key]
             ) {
               setTimeout(() => {
-                Object.assign(
-                  newValuesRef.current?.data?.[deviceIndex]?.[key],
-                  newData,
-                )
-              }, 100)
+                Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
+              }, 200)
             }
           }
         } else {
@@ -105,52 +96,56 @@ export function MapChart({
   }, [data])
 
   useEffect(() => {
-    const avgLat =
-      dataForMap.reduce((sum, [lat]) => sum + lat, 0) / dataForMap.length
-    const avgLong =
-      dataForMap.reduce((sum, [, lng]) => sum + lng, 0) / dataForMap.length
-    setAvgLatitude(avgLat)
-    setAvgLongitude(avgLong)
-    if (dataForMap.length >= 2) {
-      map.current?.setView([avgLat, avgLong], 3)
-    } else {
-      map.current?.setView([avgLat, avgLong], 15)
-    }
+    map.current?.fitBounds(dataForMap, {
+      padding: [30, 30]
+    })
   }, [dataForMap])
 
+  function refresh() {
+    setIsRefresh(true)
+    refetchData()
+    setInterval(() => {
+      setIsRefresh(false)
+    }, 1000)
+  }
+
   return (
-    <MapContainer
-      className="z-0 mx-2 mt-12 h-[90%]"
-      center={[avgLatitude, avgLongitude]}
-      zoom={0}
-      scrollWheelZoom
-      dragging={dragMode}
-      attributionControl={false}
-      ref={map}
-    >
-      <TileLayer url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga" />
-      {dataForMap.map((coor, index) => {
-        const [lat, lng] = coor
-        const deviceNameArray = deviceDetailInfo?.map((item: any) => {
-          const deviceData = JSON.parse(widgetInfo.datasource.init_message)
-            .entityDataCmds[0].query.entityFilter.entityIds
-          const deviceFilter = deviceData.filter(
-            (device: any) => device === item.id,
+    <>
+      <div
+        className="absolute top-[26px] left-[10px] cursor-pointer z-20"
+        onClick={refresh}
+      >
+        <img src={refreshIcon} alt="" />
+      </div>
+      <MapContainer
+        className="mx-2 mt-12 h-[90%] z-0"
+        zoom={0}
+        scrollWheelZoom
+        dragging={dragMode}
+        attributionControl={false}
+        ref={map}
+      >
+        <TileLayer
+          url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga"
+        />
+        {dataForMap.map((coor, index) => {
+          const [lat, lng] = coor
+          const deviceNameArray = deviceDetailInfo?.map((item: any) => {
+            const deviceData = JSON.parse(widgetInfo.datasource.init_message).entityDataCmds[0].query.entityFilter.entityIds
+            const deviceFilter = deviceData.filter((device: any) => device === item.id)
+            if (deviceFilter.length != 0) {
+              return item.entityName
+            }
+          })
+          return (
+            <Marker position={[lat, lng]} key={index}>
+              <Popup>
+                {deviceDetailInfo && deviceDetailInfo.length > 0 ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})` : `Thiết bị ${index} (${lat},${lng})`}
+              </Popup>
+            </Marker>
           )
-          if (deviceFilter.length != 0) {
-            return item.entityName
-          }
-        })
-        return (
-          <Marker position={[lat, lng]} key={index}>
-            <Popup>
-              {deviceDetailInfo && deviceDetailInfo.length > 0
-                ? `Thiết bị ${deviceNameArray[index]} (${lat},${lng})`
-                : `Thiết bị ${index} (${lat},${lng})`}
-            </Popup>
-          </Marker>
-        )
-      })}
-    </MapContainer>
+        })}
+      </MapContainer>
+    </>
   )
 }
