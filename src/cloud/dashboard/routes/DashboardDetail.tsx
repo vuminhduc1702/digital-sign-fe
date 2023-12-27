@@ -27,6 +27,7 @@ import {
 import {
   CreateControllerButton,
   CreateWidget,
+  UpdateControllerButton,
   UpdateWidget,
   type Widget,
   type WidgetCategoryType,
@@ -294,11 +295,11 @@ export function DashboardDetail() {
           }
         }}
       />
-      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
+      <div className="bg-secondary-500 flex grow flex-col justify-between shadow-lg">
         {Object.keys(widgetDetailDB).length === 0 &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
-          <div className="grid grow place-content-center text-h1">
+          <div className="text-h1 grid grow place-content-center">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
         ) : null}
@@ -382,7 +383,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('relative bg-secondary-500')}
+                    className={cn('bg-secondary-500 relative')}
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
@@ -445,16 +446,31 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                        {widgetInfo?.description === 'CONTROLLER' ? (
+                          <UpdateControllerButton
+                            widgetInfo={widgetInfo}
+                            widgetCategory={widgetInfo?.description}
+                            setWidgetList={setWidgetList}
+                            widgetId={widgetId}
+                          />
+                        ) : (
+                          <UpdateWidget
+                            widgetInfo={widgetInfo}
+                            setWidgetList={setWidgetList}
+                            widgetId={widgetId}
+                          />
+                        )}
+
                         <DragIcon
                           width={20}
                           height={20}
                           viewBox="0 0 20 20"
-                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
+                          className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
                         />
                         <DeleteIcon
                           width={20}
                           height={20}
-                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
@@ -591,7 +607,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -612,7 +628,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -633,7 +649,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -658,7 +674,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -682,7 +698,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -703,7 +719,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -726,7 +742,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
+                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -747,7 +763,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
+                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()

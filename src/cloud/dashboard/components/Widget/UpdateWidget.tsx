@@ -26,6 +26,7 @@ import {
   InputField,
   SelectDropdown,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { cn, flattenData } from '~/utils/misc'
@@ -40,6 +41,7 @@ import { Calendar as CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 import { Calendar, TimePicker } from '~/components/Calendar'
 import { useParams } from 'react-router-dom'
+import { type SelectInstance } from 'react-select'
 
 export function UpdateWidget({
   widgetInfo,
@@ -61,6 +63,13 @@ export function UpdateWidget({
   const initParse =
     widgetInfo?.datasource?.init_message &&
     JSON.parse(widgetInfo?.datasource?.init_message)
+
+  const selectDropdownDeviceRef = useRef<SelectInstance<SelectOption[]> | null>(
+    null,
+  )
+  const selectDropdownAttributeConfigRef = useRef<SelectInstance<
+    SelectOption[]
+  > | null>(null)
 
   const {
     register,
@@ -96,6 +105,8 @@ export function UpdateWidget({
     name: 'attributeConfig',
     control: control,
   })
+
+  // console.log(fields, 'check fields update widget')
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
@@ -363,19 +374,35 @@ export function UpdateWidget({
                     loadingMessage={() => t('loading:org')}
                     isLoading={orgIsLoading}
                     handleClearSelectDropdown={() => {
-                      resetField('device')
-                      resetField('attributeConfig', [{}])
+                      // resetField('device')
+                      // resetField('attributeConfig', [{}])
+                      selectDropdownDeviceRef.current?.clearValue()
+                      selectDropdownAttributeConfigRef.current?.clearValue()
                     }}
-                    defaultValue={orgSelectOptions?.find(
-                      item =>
-                        item.value ===
-                        JSON.parse(widgetInfo?.datasource?.org_id),
-                    )}
+                    handleChangeSelect={() => {
+                      selectDropdownDeviceRef.current?.clearValue()
+                      selectDropdownAttributeConfigRef.current?.clearValue()
+                    }}
+                    defaultValue={
+                      widgetInfo?.datasource?.org_id
+                        ? orgSelectOptions?.find(
+                            item =>
+                              item.value ===
+                              JSON.parse(widgetInfo?.datasource?.org_id),
+                          )
+                        : [
+                            {
+                              label: '',
+                              value: '',
+                            },
+                          ]
+                    }
                     error={formState?.errors?.org_id}
                   />
 
                   <div className="space-y-1">
                     <SelectDropdown
+                      refSelect={selectDropdownDeviceRef}
                       label={t('cloud:dashboard.config_chart.device')}
                       name="device"
                       control={control}
@@ -410,7 +437,11 @@ export function UpdateWidget({
                         }
                       }}
                       handleClearSelectDropdown={() => {
-                        resetField('attributeConfig', [{}])
+                        // resetField('attributeConfig', [{}])
+                        selectDropdownAttributeConfigRef.current?.clearValue()
+                      }}
+                      handleChangeSelect={() => {
+                        selectDropdownAttributeConfigRef.current?.clearValue()
                       }}
                       defaultValue={deviceSelectData?.filter(item =>
                         getValues('device')?.includes(item.value),
@@ -462,6 +493,7 @@ export function UpdateWidget({
                     <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                       <div className="w-full">
                         <SelectDropdown
+                          refSelect={selectDropdownAttributeConfigRef}
                           label={t('cloud:dashboard.config_chart.attr')}
                           name={`attributeConfig.${index}.attribute_key`}
                           control={control}
