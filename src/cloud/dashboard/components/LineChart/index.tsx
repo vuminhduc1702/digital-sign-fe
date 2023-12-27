@@ -31,7 +31,7 @@ export function LineChart({
   refetchData?: () => void
   refreshButton?: boolean
 }) {
-  console.log(`new line: `, data)
+  // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 

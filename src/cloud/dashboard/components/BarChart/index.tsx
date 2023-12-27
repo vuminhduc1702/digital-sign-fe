@@ -31,7 +31,7 @@ export const BarChart = ({
   refetchData?: () => void
   refreshButton?: boolean
 }) => {
-  console.log(`new bar: `, data)
+  // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
