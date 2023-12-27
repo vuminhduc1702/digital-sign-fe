@@ -61,6 +61,7 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
+import { SelectOption } from '~/components/Form'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -331,7 +332,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-<<<<<<< HEAD
                 const filterDeviceData =
                   widgetInfo &&
                   widgetInfo.attribute_config &&
@@ -339,9 +339,6 @@ export function DashboardDetail() {
                     ? widgetInfo.attribute_config
                     : {}
                 // console.log(widgetInfo.attribute_config)
-
-=======
->>>>>>> f482da18 (Update pie chart)
                 return (
                   <div
                     key={widgetId}
