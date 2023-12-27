@@ -36,6 +36,7 @@ import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDevic
 
 import { WS_URL } from '~/config'
 import {
+  DataItem,
   type DashboardWS,
   type LatestData,
   type TimeSeries,
@@ -92,6 +93,10 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const dataFilter = useRef<SelectOption>({
+    label: '',
+    value: ''
+  })
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -155,6 +160,10 @@ export function DashboardDetail() {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
       }
+      dataFilter.current = lastJsonMessage.data.map(device => ({
+        label: device.entityId.entityName,
+        value: device.entityId.id
+      }))
     }
   }, [lastJsonMessage])
 
