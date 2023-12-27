@@ -11,6 +11,8 @@ export type GetServiceById = {
     output: string
     input: inputlist[]
     code: string
+    fail_limit: number
+    lock_time: string
   }
 }
 
