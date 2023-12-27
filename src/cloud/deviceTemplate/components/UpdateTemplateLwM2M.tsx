@@ -160,7 +160,6 @@ export function UpdateTemplateLwM2M({
       })
     })
     setConfigData(newConfigData)
-    //console.log('newConfigData:', newConfigData)
 }, [accordionStates])
 const resetAllStates = () => {
   setCheckboxStates({})
@@ -168,6 +167,7 @@ const resetAllStates = () => {
   setAccordionStates([])
   setFilterLWM2M([])
 }
+console.log('accordionStates:', accordionStates)
 const handleClearSelectDropdown = () => {
   resetAllStates()
 }
@@ -199,7 +199,7 @@ const data = {
   const transport_Config = selectedUpdateTemplate?.transport_config
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
-  console.log('Mảng giá trị id:', idArray)
+  //console.log('Mảng giá trị id:', idArray)
 
   useEffect(() => {
     if (LwM2MData != null) {
@@ -228,6 +228,7 @@ const data = {
       const allid = (Object.values(newAccordionStates) as { id: string }[][])
       .flat()
       .map((moduleItem) => moduleItem.id);
+      console.log('allid',allid)
       setSelectedModuleNames(allid)
       reset({
         name: name,
@@ -235,9 +236,27 @@ const data = {
     }
   }, [LwM2MData])
 
-  const filterLWM2Mfinal = watch('rule_chain_id', selectedModuleNames)
+  useEffect(() => {
+    setValue('rule_chain_id', selectedModuleNames.map(String));
+  }, [setValue, selectedModuleNames])
+
+  const ruleChainIds  = watch('rule_chain_id')
+  console.log('ruleChainIds', ruleChainIds)
+
+//Sử dụng hàm map để tạo mảng chứa các yêu cầu API tương ứng
+//   const xmlDataArray = ruleChainIds.map(ruleChainId => {
+//   const { data: XMLData } = useGetXMLdata({
+//     fileId: ruleChainId,
+//     config: {
+//       suspense: false,
+//     },
+//   });
+
+//   return XMLData;
+// });
+// console.log('xmlDataArray', xmlDataArray)
   const { data: XMLData } = useGetXMLdata({
-    fileId: filterLWM2Mfinal?.[filterLWM2Mfinal?.length - 1] ?? '',
+    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
       suspense: false,
     },
@@ -248,18 +267,19 @@ const data = {
     if (XMLData != null) {
       XMLDataRef.current = [...XMLDataRef.current, XMLData]
     }
-    if (XMLDataRef.current.length > 0 && filterLWM2Mfinal != null) {
+    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
       const filterArr = XMLDataRef.current.filter(item => {
-        return filterLWM2Mfinal.includes(item.LWM2M.Object.ObjectID)
+        return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
       })
       setFilterLWM2M(Array.from(new Set(filterArr)))
-    } 
-    
-  }, [XMLData, filterLWM2Mfinal])
-   //console.log('selectedModuleNames', selectedModuleNames)
-  // console.log('filterLWM2M', filterLWM2M)
-  // console.log('filterLWM2Mfinal', filterLWM2Mfinal)
-    
+      console.log('filterArr', filterArr)
+    }
+  }, [XMLData, watch('rule_chain_id')])
+
+  console.log('rule_chain_id', watch('rule_chain_id'))
+  console.log('filterLWM2M', filterLWM2M)
+  
+  console.log('data',data)
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -267,7 +287,11 @@ const data = {
   return (
     <Drawer
       isOpen={isOpen}
-      onClose={close}
+      onClose={() => {
+        //setCheckboxStates({})
+        //setAccordionStates([])
+        close();
+      }}
       title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
         <>

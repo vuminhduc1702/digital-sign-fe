@@ -131,7 +131,63 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
+   
+  const handleSelectChange = (selectedOptions) => {
+    console.log('Selected Options:', selectedOptions);
+  
+    if (selectedOptions) {
+      // Tạo một bản sao mới của accordionStates
+      const updatedAccordionStates = { ...accordionStates };
+  
+      // Xóa các mảng giá trị không còn tương ứng với các option đã bị xóa
+      Object.keys(updatedAccordionStates).forEach((optionName) => {
+        if (!selectedOptions.find((option) => option.label === optionName)) {
+          delete updatedAccordionStates[optionName];
+        }
+      });
+  
+      // Thêm các mảng giá trị cho các option mới được chọn
+      // selectedOptions.forEach((option) => {
+      //   if (!updatedAccordionStates[option.label]) {
+      //     updatedAccordionStates[option.label] = /* some initial data */;
+      //   }
+      // });
+  
+      console.log('After update:', updatedAccordionStates);
+      setAccordionStates(updatedAccordionStates);
+    }
+  };
+  
+  // const handleSelectChange = (selectedOptions) => {
+  //   console.log('Selected Options:', selectedOptions)
+  
+  //   if (accordionStates && selectedOptions) {
+  //     // Lọc các option trong accordionStates sao cho chỉ giữ lại những option nằm trong selectedOptions
+  //     const updatedAccordionStates = Object.fromEntries(
+  //       Object.entries(accordionStates).filter(([key]) =>
+  //         selectedOptions.includes(key)
+  //       )
+  //     )
+  //     console.log('After update:', updatedAccordionStates)
+  //     setAccordionStates(updatedAccordionStates)
+  //   }
+  //  }
+  // const handleReSelectOption = (reSelectedOption) => {
+  //   if (accordionStates) {
+  //     // Kiểm tra xem mảng đã tồn tại trong accordionStates hay chưa
+  //     const arrayToReSelect = accordionStates[reSelectedOption];
+  
+  //     if (arrayToReSelect) {
+  //       // Tạo một bản sao mới của accordionStates và thêm lại mảng
+  //       const updatedAccordionStates = { ...accordionStates, [reSelectedOption]: arrayToReSelect };
+  //       setAccordionStates(updatedAccordionStates);
+  
+  //       console.log('After re-select:', updatedAccordionStates);
+  //     }
+  //   }
+  // }
 
+  console.log('accordionStates', accordionStates)
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     //console.log('Accordion States:', accordionArray);
@@ -228,6 +284,8 @@ const data = {
               isOptionDisabled={option => option.label === t('loading:flow_id')}
               noOptionsMessage={() => t('table:no_in_flow_id')}
               handleClearSelectDropdown={handleClearSelectDropdown}
+              customOnChange={handleSelectChange}
+              //handleChangeSelect={handleReSelectOption}
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
