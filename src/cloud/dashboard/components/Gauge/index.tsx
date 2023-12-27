@@ -217,6 +217,7 @@ export function GaugeChart({
   const { value } = useGaugeChart(
     dataTransformedFeedToChart.value,
     widgetInfo.attribute_config[0].max,
+    widgetInfo.attribute_config[0].min,
   )
 
   return (
