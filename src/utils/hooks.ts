@@ -107,19 +107,8 @@ export function useCopyId() {
   async function handleCopyId(id: string, typeCopy?: string) {
     try {
       if (id == null || id === '') {
-        // addNotification({
-        //   type: 'info',
-        //   title: t('noti:empty_id'),
-        // })
       } else {
         await navigator.clipboard.writeText(id)
-        // addNotification({
-        //   type: 'success',
-        //   title:
-        //     typeCopy === 'token'
-        //       ? t('cloud:org_manage.org_map.copy_token_success')
-        //       : t('cloud:org_manage.org_map.copy_success'),
-        // })
         typeCopy === 'token' ? 
         toast.success(t('cloud:org_manage.org_map.copy_token_success')) :
         toast.success(t('cloud:org_manage.org_map.copy_success'))

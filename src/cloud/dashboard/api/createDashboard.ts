@@ -30,7 +30,7 @@ export const useCreateDashboard = ({
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['dashboards'])
-      toast.success(t('cloud:dashbaord.add_dashboard.success_create'))
+      toast.success(t('cloud:dashboard.add_dashboard.success_create'))
     },
     ...config,
     mutationFn: createDashboard,

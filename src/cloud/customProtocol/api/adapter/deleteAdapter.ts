@@ -18,8 +18,11 @@ export const useDeleteAdapter = ({ config }: UseDeleteAdapterOptions = {}) => {
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['adapters'])
-      toast.success(t('cloud:custom_protocol.adapter.success_delete'))
+      toast.promise(() => queryClient.invalidateQueries(['adapters']), {
+        loading: t('loading:loading'),
+        success: t('cloud:custom_protocol.adapter.success_delete'),
+        error: t('error:server_res.title'),
+      })
     },
     ...config,
     mutationFn: deleteAdapter,

@@ -22,7 +22,7 @@ export const useDeletePlan = ({
     onSuccess: async () => {
       toast.promise(() => queryClient.invalidateQueries(['plans']), {
         loading: t('loading:loading'),
-        success: t('billing:package_manage_popup.success_delete'),
+        success: t('billing:package_manage.popup.success_delete'),
         error: t('error:server_res.title'),
       })
     },
