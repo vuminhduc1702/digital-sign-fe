@@ -16,7 +16,12 @@ import {
   useUpdateAdapter,
   usePingMQTT,
 } from '../api/adapter'
-import { adapterSchema, contentTypeList, protocolList, contentTypeFTPList } from './CreateAdapter'
+import {
+  adapterSchema,
+  contentTypeList,
+  protocolList,
+  contentTypeFTPList,
+} from './CreateAdapter'
 import storage from '~/utils/storage'
 import { useGetEntityThings } from '../api/entityThing'
 import { useGetServiceThings } from '../api/serviceThing'
@@ -299,8 +304,6 @@ export function UpdateAdapter({
                     option.label === t('loading:service_thing') ||
                     option.label === t('table:no_service')
                   }
-                  isLoading={isLoadingService}
-                  loadingMessage={() => t('loading:service_thing')}
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
                   defaultValue={serviceSelectData?.find(
@@ -460,7 +463,7 @@ export function UpdateAdapter({
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
