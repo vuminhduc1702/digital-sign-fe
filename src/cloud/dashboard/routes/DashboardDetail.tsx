@@ -295,11 +295,11 @@ export function DashboardDetail() {
           }
         }}
       />
-      <div className="bg-secondary-500 flex grow flex-col justify-between shadow-lg">
+      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {Object.keys(widgetDetailDB).length === 0 &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
-          <div className="text-h1 grid grow place-content-center">
+          <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
         ) : null}
@@ -383,7 +383,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('bg-secondary-500 relative')}
+                    className={cn('relative bg-secondary-500')}
                     data-iseditmode={isEditMode}
                   >
                     <p className="absolute ml-2 mt-2">
@@ -446,6 +446,12 @@ export function DashboardDetail() {
                     ) : null}
                     {isEditMode ? (
                       <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                        <DragIcon
+                          width={20}
+                          height={20}
+                          viewBox="0 0 20 20"
+                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
+                        />
                         {widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
                             widgetInfo={widgetInfo}
@@ -460,17 +466,10 @@ export function DashboardDetail() {
                             widgetId={widgetId}
                           />
                         )}
-
-                        <DragIcon
-                          width={20}
-                          height={20}
-                          viewBox="0 0 20 20"
-                          className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
-                        />
                         <DeleteIcon
                           width={20}
                           height={20}
-                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
@@ -607,7 +606,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -628,7 +627,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -649,7 +648,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -674,7 +673,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -698,7 +697,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -719,7 +718,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -742,7 +741,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
@@ -763,7 +762,7 @@ export function DashboardDetail() {
                     <Button
                       type="button"
                       size="square"
-                      className="bg-secondary-400 active:bg-primary-300 flex w-full justify-between border-none px-4"
+                      className="flex w-full justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
                       variant="secondaryLight"
                       onClick={() => {
                         close()
