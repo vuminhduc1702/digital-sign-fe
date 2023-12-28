@@ -79,7 +79,7 @@ export function UpdateThingService({
       // config: { suspense: false },
     })
 
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, watch } = useForm<
     CreateServiceThingDTO['data']
   >({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
@@ -89,8 +89,7 @@ export function UpdateThingService({
     },
   })
 
-  const [failLimit, setFailLimit] = useState(thingServiceData?.data.fail_limit)
-  const [lockTime, setLockTime] = useState(thingServiceData?.data.lock_time)
+  const watchFailLimit = watch('fail_limit')
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -285,8 +284,8 @@ export function UpdateThingService({
                     output: values.output,
                     input: dataInput,
                     code: codeInput,
-                    fail_limit: failLimit, 
-                    lock_time: failLimit === 0 ? "0s" : lockTime,
+                    fail_limit: Number(values.fail_limit),
+                    lock_time: Number(values.fail_limit) > 0 ? values.lock_time : "0s",
                   },
                   thingId: thingId,
                   name: values.name,
@@ -314,18 +313,12 @@ export function UpdateThingService({
                   label={t('cloud:custom_protocol.service.fail_limit')}
                   type="number"
                   registration={register('fail_limit')}
-                  onChange={e => {
-                    setFailLimit(parseInt(e.target.value))
-                  }}
                   min={0}
                 />
-                {failLimit > 0 && (
+                {Number(watchFailLimit) > 0 && (
                   <InputField
                     label={t('cloud:custom_protocol.service.lock_time')}
                     registration={register('lock_time')}
-                    onChange={e => {
-                      setLockTime(e.target.value)
-                    }}
                   />
                 )}
               </div>

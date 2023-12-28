@@ -18,11 +18,13 @@ export function TableChart({
   data,
   widgetInfo,
   refetchData = () => {},
+  refreshBtn,
   ...props
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
+  refreshBtn?: boolean
   className?: string
 }) {
   const { t } = useTranslation()
@@ -153,7 +155,7 @@ export function TableChart({
       columns={columns}
       isAbsoluteBtn={false}
       onDataText={t('table:no_log_attr')}
-      refreshBtn={true}
+      refreshBtn={refreshBtn}
       callbackParent={signalParent}
       {...props}
     />

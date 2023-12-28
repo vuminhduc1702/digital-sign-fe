@@ -359,19 +359,37 @@ export function DashboardDetail() {
                       {widgetInfo?.title ?? ''}
                     </p>
                     {widgetInfo?.description === 'LINE' ? (
-                      <LineChart
-                        data={realtimeValues}
-                        widgetInfo={widgetInfo}
-                        refetchData={refetchData}
-                        refreshButton={true}
-                      />
+                      widgetInfo?.config?.chartsetting.data_type ===
+                      'REALTIME' ? (
+                        <LineChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          refetchData={refetchData}
+                        />
+                      ) : (
+                        <LineChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          refetchData={refetchData}
+                          refreshBtn={true}
+                        />
+                      )
                     ) : widgetInfo?.description === 'BAR' ? (
-                      <BarChart
-                        data={realtimeValues}
-                        widgetInfo={widgetInfo}
-                        refetchData={refetchData}
-                        refreshButton={true}
-                      />
+                      widgetInfo?.config?.chartsetting.data_type ===
+                      'REALTIME' ? (
+                        <BarChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          refetchData={refetchData}
+                        />
+                      ) : (
+                        <BarChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          refetchData={refetchData}
+                          refreshBtn={true}
+                        />
+                      )
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
@@ -387,12 +405,23 @@ export function DashboardDetail() {
                         widgetInfo={widgetInfo}
                       />
                     ) : widgetInfo?.description === 'TABLE' ? (
-                      <TableChart
-                        data={realtimeValues}
-                        widgetInfo={widgetInfo}
-                        className="h-full p-5"
-                        refetchData={refetchData}
-                      />
+                      widgetInfo?.config?.chartsetting.data_type ===
+                      'REALTIME' ? (
+                        <TableChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          className="h-full p-5"
+                          refetchData={refetchData}
+                        />
+                      ) : (
+                        <TableChart
+                          data={realtimeValues}
+                          widgetInfo={widgetInfo}
+                          className="h-full p-5"
+                          refetchData={refetchData}
+                          refreshBtn={true}
+                        />
+                      )
                     ) : widgetInfo?.description === 'CARD' ? (
                       <CardChart
                         data={lastestValueOneDevice}

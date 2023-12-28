@@ -59,6 +59,8 @@ export const serviceThingSchema = z.object({
   description: z.string(),
   input: inputSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
+  fail_limit: z.string(),
+  lock_time: z.string(),
 })
 
 export type CreateServiceForm = {
@@ -67,7 +69,7 @@ export type CreateServiceForm = {
   output: string
   input: inputlist[]
   code: string
-  fail_limit: number
+  fail_limit: string
   lock_time: string
 }
 
@@ -101,8 +103,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
-  const [failLimit, setFailLimit] = useState(0)
-  const [lockTime, setLockTime] = useState('0s')
   const [, setInputTypeValue] = useState('')
   const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
@@ -140,14 +140,24 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     error: errorExecute,
   } = useExecuteService()
 
-  const { register, formState, control, setError, setValue, handleSubmit } =
-    useForm<CreateServiceThingDTO['data']>({
-      resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-      defaultValues: {
-        name: '',
-        input: [{ name: '', value: '', type: 'json' }],
-      },
-    })
+  const {
+    register,
+    formState,
+    control,
+    setError,
+    setValue,
+    handleSubmit,
+    watch,
+  } = useForm<CreateServiceThingDTO['data']>({
+    resolver: serviceThingSchema && zodResolver(serviceThingSchema),
+    defaultValues: {
+      name: '',
+      input: [{ name: '', value: '', type: 'json' }],
+      lock_time: '0s',
+    },
+  })
+
+  const watchFailLimit = watch('fail_limit')
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -305,8 +315,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   output: values.output,
                   input: dataInput,
                   code: codeInput,
-                  fail_limit: failLimit,
-                  lock_time: failLimit === 0 ? '0s' : lockTime,
+                  fail_limit: Number(values.fail_limit),
+                  lock_time:
+                    Number(values.fail_limit) > 0 ? values.lock_time : '0s',
                 },
                 thingId: thingId,
               })
@@ -343,18 +354,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 label={t('cloud:custom_protocol.service.fail_limit')}
                 type="number"
                 registration={register('fail_limit')}
-                onChange={e => {
-                  setFailLimit(parseInt(e.target.value))
-                }}
                 min={0}
               />
-              {failLimit > 0 && (
+              {Number(watchFailLimit) > 0 && (
                 <InputField
                   label={t('cloud:custom_protocol.service.lock_time')}
                   registration={register('lock_time')}
-                  onChange={e => {
-                    setLockTime(e.target.value)
-                  }}
                 />
               )}
             </div>
