@@ -24,10 +24,12 @@ export function LineChart({
   data,
   widgetInfo,
   refetchData,
+  refreshButton,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
+  refreshButton?: boolean
 }) {
   // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -225,12 +227,14 @@ export function LineChart({
     <>
       {!showSpinner && newValuesRef.current != null && !isRefresh ? (
         <>
-          <div
-            className="absolute top-[50px] left-[10px] cursor-pointer z-20"
-            onClick={refresh}
-          >
-            <img src={refreshIcon} alt="" />
-          </div>
+          {refreshButton && (
+            <div
+              className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+              onClick={refresh}
+            >
+              <img src={refreshIcon} alt="" />
+            </div>
+          )}
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
             <LineWidget data={dataTransformedFeedToChart}>
               <CartesianGrid strokeDasharray="3 3" />

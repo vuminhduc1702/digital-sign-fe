@@ -18,6 +18,7 @@ type InputFieldProps = FieldWrapperPassThroughProps & {
   classNameError?: string
   classlabel?: string
   classchild?: string
+  min?: number
 } & IconProps &
   React.InputHTMLAttributes<HTMLInputElement>
 //
@@ -37,6 +38,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       classlabel,
       classchild,
       placeholder,
+      min,
       ...props
     }: InputFieldProps,
     ref,
@@ -74,6 +76,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           placeholder={placeholder ?? t('placeholder:input_text')}
           {...registration}
           {...props}
+          min={min}
         />
         {endIcon}
       </FieldWrapper>

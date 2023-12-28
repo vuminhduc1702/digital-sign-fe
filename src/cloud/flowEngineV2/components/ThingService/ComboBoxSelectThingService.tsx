@@ -20,7 +20,16 @@ export function ComboBoxSelectThingService({
 
   const { acc: thingServiceFlattenData, extractedPropertyKeys } = flattenData(
     data,
-    ['id', 'name', 'create_ts', 'description', 'input', 'output'],
+    [
+      'id',
+      'name',
+      'create_ts',
+      'description',
+      'input',
+      'output',
+      'fail_limit',
+      'lock_time',
+    ],
   )
 
   const filteredData = filteredComboboxData(
