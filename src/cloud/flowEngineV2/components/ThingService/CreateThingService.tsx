@@ -16,7 +16,6 @@ import { nameSchemaRegex } from '~/utils/schemaValidation'
 import {
   useCreateServiceThing,
   type CreateServiceThingDTO,
-  type inputlist,
 } from '../../api/thingServiceAPI'
 import { cn } from '~/utils/misc'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
@@ -59,17 +58,10 @@ export const serviceThingSchema = z.object({
   description: z.string(),
   input: inputSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
+  fail_limit: z.number().optional(),
+  lock_time: z.string().optional(),
+  code: z.string().optional(),
 })
-
-export type CreateServiceForm = {
-  name: string
-  description: string
-  output: string
-  input: inputlist[]
-  code: string
-  fail_limit: number
-  lock_time: string
-}
 
 export interface dataRun {
   [key: string]: string
@@ -101,8 +93,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
-  const [failLimit, setFailLimit] = useState(0)
-  const [lockTime, setLockTime] = useState('0s')
   const [, setInputTypeValue] = useState('')
   const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
@@ -140,14 +130,23 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     error: errorExecute,
   } = useExecuteService()
 
-  const { register, formState, control, setError, setValue, handleSubmit } =
-    useForm<CreateServiceThingDTO['data']>({
-      resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-      defaultValues: {
-        name: '',
-        input: [{ name: '', value: '', type: 'json' }],
-      },
-    })
+  const {
+    register,
+    formState,
+    control,
+    setError,
+    setValue,
+    handleSubmit,
+    watch,
+    reset,
+  } = useForm<CreateServiceThingDTO['data']>({
+    resolver: serviceThingSchema && zodResolver(serviceThingSchema),
+    defaultValues: {
+      name: '',
+      input: [{ name: '', value: '', type: 'json' }],
+      fail_limit: 0,
+    },
+  })
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -188,6 +187,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const [debugMode, setDebugMode] = useState(true)
 
   const clearData = () => {
+    reset()
     setCodeInput('')
     setCodeOutput('')
     setFullScreen(false)
@@ -305,8 +305,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   output: values.output,
                   input: dataInput,
                   code: codeInput,
-                  fail_limit: failLimit,
-                  lock_time: failLimit === 0 ? '0s' : lockTime,
+                  fail_limit: values.fail_limit,
+                  lock_time: values.lock_time,
                 },
                 thingId: thingId,
               })
@@ -341,22 +341,20 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
               />
               <InputField
                 label={t('cloud:custom_protocol.service.fail_limit')}
+                error={formState.errors['fail_limit']}
                 type="number"
-                registration={register('fail_limit')}
-                onChange={e => {
-                  setFailLimit(parseInt(e.target.value))
-                }}
+                registration={register('fail_limit', {
+                  valueAsNumber: true,
+                })}
                 min={0}
               />
-              {failLimit > 0 && (
+              {watch('fail_limit') > 0 ? (
                 <InputField
                   label={t('cloud:custom_protocol.service.lock_time')}
+                  error={formState.errors['lock_time']}
                   registration={register('lock_time')}
-                  onChange={e => {
-                    setLockTime(e.target.value)
-                  }}
                 />
-              )}
+              ) : null}
             </div>
             <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
               <div className={'relative flex flex-col gap-2 md:col-span-1'}>

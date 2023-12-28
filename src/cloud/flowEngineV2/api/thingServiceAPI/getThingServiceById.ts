@@ -2,14 +2,17 @@ import { useQuery } from '@tanstack/react-query'
 import { axios } from '~/lib/axios'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
-import { type inputlist } from './createThingService'
 
 export type GetServiceById = {
   data: {
     name: string
     description: string
     output: string
-    input: inputlist[]
+    input: Array<{
+      name: string
+      type?: string
+      value?: string | boolean
+    }>
     code: string
     fail_limit: number
     lock_time: string

@@ -79,7 +79,7 @@ export function UpdateThingService({
       // config: { suspense: false },
     })
 
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, watch } = useForm<
     CreateServiceThingDTO['data']
   >({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
@@ -88,9 +88,6 @@ export function UpdateThingService({
       description: thingServiceData?.data?.description ?? '',
     },
   })
-
-  const [failLimit, setFailLimit] = useState(thingServiceData?.data.fail_limit)
-  const [lockTime, setLockTime] = useState(thingServiceData?.data.lock_time)
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -285,8 +282,8 @@ export function UpdateThingService({
                     output: values.output,
                     input: dataInput,
                     code: codeInput,
-                    fail_limit: failLimit,
-                    lock_time: failLimit === 0 ? '0s' : lockTime,
+                    fail_limit: values.fail_limit,
+                    lock_time: values.lock_time,
                   },
                   thingId: thingId,
                   name: values.name,
@@ -312,20 +309,18 @@ export function UpdateThingService({
                 />
                 <InputField
                   label={t('cloud:custom_protocol.service.fail_limit')}
+                  error={formState.errors['fail_limit']}
                   type="number"
-                  registration={register('fail_limit')}
-                  onChange={e => {
-                    setFailLimit(parseInt(e.target.value))
-                  }}
+                  registration={register('fail_limit', {
+                    valueAsNumber: true,
+                  })}
                   min={0}
                 />
-                {failLimit > 0 && (
+                {watch('fail_limit') > 0 && (
                   <InputField
                     label={t('cloud:custom_protocol.service.lock_time')}
+                    error={formState.errors['lock_time']}
                     registration={register('lock_time')}
-                    onChange={e => {
-                      setLockTime(e.target.value)
-                    }}
                   />
                 )}
               </div>

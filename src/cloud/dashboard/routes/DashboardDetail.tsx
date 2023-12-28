@@ -364,14 +364,20 @@ export function DashboardDetail() {
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
-                        refreshButton={true}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
-                        refreshButton={true}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
@@ -393,6 +399,10 @@ export function DashboardDetail() {
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
                         refetchData={refetchData}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'CARD' ? (
                       <CardChart

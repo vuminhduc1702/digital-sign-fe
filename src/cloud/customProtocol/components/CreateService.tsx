@@ -8,12 +8,12 @@ import { FormDialog } from '~/components/FormDialog'
 import { serviceThingSchema } from './CreateAdapter'
 import { CodeEditor } from './CodeEditor'
 import { Button } from '~/components/Button'
+import i18n from '~/i18n'
+import { cn } from '~/utils/misc'
 import {
   type CreateServiceThingDTO,
   useCreateServiceThing,
-} from '../api/serviceThing'
-import i18n from '~/i18n'
-import { cn } from '~/utils/misc'
+} from '~/cloud/flowEngineV2/api/thingServiceAPI'
 
 import { inputService } from '../types'
 

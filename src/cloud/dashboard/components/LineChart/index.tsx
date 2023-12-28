@@ -24,12 +24,12 @@ export function LineChart({
   data,
   widgetInfo,
   refetchData,
-  refreshButton,
+  refreshBtn,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
-  refreshButton?: boolean
+  refreshBtn?: boolean
 }) {
   // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -227,7 +227,7 @@ export function LineChart({
     <>
       {!showSpinner && newValuesRef.current != null && !isRefresh ? (
         <>
-          {refreshButton && (
+          {refreshBtn && (
             <div
               className="absolute top-[50px] left-[10px] cursor-pointer z-20"
               onClick={refresh}

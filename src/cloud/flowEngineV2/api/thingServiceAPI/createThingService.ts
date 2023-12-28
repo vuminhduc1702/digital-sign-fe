@@ -1,32 +1,20 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useNotificationStore } from '~/stores/notifications'
 
 import { type BaseAPIRes } from '~/types'
+import { type serviceThingSchema } from '../../components/ThingService'
 
 type CreateServiceThingRes = {
   data: 1 | number
 } & BaseAPIRes
 
-export type inputlist = {
-  name: string
-  type?: string
-  value?: string | boolean
-}
-
 export type CreateServiceThingDTO = {
-  data: {
-    name: string
-    description: string
-    output: string
-    input: inputlist[]
-    code: string
-    fail_limit?: number
-    lock_time: string
-  }
+  data: z.infer<typeof serviceThingSchema>
   thingId: string
   name?: string
 }
