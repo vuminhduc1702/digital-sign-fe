@@ -29,7 +29,7 @@ import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
 
 import { transportConfigSchema, nameSchema } from '~/utils/schemaValidation'
-import { type LWM2MResponse } from '../types'
+import { type LWM2MResponse, type TransportConfigInfo, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
 import { PlusIcon } from '~/components/SVGIcons'
@@ -73,19 +73,28 @@ export default function CreateTemplateLwM2M() {
   //   }
   // }, [XMLData, watch('rule_chain_id')])
   //console.log('filterLWM2M', filterLWM2M)
-  function formatString(str) {
+  function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
     return formattedStr
   }
+  type accordionStates = {
+    [key: number]: ModuleConfig[]
+  }
+  type checkboxStates = {
+    [key: string]: boolean
+  }
+  type itemNames = {
+    [key: string]: string
+  }
   const [openAccordion, setOpenAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
-  const [accordionStates, setAccordionStates] = useState({})
+  const [accordionStates, setAccordionStates] = useState<accordionStates>({})
   const [selectAllChecked, setSelectAllChecked] = useState(false)
-  const [checkboxStates, setCheckboxStates] = useState({})
+  const [checkboxStates, setCheckboxStates] = useState<checkboxStates>({})
   const [configData, setConfigData] = useState({})
-  const [itemNames, setItemNames] = useState({})
+  const [itemNames, setItemNames] = useState<itemNames>({})
 
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
@@ -114,10 +123,10 @@ export default function CreateTemplateLwM2M() {
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
         acc[key] = checkboxStates[key]
         return acc
-      }, {})
+      }, {} as checkboxStates)
       setCheckboxStates(filteredCheckboxStates)
-      const filteredAccordionStates = {}
-      Object.keys(accordionStates).forEach(key => {
+      const filteredAccordionStates: accordionStates = {}
+      Object.keys(accordionStates).forEach((key) => {
         filteredAccordionStates[key] = accordionStates[key].filter(obj =>
           watch('rule_chain_id').includes(obj.id.toString())
         )
@@ -126,8 +135,11 @@ export default function CreateTemplateLwM2M() {
       
     }
   }, [XMLData, watch('rule_chain_id')])
-
-  const handleAccordionChange = (accordionIndex: string ) => {
+  console.log('watch', watch('rule_chain_id'))
+  console.log('filterLWM2M', filterLWM2M)
+  console.log('checkboxStates', checkboxStates)
+  console.log('accordionStates', accordionStates)
+  const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (newStates[accordionIndex]) {
@@ -136,9 +148,7 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
-  console.log('filterLWM2M', filterLWM2M)
-  console.log('watch', watch('rule_chain_id'))
-  const handleCheckboxChange = (accordionIndex, module, item) => {
+  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
@@ -152,7 +162,7 @@ export default function CreateTemplateLwM2M() {
         const currentTimestamp = Date.now();
         newStates[accordionIndex].push({
           id: module.id,
-          module_name: module.name,
+          module_name: module.module_name,
           attribute_info: [item], 
           numberOfAttributes: 1,
           last_update_ts: currentTimestamp,
@@ -172,74 +182,17 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
-   
-  // const handleSelectChange = (selectedOptions) => {
-  //   console.log('Selected Options:', selectedOptions);
-  
-  //   if (selectedOptions) {
-  //     // Tạo một bản sao mới của accordionStates
-  //     const updatedAccordionStates = { ...accordionStates };
-  
-  //     // Xóa các mảng giá trị không còn tương ứng với các option đã bị xóa
-  //     Object.keys(updatedAccordionStates).forEach((optionName) => {
-  //       if (!selectedOptions.find((option) => option.label === optionName)) {
-  //         delete updatedAccordionStates[optionName];
-  //       }
-  //     });
-  
-  //     // Thêm các mảng giá trị cho các option mới được chọn
-  //     // selectedOptions.forEach((option) => {
-  //     //   if (!updatedAccordionStates[option.label]) {
-  //     //     updatedAccordionStates[option.label] = /* some initial data */;
-  //     //   }
-  //     // });
-  
-  //     console.log('After update:', updatedAccordionStates);
-  //     setAccordionStates(updatedAccordionStates);
-  //   }
-  // };
-  
-  // const handleSelectChange = (selectedOptions) => {
-  //   console.log('Selected Options:', selectedOptions)
-  
-  //   if (accordionStates && selectedOptions) {
-  //     // Lọc các option trong accordionStates sao cho chỉ giữ lại những option nằm trong selectedOptions
-  //     const updatedAccordionStates = Object.fromEntries(
-  //       Object.entries(accordionStates).filter(([key]) =>
-  //         selectedOptions.includes(key)
-  //       )
-  //     )
-  //     console.log('After update:', updatedAccordionStates)
-  //     setAccordionStates(updatedAccordionStates)
-  //   }
-  //  }
-  // const handleReSelectOption = (reSelectedOption) => {
-  //   if (accordionStates) {
-  //     // Kiểm tra xem mảng đã tồn tại trong accordionStates hay chưa
-  //     const arrayToReSelect = accordionStates[reSelectedOption];
-  
-  //     if (arrayToReSelect) {
-  //       // Tạo một bản sao mới của accordionStates và thêm lại mảng
-  //       const updatedAccordionStates = { ...accordionStates, [reSelectedOption]: arrayToReSelect };
-  //       setAccordionStates(updatedAccordionStates);
-  
-  //       console.log('After re-select:', updatedAccordionStates);
-  //     }
-  //   }
-  // }
-
-  
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     //console.log('Accordion States:', accordionArray);
-    const newConfigData = {}
+    const newConfigData: { [key: string]: string } = {}
     accordionArray.forEach((accordionItem) => {
       accordionItem.attribute_info.forEach((attribute) => {
         newConfigData[attribute.id] = attribute.name
       })
     })
     setConfigData(newConfigData)
-}, [accordionStates])
+  }, [accordionStates])
 // console.log('checkboxStates:', checkboxStates)
 // console.log('accordionStates', accordionStates)
 const resetAllStates = () => {
@@ -297,14 +250,6 @@ const data = {
         className="w-full space-y-5"
         id="create-template"
         onSubmit={handleSubmit(async () => {await mutateAsyncCreateTemplatelwm2m({data})
-          // mutateUpdateTemplatelwm2m({
-          //   data: {
-          //     name: dataCreateTemplatelwm2m.name,
-          //     rule_chain_id: dataCreateTemplatelwm2m.rule_chain_id,
-          //     transport_config: dataCreateTemplatelwm2m.transport_config,
-          //   },
-          //   templateId: dataCreateTemplatelwm2m.id,
-          // })
         })}
       >
         <>
@@ -325,8 +270,6 @@ const data = {
               isOptionDisabled={option => option.label === t('loading:flow_id')}
               noOptionsMessage={() => t('table:no_in_flow_id')}
               handleClearSelectDropdown={handleClearSelectDropdown}
-              //customOnChange={handleSelectChange}
-              //handleChangeSelect={handleReSelectOption}
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
@@ -397,7 +340,7 @@ const data = {
                                         const formattedName = formatString(defaultItemName)
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
-                                          name: lw2m2.LWM2M.Object.Name,
+                                          module_name: lw2m2.LWM2M.Object.Name,
                                         }
                                         const itemObject = {
                                           action: item.Operations,
@@ -405,7 +348,7 @@ const data = {
                                           kind: item.MultipleInstances,
                                           name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
                                           type: item.Type,
-                                        };
+                                        }
                                         if (typeof e === 'boolean') {
                                           setCheckboxStates((prev) => ({ ...prev, [itemId]: e }));
                                         } else {

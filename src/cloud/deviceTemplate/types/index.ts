@@ -11,7 +11,7 @@ export type TransportConfigAttribute = {
 }
 
 export type ModuleConfig = {
-  Observe: boolean
+  Observe?: boolean
   attribute_info: TransportConfigAttribute[]
   last_update_ts: number
   id: string
