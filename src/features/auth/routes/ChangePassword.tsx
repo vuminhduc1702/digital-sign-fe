@@ -3,14 +3,13 @@ import { useTranslation } from 'react-i18next'
 
 import { ChangePaswordForm } from '../components/ChangePasswordForm'
 import { logoutFn } from '~/lib/auth'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import narrowLeft from '~/assets/icons/narrow-left.svg'
 import frameAuth from '~/assets/images/frame-auth-layout.svg'
 import logo from '~/assets/images/logo.svg'
 
 export const ChangePassword = () => {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
   const navigate = useNavigate()
   return (
     <>
@@ -51,10 +50,7 @@ export const ChangePassword = () => {
                 <ChangePaswordForm
                   onSuccess={() => {
                     logoutFn()
-                    addNotification({
-                      type: 'success',
-                      title: t('auth:success_password'),
-                    })
+                    toast.success(t('auth:success_password'))
                   }}
                 />
               </div>

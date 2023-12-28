@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type Dashboard } from '../components/DashboardTable'
 import { type DashboardRes } from './getDashboards'
@@ -27,15 +27,10 @@ export const useCreateDashboard = ({
 }: UseCreateDashboardOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['dashboards'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:dashboard.add_dashboard.success_create'),
-      })
+      toast.success(t('cloud:dashbaord.add_dashboard.success_create'))
     },
     ...config,
     mutationFn: createDashboard,

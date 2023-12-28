@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export type TriggerEventDTO = {
   data: {
@@ -25,17 +25,12 @@ type UseTriggerEventOptions = {
 export const useTriggerEvent = ({ config }: UseTriggerEventOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['events'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.event_manage.add_event.success_active'),
-      })
+      toast.success(t('cloud:org_manage.event_manage.add_event.success_active'))
     },
     ...config,
     mutationFn: triggerEvent,

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export type UpdateEntityCustomerRoleDTO = {
   data: {
@@ -26,17 +26,12 @@ export const useUpdateCustomerRole = ({
 }: UseUpdateCustomerRoleOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['call-customer-list-api'],
       })
-      addNotification({
-        type: 'success',
-        title: t('form:customer.success_update_role'),
-      })
+      toast.success(t('form:customer.success_update_role')) 
     },
     ...config,
     mutationFn: updateCustomerRole,

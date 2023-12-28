@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type CreateProjectSchema } from './createProject'
 
@@ -28,16 +28,11 @@ export const useUpdateProject = ({
 }: UseUpdateProjectOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['projects'])
       !isOnCreateProject &&
-        addNotification({
-          type: 'success',
-          title: t('cloud:project_manager.add_project.success_update'),
-        })
+        toast.success(t('cloud:project_manager.add_project.success_update'))
     },
     ...config,
     mutationFn: updateProject,

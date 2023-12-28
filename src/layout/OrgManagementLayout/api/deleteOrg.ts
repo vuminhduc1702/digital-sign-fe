@@ -1,11 +1,11 @@
 import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { PATHS } from '~/routes/PATHS'
-import { useNotificationStore } from '~/stores/notifications'
 import { useProjectById } from '~/cloud/project/api'
 import storage from '~/utils/storage'
 
@@ -23,8 +23,6 @@ export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const { addNotification } = useNotificationStore()
-
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
 
   const projectId = storage.getProject()?.id
@@ -35,10 +33,10 @@ export const useDeleteOrg = ({ config }: UseDeleteOrgOptions = {}) => {
 
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['orgs'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.org_manage.add_org.success_delete'),
+      toast.promise(() => queryClient.invalidateQueries(['orgs']), {
+        loading: t('loading:loading'),
+        success: t('cloud:org_manage.org_manage.add_org.success_delete'),
+        error: t('error:server_res.title'),
       })
 
       if (projectByIdData == null) {

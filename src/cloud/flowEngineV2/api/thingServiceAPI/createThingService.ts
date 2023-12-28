@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type BaseAPIRes } from '~/types'
 
@@ -47,17 +47,12 @@ export const useCreateServiceThing = ({
 }: UseCreateServiceOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['service-things'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:custom_protocol.service.success_create'),
-      })
+      toast.success(t('cloud:custom_protocol.service.success_create'))
     },
     ...config,
     mutationFn: createServiceThing,

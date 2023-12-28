@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type BaseAPIRes } from '~/types'
 import { ProjectSchema } from '../routes/ProjectManage'
@@ -59,15 +59,10 @@ export type UseCreateProjectOptions = {
 export const useCreateProject = ({ config }: UseCreateProjectOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['projects'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:project_manager.add_project.success_add'),
-      })
+      toast.success(t('cloud:project_manager.add_project.success_add')) 
     },
     ...config,
     mutationFn: createProject,

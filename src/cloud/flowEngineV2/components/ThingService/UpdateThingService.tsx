@@ -294,7 +294,7 @@ export function UpdateThingService({
             })}
           >
             <>
-              <div className="my-2 grid grow grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4">
+              <div className="my-2 grid grow grid-cols-1 gap-4 md:grid-cols-4">
                 <InputField
                   require={true}
                   label={t('cloud:custom_protocol.service.name')}

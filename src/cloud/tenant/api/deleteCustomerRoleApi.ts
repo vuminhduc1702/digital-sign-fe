@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deleteCustomerRole = ({
   project_id,
@@ -22,14 +22,12 @@ type UseDeleteCustomerRoleOptions = {
 export const useDeleteCustomerRole = ({ config }: UseDeleteCustomerRoleOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['call-customer-list-api'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:role_manage.add_role.success_delete'),
+      toast.promise(() => queryClient.invalidateQueries(['call-customer-list-api']), {
+        loading: t('loading:loading'),
+        success: t('cloud:role_manage.add_role.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

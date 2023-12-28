@@ -9,7 +9,7 @@ import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
 import i18n from '~/i18n'
-import { useNotificationStore } from '~/stores/notifications'
+// import { useNotificationStore } from '~/stores/notifications'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const controller = new AbortController()

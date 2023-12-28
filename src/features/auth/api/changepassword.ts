@@ -3,7 +3,7 @@ import { axios } from '~/lib/axios'
 import { type UserResponse } from '../types'
 import { MutationConfig, queryClient } from '~/lib/react-query'
 import { useTranslation } from 'react-i18next'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 import { z } from 'zod'
 import { passwordSchema } from '~/utils/schemaValidation'
@@ -40,17 +40,12 @@ type UseChangePassword = {
 export const useChangePassword = ({ config }: UseChangePassword = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['email'],
       })
-      addNotification({
-        type: 'success',
-        title: t('auth:success_password'),
-      })
+      toast.success(t('auth:success_password'))
     },
     ...config,
     mutationFn: changePassword,

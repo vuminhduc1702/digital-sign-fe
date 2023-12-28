@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type Template } from '../types'
 import { type AttrList} from '~/utils/schemaValidation'
@@ -32,17 +32,12 @@ export const useCreateTemplate = ({
 }: UseCreateTemplateOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['templates'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:device_template.add_template.success_create'),
-      })
+      toast.success(t('cloud:device_template.add_template.success_create'))
     },
     ...config,
     mutationFn: createTemplate,

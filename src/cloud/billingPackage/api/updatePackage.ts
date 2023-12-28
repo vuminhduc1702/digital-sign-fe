@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type entityPlanSchema } from '../components'
 
@@ -28,15 +28,10 @@ export const useUpdatePlan = ({
 }: UseUpdatePlanOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['plans'] })
-      addNotification({
-        type: 'success',
-        title: t('billing:package_manage.popup.success_update'),
-      })
+      toast.success(t('billing:package_manage.popup.success_update'))
     },
     ...config,
     mutationFn: updatePlan,

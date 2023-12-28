@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type BaseAPIRes } from '~/types'
 import { type entityFirmWareSchema } from '../../components/Firmware'
@@ -38,17 +38,12 @@ export const useCreateFireWare = ({
 }: UseCreateFirmWareOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['firm-ware'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:firmware.add_firmware.success_create'),
-      })
+      toast.success(t('cloud:firmware.add_firmware.success_create'))
     },
     ...config,
     mutationFn: createFirmWare,

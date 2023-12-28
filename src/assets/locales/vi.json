@@ -597,7 +597,7 @@
         "org": "Tổ chức",
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
-        "max": "Max", 
+        "max": "Max",
         "min": "Min"
       },
       "detail_dashboard": {
@@ -881,7 +881,7 @@
     },
     "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
-      "title": "Lỗi",
+      "title": "Lỗi. Xin vui lòng thử lại.",
       "malformed_data": "Lỗi 400: Dữ liệu truyền lên không hợp lệ.",
       "authorization": "Lỗi 403: Bạn không có quyền truy cập vào trang này.",
       "server": "Lỗi 500: Server đang bị lỗi, vui lòng thử lại.",
@@ -907,7 +907,8 @@
     "template": "Đang tải danh sách mẫu thiết bị...",
     "entity_thing": "Đang tải danh sách Entity thing...",
     "service_thing": "Vui lòng chọn Entity thing trước",
-    "input": "Vui lòng chọn nghiệp vụ trước"
+    "input": "Vui lòng chọn nghiệp vụ trước",
+    "loading": "Xin vui lòng chờ..."
   },
   "placeholder": {
     "select": "Vui lòng chọn",

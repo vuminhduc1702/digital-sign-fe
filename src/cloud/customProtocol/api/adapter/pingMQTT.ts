@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type MutationConfig } from '~/lib/react-query'
 
@@ -28,21 +28,12 @@ type UsePingMQTTOptions = {
 export const usePingMQTT = ({ config }: UsePingMQTTOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification, dismissNotification, notifications } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
-      addNotification({
-        type: 'success',
-        title: t('cloud:custom_protocol.adapter.ping_MQTT.success'),
-      })
+      toast.success(t('cloud:custom_protocol.adapter.ping_MQTT.success'))
     },
     onError: async () => {
-      dismissNotification(notifications[0].id)
-      addNotification({
-        type: 'error',
-        title: t('cloud:custom_protocol.adapter.ping_MQTT.failure'),
-      })
+      toast.error(t('cloud:custom_protocol.adapter.ping_MQTT.failure'))
     },
     ...config,
     mutationFn: pingMQTT,

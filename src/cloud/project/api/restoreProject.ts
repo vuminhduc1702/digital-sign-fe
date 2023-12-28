@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next"
 import { uploadImage } from "~/layout/OrgManagementLayout/api"
 import { axios } from "~/lib/axios"
 import { type MutationConfig, queryClient } from "~/lib/react-query"
-import { useNotificationStore } from "~/stores/notifications"
+import { toast } from 'sonner'
 
 export type RestoreProjectRes = {
   data: string
@@ -28,17 +28,13 @@ type UseUploadImageOptions = {
 
 export const useRestoreProject = ({ type, config }: UseUploadImageOptions = {}) => {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
 
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['restore-project'],
       })
-      addNotification({
-        type: 'success',
-        title: type === 'overView' ? t('cloud:project_manager.add_project.success_restore') : '',
-      })
+      toast.success(t('cloud:project_manager.add_project.success_restore'))
     },
     ...config,
     mutationFn: restoreProject,

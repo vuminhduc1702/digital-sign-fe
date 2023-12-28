@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deleteTemplate = ({ id }: { id: string }) => {
   return axios.delete(`/api/templates/${id}`)
@@ -18,13 +18,12 @@ export const useDeleteTemplate = ({
 }: UseDeleteTemplateOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
   return useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['templates'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:device_template.add_template.success_delete'),
+    onSuccess: async () => {      
+      toast.promise(() => queryClient.invalidateQueries(['templates']), {
+        loading: t('loading:loading'),
+        success: t('cloud:device_template.add_template.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,
