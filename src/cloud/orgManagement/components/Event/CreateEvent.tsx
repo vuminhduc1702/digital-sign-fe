@@ -922,7 +922,7 @@ export function CreateEvent() {
                         option.label === t('loading:service_thing') ||
                         option.label === t('table:no_service')
                       }
-                      isLoading={isLoadingService}
+                      isLoading={watch('cmd.thing_id') != null ? isLoadingService : false}
                       loadingMessage={() => t('loading:service_thing')}
                       noOptionsMessage={() => t('table:no_service')}
                       placeholder={t('cloud:custom_protocol.service.choose')}

@@ -79,7 +79,7 @@ export function UpdateThingService({
       // config: { suspense: false },
     })
 
-  const { register, formState, control, handleSubmit } = useForm<
+  const { register, formState, control, handleSubmit, watch } = useForm<
     CreateServiceThingDTO['data']
   >({
     resolver: serviceThingSchema && zodResolver(serviceThingSchema),
@@ -282,6 +282,8 @@ export function UpdateThingService({
                     output: values.output,
                     input: dataInput,
                     code: codeInput,
+                    fail_limit: values.fail_limit,
+                    lock_time: values.lock_time,
                   },
                   thingId: thingId,
                   name: values.name,
@@ -290,7 +292,7 @@ export function UpdateThingService({
             })}
           >
             <>
-              <div className="my-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
+              <div className="my-2 grid grow grid-cols-1 gap-4 md:grid-cols-4">
                 <InputField
                   require={true}
                   label={t('cloud:custom_protocol.service.name')}
@@ -305,6 +307,22 @@ export function UpdateThingService({
                   registration={register('output')}
                   options={outputList}
                 />
+                <InputField
+                  label={t('cloud:custom_protocol.service.fail_limit')}
+                  error={formState.errors['fail_limit']}
+                  type="number"
+                  registration={register('fail_limit', {
+                    valueAsNumber: true,
+                  })}
+                  min={0}
+                />
+                {watch('fail_limit') > 0 && (
+                  <InputField
+                    label={t('cloud:custom_protocol.service.lock_time')}
+                    error={formState.errors['lock_time']}
+                    registration={register('lock_time')}
+                  />
+                )}
               </div>
               <Tab.Group>
                 <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">

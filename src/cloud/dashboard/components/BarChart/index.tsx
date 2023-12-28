@@ -24,10 +24,12 @@ export const BarChart = ({
   data,
   widgetInfo,
   refetchData,
+  refreshBtn,
 }: {
   data: TimeSeries
   widgetInfo: z.infer<typeof widgetSchema>
   refetchData?: () => void
+  refreshBtn?: boolean
 }) => {
   // console.log(`new bar: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -225,12 +227,14 @@ export const BarChart = ({
     <>
       {!showSpinner && newValuesRef.current != null && !isRefresh ? (
         <>
-          <div
-            className="absolute top-[50px] left-[10px] cursor-pointer z-20"
-            onClick={refresh}
-          >
-            <img src={refreshIcon} alt="" />
-          </div>
+          {refreshBtn && (
+            <div
+              className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+              onClick={refresh}
+            >
+              <img src={refreshIcon} alt="" />
+            </div>
+          )}
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
             <BarReChart data={dataTransformedFeedToChart}>
               <CartesianGrid strokeDasharray="3 3" />

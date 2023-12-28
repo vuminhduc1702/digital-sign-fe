@@ -1,15 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
-import ColorPicker from 'react-pick-color'
-import * as z from 'zod'
-import { v4 as uuidv4 } from 'uuid'
+import { useEffect, useRef } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import ColorPicker from 'react-pick-color'
 import { useParams } from 'react-router-dom'
+import { v4 as uuidv4 } from 'uuid'
+import * as z from 'zod'
 
-import i18n from '~/i18n'
+import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { Button } from '~/components/Button'
+import { Calendar, TimePicker } from '~/components/Calendar'
+import { Dialog, DialogTitle } from '~/components/Dialog'
 import {
   FieldWrapper,
   InputField,
@@ -17,29 +19,26 @@ import {
   SelectField,
   type SelectOption,
 } from '~/components/Form'
-import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
-import { Dialog, DialogTitle } from '~/components/Dialog'
+import TitleBar from '~/components/Head/TitleBar'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { Spinner } from '~/components/Spinner'
+import i18n from '~/i18n'
+import { useGetOrgs } from '~/layout/MainLayout/api'
+import { useDefaultCombobox } from '~/utils/hooks'
 import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { Calendar, TimePicker } from '~/components/Calendar'
-import { useGetOrgs } from '~/layout/MainLayout/api'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
-import { useDefaultCombobox } from '~/utils/hooks'
 
 import { type SelectInstance } from 'react-select'
-import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 import { nameSchema } from '~/utils/schemaValidation'
-import { type ControllerBtn } from './CreateControllerButton'
+import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 
-import { Calendar as CalendarIcon } from 'lucide-react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { PlusIcon } from '~/components/SVGIcons'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
 export const wsInterval = [
   { label: 'Second', value: 1000 },
@@ -92,7 +91,6 @@ export const widgetSchema = z.object({
     lastest_message: z.string(),
     realtime_message: z.string(),
     history_message: z.string(),
-    controller_message: z.string().optional(),
   }),
   attribute_config: attrWidgetSchema,
   config: z

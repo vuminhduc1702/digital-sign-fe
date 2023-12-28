@@ -27,6 +27,7 @@ import {
 import {
   CreateControllerButton,
   CreateWidget,
+  UpdateControllerButton,
   UpdateWidget,
   type Widget,
   type WidgetCategoryType,
@@ -171,41 +172,11 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    if (isSendInitMessageRef.current) {
+    if (isSendInitMessageRef.current && !rerenderLayout) {
       handleSendInitMessage()
     }
     isSendInitMessageRef.current = true
   }, [widgetList])
-
-  // async function handleSendMessage() {
-  //   setTimeout(() => {
-  //     if (
-  //       lastJsonMessage?.requestType != null &&
-  //       lastJsonMessage?.requestType === 'INIT' &&
-  //       isSendMessageSubscribeRef.current
-  //     ) {
-  //       Object.values(widgetList).forEach(widget => {
-  //         const realtimeMessage = widget?.datasource?.realtime_message
-  //         const historyMessage = widget?.datasource?.history_message
-  //         const lastestMessage = widget?.datasource?.lastest_message
-  //         if (realtimeMessage !== '' && realtimeMessage != null) {
-  //           sendMessage(realtimeMessage)
-  //         }
-  //         if (historyMessage !== '' && historyMessage != null) {
-  //           sendMessage(historyMessage)
-  //         }
-  //         if (lastestMessage !== '' && lastestMessage != null) {
-  //           sendMessage(lastestMessage)
-  //         }
-  //       })
-  //     }
-  //   }, 150)
-  //   isSendMessageSubscribeRef.current = true
-  // }
-
-  // useEffect(() => {
-  //   handleSendMessage()
-  // }, [widgetList, lastJsonMessage])
 
   async function handleSendMessage() {
     if (
@@ -361,7 +332,7 @@ export function DashboardDetail() {
                   widgetInfo.attribute_config.length > 0
                     ? widgetInfo.attribute_config
                     : {}
-                console.log(widgetInfo.attribute_config)
+                // console.log(widgetInfo.attribute_config)
 
                 return (
                   <div
@@ -393,12 +364,20 @@ export function DashboardDetail() {
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
@@ -420,6 +399,10 @@ export function DashboardDetail() {
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
                         refetchData={refetchData}
+                        refreshBtn={
+                          widgetInfo?.config?.chartsetting.data_type ===
+                          'HISTORY'
+                        }
                       />
                     ) : widgetInfo?.description === 'CARD' ? (
                       <CardChart
@@ -451,6 +434,20 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
                         />
+                        {widgetInfo?.description === 'CONTROLLER' ? (
+                          <UpdateControllerButton
+                            widgetInfo={widgetInfo}
+                            widgetCategory={widgetInfo?.description}
+                            setWidgetList={setWidgetList}
+                            widgetId={widgetId}
+                          />
+                        ) : (
+                          <UpdateWidget
+                            widgetInfo={widgetInfo}
+                            setWidgetList={setWidgetList}
+                            widgetId={widgetId}
+                          />
+                        )}
                         <DeleteIcon
                           width={20}
                           height={20}

@@ -8,16 +8,17 @@ import { disableReactDevTools } from '@fvilers/disable-react-devtools'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 
-import '~/style/main.css'
 import '~/i18n'
-
 import storage from '~/utils/storage'
 import { lazyImport } from '~/utils/lazyImport'
 import { queryClient } from '~/lib/react-query'
 import { Spinner } from '~/components/Spinner'
-import { Notifications } from '~/components/Notifications'
 import { AuthLoader, logoutFn } from '~/lib/auth'
 import { AppRoutes } from '~/routes'
+import { Toaster } from '~/components/Toaster'
+
+import '~/style/main.css'
+
 const { ErrorFallback } = lazyImport(
   () => import('~/pages/ErrorPage'),
   'ErrorFallback',
@@ -100,7 +101,13 @@ function App() {
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <HelmetProvider>
           <QueryClientProvider client={queryClient}>
-            <Notifications />
+            <Toaster
+              position="top-right"
+              closeButton
+              richColors
+              duration={5000}
+              visibleToasts={10}
+            />
             <AuthLoader
               renderLoading={() => (
                 <div className="flex h-screen w-screen items-center justify-center">
