@@ -285,8 +285,8 @@ export function UpdateThingService({
                     output: values.output,
                     input: dataInput,
                     code: codeInput,
-                    fail_limit: failLimit, 
-                    lock_time: failLimit === 0 ? "0s" : lockTime,
+                    fail_limit: failLimit,
+                    lock_time: failLimit === 0 ? '0s' : lockTime,
                   },
                   thingId: thingId,
                   name: values.name,
@@ -295,7 +295,7 @@ export function UpdateThingService({
             })}
           >
             <>
-              <div className="my-2 grid grow grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4">
+              <div className="my-2 grid grow grid-cols-1 gap-4 md:grid-cols-4">
                 <InputField
                   require={true}
                   label={t('cloud:custom_protocol.service.name')}
