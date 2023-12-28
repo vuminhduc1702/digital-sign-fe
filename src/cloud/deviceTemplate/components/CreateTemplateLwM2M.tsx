@@ -53,25 +53,25 @@ export default function CreateTemplateLwM2M() {
   } = useCreateTemplate()
   const { register, formState, handleSubmit, control, watch, reset } = useForm()
   //console.log('formState errors', formState.errors)
-  const { data: XMLData } = useGetXMLdata({
-    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-    config: {
-      suspense: false,
-    },
-  })
-  const XMLDataRef = useRef<LWM2MResponse[]>([])
-  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  useEffect(() => {
-    if (XMLData != null) {
-      XMLDataRef.current = [...XMLDataRef.current, XMLData]
-    }
-    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-      const filterArr = XMLDataRef.current.filter(item => {
-        return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
-      })
-      setFilterLWM2M(Array.from(new Set(filterArr)))
-    }
-  }, [XMLData, watch('rule_chain_id')])
+  // const { data: XMLData } = useGetXMLdata({
+  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+  //   config: {
+  //     suspense: false,
+  //   },
+  // })
+  // const XMLDataRef = useRef<LWM2MResponse[]>([])
+  // const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  // useEffect(() => {
+  //   if (XMLData != null) {
+  //     XMLDataRef.current = [...XMLDataRef.current, XMLData]
+  //   }
+  //   if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
+  //     const filterArr = XMLDataRef.current.filter(item => {
+  //       return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
+  //     })
+  //     setFilterLWM2M(Array.from(new Set(filterArr)))
+  //   }
+  // }, [XMLData, watch('rule_chain_id')])
   //console.log('filterLWM2M', filterLWM2M)
   function formatString(str) {
     const lowercasedStr = str.toLowerCase();
@@ -87,22 +87,63 @@ export default function CreateTemplateLwM2M() {
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState({})
 
-  const handleAccordionChange = (accordionIndex) => {
+  const { data: XMLData } = useGetXMLdata({
+    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+    config: {
+      suspense: false,
+    },
+  })
+  const XMLDataRef = useRef<LWM2MResponse[]>([])
+  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  useEffect(() => {
+    if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
+      XMLDataRef.current = [...XMLDataRef.current, XMLData]
+    }
+    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
+      const sortedData = XMLDataRef.current.sort((a, b) => {
+        const indexA = watch('rule_chain_id').indexOf(a.LWM2M.Object.ObjectID)
+        const indexB = watch('rule_chain_id').indexOf(b.LWM2M.Object.ObjectID)
+        return indexA - indexB
+      })
+      const filterArr = sortedData.filter(item => watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID))
+      setFilterLWM2M(Array.from(new Set(filterArr)))
+      const filteredKeys = Object.keys(checkboxStates).filter(key => {
+        const objectId = parseInt(key.split('/')[1], 10) 
+        return watch('rule_chain_id').includes(objectId.toString())
+      })
+      const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
+        acc[key] = checkboxStates[key]
+        return acc
+      }, {})
+      setCheckboxStates(filteredCheckboxStates)
+      const filteredAccordionStates = {}
+      Object.keys(accordionStates).forEach(key => {
+        filteredAccordionStates[key] = accordionStates[key].filter(obj =>
+          watch('rule_chain_id').includes(obj.id.toString())
+        )
+      })
+      setAccordionStates(filteredAccordionStates)
+      
+    }
+  }, [XMLData, watch('rule_chain_id')])
+
+  const handleAccordionChange = (accordionIndex: string ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (newStates[accordionIndex]) {
-        newStates[accordionIndex] = []
-      } else {
         newStates[accordionIndex] = []
       }
       return newStates
     })
   }
+  console.log('filterLWM2M', filterLWM2M)
+  console.log('watch', watch('rule_chain_id'))
   const handleCheckboxChange = (accordionIndex, module, item) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
+        console.log('newStates', newStates)
       }
       const moduleId = module.id
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
@@ -132,31 +173,31 @@ export default function CreateTemplateLwM2M() {
     })
   }
    
-  const handleSelectChange = (selectedOptions) => {
-    console.log('Selected Options:', selectedOptions);
+  // const handleSelectChange = (selectedOptions) => {
+  //   console.log('Selected Options:', selectedOptions);
   
-    if (selectedOptions) {
-      // Tạo một bản sao mới của accordionStates
-      const updatedAccordionStates = { ...accordionStates };
+  //   if (selectedOptions) {
+  //     // Tạo một bản sao mới của accordionStates
+  //     const updatedAccordionStates = { ...accordionStates };
   
-      // Xóa các mảng giá trị không còn tương ứng với các option đã bị xóa
-      Object.keys(updatedAccordionStates).forEach((optionName) => {
-        if (!selectedOptions.find((option) => option.label === optionName)) {
-          delete updatedAccordionStates[optionName];
-        }
-      });
+  //     // Xóa các mảng giá trị không còn tương ứng với các option đã bị xóa
+  //     Object.keys(updatedAccordionStates).forEach((optionName) => {
+  //       if (!selectedOptions.find((option) => option.label === optionName)) {
+  //         delete updatedAccordionStates[optionName];
+  //       }
+  //     });
   
-      // Thêm các mảng giá trị cho các option mới được chọn
-      // selectedOptions.forEach((option) => {
-      //   if (!updatedAccordionStates[option.label]) {
-      //     updatedAccordionStates[option.label] = /* some initial data */;
-      //   }
-      // });
+  //     // Thêm các mảng giá trị cho các option mới được chọn
+  //     // selectedOptions.forEach((option) => {
+  //     //   if (!updatedAccordionStates[option.label]) {
+  //     //     updatedAccordionStates[option.label] = /* some initial data */;
+  //     //   }
+  //     // });
   
-      console.log('After update:', updatedAccordionStates);
-      setAccordionStates(updatedAccordionStates);
-    }
-  };
+  //     console.log('After update:', updatedAccordionStates);
+  //     setAccordionStates(updatedAccordionStates);
+  //   }
+  // };
   
   // const handleSelectChange = (selectedOptions) => {
   //   console.log('Selected Options:', selectedOptions)
@@ -187,7 +228,7 @@ export default function CreateTemplateLwM2M() {
   //   }
   // }
 
-  console.log('accordionStates', accordionStates)
+  
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     //console.log('Accordion States:', accordionArray);
@@ -284,7 +325,7 @@ const data = {
               isOptionDisabled={option => option.label === t('loading:flow_id')}
               noOptionsMessage={() => t('table:no_in_flow_id')}
               handleClearSelectDropdown={handleClearSelectDropdown}
-              customOnChange={handleSelectChange}
+              //customOnChange={handleSelectChange}
               //handleChangeSelect={handleReSelectOption}
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',

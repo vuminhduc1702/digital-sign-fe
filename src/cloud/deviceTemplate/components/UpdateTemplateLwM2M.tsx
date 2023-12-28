@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState, useCallback } from 'react'
+import { axios } from '~/lib/axios'
 import { useSpinDelay } from 'spin-delay'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -104,27 +105,90 @@ export function UpdateTemplateLwM2M({
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState({})
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
-  const handleAccordionChange = (accordionIndex: string | number) => {
+
+  useEffect(() => {
+    setValue('rule_chain_id', selectedModuleNames.map(String));
+  }, [setValue, selectedModuleNames])
+
+  const { data: XMLData } = useGetXMLdata({
+    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+    config: {
+      suspense: false,
+    },
+  })
+  const XMLDataRef = useRef<LWM2MResponse[]>([])
+  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  useEffect(() => {
+    if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
+      XMLDataRef.current = [...XMLDataRef.current, XMLData]
+    }
+    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
+      const sortedData = XMLDataRef.current.sort((a, b) => {
+        const indexA = watch('rule_chain_id').indexOf(a.LWM2M.Object.ObjectID)
+        const indexB = watch('rule_chain_id').indexOf(b.LWM2M.Object.ObjectID)
+        return indexA - indexB
+      })
+      const filterArr = sortedData.filter(item => watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID))
+      setFilterLWM2M(Array.from(new Set(filterArr)))
+      const filteredKeys = Object.keys(checkboxStates).filter(key => {
+        const objectId = parseInt(key.split('/')[1], 10) 
+        return watch('rule_chain_id').includes(objectId.toString())
+      })
+      const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
+        acc[key] = checkboxStates[key]
+        return acc
+      }, {})
+      setCheckboxStates(filteredCheckboxStates)
+      const filteredAccordionStates = {}
+      Object.keys(accordionStates).forEach(key => {
+        filteredAccordionStates[key] = accordionStates[key].filter(obj =>
+          watch('rule_chain_id').includes(obj.id.toString())
+        )
+      })
+      setAccordionStates(filteredAccordionStates)
+      
+    }
+  }, [XMLData, watch('rule_chain_id')])
+  const handleAccordionChange = (accordionIndex: string ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
+      //console.log('newStates', newStates)
       if (newStates[accordionIndex]) {
-        newStates[accordionIndex] = []
-      } else {
         newStates[accordionIndex] = []
       }
       return newStates
     })
   }
   //console.log('selectedUpdateTemplate', selectedUpdateTemplate)
-  const handleCheckboxChange = (accordionIndex: string | number, module: { id: any; name: any }, item: { id: any }) => {
+  const handleCheckboxChange = (accordionIndex: string , module: { id: any; name: any }, item: { id: any }) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
+      const moduleId = module.id
+      // const allIds = Object.values(newStates).flatMap(accordion => accordion.map(item => item.id))
+      // console.log('allIds', allIds)
+      // const filteraccordion = Object.entries(accordionStates).find(([accordionKey, accordion]) => {
+      //   const index = accordion.findIndex(item => item.id === moduleId)
+      //   return index !== -1
+      // })
+      // if (filteraccordion) {
+      //   const [accordionKey, accordion] = filteraccordion
+      //   const index = accordion.findIndex(item => item.id === moduleId)
+      //   console.log('index', index)
+      //   // targetId đã tồn tại trong mảng, thêm newAttributeValue vào mảng attribute_info
+      //   accordion[index].attribute_info.push(item)
+        
+      //   // In ra mảng accordionStates để kiểm tra
+      //   // console.log('22222222222', accordionStates)
+      //   // console.log('filteraccordion', filteraccordion)
+      //   // console.log('accordion[index]', accordion[index])
+      // } else {
+      //   console.log(`${moduleId} không tồn tại trong mảng.`)
+      // }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
       }
-      const moduleId = module.id
-      const moduleIndex = newStates[accordionIndex].findIndex((obj: { id: any }) => obj.id === moduleId)
-  
+      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
+      console.log('moduleIndex', moduleIndex)
       if (moduleIndex === -1) {
         const currentTimestamp = Date.now();
         newStates[accordionIndex].push({
@@ -136,7 +200,7 @@ export function UpdateTemplateLwM2M({
         })
       } else {
         const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
-          (attribute: { id: any }) => attribute.id === item.id
+          (attribute) => attribute.id === item.id
         )
         if (attributeIndex === -1) {
           newStates[accordionIndex][moduleIndex].attribute_info.push(item)
@@ -227,22 +291,14 @@ const data = {
       setCheckboxStates(newCheckboxStates);
       const allid = (Object.values(newAccordionStates) as { id: string }[][])
       .flat()
-      .map((moduleItem) => moduleItem.id);
-      console.log('allid',allid)
+      .map((moduleItem) => moduleItem.id)
       setSelectedModuleNames(allid)
       reset({
         name: name,
       })
     }
   }, [LwM2MData])
-
-  useEffect(() => {
-    setValue('rule_chain_id', selectedModuleNames.map(String));
-  }, [setValue, selectedModuleNames])
-
-  const ruleChainIds  = watch('rule_chain_id')
-  console.log('ruleChainIds', ruleChainIds)
-
+// console.log('CheckboxStates', checkboxStates)
 //Sử dụng hàm map để tạo mảng chứa các yêu cầu API tương ứng
 //   const xmlDataArray = ruleChainIds.map(ruleChainId => {
 //   const { data: XMLData } = useGetXMLdata({
@@ -254,32 +310,8 @@ const data = {
 
 //   return XMLData;
 // });
-// console.log('xmlDataArray', xmlDataArray)
-  const { data: XMLData } = useGetXMLdata({
-    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-    config: {
-      suspense: false,
-    },
-  })
-  const XMLDataRef = useRef<LWM2MResponse[]>([])
-  const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  useEffect(() => {
-    if (XMLData != null) {
-      XMLDataRef.current = [...XMLDataRef.current, XMLData]
-    }
-    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-      const filterArr = XMLDataRef.current.filter(item => {
-        return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
-      })
-      setFilterLWM2M(Array.from(new Set(filterArr)))
-      console.log('filterArr', filterArr)
-    }
-  }, [XMLData, watch('rule_chain_id')])
-
-  console.log('rule_chain_id', watch('rule_chain_id'))
-  console.log('filterLWM2M', filterLWM2M)
-  
-  console.log('data',data)
+ //console.log('filterLWM2M', filterLWM2M)
+ //console.log('selectedModuleNames', selectedModuleNames)
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -288,8 +320,7 @@ const data = {
     <Drawer
       isOpen={isOpen}
       onClose={() => {
-        //setCheckboxStates({})
-        //setAccordionStates([])
+        setValue('rule_chain_id', selectedModuleNames)
         close();
       }}
       title={t('cloud:device_template.add_template.update')}
