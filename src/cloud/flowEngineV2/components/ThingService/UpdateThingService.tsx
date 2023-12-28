@@ -89,6 +89,9 @@ export function UpdateThingService({
     },
   })
 
+  const [failLimit, setFailLimit] = useState(thingServiceData?.data.fail_limit)
+  const [lockTime, setLockTime] = useState(thingServiceData?.data.lock_time)
+
   const { fields, append, remove } = useFieldArray({
     name: 'input',
     control,
@@ -282,6 +285,8 @@ export function UpdateThingService({
                     output: values.output,
                     input: dataInput,
                     code: codeInput,
+                    fail_limit: failLimit, 
+                    lock_time: failLimit === 0 ? "0s" : lockTime,
                   },
                   thingId: thingId,
                   name: values.name,
@@ -290,7 +295,7 @@ export function UpdateThingService({
             })}
           >
             <>
-              <div className="my-2 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
+              <div className="my-2 grid grow grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4">
                 <InputField
                   require={true}
                   label={t('cloud:custom_protocol.service.name')}
@@ -305,6 +310,24 @@ export function UpdateThingService({
                   registration={register('output')}
                   options={outputList}
                 />
+                <InputField
+                  label={t('cloud:custom_protocol.service.fail_limit')}
+                  type="number"
+                  registration={register('fail_limit')}
+                  onChange={e => {
+                    setFailLimit(parseInt(e.target.value))
+                  }}
+                  min={0}
+                />
+                {failLimit > 0 && (
+                  <InputField
+                    label={t('cloud:custom_protocol.service.lock_time')}
+                    registration={register('lock_time')}
+                    onChange={e => {
+                      setLockTime(e.target.value)
+                    }}
+                  />
+                )}
               </div>
               <Tab.Group>
                 <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">

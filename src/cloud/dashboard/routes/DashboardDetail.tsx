@@ -172,41 +172,11 @@ export function DashboardDetail() {
   }
 
   useEffect(() => {
-    if (isSendInitMessageRef.current) {
+    if (isSendInitMessageRef.current && !rerenderLayout) {
       handleSendInitMessage()
     }
     isSendInitMessageRef.current = true
   }, [widgetList])
-
-  // async function handleSendMessage() {
-  //   setTimeout(() => {
-  //     if (
-  //       lastJsonMessage?.requestType != null &&
-  //       lastJsonMessage?.requestType === 'INIT' &&
-  //       isSendMessageSubscribeRef.current
-  //     ) {
-  //       Object.values(widgetList).forEach(widget => {
-  //         const realtimeMessage = widget?.datasource?.realtime_message
-  //         const historyMessage = widget?.datasource?.history_message
-  //         const lastestMessage = widget?.datasource?.lastest_message
-  //         if (realtimeMessage !== '' && realtimeMessage != null) {
-  //           sendMessage(realtimeMessage)
-  //         }
-  //         if (historyMessage !== '' && historyMessage != null) {
-  //           sendMessage(historyMessage)
-  //         }
-  //         if (lastestMessage !== '' && lastestMessage != null) {
-  //           sendMessage(lastestMessage)
-  //         }
-  //       })
-  //     }
-  //   }, 150)
-  //   isSendMessageSubscribeRef.current = true
-  // }
-
-  // useEffect(() => {
-  //   handleSendMessage()
-  // }, [widgetList, lastJsonMessage])
 
   async function handleSendMessage() {
     if (
@@ -362,7 +332,7 @@ export function DashboardDetail() {
                   widgetInfo.attribute_config.length > 0
                     ? widgetInfo.attribute_config
                     : {}
-                console.log(widgetInfo.attribute_config)
+                // console.log(widgetInfo.attribute_config)
 
                 return (
                   <div
@@ -394,12 +364,14 @@ export function DashboardDetail() {
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
+                        refreshButton={true}
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
                         data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
+                        refreshButton={true}
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />

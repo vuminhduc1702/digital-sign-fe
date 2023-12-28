@@ -24,6 +24,8 @@ export type CreateServiceThingDTO = {
     output: string
     input: inputlist[]
     code: string
+    fail_limit?: number
+    lock_time: string
   }
   thingId: string
   name?: string

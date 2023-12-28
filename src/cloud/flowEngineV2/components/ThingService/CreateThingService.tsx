@@ -67,6 +67,8 @@ export type CreateServiceForm = {
   output: string
   input: inputlist[]
   code: string
+  fail_limit: number
+  lock_time: string
 }
 
 export interface dataRun {
@@ -99,6 +101,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
+  const [failLimit, setFailLimit] = useState(0)
+  const [lockTime, setLockTime] = useState('0s')
   const [, setInputTypeValue] = useState('')
   const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
@@ -301,6 +305,8 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   output: values.output,
                   input: dataInput,
                   code: codeInput,
+                  fail_limit: failLimit,
+                  lock_time: failLimit === 0 ? '0s' : lockTime,
                 },
                 thingId: thingId,
               })
@@ -308,7 +314,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           })}
         >
           <div>
-            <div className="mb-4 grid grow grid-cols-1 gap-x-4 md:grid-cols-2">
+            <div className="mb-4 grid grow grid-cols-1 md:grid-cols-2 grid-rows-2 gap-4">
               <InputField
                 require={true}
                 label={t('cloud:custom_protocol.service.name')}
@@ -333,6 +339,24 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 registration={register('output')}
                 options={outputList}
               />
+              <InputField
+                label={t('cloud:custom_protocol.service.fail_limit')}
+                type="number"
+                registration={register('fail_limit')}
+                onChange={e => {
+                  setFailLimit(parseInt(e.target.value))
+                }}
+                min={0}
+              />
+              {failLimit > 0 && (
+                <InputField
+                  label={t('cloud:custom_protocol.service.lock_time')}
+                  registration={register('lock_time')}
+                  onChange={e => {
+                    setLockTime(e.target.value)
+                  }}
+                />
+              )}
             </div>
             <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
               <div className={'relative flex flex-col gap-2 md:col-span-1'}>

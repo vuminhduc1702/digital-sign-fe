@@ -445,6 +445,8 @@
         "success_update": "Sửa nghiệp vụ thành công",
         "success_delete": "Xoá nghiệp vụ thành công",
         "name": "Tên nghiệp vụ",
+        "fail_limit": "Số lần thực thi thất bại",
+        "lock_time": "Thời gian khóa",
         "output": "Kết quả",
         "input": "Biến đầu vào",
         "add_other": "Thêm biến khác",
