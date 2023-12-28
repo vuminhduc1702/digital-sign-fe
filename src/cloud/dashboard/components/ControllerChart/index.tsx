@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import storage from '~/utils/storage'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type SendMessage } from 'react-use-websocket/dist/lib/types'
 import { type DashboardWS } from '../../types'
@@ -17,7 +17,6 @@ export function ControllerButton({
   lastJsonMessage: DashboardWS
 }) {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
 
   const projectId = storage.getProject()?.id
 
@@ -44,14 +43,11 @@ export function ControllerButton({
         lastJsonMessage?.errorCode === 0 &&
         !Array.isArray(lastJsonMessage.data)
       ) {
-        addNotification({
-          type: 'success',
-          title: t(
-            'cloud:dashboard.detail_dashboard.add_widget.controller.success',
-          )
+        toast.success(
+          t('cloud:dashboard.detail_dashboard.add_widget.controller.success')
             .replace('{{SERVICE_NAME}}', service_name)
             .replace('{{DATA}}', lastJsonMessage.data.data),
-        })
+        )
       }
     }
   }, [lastJsonMessage])
