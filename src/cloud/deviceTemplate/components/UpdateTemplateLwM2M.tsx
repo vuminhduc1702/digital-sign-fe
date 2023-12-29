@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { axios } from '~/lib/axios'
+import { axios} from '~/lib/axios'
 import { useSpinDelay } from 'spin-delay'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,6 +19,7 @@ import {
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
+import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 import { type UpdateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
 import { templateAttrSchema } from './CreateTemplate'
@@ -69,7 +70,7 @@ export function UpdateTemplateLwM2M({
   //   isLoading: isLoadingCreateTemplatelwm2m,
   //   isSuccess: isSuccessCreateTemplatelwm2m,
   // } = useCreateTemplate()
-  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm()
+  const { register, formState: { errors }, handleSubmit, control, watch, reset, setValue } = useForm()
   //console.log('formState errors', formState.errors)
   // const { data: XMLData } = useGetXMLdata({
   //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
@@ -107,17 +108,57 @@ export function UpdateTemplateLwM2M({
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
 
   useEffect(() => {
-    setValue('rule_chain_id', selectedModuleNames.map(String));
+    setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
-
-  const { data: XMLData } = useGetXMLdata({
-    fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-    config: {
-      suspense: false,
-    },
-  })
+  //console.log('watch', watch('rule_chain_id'))
+  //console.log('selectedModuleNames', typeof selectedModuleNames)
   const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
+  const [XMLData, setXMLData] = useState<LWM2MResponse | null>(null)
+  //console.log('XMLData', XMLData)
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const ids = watch('rule_chain_id');
+  //       const promises = ids.map(async (id) => {
+  //         const response = await axios.get(`/file/publishjson/${id}.json`);
+  //         return response 
+  //       })
+  
+  //       const orderedResponses = await Promise.all(promises)
+  //       console.log('orderedResponses', orderedResponses)
+  //       const orderedData = orderedResponses.map((item) => item.data)
+  //       console.log('orderedData', orderedData)
+  //       setXMLData(orderedData)
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   };
+  
+  //   fetchData();
+  // }, [watch('rule_chain_id')])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const promises = watch('rule_chain_id').map(async (id) => {
+          const response = await axios.get(`/file/publishjson/${id}.json`)
+          console.log('response', response)
+          setXMLData(response)
+          return response
+         })
+         //console.log('filterLWM2M', filterLWM2M)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    }
+    fetchData()
+  }, [watch('rule_chain_id')])
+  // const { data: XMLData } = useGetXMLdata({
+  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+  //   config: {
+  //     suspense: false,
+  //   },
+  // })
   useEffect(() => {
     if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
       XMLDataRef.current = [...XMLDataRef.current, XMLData]
@@ -298,20 +339,8 @@ const data = {
       })
     }
   }, [LwM2MData])
-// console.log('CheckboxStates', checkboxStates)
-//Sử dụng hàm map để tạo mảng chứa các yêu cầu API tương ứng
-//   const xmlDataArray = ruleChainIds.map(ruleChainId => {
-//   const { data: XMLData } = useGetXMLdata({
-//     fileId: ruleChainId,
-//     config: {
-//       suspense: false,
-//     },
-//   });
-
-//   return XMLData;
-// });
  //console.log('filterLWM2M', filterLWM2M)
- //console.log('selectedModuleNames', selectedModuleNames)
+ console.log('selectedModuleNames', selectedModuleNames)
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -372,6 +401,7 @@ const data = {
             onChange={handleNameChange}
             registration={register('name')}
           />
+          {errors.name && <p>{errors.name.message}</p>}
           <div className="space-y-1">
             <SelectDropdown
               isClearable

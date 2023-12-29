@@ -253,11 +253,12 @@ const data = {
         })}
       >
         <>
-          <InputField
-            label={t('cloud:device_template.add_template.name')}
-            value={name}
-            onChange={handleNameChange}
-          />
+        <InputField
+          label={t('cloud:device_template.add_template.name')}
+          value={name}
+          onChange={handleNameChange}
+          registration={register('name', { required: 'This field is required' })}
+        />
           <div className="space-y-1">
             <SelectDropdown
               isClearable
