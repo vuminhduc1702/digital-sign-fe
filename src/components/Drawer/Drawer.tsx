@@ -1,4 +1,4 @@
-import { Dialog, Transition } from '@headlessui/react'
+import { Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import clsx from 'clsx'
 import 'intersection-observer'
@@ -31,15 +31,15 @@ export const Drawer = ({
 }: DrawerProps) => {
   return (
     <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog
-        as="div"
-        static
+      <div
+        // as="div"
+        // static
         className="fixed inset-0 z-40 overflow-hidden"
-        open={isOpen}
-        onClose={() => null}
+        // open={isOpen}
+        // onClose={() => null}
       >
         <div className="absolute inset-0 overflow-hidden">
-          <Dialog.Overlay className="absolute inset-0" />
+          <div className="absolute inset-0" />
           <div className="fixed inset-y-0 right-0 flex max-w-full pl-10">
             <Transition.Child
               as={Fragment}
@@ -55,9 +55,9 @@ export const Drawer = ({
                   <div className="flex min-h-0 flex-1 flex-col overflow-y-scroll py-6">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-body-md font-medium text-gray-900">
+                        <div className="text-body-md font-medium text-gray-900">
                           {title}
-                        </Dialog.Title>
+                        </div>
                         <div className="ml-3 flex h-7 items-center">
                           <button
                             className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
@@ -81,7 +81,7 @@ export const Drawer = ({
             </Transition.Child>
           </div>
         </div>
-      </Dialog>
+      </div>
     </Transition.Root>
   )
 }

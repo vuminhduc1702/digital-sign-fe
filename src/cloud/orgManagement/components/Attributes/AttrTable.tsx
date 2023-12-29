@@ -262,6 +262,7 @@ export function AttrTable({
       data={dataSorted}
       columns={columns}
       onDataText={t('table:no_attr')}
+      isAbsoluteBtn={false}
       {...props}
     />
   )
