@@ -29,12 +29,22 @@ import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
 
 import { transportConfigSchema, nameSchema } from '~/utils/schemaValidation'
-import { type LWM2MResponse, type TransportConfigInfo, type ModuleConfig, type TransportConfigAttribute } from '../types'
+import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ChevronDown } from 'lucide-react'
+
+type AccordionStates = {
+  [key: number]: ModuleConfig[]
+}
+type CheckboxStates = {
+  [key: string]: boolean
+}
+type ItemNames = {
+  [key: string]: string
+}
 
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
@@ -78,23 +88,14 @@ export default function CreateTemplateLwM2M() {
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
     return formattedStr
   }
-  type accordionStates = {
-    [key: number]: ModuleConfig[]
-  }
-  type checkboxStates = {
-    [key: string]: boolean
-  }
-  type itemNames = {
-    [key: string]: string
-  }
   const [openAccordion, setOpenAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
-  const [accordionStates, setAccordionStates] = useState<accordionStates>({})
-  const [selectAllChecked, setSelectAllChecked] = useState(false)
-  const [checkboxStates, setCheckboxStates] = useState<checkboxStates>({})
+  const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
+  const [selectAllAttributes, setSelectAllAttributes] = useState<Record<number, boolean>>({})
+  const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
-  const [itemNames, setItemNames] = useState<itemNames>({})
+  const [itemNames, setItemNames] = useState<ItemNames>({})
 
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
@@ -121,24 +122,31 @@ export default function CreateTemplateLwM2M() {
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
-        acc[key] = checkboxStates[key]
+        acc[key] = checkboxStates[key] 
         return acc
-      }, {} as checkboxStates)
+      }, {} as CheckboxStates)
       setCheckboxStates(filteredCheckboxStates)
-      const filteredAccordionStates: accordionStates = {}
+      const updatedSelectAllAttributes = { ...selectAllAttributes }
+      console.log('updatedSelectAllAttributes', updatedSelectAllAttributes)
+      const indexesToRemove = watch('rule_chain_id').map((id) => parseInt(id, 10))
+      indexesToRemove.forEach((index) => {
+        delete updatedSelectAllAttributes[index]
+      })
+      setSelectAllAttributes(updatedSelectAllAttributes)
+      const filteredAccordionStates: AccordionStates = {}
       Object.keys(accordionStates).forEach((key) => {
         filteredAccordionStates[key] = accordionStates[key].filter(obj =>
           watch('rule_chain_id').includes(obj.id.toString())
         )
       })
       setAccordionStates(filteredAccordionStates)
-      
     }
   }, [XMLData, watch('rule_chain_id')])
-  console.log('watch', watch('rule_chain_id'))
-  console.log('filterLWM2M', filterLWM2M)
+  //console.log('watch', watch('rule_chain_id'))
+  //console.log('filterLWM2M', filterLWM2M)
   console.log('checkboxStates', checkboxStates)
-  console.log('accordionStates', accordionStates)
+  //console.log('accordionStates', accordionStates)
+  //console.log('selectAllAttributes', selectAllAttributes)
   const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
@@ -153,7 +161,7 @@ export default function CreateTemplateLwM2M() {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
-        console.log('newStates', newStates)
+        //console.log('newStates', newStates)
       }
       const moduleId = module.id
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
@@ -182,6 +190,50 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
+  const handleSelectAllAttributesChange = (accordionIndex: number) => {
+    setSelectAllAttributes((prevStates) => {
+      const updatedSelectAllAttributes = { ...prevStates }
+      updatedSelectAllAttributes[accordionIndex] = !prevStates[accordionIndex]
+      return updatedSelectAllAttributes
+    })
+    const updatedCheckboxStates: Record<string, boolean> = {}
+    filterLWM2M.forEach((lw2m2, index) => {
+      if (index === accordionIndex) {
+        lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
+          if (item.Operations === 'RW' || item.Operations === 'R') {
+            const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+            updatedCheckboxStates[itemId] = !selectAllAttributes[accordionIndex]
+          }
+        })
+      }
+    })
+    setCheckboxStates((prevStates) => {
+      const newStates = { ...prevStates, ...updatedCheckboxStates }
+      return newStates
+    })
+    filterLWM2M.forEach((lw2m2, index) => {
+      if (index === accordionIndex) {
+        lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
+          if (item.Operations === 'RW' || item.Operations === 'R') {
+            const moduleId = lw2m2.LWM2M.Object.ObjectID;
+            const moduleObject = {
+              id: moduleId,
+              module_name: lw2m2.LWM2M.Object.Name,
+            }
+            const itemId = `/${moduleId}/0/${item['@ID']}`;
+            const itemObject = {
+              action: item.Operations,
+              id: itemId,
+              kind: item.MultipleInstances,
+              name: itemNames[`${moduleId}-${item['@ID']}`] || formatString(item.Name),
+              type: item.Type,
+            }
+            handleCheckboxChange(accordionIndex, moduleObject, itemObject)
+          }
+        })
+      }
+    })
+  }
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     //console.log('Accordion States:', accordionArray);
@@ -199,6 +251,7 @@ const resetAllStates = () => {
   setCheckboxStates({})
   setItemNames({})
   setAccordionStates([])
+  setSelectAllAttributes({})
   setFilterLWM2M([])
 }
 const handleClearSelectDropdown = () => {
@@ -257,7 +310,7 @@ const data = {
           label={t('cloud:device_template.add_template.name')}
           value={name}
           onChange={handleNameChange}
-          registration={register('name', { required: 'This field is required' })}
+          registration={register('name')}
         />
           <div className="space-y-1">
             <SelectDropdown
@@ -304,7 +357,9 @@ const data = {
                         </div>
                         <div className="ml-auto">
                           <Checkbox 
-                            className="mb-1 ml-5 flex h-5 w-5" 
+                            className="mb-1 ml-5 flex h-5 w-5"
+                            checked={selectAllAttributes[accordionIndex]}
+                            onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex, e)}
                           />
                           {t('Attribute')}
                         </div>

@@ -28,7 +28,7 @@ import storage from '~/utils/storage'
 import { useGetXMLdata } from '../api/getXMLdata'
 import { useGetRulechains } from '../api/getRulechains'
 import { flattenData } from '~/utils/misc.ts'
-import { type LWM2MResponse, type TransportConfig } from '../types'
+import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
 
@@ -45,6 +45,15 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 
+type AccordionStates = {
+  [key: number]: ModuleConfig[]
+}
+type CheckboxStates = {
+  [key: string]: boolean
+}
+type ItemNames = {
+  [key: string]: string
+}
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
   close: () => void
@@ -63,35 +72,7 @@ export function UpdateTemplateLwM2M({
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-// console.log(LwM2MSelectOptions, 'LwM2MSelectOptions');
-
-  // const {
-  //   mutateAsync: mutateAsyncCreateTemplatelwm2m,
-  //   isLoading: isLoadingCreateTemplatelwm2m,
-  //   isSuccess: isSuccessCreateTemplatelwm2m,
-  // } = useCreateTemplate()
-  const { register, formState: { errors }, handleSubmit, control, watch, reset, setValue } = useForm()
-  //console.log('formState errors', formState.errors)
-  // const { data: XMLData } = useGetXMLdata({
-  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-  //   config: {
-  //     suspense: false,
-  //   },
-  // })
-  // const XMLDataRef = useRef<LWM2MResponse[]>([])
-  // const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  // useEffect(() => {
-  //   if (XMLData != null) {
-  //     XMLDataRef.current = [...XMLDataRef.current, XMLData]
-  //   }
-  //   if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-  //     const filterArr = XMLDataRef.current.filter(item => {
-  //       return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
-  //     })
-  //     setFilterLWM2M(Array.from(new Set(filterArr)))
-  //   }
-  // }, [XMLData, watch('rule_chain_id')])
-  //console.log('filterLWM2M', filterLWM2M)
+  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm()
   function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
@@ -100,49 +81,25 @@ export function UpdateTemplateLwM2M({
   const [openAccordion, setOpenAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
-  const [accordionStates, setAccordionStates] = useState({})
-  const [selectAllChecked, setSelectAllChecked] = useState(false)
-  const [checkboxStates, setCheckboxStates] = useState({})
+  const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
+  const [selectAllAttributes, setSelectAllAttributes] = useState<Record<number, boolean>>({})
+  const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
-  const [itemNames, setItemNames] = useState({})
+  const [itemNames, setItemNames] = useState<ItemNames>({})
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
 
   useEffect(() => {
     setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
-  //console.log('watch', watch('rule_chain_id'))
-  //console.log('selectedModuleNames', typeof selectedModuleNames)
   const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
   const [XMLData, setXMLData] = useState<LWM2MResponse | null>(null)
-  //console.log('XMLData', XMLData)
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const ids = watch('rule_chain_id');
-  //       const promises = ids.map(async (id) => {
-  //         const response = await axios.get(`/file/publishjson/${id}.json`);
-  //         return response 
-  //       })
-  
-  //       const orderedResponses = await Promise.all(promises)
-  //       console.log('orderedResponses', orderedResponses)
-  //       const orderedData = orderedResponses.map((item) => item.data)
-  //       console.log('orderedData', orderedData)
-  //       setXMLData(orderedData)
-  //     } catch (error) {
-  //       console.error('Error fetching data:', error);
-  //     }
-  //   };
-  
-  //   fetchData();
-  // }, [watch('rule_chain_id')])
   useEffect(() => {
     const fetchData = async () => {
       try {
         const promises = watch('rule_chain_id').map(async (id) => {
           const response = await axios.get(`/file/publishjson/${id}.json`)
-          console.log('response', response)
+          //console.log('response', response)
           setXMLData(response)
           return response
          })
@@ -176,21 +133,27 @@ export function UpdateTemplateLwM2M({
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
-        acc[key] = checkboxStates[key]
+        acc[key] = checkboxStates[key] 
         return acc
-      }, {})
+      }, {} as CheckboxStates)
       setCheckboxStates(filteredCheckboxStates)
-      const filteredAccordionStates = {}
-      Object.keys(accordionStates).forEach(key => {
+      const updatedSelectAllAttributes = { ...selectAllAttributes }
+      //console.log('updatedSelectAllAttributes', updatedSelectAllAttributes)
+      const indexesToRemove = watch('rule_chain_id').map((id) => parseInt(id, 10))
+      indexesToRemove.forEach((index) => {
+        delete updatedSelectAllAttributes[index]
+      })
+      setSelectAllAttributes(updatedSelectAllAttributes)
+      const filteredAccordionStates: AccordionStates = {}
+      Object.keys(accordionStates).forEach((key) => {
         filteredAccordionStates[key] = accordionStates[key].filter(obj =>
           watch('rule_chain_id').includes(obj.id.toString())
         )
       })
       setAccordionStates(filteredAccordionStates)
-      
     }
   }, [XMLData, watch('rule_chain_id')])
-  const handleAccordionChange = (accordionIndex: string ) => {
+  const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       //console.log('newStates', newStates)
@@ -201,40 +164,21 @@ export function UpdateTemplateLwM2M({
     })
   }
   //console.log('selectedUpdateTemplate', selectedUpdateTemplate)
-  const handleCheckboxChange = (accordionIndex: string , module: { id: any; name: any }, item: { id: any }) => {
+  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
-      const moduleId = module.id
-      // const allIds = Object.values(newStates).flatMap(accordion => accordion.map(item => item.id))
-      // console.log('allIds', allIds)
-      // const filteraccordion = Object.entries(accordionStates).find(([accordionKey, accordion]) => {
-      //   const index = accordion.findIndex(item => item.id === moduleId)
-      //   return index !== -1
-      // })
-      // if (filteraccordion) {
-      //   const [accordionKey, accordion] = filteraccordion
-      //   const index = accordion.findIndex(item => item.id === moduleId)
-      //   console.log('index', index)
-      //   // targetId đã tồn tại trong mảng, thêm newAttributeValue vào mảng attribute_info
-      //   accordion[index].attribute_info.push(item)
-        
-      //   // In ra mảng accordionStates để kiểm tra
-      //   // console.log('22222222222', accordionStates)
-      //   // console.log('filteraccordion', filteraccordion)
-      //   // console.log('accordion[index]', accordion[index])
-      // } else {
-      //   console.log(`${moduleId} không tồn tại trong mảng.`)
-      // }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
+        //console.log('newStates', newStates)
       }
+      const moduleId = module.id
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
-      console.log('moduleIndex', moduleIndex)
+  
       if (moduleIndex === -1) {
         const currentTimestamp = Date.now();
         newStates[accordionIndex].push({
           id: module.id,
-          module_name: module.name,
+          module_name: module.module_name,
           attribute_info: [item], 
           numberOfAttributes: 1,
           last_update_ts: currentTimestamp,
@@ -254,25 +198,68 @@ export function UpdateTemplateLwM2M({
       return newStates
     })
   }
-
+  const handleSelectAllAttributesChange = (accordionIndex: number) => {
+    setSelectAllAttributes((prevStates) => {
+      const updatedSelectAllAttributes = { ...prevStates }
+      updatedSelectAllAttributes[accordionIndex] = !prevStates[accordionIndex]
+      return updatedSelectAllAttributes
+    })
+    const updatedCheckboxStates: Record<string, boolean> = {}
+    filterLWM2M.forEach((lw2m2, index) => {
+      if (index === accordionIndex) {
+        lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
+          if (item.Operations === 'RW' || item.Operations === 'R') {
+            const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+            updatedCheckboxStates[itemId] = !selectAllAttributes[accordionIndex]
+          }
+        })
+      }
+    })
+    setCheckboxStates((prevStates) => {
+      const newStates = { ...prevStates, ...updatedCheckboxStates }
+      return newStates
+    })
+    filterLWM2M.forEach((lw2m2, index) => {
+      if (index === accordionIndex) {
+        lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
+          if (item.Operations === 'RW' || item.Operations === 'R') {
+            const moduleId = lw2m2.LWM2M.Object.ObjectID;
+            const moduleObject = {
+              id: moduleId,
+              module_name: lw2m2.LWM2M.Object.Name,
+            }
+            const itemId = `/${moduleId}/0/${item['@ID']}`;
+            const itemObject = {
+              action: item.Operations,
+              id: itemId,
+              kind: item.MultipleInstances,
+              name: itemNames[`${moduleId}-${item['@ID']}`] || formatString(item.Name),
+              type: item.Type,
+            }
+            handleCheckboxChange(accordionIndex, moduleObject, itemObject)
+          }
+        })
+      }
+    })
+  }
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     //console.log('Accordion States:', accordionArray);
-    const newConfigData = {}
+    const newConfigData: { [key: string]: string } = {}
     accordionArray.forEach((accordionItem) => {
-      accordionItem.attribute_info.forEach((attribute: { id: string | number; name: any }) => {
+      accordionItem.attribute_info.forEach((attribute) => {
         newConfigData[attribute.id] = attribute.name
       })
     })
     setConfigData(newConfigData)
-}, [accordionStates])
+  }, [accordionStates])
 const resetAllStates = () => {
   setCheckboxStates({})
   setItemNames({})
   setAccordionStates([])
+  setSelectAllAttributes({})
   setFilterLWM2M([])
 }
-console.log('accordionStates:', accordionStates)
 const handleClearSelectDropdown = () => {
   resetAllStates()
 }
@@ -311,9 +298,11 @@ const data = {
       const { name, transport_config } = LwM2MData
       const { module_config } = transport_config.info
       setName(name)
-      const newAccordionStates = {}
-      const newCheckboxStates = {}
+      const newAccordionStates: AccordionStates = {}
+      const newCheckboxStates: CheckboxStates = {}
+      const newSelectAllAttributes: Record<number, boolean> = {}
       module_config.forEach((moduleItem, accordionIndex) => {
+        let allAttributesSelected = true
         if (!newAccordionStates[accordionIndex]) {
           newAccordionStates[accordionIndex] = []
         }
@@ -327,9 +316,11 @@ const data = {
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
         })
+        
       })
       setAccordionStates(newAccordionStates)
-      setCheckboxStates(newCheckboxStates);
+      setCheckboxStates(newCheckboxStates)
+      setSelectAllAttributes(newSelectAllAttributes)
       const allid = (Object.values(newAccordionStates) as { id: string }[][])
       .flat()
       .map((moduleItem) => moduleItem.id)
@@ -339,8 +330,7 @@ const data = {
       })
     }
   }, [LwM2MData])
- //console.log('filterLWM2M', filterLWM2M)
- console.log('selectedModuleNames', selectedModuleNames)
+ //console.log('selectedModuleNames', selectedModuleNames)
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -401,7 +391,6 @@ const data = {
             onChange={handleNameChange}
             registration={register('name')}
           />
-          {errors.name && <p>{errors.name.message}</p>}
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -450,7 +439,9 @@ const data = {
                         </div>
                         <div className="ml-auto">
                           <Checkbox 
-                            className="mb-1 ml-5 flex h-5 w-5" 
+                            className="mb-1 ml-5 flex h-5 w-5"
+                            checked={selectAllAttributes[accordionIndex]}
+                            onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex, e)}
                           />
                           {t('Attribute')}
                         </div>
@@ -487,7 +478,7 @@ const data = {
                                         const formattedName = formatString(defaultItemName)
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
-                                          name: lw2m2.LWM2M.Object.Name,
+                                          module_name: lw2m2.LWM2M.Object.Name,
                                         }
                                         const itemObject = {
                                           action: item.Operations,
