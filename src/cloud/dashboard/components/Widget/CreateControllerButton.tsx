@@ -1,32 +1,36 @@
-import { useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
-import * as z from 'zod'
-import { v4 as uuidv4 } from 'uuid'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
+import { v4 as uuidv4 } from 'uuid'
+import * as z from 'zod'
 
-import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectDropdown } from '~/components/Form'
-import { Dialog, DialogTitle } from '~/components/Dialog'
-import storage from '~/utils/storage'
-import TitleBar from '~/components/Head/TitleBar'
-import { Spinner } from '~/components/Spinner'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
-import i18n from '~/i18n'
+import { Button } from '~/components/Button'
+import { Dialog, DialogTitle } from '~/components/Dialog'
+import {
+  FieldWrapper,
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
+import TitleBar from '~/components/Head/TitleBar'
+import { Spinner } from '~/components/Spinner'
+import storage from '~/utils/storage'
 
 import { widgetCategorySchema } from '../../types'
 import { type Widget, type WidgetCategoryType } from './CreateWidget'
-import { type OutputType } from '~/cloud/customProtocol'
 
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { type SelectInstance } from 'react-select'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { PlusIcon } from '~/components/SVGIcons'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Checkbox } from '~/components/Checkbox'
+import { PlusIcon } from '~/components/SVGIcons'
 
 const controllerBtnSchema = z.object({
   title: z.string(),
@@ -44,16 +48,16 @@ export const controllerBtnCreateSchema = z.object({
   title: z.string(),
   thing_id: z.string(),
   handle_service: z.string(),
-  input: z.array(
-    z.object({
-      name: z.string().min(1, {
-        message: i18n.t('cloud:custom_protocol.service.choose_input'),
-      }),
-      value: z.string().min(1, {
-        message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
-      }),
-    }),
-  ),
+  // input: z.array(
+  //   z.object({
+  //     name: z.string().min(1, {
+  //       message: i18n.t('cloud:custom_protocol.service.choose_input'),
+  //     }),
+  //     value: z.string().min(1, {
+  //       message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+  //     }),
+  //   }),
+  // ),
   id: z.string().optional(),
 })
 
@@ -79,9 +83,11 @@ export function CreateControllerButton({
 }: CreateControllerButtonProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
-
+  const selectDropdownServiceRef = useRef<SelectInstance<
+    SelectOption[]
+  > | null>(null)
   const projectId = storage.getProject()?.id
-
+  const [inputField, setInputField] = useState<any[]>([])
   const { register, formState, control, handleSubmit, watch } = useForm<
     ControllerBtnCreateDTO['data']
   >({
@@ -127,17 +133,31 @@ export function CreateControllerButton({
     type: input.type,
   }))
 
+  useEffect(() => {
+    if (inputSelectData && inputSelectData.length > 0) {
+      const tempInput = inputSelectData.map(item => {
+        return {
+          input: item.value,
+          value: '',
+          id: uuidv4(),
+          type: item.type,
+        }
+      })
+      setInputField(tempInput)
+    }
+  }, [thingServiceData, watch('handle_service')])
+
   const { fields, append, remove } = useFieldArray({
     name: 'input',
     control: control,
   })
-
-  useEffect(() => {
-    append({
-      name: '',
-      value: '',
-    })
-  }, [])
+  // console.log(fields, 'check fields')
+  // useEffect(() => {
+  //   append({
+  //     name: '',
+  //     value: '',
+  //   })
+  // }, [])
 
   const showSpinner = useSpinDelay(thingIsLoading, {
     delay: 150,
@@ -179,22 +199,44 @@ export function CreateControllerButton({
                         project_id: projectId,
                         thing_id: values.thing_id,
                         service_name: values.handle_service,
-                        input: values.input.reduce(
-                          (acc: { [key: string]: any }, item) => {
-                            const itemType = inputSelectData?.find(
-                              input => input.value === item.name,
-                            )?.type as OutputType
-                            if (itemType === 'json' || itemType === 'str') {
-                              acc[item.name] = item.value
+                        // input: values.input.reduce(
+                        //   (acc: { [key: string]: any }, item) => {
+                        //     const itemType = inputSelectData?.find(
+                        //       input => input.value === item.name,
+                        //     )?.type as OutputType
+                        //     if (itemType === 'json' || itemType === 'str') {
+                        //       acc[item.name] = item.value
+                        //     }
+                        //     if (itemType === 'i32' || itemType === 'i64') {
+                        //       acc[item.name] = parseInt(item.value)
+                        //     }
+                        //     if (itemType === 'f32' || itemType === 'f64') {
+                        //       acc[item.name] = parseFloat(item.value)
+                        //     }
+                        //     if (itemType === 'bool') {
+                        //       acc[item.name] = item.value === 'true'
+                        //     }
+                        //     return acc
+                        //   },
+                        //   {},
+                        // ),
+                        input: inputField.reduce(
+                          (acc: { [key: string]: any }, curr) => {
+                            if (curr.type === 'json' || curr.type === 'str') {
+                              acc[curr.input] = curr.value ? curr.value : null
                             }
-                            if (itemType === 'i32' || itemType === 'i64') {
-                              acc[item.name] = parseInt(item.value)
+                            if (curr.type === 'i32' || curr.type === 'i64') {
+                              acc[curr.input] = curr.value
+                                ? parseInt(curr.value)
+                                : null
                             }
-                            if (itemType === 'f32' || itemType === 'f64') {
-                              acc[item.name] = parseFloat(item.value)
+                            if (curr.type === 'f32' || curr.type === 'f64') {
+                              acc[curr.input] = curr.value
+                                ? parseFloat(curr.value)
+                                : null
                             }
-                            if (itemType === 'bool') {
-                              acc[item.name] = item.value === 'true'
+                            if (curr.type === 'bool') {
+                              acc[curr.input] = curr.value === 'true'
                             }
                             return acc
                           },
@@ -250,9 +292,18 @@ export function CreateControllerButton({
                       isLoading={thingIsLoading}
                       placeholder={t('cloud:custom_protocol.thing.choose')}
                       error={formState?.errors?.thing_id}
+                      handleClearSelectDropdown={() => {
+                        selectDropdownServiceRef.current?.clearValue()
+                        setInputField([])
+                      }}
+                      handleChangeSelect={() => {
+                        selectDropdownServiceRef.current?.clearValue()
+                        setInputField([])
+                      }}
                     />
 
                     <SelectDropdown
+                      refSelect={selectDropdownServiceRef}
                       label={t('cloud:custom_protocol.service.title')}
                       name="handle_service"
                       control={control}
@@ -280,6 +331,9 @@ export function CreateControllerButton({
                       noOptionsMessage={() => t('table:no_service')}
                       placeholder={t('cloud:custom_protocol.service.choose')}
                       error={formState?.errors?.handle_service}
+                      handleClearSelectDropdown={() => {
+                        setInputField([])
+                      }}
                     />
                   </div>
 
@@ -297,15 +351,26 @@ export function CreateControllerButton({
                       startIcon={
                         <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                       }
-                      onClick={() =>
-                        append({
-                          name: '',
-                          value: '',
-                        })
-                      }
+                      // onClick={() =>
+                      //   append({
+                      //     name: '',
+                      //     value: '',
+                      //   })
+                      // }
+                      onClick={() => {
+                        setInputField([
+                          ...inputField,
+                          {
+                            input: '',
+                            value: '',
+                            id: uuidv4(),
+                            type: 'str',
+                          },
+                        ])
+                      }}
                     />
                   </div>
-                  {fields.map((field, index) => {
+                  {/* {fields.map((field, index) => {
                     return (
                       <section
                         className="mt-3 flex justify-between px-2"
@@ -347,15 +412,6 @@ export function CreateControllerButton({
                               error={formState?.errors?.input?.[index]?.name}
                             />
                           </div>
-                          {/* <InputField
-                            label={t(
-                              'cloud:dashboard.detail_dashboard.add_widget.controller.value',
-                            )}
-                            error={formState.errors?.input?.[index]?.value}
-                            registration={register(
-                              `input.${index}.value` as const,
-                            )}
-                          /> */}
                           {inputSelectData?.map(ele => {
                             if (ele.value === watch(`input.${index}.name`)) {
                               return ele.type === 'bool' ? (
@@ -407,53 +463,6 @@ export function CreateControllerButton({
                             }
                             return null
                           })}
-                          {/* {watch(`input.${index}.name`) === 'bool' ? (
-                            <FieldWrapper
-                              label={t(
-                                'cloud:custom_protocol.service.service_input.value',
-                              )}
-                              error={formState.errors?.input?.[index]?.value}
-                              className="w-fit"
-                            >
-                              <Controller
-                                control={control}
-                                name={`input.${index}.value`}
-                                render={({
-                                  field: { onChange, value, ...field },
-                                }) => {
-                                  return (
-                                    <Checkbox
-                                      {...field}
-                                      checked={value as boolean}
-                                      onCheckedChange={onChange}
-                                      defaultChecked
-                                    />
-                                  )
-                                }}
-                              />
-                              <span className="pl-3">True</span>
-                            </FieldWrapper>
-                          ) : (
-                            <InputField
-                              // defaultValue={
-                              //   inputSelectData ? inputSelectData[field.name] : ''
-                              // }
-                              label={t(
-                                'cloud:custom_protocol.service.service_input.value',
-                              )}
-                              error={formState.errors?.input?.[index]?.value}
-                              registration={register(
-                                `input.${index}.value` as const,
-                              )}
-                              type={
-                                ['json', 'str'].includes(
-                                  watch(`input.${index}.name`),
-                                )
-                                  ? 'text'
-                                  : 'number'
-                              }
-                            />
-                          )} */}
                         </div>
                         <Button
                           type="button"
@@ -461,6 +470,146 @@ export function CreateControllerButton({
                           variant="none"
                           className="mt-0 self-start p-0"
                           onClick={() => remove(index)}
+                          startIcon={
+                            <img
+                              src={btnDeleteIcon}
+                              alt="Delete controller input"
+                              className="mt-3 h-10 w-10"
+                            />
+                          }
+                        />
+                      </section>
+                    )
+                  })} */}
+                  {inputField.map((item, idx) => {
+                    return (
+                      <section
+                        className="mt-3 flex justify-between px-2"
+                        key={`id-input-${idx}`}
+                      >
+                        <div className="flex gap-x-2">
+                          <div className="flex flex-col">
+                            <div className="w-80">
+                              <SelectDropdown
+                                label={t('cloud:custom_protocol.service.input')}
+                                name={`input.${idx}.name`}
+                                // error={formState?.errors?.input?.[idx]?.name}
+                                // registration={register(`input.${idx}.name`)}
+                                control={control}
+                                options={
+                                  thingServiceData?.data != null
+                                    ? inputSelectData
+                                    : thingServiceData?.data == null
+                                    ? [
+                                        {
+                                          label: t('table:no_input'),
+                                          value: '',
+                                          type: '',
+                                        },
+                                      ]
+                                    : [
+                                        {
+                                          label: t('loading:input'),
+                                          value: '',
+                                          type: '',
+                                        },
+                                      ]
+                                }
+                                value={inputSelectData?.find(
+                                  ele => ele.value === item.input,
+                                )}
+                                customOnChange={option => {
+                                  const temp = inputField.map(element => {
+                                    if (element.id === item.id) {
+                                      return {
+                                        ...element,
+                                        input: option,
+                                        value: '',
+                                        type: inputSelectData?.find(
+                                          i => i.value === option,
+                                        )?.type,
+                                      }
+                                    }
+                                    return element
+                                  })
+                                  setInputField(temp)
+                                }}
+                              />
+                            </div>
+                          </div>
+                          {item.input ? (
+                            item.type === 'bool' ? (
+                              <FieldWrapper
+                                label={t(
+                                  'cloud:custom_protocol.service.service_input.value',
+                                )}
+                                // error={formState.errors?.input?.[idx]?.value}
+                                className="w-fit"
+                              >
+                                <Controller
+                                  // control={control}
+                                  name={`input.${idx}.value`}
+                                  // registration={register(`input.${idx}.value`)}
+                                  render={({
+                                    field: { onChange, value, ...field },
+                                  }) => {
+                                    return (
+                                      <Checkbox
+                                        {...field}
+                                        checked={value as boolean}
+                                        onCheckedChange={onChange}
+                                        defaultChecked
+                                      />
+                                    )
+                                  }}
+                                />
+                                <span className="pl-3">True</span>
+                              </FieldWrapper>
+                            ) : (
+                              <div className="flex flex-col">
+                                <InputField
+                                  className="w-80"
+                                  label={t(
+                                    'cloud:custom_protocol.service.service_input.value',
+                                  )}
+                                  // error={formState.errors?.input?.[idx]?.value}
+                                  // registration={register(
+                                  //   `input.${index}.value` as const,
+                                  // )}
+                                  name={`input.${idx}.value`}
+                                  value={item.value}
+                                  onChange={e => {
+                                    const temp = inputField.map(element => {
+                                      if (element.id === item.id) {
+                                        return {
+                                          ...element,
+                                          value: e.target.value,
+                                        }
+                                      }
+                                      return element
+                                    })
+                                    setInputField(temp)
+                                  }}
+                                  type={
+                                    ['json', 'str'].includes(item.type)
+                                      ? 'text'
+                                      : 'number'
+                                  }
+                                />
+                              </div>
+                            )
+                          ) : null}
+                        </div>
+                        <Button
+                          type="button"
+                          size="square"
+                          variant="none"
+                          className="mt-0 self-start p-0"
+                          onClick={() => {
+                            setInputField(
+                              inputField.filter(t => t.id !== item.id),
+                            )
+                          }}
                           startIcon={
                             <img
                               src={btnDeleteIcon}

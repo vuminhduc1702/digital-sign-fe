@@ -119,23 +119,28 @@ export function UpdateControllerButton({
     label: input.name,
     type: input.type,
   }))
-
   useEffect(() => {
     if (inputSelectData && inputSelectData.length > 0) {
       const tempInput = parseArrDataProp.executorCmds[0].input
-      const keyArr = Object.keys(tempInput)
+      const checkIsFirstValue = inputSelectData.every(
+        item => tempInput[item.value],
+      )
+      const keyArr = checkIsFirstValue
+        ? Object.keys(tempInput)
+        : inputSelectData.map(item => item.value)
+
       const rs = keyArr.map(item => {
         const temp = inputSelectData.find(ele => ele.value === item)
         return {
           input: temp?.value,
-          value: tempInput[item],
+          value: checkIsFirstValue ? tempInput[item] : '',
           type: temp?.type,
           id: uuidv4(),
         }
       })
       setInputField(rs)
     }
-  }, [thingServiceData])
+  }, [thingServiceData, watch('handle_service')])
 
   // const showSpinner = useSpinDelay(thingIsLoading, {
   //   delay: 150,
@@ -167,13 +172,17 @@ export function UpdateControllerButton({
                       input: inputField.reduce(
                         (acc: { [key: string]: any }, curr) => {
                           if (curr.type === 'json' || curr.type === 'str') {
-                            acc[curr.input] = curr.value
+                            acc[curr.input] = curr.value ? curr.value : null
                           }
                           if (curr.type === 'i32' || curr.type === 'i64') {
-                            acc[curr.input] = parseInt(curr.value)
+                            acc[curr.input] = curr.value
+                              ? parseInt(curr.value)
+                              : null
                           }
                           if (curr.type === 'f32' || curr.type === 'f64') {
-                            acc[curr.input] = parseFloat(curr.value)
+                            acc[curr.input] = curr.value
+                              ? parseFloat(curr.value)
+                              : null
                           }
                           if (curr.type === 'bool') {
                             acc[curr.input] = curr.value === 'true'
@@ -191,19 +200,12 @@ export function UpdateControllerButton({
               id: widgetId,
             }
 
-            const isValid = inputField.every(
-              item => item.input && item.value !== '',
-            )
-            console.log(isValid, 'check isValid')
-            if (isValid) {
-              console.log(isValid, 'come herre is valid')
-              setWidgetList(prev => ({
-                ...prev,
-                ...({ [widgetId]: controllerBtn } as Widget),
-              }))
+            setWidgetList(prev => ({
+              ...prev,
+              ...({ [widgetId]: controllerBtn } as Widget),
+            }))
 
-              setIsDone(true)
-            }
+            setIsDone(true)
           })}
         >
           <>
@@ -287,9 +289,6 @@ export function UpdateControllerButton({
                     handleClearSelectDropdown={() => {
                       setInputField([])
                     }}
-                    handleChangeSelect={() => {
-                      setInputField([])
-                    }}
                   />
                 </div>
 
@@ -354,7 +353,7 @@ export function UpdateControllerButton({
                                       },
                                     ]
                               }
-                              defaultValue={inputSelectData?.find(ele => {
+                              value={inputSelectData?.find(ele => {
                                 return ele.value === item.input
                               })}
                               customOnChange={option => {
@@ -375,11 +374,6 @@ export function UpdateControllerButton({
                               }}
                             />
                           </div>
-                          {!item.input && (
-                            <div className="text-body-sm text-primary-400">
-                              Vui lòng không bỏ trống mục này
-                            </div>
-                          )}
                         </div>
                         {item.input ? (
                           item.type === 'bool' ? (
@@ -440,11 +434,6 @@ export function UpdateControllerButton({
                                     : 'number'
                                 }
                               />
-                              {!item.value && (
-                                <div className="text-body-sm text-primary-400">
-                                  Vui lòng không bỏ trống mục này
-                                </div>
-                              )}
                             </div>
                           )
                         ) : null}
