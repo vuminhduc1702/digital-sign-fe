@@ -24,7 +24,7 @@ export function ComboBoxSelectModuleConfig({
   //console.log('data12', LwM2MDataById)
   // console.log('filteredComboboxData', filteredComboboxData)
   const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
-    LwM2MDataById?.transport_config?.info.module_config,
+    LwM2MDataById?.transport_config?.info.module_config || [],
     [
       'module_name',
       'numberOfAttributes',

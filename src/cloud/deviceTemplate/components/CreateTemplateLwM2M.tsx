@@ -126,13 +126,13 @@ export default function CreateTemplateLwM2M() {
         return acc
       }, {} as CheckboxStates)
       setCheckboxStates(filteredCheckboxStates)
-      const updatedSelectAllAttributes = { ...selectAllAttributes }
-      console.log('updatedSelectAllAttributes', updatedSelectAllAttributes)
-      const indexesToRemove = watch('rule_chain_id').map((id) => parseInt(id, 10))
-      indexesToRemove.forEach((index) => {
-        delete updatedSelectAllAttributes[index]
-      })
-      setSelectAllAttributes(updatedSelectAllAttributes)
+      // const updatedSelectAllAttributes = { ...selectAllAttributes }
+      // console.log('updatedSelectAllAttributes', updatedSelectAllAttributes)
+      // const indexesToRemove = watch('rule_chain_id').map((id) => parseInt(id, 10))
+      // indexesToRemove.forEach((index) => {
+      //   delete updatedSelectAllAttributes[index]
+      // })
+      // setSelectAllAttributes(updatedSelectAllAttributes)
       const filteredAccordionStates: AccordionStates = {}
       Object.keys(accordionStates).forEach((key) => {
         filteredAccordionStates[key] = accordionStates[key].filter(obj =>
@@ -161,32 +161,39 @@ export default function CreateTemplateLwM2M() {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
-        //console.log('newStates', newStates)
       }
-      const moduleId = module.id
-      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
-  
-      if (moduleIndex === -1) {
-        const currentTimestamp = Date.now();
-        newStates[accordionIndex].push({
-          id: module.id,
-          module_name: module.module_name,
-          attribute_info: [item], 
-          numberOfAttributes: 1,
-          last_update_ts: currentTimestamp,
-        })
-      } else {
-        const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
-          (attribute) => attribute.id === item.id
-        )
-        if (attributeIndex === -1) {
-          newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-          newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
+      
+      const hasTrueValue = newStates[accordionIndex].some((module) => {
+        const moduleId = module.id
+        return Object.keys(checkboxStates).some((key) => key.startsWith(`/${moduleId}`) && checkboxStates[key]);
+      })
+      console.log(`hasTrueValue for moduleId ${module.id}:`, hasTrueValue)
+      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === module.id)
+      if(!hasTrueValue){
+        if (moduleIndex === -1) {
+          const currentTimestamp = Date.now();
+          newStates[accordionIndex].push({
+            id: module.id,
+            module_name: module.module_name,
+            attribute_info: [item], 
+            numberOfAttributes: 1,
+            last_update_ts: currentTimestamp,
+          })
         } else {
-          newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
-          newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
+          const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
+            (attribute) => attribute.id === item.id
+          )
+          if (attributeIndex === -1) {
+            newStates[accordionIndex][moduleIndex].attribute_info.push(item)
+            newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
+          } else {
+            newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
+            newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
+          }
         }
-      }
+      } else {
+        newStates[accordionIndex].splice(moduleIndex, 1)
+      }  
       return newStates
     })
   }
@@ -406,9 +413,9 @@ const data = {
                                           type: item.Type,
                                         }
                                         if (typeof e === 'boolean') {
-                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e }));
+                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e }))
                                         } else {
-                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e.target.checked }));
+                                          setCheckboxStates((prev) => ({ ...prev, [itemId]: e.target.checked }))
                                         }
                                         handleCheckboxChange(accordionIndex, moduleObject ,itemObject)
                                         onChange(e)
