@@ -1,10 +1,10 @@
 import { ResponsivePie } from '@nivo/pie'
-import { SetStateAction, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { DataSeries, MapSeries, type TimeSeries } from '../../types'
+import { DataSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
