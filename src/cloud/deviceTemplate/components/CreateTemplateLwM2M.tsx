@@ -170,6 +170,7 @@ export default function CreateTemplateLwM2M() {
             attribute_info: [item], 
             numberOfAttributes: 1,
             last_update_ts: currentTimestamp,
+            allcheckbox: module.allcheckbox
           })
         } else {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
@@ -216,6 +217,7 @@ export default function CreateTemplateLwM2M() {
             const moduleObject = {
               id: moduleId,
               module_name: lw2m2.LWM2M.Object.Name,
+              allcheckbox: selectAllAttributes.ObjectID
             }
             const itemId = `/${moduleId}/0/${item['@ID']}`;
             const itemObject = {
@@ -263,6 +265,7 @@ const data = {
   project_id: projectId,
   transport_config: transportConfig
 }
+console.log('data', data)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -391,6 +394,7 @@ const data = {
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
                                           module_name: lw2m2.LWM2M.Object.Name,
+                                          allcheckbox: selectAllAttributes.ObjectID
                                         }
                                         const itemObject = {
                                           action: item.Operations,

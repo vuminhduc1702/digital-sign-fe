@@ -299,7 +299,7 @@ const data = {
       const newCheckboxStates: CheckboxStates = {}
       const newSelectAllAttributes: CheckboxStates = {}
       module_config.forEach((moduleItem, accordionIndex) => {
-        let allAttributesSelected = true
+        let allAttributesSelected  = true
         if (!newAccordionStates[accordionIndex]) {
           newAccordionStates[accordionIndex] = []
         }
@@ -312,11 +312,14 @@ const data = {
         })
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
+          console.log('newCheckboxStates', newCheckboxStates)
           if (!newCheckboxStates[attribute.id]) {
+            console.log('attribute.id', attribute.id)
             allAttributesSelected = false
           }
         })
-        
+        newSelectAllAttributes[moduleItem.id] = allAttributesSelected
+        console.log('newSelectAllAttributes', newSelectAllAttributes)
       })
       setAccordionStates(newAccordionStates)
       setCheckboxStates(newCheckboxStates)

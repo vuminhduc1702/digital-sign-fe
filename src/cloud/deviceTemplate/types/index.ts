@@ -17,6 +17,7 @@ export type ModuleConfig = {
   id: string
   module_name: string
   numberOfAttributes: number
+  allcheckbox?: boolean
 }
 
 export type TransportConfigInfo = {
