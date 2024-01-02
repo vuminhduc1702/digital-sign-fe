@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { type TimeSeries } from '../../types'
+import { MapSeries, type TimeSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
@@ -15,58 +15,111 @@ type PieWidgetDataType = {
   [key: string]: string | number
 }
 
-export const PieChart = ({
-  data,
-  widgetInfo,
-}: {
-  data: TimeSeries
-  widgetInfo: z.infer<typeof widgetSchema>
-}) => {
+export const PieChart = ({ data, widgetInfo }: { data: MapSeries, widgetInfo: z.infer<typeof widgetSchema> }) => {
+
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
-  const newValuesRef = useRef<TimeSeries | null>(null)
-  const prevValuesRef = useRef<TimeSeries | null>(null)
+  const newValuesRef = useRef<MapSeries | null>(null)
+  const prevValuesRef = useRef<MapSeries | null>(null)
 
   function dataManipulation() {
-    const pieWidgetData = Object.entries(
-      newValuesRef.current as TimeSeries,
-    ).map(([key, value]) => ({
-      id: key,
-      label: key,
-      value: parseFloat(value[0].value),
-      [key + 'Color']:
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) &&
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)
-          .length > 0 &&
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0]
-          .color !== ''
-          ? widgetInfo.attribute_config.filter(
-              obj => obj.attribute_key === key,
-            )[0].color
-          : '#e8c1a0',
-    }))
-    setDataTransformedFeedToChart(pieWidgetData)
+    if (newValuesRef.current?.data) {
+      console.log(Object.entries(newValuesRef.current.data))
+      // const pieWidgetData = Object.entries(newValuesRef.current.data)[1].reduce((result: Array<PieWidgetDataType>, [,dataItem]) => {
+      //   Object.entries(dataItem).forEach((key, index) => {
+      //     const item = {
+      //       id: key[0],
+      //       label: key[0],
+      //       value: parseFloat(key),
+      //       // [key[0] + 'Color']:
+      //       //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key[0]) &&
+      //       //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key[0])
+      //       //     .length > 0 &&
+      //       //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key[0])[index]
+      //       //     .color !== ''
+      //       //     ? widgetInfo.attribute_config.filter(
+      //       //         obj => obj.attribute_key === key[0],
+      //       //       )[index].color
+      //       //     : '#e8c1a0',
+      //     }
+      //     result.push(item)
+      //   })
+      //   return result
+      // })
+
+      // console.log(pieWidgetData)
+      // setDataTransformedFeedToChart(pieWidgetData)
+    }
+   
+    // const pieWidgetData = Object.entries(
+    //   newValuesRef.current as MapSeries,
+    // ).map((key, index, value) => {
+    //   // console.log('key: ', key),
+    //   // console.log('index: ', index),
+    //   // console.log('value: ', value)
+    //   // id: key,
+    //   // label: key,
+    //   // value: parseFloat(value[index].value),
+    //   // [key + 'Color']:
+    //   //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) &&
+    //   //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)
+    //   //     .length > 0 &&
+    //   //   widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[index]
+    //   //     .color !== ''
+    //   //     ? widgetInfo.attribute_config.filter(
+    //   //         obj => obj.attribute_key === key,
+    //   //       )[index].color
+    //   //     : '#e8c1a0',
+    // })
+    // console.log(pieWidgetData)
+    // setDataTransformedFeedToChart(pieWidgetData)
   }
 
   useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      prevValuesRef.current = newValuesRef.current || data
-      if (newValuesRef.current !== null) {
-        for (const [key, value] of Object.entries(data)) {
-          if (
-            newValuesRef.current[key] != null &&
-            newValuesRef.current[key] === prevValuesRef.current[key]
-          ) {
-            newValuesRef.current[key] = [...value]
+    // console.log(data)
+    if (data.data) {
+      // prevValuesRef.current = newValuesRef.current || data
+      // if (newValuesRef.current !== null) {
+      //   for (const [key, value] of Object.entries(data)) {
+      //     if (
+      //       newValuesRef.current[key] != null &&
+      //       newValuesRef.current[key] === prevValuesRef.current[key]
+      //     ) {
+      //       newValuesRef.current[key] = [...value]
+      //     } else {
+      //       prevValuesRef.current = data
+      //     }
+      //     dataManipulation()
+      //   }
+      // } else {
+      //   newValuesRef.current = data
+      //   dataManipulation()
+      // }
+        prevValuesRef.current = newValuesRef.current || data
+        if (newValuesRef.current !== null) {
+          const deviceIndex = newValuesRef.current.device.findIndex(
+            device => device.id === data.device[0].id,
+          )
+          if (deviceIndex !== -1 && data.data[0]) {
+            for (const [key, newData] of Object.entries(data.data[0])) {
+              if (
+                key !== null &&
+                newData !== null &&
+                newValuesRef.current?.data?.[deviceIndex]?.[key] ===
+                  prevValuesRef.current?.data?.[deviceIndex]?.[key]
+              ) {
+                setTimeout(() => {
+                  Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
+                }, 200)
+              }
+            }
           } else {
             prevValuesRef.current = data
           }
           dataManipulation()
-        }
-      } else {
-        newValuesRef.current = data
-        dataManipulation()
+        } else {
+          newValuesRef.current = data
       }
     }
   }, [data])
