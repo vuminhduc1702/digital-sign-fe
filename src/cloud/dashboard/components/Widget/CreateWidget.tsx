@@ -455,14 +455,7 @@ export function CreateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-<<<<<<< HEAD
   const attrSelectData = attrChartData?.entities?.flatMap(item => item.attr_keys).map(key => ({ label: key, value: key }))
-=======
-  const attrSelectData = attrChartData?.keys?.map(item => ({
-    value: item,
-    label: item,
-  }))
->>>>>>> e1112bc... Update dashboard
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
     { value: 'long', label: 'longitude' }
@@ -887,7 +880,6 @@ export function CreateWidget({
                             />
                           )
                         }
-<<<<<<< HEAD
                         {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
@@ -906,8 +898,6 @@ export function CreateWidget({
                             setInputField(temp)
                           }}
                         />
-=======
->>>>>>> e1112bc... Update dashboard
                         {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
