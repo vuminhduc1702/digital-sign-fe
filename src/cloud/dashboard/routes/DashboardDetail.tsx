@@ -373,7 +373,7 @@ export function DashboardDetail() {
                         refetchData={refetchData}
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
+                      <PieChart data={lastestValuesForMap} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
                         data={lastestValuesForMap}

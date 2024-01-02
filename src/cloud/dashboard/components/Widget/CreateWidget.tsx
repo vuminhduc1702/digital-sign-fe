@@ -580,6 +580,7 @@ export function CreateWidget({
                               entity_ids: option,
                               entity_type: 'DEVICE',
                               // time_series: true,
+                              version_two: true
                             },
                           })
                         }
