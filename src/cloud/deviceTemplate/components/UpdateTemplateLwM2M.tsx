@@ -82,7 +82,7 @@ export function UpdateTemplateLwM2M({
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
   const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
-  const [selectAllAttributes, setSelectAllAttributes] = useState<Record<number, boolean>>({})
+  const [selectAllAttributes, setSelectAllAttributes] = useState<CheckboxStates>({})
   const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState<ItemNames>({})
@@ -129,7 +129,8 @@ export function UpdateTemplateLwM2M({
       const filterArr = sortedData.filter(item => watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID))
       setFilterLWM2M(Array.from(new Set(filterArr)))
       const filteredKeys = Object.keys(checkboxStates).filter(key => {
-        const objectId = parseInt(key.split('/')[1], 10) 
+        const objectId = parseInt(key.split('/')[1], 10)
+        console.log('objectId1111', objectId)
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
@@ -137,13 +138,15 @@ export function UpdateTemplateLwM2M({
         return acc
       }, {} as CheckboxStates)
       setCheckboxStates(filteredCheckboxStates)
-      const updatedSelectAllAttributes = { ...selectAllAttributes }
-      //console.log('updatedSelectAllAttributes', updatedSelectAllAttributes)
-      const indexesToRemove = watch('rule_chain_id').map((id) => parseInt(id, 10))
-      indexesToRemove.forEach((index) => {
-        delete updatedSelectAllAttributes[index]
+      const filteredallKeys = Object.keys(selectAllAttributes).filter(key => {
+        const objectId = parseInt(key, 10) 
+        return watch('rule_chain_id').includes(objectId.toString())
       })
-      setSelectAllAttributes(updatedSelectAllAttributes)
+      const filteredselectAllAttributes = filteredallKeys.reduce((acc, key) => {
+        acc[key] = selectAllAttributes[key] 
+        return acc
+      }, {} as CheckboxStates)
+      setSelectAllAttributes(filteredselectAllAttributes)
       const filteredAccordionStates: AccordionStates = {}
       Object.keys(accordionStates).forEach((key) => {
         filteredAccordionStates[key] = accordionStates[key].filter(obj =>
@@ -156,20 +159,17 @@ export function UpdateTemplateLwM2M({
   const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
-      //console.log('newStates', newStates)
       if (newStates[accordionIndex]) {
         newStates[accordionIndex] = []
       }
       return newStates
     })
   }
-  //console.log('selectedUpdateTemplate', selectedUpdateTemplate)
   const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
-        //console.log('newStates', newStates)
       }
       const moduleId = module.id
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
@@ -198,10 +198,11 @@ export function UpdateTemplateLwM2M({
       return newStates
     })
   }
-  const handleSelectAllAttributesChange = (accordionIndex: number) => {
+  const handleSelectAllAttributesChange = (accordionIndex: number,  lw2m2: LWM2MResponse) => {
     setSelectAllAttributes((prevStates) => {
+      const objectId = lw2m2.LWM2M.Object.ObjectID
       const updatedSelectAllAttributes = { ...prevStates }
-      updatedSelectAllAttributes[accordionIndex] = !prevStates[accordionIndex]
+      updatedSelectAllAttributes[objectId] = !prevStates[objectId]
       return updatedSelectAllAttributes
     })
     const updatedCheckboxStates: Record<string, boolean> = {}
@@ -210,7 +211,7 @@ export function UpdateTemplateLwM2M({
         lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
           if (item.Operations === 'RW' || item.Operations === 'R') {
             const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
-            updatedCheckboxStates[itemId] = !selectAllAttributes[accordionIndex]
+            updatedCheckboxStates[itemId] = !selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
           }
         })
       }
@@ -244,7 +245,6 @@ export function UpdateTemplateLwM2M({
   }
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
-    //console.log('Accordion States:', accordionArray);
     const newConfigData: { [key: string]: string } = {}
     accordionArray.forEach((accordionItem) => {
       accordionItem.attribute_info.forEach((attribute) => {
@@ -287,12 +287,9 @@ const data = {
       close()
     }
   }, [isSuccess, close])
-
   const transport_Config = selectedUpdateTemplate?.transport_config
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
-  //console.log('Mảng giá trị id:', idArray)
-
   useEffect(() => {
     if (LwM2MData != null) {
       const { name, transport_config } = LwM2MData
@@ -300,7 +297,7 @@ const data = {
       setName(name)
       const newAccordionStates: AccordionStates = {}
       const newCheckboxStates: CheckboxStates = {}
-      const newSelectAllAttributes: Record<number, boolean> = {}
+      const newSelectAllAttributes: CheckboxStates = {}
       module_config.forEach((moduleItem, accordionIndex) => {
         let allAttributesSelected = true
         if (!newAccordionStates[accordionIndex]) {
@@ -315,6 +312,9 @@ const data = {
         })
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
+          if (!newCheckboxStates[attribute.id]) {
+            allAttributesSelected = false
+          }
         })
         
       })
@@ -330,7 +330,6 @@ const data = {
       })
     }
   }, [LwM2MData])
- //console.log('selectedModuleNames', selectedModuleNames)
   const showSpinner = useSpinDelay(LwM2MLoading, {
     delay: 150,
     minDuration: 300,
@@ -440,8 +439,8 @@ const data = {
                         <div className="ml-auto">
                           <Checkbox 
                             className="mb-1 ml-5 flex h-5 w-5"
-                            checked={selectAllAttributes[accordionIndex]}
-                            onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex, e)}
+                            checked={selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]}
+                            onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex, lw2m2, e)}
                           />
                           {t('Attribute')}
                         </div>
