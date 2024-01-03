@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner' 
 
 import { type adapterSchema } from '../../components'
 
@@ -24,17 +24,12 @@ type UseUpdateAdapterOptions = {
 export const useUpdateAdapter = ({ config }: UseUpdateAdapterOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['adapters'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:custom_protocol.adapter.success_update'),
-      })
+      toast.success(t('cloud:custom_protocol.adapter.success_update'))
     },
     ...config,
     mutationFn: updateAdapter,

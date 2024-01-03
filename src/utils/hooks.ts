@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import useWebSocket, { ReadyState } from 'react-use-websocket'
 import * as z from 'zod'
 
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import i18n from '~/i18n'
 
 import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
@@ -49,8 +49,6 @@ export const useDisclosure = (initial = false) => {
 export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: boolean) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   useEffect(() => {
     sendMessageCallback()
   }, [rerun])
@@ -63,10 +61,7 @@ export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: b
     readyState,
   } = useWebSocket<T>(url, {
     onError: () =>
-      addNotification({
-        type: 'error',
-        title: t('ws:connect_error'),
-      }),
+      toast.error(t('ws:connect_error')),
     shouldReconnect: closeEvent => true,
     reconnectAttempts: 5,
     // attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
@@ -108,24 +103,15 @@ export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: b
 
 export function useCopyId() {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
 
   async function handleCopyId(id: string, typeCopy?: string) {
     try {
       if (id == null || id === '') {
-        addNotification({
-          type: 'info',
-          title: t('noti:empty_id'),
-        })
       } else {
         await navigator.clipboard.writeText(id)
-        addNotification({
-          type: 'success',
-          title:
-            typeCopy === 'token'
-              ? t('cloud:org_manage.org_map.copy_token_success')
-              : t('cloud:org_manage.org_map.copy_success'),
-        })
+        typeCopy === 'token' ? 
+        toast.success(t('cloud:org_manage.org_map.copy_token_success')) :
+        toast.success(t('cloud:org_manage.org_map.copy_success'))
       }
     } catch (error) {
       console.error(error)

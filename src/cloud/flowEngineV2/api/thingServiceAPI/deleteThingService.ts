@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deleteThingService = ({ thingId, name }: { thingId: string, name: string }) => {
   return axios.delete(`/api/fe/thing/${thingId}/service/${name}`)
@@ -16,14 +16,12 @@ type ThingServiceDeleteUserOptions = {
 export const useDeleteThingService = ({ config }: ThingServiceDeleteUserOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['service-things'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:custom_protocol.service.success_delete'),
+      toast.promise(() => queryClient.invalidateQueries(['service-things']), {
+        loading: t('loading:loading'),
+        success: t('cloud:custom_protocol.service.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

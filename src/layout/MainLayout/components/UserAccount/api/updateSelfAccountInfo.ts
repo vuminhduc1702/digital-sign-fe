@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { type z } from 'zod'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type selfInfoSchema } from '../SelfAccount'
 
 export type UpdateSelfAccountInfo = {
@@ -42,17 +42,12 @@ export const useMutationSelfAccountInfo = ({
 }: UseUpdateSelfAccountInfo = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['user-info'],
       })
-      addNotification({
-        type: 'success',
-        title: t('form:user.success_update'),
-      })
+      toast.success(t('form:user.success_update'))
     },
     ...config,
     mutationFn: updateSelfAccountInfo,

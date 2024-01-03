@@ -4,7 +4,7 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type BaseAPIRes } from '~/types'
 import { type entitySubcriptionSchema } from '../../components/Subcription'
@@ -38,17 +38,12 @@ export const useCreateSubcription = ({
 }: UseCreateSubcriptionOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['subcriptions'],
       })
-      addNotification({
-        type: 'success',
-        title: t('billing:subcription.popup.success_create'),
-      })
+      toast.success(t('billing:subcription.popup.success_create'))
     },
     ...config,
     mutationFn: createSubcription,

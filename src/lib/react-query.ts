@@ -7,8 +7,8 @@ import {
   QueryCache,
   MutationCache,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
-import { useNotificationStore } from '~/stores/notifications'
 import i18n from '~/i18n'
 
 const queryConfig: DefaultOptions = {
@@ -25,19 +25,15 @@ export const queryClient = new QueryClient({
   defaultOptions: queryConfig,
   queryCache: new QueryCache({
     onError: error => {
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: i18n.t('error:server_res.title'),
-        message: (error as AxiosError).message,
+      toast.error(i18n.t('error:server_res.title'), {
+        description: (error as AxiosError).message,
       })
     },
   }),
   mutationCache: new MutationCache({
     onError: error => {
-      useNotificationStore.getState().addNotification({
-        type: 'error',
-        title: i18n.t('error:server_res.title'),
-        message: (error as AxiosError).message,
+      toast.error(i18n.t('error:server_res.title'), {
+        description: (error as AxiosError).message,
       })
     },
   }),

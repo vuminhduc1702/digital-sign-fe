@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type entityCustomerSchema } from '../components/CreateCustomer'
 
 export type CreateEntityCustomerDTO = {
@@ -23,17 +23,12 @@ export const useCreateCustomer = ({
 }: UseCreateCustomerOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['call-customer-list-api'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.user_manage.add_user.success_create'),
-      })
+      toast.success(t('cloud:org_manage.user_manage.add_user.success_create'))
     },
     ...config,
     mutationFn: createCustomer,

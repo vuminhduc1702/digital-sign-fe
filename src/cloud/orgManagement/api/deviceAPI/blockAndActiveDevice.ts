@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export type BlockAndActiveDeviceDTO = {
   type: string
@@ -29,20 +29,17 @@ export const useBlockAndActiveDevice = ({
 }: UseBlockAndUpdateDeviceOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async (_, variables) => {
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('device:udpate_device').replace(
+      toast.success(
+        t('device:udpate_device').replace(
           '{{value}}',
           variables.type.toUpperCase(),
         ),
-      })
+      )
     },
     ...config,
     mutationFn: blockAndActiveDevice,

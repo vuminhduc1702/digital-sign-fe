@@ -1,13 +1,13 @@
-import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
+import { useMutation } from '@tanstack/react-query'
 import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
-import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
 
 import { type BaseAPIRes } from '~/types'
-import { type serviceThingSchema } from '../../components/ThingService'
+import { type serviceThingSchema } from '../../components'
 
 type CreateServiceThingRes = {
   data: 1 | number
@@ -16,7 +16,6 @@ type CreateServiceThingRes = {
 export type CreateServiceThingDTO = {
   data: z.infer<typeof serviceThingSchema>
   thingId: string
-  name?: string
 }
 
 export const createServiceThing = ({

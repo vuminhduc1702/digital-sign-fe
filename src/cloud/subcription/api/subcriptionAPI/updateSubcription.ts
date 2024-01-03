@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import type * as z from 'zod'
 import { type entitySubcriptionUpdateSchema } from '../../components/Subcription/UpdateSubcription'
 
@@ -23,17 +23,12 @@ type UseUpdateSubcriptionOptions = {
 export const useUpdateSubcription = ({ config }: UseUpdateSubcriptionOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['subcriptions'],
       })
-      addNotification({
-        type: 'success',
-        title: t('billing:subcription.popup.success_update'),
-      })
+      toast.success(t('billing:subcription.popup.success_update'))
     },
     ...config,
     mutationFn: updateSubcription,

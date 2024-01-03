@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deletePlan = ({ id }: { id: string }) => {
   return axios.delete(`/api/priceplan/plan/${id}`)
@@ -18,13 +18,12 @@ export const useDeletePlan = ({
 }: UseDeletePlanOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['plans'])
-      addNotification({
-        type: 'success',
-        title: t('billing:package_manage.popup.success_delete'),
+      toast.promise(() => queryClient.invalidateQueries(['plans']), {
+        loading: t('loading:loading'),
+        success: t('billing:package_manage.popup.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

@@ -3,7 +3,7 @@ import { type mqttConfigSchema } from '../../components/Device/UpdateMqttConfig'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { useTranslation } from 'react-i18next'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { useMutation } from '@tanstack/react-query'
 
 export type MqttConfigDTO = {
@@ -23,7 +23,6 @@ export const useUpdateMqttConfig = ({
   config,
 }: UseUpdateMqttConfigOptions = {}) => {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
 
   return useMutation({
     onSuccess: async () => {
@@ -33,10 +32,7 @@ export const useUpdateMqttConfig = ({
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.device_manage.mqtt_config.update_success'),
-      })
+      toast.success(t('cloud:org_manage.device_manage.mqtt_config.update_success'))
     },
     ...config,
     mutationFn: updateMqttConfig,

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type entityFirmWareSchema } from '../../components/Firmware'
 import type * as z from 'zod'
 
@@ -23,17 +23,12 @@ type UseUpdateFirmwareOptions = {
 export const useUpdateFirmware = ({ config }: UseUpdateFirmwareOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['firm-ware'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:firmware.add_firmware.success_update'),
-      })
+      toast.success(t('cloud:firmware.add_firmware.success_update'))
     },
     ...config,
     mutationFn: updateFirmware,

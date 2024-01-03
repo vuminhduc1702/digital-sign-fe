@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deleteCustomer = ({ id }: { id: string }) => {
   return axios.delete(`/api/tenant/${id}`)
@@ -18,14 +18,12 @@ export const useDeleteCustomer = ({
 }: UseDeleteCustomerOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['call-customer-list-api'])
-      addNotification({
-        type: 'success',
-        title: t('form:customer.success_delete'),
+      toast.promise(() => queryClient.invalidateQueries(['call-customer-list-api']), {
+        loading: t('loading:loading'),
+        success: t('form:customer.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

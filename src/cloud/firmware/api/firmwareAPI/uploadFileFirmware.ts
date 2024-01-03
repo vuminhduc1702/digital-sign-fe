@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axiosUploadFile } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export type UploadFileFirmWareDTO = {
   file: any
@@ -23,17 +23,12 @@ export const useUploadFileFireWare = ({
 }: UseUploadFileFirmWareOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['firm-ware'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:firmware.add_firmware.success_upload'),
-      })
+      toast.success(t('cloud:firmware.add_firmware.success_upload'))
     },
     ...config,
     mutationFn: uploadFileFirmWare,

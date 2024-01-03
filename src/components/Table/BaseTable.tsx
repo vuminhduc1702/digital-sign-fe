@@ -352,7 +352,7 @@ export function BaseTable<T extends Record<string, any>>({
                   )
                 })
               ) : (
-                <td colSpan={999} className="text-center">
+                <td colSpan={999} className="text-center py-[200px]">
                   {onDataText || t('error:no_data')}
                 </td>
               )}

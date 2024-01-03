@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type updatedUserSchema } from '../../components/User'
 
 export type UpdateUserDTO = {
@@ -23,17 +23,12 @@ type UseUpdateUserOptions = {
 export const useUpdateUser = ({ config }: UseUpdateUserOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['users'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.user_manage.add_user.success_update'),
-      })
+      toast.success(t('cloud:org_manage.user_manage.add_user.success_update'))
     },
     ...config,
     mutationFn: updateUser,
