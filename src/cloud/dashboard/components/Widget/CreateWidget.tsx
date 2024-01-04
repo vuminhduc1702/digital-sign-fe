@@ -279,10 +279,7 @@ export function CreateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.keys?.map(item => ({
-    value: item,
-    label: item,
-  }))
+  const attrSelectData = attrChartData?.entities?.flatMap(item => item.attr_keys).map(key => ({ label: key, value: key }))
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
     { value: 'long', label: 'longitude' }

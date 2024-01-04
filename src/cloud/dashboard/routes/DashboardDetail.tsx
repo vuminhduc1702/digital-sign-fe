@@ -334,7 +334,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                
                 return (
                   <div
                     key={widgetId}
