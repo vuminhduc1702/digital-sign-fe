@@ -331,6 +331,7 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
+<<<<<<< HEAD
                 const filterDeviceData =
                   widgetInfo &&
                   widgetInfo.attribute_config &&
@@ -339,6 +340,8 @@ export function DashboardDetail() {
                     : {}
                 // console.log(widgetInfo.attribute_config)
 
+=======
+>>>>>>> f482da18 (Update pie chart)
                 return (
                   <div
                     key={widgetId}
