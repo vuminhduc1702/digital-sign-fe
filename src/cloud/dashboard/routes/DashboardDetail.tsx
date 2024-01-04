@@ -332,13 +332,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                const filterDeviceData =
-                  widgetInfo &&
-                  widgetInfo.attribute_config &&
-                  widgetInfo.attribute_config.length > 0
-                    ? widgetInfo.attribute_config
-                    : {}
-                // console.log(widgetInfo.attribute_config)
                 return (
                   <div
                     key={widgetId}
