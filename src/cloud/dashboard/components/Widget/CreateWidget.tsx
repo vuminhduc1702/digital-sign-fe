@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import ColorPicker from 'react-pick-color'
@@ -61,14 +61,14 @@ export const widgetAgg = [
 
 export const attrWidgetSchema = z.array(
   z.object({
-    attribute_key: z
-      .string()
-      .min(1, { message: i18n.t('ws:filter.choose_attr') }),
+    // attribute_key: z
+    //   .string()
+    //   .min(1, { message: i18n.t('ws:filter.choose_attr') }),
     // label: z.string(),
-    color: z.string(),
-    unit: z.string(),
-    max: z.number(),
-    min: z.number()
+    // color: z.string(),
+    // unit: z.string(),
+    // max: z.number(),
+    // min: z.number(),
   }),
 )
 
@@ -216,7 +216,15 @@ export function CreateWidget({
   setWidgetList,
 }: CreateWidgetProps) {
   const { t } = useTranslation()
-
+  const [inputField, setInputField] = useState<any[]>([
+    {
+      attribute_key: '',
+      color: '',
+      unit: '',
+      max: 100,
+      min: 0,
+    },
+  ])
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
 
@@ -235,13 +243,13 @@ export function CreateWidget({
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
   })
-  // console.log('zod errors', formState.errors)
+  console.log('zod errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,
   })
-
+  // console.log(fields, 'check fields')
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
     config: {
@@ -272,7 +280,7 @@ export function CreateWidget({
     value: device.id,
     label: device.name,
   }))
-
+  console.log(deviceSelectData, 'deviceSelectData')
   const {
     data: attrChartData,
     mutate: attrChartMutate,
@@ -282,22 +290,29 @@ export function CreateWidget({
     value: item,
     label: item,
   }))
+  console.log(attrChartData, 'attrChartData')
+  // console.log(attrSelectData, 'attrSelectData')
 
   useEffect(() => {
-    append({
-      attribute_key: '',
-      // label: '',
-      color: '',
-      unit: '',
-      max: 100,
-      min: 0,
-    })
-  }, [])
+    if (attrChartData?.keys && attrChartData?.keys.length > 0) {
+      const temp = inputField.map(item => {
+        if (!attrChartData?.keys?.includes(item.attribute_key)) {
+          return {
+            ...item,
+            attribute_key: '',
+          }
+        }
+        return item
+      })
+      setInputField(temp)
+    }
+  }, [attrChartData?.keys])
 
   const selectDropdownDeviceRef = useRef<SelectInstance<SelectOption[]> | null>(
     null,
   )
 
+  console.log(inputField, 'inputField create widget')
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
@@ -308,7 +323,7 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -321,6 +336,7 @@ export function CreateWidget({
             id="create-widget"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
+              console.log('check submit value:', values)
               const widgetId = uuidv4()
               const attrData = values.attributeConfig.map(item => ({
                 type: 'TIME_SERIES',
@@ -458,7 +474,7 @@ export function CreateWidget({
                       : '',
                   org_id: JSON.stringify(values.org_id),
                 },
-                attribute_config: values.attributeConfig.map(item => ({
+                attribute_config: inputField.map(item => ({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
@@ -502,7 +518,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -527,31 +543,49 @@ export function CreateWidget({
                       isLoading={orgIsLoading}
                       handleClearSelectDropdown={() => {
                         selectDropdownDeviceRef.current?.clearValue()
-                        resetField('attributeConfig', {
-                          defaultValue: [
-                            {
-                              attribute_key: '',
-                              color: '',
-                              max: 100,
-                              min: 0,
-                              unit: '',
-                            },
-                          ],
-                        })
+                        // resetField('attributeConfig', {
+                        //   defaultValue: [
+                        //     {
+                        //       attribute_key: '',
+                        //       color: '',
+                        //       max: 100,
+                        //       min: 0,
+                        //       unit: '',
+                        //     },
+                        //   ],
+                        // })
+                        setInputField([
+                          {
+                            attribute_key: '',
+                            color: '',
+                            unit: '',
+                            max: 100,
+                            min: 0,
+                          },
+                        ])
                       }}
                       handleChangeSelect={() => {
                         selectDropdownDeviceRef.current?.clearValue()
-                        resetField('attributeConfig', {
-                          defaultValue: [
-                            {
-                              attribute_key: '',
-                              color: '',
-                              max: 100,
-                              min: 0,
-                              unit: '',
-                            },
-                          ],
-                        })
+                        // resetField('attributeConfig', {
+                        //   defaultValue: [
+                        //     {
+                        //       attribute_key: '',
+                        //       color: '',
+                        //       max: 100,
+                        //       min: 0,
+                        //       unit: '',
+                        //     },
+                        //   ],
+                        // })
+                        setInputField([
+                          {
+                            attribute_key: '',
+                            color: '',
+                            unit: '',
+                            max: 100,
+                            min: 0,
+                          },
+                        ])
                       }}
                     />
 
@@ -584,17 +618,26 @@ export function CreateWidget({
                         }
                       }}
                       handleClearSelectDropdown={() => {
-                        resetField('attributeConfig', {
-                          defaultValue: [
-                            {
-                              attribute_key: '',
-                              color: '',
-                              max: 100,
-                              min: 0,
-                              unit: '',
-                            },
-                          ],
-                        })
+                        setInputField([
+                          {
+                            attribute_key: '',
+                            color: '',
+                            unit: '',
+                            max: 100,
+                            min: 0,
+                          },
+                        ])
+                        // resetField('attributeConfig', {
+                        //   defaultValue: [
+                        //     {
+                        //       attribute_key: '',
+                        //       color: '',
+                        //       max: 100,
+                        //       min: 0,
+                        //       unit: '',
+                        //     },
+                        //   ],
+                        // })
                       }}
                     />
                   </div>
@@ -603,7 +646,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -618,20 +661,30 @@ export function CreateWidget({
                           />
                         }
                         onClick={() =>
-                          append({
-                            attribute_key: '',
-                            // label: '',
-                            color: '',
-                            unit: '',
-                            max: 100,
-                            min: 0,
-                          })
+                          // append({
+                          //   attribute_key: '',
+                          //   // label: '',
+                          //   color: '',
+                          //   unit: '',
+                          //   max: 100,
+                          //   min: 0,
+                          // })
+                          setInputField([
+                            ...inputField,
+                            {
+                              attribute_key: '',
+                              color: '',
+                              unit: '',
+                              max: 100,
+                              min: 0,
+                            },
+                          ])
                         }
                       />
                     ) : null}
                   </div>
 
-                  {fields.map((field, index) => (
+                  {inputField.map((field, index) => (
                     <section
                       className="!mt-2 flex justify-between gap-x-2"
                       key={field.id}
@@ -639,10 +692,10 @@ export function CreateWidget({
                       <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                         <SelectDropdown
                           label={t('cloud:dashboard.config_chart.attr')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]
-                              ?.attribute_key
-                          }
+                          // error={
+                          //   formState?.errors?.attributeConfig?.[index]
+                          //     ?.attribute_key
+                          // }
                           name={`attributeConfig.${index}.attribute_key`}
                           control={control}
                           options={attrSelectData}
@@ -656,26 +709,39 @@ export function CreateWidget({
                           placeholder={t(
                             'cloud:org_manage.org_manage.add_attr.choose_attr',
                           )}
-                        />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.label')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.label
+                          value={
+                            attrSelectData
+                              ? attrSelectData?.map(item => {
+                                  if (item.value === field.attribute_key) {
+                                    return item
+                                  }
+                                  return ''
+                                })
+                              : ''
                           }
-                          registration={register(
-                            `attributeConfig.${index}.label` as const,
-                          )}
-                        /> */}
+                          customOnChange={option => {
+                            const temp = inputField.map((element, idx) => {
+                              if (idx === index) {
+                                return {
+                                  ...element,
+                                  attribute_key: option,
+                                }
+                              }
+                              return element
+                            })
+                            setInputField(temp)
+                          }}
+                        />
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                           e => widgetCategory === e,
                         ) ? (
                           <div className="space-y-1">
                             <FieldWrapper
                               label={t('cloud:dashboard.config_chart.color')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.color
-                              }
+                              // error={
+                              //   formState?.errors?.attributeConfig?.[index]
+                              //     ?.color
+                              // }
                             >
                               <Controller
                                 control={control}
@@ -717,6 +783,18 @@ export function CreateWidget({
                                           }) => {
                                             const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
                                             onChange(rgb)
+                                            const temp = inputField.map(
+                                              (element, idx) => {
+                                                if (idx === index) {
+                                                  return {
+                                                    ...element,
+                                                    color: rgb,
+                                                  }
+                                                }
+                                                return element
+                                              },
+                                            )
+                                            setInputField(temp)
                                           }}
                                           // @ts-expect-error: ColorPicker don't have ref prop
                                           ref={colorPickerRef}
@@ -731,36 +809,72 @@ export function CreateWidget({
                         ) : null}
                         <InputField
                           label={t('cloud:dashboard.config_chart.unit')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.unit
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.unit` as const,
-                          )}
+                          // error={
+                          //   formState?.errors?.attributeConfig?.[index]?.unit
+                          // }
+                          // registration={register(
+                          //   `attributeConfig.${index}.unit` as const,
+                          // )}
+                          onChange={e => {
+                            const temp = inputField.map((element, idx) => {
+                              if (idx === index) {
+                                return {
+                                  ...element,
+                                  unit: e.target.value,
+                                }
+                              }
+                              return element
+                            })
+                            setInputField(temp)
+                          }}
                         />
                         {widgetCategory === 'GAUGE' && (
                           <>
                             <InputField
                               label={t('cloud:dashboard.config_chart.min')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]?.min
-                              }
+                              // error={
+                              //   formState?.errors?.attributeConfig?.[index]?.min
+                              // }
                               type="number"
-                              registration={register(
-                                `attributeConfig.${index}.min` as const,
-                                { valueAsNumber: true },
-                              )}
+                              // registration={register(
+                              //   `attributeConfig.${index}.min` as const,
+                              //   { valueAsNumber: true },
+                              // )}
+                              onChange={e => {
+                                const temp = inputField.map((element, idx) => {
+                                  if (idx === index) {
+                                    return {
+                                      ...element,
+                                      min: e.target.value,
+                                    }
+                                  }
+                                  return element
+                                })
+                                setInputField(temp)
+                              }}
                             />
                             <InputField
                               label={t('cloud:dashboard.config_chart.max')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]?.max
-                              }
+                              // error={
+                              //   formState?.errors?.attributeConfig?.[index]?.max
+                              // }
                               type="number"
-                              registration={register(
-                                `attributeConfig.${index}.max` as const,
-                                { valueAsNumber: true },
-                              )}
+                              // registration={register(
+                              //   `attributeConfig.${index}.max` as const,
+                              //   { valueAsNumber: true },
+                              // )}
+                              onChange={e => {
+                                const temp = inputField.map((element, idx) => {
+                                  if (idx === index) {
+                                    return {
+                                      ...element,
+                                      max: e.target.value,
+                                    }
+                                  }
+                                  return element
+                                })
+                                setInputField(temp)
+                              }}
                             />
                           </>
                         )}
@@ -771,7 +885,12 @@ export function CreateWidget({
                           size="square"
                           variant="none"
                           className="self-start p-2 pt-3"
-                          onClick={() => remove(index)}
+                          onClick={() => {
+                            setInputField(
+                              inputField.filter((t, idx) => idx !== index),
+                            )
+                            // remove(index)
+                          }}
                           startIcon={
                             <img
                               src={btnDeleteIcon}
@@ -788,7 +907,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="w-full rounded-md bg-secondary-700 pl-3"
+                        className="bg-secondary-700 w-full rounded-md pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -880,9 +999,9 @@ export function CreateWidget({
                                 label={t(
                                   'cloud:dashboard.config_chart.startDate',
                                 )}
-                                error={
-                                  formState?.errors?.widgetSetting?.startDate
-                                }
+                                // error={
+                                //   formState?.errors?.widgetSetting?.startDate
+                                // }
                               >
                                 <Controller
                                   control={control}
@@ -898,7 +1017,7 @@ export function CreateWidget({
                                             variant="trans"
                                             size="square"
                                             className={cn(
-                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                              'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                               !value && 'text-secondary-700',
                                             )}
                                           >

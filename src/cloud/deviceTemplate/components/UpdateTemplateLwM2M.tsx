@@ -19,15 +19,12 @@ import {
 } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import { attrSchema, nameSchema } from '~/utils/schemaValidation'
+import { nameSchema } from '~/utils/schemaValidation'
 import { type UpdateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
-import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
 import { templateAttrSchema } from './CreateTemplate'
 import { Checkbox } from '~/components/Checkbox'
 import storage from '~/utils/storage'
 import { useGetXMLdata } from '../api/getXMLdata'
-import { useGetRulechains } from '../api/getRulechains'
-import { flattenData } from '~/utils/misc.ts'
 import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
@@ -78,7 +75,7 @@ export function UpdateTemplateLwM2M({
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
     return formattedStr
   }
-  const [openAccordion, setOpenAccordion] = useState()
+  const [openAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
   const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
@@ -110,12 +107,6 @@ export function UpdateTemplateLwM2M({
     }
     fetchData()
   }, [watch('rule_chain_id')])
-  // const { data: XMLData } = useGetXMLdata({
-  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-  //   config: {
-  //     suspense: false,
-  //   },
-  // })
   useEffect(() => {
     if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
       XMLDataRef.current = [...XMLDataRef.current, XMLData]

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { CreateServiceThingDTO } from './createThingService'
 
 export const updateThingService = ({ data, thingId, name }: CreateServiceThingDTO) => {
@@ -18,17 +18,12 @@ type UseUpdateServiceOptions = {
 export const useUpdateService = ({ config }: UseUpdateServiceOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['serviceById'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:custom_protocol.service.success_update'),
-      })
+      toast.success(t('cloud:custom_protocol.service.success_update'))
     },
     ...config,
     mutationFn: updateThingService,

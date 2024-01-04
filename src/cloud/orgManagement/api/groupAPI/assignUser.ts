@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type z } from 'zod'
 import { type assignUserSchema } from '../../components/Group/AssignUser'
 
@@ -21,17 +21,12 @@ type UseAssignUserOptions = {
 export const useAssignUser = ({ config }: UseAssignUserOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.user_manage.add_user.success_assign'),
-      })
+      toast.success(t('cloud:org_manage.user_manage.add_user.success_assign'))
     },
     ...config,
     mutationFn: assignUser,

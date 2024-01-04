@@ -4,7 +4,7 @@ import { type z } from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type deviceSchema } from '../../components/Device'
 
 import { type Device } from '../../types'
@@ -29,17 +29,12 @@ type UseCreateDeviceOptions = {
 export const useCreateDevice = ({ config }: UseCreateDeviceOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.device_manage.add_device.success_create'),
-      })
+      toast.success(t('cloud:org_manage.device_manage.add_device.success_create'))
     },
     ...config,
     mutationFn: createDevice,

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 type DeleteDashboardDTO = {
   id: string
@@ -22,14 +22,12 @@ export const useDeleteDashboard = ({
 }: UseDeleteDashboardOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['dashboards'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:dashboard.add_dashboard.success_delete'),
+    onSuccess: async () => {      
+      toast.promise(() => queryClient.invalidateQueries(['dashboards']), {
+        loading: t('loading:loading'),
+        success: t('cloud:dashboard.add_dashboard.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

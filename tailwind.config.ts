@@ -13,7 +13,7 @@ function withOpacity(variableName: string) {
 
 export default {
   content: ['./src/**/*.{ts,tsx}'],
-  plugins: [],
+  plugins: [require('tailwindcss-animate')],
   theme: {
     extend: {
       colors: {

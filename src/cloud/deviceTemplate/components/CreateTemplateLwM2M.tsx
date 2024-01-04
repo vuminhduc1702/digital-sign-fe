@@ -18,7 +18,6 @@ import {
   InputField,
   SelectField,
 } from '~/components/Form'
-import { valueTypeList } from '~/cloud/orgManagement/components/Attributes'
 import {
   useCreateTemplate,
   useUpdateTemplate,
@@ -27,8 +26,8 @@ import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
-
-import { transportConfigSchema, nameSchema } from '~/utils/schemaValidation'
+import { type CreateTemplateDTO } from '../api'
+import { nameSchema } from '~/utils/schemaValidation'
 import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
@@ -46,6 +45,12 @@ type ItemNames = {
   [key: string]: string
 }
 
+export const templateAttrSchema = z.object({
+  name: nameSchema,
+  // rule_chain_id: z.string().optional(),
+  // attributes: z.array(attrSchema),
+})
+
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
@@ -61,34 +66,20 @@ export default function CreateTemplateLwM2M() {
     isLoading: isLoadingCreateTemplatelwm2m,
     isSuccess: isSuccessCreateTemplatelwm2m,
   } = useCreateTemplate()
-  const { register, formState, handleSubmit, control, watch, reset } = useForm()
-  //console.log('formState errors', formState.errors)
-  // const { data: XMLData } = useGetXMLdata({
-  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-  //   config: {
-  //     suspense: false,
-  //   },
-  // })
-  // const XMLDataRef = useRef<LWM2MResponse[]>([])
-  // const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  // useEffect(() => {
-  //   if (XMLData != null) {
-  //     XMLDataRef.current = [...XMLDataRef.current, XMLData]
-  //   }
-  //   if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-  //     const filterArr = XMLDataRef.current.filter(item => {
-  //       return watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID)
-  //     })
-  //     setFilterLWM2M(Array.from(new Set(filterArr)))
-  //   }
-  // }, [XMLData, watch('rule_chain_id')])
-  //console.log('filterLWM2M', filterLWM2M)
+  const { register, formState, handleSubmit, control, watch, reset } = useForm<
+    CreateTemplateDTO['data']
+  >({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+    defaultValues: {
+      name: '',
+    },
+  })
   function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
     return formattedStr
   }
-  const [openAccordion, setOpenAccordion] = useState()
+  const [openAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
   const [accordionStates, setAccordionStates] = useState<AccordionStates>({})
@@ -119,7 +110,6 @@ export default function CreateTemplateLwM2M() {
       setFilterLWM2M(Array.from(new Set(filterArr)))
       const filteredKeys = Object.keys(checkboxStates).filter(key => {
         const objectId = parseInt(key.split('/')[1], 10)
-        console.log('objectId1111', objectId)
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
@@ -154,12 +144,13 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
-  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute) => {
+  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute, totalItemCount: number) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
       }
+      console.log('totalItemCount', totalItemCount)
       const moduleId = module.id
       const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
         if (moduleIndex === -1) {
@@ -170,8 +161,9 @@ export default function CreateTemplateLwM2M() {
             attribute_info: [item], 
             numberOfAttributes: 1,
             last_update_ts: currentTimestamp,
-            allcheckbox: module.allcheckbox
+            //allcheckbox: module.allcheckbox
           })
+
         } else {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
@@ -179,14 +171,31 @@ export default function CreateTemplateLwM2M() {
           if (attributeIndex === -1) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
             newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
+
           } else {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
             newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
+          }
+          const numberOfAttributes = newStates[accordionIndex][moduleIndex].numberOfAttributes
+          console.log('numberOfAttributes', numberOfAttributes)
+          if(numberOfAttributes === totalItemCount){
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = !prevStates[moduleId]
+              return updatedSelectAllAttributes
+            })
+          } else {
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = false
+              return updatedSelectAllAttributes
+            })
           }
         }  
       return newStates
     })
   }
+  //console.log('selectAllAttributes', selectAllAttributes)
   const handleSelectAllAttributesChange = (accordionIndex: number,  lw2m2: LWM2MResponse) => {
     setSelectAllAttributes((prevStates) => {
       const objectId = lw2m2.LWM2M.Object.ObjectID
@@ -213,11 +222,10 @@ export default function CreateTemplateLwM2M() {
       if (index === accordionIndex) {
         lw2m2.LWM2M.Object.Resources.Item.forEach((item) => {
           if (item.Operations === 'RW' || item.Operations === 'R') {
-            const moduleId = lw2m2.LWM2M.Object.ObjectID;
+            const moduleId = lw2m2.LWM2M.Object.ObjectID
             const moduleObject = {
               id: moduleId,
               module_name: lw2m2.LWM2M.Object.Name,
-              allcheckbox: selectAllAttributes.ObjectID
             }
             const itemId = `/${moduleId}/0/${item['@ID']}`;
             const itemObject = {
@@ -227,7 +235,7 @@ export default function CreateTemplateLwM2M() {
               name: itemNames[`${moduleId}-${item['@ID']}`] || formatString(item.Name),
               type: item.Type,
             }
-            handleCheckboxChange(accordionIndex, moduleObject, itemObject)
+            handleCheckboxChange(accordionIndex, moduleObject, itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
           }
         })
       }
@@ -265,7 +273,8 @@ const data = {
   project_id: projectId,
   transport_config: transportConfig
 }
-console.log('data', data)
+//console.log('data', data)
+console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -307,22 +316,23 @@ console.log('data', data)
           label={t('cloud:device_template.add_template.name')}
           value={name}
           onChange={handleNameChange}
+          error={formState.errors['name']}
           registration={register('name')}
         />
           <div className="space-y-1">
             <SelectDropdown
               isClearable
-              label={t('cloud:device_template.add_template.flow')}
+              label={t('cloud:device_template.add_template.lwm2m')}
               name="rule_chain_id"
               control={control}
               options={LwM2MSelectOptions}
               isMulti
               closeMenuOnSelect={false}
-              isOptionDisabled={option => option.label === t('loading:flow_id')}
-              noOptionsMessage={() => t('table:no_in_flow_id')}
+              isOptionDisabled={option => option.label === t('loading:lwm2m_model')}
+              noOptionsMessage={() => t('table:no_in_lwm2m_model')}
               handleClearSelectDropdown={handleClearSelectDropdown}
               placeholder={t(
-                'cloud:device_template.add_template.choose_flow_id',
+                'cloud:device_template.add_template.choose_lwm2m_model',
               )}
             />
             <p className="text-body-sm text-primary-400">
@@ -366,13 +376,13 @@ console.log('data', data)
                       </div>
                     </div>
                     <div>
-                      {lw2m2.LWM2M.Object.Resources.Item.map(item => { 
+                      {lw2m2.LWM2M.Object.Resources.Item.map(item => {
                         if (
                           item.Operations === 'RW' ||
                           item.Operations === 'R'
-                        ) { 
-                          const defaultItemName = item.Name
-                          const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
+                        ) {
+                        const defaultItemName = item.Name
+                        const itemId = `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`
                         return (
                             <section key={item['@ID']} className="mt-3">
                               <div className="grid grow grid-cols-1 gap-x-3 gap-y-2 md:grid-cols-2">
@@ -394,8 +404,9 @@ console.log('data', data)
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
                                           module_name: lw2m2.LWM2M.Object.Name,
-                                          allcheckbox: selectAllAttributes.ObjectID
+                                          allcheckbox: selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                                         }
+                                        console.log('selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]', selectAllAttributes[lw2m2.LWM2M.Object.ObjectID])
                                         const itemObject = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
@@ -408,7 +419,7 @@ console.log('data', data)
                                         } else {
                                           setCheckboxStates((prev) => ({ ...prev, [itemId]: e.target.checked }))
                                         }
-                                        handleCheckboxChange(accordionIndex, moduleObject ,itemObject)
+                                        handleCheckboxChange(accordionIndex, moduleObject ,itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
                                         onChange(e)
                                         }}
                                       />

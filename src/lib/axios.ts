@@ -9,18 +9,16 @@ import storage from '~/utils/storage'
 import { logoutFn } from './auth'
 import { PATHS } from '~/routes/PATHS'
 import i18n from '~/i18n'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 function authRequestInterceptor(config: InternalAxiosRequestConfig) {
   const controller = new AbortController()
 
   // setTimeout(() => {
   //   controller.abort()
-  //   useNotificationStore.getState().addNotification({
-  //     type: 'error',
-  //     title: i18n.t('error:server_res.title'),
-  //     message: 'hahahahahahahahhaha',
-  //   })
+  // toast.error(i18n.t('error:server_res.title'), {
+  //   description: 'aborttttttttttttttt'
+  // })
   // }, 200)
 
   const userStorage = storage.getToken()
@@ -62,12 +60,14 @@ axios.interceptors.response.use(
       message = i18n.t('error:server_res.malformed_data')
       const customError = { ...response?.data, message }
 
+      toast.error(customError)
       return Promise.reject(customError)
     }
     if (errCode != null && errCode !== 0) {
       message = errMessage ?? i18n.t('error:server_res.server')
       const customError = { ...response?.data, message }
 
+      toast.error(customError)
       return Promise.reject(customError)
     } else {
       return response.data
@@ -105,6 +105,7 @@ axios.interceptors.response.use(
 
     const customError = { ...error, message }
 
+    toast.error(message)
     return Promise.reject(customError)
   },
 )

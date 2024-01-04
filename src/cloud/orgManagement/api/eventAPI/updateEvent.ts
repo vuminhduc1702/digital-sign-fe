@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type z } from 'zod'
 import { type createEventSchema } from '../../components/Event'
 
@@ -40,17 +40,12 @@ type UseUpdateEventOptions = {
 export const useUpdateEvent = ({ config }: UseUpdateEventOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ['events'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.device_manage.add_device.success_update'),
-      })
+      toast.success(t('cloud:org_manage.event_manage.add_event.success_update'))
     },
     ...config,
     mutationFn: updateEvent,

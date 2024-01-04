@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export const deleteFirmware = ({ id }: { id: string }) => {
   return axios.delete(`/api/ota/${id}`)
@@ -16,14 +16,12 @@ type UseDeleteFirmwareOptions = {
 export const useDeleteFirmWare = ({ config }: UseDeleteFirmwareOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
-    onSuccess: async () => {
-      await queryClient.invalidateQueries(['firm-ware'])
-      addNotification({
-        type: 'success',
-        title: t('cloud:firmware.add_firmware.success_delete'),
+    onSuccess: async () => {      
+      toast.promise(() => queryClient.invalidateQueries(['firm-ware']), {
+        loading: t('loading:loading'),
+        success: t('cloud:firmware.add_firmware.success_delete'),
+        error: t('error:server_res.title'),
       })
     },
     ...config,

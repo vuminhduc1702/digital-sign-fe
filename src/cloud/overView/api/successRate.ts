@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 export type SuccessRateDTO = {
   projectId: string
@@ -34,8 +34,6 @@ type UseSuccessRateOptions = {
 
 export const useSuccessRate = ({ config }: UseSuccessRateOptions = {}) => {
   const { t } = useTranslation()
-
-  const { addNotification } = useNotificationStore()
 
   return useMutation({
     onSuccess: async () => {

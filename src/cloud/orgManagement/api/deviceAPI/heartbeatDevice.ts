@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { type z } from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { type heartBeatSchema } from '../../components/Device/UpdateDevice'
 
 export type HeartBeatDTO = {
@@ -28,7 +28,6 @@ type UseUpdateHeartBeatOptions = {
 
 export const useHeartBeat = ({ config }: UseHeartBeatOptions = {}) => {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -37,10 +36,7 @@ export const useHeartBeat = ({ config }: UseHeartBeatOptions = {}) => {
       queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
-      })
+      toast.success(t('cloud:org_manage.device_manage.add_device.success_heartbeat'))
     },
     ...config,
     mutationFn: heartBeat,
@@ -51,7 +47,6 @@ export const useUpdateHeartBeat = ({
   config,
 }: UseUpdateHeartBeatOptions = {}) => {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -60,10 +55,7 @@ export const useUpdateHeartBeat = ({
       queryClient.invalidateQueries({
         queryKey: ['devices'],
       })
-      addNotification({
-        type: 'success',
-        title: t('cloud:org_manage.device_manage.add_device.success_heartbeat'),
-      })
+      toast(t('cloud:org_manage.device_manage.add_device.success_heartbeat'))
     },
     ...config,
     mutationFn: updateHeartBeat,

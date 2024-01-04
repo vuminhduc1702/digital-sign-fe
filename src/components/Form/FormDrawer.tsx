@@ -10,6 +10,17 @@ import { useDisclosure } from '~/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
 
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetPortal,
+  SheetOverlay,
+} from '../Sheet/Sheet'
+
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import { useLocation, useParams } from 'react-router-dom'
 
@@ -57,13 +68,15 @@ export const FormDrawer = ({
   }, [openDrawer])
 
   return (
-    <>
-      {cloneElement(triggerButton, {
-        onClick: () => {
-          open()
-          resetData?.()
-        },
-      })}
+    <Sheet modal={false}>
+      <SheetTrigger>
+        {cloneElement(triggerButton, {
+          onClick: () => {
+            open()
+            resetData?.()
+          },
+        })}
+      </SheetTrigger>
       <Drawer
         isOpen={isOpen}
         onClose={() => {
@@ -74,6 +87,7 @@ export const FormDrawer = ({
         size={size}
         renderFooter={() => (
           <>
+<<<<<<< HEAD
             <Button
               className="rounded border-none"
               variant="secondary"
@@ -86,6 +100,19 @@ export const FormDrawer = ({
                 <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
             />
+=======
+            <SheetTrigger>
+              <Button
+                className="rounded border-none"
+                variant="secondary"
+                size="lg"
+                onClick={close}
+                startIcon={
+                  <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+                }
+              />
+            </SheetTrigger>
+>>>>>>> 99332750fa8524ea7e81fb0aeebf32949138a7cd
             {submitButton}
           </>
         )}
@@ -94,6 +121,6 @@ export const FormDrawer = ({
       >
         {children}
       </Drawer>
-    </>
+    </Sheet>
   )
 }

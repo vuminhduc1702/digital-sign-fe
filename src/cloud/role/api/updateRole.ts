@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 
 import { type PoliciesReq } from './createRole'
 
@@ -27,15 +27,10 @@ type UseUpdateRoleOptions = {
 export const useUpdateRole = ({ config }: UseUpdateRoleOptions = {}) => {
   const { t } = useTranslation()
 
-  const { addNotification } = useNotificationStore()
-
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['roles'] })
-      addNotification({
-        type: 'success',
-        title: t('cloud:role_manage.add_role.success_update'),
-      })
+      toast.success(t('cloud:role_manage.add_role.success_update'))
     },
     ...config,
     mutationFn: updateRole,
