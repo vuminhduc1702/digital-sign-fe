@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 
-import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-import { useGetRoles } from '../api'
-import storage from '~/utils/storage'
+import { flattenData } from '~/utils/misc'
 
 import { type Role } from '../types'
 
