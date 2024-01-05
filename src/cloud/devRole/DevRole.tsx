@@ -88,9 +88,8 @@ export default function DevRole() {
             data={filteredComboboxData}
             offset={offset}
             setOffset={setOffset}
-            total={projectsData?.total ?? 0}
+            total={data?.total ?? 0}
             isPreviousData={isPreviousData}
-            emptyTable={t('table:no_role')}
           />
         )}
       </div>

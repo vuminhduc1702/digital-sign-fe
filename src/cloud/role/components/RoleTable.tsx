@@ -136,7 +136,6 @@ function RoleTableContextMenu({
 type RoleTableProps = {
   data: Role[]
   project_id: string
-  emptyTable: string
 } & BaseTablePagination
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
@@ -204,18 +203,12 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
   )
 
   return (
-    <>
-      {data && data.length > 0 ? (
-        <BaseTable
-          popoverClassName="absolute right-0 top-1 block"
-          data={data}
-          columns={columns}
-          onDataText={t('table:no_role')}
-          {...props}
-        />
-      ) : (
-        <div>{props.emptyTable}</div>
-      )}
-    </>
+    <BaseTable
+      popoverClassName="absolute right-0 top-1 block"
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_role')}
+      {...props}
+    />
   )
 }
