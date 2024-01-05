@@ -58,7 +58,7 @@ export const Drawer = ({
                         <div className="ml-3 flex h-7 items-center">
                           <SheetTrigger>
                             <button
-                              className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                              className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                               onClick={onClose}
                             >
                               <span className="sr-only">Close panel</span>

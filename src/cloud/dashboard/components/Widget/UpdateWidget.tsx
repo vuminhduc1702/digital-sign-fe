@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
-import { memo, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import {
@@ -43,7 +43,7 @@ import { Calendar, TimePicker } from '~/components/Calendar'
 import { useParams } from 'react-router-dom'
 import { type SelectInstance } from 'react-select'
 
-const UpdateWidget = memo(function UpdateWidget({
+export function UpdateWidget({
   widgetInfo,
   setWidgetList,
   widgetId,
@@ -59,9 +59,7 @@ const UpdateWidget = memo(function UpdateWidget({
 
   const colorPickerRef = useRef()
   const [isDone, setIsDone] = useState(false)
-  const [inputField, setInputField] = useState<any[]>(
-    widgetInfo?.attribute_config,
-  )
+
   const initParse =
     widgetInfo?.datasource?.init_message &&
     JSON.parse(widgetInfo?.datasource?.init_message)
@@ -90,7 +88,7 @@ const UpdateWidget = memo(function UpdateWidget({
         ? JSON.parse(widgetInfo?.datasource?.org_id)
         : '',
       device: initParse?.entityDataCmds[0]?.query?.entityFilter?.entityIds,
-      // attributeConfig: widgetInfo?.attribute_config,
+      attributeConfig: widgetInfo?.attribute_config,
       widgetSetting: {
         agg: widgetInfo?.config?.aggregation || 'AVG',
         dataType: widgetInfo?.config?.chartsetting?.data_type || 'REALTIME',
@@ -164,22 +162,6 @@ const UpdateWidget = memo(function UpdateWidget({
     setIsDone(false)
   }, [widgetInfo])
 
-  useEffect(() => {
-    if (attrChartData?.keys) {
-      const temp = inputField.map(item => {
-        if (!attrChartData?.keys?.includes(item.attribute_key)) {
-          return {
-            ...item,
-            attribute_key: '',
-          }
-        }
-        return item
-      })
-      setInputField(temp)
-    }
-  }, [attrChartData?.keys])
-
-  console.log(inputField, 'inputField')
   return (
     <FormDialog
       size="max"
@@ -325,12 +307,12 @@ const UpdateWidget = memo(function UpdateWidget({
                     : '',
                 org_id: JSON.stringify(values.org_id),
               },
-              attribute_config: inputField.map(item => ({
+              attribute_config: values.attributeConfig.map(item => ({
                 attribute_key: item.attribute_key,
                 color: item.color,
                 max: item.max,
-                // label: item.label,
                 min: item.min,
+                label: item.label,
                 unit: item.unit,
               })),
               config:
@@ -396,28 +378,10 @@ const UpdateWidget = memo(function UpdateWidget({
                       // resetField('attributeConfig', [{}])
                       selectDropdownDeviceRef.current?.clearValue()
                       selectDropdownAttributeConfigRef.current?.clearValue()
-                      setInputField([
-                        {
-                          attribute_key: '',
-                          color: '',
-                          unit: '',
-                          max: 100,
-                          min: 0,
-                        },
-                      ])
                     }}
                     handleChangeSelect={() => {
                       selectDropdownDeviceRef.current?.clearValue()
                       selectDropdownAttributeConfigRef.current?.clearValue()
-                      setInputField([
-                        {
-                          attribute_key: '',
-                          color: '',
-                          unit: '',
-                          max: 100,
-                          min: 0,
-                        },
-                      ])
                     }}
                     defaultValue={
                       widgetInfo?.datasource?.org_id
@@ -475,19 +439,10 @@ const UpdateWidget = memo(function UpdateWidget({
                       handleClearSelectDropdown={() => {
                         // resetField('attributeConfig', [{}])
                         selectDropdownAttributeConfigRef.current?.clearValue()
-                        setInputField([
-                          {
-                            attribute_key: '',
-                            color: '',
-                            unit: '',
-                            max: 100,
-                            min: 0,
-                          },
-                        ])
                       }}
-                      // handleChangeSelect={() => {
-                      //   selectDropdownAttributeConfigRef.current?.clearValue()
-                      // }}
+                      handleChangeSelect={() => {
+                        selectDropdownAttributeConfigRef.current?.clearValue()
+                      }}
                       defaultValue={deviceSelectData?.filter(item =>
                         getValues('device')?.includes(item.value),
                       )}
@@ -517,30 +472,20 @@ const UpdateWidget = memo(function UpdateWidget({
                         <PlusIcon width={16} height={16} viewBox="0 0 16 16" />
                       }
                       onClick={() =>
-                        // append({
-                        //   attribute_key: '',
-                        //   label: '',
-                        //   color: '',
-                        //   unit: '',
-                        //   max: 100,
-                        //   min: 0,
-                        // })
-                        setInputField([
-                          ...inputField,
-                          {
-                            attribute_key: '',
-                            color: '',
-                            unit: '',
-                            max: 100,
-                            min: 0,
-                          },
-                        ])
+                        append({
+                          attribute_key: '',
+                          label: '',
+                          color: '',
+                          unit: '',
+                          max: 100,
+                          min: 0,
+                        })
                       }
                     />
                   ) : null}
                 </div>
 
-                {inputField.map((field, index) => (
+                {fields.map((field, index) => (
                   <section
                     className="!mt-2 flex justify-between gap-x-2"
                     key={field.id}
@@ -563,37 +508,15 @@ const UpdateWidget = memo(function UpdateWidget({
                           placeholder={t(
                             'cloud:org_manage.org_manage.add_attr.choose_attr',
                           )}
-                          // defaultValue={attrSelectData?.find(
-                          //   item =>
-                          //     widgetInfo?.attribute_config[index]
-                          //       ?.attribute_key === item.value,
-                          // )}
-                          // error={
-                          //   formState?.errors?.attributeConfig?.[index]
-                          //     ?.attribute_key
-                          // }
-                          value={
-                            attrSelectData
-                              ? attrSelectData?.map(item => {
-                                  if (item.value === field.attribute_key) {
-                                    return item
-                                  }
-                                  return ''
-                                })
-                              : ''
+                          defaultValue={attrSelectData?.find(
+                            item =>
+                              widgetInfo?.attribute_config[index]
+                                ?.attribute_key === item.value,
+                          )}
+                          error={
+                            formState?.errors?.attributeConfig?.[index]
+                              ?.attribute_key
                           }
-                          customOnChange={option => {
-                            const temp = inputField.map((element, idx) => {
-                              if (idx === index) {
-                                return {
-                                  ...element,
-                                  attribute_key: option,
-                                }
-                              }
-                              return element
-                            })
-                            setInputField(temp)
-                          }}
                         />
                       </div>
                       {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
@@ -602,14 +525,13 @@ const UpdateWidget = memo(function UpdateWidget({
                         <div className="space-y-1">
                           <FieldWrapper
                             label={t('cloud:dashboard.config_chart.color')}
-                            // error={
-                            //   formState?.errors?.attributeConfig?.[index]?.color
-                            // }
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.color
+                            }
                           >
                             <Controller
                               control={control}
                               name={`attributeConfig.${index}.color`}
-                              defaultValue={field.color}
                               render={({
                                 field: { onChange, value, ...field },
                               }) => {
@@ -647,18 +569,6 @@ const UpdateWidget = memo(function UpdateWidget({
                                         }) => {
                                           const rgb = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`
                                           onChange(rgb)
-                                          const temp = inputField.map(
-                                            (element, idx) => {
-                                              if (idx === index) {
-                                                return {
-                                                  ...element,
-                                                  color: rgb,
-                                                }
-                                              }
-                                              return element
-                                            },
-                                          )
-                                          setInputField(temp)
                                         }}
                                         // @ts-expect-error: ColorPicker don't have ref prop
                                         ref={colorPickerRef}
@@ -673,75 +583,36 @@ const UpdateWidget = memo(function UpdateWidget({
                       ) : null}
                       <InputField
                         label={t('cloud:dashboard.config_chart.unit')}
-                        // error={
-                        //   formState?.errors?.attributeConfig?.[index]?.unit
-                        // }
-                        // registration={register(
-                        //   `attributeConfig.${index}.unit` as const,
-                        // )}
-                        value={field.unit}
-                        onChange={e => {
-                          const temp = inputField.map((element, idx) => {
-                            if (idx === index) {
-                              return {
-                                ...element,
-                                unit: e.target.value,
-                              }
-                            }
-                            return element
-                          })
-                          setInputField(temp)
-                        }}
+                        error={
+                          formState?.errors?.attributeConfig?.[index]?.unit
+                        }
+                        registration={register(
+                          `attributeConfig.${index}.unit` as const,
+                        )}
                       />
                       {widgetInfo?.description === 'GAUGE' && (
                         <>
                           <InputField
                             label={t('cloud:dashboard.config_chart.min')}
-                            // error={
-                            //   formState?.errors?.attributeConfig?.[index]?.min
-                            // }
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.min
+                            }
                             type="number"
-                            // registration={register(
-                            //   `attributeConfig.${index}.min` as const,
-                            //   { valueAsNumber: true },
-                            // )}
-                            value={field.min}
-                            onChange={e => {
-                              const temp = inputField.map((element, idx) => {
-                                if (idx === index) {
-                                  return {
-                                    ...element,
-                                    min: e.target.value,
-                                  }
-                                }
-                                return element
-                              })
-                              setInputField(temp)
-                            }}
+                            registration={register(
+                              `attributeConfig.${index}.min` as const,
+                              { valueAsNumber: true },
+                            )}
                           />
                           <InputField
                             label={t('cloud:dashboard.config_chart.max')}
-                            // error={
-                            //   formState?.errors?.attributeConfig?.[index]?.max
-                            // }
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.max
+                            }
                             type="number"
-                            // registration={register(
-                            //   `attributeConfig.${index}.max` as const,
-                            //   { valueAsNumber: true },
-                            // )}
-                            value={field.max}
-                            onChange={e => {
-                              const temp = inputField.map((element, idx) => {
-                                if (idx === index) {
-                                  return {
-                                    ...element,
-                                    max: e.target.value,
-                                  }
-                                }
-                                return element
-                              })
-                              setInputField(temp)
-                            }}
+                            registration={register(
+                              `attributeConfig.${index}.max` as const,
+                              { valueAsNumber: true },
+                            )}
                           />
                         </>
                       )}
@@ -755,12 +626,7 @@ const UpdateWidget = memo(function UpdateWidget({
                         size="square"
                         variant="none"
                         className="self-start p-2 pt-3"
-                        onClick={() => {
-                          setInputField(
-                            inputField.filter((t, idx) => idx !== index),
-                          )
-                          // remove(index)
-                        }}
+                        onClick={() => remove(index)}
                         startIcon={
                           <img
                             src={btnDeleteIcon}
@@ -868,9 +734,9 @@ const UpdateWidget = memo(function UpdateWidget({
                               label={t(
                                 'cloud:dashboard.config_chart.startDate',
                               )}
-                              // error={
-                              //   formState?.errors?.widgetSetting?.startDate
-                              // }
+                              error={
+                                formState?.errors?.widgetSetting?.startDate
+                              }
                             >
                               <Controller
                                 control={control}
@@ -1095,6 +961,4 @@ const UpdateWidget = memo(function UpdateWidget({
       }
     />
   )
-})
-
-export default UpdateWidget
+}

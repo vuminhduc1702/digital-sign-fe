@@ -9,7 +9,7 @@ import { Button } from '~/components/Button/Button'
 import { Drawer } from '~/components/Drawer'
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
-import { toast } from 'sonner'
+import { useNotificationStore } from '~/stores/notifications'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
@@ -28,6 +28,7 @@ import {
   CreateControllerButton,
   CreateWidget,
   UpdateControllerButton,
+  UpdateWidget,
   type Widget,
   type WidgetCategoryType,
 } from '../components/Widget'
@@ -59,7 +60,6 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
-import UpdateWidget from '../components/Widget/UpdateWidget'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -75,6 +75,7 @@ export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeU
 
 export function DashboardDetail() {
   const { t } = useTranslation()
+  const { addNotification } = useNotificationStore()
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -153,7 +154,10 @@ export function DashboardDetail() {
   useEffect(() => {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
-        toast.error(lastJsonMessage.errorMsg)
+        addNotification({
+          type: 'error',
+          title: lastJsonMessage.errorMsg,
+        })
       }
     }
   }, [lastJsonMessage])
@@ -243,7 +247,7 @@ export function DashboardDetail() {
   }
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
-  // console.log('render in dashboard detail')
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -328,6 +332,7 @@ export function DashboardDetail() {
                   widgetInfo.attribute_config.length > 0
                     ? widgetInfo.attribute_config
                     : {}
+                // console.log(widgetInfo.attribute_config)
 
                 return (
                   <div
