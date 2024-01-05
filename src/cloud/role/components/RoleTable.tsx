@@ -11,7 +11,6 @@ import { useCopyId, useDisclosure } from '~/utils/hooks'
 
 import { type BaseTablePagination } from '~/types'
 
-import { useParams } from 'react-router-dom'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -19,8 +18,8 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useDeleteRole } from '../api'
 import { type Role } from '../types'
-import { UpdateRole } from './UpdateRole'
 import { actionsList } from './CreateRole'
+import { UpdateRole } from './UpdateRole'
 
 function RoleTableContextMenu({
   id,
@@ -54,7 +53,7 @@ function RoleTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -89,7 +88,7 @@ function RoleTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -141,8 +140,6 @@ type RoleTableProps = {
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
   const { t } = useTranslation()
-  const params = useParams()
-  const thingId = params.thingId as string
 
   const columnHelper = createColumnHelper<Role>()
   const columns = useMemo<ColumnDef<Role, any>[]>(

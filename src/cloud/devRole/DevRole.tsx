@@ -50,10 +50,11 @@ export default function DevRole() {
     }
   }, [])
 
+  console.log(filteredComboboxData, 'filteredComboboxData')
   return (
     <>
       <div
-        className="mb-4 mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
+        className="border-secondary-700 mb-4 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
         onClick={() => navigate(-1)}
       >
         <img src={narrowLeft} alt="left" className="aspect-square w-[20px]" />
@@ -68,7 +69,7 @@ export default function DevRole() {
         defaultValue={storage.getProject()?.id}
       />
 
-      <TitleBar title="Danh sách dev role" className="mx-32" />
+      <TitleBar title={t('dev_role:list')} className="mx-32" />
       <div className="relative mx-32 flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           {projectId && (
@@ -87,7 +88,7 @@ export default function DevRole() {
             data={filteredComboboxData}
             offset={offset}
             setOffset={setOffset}
-            total={projectsData?.total ?? 0}
+            total={data?.total ?? 0}
             isPreviousData={isPreviousData}
           />
         )}

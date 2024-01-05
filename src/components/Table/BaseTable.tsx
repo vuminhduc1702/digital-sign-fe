@@ -141,7 +141,7 @@ export function BaseTable<T extends Record<string, any>>({
                             }`}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            <div className="relative flex items-center justify-center text-table-header">
+                            <div className="text-table-header relative flex items-center justify-center">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -195,7 +195,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -246,7 +246,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
+                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -352,7 +352,7 @@ export function BaseTable<T extends Record<string, any>>({
                   )
                 })
               ) : (
-                <td colSpan={999} className="text-center py-[200px]">
+                <td colSpan={999} className="py-[200px] text-center">
                   {onDataText || t('error:no_data')}
                 </td>
               )}
@@ -360,7 +360,7 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="mt-4 flex items-center justify-between gap-2 relative">
+      <div className="relative mt-4 flex items-center justify-between gap-2">
         <div
           className={cn('flex gap-3', 
           {
@@ -368,7 +368,7 @@ export function BaseTable<T extends Record<string, any>>({
           }
           )}
         >
-          <span className="flex items-center gap-1 text-body-light">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',

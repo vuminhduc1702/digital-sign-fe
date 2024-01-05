@@ -285,7 +285,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
               className="rounded-md"
@@ -336,7 +336,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                 {type === 'Group' && (
                   <div className="space-y-3">
                     <SelectDropdown
-                      label={'Thiết bị'}
+                      label={t('sidebar:device.title')}
                       name={`policies.${index}.devices`}
                       control={control}
                       options={groupDataDeviceOptions}
@@ -356,7 +356,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     />
 
                     <SelectDropdown
-                      label={'Sự kiện'}
+                      label={t('cloud:org_manage.event_manage.title')}
                       name={`policies.${index}.events`}
                       options={groupDataEventOptions}
                       isOptionDisabled={option =>
@@ -376,7 +376,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     />
 
                     <SelectDropdown
-                      label={'Người dùng'}
+                      label={t('cloud:org_manage.user_manage.title')}
                       name={`policies.${index}.users`}
                       options={groupDataUserOptions}
                       isOptionDisabled={option =>
@@ -396,7 +396,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     />
 
                     <SelectDropdown
-                      label={'Tổ chức'}
+                      label={t('cloud:org_manage.org_manage.title')}
                       name={`policies.${index}.orgs`}
                       options={groupDataOrgOptions}
                       isOptionDisabled={option =>
