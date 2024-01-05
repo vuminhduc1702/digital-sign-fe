@@ -1138,5 +1138,8 @@
   },
   "noti": {
     "empty_id": "Không có ID"
+  },
+  "dev_role": {
+    "list": "Danh sách dev role"
   }
 }
