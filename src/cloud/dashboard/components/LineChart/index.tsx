@@ -20,8 +20,6 @@ import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
-import * as d3 from 'd3'
-
 export function LineChart({
   data,
   widgetInfo,
@@ -33,6 +31,7 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
+  // console.log(`new line: `, data)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -224,154 +223,26 @@ export function LineChart({
     }, 1000)
   }
 
-  const TICK_INTERVAL = 10000
-  const [ticks, setTicks] = useState<any[]>(initTick())
-
-  function timeFormatter(tick: any | null) {
-    return d3.timeFormat('%H:%M:%S')(new Date(tick))
-  }
-
-  function initTick() {
-    const now = new Date()
-    // rounded to the nearest 10 seconds
-    const rounded = now.getSeconds() - (now.getSeconds() % 10)
-    const start = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      now.getHours(),
-      now.getMinutes(),
-      rounded,
-    )
-
-    // create an array of 6 ticks
-    const initTicks = []
-    for (let i = 5; i >= 0; i--) {
-      initTicks.push(
-        new Date(start.getTime() - (i + 1) * TICK_INTERVAL).getTime(),
-      )
-    }
-    initTicks.push(start.getTime())
-
-    return initTicks
-  }
-
-  function convertTimeToStringTime(time: number[]) {
-    return time.map(item => {
-      return timeFormatter(item)
-    })
-  }
-
-  function addTick() {
-    if (new Date().getSeconds() % (TICK_INTERVAL / 1000) === 0) {
-      setTicks(prev =>
-        prev.length > 6
-          ? [...prev.slice(1), new Date().getTime()]
-          : [...prev, new Date().getTime()],
-      )
-    }
-  }
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      addTick()
-    }, 1000)
-
-    return () => {
-      clearInterval(interval)
-    }
-  }, [])
-
-  console.log(newValuesRef.current)
-
-  const start = new Date();
-  const end = new Date(start.getTime() - 60 * 60 * 1000);
-
-  const xScale = d3.scaleTime()
-  .domain([end, start])
-  .range([0, 10000])
-
-  console.log(xScale);
-
   return (
     <>
-      {refreshBtn && (
-        <div
-          className="absolute top-[50px] left-[10px] cursor-pointer z-20"
-          onClick={refresh}
-        >
-          <img src={refreshIcon} alt="" />
-        </div>
-      )}
-      {widgetInfo?.config?.chartsetting.data_type === 'HISTORY' ? (
-        !showSpinner && newValuesRef.current != null && !isRefresh ? (
-          <>
-            <ResponsiveContainer width="98%" height="90%" className="pt-8">
-              <LineWidget data={dataTransformedFeedToChart}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey={ticks} allowDuplicatedCategory={false} />
-                <YAxis />
-                <Tooltip />
-                <Legend content={renderLegend} />
-                <Brush dataKey="ts" height={30} stroke="#8884d8" />
-                {Object.keys(newValuesRef.current).map((key, index) => {
-                  const colorConfig = widgetInfo.attribute_config.filter(
-                    obj => obj.attribute_key === key,
-                  )
-                  return (
-                    <Line
-                      key={index.toString()}
-                      connectNulls
-                      type="monotone"
-                      dataKey={key}
-                      animationDuration={250}
-                      stroke={
-                        key.includes('SMA') || key.includes('FFT')
-                          ? '#2c2c2c'
-                          : colorConfig && colorConfig[0].color !== ''
-                          ? colorConfig[0].color
-                          : '#e8c1a0'
-                      }
-                      activeDot={{ r: 5 }}
-                      dot={false}
-                    />
-                  )
-                })}
-              </LineWidget>
-            </ResponsiveContainer>
-          </>
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <Spinner size="xl" />
-          </div>
-        )
-      ) : !showSpinner && newValuesRef.current != null ? (
+      {!showSpinner && newValuesRef.current != null && !isRefresh ? (
         <>
+          {refreshBtn && (
+            <div
+              className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+              onClick={refresh}
+            >
+              <img src={refreshIcon} alt="" />
+            </div>
+          )}
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
             <LineWidget data={dataTransformedFeedToChart}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="ts"
-                scale="time"
-                type="number"
-                domain={[ticks[0], ticks[ticks.length - 1]]}
-                ticks={ticks}
-                tickCount={ticks.length}
-                tickFormatter={timeFormatter}
-              />
+              <XAxis dataKey="ts" allowDuplicatedCategory={false} />
               <YAxis />
               <Tooltip />
               <Legend content={renderLegend} />
               <Brush dataKey="ts" height={30} stroke="#8884d8" />
-              <Line
-                connectNulls
-                type="monotone"
-                dataKey="value"
-                animationDuration={250}
-                stroke="#2c2c2c"
-                activeDot={{ r: 5 }}
-                dot={false}
-              />
               {Object.keys(newValuesRef.current).map((key, index) => {
                 const colorConfig = widgetInfo.attribute_config.filter(
                   obj => obj.attribute_key === key,
@@ -399,35 +270,12 @@ export function LineChart({
           </ResponsiveContainer>
         </>
       ) : (
-        <>
-          <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <LineWidget data={dataTransformedFeedToChart}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="ts"
-                scale="time"
-                type="number"
-                domain={[ticks[0], ticks[ticks.length - 1]]}
-                ticks={ticks}
-                tickCount={ticks.length}
-                tickFormatter={timeFormatter}
-              />
-              <YAxis />
-              <Tooltip />
-              <Legend content={renderLegend} />
-              <Brush dataKey="ts" height={30} stroke="#8884d8" />
-              {/* <Line
-                connectNulls
-                type="monotone"
-                dataKey="value"
-                animationDuration={250}
-                stroke="#2c2c2c"
-                activeDot={{ r: 5 }}
-                dot={false}
-              /> */}
-            </LineWidget>
-          </ResponsiveContainer>
-        </>
+        <div className="flex h-full items-center justify-center">
+          <Spinner
+            // showSpinner={showSpinner}
+            size="xl"
+          />
+        </div>
       )}
     </>
   )
