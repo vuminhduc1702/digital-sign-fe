@@ -5,11 +5,11 @@ import {
   useEffect,
   useMemo,
 } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { useDisclosure } from '~/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
-
 import {
   Sheet,
   SheetContent,
@@ -18,11 +18,12 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetPortal,
-  SheetOverlay,
-} from '../Sheet/Sheet'
+  SheetClose,
+  SheetFooter,
+} from '../Sheet'
+import { cn } from '~/utils/misc'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import { useLocation, useParams } from 'react-router-dom'
 
 type FormDrawerProps = {
   isDone: boolean
@@ -68,15 +69,13 @@ export const FormDrawer = ({
   }, [openDrawer])
 
   return (
-    <Sheet modal={false}>
-      <SheetTrigger>
-        {cloneElement(triggerButton, {
-          onClick: () => {
-            open()
-            resetData?.()
-          },
-        })}
-      </SheetTrigger>
+    <>
+      {cloneElement(triggerButton, {
+        onClick: () => {
+          open()
+          resetData?.()
+        },
+      })}
       <Drawer
         isOpen={isOpen}
         onClose={close}
@@ -84,17 +83,15 @@ export const FormDrawer = ({
         size={size}
         renderFooter={() => (
           <>
-            <SheetTrigger>
-              <Button
-                className="rounded border-none"
-                variant="secondary"
-                size="lg"
-                onClick={close}
-                startIcon={
-                  <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
-                }
-              />
-            </SheetTrigger>
+            <Button
+              className="rounded border-none"
+              variant="secondary"
+              size="lg"
+              onClick={close}
+              startIcon={
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              }
+            />
             {submitButton}
           </>
         )}
@@ -102,6 +99,6 @@ export const FormDrawer = ({
       >
         {children}
       </Drawer>
-    </Sheet>
+    </>
   )
 }
