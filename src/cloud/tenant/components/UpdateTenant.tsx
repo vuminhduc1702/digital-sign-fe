@@ -7,18 +7,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
 import { InputField } from '~/components/Form'
-import {
-  useUpdateCustomer,
-  type UpdateCustomerDTO,
-} from '../api/updateCustomer'
+import { useUpdateCustomer, type UpdateCustomerDTO } from '../api/updateTenant'
 import * as z from 'zod'
 import {
   emailSchema,
   nameSchema,
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
-import { UpdateCustomerRole } from './UpdateCustomerRole'
-import { CustomerRoleTable } from './CustomerRoleTable'
+import { UpdateCustomerRole } from './UpdateTenantRole'
+import { CustomerRoleTable } from './TenantRoleTable'
 import { useDisclosure } from '~/utils/hooks'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -86,11 +83,11 @@ export function UpdateCustomer({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('form:customer.edit')}
+              {t('cloud:dashboard.table.edit_tenant')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -150,7 +147,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="muted"
-            className="inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={openRole}
           >
             {t('form:role.add')}
@@ -158,7 +155,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

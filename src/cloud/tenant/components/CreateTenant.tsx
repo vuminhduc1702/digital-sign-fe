@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import { Calendar } from '~/components/Calendar'
+import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 import { InputField, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import { PlusIcon } from '~/components/SVGIcons'
@@ -20,7 +21,7 @@ import {
 import {
   useCreateCustomer,
   type CreateEntityCustomerDTO,
-} from '../api/createCustomerApi'
+} from '../api/createTenantApi'
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { cn } from '~/utils/misc'
@@ -56,8 +57,8 @@ export const entityCustomerSchema = z
 
 export function CreateCustomer() {
   const { t } = useTranslation()
-
-  const { register, formState, handleSubmit } = useForm<
+  const [dateValue, setDateValue] = useState(new Date())
+  const { register, formState, handleSubmit, reset } = useForm<
     CreateEntityCustomerDTO['data']
   >({
     resolver: entityCustomerSchema && zodResolver(entityCustomerSchema),
@@ -73,7 +74,6 @@ export function CreateCustomer() {
 
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
-  const [date, setDate] = useState<Date | null>()
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
@@ -115,7 +115,7 @@ export function CreateCustomer() {
                 name: values.name,
                 phone: values.phone,
                 profile: {
-                  dob: date,
+                  dob: dateValue,
                   gender: values.gender,
                   province: values.province,
                   district: values.district,
@@ -128,12 +128,11 @@ export function CreateCustomer() {
         >
           <>
             <div className="mb-3 text-base font-semibold text-black">
-              {t('billing:subcription.popup.customer_info')}
+              {t('cloud:dashboard.table.tenant_info')}
             </div>
             <div className="mb-3 grid grid-cols-4 gap-4">
               <div className="text-end">
-                {t('billing:subcription.popup.customer_name')}{' '}
-                <span className="text-red-600">*</span>
+                Tenant <span className="text-red-600">*</span>
               </div>
               <InputField
                 autoComplete="off"
@@ -149,37 +148,31 @@ export function CreateCustomer() {
                     variant="trans"
                     className={cn(
                       'relative h-[37px] w-full justify-start rounded-md text-left font-normal ',
-                      !date && 'text-muted-foreground',
+                      !dateValue && 'text-muted-foreground',
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {date ? (
-                      date ? (
-                        <>{format(date, 'dd/MM/y')}</>
+                    {dateValue ? (
+                      dateValue ? (
+                        <>{format(dateValue, 'dd/MM/y')}</>
                       ) : (
-                        format(date, 'dd MM, y')
+                        format(dateValue, 'dd MM, y')
                       )
                     ) : (
-                      <span>{t('cloud:dashboard.config_chart.pick_date')}</span>
+                      <span className="text-sm">
+                        {t('cloud:dashboard.config_chart.pick_date')}
+                      </span>
                     )}
-                    {date && (
+                    {dateValue && (
                       <XMarkIcon
-                        onClick={() => setDate(null)}
+                        onClick={() => setDateValue(null)}
                         className="absolute right-3 top-2.5 h-4 w-4 "
                       />
                     )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    defaultMonth={new Date(1990, 0)}
-                    selected={date}
-                    onSelect={setDate}
-                    numberOfMonths={1}
-                    // fromYear={1960}
-                    // toYear={2005}
-                  />
+                  <Calendar onChange={setDateValue} />
                 </PopoverContent>
               </Popover>
               <div className="text-end">{t('form:sex')}</div>
@@ -279,6 +272,7 @@ export function CreateCustomer() {
           </>
         </form>
       }
+      resetData={() => reset()}
       triggerButton={
         <Button
           className="rounded-md"

@@ -1,20 +1,20 @@
-import { useTranslation } from 'react-i18next'
+import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { Menu } from '@headlessui/react'
+import { useTranslation } from 'react-i18next'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { Dropdown } from '~/components/Dropdown'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { BaseTable } from '~/components/Table'
 import { type BaseTablePagination } from '~/types'
+import { useDisclosure } from '~/utils/hooks'
+import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
-import { useDeleteCustomerRole } from '../api/deleteCustomerRoleApi'
-import { UpdateCustomerRole } from './UpdateCustomerRole'
+import { UpdateCustomerRole } from './UpdateTenantRole'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
@@ -54,10 +54,10 @@ function CustomerTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <Button
-              className="w-full justify-start border-none hover:text-primary-400"
+              className="hover:text-primary-400 w-full justify-start border-none"
               variant="trans"
               size="square"
               startIcon={
@@ -75,10 +75,10 @@ function CustomerTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('form:role.delete')}
-              body={`Bạn có chắc chắn muốn xoá ${name}`}
+              body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
