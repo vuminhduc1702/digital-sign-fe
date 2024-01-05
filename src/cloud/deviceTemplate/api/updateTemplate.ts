@@ -4,13 +4,8 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-<<<<<<< HEAD
 import { useNotificationStore } from '~/stores/notifications'
 import { type TransportConfig } from '../types'
-=======
-import { toast } from 'sonner'
-
->>>>>>> 99332750fa8524ea7e81fb0aeebf32949138a7cd
 import { type AttrList} from '~/utils/schemaValidation'
 
 export type UpdateTemplateDTO = {

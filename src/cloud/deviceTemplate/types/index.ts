@@ -49,6 +49,8 @@ export type Template = {
   created_time: number
   transport_config: TransportConfig
   attributes: AttrList
+  thing_id: string
+  handle_service: string
 }
 export type TemplateLwM2MList = {
   templates: TemplateLwM2M[]

@@ -3,7 +3,6 @@ import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { axios } from '~/lib/axios'
 import { Button } from '~/components/Button'
 import {
   Accordion,
@@ -18,15 +17,11 @@ import {
   InputField,
   SelectField,
 } from '~/components/Form'
-import {
-  useCreateTemplate,
-  useUpdateTemplate,
-} from '../api'
+import { type CreateTemplateDTO,useCreateTemplate,useUpdateTemplate } from '../api'
 import storage from '~/utils/storage'
 import { Checkbox } from '~/components/Checkbox'
 import { flattenData } from '~/utils/misc.ts'
 import { useGetXMLdata } from '../api/getXMLdata'
-import { type CreateTemplateDTO } from '../api'
 import { nameSchema } from '~/utils/schemaValidation'
 import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
@@ -51,13 +46,14 @@ export const templateAttrSchema = z.object({
   // attributes: z.array(attrSchema),
 })
 
+const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
+  label: `${item.module_name} #${item.file_id}_${item.version}`,
+  value: `${item.file_id}`,
+}))
+
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-  const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
-    label: `${item.module_name} #${item.file_id}_${item.version}`,
-    value: `${item.file_id}`,
-  }))
   const { mutate: mutateUpdateTemplatelwm2m } = useUpdateTemplate({
     isOnCreateTemplate: true,
   })
@@ -135,6 +131,16 @@ export default function CreateTemplateLwM2M() {
       setAccordionStates(filteredAccordionStates)
     }
   }, [XMLData, watch('rule_chain_id')])
+  const countTrueValuesForId = (checkboxStates: Record<string, boolean>, idToCount: string): number => {
+    const extractIdFromKey = (key: string): number | null => {
+      const idString = key.match(/\/(\d+)\/\d+\/\d+/)?.[1]
+      return idString ? parseInt(idString, 10) : null
+    }
+    const id = parseInt(idToCount, 10)
+    const trueValues = Object.entries(checkboxStates)
+      .filter(([key, value]) => extractIdFromKey(key) === id && value === true)
+    return trueValues.length
+  }
   const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
@@ -150,52 +156,39 @@ export default function CreateTemplateLwM2M() {
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
       }
-      console.log('totalItemCount', totalItemCount)
       const moduleId = module.id
-      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
+      setCheckboxStates((prevCheckboxStates) => {
+        const updatedCheckboxStates = { ...prevCheckboxStates }
+        updatedCheckboxStates[module.id.toString()] = true
+        const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
         if (moduleIndex === -1) {
           const currentTimestamp = Date.now()
+          const attributesCount = countTrueValuesForId(updatedCheckboxStates, module.id.toString())
           newStates[accordionIndex].push({
             id: module.id,
             module_name: module.module_name,
             attribute_info: [item], 
-            numberOfAttributes: 1,
+            numberOfAttributes: attributesCount,
             last_update_ts: currentTimestamp,
-            //allcheckbox: module.allcheckbox
           })
-
         } else {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1) {
+          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-            newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
-
           } else {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
-            newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
           }
-          const numberOfAttributes = newStates[accordionIndex][moduleIndex].numberOfAttributes
-          console.log('numberOfAttributes', numberOfAttributes)
-          if(numberOfAttributes === totalItemCount){
-            setSelectAllAttributes((prevStates) => {
-              const updatedSelectAllAttributes = { ...prevStates }
-              updatedSelectAllAttributes[moduleId] = !prevStates[moduleId]
-              return updatedSelectAllAttributes
-            })
-          } else {
-            setSelectAllAttributes((prevStates) => {
-              const updatedSelectAllAttributes = { ...prevStates }
-              updatedSelectAllAttributes[moduleId] = false
-              return updatedSelectAllAttributes
-            })
-          }
-        }  
+          const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
+          newStates[accordionIndex][moduleIndex].numberOfAttributes = attributesCount
+        }
+        return updatedCheckboxStates
+      })
+  
       return newStates
     })
   }
-  //console.log('selectAllAttributes', selectAllAttributes)
   const handleSelectAllAttributesChange = (accordionIndex: number,  lw2m2: LWM2MResponse) => {
     setSelectAllAttributes((prevStates) => {
       const objectId = lw2m2.LWM2M.Object.ObjectID
@@ -274,7 +267,7 @@ const data = {
   transport_config: transportConfig
 }
 //console.log('data', data)
-console.log('checkboxStates', checkboxStates)
+//console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplatelwm2m}
@@ -364,6 +357,7 @@ console.log('checkboxStates', checkboxStates)
                         </div>
                         <div className="ml-auto">
                           <Checkbox 
+                            customClassName='w-5 h-5'
                             className="mb-1 ml-5 flex h-5 w-5"
                             checked={selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]}
                             onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex,lw2m2, e)}
@@ -422,6 +416,7 @@ console.log('checkboxStates', checkboxStates)
                                         handleCheckboxChange(accordionIndex, moduleObject ,itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
                                         onChange(e)
                                         }}
+                                        customClassName='w-5 h-5'
                                       />
                                     )
                                   }}

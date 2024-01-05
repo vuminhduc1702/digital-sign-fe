@@ -87,20 +87,6 @@ export const FormDrawer = ({
         size={size}
         renderFooter={() => (
           <>
-<<<<<<< HEAD
-            <Button
-              className="rounded border-none"
-              variant="secondary"
-              size="lg"
-              onClick={() => {
-                resetData?.()
-                close()
-              }}
-              startIcon={
-                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
-              }
-            />
-=======
             <SheetTrigger>
               <Button
                 className="rounded border-none"
@@ -112,7 +98,6 @@ export const FormDrawer = ({
                 }
               />
             </SheetTrigger>
->>>>>>> 99332750fa8524ea7e81fb0aeebf32949138a7cd
             {submitButton}
           </>
         )}

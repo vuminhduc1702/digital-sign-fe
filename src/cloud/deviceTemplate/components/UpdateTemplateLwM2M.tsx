@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState, useCallback } from 'react'
+import * as z from 'zod'
 import { axios} from '~/lib/axios'
 import { useSpinDelay } from 'spin-delay'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -20,8 +21,7 @@ import {
 import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
 import { nameSchema } from '~/utils/schemaValidation'
-import { type UpdateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
-import { templateAttrSchema } from './CreateTemplate'
+import { type CreateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
 import { Checkbox } from '~/components/Checkbox'
 import storage from '~/utils/storage'
 import { useGetXMLdata } from '../api/getXMLdata'
@@ -57,6 +57,12 @@ type UpdateTemplateProps = {
   isOpen: boolean
 }
 
+export const templateAttrSchema = z.object({
+  name: nameSchema,
+  // rule_chain_id: z.string().optional(),
+  // attributes: z.array(attrSchema),
+})
+
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
   label: `${item.module_name} #${item.file_id}_${item.version}`,
   value: `${item.file_id}`,
@@ -69,7 +75,14 @@ export function UpdateTemplateLwM2M({
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm()
+  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm<
+  CreateTemplateDTO['data']
+  >({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+    defaultValues: {
+      name: '',
+    },
+  })
   function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
@@ -88,6 +101,12 @@ export function UpdateTemplateLwM2M({
   useEffect(() => {
     setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
+  // const { data: XMLData } = useGetXMLdata({
+  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
+  //   config: {
+  //     suspense: false,
+  //   },
+  // })
   const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
   const [XMLData, setXMLData] = useState<LWM2MResponse | null>(null)
@@ -121,7 +140,7 @@ export function UpdateTemplateLwM2M({
       setFilterLWM2M(Array.from(new Set(filterArr)))
       const filteredKeys = Object.keys(checkboxStates).filter(key => {
         const objectId = parseInt(key.split('/')[1], 10)
-        console.log('objectId1111', objectId)
+        //console.log('objectId1111', objectId)
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
@@ -147,6 +166,16 @@ export function UpdateTemplateLwM2M({
       setAccordionStates(filteredAccordionStates)
     }
   }, [XMLData, watch('rule_chain_id')])
+  const countTrueValuesForId = (checkboxStates: Record<string, boolean>, idToCount: string): number => {
+    const extractIdFromKey = (key: string): number | null => {
+      const idString = key.match(/\/(\d+)\/\d+\/\d+/)?.[1]
+      return idString ? parseInt(idString, 10) : null
+    }
+    const id = parseInt(idToCount, 10)
+    const trueValues = Object.entries(checkboxStates)
+      .filter(([key, value]) => extractIdFromKey(key) === id && value === true)
+    return trueValues.length
+  }
   const handleAccordionChange = (accordionIndex: number ) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
@@ -156,36 +185,42 @@ export function UpdateTemplateLwM2M({
       return newStates
     })
   }
-  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute) => {
+  const handleCheckboxChange = (accordionIndex: number, module: ModuleConfig , item: TransportConfigAttribute, totalItemCount: number) => {
     setAccordionStates((prevStates) => {
       const newStates = { ...prevStates }
       if (!newStates[accordionIndex]) {
         newStates[accordionIndex] = []
       }
       const moduleId = module.id
-      const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
-  
-      if (moduleIndex === -1) {
-        const currentTimestamp = Date.now();
-        newStates[accordionIndex].push({
-          id: module.id,
-          module_name: module.module_name,
-          attribute_info: [item], 
-          numberOfAttributes: 1,
-          last_update_ts: currentTimestamp,
-        })
-      } else {
-        const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
-          (attribute) => attribute.id === item.id
-        )
-        if (attributeIndex === -1) {
-          newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-          newStates[accordionIndex][moduleIndex].numberOfAttributes += 1
+      setCheckboxStates((prevCheckboxStates) => {
+        const updatedCheckboxStates = { ...prevCheckboxStates }
+        updatedCheckboxStates[module.id.toString()] = true
+        const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
+        if (moduleIndex === -1) {
+          const currentTimestamp = Date.now()
+          const attributesCount = countTrueValuesForId(updatedCheckboxStates, module.id.toString())
+          newStates[accordionIndex].push({
+            id: module.id,
+            module_name: module.module_name,
+            attribute_info: [item], 
+            numberOfAttributes: attributesCount,
+            last_update_ts: currentTimestamp,
+          })
         } else {
-          newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
-          newStates[accordionIndex][moduleIndex].numberOfAttributes -= 1
+          const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
+            (attribute) => attribute.id === item.id
+          )
+          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true) {
+            newStates[accordionIndex][moduleIndex].attribute_info.push(item)
+          } else {
+            newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
+          }
+          const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
+          newStates[accordionIndex][moduleIndex].numberOfAttributes = attributesCount
         }
-      }
+        return updatedCheckboxStates
+      })
+  
       return newStates
     })
   }
@@ -228,7 +263,7 @@ export function UpdateTemplateLwM2M({
               name: itemNames[`${moduleId}-${item['@ID']}`] || formatString(item.Name),
               type: item.Type,
             }
-            handleCheckboxChange(accordionIndex, moduleObject, itemObject)
+            handleCheckboxChange(accordionIndex, moduleObject, itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
           }
         })
       }
@@ -303,14 +338,14 @@ const data = {
         })
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
-          console.log('newCheckboxStates', newCheckboxStates)
+          //console.log('newCheckboxStates', newCheckboxStates)
           if (!newCheckboxStates[attribute.id]) {
             console.log('attribute.id', attribute.id)
             allAttributesSelected = false
           }
         })
         newSelectAllAttributes[moduleItem.id] = allAttributesSelected
-        console.log('newSelectAllAttributes', newSelectAllAttributes)
+        //console.log('newSelectAllAttributes', newSelectAllAttributes)
       })
       setAccordionStates(newAccordionStates)
       setCheckboxStates(newCheckboxStates)
@@ -338,7 +373,7 @@ const data = {
       title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
         <>
-          <Button
+          {/* <Button
             className="rounded border-none"
             variant="secondary"
             size="lg"
@@ -346,8 +381,8 @@ const data = {
             startIcon={
               <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
-          />
-          <Button
+          /> */}
+          {/* <Button
             className="rounded border-none"
             form="update-template"
             type="submit"
@@ -357,11 +392,11 @@ const data = {
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty}
-          />
+          /> */}
         </>
       )}
     >
-      {LwM2MLoading ? (
+      {/* {LwM2MLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
@@ -382,6 +417,7 @@ const data = {
             label={t('cloud:device_template.add_template.name')}
             value={name}
             onChange={handleNameChange}
+            error={formState.errors['name']}
             registration={register('name')}
           />
           <div className="space-y-1">
@@ -485,7 +521,7 @@ const data = {
                                         } else {
                                           setCheckboxStates((prev) => ({ ...prev, [itemId]: e.target.checked }));
                                         }
-                                        handleCheckboxChange(accordionIndex, moduleObject ,itemObject)
+                                        handleCheckboxChange(accordionIndex, moduleObject ,itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
                                         onChange(e)
                                         }}
                                       />
@@ -515,7 +551,8 @@ const data = {
           </div>
           </>
         </form>
-      )}
+      )} */}
+      <div>zzzzzz1</div>
     </Drawer>
   )
 }

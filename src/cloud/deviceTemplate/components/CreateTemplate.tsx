@@ -2,14 +2,16 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
-
+import { useRef } from 'react'
 import { Button } from '~/components/Button'
+import { type SelectInstance } from 'react-select'
 import {
   FieldWrapper,
   FormDrawer,
   SelectDropdown,
   InputField,
   SelectField,
+  type SelectOption,
 } from '~/components/Form'
 import {
   useCreateTemplate,
@@ -31,11 +33,17 @@ import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '~/cloud/customProtocol/components/CreateService'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
   attributes: z.array(attrSchema),
+  thing_id: z.string(),
+  handle_service: z.string(),
 })
 
 export default function CreateTemplate() {
@@ -51,6 +59,19 @@ export default function CreateTemplate() {
     { projectId },
   )
 
+  const { register, formState, watch, handleSubmit, getValues, control, reset } = useForm<
+    CreateTemplateDTO['data']
+  >({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+    defaultValues: {
+      name: '',
+      rule_chain_id: '',
+      attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
+      thing_id: '',
+      handle_service: '',
+    },
+  })
+
   const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
     'id',
     'name',
@@ -60,6 +81,32 @@ export default function CreateTemplate() {
     label: ruchains?.name,
     value: JSON.parse(ruchains?.id)?.id,
   }))
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+  //console.log('thingSelectData', thingSelectData)
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: getValues('thing_id'),
+      config: {
+        enabled: !!getValues('thing_id'),
+        suspense: false,
+      },
+    })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  console.log('serviceSelectData', serviceSelectData)
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
   const { mutate: mutateUpdateTemplate } = useUpdateTemplate({
     isOnCreateTemplate: true,
   })
@@ -70,21 +117,11 @@ export default function CreateTemplate() {
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
 
-  const { register, formState, watch, handleSubmit, control, reset } = useForm<
-    CreateTemplateDTO['data']
-  >({
-    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-    defaultValues: {
-      name: '',
-      rule_chain_id: '',
-      attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
-    },
-  })
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
     control,
   })
-  console.log('fields', fields)
+  //console.log('data', data)
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}
@@ -115,19 +152,27 @@ export default function CreateTemplate() {
         className="w-full space-y-5"
         id="create-template"
         onSubmit={handleSubmit(async values => {
+          console.log('values', values)
           const dataCreateTemplate = await mutateAsyncCreateTemplate({
             data: {
               project_id: projectId,
               rule_chain_id: values.rule_chain_id,
               name: values.name,
               attributes: values.attributes,
+              thing_id: values.thing_id,
+              handle_service: values.handle_service
             },
           })
+          console.log('dataCreateTemplate', dataCreateTemplate)
+          console.log('thing_id:', dataCreateTemplate.thing_id)
+          console.log('handle_service:', dataCreateTemplate.handle_service)
           mutateUpdateTemplate({
             data: {
               name: dataCreateTemplate.name,
               rule_chain_id: dataCreateTemplate.rule_chain_id,
               attributes: dataCreateTemplate.attributes,
+              thing_id: dataCreateTemplate.thing_id,
+              handle_service: dataCreateTemplate.handle_service,
             },
             templateId: dataCreateTemplate.id,
           })
@@ -170,7 +215,47 @@ export default function CreateTemplate() {
             placeholder={t('cloud:device_template.add_template.choose_flow_id')}
             error={formState?.errors?.rule_chain_id}
           />
-
+          <div className="w-[calc(100%-2.5rem)]">
+            <SelectDropdown
+              label={t('cloud:custom_protocol.thing.id')}
+                name="thing_id"
+                control={control}
+                options={thingSelectData}
+                isOptionDisabled={option =>
+                  option.label === t('loading:entity_thing') ||
+                  option.label === t('table:no_thing')
+                }
+                noOptionsMessage={() => t('table:no_thing')}
+                loadingMessage={() => t('loading:entity_thing')}
+                isLoading={AdapterIsLoading}
+                placeholder={t('cloud:custom_protocol.thing.choose')}
+                handleClearSelectDropdown={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+                handleChangeSelect={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+              error={formState?.errors?.thing_id}
+            />
+          </div>
+          <div className="w-[calc(100%-2.5rem)]">
+            <SelectDropdown
+              refSelect={selectDropdownServiceRef}
+              label={t('cloud:custom_protocol.service.title')}
+              name="handle_service"
+              control={control}
+              options={serviceSelectData}
+              isOptionDisabled={option =>
+                option.label === t('loading:service_thing') ||
+                option.label === t('table:no_service')
+              }
+              isLoading={watch('thing_id') != null ? isLoadingService : false}
+              loadingMessage={() => t('loading:service_thing')}
+              noOptionsMessage={() => t('table:no_service')}
+              placeholder={t('cloud:custom_protocol.service.choose')}
+              error={formState?.errors?.handle_service}
+            />
+          </div>
           {fields.map((field, index) => (
             <section
               key={field.id}
@@ -256,6 +341,14 @@ export default function CreateTemplate() {
           ))} 
         </>
       </form>
+      <CreateThing
+        thingType="thing"
+        classNameTriggerBtn="absolute right-0 top-[238px] mr-6"
+      />
+      <CreateService
+        thingId={watch('thing_id')}
+        classNameTriggerBtn="absolute right-0 top-[318px] mr-6"
+      />
     </FormDrawer>
   )
 }
