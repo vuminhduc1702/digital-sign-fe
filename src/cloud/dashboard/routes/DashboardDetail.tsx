@@ -9,7 +9,7 @@ import { Button } from '~/components/Button/Button'
 import { Drawer } from '~/components/Drawer'
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
-import { useNotificationStore } from '~/stores/notifications'
+import { toast } from 'sonner'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
@@ -75,7 +75,6 @@ export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeU
 
 export function DashboardDetail() {
   const { t } = useTranslation()
-  const { addNotification } = useNotificationStore()
 
   const params = useParams()
   const dashboardId = params.dashboardId as string
@@ -154,10 +153,7 @@ export function DashboardDetail() {
   useEffect(() => {
     if (lastJsonMessage != null) {
       if (lastJsonMessage?.errorCode !== 0) {
-        addNotification({
-          type: 'error',
-          title: lastJsonMessage.errorMsg,
-        })
+        toast.error(lastJsonMessage.errorMsg)
       }
     }
   }, [lastJsonMessage])
