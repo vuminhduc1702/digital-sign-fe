@@ -71,7 +71,7 @@ export function TemplateLwM2M() {
                   variant="muted"
                   onClick={() =>
                     navigate(
-                      `${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${template.id}`,
+                      `${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/lwm2m/${template.id}`,
                     )
                   }
                 >

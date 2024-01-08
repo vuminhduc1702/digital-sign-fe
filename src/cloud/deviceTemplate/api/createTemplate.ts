@@ -17,7 +17,7 @@ export type CreateTemplateDTO = {
     transport_config: TransportConfig
     attributes: AttrList
     thing_id: string
-    handle_service: string
+    handle_msg_svc: string
   }
 }
 export const createTemplate = ({

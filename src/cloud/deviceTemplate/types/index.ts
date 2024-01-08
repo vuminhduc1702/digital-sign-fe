@@ -41,6 +41,7 @@ export type TemplateLwM2M = {
 }
 
 export type Template = {
+  handle_service: any
   id: string
   name: string
   rule_chain_id: string
@@ -50,7 +51,7 @@ export type Template = {
   transport_config: TransportConfig
   attributes: AttrList
   thing_id: string
-  handle_service: string
+  handle_message_svc: string
 }
 export type TemplateLwM2MList = {
   templates: TemplateLwM2M[]

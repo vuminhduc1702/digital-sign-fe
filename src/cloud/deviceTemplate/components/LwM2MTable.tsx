@@ -120,7 +120,6 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
   const projectId = storage.getProject()?.id
   const params = useParams()
   const templateId = params.templateId as string
-  console.log('module_config', module_config)
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
     () => [
@@ -140,9 +139,9 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
           const nameLwM2M = info.row.original.module_name
           const id = info.row.original.id
           return (
-            <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/${id}`}>
+            <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/lwm2m/${templateId}/${id}`}>
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400"
-                  onClick={() => console.log(`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/${id}`)}>
+                  onClick={() => console.log(`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/lwm2m/${id}`)}>
                 {nameLwM2M}
               </p>
             </Link>

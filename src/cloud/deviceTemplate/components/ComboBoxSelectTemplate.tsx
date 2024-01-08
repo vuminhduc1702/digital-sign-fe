@@ -18,7 +18,7 @@ export function ComboBoxSelectTemplate({
   const [query, setQuery] = useState('')
 
   const projectId = storage.getProject()?.id
-  const { data } = useGetTemplates({ projectId })
+  const { data } = useGetTemplates({ projectId, protocol: 'default' })
 
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
     data?.templates,

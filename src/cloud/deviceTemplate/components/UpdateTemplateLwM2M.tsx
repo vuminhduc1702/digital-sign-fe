@@ -97,7 +97,6 @@ export function UpdateTemplateLwM2M({
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState<ItemNames>({})
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
-
   useEffect(() => {
     setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
@@ -194,29 +193,45 @@ export function UpdateTemplateLwM2M({
       const moduleId = module.id
       setCheckboxStates((prevCheckboxStates) => {
         const updatedCheckboxStates = { ...prevCheckboxStates }
-        updatedCheckboxStates[module.id.toString()] = true
         const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
         if (moduleIndex === -1) {
           const currentTimestamp = Date.now()
           const attributesCount = countTrueValuesForId(updatedCheckboxStates, module.id.toString())
+          const allCheckbox = attributesCount === totalItemCount
           newStates[accordionIndex].push({
             id: module.id,
             module_name: module.module_name,
             attribute_info: [item], 
             numberOfAttributes: attributesCount,
             last_update_ts: currentTimestamp,
+            allcheckbox: allCheckbox
           })
         } else {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true) {
+          if (attributeIndex === -1) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
           } else {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
           newStates[accordionIndex][moduleIndex].numberOfAttributes = attributesCount
+          if(attributesCount === totalItemCount){
+            newStates[accordionIndex][moduleIndex].allcheckbox = true
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = true
+              return updatedSelectAllAttributes
+            })
+          } else {
+            newStates[accordionIndex][moduleIndex].allcheckbox = false
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = false
+              return updatedSelectAllAttributes
+            })
+          }
         }
         return updatedCheckboxStates
       })
@@ -306,6 +321,7 @@ const data = {
     templateId: selectedUpdateTemplate?.id,
     config: { suspense: false },
   })
+  console.log('LwM2MData', LwM2MData)
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
   useEffect(() => {
@@ -325,7 +341,6 @@ const data = {
       const newCheckboxStates: CheckboxStates = {}
       const newSelectAllAttributes: CheckboxStates = {}
       module_config.forEach((moduleItem, accordionIndex) => {
-        let allAttributesSelected  = true
         if (!newAccordionStates[accordionIndex]) {
           newAccordionStates[accordionIndex] = []
         }
@@ -335,17 +350,13 @@ const data = {
           attribute_info: moduleItem.attribute_info,
           numberOfAttributes: moduleItem.numberOfAttributes,
           last_update_ts: moduleItem.last_update_ts,
+          allcheckbox: moduleItem.allcheckbox
         })
+        console.log('allcheckbox', moduleItem.allcheckbox )
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
-          //console.log('newCheckboxStates', newCheckboxStates)
-          if (!newCheckboxStates[attribute.id]) {
-            console.log('attribute.id', attribute.id)
-            allAttributesSelected = false
-          }
         })
-        newSelectAllAttributes[moduleItem.id] = allAttributesSelected
-        //console.log('newSelectAllAttributes', newSelectAllAttributes)
+        newSelectAllAttributes[moduleItem.id] = moduleItem.allcheckbox
       })
       setAccordionStates(newAccordionStates)
       setCheckboxStates(newCheckboxStates)
@@ -373,7 +384,7 @@ const data = {
       title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
         <>
-          {/* <Button
+          <Button
             className="rounded border-none"
             variant="secondary"
             size="lg"
@@ -381,8 +392,8 @@ const data = {
             startIcon={
               <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
-          /> */}
-          {/* <Button
+          />
+          <Button
             className="rounded border-none"
             form="update-template"
             type="submit"
@@ -392,11 +403,11 @@ const data = {
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty}
-          /> */}
+          />
         </>
       )}
     >
-      {/* {LwM2MLoading ? (
+      {LwM2MLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
@@ -468,6 +479,7 @@ const data = {
                         </div>
                         <div className="ml-auto">
                           <Checkbox 
+                            customClassName='w-5 h-5'
                             className="mb-1 ml-5 flex h-5 w-5"
                             checked={selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]}
                             onCheckedChange={(e) => handleSelectAllAttributesChange(accordionIndex, lw2m2, e)}
@@ -524,6 +536,7 @@ const data = {
                                         handleCheckboxChange(accordionIndex, moduleObject ,itemObject, lw2m2.LWM2M.Object.Resources.Item.filter(item => item.Operations === 'RW' || item.Operations === 'R').length)
                                         onChange(e)
                                         }}
+                                        customClassName='w-5 h-5'
                                       />
                                     )
                                   }}
@@ -551,8 +564,7 @@ const data = {
           </div>
           </>
         </form>
-      )} */}
-      <div>zzzzzz1</div>
+      )}
     </Drawer>
   )
 }

@@ -83,7 +83,6 @@ export default function CreateTemplateLwM2M() {
   const [checkboxStates, setCheckboxStates] = useState<CheckboxStates>({})
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState<ItemNames>({})
-
   const { data: XMLData } = useGetXMLdata({
     fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
     config: {
@@ -159,36 +158,53 @@ export default function CreateTemplateLwM2M() {
       const moduleId = module.id
       setCheckboxStates((prevCheckboxStates) => {
         const updatedCheckboxStates = { ...prevCheckboxStates }
-        updatedCheckboxStates[module.id.toString()] = true
         const moduleIndex = newStates[accordionIndex].findIndex((obj) => obj.id === moduleId)
         if (moduleIndex === -1) {
           const currentTimestamp = Date.now()
           const attributesCount = countTrueValuesForId(updatedCheckboxStates, module.id.toString())
+          const allCheckbox = attributesCount === totalItemCount
           newStates[accordionIndex].push({
             id: module.id,
             module_name: module.module_name,
             attribute_info: [item], 
             numberOfAttributes: attributesCount,
             last_update_ts: currentTimestamp,
+            allcheckbox: allCheckbox
           })
         } else {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true) {
+          if (attributeIndex === -1) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
           } else {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
           newStates[accordionIndex][moduleIndex].numberOfAttributes = attributesCount
+          //console.log('attributesCount', attributesCount)
+          if(attributesCount === totalItemCount){
+            newStates[accordionIndex][moduleIndex].allcheckbox = true
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = true
+              return updatedSelectAllAttributes
+            })
+          } else {
+            newStates[accordionIndex][moduleIndex].allcheckbox = false
+            setSelectAllAttributes((prevStates) => {
+              const updatedSelectAllAttributes = { ...prevStates }
+              updatedSelectAllAttributes[moduleId] = false
+              return updatedSelectAllAttributes
+          })
+        }
         }
         return updatedCheckboxStates
       })
-  
       return newStates
     })
   }
+  //console.log('selectAllAttributes', selectAllAttributes)
   const handleSelectAllAttributesChange = (accordionIndex: number,  lw2m2: LWM2MResponse) => {
     setSelectAllAttributes((prevStates) => {
       const objectId = lw2m2.LWM2M.Object.ObjectID
@@ -218,7 +234,7 @@ export default function CreateTemplateLwM2M() {
             const moduleId = lw2m2.LWM2M.Object.ObjectID
             const moduleObject = {
               id: moduleId,
-              module_name: lw2m2.LWM2M.Object.Name,
+              module_name: lw2m2.LWM2M.Object.Name,   
             }
             const itemId = `/${moduleId}/0/${item['@ID']}`;
             const itemObject = {
@@ -234,6 +250,7 @@ export default function CreateTemplateLwM2M() {
       }
     })
   }
+  //console.log('checkboxStates', checkboxStates)
   useEffect(() => {
     const accordionArray = Object.values(accordionStates).flat()
     const newConfigData: { [key: string]: string } = {}
@@ -266,7 +283,7 @@ const data = {
   project_id: projectId,
   transport_config: transportConfig
 }
-//console.log('data', data)
+console.log('data', data)
 //console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer
@@ -398,9 +415,9 @@ const data = {
                                         const moduleObject ={
                                           id: lw2m2.LWM2M.Object.ObjectID,
                                           module_name: lw2m2.LWM2M.Object.Name,
-                                          allcheckbox: selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
+                                          //allcheckbox: !selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                                         }
-                                        console.log('selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]', selectAllAttributes[lw2m2.LWM2M.Object.ObjectID])
+                                        //console.log('allcheckbox', !selectAllAttributes[lw2m2.LWM2M.Object.ObjectID])
                                         const itemObject = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,

@@ -1,2 +1,2 @@
-//export * from './DeviceTemplateManage'
+export * from './DeviceTemplateManage'
 export * from './DeviceTemplatelwm2mManage'

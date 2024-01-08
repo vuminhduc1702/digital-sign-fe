@@ -43,7 +43,7 @@ export const templateAttrSchema = z.object({
   rule_chain_id: z.string().optional(),
   attributes: z.array(attrSchema),
   thing_id: z.string(),
-  handle_service: z.string(),
+  handle_msg_svc: z.string(),
 })
 
 export default function CreateTemplate() {
@@ -68,7 +68,7 @@ export default function CreateTemplate() {
       rule_chain_id: '',
       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
       thing_id: '',
-      handle_service: '',
+      handle_msg_svc: '',
     },
   })
 
@@ -103,7 +103,6 @@ export default function CreateTemplate() {
     value: service.name,
     label: service.name,
   }))
-  console.log('serviceSelectData', serviceSelectData)
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
@@ -153,6 +152,7 @@ export default function CreateTemplate() {
         id="create-template"
         onSubmit={handleSubmit(async values => {
           console.log('values', values)
+          console.log('values123', values.handle_msg_svc)
           const dataCreateTemplate = await mutateAsyncCreateTemplate({
             data: {
               project_id: projectId,
@@ -160,19 +160,20 @@ export default function CreateTemplate() {
               name: values.name,
               attributes: values.attributes,
               thing_id: values.thing_id,
-              handle_service: values.handle_service
+              handle_msg_svc: values.handle_msg_svc
             },
           })
           console.log('dataCreateTemplate', dataCreateTemplate)
           console.log('thing_id:', dataCreateTemplate.thing_id)
-          console.log('handle_service:', dataCreateTemplate.handle_service)
+          const handleServiceFromData = dataCreateTemplate.handle_message_svc
+          console.log('handle_msg_svc từ dataCreateTemplate:', handleServiceFromData)
           mutateUpdateTemplate({
             data: {
               name: dataCreateTemplate.name,
               rule_chain_id: dataCreateTemplate.rule_chain_id,
               attributes: dataCreateTemplate.attributes,
               thing_id: dataCreateTemplate.thing_id,
-              handle_service: dataCreateTemplate.handle_service,
+              handle_msg_svc: dataCreateTemplate.handle_message_svc,
             },
             templateId: dataCreateTemplate.id,
           })
@@ -242,7 +243,7 @@ export default function CreateTemplate() {
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
               label={t('cloud:custom_protocol.service.title')}
-              name="handle_service"
+              name="handle_msg_svc"
               control={control}
               options={serviceSelectData}
               isOptionDisabled={option =>
@@ -253,7 +254,7 @@ export default function CreateTemplate() {
               loadingMessage={() => t('loading:service_thing')}
               noOptionsMessage={() => t('table:no_service')}
               placeholder={t('cloud:custom_protocol.service.choose')}
-              error={formState?.errors?.handle_service}
+              error={formState?.errors?.handle_msg_svc}
             />
           </div>
           {fields.map((field, index) => (
