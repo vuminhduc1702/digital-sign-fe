@@ -21,6 +21,7 @@ import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 import * as d3 from 'd3'
+import { transform } from 'framer-motion'
 
 export function LineChart({
   data,
@@ -33,6 +34,8 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
+  const TICK_COUNT = 7
+  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -224,15 +227,13 @@ export function LineChart({
     }, 1000)
   }
 
-  const TICK_COUNT = 7
-  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
 
   function timeFormatter(tick: any | null) {
-    if (TICK_INTERVAL <= 60000 * 60) {
+    if (TICK_INTERVAL <= 1000 * 60 * 60) {
       return d3.timeFormat('%H:%M:%S')(new Date(tick))
     } else if (
       60000 * 60 <= TICK_INTERVAL &&
-      TICK_INTERVAL <= 60000 * 60 * 24
+      TICK_INTERVAL <= 1000 * 60 * 60 * 24
     ) {
       return d3.timeFormat('%H:%M %d')(new Date(tick))
     } else {
@@ -240,12 +241,16 @@ export function LineChart({
     }
   }
 
-  const start = new Date().getTime()
-  const end = new Date(start - TICK_COUNT * TICK_INTERVAL).getTime()
-  const [ticks, setTicks] = useState(d3.range(start, end, TICK_INTERVAL))
-  const [realtimeData, setRealtimeData] = useState([
+  const initStart = new Date().getTime() - TICK_COUNT * TICK_INTERVAL
+  const initEnd = new Date().getTime()
+  const [ticks, setTicks] = useState(
+    d3.range(initStart, initEnd, TICK_INTERVAL),
+  )
+  const [realtimeData, setRealtimeData] = useState<
+    Array<{ ts: number; [key: string]: string | number }>
+  >([
     {
-      ts: '',
+      ts: 0,
     },
   ])
 
@@ -257,34 +262,30 @@ export function LineChart({
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [realtimeData, newValuesRef])
 
   function updateScale() {
     const now = new Date()
-    const newStart = new Date(
-      now.getTime() - TICK_COUNT * TICK_INTERVAL,
-    ).getTime()
-    const newEnd = new Date(now.getTime()).getTime()
+    const start = now.getTime() - TICK_COUNT * TICK_INTERVAL
+    const end = now.getTime()
+    const divineTick = d3.range(start, end, TICK_INTERVAL)
 
     for (let widget in newValuesRef.current) {
-      const newValues = newValuesRef.current[widget].filter(
-        (item: any) => item.ts >= newStart && item.ts <= newEnd,
-      )
-      console.log(newValuesRef.current[widget])
-      console.log('start', newStart)
-      console.log('end', newEnd)
-      console.log(newValues)
-      console.log(TICK_INTERVAL)
-      const newValuesToChart = newValues.map((item: any) => {
-        return {
-          ...item,
-          ts: dateTransformation(item.ts),
+      const transformedNewValues: Array<{
+        ts: number
+        [key: string]: string | number
+      }> = []
+      newValuesRef.current[widget].map(item => {
+        if (item.ts > start && item.ts < ticks[ticks.length - 1]) {
+          const returnValue = {
+            ts: item.ts,
+            [widget]: parseFloat(item.value),
+          }
+          transformedNewValues.push(returnValue)
         }
       })
-      setRealtimeData(newValuesToChart)
+      setRealtimeData(transformedNewValues)
     }
-
-    const divineTick = d3.range(newStart, newEnd, TICK_INTERVAL)
     setTicks(divineTick)
   }
 
@@ -343,21 +344,26 @@ export function LineChart({
       ) : !showSpinner && newValuesRef.current != null ? (
         <>
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <LineWidget data={dataTransformedFeedToChart}>
+            <LineWidget data={realtimeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
                 allowDuplicatedCategory={false}
-                // scale="time"
-                // type="number"
-                // domain={[ticks[0], ticks[ticks.length - 1]]}
-                // ticks={ticks}
-                // tickFormatter={timeFormatter}
+                scale="time"
+                type="number"
+                domain={[ticks[0], ticks[ticks.length - 1]]}
+                ticks={ticks}
+                tickFormatter={timeFormatter}
               />
               <YAxis />
               <Tooltip />
               <Legend content={renderLegend} />
-              <Brush dataKey="ts" height={30} stroke="#8884d8" />
+              <Brush
+                dataKey="ts"
+                height={30}
+                stroke="#8884d8"
+                tickFormatter={timeFormatter}
+              />
               {Object.keys(newValuesRef.current).map((key, index) => {
                 const colorConfig = widgetInfo.attribute_config.filter(
                   obj => obj.attribute_key === key,
@@ -378,6 +384,7 @@ export function LineChart({
                     }
                     activeDot={{ r: 5 }}
                     dot={false}
+                    
                   />
                 )
               })}
@@ -387,7 +394,7 @@ export function LineChart({
       ) : (
         <>
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <LineWidget data={dataTransformedFeedToChart}>
+            <LineWidget>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
@@ -404,30 +411,6 @@ export function LineChart({
               <Tooltip />
               <Legend content={renderLegend} />
               <Brush dataKey="ts" height={30} stroke="#8884d8" />
-              {/* {Object.keys(newValuesRef.current).map((key, index) => {
-                const colorConfig = widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )
-                return (
-                  null
-                  // <Line
-                    // key={index.toString()}
-                    // connectNulls
-                    // type="monotone"
-                    // dataKey={key}
-                    // animationDuration={250}
-                    // stroke={
-                    //   key.includes('SMA') || key.includes('FFT')
-                    //     ? '#2c2c2c'
-                    //     : colorConfig && colorConfig[0].color !== ''
-                    //     ? colorConfig[0].color
-                    //     : '#e8c1a0'
-                    // }
-                    // activeDot={{ r: 5 }}
-                    // dot={false}
-                  // />
-                )
-              })} */}
             </LineWidget>
           </ResponsiveContainer>
         </>
