@@ -28,6 +28,7 @@ import {
   CreateControllerButton,
   CreateWidget,
   UpdateControllerButton,
+  UpdateWidget,
   type Widget,
   type WidgetCategoryType,
 } from '../components/Widget'
@@ -59,7 +60,6 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
-import UpdateWidget from '../components/Widget/UpdateWidget'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -243,7 +243,7 @@ export function DashboardDetail() {
   }
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
-  // console.log('render in dashboard detail')
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -328,6 +328,7 @@ export function DashboardDetail() {
                   widgetInfo.attribute_config.length > 0
                     ? widgetInfo.attribute_config
                     : {}
+                // console.log(widgetInfo.attribute_config)
 
                 return (
                   <div
