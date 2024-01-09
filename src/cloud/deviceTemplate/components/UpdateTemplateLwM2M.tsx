@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
+import { type SelectInstance } from 'react-select'
 import * as z from 'zod'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -18,7 +19,8 @@ import { Checkbox } from '~/components/Checkbox'
 import { Drawer } from '~/components/Drawer'
 import {
   InputField,
-  SelectDropdown
+  SelectDropdown,
+  type SelectOption
 } from '~/components/Form'
 import { Spinner } from '~/components/Spinner'
 import { axios } from '~/lib/axios'
@@ -28,6 +30,11 @@ import { useUpdateTemplate, type CreateTemplateDTO } from '../api'
 import { useTemplateById } from '../api/getTemplateById'
 import { type LWM2MResponse, type ModuleConfig, type Template, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
+
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '~/cloud/customProtocol/components/CreateService'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -47,9 +54,10 @@ type UpdateTemplateProps = {
 export const templateAttrSchema = z.object({
   name: nameSchema,
   // rule_chain_id: z.string().optional(),
+  thing_id: z.string(),
+  handle_msg_svc: z.string(),
   // attributes: z.array(attrSchema),
 })
-
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
   label: `${item.module_name} #${item.file_id}_${item.version}`,
   value: `${item.file_id}`,
@@ -60,16 +68,47 @@ export function UpdateTemplateLwM2M({
   close,
   isOpen,
 }: UpdateTemplateProps) {
+  console.log('selectedUpdateTemplate', selectedUpdateTemplate)
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-  const { register, formState, handleSubmit, control, watch, reset, setValue } = useForm<
+  const { register, formState, handleSubmit, control, watch, reset, setValue, getValues } = useForm<
   CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
     defaultValues: {
       name: '',
+      thing_id: '',
+      handle_msg_svc: '',
     },
   })
+
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+  //console.log('thingSelectData', thingSelectData)
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: getValues('thing_id') || selectedUpdateTemplate.thing_id,
+      config: {
+        enabled: !!getValues('thing_id'),
+        suspense: false,
+      },
+    })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  console.log('serviceSelectData', serviceSelectData )
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
+
   function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
@@ -290,6 +329,9 @@ const resetAllStates = () => {
 const handleClearSelectDropdown = () => {
   resetAllStates()
 }
+const selectedThing = watch('thing_id')
+const selectedService = watch('handle_msg_svc')
+
 const transportConfig = {
   protocol: 'lwm2m',
   config: configData,
@@ -300,7 +342,9 @@ const transportConfig = {
 const data = {
   name: name,
   project_id: projectId,
-  transport_config: transportConfig
+  transport_config: transportConfig,
+  thing_id: selectedThing,
+  handle_msg_svc: selectedService
 }
   
   const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
@@ -416,20 +460,71 @@ const data = {
             error={formState.errors['name']}
             registration={register('name')}
           />
+        {!AdapterIsLoading ? (
+              <div className="w-[calc(100%-2.5rem)]">
+                <SelectDropdown
+                  label={t('cloud:custom_protocol.thing.id')}
+                  name="thing_id"
+                  control={control}
+                  options={thingSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:entity_thing') ||
+                    option.label === t('table:no_thing')
+                  }
+                  noOptionsMessage={() => t('table:no_thing')}
+                  loadingMessage={() => t('loading:entity_thing')}
+                  isLoading={AdapterIsLoading}
+                  placeholder={t('cloud:custom_protocol.thing.choose')}
+                  defaultValue={thingSelectData?.find(
+                    thing => thing.value === selectedUpdateTemplate.thing_id,
+                  )}
+                  handleClearSelectDropdown={() =>
+                    selectDropdownServiceRef.current?.clearValue()
+                  }
+                  handleChangeSelect={() =>
+                    selectDropdownServiceRef.current?.clearValue()
+                  }
+                  error={formState?.errors?.thing_id}
+                />
+              </div>
+          ) : null}
+          {console.log('handle_message_svc:', selectedUpdateTemplate.handle_message_svc)}
+          {!isLoadingService ? (
+              <div className="w-[calc(100%-2.5rem)]">
+                <SelectDropdown
+                  refSelect={selectDropdownServiceRef}
+                  label={t('cloud:custom_protocol.service.title')}
+                  name="handle_msg_svc"
+                  control={control}
+                  options={serviceSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:service_thing') ||
+                    option.label === t('table:no_service')
+                  }
+                  isLoading={isLoadingService}
+                  noOptionsMessage={() => t('table:no_service')}
+                  placeholder={t('cloud:custom_protocol.service.choose')}
+                  defaultValue={serviceSelectData && serviceSelectData?.find(
+                    service => service.value === selectedUpdateTemplate.handle_message_svc,
+                  )}
+                  error={formState?.errors?.handle_msg_svc}
+                />
+              </div>
+          ) : null}
           <div className="space-y-1">
             <SelectDropdown
               isClearable
-              label={t('cloud:device_template.add_template.flow')}
+              label={t('cloud:device_template.add_template.lwm2m')}
               name="rule_chain_id"
               control={control}
               options={LwM2MSelectOptions}
               isMulti
               closeMenuOnSelect={false}
-              isOptionDisabled={option => option.label === t('loading:flow_id')}
-              noOptionsMessage={() => t('table:no_in_flow_id')}
+              isOptionDisabled={option => option.label === t('loading:lwm2m_model')}
+              noOptionsMessage={() => t('table:no_in_lwm2m_model')}
               handleClearSelectDropdown={handleClearSelectDropdown}
               placeholder={t(
-                'cloud:device_template.add_template.choose_flow_id',
+                'cloud:device_template.add_template.choose_lwm2m_model',
               )}
               defaultValue={LwM2MSelectOptions.filter(
                 (item) => idArray.includes(item.value),
@@ -550,6 +645,14 @@ const data = {
           </>
         </form>
       )}
+      <CreateThing
+        thingType="thing"
+        classNameTriggerBtn="absolute right-0 top-[102px] mr-6"
+      />
+      <CreateService
+        thingId={watch('thing_id')}
+        classNameTriggerBtn="absolute right-0 top-[186px] mr-6"
+      />
     </Drawer>
   )
 }

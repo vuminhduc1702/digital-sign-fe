@@ -178,11 +178,11 @@ export function UpdateTemplate({
         </>
       )}
     >
-      {/* {attrLoading ? (
+      {attrLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
-      ) : ( */}
+      ) : (
         <form
           className="w-full space-y-5"
           id="update-template"
@@ -365,7 +365,7 @@ export function UpdateTemplate({
             ))}
           </>
         </form>
-      {/* )} */}
+      )}
       <CreateThing
         thingType="thing"
         classNameTriggerBtn="absolute right-0 top-[183px] mr-6"

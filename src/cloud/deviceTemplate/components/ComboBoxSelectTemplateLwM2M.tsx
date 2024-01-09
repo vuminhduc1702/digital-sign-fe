@@ -29,6 +29,8 @@ export function ComboBoxSelectTemplateLwM2M({
       'provision_secret',
       'created_time',
       'transport_config',
+      'thing_id',
+      'handle_message_svc'
     ],
   )
   const filteredData = filteredComboboxData(

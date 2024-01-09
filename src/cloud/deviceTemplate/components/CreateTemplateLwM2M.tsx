@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { type SelectInstance } from 'react-select'
 import * as z from 'zod'
 import {
   Accordion,
@@ -14,7 +15,8 @@ import { Checkbox } from '~/components/Checkbox'
 import {
   FormDrawer,
   InputField,
-  SelectDropdown
+  SelectDropdown,
+  type SelectOption,
 } from '~/components/Form'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
@@ -26,6 +28,11 @@ import { LWM2MData } from '../types/lwm2mXML'
 import { ChevronDown } from 'lucide-react'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '~/cloud/customProtocol/components/CreateService'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -40,6 +47,8 @@ type ItemNames = {
 export const templateAttrSchema = z.object({
   name: nameSchema,
   // rule_chain_id: z.string().optional(),
+  thing_id: z.string(),
+  handle_msg_svc: z.string(),
   // attributes: z.array(attrSchema),
 })
 
@@ -57,14 +66,43 @@ export default function CreateTemplateLwM2M() {
     isLoading: isLoadingCreateTemplatelwm2m,
     isSuccess: isSuccessCreateTemplatelwm2m,
   } = useCreateTemplate()
-  const { register, formState, handleSubmit, control, watch, reset } = useForm<
+  const { register, formState, handleSubmit, control, watch, reset, getValues } = useForm<
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
     defaultValues: {
       name: '',
+      thing_id: '',
+      handle_msg_svc: '',
     },
   })
+
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+  //console.log('thingSelectData', thingSelectData)
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId: getValues('thing_id'),
+      config: {
+        enabled: !!getValues('thing_id'),
+        suspense: false,
+      },
+    })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
+
   function formatString(str: string) {
     const lowercasedStr = str.toLowerCase();
     const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
@@ -264,6 +302,9 @@ const resetAllStates = () => {
 const handleClearSelectDropdown = () => {
   resetAllStates()
 }
+const selectedThing = watch('thing_id')
+const selectedService = watch('handle_msg_svc')
+
 const transportConfig = {
   protocol: 'lwm2m',
   config: configData,
@@ -274,7 +315,9 @@ const transportConfig = {
 const data = {
   name: name,
   project_id: projectId,
-  transport_config: transportConfig
+  transport_config: transportConfig,
+  thing_id: selectedThing,
+  handle_msg_svc: selectedService
 }
 //console.log('data', data)
 //console.log('checkboxStates', checkboxStates)
@@ -315,13 +358,56 @@ const data = {
         })}
       >
         <>
-        <InputField
-          label={t('cloud:device_template.add_template.name')}
-          value={name}
-          onChange={handleNameChange}
-          error={formState.errors['name']}
-          registration={register('name')}
-        />
+          <InputField
+            label={t('cloud:device_template.add_template.name')}
+            value={name}
+            onChange={handleNameChange}
+            error={formState.errors['name']}
+            registration={register('name')}
+          />
+
+          <div className="w-[calc(100%-2.5rem)]">
+            <SelectDropdown
+              label={t('cloud:custom_protocol.thing.id')}
+                name="thing_id"
+                control={control}
+                options={thingSelectData}
+                isOptionDisabled={option =>
+                  option.label === t('loading:entity_thing') ||
+                  option.label === t('table:no_thing')
+                }
+                noOptionsMessage={() => t('table:no_thing')}
+                loadingMessage={() => t('loading:entity_thing')}
+                isLoading={AdapterIsLoading}
+                placeholder={t('cloud:custom_protocol.thing.choose')}
+                handleClearSelectDropdown={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+                handleChangeSelect={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+              error={formState?.errors?.thing_id}
+            />
+          </div>
+          <div className="w-[calc(100%-2.5rem)]">
+            <SelectDropdown
+              refSelect={selectDropdownServiceRef}
+              label={t('cloud:custom_protocol.service.title')}
+              name="handle_msg_svc"
+              control={control}
+              options={serviceSelectData}
+              isOptionDisabled={option =>
+                option.label === t('loading:service_thing') ||
+                option.label === t('table:no_service')
+              }
+              isLoading={watch('thing_id') != null ? isLoadingService : false}
+              loadingMessage={() => t('loading:service_thing')}
+              noOptionsMessage={() => t('table:no_service')}
+              placeholder={t('cloud:custom_protocol.service.choose')}
+              error={formState?.errors?.handle_msg_svc}
+            />
+          </div>
+
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -454,6 +540,14 @@ const data = {
           </div>
         </>
       </form>
+      <CreateThing
+        thingType="thing"
+        classNameTriggerBtn="absolute right-0 top-[102px] mr-6"
+      />
+      <CreateService
+        thingId={watch('thing_id')}
+        classNameTriggerBtn="absolute right-0 top-[186px] mr-6"
+      />
     </FormDrawer>
   )
 }
