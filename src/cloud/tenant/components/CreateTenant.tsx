@@ -1,34 +1,34 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { Button } from '~/components/Button'
-import Calendar from 'react-calendar'
-import 'react-calendar/dist/Calendar.css'
+import { Calendar } from '~/components/Calendar'
 import { InputField, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { PlusIcon } from '~/components/SVGIcons'
 import i18n from '~/i18n'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
+import { cn } from '~/utils/misc'
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
+
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import 'react-day-picker/dist/style.css'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   useCreateCustomer,
   type CreateEntityCustomerDTO,
 } from '../api/createTenantApi'
-import { Calendar as CalendarIcon } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { cn } from '~/utils/misc'
-import { format } from 'date-fns'
-
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const entityCustomerSchema = z
   .object({
@@ -57,8 +57,8 @@ export const entityCustomerSchema = z
 
 export function CreateCustomer() {
   const { t } = useTranslation()
-  const [dateValue, setDateValue] = useState(new Date())
-  const { register, formState, handleSubmit, reset } = useForm<
+
+  const { register, formState, handleSubmit } = useForm<
     CreateEntityCustomerDTO['data']
   >({
     resolver: entityCustomerSchema && zodResolver(entityCustomerSchema),
@@ -74,6 +74,7 @@ export function CreateCustomer() {
 
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
+  const [date, setDate] = useState<Date | null>(new Date())
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
@@ -115,7 +116,7 @@ export function CreateCustomer() {
                 name: values.name,
                 phone: values.phone,
                 profile: {
-                  dob: dateValue,
+                  dob: date,
                   gender: values.gender,
                   province: values.province,
                   district: values.district,
@@ -132,7 +133,8 @@ export function CreateCustomer() {
             </div>
             <div className="mb-3 grid grid-cols-4 gap-4">
               <div className="text-end">
-                Tenant <span className="text-red-600">*</span>
+                Tenant
+                <span className="text-red-600">*</span>
               </div>
               <InputField
                 autoComplete="off"
@@ -148,31 +150,37 @@ export function CreateCustomer() {
                     variant="trans"
                     className={cn(
                       'relative h-[37px] w-full justify-start rounded-md text-left font-normal ',
-                      !dateValue && 'text-muted-foreground',
+                      !date && 'text-muted-foreground',
                     )}
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateValue ? (
-                      dateValue ? (
-                        <>{format(dateValue, 'dd/MM/y')}</>
+                    {date ? (
+                      date ? (
+                        <>{format(date, 'dd/MM/y')}</>
                       ) : (
-                        format(dateValue, 'dd MM, y')
+                        format(date, 'dd MM, y')
                       )
                     ) : (
                       <span className="text-sm">
                         {t('cloud:dashboard.config_chart.pick_date')}
                       </span>
                     )}
-                    {dateValue && (
+                    {date && (
                       <XMarkIcon
-                        onClick={() => setDateValue(null)}
+                        onClick={() => setDate(null)}
                         className="absolute right-3 top-2.5 h-4 w-4 "
                       />
                     )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar onChange={setDateValue} />
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    fromYear={1950}
+                    toYear={new Date().getFullYear()}
+                  />
                 </PopoverContent>
               </Popover>
               <div className="text-end">{t('form:sex')}</div>
@@ -272,7 +280,6 @@ export function CreateCustomer() {
           </>
         </form>
       }
-      resetData={() => reset()}
       triggerButton={
         <Button
           className="rounded-md"
