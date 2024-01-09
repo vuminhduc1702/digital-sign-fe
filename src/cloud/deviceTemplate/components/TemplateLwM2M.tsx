@@ -11,14 +11,12 @@ import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'
 import { useDeleteTemplate } from '../api'
-//import { UpdateTemplate } from './UpdateTemplate'
 import { ComboBoxSelectTemplateLwM2M } from './ComboBoxSelectTemplateLwM2M'
 import storage from '~/utils/storage'
 
 import { type Template } from '../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import listIcon from '~/assets/icons/list.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -60,7 +58,7 @@ export function TemplateLwM2M() {
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="h-[50vh] grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
         {filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (

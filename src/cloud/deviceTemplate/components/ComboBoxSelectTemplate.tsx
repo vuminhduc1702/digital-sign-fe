@@ -29,6 +29,8 @@ export function ComboBoxSelectTemplate({
       'provision_key',
       'provision_secret',
       'created_time',
+      'thing_id',
+      'handle_message_svc'
     ],
   )
 

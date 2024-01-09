@@ -119,8 +119,7 @@ export default function CreateTemplate() {
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
     control,
-  })
-  //console.log('data', data)
+  })  
   return (
     <FormDrawer
       isDone={isLoadingCreateTemplate}
@@ -151,8 +150,6 @@ export default function CreateTemplate() {
         className="w-full space-y-5"
         id="create-template"
         onSubmit={handleSubmit(async values => {
-          console.log('values', values)
-          console.log('values123', values.handle_msg_svc)
           const dataCreateTemplate = await mutateAsyncCreateTemplate({
             data: {
               project_id: projectId,
@@ -164,9 +161,7 @@ export default function CreateTemplate() {
             },
           })
           console.log('dataCreateTemplate', dataCreateTemplate)
-          console.log('thing_id:', dataCreateTemplate.thing_id)
-          const handleServiceFromData = dataCreateTemplate.handle_message_svc
-          console.log('handle_msg_svc từ dataCreateTemplate:', handleServiceFromData)
+          console.log('values', values)
           mutateUpdateTemplate({
             data: {
               name: dataCreateTemplate.name,

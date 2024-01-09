@@ -1,46 +1,33 @@
-import { useTranslation } from 'react-i18next'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import * as z from 'zod'
-import { axios} from '~/lib/axios'
-import { useSpinDelay } from 'spin-delay'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from '~/components/Button'
+import { ChevronDown } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useSpinDelay } from 'spin-delay'
+import * as z from 'zod'
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   Accordion,
-  AccordionItem,
   AccordionContent,
+  AccordionItem,
   AccordionTrigger,
 } from '~/components/Accordion'
-import {
-  FieldWrapper,
-  InputField,
-  SelectField,
-  SelectDropdown,
-} from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
-import { Spinner } from '~/components/Spinner'
-import { nameSchema } from '~/utils/schemaValidation'
-import { type CreateTemplateDTO, useUpdateTemplate, useTemplateLwM2MById } from '../api'
+import { Button } from '~/components/Button'
 import { Checkbox } from '~/components/Checkbox'
-import storage from '~/utils/storage'
-import { useGetXMLdata } from '../api/getXMLdata'
-import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
-import { LWM2MData } from '../types/lwm2mXML'
-
-
-import { ChevronDown } from 'lucide-react'
-import { type Template } from '../types'
-import { type Attribute } from '~/types'
+import { Drawer } from '~/components/Drawer'
 import {
-  booleanSelectOption,
-  numberInput,
-  valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
-
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+  InputField,
+  SelectDropdown
+} from '~/components/Form'
+import { Spinner } from '~/components/Spinner'
+import { axios } from '~/lib/axios'
+import { nameSchema } from '~/utils/schemaValidation'
+import storage from '~/utils/storage'
+import { useUpdateTemplate, type CreateTemplateDTO } from '../api'
+import { useTemplateById } from '../api/getTemplateById'
+import { type LWM2MResponse, type ModuleConfig, type Template, type TransportConfigAttribute } from '../types'
+import { LWM2MData } from '../types/lwm2mXML'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -114,7 +101,6 @@ export function UpdateTemplateLwM2M({
       try {
         const promises = watch('rule_chain_id').map(async (id) => {
           const response = await axios.get(`/file/publishjson/${id}.json`)
-          //console.log('response', response)
           setXMLData(response)
           return response
          })
@@ -317,11 +303,11 @@ const data = {
   transport_config: transportConfig
 }
   
-  const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateLwM2MById({
+  const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
     templateId: selectedUpdateTemplate?.id,
     config: { suspense: false },
   })
-  console.log('LwM2MData', LwM2MData)
+  //console.log('LwM2MData', LwM2MData)
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
   useEffect(() => {
@@ -352,7 +338,6 @@ const data = {
           last_update_ts: moduleItem.last_update_ts,
           allcheckbox: moduleItem.allcheckbox
         })
-        console.log('allcheckbox', moduleItem.allcheckbox )
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
         })

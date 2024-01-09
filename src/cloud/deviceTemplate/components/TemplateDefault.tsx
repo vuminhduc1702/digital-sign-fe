@@ -18,7 +18,6 @@ import storage from '~/utils/storage'
 import { type Template } from '../types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import listIcon from '~/assets/icons/list.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -43,18 +42,9 @@ export function TemplateDefault() {
   )
 
   const handleCopyId = useCopyId()
-
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
-        {/* <div className="flex gap-3">
-          <img
-            src={listIcon}
-            alt="Template list"
-            className="aspect-square w-[50px]"
-          />
-          <p>{t('cloud:device_template.sidebar.title')}</p>
-        </div> */}
         <CreateTemplate />
         <ComboBoxSelectTemplate
           setFilteredComboboxData={setFilteredComboboxData}

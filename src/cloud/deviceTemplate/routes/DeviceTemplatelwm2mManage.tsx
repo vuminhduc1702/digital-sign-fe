@@ -10,7 +10,6 @@ import { Spinner } from '~/components/Spinner'
 import storage from '~/utils/storage'
 
 import { type TransportConfigAttribute, type ModuleConfig } from '../types'
-import { useTemplateLwM2MById } from '../api'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'
 import { ComboBoxSelectAttrLwM2M } from '../components/ComboBoxSelectAttrLwM2M'
@@ -26,7 +25,7 @@ export function DeviceTemplatelwm2mManage() {
   const [filteredComboboxDataAttr, setFilteredComboboxDataAttr] = useState<
   TransportConfigAttribute[]
   >([])
-  const [offset, setOffset] = useState(0)
+  const [offset] = useState(0)
   const params = useParams()
   const templateId = params.templateId as string
   const id = params.id as string
@@ -57,19 +56,14 @@ export function DeviceTemplatelwm2mManage() {
                 <div className="flex justify-between">
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
-                    {/* {isSuccess ? ( */}
-                        <ComboBoxSelectModuleConfig
-                        setFilteredComboboxData={setFilteredComboboxData}
-                        offset={offset}
-                        />
-                    {/* ) : null} */}
+                    <ComboBoxSelectModuleConfig
+                      setFilteredComboboxData={setFilteredComboboxData}
+                      offset={offset}
+                    />
                   </div>
                 </div>
                 <LwM2MTable
                   module_config={filteredComboboxData}
-                  //offset={offset}
-                  //setOffset={setOffset}
-                  //isPreviousData={isPreviousData}
                 />
               </div>
             </Suspense>
@@ -95,19 +89,14 @@ export function DeviceTemplatelwm2mManage() {
                   <div className="flex justify-between">
                     <ExportTable refComponent={ref} />
                     <div className="flex items-center gap-x-3">
-                      {/* {isSuccess ? ( */}
-                          <ComboBoxSelectAttrLwM2M
-                          setFilteredComboboxDataAttr={setFilteredComboboxDataAttr}
-                          offset={offset}
-                          />
-                      {/* ) : null} */}
+                      <ComboBoxSelectAttrLwM2M
+                      setFilteredComboboxDataAttr={setFilteredComboboxDataAttr}
+                      offset={offset}
+                    />
                     </div>
                   </div>
                   <AttrLwM2MTable
                     attribute_info={filteredComboboxDataAttr}
-                    //offset={offset}
-                    //setOffset={setOffset}
-                    //isPreviousData={isPreviousData}
                   />
                   </div>
             </Suspense>

@@ -1,51 +1,53 @@
-import { useTranslation } from 'react-i18next'
-import { useEffect } from 'react'
-import { useSpinDelay } from 'spin-delay'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { useSpinDelay } from 'spin-delay'
 
+import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
 import { Button } from '~/components/Button'
+import { Checkbox } from '~/components/Checkbox'
+import { Drawer } from '~/components/Drawer'
 import {
   FieldWrapper,
   InputField,
-  SelectField,
   SelectDropdown,
+  SelectField,
+  type SelectOption,
 } from '~/components/Form'
-import { Drawer } from '~/components/Drawer'
 import { Spinner } from '~/components/Spinner'
-import { type UpdateTemplateDTO, useUpdateTemplate } from '../api'
-import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
-import { templateAttrSchema } from './CreateTemplate'
-import { Checkbox } from '~/components/Checkbox'
-import storage from '~/utils/storage'
-import { useGetRulechains } from '../api/getRulechains'
 import { flattenData } from '~/utils/misc.ts'
-
-import { type Template } from '../types'
-import { type Attribute } from '~/types'
+import storage from '~/utils/storage'
+import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
+import { useGetRulechains } from '../api/getRulechains'
+import { templateAttrSchema } from './CreateTemplate'
+import { type SelectInstance } from 'react-select'
 import {
   booleanSelectOption,
   numberInput,
   valueTypeList,
 } from '~/cloud/orgManagement/components/Attributes'
+import { type Attribute } from '~/types'
+import { type Template } from '../types'
 
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { CreateService } from '~/cloud/customProtocol/components/CreateService'
 
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
   close: () => void
   isOpen: boolean
 }
-
 export function UpdateTemplate({
   selectedUpdateTemplate,
   close,
   isOpen,
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
-
   const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
     projectId,
@@ -69,26 +71,29 @@ export function UpdateTemplate({
     config: { suspense: false },
   })
 
-  const { register, formState, watch, handleSubmit,  reset, control } = useForm<
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing?.id,
+    label: thing?.name,
+  }))
+
+  const { register, formState, watch, handleSubmit,  reset, control, getValues } = useForm<
     UpdateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
-  useEffect(() => {
-    if (attrData != null) {
-      reset({
-          name: selectedUpdateTemplate?.name,
-          rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
-          attributes:
-            attrData?.attributes.map((attribute: Attribute) => ({
-              attribute_key: attribute.attribute_key,
-              logged: attribute.logged,
-              value: attribute.value.toString(),
-              value_t: attribute.value_type,
-            })),
-        })
-    }
-  }, [attrData])
+  const { data: serviceData, isLoading: isLoadingService } =
+  useGetServiceThings({
+    thingId: getValues('thing_id') || selectedUpdateTemplate.thing_id,
+    config: { enabled: !!getValues('thing_id'), suspense: false },
+  })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service?.name,
+    label: service?.name,
+  }))
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
@@ -97,17 +102,22 @@ export function UpdateTemplate({
 
   const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
+
   useEffect(() => {
     if (isSuccess) {
       close()
     }
   }, [isSuccess, close])
-
   useEffect(() => {
-    if (attrData != null) {
+    if (attrData != null && selectedUpdateTemplate) {
       reset({
-        name: selectedUpdateTemplate?.name,
-        rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
+        name: selectedUpdateTemplate.name,
+        rule_chain_id: selectedUpdateTemplate.rule_chain_id,
+        thing_id: selectedUpdateTemplate.thing_id,
+        handle_msg_svc: selectedUpdateTemplate.handle_message_svc,
         attributes: attrData?.attributes.map((attribute: Attribute) => ({
           attribute_key: attribute.attribute_key,
           logged: attribute.logged,
@@ -119,13 +129,25 @@ export function UpdateTemplate({
         })),
       })
     }
-  }, [attrData, selectedUpdateTemplate])
+  }, [attrData, selectedUpdateTemplate, AdapterIsLoading])
 
   const showSpinner = useSpinDelay(attrLoading, {
     delay: 150,
     minDuration: 300,
   })
 
+  useEffect(() => {
+    if (!isLoadingService && serviceSelectData && serviceSelectData.length > 0) {
+      console.log(
+        '11111111111111111111111111',
+        serviceSelectData,
+        serviceSelectData.find(
+          (service) => service.value === selectedUpdateTemplate?.handle_message_svc
+        )
+      );
+    }
+  }, [isLoadingService, serviceSelectData, selectedUpdateTemplate]);
+  console.log('selectedUpdateTemplate', selectedUpdateTemplate)
   return (
     <Drawer
       isOpen={isOpen}
@@ -156,11 +178,11 @@ export function UpdateTemplate({
         </>
       )}
     >
-      {attrLoading ? (
+      {/* {attrLoading ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner={showSpinner} size="xl" />
         </div>
-      ) : (
+      ) : ( */}
         <form
           className="w-full space-y-5"
           id="update-template"
@@ -172,7 +194,12 @@ export function UpdateTemplate({
                 values.attributes && values.attributes.length > 0
                   ? values.attributes
                   : undefined,
+              thing_id: values.thing_id,
+              handle_msg_svc: values.handle_msg_svc
             }
+            // console.log('rule_chain_id', values.rule_chain_id)
+            // console.log('thing_id', values.thing_id)
+            // console.log('handle_msg_svc', values.handle_msg_svc)
             mutate({
               data,
               templateId: selectedUpdateTemplate?.id,
@@ -207,6 +234,57 @@ export function UpdateTemplate({
               )}
               error={formState?.errors?.rule_chain_id}
             />
+            {/* {console.log('rule_chain_id:', selectedUpdateTemplate.rule_chain_id)} */}
+            {!AdapterIsLoading ? (
+              <div className="w-[calc(100%-2.5rem)]">
+                <SelectDropdown
+                  label={t('cloud:custom_protocol.thing.id')}
+                  name="thing_id"
+                  control={control}
+                  options={thingSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:entity_thing') ||
+                    option.label === t('table:no_thing')
+                  }
+                  noOptionsMessage={() => t('table:no_thing')}
+                  loadingMessage={() => t('loading:entity_thing')}
+                  isLoading={AdapterIsLoading}
+                  placeholder={t('cloud:custom_protocol.thing.choose')}
+                  defaultValue={thingSelectData?.find(
+                    thing => thing.value === selectedUpdateTemplate.thing_id,
+                  )}
+                  handleClearSelectDropdown={() =>
+                    selectDropdownServiceRef.current?.clearValue()
+                  }
+                  handleChangeSelect={() =>
+                    selectDropdownServiceRef.current?.clearValue()
+                  }
+                  error={formState?.errors?.thing_id}
+                />
+              </div>
+            ) : null}
+            {!isLoadingService && serviceSelectData ? (
+              <div className="w-[calc(100%-2.5rem)]">
+                <SelectDropdown
+                  refSelect={selectDropdownServiceRef}
+                  label={t('cloud:custom_protocol.service.title')}
+                  name="handle_msg_svc"
+                  control={control}
+                  options={serviceSelectData}
+                  isOptionDisabled={option =>
+                    option.label === t('loading:service_thing') ||
+                    option.label === t('table:no_service')
+                  }
+                  isLoading={isLoadingService}
+                  noOptionsMessage={() => t('table:no_service')}
+                  placeholder={t('cloud:custom_protocol.service.choose')}
+                  defaultValue={serviceSelectData && serviceSelectData?.find(
+                    service => service.value === selectedUpdateTemplate.handle_message_svc,
+                  )}
+                  error={formState?.errors?.handle_msg_svc}
+                />
+              </div>
+            ) : null}
             {fields.map((field, index) => (
               <section
                 key={field.id}
@@ -287,7 +365,15 @@ export function UpdateTemplate({
             ))}
           </>
         </form>
-      )}
+      {/* )} */}
+      <CreateThing
+        thingType="thing"
+        classNameTriggerBtn="absolute right-0 top-[183px] mr-6"
+      />
+      <CreateService
+        thingId={watch('thing_id')}
+        classNameTriggerBtn="absolute right-0 top-[262px] mr-6"
+      />
     </Drawer>
-  )
+    )
 }

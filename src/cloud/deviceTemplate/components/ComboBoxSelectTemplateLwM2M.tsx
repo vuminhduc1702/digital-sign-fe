@@ -19,7 +19,6 @@ export function ComboBoxSelectTemplateLwM2M({
 
   const projectId = storage.getProject()?.id
   const { data } = useGetTemplates({ projectId , protocol: 'lwm2m' })
-
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
     data?.templates,
     [

@@ -1,34 +1,31 @@
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { useEffect, useRef, useState, useCallback } from 'react'
-import { Button } from '~/components/Button'
 import {
   Accordion,
-  AccordionItem,
   AccordionContent,
+  AccordionItem,
   AccordionTrigger,
 } from '~/components/Accordion'
-import {
-  FieldWrapper,
-  FormDrawer,
-  SelectDropdown,
-  InputField,
-  SelectField,
-} from '~/components/Form'
-import { type CreateTemplateDTO,useCreateTemplate,useUpdateTemplate } from '../api'
-import storage from '~/utils/storage'
+import { Button } from '~/components/Button'
 import { Checkbox } from '~/components/Checkbox'
-import { flattenData } from '~/utils/misc.ts'
-import { useGetXMLdata } from '../api/getXMLdata'
+import {
+  FormDrawer,
+  InputField,
+  SelectDropdown
+} from '~/components/Form'
 import { nameSchema } from '~/utils/schemaValidation'
+import storage from '~/utils/storage'
+import { useCreateTemplate, type CreateTemplateDTO } from '../api'
+import { useGetXMLdata } from '../api/getXMLdata'
 import { type LWM2MResponse, type ModuleConfig, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ChevronDown } from 'lucide-react'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { PlusIcon } from '~/components/SVGIcons'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -54,9 +51,7 @@ const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
 export default function CreateTemplateLwM2M() {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-  const { mutate: mutateUpdateTemplatelwm2m } = useUpdateTemplate({
-    isOnCreateTemplate: true,
-  })
+
   const {
     mutateAsync: mutateAsyncCreateTemplatelwm2m,
     isLoading: isLoadingCreateTemplatelwm2m,
@@ -182,7 +177,6 @@ export default function CreateTemplateLwM2M() {
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
           newStates[accordionIndex][moduleIndex].numberOfAttributes = attributesCount
-          //console.log('attributesCount', attributesCount)
           if(attributesCount === totalItemCount){
             newStates[accordionIndex][moduleIndex].allcheckbox = true
             setSelectAllAttributes((prevStates) => {
@@ -204,7 +198,6 @@ export default function CreateTemplateLwM2M() {
       return newStates
     })
   }
-  //console.log('selectAllAttributes', selectAllAttributes)
   const handleSelectAllAttributesChange = (accordionIndex: number,  lw2m2: LWM2MResponse) => {
     setSelectAllAttributes((prevStates) => {
       const objectId = lw2m2.LWM2M.Object.ObjectID
@@ -283,7 +276,7 @@ const data = {
   project_id: projectId,
   transport_config: transportConfig
 }
-console.log('data', data)
+//console.log('data', data)
 //console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer

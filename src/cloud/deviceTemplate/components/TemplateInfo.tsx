@@ -4,7 +4,8 @@ import { useParams } from 'react-router-dom'
 import TitleBar from '~/components/Head/TitleBar'
 
 import { getVNDateFormat } from '~/utils/misc'
-import { useTemplateLwM2MById } from '../api'
+import { useTemplateById } from '../api/getTemplateById'
+
 
 
 
@@ -14,8 +15,7 @@ export function TemplateInfo() {
   const params = useParams()
   const templateId = params.templateId as string
 
-  const { data } = useTemplateLwM2MById({ templateId })
-  //console.log('data', data)
+  const { data } = useTemplateById({ templateId })
 
   return (
     <>
