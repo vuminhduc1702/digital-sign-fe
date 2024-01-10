@@ -96,7 +96,7 @@ export function UpdateAdapter({
           configuration !== 'null' ? JSON.parse(configuration) : null,
         schema: { fields: renderFields() },
       },
-  })
+    })
   console.log('zod adapter errors: ', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
@@ -122,6 +122,7 @@ export function UpdateAdapter({
     value: service.name,
     label: service.name,
   }))
+
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
   function renderFields() {
@@ -278,8 +279,8 @@ export function UpdateAdapter({
                   loadingMessage={() => t('loading:entity_thing')}
                   isLoading={AdapterIsLoading}
                   placeholder={t('cloud:custom_protocol.thing.choose')}
-                  defaultValue={thingSelectData?.find(
-                    thing => thing.value === thing_id,
+                  defaultValue={thingSelectData.find(
+                    thing => thing.value === getValues('thing_id'),
                   )}
                   handleClearSelectDropdown={() =>
                     selectDropdownServiceRef.current?.clearValue()
@@ -306,7 +307,7 @@ export function UpdateAdapter({
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
                   defaultValue={serviceSelectData?.find(
-                    service => service.value === handle_service,
+                    service => service.value === getValues('handle_service'),
                   )}
                   error={formState?.errors?.handle_service}
                 />

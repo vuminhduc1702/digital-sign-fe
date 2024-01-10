@@ -1,10 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
 
+import { type SelectInstance } from 'react-select'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
+import {
+  booleanSelectOption,
+  numberInput,
+  valueTypeList,
+} from '~/cloud/orgManagement/components/Attributes'
 import { Button } from '~/components/Button'
 import { Checkbox } from '~/components/Checkbox'
 import { Drawer } from '~/components/Drawer'
@@ -16,26 +22,20 @@ import {
   type SelectOption,
 } from '~/components/Form'
 import { Spinner } from '~/components/Spinner'
+import { type Attribute } from '~/types'
 import { flattenData } from '~/utils/misc.ts'
 import storage from '~/utils/storage'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
-import { templateAttrSchema } from './CreateTemplate'
-import { type SelectInstance } from 'react-select'
-import {
-  booleanSelectOption,
-  numberInput,
-  valueTypeList,
-} from '~/cloud/orgManagement/components/Attributes'
-import { type Attribute } from '~/types'
 import { type Template } from '../types'
+import { templateAttrSchema } from './CreateTemplate'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
@@ -48,6 +48,14 @@ export function UpdateTemplate({
   isOpen,
 }: UpdateTemplateProps) {
   const { t } = useTranslation()
+  const { mutate, isLoading, isSuccess } = useUpdateTemplate()
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
+
   const projectId = storage.getProject()?.id
   const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
     projectId,
@@ -85,9 +93,10 @@ export function UpdateTemplate({
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
+
   const { data: serviceData, isLoading: isLoadingService } =
   useGetServiceThings({
-    thingId: getValues('thing_id') || selectedUpdateTemplate.thing_id,
+    thingId: getValues('thing_id'),
     config: { enabled: !!getValues('thing_id'), suspense: false },
   })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -99,18 +108,6 @@ export function UpdateTemplate({
     name: 'attributes',
     control,
   })
-
-  const { mutate, isLoading, isSuccess } = useUpdateTemplate()
-
-  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
-    null,
-  )
-
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
   useEffect(() => {
     if (attrData != null && selectedUpdateTemplate) {
       reset({
@@ -129,25 +126,17 @@ export function UpdateTemplate({
         })),
       })
     }
-  }, [attrData, selectedUpdateTemplate, AdapterIsLoading])
+  }, [attrData, selectedUpdateTemplate])
 
   const showSpinner = useSpinDelay(attrLoading, {
     delay: 150,
     minDuration: 300,
   })
 
-  useEffect(() => {
-    if (!isLoadingService && serviceSelectData && serviceSelectData.length > 0) {
-      console.log(
-        '11111111111111111111111111',
-        serviceSelectData,
-        serviceSelectData.find(
-          (service) => service.value === selectedUpdateTemplate?.handle_message_svc
-        )
-      );
-    }
-  }, [isLoadingService, serviceSelectData, selectedUpdateTemplate]);
-  console.log('selectedUpdateTemplate', selectedUpdateTemplate)
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -170,10 +159,10 @@ export function UpdateTemplate({
             type="submit"
             size="lg"
             isLoading={isLoading}
+            disabled={!formState.isDirty}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={!formState.isDirty}
           />
         </>
       )}
@@ -197,9 +186,6 @@ export function UpdateTemplate({
               thing_id: values.thing_id,
               handle_msg_svc: values.handle_msg_svc
             }
-            // console.log('rule_chain_id', values.rule_chain_id)
-            // console.log('thing_id', values.thing_id)
-            // console.log('handle_msg_svc', values.handle_msg_svc)
             mutate({
               data,
               templateId: selectedUpdateTemplate?.id,
@@ -213,29 +199,7 @@ export function UpdateTemplate({
               registration={register('name')}
             />
 
-            <SelectDropdown
-              label={t('cloud:device_template.add_template.flow')}
-              name="rule_chain_id"
-              control={control}
-              options={RuleSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:flow_id') ||
-                option.label === t('table:no_in_flow_id')
-              }
-              noOptionsMessage={() => t('table:no_in_flow_id')}
-              loadingMessage={() => t('loading:flow_id')}
-              isLoading={RuleIsLoading}
-              placeholder={t(
-                'cloud:device_template.add_template.choose_flow_id',
-              )}
-              defaultValue={RuleSelectOptions.find(
-                ruchains =>
-                  ruchains.value === selectedUpdateTemplate.rule_chain_id,
-              )}
-              error={formState?.errors?.rule_chain_id}
-            />
-            {/* {console.log('rule_chain_id:', selectedUpdateTemplate.rule_chain_id)} */}
-            {!AdapterIsLoading ? (
+            
               <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
                   label={t('cloud:custom_protocol.thing.id')}
@@ -262,8 +226,7 @@ export function UpdateTemplate({
                   error={formState?.errors?.thing_id}
                 />
               </div>
-            ) : null}
-            {!isLoadingService && serviceSelectData ? (
+            {!isLoadingService ? (
               <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
                   refSelect={selectDropdownServiceRef}
@@ -278,13 +241,34 @@ export function UpdateTemplate({
                   isLoading={isLoadingService}
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
-                  defaultValue={serviceSelectData && serviceSelectData?.find(
+                  defaultValue={serviceSelectData?.find(
                     service => service.value === selectedUpdateTemplate.handle_message_svc,
                   )}
                   error={formState?.errors?.handle_msg_svc}
                 />
               </div>
             ) : null}
+            <SelectDropdown
+              label={t('cloud:device_template.add_template.flow')}
+              name="rule_chain_id"
+              control={control}
+              options={RuleSelectOptions}
+              isOptionDisabled={option =>
+                option.label === t('loading:flow_id') ||
+                option.label === t('table:no_in_flow_id')
+              }
+              noOptionsMessage={() => t('table:no_in_flow_id')}
+              loadingMessage={() => t('loading:flow_id')}
+              isLoading={RuleIsLoading}
+              placeholder={t(
+                'cloud:device_template.add_template.choose_flow_id',
+              )}
+              defaultValue={RuleSelectOptions.find(
+                ruchains =>
+                  ruchains.value === selectedUpdateTemplate.rule_chain_id,
+              )}
+              error={formState?.errors?.rule_chain_id}
+            />
             {fields.map((field, index) => (
               <section
                 key={field.id}
@@ -368,11 +352,11 @@ export function UpdateTemplate({
       )}
       <CreateThing
         thingType="thing"
-        classNameTriggerBtn="absolute right-0 top-[183px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[102px] mr-6"
       />
       <CreateService
         thingId={watch('thing_id')}
-        classNameTriggerBtn="absolute right-0 top-[262px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[182px] mr-6"
       />
     </Drawer>
     )

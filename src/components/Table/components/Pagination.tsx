@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
-import clsx from 'clsx'
-
 import { type Table } from '@tanstack/react-table'
+
+import { cn } from '~/utils/misc'
 
 const DOTS = '...'
 
@@ -42,34 +42,28 @@ const Pagination = <T extends Record<string, any>>({
 
   return (
     <ul
-      className={clsx('flex cursor-pointer items-center gap-x-3', {
+      className={cn('flex cursor-pointer items-center gap-x-3', {
         className,
       })}
     >
       {/* Left navigation arrow */}
       <li
-        className={clsx('pagination-item', {
+        className={cn('', {
           disabled: !table.getCanPreviousPage(),
         })}
         onClick={onPrevious}
-      >
-        <div className="arrow left" />
-      </li>
+      ></li>
       {paginationRange?.map((pageNumber, index) => {
         // If the pageItem is a DOT, render the DOTS unicode character
         if (pageNumber === DOTS) {
-          return (
-            <li className="pagination-item dots" key={index}>
-              &#8230;
-            </li>
-          )
+          return <li key={index}>&#8230;</li>
         }
 
         // Render our Page Pills
         return typeof pageNumber === 'number' ? (
           <li
-            className={clsx('pagination-item', {
-              selected: pageNumber === currentPage + 1,
+            className={cn('', {
+              'text-primary-400': pageNumber === currentPage + 1,
             })}
             onClick={() => table.setPageIndex(pageNumber - 1)}
             key={index}
@@ -80,13 +74,11 @@ const Pagination = <T extends Record<string, any>>({
       })}
       {/*  Right Navigation arrow */}
       <li
-        className={clsx('pagination-item', {
+        className={cn('', {
           disabled: !table.getCanNextPage(),
         })}
         onClick={onNext}
-      >
-        <div className="arrow right" />
-      </li>
+      ></li>
     </ul>
   )
 }

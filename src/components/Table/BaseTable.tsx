@@ -92,7 +92,7 @@ export function BaseTable<T extends Record<string, any>>({
     table.setPageSize(10)
   }, [])
 
-  const pageIndexRef = useRef(0)
+  const currentPage = table.getState().pagination.pageIndex
   const countLimitPaginationRef = useRef(1)
 
   function refresh() {
@@ -362,11 +362,9 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="relative mt-4 flex items-center justify-between gap-2">
         <div
-          className={cn('flex gap-3', 
-          {
+          className={cn('flex gap-3', {
             'absolute bottom-5': isAbsoluteBtn,
-          }
-          )}
+          })}
         >
           <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
@@ -380,33 +378,30 @@ export function BaseTable<T extends Record<string, any>>({
           </span>
         </div>
         <div
-          className={cn('flex gap-x-2', 
-          {
+          className={cn('flex gap-x-2', {
             'absolute bottom-5 right-6': isAbsoluteBtn,
-          }
-          )}
+          })}
         >
           <Button
             className="rounded-l-md border-none"
             onClick={() => {
-              pageIndexRef.current--
               if (
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
-                (pageIndexRef.current + 1) * pageSize <=
+                (currentPage + 1) * pageSize <=
                   limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
               table.previousPage()
             }}
-            disabled={pageIndexRef.current === 0 || isPreviousData}
+            disabled={currentPage === 0 || isPreviousData}
             variant="secondaryLight"
           >
             {'Prev'}
           </Button>
           <Pagination
-            currentPage={pageIndexRef.current}
+            currentPage={currentPage}
             totalCount={totalAttrs}
             pageSize={pageSize}
             table={table}
@@ -414,10 +409,9 @@ export function BaseTable<T extends Record<string, any>>({
           <Button
             className="rounded-r-md border-none"
             onClick={() => {
-              pageIndexRef.current++
               if (
                 limitPagination < totalAttrs &&
-                (pageIndexRef.current + 1) * pageSize >
+                (currentPage + 1) * pageSize >
                   limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
@@ -426,8 +420,7 @@ export function BaseTable<T extends Record<string, any>>({
               table.nextPage()
             }}
             disabled={
-              (pageIndexRef.current + 1) * pageSize >= totalAttrs ||
-              isPreviousData
+              (currentPage + 1) * pageSize >= totalAttrs || isPreviousData
             }
             variant="secondaryLight"
           >

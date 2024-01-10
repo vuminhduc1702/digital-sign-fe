@@ -12,7 +12,7 @@ import { CustomerManageRoutes } from '~/cloud/customerManage'
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
-import { SubcriptionRoutes } from '~/cloud/subcription/routes'
+import { SubscriptionRoutes } from '~/cloud/subcription/routes'
 import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
@@ -57,7 +57,7 @@ export const protectedRoutes = [
       ...FlowEngineV2Routes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
-      ...SubcriptionRoutes,
+      ...SubscriptionRoutes,
       ...DeviceRoutes,
       ...BillingRoutes,
       ...ApplicationRoutes,

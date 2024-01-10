@@ -26,7 +26,7 @@ import { Spinner } from '~/components/Spinner'
 import { axios } from '~/lib/axios'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { useUpdateTemplate, type CreateTemplateDTO } from '../api'
+import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useTemplateById } from '../api/getTemplateById'
 import { type LWM2MResponse, type ModuleConfig, type Template, type TransportConfigAttribute } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
@@ -56,7 +56,6 @@ export const templateAttrSchema = z.object({
   // rule_chain_id: z.string().optional(),
   thing_id: z.string(),
   handle_msg_svc: z.string(),
-  // attributes: z.array(attrSchema),
 })
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
   label: `${item.module_name} #${item.file_id}_${item.version}`,
@@ -68,52 +67,17 @@ export function UpdateTemplateLwM2M({
   close,
   isOpen,
 }: UpdateTemplateProps) {
-  console.log('selectedUpdateTemplate', selectedUpdateTemplate)
+  
   const { t } = useTranslation()
+  const { mutate, isLoading, isSuccess } = useUpdateTemplate()
+
+  useEffect(() => {
+    if (isSuccess) {
+      close()
+    }
+  }, [isSuccess, close])
+
   const projectId = storage.getProject()?.id
-  const { register, formState, handleSubmit, control, watch, reset, setValue, getValues } = useForm<
-  CreateTemplateDTO['data']
-  >({
-    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-    defaultValues: {
-      name: '',
-      thing_id: '',
-      handle_msg_svc: '',
-    },
-  })
-
-  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
-    projectId,
-    type: 'thing',
-  })
-
-  const thingSelectData = thingData?.data?.list?.map(thing => ({
-    value: thing.id,
-    label: thing.name,
-  }))
-  //console.log('thingSelectData', thingSelectData)
-  const { data: serviceData, isLoading: isLoadingService } =
-    useGetServiceThings({
-      thingId: getValues('thing_id') || selectedUpdateTemplate.thing_id,
-      config: {
-        enabled: !!getValues('thing_id'),
-        suspense: false,
-      },
-    })
-  const serviceSelectData = serviceData?.data?.map(service => ({
-    value: service.name,
-    label: service.name,
-  }))
-  console.log('serviceSelectData', serviceSelectData )
-  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
-    null,
-  )
-
-  function formatString(str: string) {
-    const lowercasedStr = str.toLowerCase();
-    const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
-    return formattedStr
-  }
   const [openAccordion] = useState()
   const [name, setName] = useState<string>('')
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {setName(event.target.value)}
@@ -123,6 +87,44 @@ export function UpdateTemplateLwM2M({
   const [configData, setConfigData] = useState({})
   const [itemNames, setItemNames] = useState<ItemNames>({})
   const [selectedModuleNames, setSelectedModuleNames] = useState<string[]>([])
+  const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+  })
+
+  const thingSelectData = thingData?.data?.list?.map(thing => ({
+    value: thing.id,
+    label: thing.name,
+  }))
+
+  const { register, formState, handleSubmit, control, watch, reset, setValue, getValues } = useForm<
+  UpdateTemplateDTO['data']
+  >({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+  })
+
+  const { data: serviceData, isLoading: isLoadingService } =
+    useGetServiceThings({
+      thingId:  getValues('thing_id'),
+      config: {
+        enabled: !!getValues('thing_id'),
+        suspense: false,
+      },
+    })
+
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
+
+  function formatString(str: string) {
+    const lowercasedStr = str.toLowerCase();
+    const formattedStr = lowercasedStr.replace(/[\s_]+/g, '')
+    return formattedStr
+  }
   useEffect(() => {
     setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
@@ -150,6 +152,7 @@ export function UpdateTemplateLwM2M({
     }
     fetchData()
   }, [watch('rule_chain_id')])
+
   useEffect(() => {
     if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
       XMLDataRef.current = [...XMLDataRef.current, XMLData]
@@ -164,7 +167,6 @@ export function UpdateTemplateLwM2M({
       setFilterLWM2M(Array.from(new Set(filterArr)))
       const filteredKeys = Object.keys(checkboxStates).filter(key => {
         const objectId = parseInt(key.split('/')[1], 10)
-        //console.log('objectId1111', objectId)
         return watch('rule_chain_id').includes(objectId.toString())
       })
       const filteredCheckboxStates = filteredKeys.reduce((acc, key) => {
@@ -346,19 +348,13 @@ const data = {
   thing_id: selectedThing,
   handle_msg_svc: selectedService
 }
-  
+
   const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
     templateId: selectedUpdateTemplate?.id,
     config: { suspense: false },
   })
   //console.log('LwM2MData', LwM2MData)
-  const { mutate, isLoading, isSuccess } = useUpdateTemplate()
 
-  useEffect(() => {
-    if (isSuccess) {
-      close()
-    }
-  }, [isSuccess, close])
   const transport_Config = selectedUpdateTemplate?.transport_config
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
@@ -396,6 +392,8 @@ const data = {
       setSelectedModuleNames(allid)
       reset({
         name: name,
+        thing_id: selectedUpdateTemplate.thing_id,
+        handle_msg_svc: selectedUpdateTemplate.handle_message_svc,
       })
     }
   }, [LwM2MData])
@@ -408,7 +406,7 @@ const data = {
       isOpen={isOpen}
       onClose={() => {
         setValue('rule_chain_id', selectedModuleNames)
-        close();
+        close()
       }}
       title={t('cloud:device_template.add_template.update')}
       renderFooter={() => (
@@ -460,7 +458,7 @@ const data = {
             error={formState.errors['name']}
             registration={register('name')}
           />
-        {!AdapterIsLoading ? (
+        
               <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
                   label={t('cloud:custom_protocol.thing.id')}
@@ -487,8 +485,7 @@ const data = {
                   error={formState?.errors?.thing_id}
                 />
               </div>
-          ) : null}
-          {console.log('handle_message_svc:', selectedUpdateTemplate.handle_message_svc)}
+          
           {!isLoadingService ? (
               <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
@@ -504,7 +501,7 @@ const data = {
                   isLoading={isLoadingService}
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
-                  defaultValue={serviceSelectData && serviceSelectData?.find(
+                  defaultValue={serviceSelectData?.find(
                     service => service.value === selectedUpdateTemplate.handle_message_svc,
                   )}
                   error={formState?.errors?.handle_msg_svc}
@@ -651,7 +648,7 @@ const data = {
       />
       <CreateService
         thingId={watch('thing_id')}
-        classNameTriggerBtn="absolute right-0 top-[186px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[182px] mr-6"
       />
     </Drawer>
   )

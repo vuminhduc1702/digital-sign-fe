@@ -1,33 +1,34 @@
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
 import { Button } from '~/components/Button'
 import { Calendar } from '~/components/Calendar'
 import { InputField, SelectField } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { PlusIcon } from '~/components/SVGIcons'
 import i18n from '~/i18n'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
+import { cn } from '~/utils/misc'
 import {
   emailSchema,
   nameSchema,
   passwordSchema,
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
+
+import { XMarkIcon } from '@heroicons/react/24/outline'
+import 'react-day-picker/dist/style.css'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   useCreateCustomer,
   type CreateEntityCustomerDTO,
-} from '../api/createCustomerApi'
-import { Calendar as CalendarIcon } from 'lucide-react'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { cn } from '~/utils/misc'
-import { format } from 'date-fns'
-
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+} from '../api/createTenantApi'
 
 export const entityCustomerSchema = z
   .object({
@@ -57,7 +58,7 @@ export const entityCustomerSchema = z
 export function CreateCustomer() {
   const { t } = useTranslation()
 
-  const { register, formState, handleSubmit } = useForm<
+  const { register, formState, handleSubmit, reset } = useForm<
     CreateEntityCustomerDTO['data']
   >({
     resolver: entityCustomerSchema && zodResolver(entityCustomerSchema),
@@ -73,7 +74,7 @@ export function CreateCustomer() {
 
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
-  const [date, setDate] = useState<Date | null>()
+  const [date, setDate] = useState<Date | null>(new Date())
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
@@ -102,10 +103,11 @@ export function CreateCustomer() {
     <FormDialog
       size="lg"
       isDone={isSuccess}
-      title={t('form:customer.create')}
+      title={t('form:tenant.create')}
+      resetData={() => reset()}
       body={
         <form
-          id="create-customer"
+          id="create-tenant"
           className="flex flex-col justify-between"
           onSubmit={handleSubmit(values => {
             mutate({
@@ -128,11 +130,11 @@ export function CreateCustomer() {
         >
           <>
             <div className="mb-3 text-base font-semibold text-black">
-              {t('billing:subcription.popup.customer_info')}
+              {t('cloud:dashboard.table.tenant_info')}
             </div>
             <div className="mb-3 grid grid-cols-4 gap-4">
               <div className="text-end">
-                {t('billing:subcription.popup.customer_name')}{' '}
+                Tenant
                 <span className="text-red-600">*</span>
               </div>
               <InputField
@@ -160,7 +162,9 @@ export function CreateCustomer() {
                         format(date, 'dd MM, y')
                       )
                     ) : (
-                      <span>{t('cloud:dashboard.config_chart.pick_date')}</span>
+                      <span className="text-sm">
+                        {t('cloud:dashboard.config_chart.pick_date')}
+                      </span>
                     )}
                     {date && (
                       <XMarkIcon
@@ -173,12 +177,10 @@ export function CreateCustomer() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    defaultMonth={new Date(1990, 0)}
                     selected={date}
                     onSelect={setDate}
-                    numberOfMonths={1}
-                    // fromYear={1960}
-                    // toYear={2005}
+                    fromYear={1950}
+                    toYear={new Date().getFullYear()}
                   />
                 </PopoverContent>
               </Popover>
@@ -290,7 +292,7 @@ export function CreateCustomer() {
       confirmButton={
         <Button
           isLoading={isLoading}
-          form="create-customer"
+          form="create-tenant"
           type="submit"
           size="md"
           className="bg-primary-400"

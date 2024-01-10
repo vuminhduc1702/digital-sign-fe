@@ -49,7 +49,6 @@ export const templateAttrSchema = z.object({
   // rule_chain_id: z.string().optional(),
   thing_id: z.string(),
   handle_msg_svc: z.string(),
-  // attributes: z.array(attrSchema),
 })
 
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
@@ -70,11 +69,6 @@ export default function CreateTemplateLwM2M() {
     CreateTemplateDTO['data']
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-    defaultValues: {
-      name: '',
-      thing_id: '',
-      handle_msg_svc: '',
-    },
   })
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
@@ -389,6 +383,8 @@ const data = {
               error={formState?.errors?.thing_id}
             />
           </div>
+          
+          {!isLoadingService ? (
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
@@ -407,7 +403,7 @@ const data = {
               error={formState?.errors?.handle_msg_svc}
             />
           </div>
-
+          ) : null}
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -546,7 +542,7 @@ const data = {
       />
       <CreateService
         thingId={watch('thing_id')}
-        classNameTriggerBtn="absolute right-0 top-[186px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[182px] mr-6"
       />
     </FormDrawer>
   )

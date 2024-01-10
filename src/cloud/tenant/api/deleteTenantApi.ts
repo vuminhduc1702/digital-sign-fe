@@ -20,11 +20,14 @@ export const useDeleteCustomer = ({
 
   return useMutation({
     onSuccess: async () => {
-      toast.promise(() => queryClient.invalidateQueries(['call-customer-list-api']), {
-        loading: t('loading:loading'),
-        success: t('form:customer.success_delete'),
-        error: t('error:server_res.title'),
-      })
+      toast.promise(
+        () => queryClient.invalidateQueries(['call-customer-list-api']),
+        {
+          loading: t('loading:loading'),
+          success: t('form:tenant.success_delete'),
+          error: t('error:server_res.title'),
+        },
+      )
     },
     ...config,
     mutationFn: deleteCustomer,

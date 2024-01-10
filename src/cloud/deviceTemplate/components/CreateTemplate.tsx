@@ -1,42 +1,42 @@
-import { useTranslation } from 'react-i18next'
-import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useRef } from 'react'
-import { Button } from '~/components/Button'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { type SelectInstance } from 'react-select'
-import {
-  FieldWrapper,
-  FormDrawer,
-  SelectDropdown,
-  InputField,
-  SelectField,
-  type SelectOption,
-} from '~/components/Form'
-import {
-  useCreateTemplate,
-  type CreateTemplateDTO,
-  useUpdateTemplate,
-} from '../api'
-import storage from '~/utils/storage'
-import { Checkbox } from '~/components/Checkbox'
-import { flattenData } from '~/utils/misc.ts'
-import { useGetRulechains } from '../api/getRulechains'
+import * as z from 'zod'
 import {
   booleanSelectOption,
   numberInput,
   valueTypeList,
 } from '~/cloud/orgManagement/components/Attributes'
+import { Button } from '~/components/Button'
+import { Checkbox } from '~/components/Checkbox'
+import {
+  FieldWrapper,
+  FormDrawer,
+  InputField,
+  SelectDropdown,
+  SelectField,
+  type SelectOption,
+} from '~/components/Form'
+import { flattenData } from '~/utils/misc.ts'
+import storage from '~/utils/storage'
+import {
+  useCreateTemplate,
+  type CreateTemplateDTO,
+  useUpdateTemplate
+} from '../api'
+import { useGetRulechains } from '../api/getRulechains'
 
 import { attrSchema, nameSchema } from '~/utils/schemaValidation'
 
-import { PlusIcon } from '~/components/SVGIcons'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+import { PlusIcon } from '~/components/SVGIcons'
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
@@ -48,39 +48,22 @@ export const templateAttrSchema = z.object({
 
 export default function CreateTemplate() {
   const { t } = useTranslation()
-
+  const projectId = storage.getProject()?.id
   const valueTypeOptions = valueTypeList.map(valueType => ({
     label: valueType.name,
     value: valueType.type,
   }))
 
-  const projectId = storage.getProject()?.id
+  const {
+    mutateAsync: mutateAsyncCreateTemplate,
+    isLoading: isLoadingCreateTemplate,
+    isSuccess: isSuccessCreateTemplate,
+  } = useCreateTemplate() 
+
   const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
     { projectId },
   )
 
-  const { register, formState, watch, handleSubmit, getValues, control, reset } = useForm<
-    CreateTemplateDTO['data']
-  >({
-    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-    defaultValues: {
-      name: '',
-      rule_chain_id: '',
-      attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
-      thing_id: '',
-      handle_msg_svc: '',
-    },
-  })
-
-  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
-    'id',
-    'name',
-  ])
-
-  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
-    label: ruchains?.name,
-    value: JSON.parse(ruchains?.id)?.id,
-  }))
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
     projectId,
     type: 'thing',
@@ -90,7 +73,32 @@ export default function CreateTemplate() {
     value: thing.id,
     label: thing.name,
   }))
-  //console.log('thingSelectData', thingSelectData)
+
+  const { register, formState, watch, handleSubmit, getValues, control, reset } = useForm<
+    CreateTemplateDTO['data']
+  >({
+    resolver: templateAttrSchema && zodResolver(templateAttrSchema),
+     defaultValues: {
+      name: '',
+      rule_chain_id: '',
+       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
+      thing_id: '',
+      handle_msg_svc: '',
+     },
+  })
+  const { fields, append, remove } = useFieldArray({
+    name: 'attributes',
+    control,
+  })  
+  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
+    'id',
+    'name',
+  ])
+
+  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
+    label: ruchains?.name,
+    value: JSON.parse(ruchains?.id)?.id,
+  }))
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
       thingId: getValues('thing_id'),
@@ -103,26 +111,16 @@ export default function CreateTemplate() {
     value: service.name,
     label: service.name,
   }))
-  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
-    null,
-  )
   const { mutate: mutateUpdateTemplate } = useUpdateTemplate({
     isOnCreateTemplate: true,
   })
 
-  const {
-    mutateAsync: mutateAsyncCreateTemplate,
-    isLoading: isLoadingCreateTemplate,
-    isSuccess: isSuccessCreateTemplate,
-  } = useCreateTemplate()
-
-  const { fields, append, remove } = useFieldArray({
-    name: 'attributes',
-    control,
-  })  
+  const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
+    null,
+  )
   return (
     <FormDrawer
-      isDone={isLoadingCreateTemplate}
+      isDone={isSuccessCreateTemplate}
       resetData={() => reset()}
       triggerButton={
         <Button
@@ -139,7 +137,7 @@ export default function CreateTemplate() {
           form="create-template"
           type="submit"
           size="lg"
-          isLoading={isSuccessCreateTemplate}
+          isLoading={isLoadingCreateTemplate}
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
@@ -160,8 +158,6 @@ export default function CreateTemplate() {
               handle_msg_svc: values.handle_msg_svc
             },
           })
-          console.log('dataCreateTemplate', dataCreateTemplate)
-          console.log('values', values)
           mutateUpdateTemplate({
             data: {
               name: dataCreateTemplate.name,
@@ -195,22 +191,6 @@ export default function CreateTemplate() {
             registration={register('name')}
           />
 
-          <SelectDropdown
-            isClearable={true}
-            label={t('cloud:device_template.add_template.flow')}
-            name="rule_chain_id"
-            control={control}
-            options={RuleSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:flow_id') ||
-              option.label === t('table:no_in_flow_id')
-            }
-            noOptionsMessage={() => t('table:no_in_flow_id')}
-            loadingMessage={() => t('loading:flow_id')}
-            isLoading={isLoadingRuchains}
-            placeholder={t('cloud:device_template.add_template.choose_flow_id')}
-            error={formState?.errors?.rule_chain_id}
-          />
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               label={t('cloud:custom_protocol.thing.id')}
@@ -234,6 +214,8 @@ export default function CreateTemplate() {
               error={formState?.errors?.thing_id}
             />
           </div>
+
+          {!isLoadingService ? (
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
@@ -252,6 +234,24 @@ export default function CreateTemplate() {
               error={formState?.errors?.handle_msg_svc}
             />
           </div>
+          ) : null}
+
+          <SelectDropdown
+            isClearable={true}
+            label={t('cloud:device_template.add_template.flow')}
+            name="rule_chain_id"
+            control={control}
+            options={RuleSelectOptions}
+            isOptionDisabled={option =>
+              option.label === t('loading:flow_id') ||
+              option.label === t('table:no_in_flow_id')
+            }
+            noOptionsMessage={() => t('table:no_in_flow_id')}
+            loadingMessage={() => t('loading:flow_id')}
+            isLoading={isLoadingRuchains}
+            placeholder={t('cloud:device_template.add_template.choose_flow_id')}
+            error={formState?.errors?.rule_chain_id}
+          />
           {fields.map((field, index) => (
             <section
               key={field.id}
@@ -339,11 +339,11 @@ export default function CreateTemplate() {
       </form>
       <CreateThing
         thingType="thing"
-        classNameTriggerBtn="absolute right-0 top-[238px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[158px] mr-6"
       />
       <CreateService
         thingId={watch('thing_id')}
-        classNameTriggerBtn="absolute right-0 top-[318px] mr-6"
+        classNameTriggerBtn="absolute right-0 top-[238px] mr-6"
       />
     </FormDrawer>
   )

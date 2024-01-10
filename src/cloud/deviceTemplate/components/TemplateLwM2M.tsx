@@ -64,7 +64,7 @@ export function TemplateLwM2M() {
             {filteredComboboxData?.map((template: Template) => (
               <div className="flex" key={template.id}>
                 <Button
-                  className={clsx('')}
+                  className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}
                   key={template.id}
                   variant="muted"
                   onClick={() =>
@@ -180,7 +180,7 @@ export function TemplateLwM2M() {
             {t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {selectedUpdateTemplate != null ? (
+        {isOpen && selectedUpdateTemplate ? (
           <UpdateTemplateLwM2M
             close={close}
             isOpen={isOpen}

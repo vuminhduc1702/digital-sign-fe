@@ -430,7 +430,7 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
                         />
-                        {widgetInfo?.description === 'CONTROLLER' ? (
+                        {/* {widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
                             widgetInfo={widgetInfo}
                             widgetCategory={widgetInfo?.description}
@@ -443,7 +443,7 @@ export function DashboardDetail() {
                             setWidgetList={setWidgetList}
                             widgetId={widgetId}
                           />
-                        )}
+                        )} */}
                         <DeleteIcon
                           width={20}
                           height={20}

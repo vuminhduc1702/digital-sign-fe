@@ -172,7 +172,7 @@ export function TemplateDefault() {
             {t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
-        {selectedUpdateTemplate != null ? (
+        {isOpen && selectedUpdateTemplate ? (
           <UpdateTemplate
             close={close}
             isOpen={isOpen}

@@ -573,9 +573,12 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
+        "tenant_info": "Thông tin Tenant",
+        "edit_tenant": "Sửa Tenant",
         "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?",
+        "delete_confirm": "Bạn có chắc chắn muốn xóa"
       },
       "add_dashboard": {
         "title": "Thêm mới bảng điều khiển",
@@ -1012,6 +1015,7 @@
     "service_transmit_data": "Dịch vụ Sim Data truyền tải dữ liệu",
     "viettel_M2M": "Viettel M2M IoT ",
     "experience_now": "Trải nghiệm ngay",
+    "user_manual": "Hướng dẫn sử dụng",
     "pack_of_data_M2M": {
       "title": "Sản phẩm gói cước M2M",
       "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng",
@@ -1130,13 +1134,13 @@
       "name": "Tên người dùng",
       "list": "Danh sách người dùng"
     },
-    "customer": {
-      "success_delete": "Xoá khách hàng thành công",
-      "success_update": "Cập nhật khách hàng thành công",
-      "success_update_role": "Cập nhật quyền khách hàng thành công",
-      "edit": "Sửa khách hàng",
-      "delete": "Xoá khách hàng",
-      "create": "Tạo khách hàng"
+    "tenant": {
+      "success_delete": "Xoá Tenant thành công",
+      "success_update": "Cập nhật Tenant thành công",
+      "success_update_role": "Cập nhật quyền Tenant thành công",
+      "edit": "Sửa Tenant",
+      "delete": "Xoá Tenant",
+      "create": "Tạo Tenant"
     },
     "role": {
       "edit": "Sửa quyền",
