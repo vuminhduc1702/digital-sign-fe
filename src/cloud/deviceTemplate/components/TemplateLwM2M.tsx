@@ -45,14 +45,6 @@ export function TemplateLwM2M() {
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
-        {/* <div className="flex gap-3">
-          <img
-            src={listIcon}
-            alt="Template list"
-            className="aspect-square w-[20px]"
-          />
-          <p>{t('cloud:device_template.sidebar.title')}</p>
-        </div> */}
         <CreateTemplateLwM2M />
         <ComboBoxSelectTemplateLwM2M
           setFilteredComboboxData={setFilteredComboboxData}
