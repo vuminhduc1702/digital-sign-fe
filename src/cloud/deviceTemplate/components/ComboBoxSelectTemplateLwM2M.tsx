@@ -1,48 +1,43 @@
 import { useEffect, useState } from 'react'
-import { type FieldValues } from 'react-hook-form'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { useGetTemplates } from '../api'
+import storage from '~/utils/storage'
 
-import { type FieldWrapperPassThroughProps } from '~/components/Form'
+import { type Template } from '../types'
 
 import { SearchIcon } from '~/components/SVGIcons'
-import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
 
-type ComboBoxSelectDeviceProps = {
-  data: EntityThingList
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<EntityThing[]>>
-  offset?: number
-} & FieldWrapperPassThroughProps
-
-export function ComboBoxSelectThing({
-  data,
-  setFilteredComboboxData, 
-  offset,
+export function ComboBoxSelectTemplateLwM2M({
+  setFilteredComboboxData,
   ...props
-}: ComboBoxSelectDeviceProps) {
+}: {
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Template[]>>
+}) {
   const [query, setQuery] = useState('')
 
-  const { acc: thingFlattenData, extractedPropertyKeys } = flattenData(
-    data?.list,
+  const projectId = storage.getProject()?.id
+  const { data } = useGetTemplates({ projectId , protocol: 'lwm2m' })
+  const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
+    data?.templates,
     [
       'id',
       'name',
-      'type',
-      'project_id',
-      'template_name',
-      'create_ts',
-      'description',
-      'total_service',
+      'rule_chain_id',
+      'provision_key',
+      'provision_secret',
+      'created_time',
+      'transport_config',
+      'thing_id',
+      'handle_message_svc'
     ],
   )
-
   const filteredData = filteredComboboxData(
     query,
-    thingFlattenData,
+    templateFlattenData,
     extractedPropertyKeys,
   )
-
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
   }, [query, data])

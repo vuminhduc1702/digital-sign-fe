@@ -1,51 +1,45 @@
 import { useEffect, useState } from 'react'
-import { type FieldValues } from 'react-hook-form'
-
-import { flattenData } from '~/utils/misc'
+import { useParams } from 'react-router-dom'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
-
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
-
 import { SearchIcon } from '~/components/SVGIcons'
-import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
+import { flattenData } from '~/utils/misc'
+import { useTemplateById } from '../api/getTemplateById'
+import { type ModuleConfig } from '../types'
 
 type ComboBoxSelectDeviceProps = {
-  data: EntityThingList
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<EntityThing[]>>
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<ModuleConfig[]>>
   offset?: number
 } & FieldWrapperPassThroughProps
 
-export function ComboBoxSelectThing({
-  data,
-  setFilteredComboboxData, 
-  offset,
+export function ComboBoxSelectModuleConfig({
+  setFilteredComboboxData,
   ...props
 }: ComboBoxSelectDeviceProps) {
   const [query, setQuery] = useState('')
-
-  const { acc: thingFlattenData, extractedPropertyKeys } = flattenData(
-    data?.list,
+  const params = useParams()
+  const templateId = params.templateId as string
+  const { data: LwM2MDataById } = useTemplateById ({ templateId })
+  //console.log('data12', LwM2MDataById)
+  // console.log('filteredComboboxData', filteredComboboxData)
+  const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
+    LwM2MDataById?.transport_config?.info?.module_config || [],
     [
+      'module_name',
+      'numberOfAttributes',
       'id',
-      'name',
-      'type',
-      'project_id',
-      'template_name',
-      'create_ts',
-      'description',
-      'total_service',
+      'created_time',
     ],
   )
 
   const filteredData = filteredComboboxData(
     query,
-    thingFlattenData,
+    templateLwM2MFlattenData,
     extractedPropertyKeys,
   )
-
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
-  }, [query, data])
+  }, [query, LwM2MDataById])
 
   return (
     <ComboBoxBase

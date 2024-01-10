@@ -86,7 +86,6 @@ export const roleSchema = z
       }),
     ]),
   )
-
 export function CreateRole({ project_id = '' }: { project_id: string }) {
   const { t } = useTranslation()
   const [type, setType] = useState('Generic')

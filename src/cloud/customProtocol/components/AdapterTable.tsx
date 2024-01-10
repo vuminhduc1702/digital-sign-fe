@@ -44,7 +44,6 @@ function AdapterTableContextMenu({
   const { mutate, isLoading, isSuccess } = useDeleteAdapter()
 
   const handleCopyId = useCopyId()
-
   return (
     <>
       <Dropdown

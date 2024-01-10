@@ -115,11 +115,10 @@ function ThingTableContextMenu({
 type ThingTableProps = {
   data: EntityThing[]
 } & BaseTablePagination
-
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
-
+  console.log('data', data)
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
     () => [

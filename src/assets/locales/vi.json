@@ -368,22 +368,31 @@
       "title": "Mẫu thiết bị",
       "info": {
         "title": "Thông tin mẫu thiết bị",
+        "listattr": "Danh sách nhóm thuộc tính",
+        "attr": "Danh sách thuộc tính",
         "flow": "Flow",
         "provision_key": "Provision key",
         "provision_secret": "Provision secret",
         "created_at": "Ngày tạo",
         "create_by": "Người tạo"
+      }, 
+      "listLwM2M": {
+        "name": "Nhóm thuộc tính",
+        "numberAttr": "Số lượng thuộc tính",
+        "id": "ID"
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
         "update": "Sửa mẫu thiết bị",
         "flow": "Flow ID",
+        "lwm2m": "Mô hình đối tượng LWM2M",
         "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
         "success_delete": "Xoá mẫu thiết bị thành công",
         "choose_flow_id": "Vui lòng chọn flow id",
+        "choose_lwm2m_model": "Vui lòng chọn mô hình đối tượng LWM2M",
         "no_flow_id": "Không thuộc flow id"
       },
       "sidebar": {
@@ -852,6 +861,7 @@
     "no_template": "Không có thiết bị mẫu. Vui lòng tạo.",
     "no_in_org": "Không trực thuộc tổ chức.",
     "no_in_flow_id": "Không thuộc flow id.",
+    "no_in_lwm2m_model": "Không có mô hình đối tượng LWM2M.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subscription": "Không có dịch vụ. Vui lòng tạo.",
@@ -901,6 +911,7 @@
     "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "flow_id": "Đang tải danh sách flow id...",
+    "lwm2m_model": "Đang tải danh sách mô hình đối tượng LWM2M...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",

@@ -31,6 +31,7 @@ export const PATHS = {
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,
 
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
+  DEVICE_TEMPLATELWM2M: `${BASE_PATH_CLOUD}device-template`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,

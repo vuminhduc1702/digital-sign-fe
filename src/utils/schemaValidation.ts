@@ -77,3 +77,12 @@ export const emptyInputSchema = z
 export const emptySelectSchema = z
   .string()
   .min(1, { message: 'Vui lòng chọn mục này' })
+
+export const attributeInfoSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    kind: z.string(),
+    type: z.string(),
+    action: z.string(),
+  })
+  

@@ -23,9 +23,14 @@ import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
 
+
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
+)
+const { DeviceTemplatelwm2mManage } = lazyImport(
+  () => import('~/cloud/deviceTemplate'),
+  'DeviceTemplatelwm2mManage',
 )
 const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
@@ -44,7 +49,6 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
-
 export const protectedRoutes = [
   {
     element: <MainLayout />,
@@ -67,6 +71,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
+      },
+      {
+        path: PATHS.DEVICE_TEMPLATELWM2M,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DeviceTemplatelwm2mManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':lwm2m/:templateId' }, { path: ':lwm2m/:templateId/:id' }] }],
       },
       {
         path: PATHS.FLOW_ENGINE,
