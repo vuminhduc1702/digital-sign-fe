@@ -1,21 +1,20 @@
+import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { BaseTable } from '~/components/Table'
-import { Menu } from '@headlessui/react'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { BaseTable } from '~/components/Table'
 import { type BaseTablePagination } from '~/types'
-import storage from '~/utils/storage'
-import { type BillingCustomerEntity } from '../types'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { useDisclosure } from '~/utils/hooks'
-import { useDeleteCustomer } from '../api/deleteCustomerApi'
-import { UpdateCustomer } from './UpdateCustomer'
+import { useDeleteCustomer } from '../api/deleteTenantApi'
+import { type BillingCustomerEntity } from '../types'
+import { UpdateCustomer } from './UpdateTenant'
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -52,7 +51,7 @@ function CustomerTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -66,10 +65,10 @@ function CustomerTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('form:customer.delete')}
-              body={`Bạn có chắc chắn muốn xoá ${name}`}
+              body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -133,9 +132,7 @@ export function BillingCustomerTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
-        header: () => (
-          <span>{t('billing:subcription.popup.customer_name')}</span>
-        ),
+        header: () => <span>Tenant</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

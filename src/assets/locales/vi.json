@@ -564,9 +564,12 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
+        "tenant_info": "Thông tin Tenant",
+        "edit_tenant": "Sửa Tenant",
         "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?",
+        "delete_confirm": "Bạn có chắc chắn muốn xóa"
       },
       "add_dashboard": {
         "title": "Thêm mới bảng điều khiển",
