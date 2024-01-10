@@ -20,6 +20,8 @@ import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
+import * as d3 from 'd3'
+
 export const BarChart = ({
   data,
   widgetInfo,
@@ -32,6 +34,8 @@ export const BarChart = ({
   refreshBtn?: boolean
 }) => {
   // console.log(`new bar: `, data)
+  const TICK_COUNT = 7
+  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -184,6 +188,49 @@ export const BarChart = ({
     minDuration: 500,
   })
 
+  const renderTooltip = (props: any) => {
+    const { payload } = props
+    return (
+      <div>
+        {payload.length === 0 ? (
+          <></>
+        ) : (
+          <>
+            {payload.map((entry: any, index: number) => {
+              const unitConfig = widgetInfo.attribute_config.filter(
+                obj => obj.attribute_key === entry.dataKey,
+              )
+              if (entry.payload.ts !== 0) {
+                return (
+                  <div
+                    key={`item-${index}`}
+                    className="flex flex-col justify-between p-[10px] m-[3px] bg-white border border-gray-300"
+                  >
+                    <div>{timeFormatter(entry.payload.ts)}</div>
+                    <div
+                      style={{ color: entry.color ? entry.color : 'inherit' }}
+                    >
+                      {unitConfig &&
+                      unitConfig.length > 0 &&
+                      unitConfig[0].unit !== ''
+                        ? unitConfig[0].attribute_key +
+                          ': ' +
+                          entry.value +
+                          ' (' +
+                          unitConfig[0].unit +
+                          ')'
+                        : entry.value}
+                    </div>
+                  </div>
+                )
+              }
+            })}
+          </>
+        )}
+      </div>
+    )
+  }
+
   const renderLegend = (props: any) => {
     const { payload } = props
     return (
@@ -221,28 +268,158 @@ export const BarChart = ({
     }, 1000)
   }
 
-  // console.log('transform bar', dataTransformedFeedToChart)
+  function timeFormatter(tick: any | null) {
+    if (TICK_INTERVAL <= 1000 * 60 * 60) {
+      return d3.timeFormat('%H:%M:%S')(new Date(tick))
+    } else if (
+      60000 * 60 <= TICK_INTERVAL &&
+      TICK_INTERVAL <= 1000 * 60 * 60 * 24
+    ) {
+      return d3.timeFormat('%H:%M %d')(new Date(tick))
+    } else {
+      return d3.timeFormat('%d/%m/%y')(new Date(tick))
+    }
+  }
+
+  const initStart = new Date().getTime() - TICK_COUNT * TICK_INTERVAL
+  const initEnd = new Date().getTime()
+  const [ticks, setTicks] = useState(
+    d3.range(initStart, initEnd, TICK_INTERVAL),
+  )
+  const [realtimeData, setRealtimeData] = useState<
+    Array<{ ts: number; [key: string]: string | number }>
+  >([
+    {
+      ts: 0,
+    },
+  ])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      updateScale()
+    }, 1000)
+
+    return () => {
+      clearInterval(interval)
+    }
+  }, [realtimeData, newValuesRef])
+
+  function updateScale() {
+    const now = new Date()
+    const start = now.getTime() - TICK_COUNT * TICK_INTERVAL
+    const end = now.getTime()
+    const divineTick = d3.range(start, end, TICK_INTERVAL)
+
+    for (let widget in newValuesRef.current) {
+      const transformedNewValues: Array<{
+        ts: number
+        [key: string]: string | number
+      }> = []
+      newValuesRef.current[widget].map(item => {
+        if (item.ts > start && item.ts < ticks[ticks.length - 1]) {
+          const returnValue = {
+            ts: item.ts,
+            [widget]: parseFloat(item.value),
+            date: dateTransformation(item.ts),
+          }
+          transformedNewValues.push(returnValue)
+        }
+      })
+      if (transformedNewValues.length > 0) {
+        setRealtimeData(transformedNewValues)
+      } else {
+        setRealtimeData([
+          {
+            ts: 0,
+            [widget]: 0,
+          },
+        ])
+      }
+    }
+    setTicks(divineTick)
+  }
 
   return (
     <>
-      {!showSpinner && newValuesRef.current != null && !isRefresh ? (
+      {refreshBtn && (
+        <div
+          className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+          onClick={refresh}
+        >
+          <img src={refreshIcon} alt="" />
+        </div>
+      )}
+      {widgetInfo?.config?.chartsetting.data_type === 'HISTORY' ? (
+        !showSpinner && newValuesRef.current != null && !isRefresh ? (
+          <>
+            <ResponsiveContainer width="98%" height="90%" className="pt-8">
+              <BarReChart data={dataTransformedFeedToChart}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis />
+                <Tooltip />
+                <Legend content={renderLegend} />
+                <Brush dataKey="time" height={30} stroke="#8884d8" />
+                {Object.keys(newValuesRef.current).map((key, index) => {
+                  const colorConfig = widgetInfo.attribute_config.filter(
+                    obj => obj.attribute_key === key,
+                  )
+                  return (
+                    <Bar
+                      key={index.toString()}
+                      dataKey={key}
+                      animationDuration={250}
+                      barSize={10}
+                      stroke={
+                        colorConfig && colorConfig[0].color !== ''
+                          ? colorConfig[0].color
+                          : '#e8c1a0'
+                      }
+                      fill={
+                        colorConfig && colorConfig[0].color !== ''
+                          ? colorConfig[0].color
+                          : '#e8c1a0'
+                      }
+                    />
+                  )
+                })}
+                {/* stackId="a" */}
+              </BarReChart>
+            </ResponsiveContainer>
+          </>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <Spinner
+              //  showSpinner={showSpinner}
+              size="xl"
+            />
+          </div>
+        )
+      ) : !showSpinner && newValuesRef.current != null ? (
         <>
-          {refreshBtn && (
-            <div
-              className="absolute top-[50px] left-[10px] cursor-pointer z-20"
-              onClick={refresh}
-            >
-              <img src={refreshIcon} alt="" />
-            </div>
-          )}
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <BarReChart data={dataTransformedFeedToChart}>
+            <BarReChart data={realtimeData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="time" />
+              <XAxis
+                dataKey="ts"
+                scale="time"
+                type="number"
+                domain={[ticks[0], ticks[ticks.length - 1]]}
+                ticks={ticks}
+                tickCount={TICK_COUNT}
+                tickFormatter={timeFormatter}
+                allowDuplicatedCategory={true}
+                allowDataOverflow={true}
+              />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={renderTooltip} cursor={{ fill: 'transparent' }} />
               <Legend content={renderLegend} />
-              <Brush dataKey="time" height={30} stroke="#8884d8" />
+              {/* <Brush
+                dataKey="time"
+                height={30}
+                stroke="#8884d8"
+                tickFormatter={timeFormatter}
+              /> */}
               {Object.keys(newValuesRef.current).map((key, index) => {
                 const colorConfig = widgetInfo.attribute_config.filter(
                   obj => obj.attribute_key === key,
@@ -271,12 +448,33 @@ export const BarChart = ({
           </ResponsiveContainer>
         </>
       ) : (
-        <div className="flex h-full items-center justify-center">
-          <Spinner
-            //  showSpinner={showSpinner}
-            size="xl"
-          />
-        </div>
+        <>
+          <ResponsiveContainer width="98%" height="90%" className="pt-8">
+            <BarReChart>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="ts"
+                scale="time"
+                type="number"
+                domain={[ticks[0], ticks[ticks.length - 1]]}
+                ticks={ticks}
+                tickCount={TICK_COUNT}
+                tickFormatter={timeFormatter}
+                allowDuplicatedCategory={true}
+                allowDataOverflow={true}
+              />
+              <YAxis />
+              <Tooltip />
+              <Legend content={renderLegend} />
+              {/* <Brush
+                dataKey="time"
+                height={30}
+                stroke="#8884d8"
+                tickFormatter={timeFormatter}
+              /> */}
+            </BarReChart>
+          </ResponsiveContainer>
+        </>
       )}
     </>
   )
