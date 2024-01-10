@@ -21,7 +21,6 @@ import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 import * as d3 from 'd3'
-import { transform } from 'framer-motion'
 
 export function LineChart({
   data,
@@ -189,6 +188,52 @@ export function LineChart({
     delay: 400,
     minDuration: 500,
   })
+  
+  const renderTooltip = (props: any) => {
+    const { payload } = props
+    return (
+      <div>
+        {payload.length === 0 ? (
+          <></>
+        ) : (
+          <>
+            {payload.map((entry: any, index: number) => {
+              const unitConfig = widgetInfo.attribute_config.filter(
+                obj => obj.attribute_key === entry.dataKey,
+              )
+              if (entry.payload.ts !== 0) {
+                return (
+                  <div
+                    key={`item-${index}`}
+                    className="flex flex-col justify-between p-[10px] m-[3px] bg-white border border-gray-300"
+                  >
+                    <div>{timeFormatter(entry.payload.ts)}</div>
+                    <div
+                      className={`
+                      color-blue-200
+                    `}
+                      style={{ color: entry.color ? entry.color : 'inherit' }}
+                    >
+                      {unitConfig &&
+                      unitConfig.length > 0 &&
+                      unitConfig[0].unit !== ''
+                        ? unitConfig[0].attribute_key +
+                          ': ' +
+                          entry.value +
+                          ' (' +
+                          unitConfig[0].unit +
+                          ')'
+                        : entry.value}
+                    </div>
+                  </div>
+                )
+              }
+            })}
+          </>
+        )}
+      </div>
+    )
+  }
 
   const renderLegend = (props: any) => {
     const { payload } = props
@@ -226,7 +271,6 @@ export function LineChart({
       setIsRefresh(false)
     }, 1000)
   }
-
 
   function timeFormatter(tick: any | null) {
     if (TICK_INTERVAL <= 1000 * 60 * 60) {
@@ -284,7 +328,16 @@ export function LineChart({
           transformedNewValues.push(returnValue)
         }
       })
-      setRealtimeData(transformedNewValues)
+      if (transformedNewValues.length > 0) {
+        setRealtimeData(transformedNewValues)
+      } else {
+        setRealtimeData([
+          {
+            ts: 0,
+            [widget]: 0,
+          },
+        ])
+      }
     }
     setTicks(divineTick)
   }
@@ -348,22 +401,24 @@ export function LineChart({
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
-                allowDuplicatedCategory={false}
                 scale="time"
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
+                tickCount={TICK_COUNT}
                 tickFormatter={timeFormatter}
+                allowDuplicatedCategory={false}
+                allowDataOverflow={true}
               />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={renderTooltip}/>
               <Legend content={renderLegend} />
-              <Brush
+              {/* <Brush
                 dataKey="ts"
                 height={30}
                 stroke="#8884d8"
                 tickFormatter={timeFormatter}
-              />
+              /> */}
               {Object.keys(newValuesRef.current).map((key, index) => {
                 const colorConfig = widgetInfo.attribute_config.filter(
                   obj => obj.attribute_key === key,
@@ -384,7 +439,6 @@ export function LineChart({
                     }
                     activeDot={{ r: 5 }}
                     dot={false}
-                    
                   />
                 )
               })}
@@ -408,9 +462,14 @@ export function LineChart({
                 allowDataOverflow={true}
               />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={renderTooltip}/>
               <Legend content={renderLegend} />
-              <Brush dataKey="ts" height={30} stroke="#8884d8" />
+              {/* <Brush
+                dataKey="ts"
+                height={30}
+                stroke="#8884d8"
+                tickFormatter={timeFormatter}
+              /> */}
             </LineWidget>
           </ResponsiveContainer>
         </>
