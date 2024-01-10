@@ -1123,13 +1123,13 @@
       "name": "Tên người dùng",
       "list": "Danh sách người dùng"
     },
-    "customer": {
-      "success_delete": "Xoá khách hàng thành công",
-      "success_update": "Cập nhật khách hàng thành công",
-      "success_update_role": "Cập nhật quyền khách hàng thành công",
-      "edit": "Sửa khách hàng",
-      "delete": "Xoá khách hàng",
-      "create": "Tạo khách hàng"
+    "tenant": {
+      "success_delete": "Xoá Tenant thành công",
+      "success_update": "Cập nhật Tenant thành công",
+      "success_update_role": "Cập nhật quyền Tenant thành công",
+      "edit": "Sửa Tenant",
+      "delete": "Xoá Tenant",
+      "create": "Tạo Tenant"
     },
     "role": {
       "edit": "Sửa quyền",

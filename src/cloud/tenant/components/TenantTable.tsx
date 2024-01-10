@@ -59,12 +59,12 @@ function CustomerTableContextMenu({
               }
               onClick={open}
             >
-              {t('form:customer.edit')}
+              {t('form:tenant.edit')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('form:customer.delete')}
+              title={t('form:tenant.delete')}
               body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
@@ -79,7 +79,7 @@ function CustomerTableContextMenu({
                     />
                   }
                 >
-                  {t('form:customer.delete')}
+                  {t('form:tenant.delete')}
                 </Button>
               }
               confirmButton={

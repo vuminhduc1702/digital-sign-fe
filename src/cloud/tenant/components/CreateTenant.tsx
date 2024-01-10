@@ -58,7 +58,7 @@ export const entityCustomerSchema = z
 export function CreateCustomer() {
   const { t } = useTranslation()
 
-  const { register, formState, handleSubmit } = useForm<
+  const { register, formState, handleSubmit, reset } = useForm<
     CreateEntityCustomerDTO['data']
   >({
     resolver: entityCustomerSchema && zodResolver(entityCustomerSchema),
@@ -103,10 +103,11 @@ export function CreateCustomer() {
     <FormDialog
       size="lg"
       isDone={isSuccess}
-      title={t('form:customer.create')}
+      title={t('form:tenant.create')}
+      resetData={() => reset()}
       body={
         <form
-          id="create-customer"
+          id="create-tenant"
           className="flex flex-col justify-between"
           onSubmit={handleSubmit(values => {
             mutate({
@@ -291,7 +292,7 @@ export function CreateCustomer() {
       confirmButton={
         <Button
           isLoading={isLoading}
-          form="create-customer"
+          form="create-tenant"
           type="submit"
           size="md"
           className="bg-primary-400"

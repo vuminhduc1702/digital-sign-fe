@@ -24,7 +24,7 @@ export const useDeleteCustomer = ({
         () => queryClient.invalidateQueries(['call-customer-list-api']),
         {
           loading: t('loading:loading'),
-          success: t('form:customer.success_delete'),
+          success: t('form:tenant.success_delete'),
           error: t('error:server_res.title'),
         },
       )

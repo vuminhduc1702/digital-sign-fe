@@ -31,7 +31,7 @@ export const useUpdateCustomerRole = ({
       await queryClient.invalidateQueries({
         queryKey: ['call-customer-list-api'],
       })
-      toast.success(t('form:customer.success_update_role')) 
+      toast.success(t('form:tenant.success_update_role'))
     },
     ...config,
     mutationFn: updateCustomerRole,
