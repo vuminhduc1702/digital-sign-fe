@@ -1,5 +1,0 @@
-export * from './CreateTemplate'
-export * from './UpdateTemplate'
-export * from './ComboBoxSelectTemplate'
-export * from './TemplateSidebar'
-export * from './TemplateInfo'
