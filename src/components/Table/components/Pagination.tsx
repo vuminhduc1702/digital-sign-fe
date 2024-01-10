@@ -69,7 +69,7 @@ const Pagination = <T extends Record<string, any>>({
         return typeof pageNumber === 'number' ? (
           <li
             className={clsx('pagination-item', {
-              selected: pageNumber === currentPage + 1,
+              'text-primary-400': pageNumber === currentPage + 1,
             })}
             onClick={() => table.setPageIndex(pageNumber - 1)}
             key={index}
