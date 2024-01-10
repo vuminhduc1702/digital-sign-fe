@@ -192,11 +192,9 @@ export const BarChart = ({
     const { payload } = props
     return (
       <div>
-        {payload.length === 0 ? (
-          <></>
-        ) : (
+        {payload?.length === 0 ? null : (
           <>
-            {payload.map((entry: any, index: number) => {
+            {payload?.map((entry: any, index: number) => {
               const unitConfig = widgetInfo.attribute_config.filter(
                 obj => obj.attribute_key === entry.dataKey,
               )
@@ -204,7 +202,7 @@ export const BarChart = ({
                 return (
                   <div
                     key={`item-${index}`}
-                    className="flex flex-col justify-between p-[10px] m-[3px] bg-white border border-gray-300"
+                    className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
                     <div>{timeFormatter(entry.payload.ts)}</div>
                     <div
@@ -235,7 +233,7 @@ export const BarChart = ({
     const { payload } = props
     return (
       <div className="pt-3 text-center">
-        {payload.reverse().map((entry: any, index: number) => {
+        {payload?.reverse().map((entry: any, index: number) => {
           const unitConfig = widgetInfo.attribute_config.filter(
             obj => obj.attribute_key === entry.dataKey,
           )
@@ -343,7 +341,7 @@ export const BarChart = ({
     <>
       {refreshBtn && (
         <div
-          className="absolute top-[50px] left-[10px] cursor-pointer z-20"
+          className="absolute left-[10px] top-[50px] z-20 cursor-pointer"
           onClick={refresh}
         >
           <img src={refreshIcon} alt="" />
@@ -412,7 +410,10 @@ export const BarChart = ({
                 allowDataOverflow={true}
               />
               <YAxis />
-              <Tooltip content={renderTooltip} cursor={{ fill: 'transparent' }} />
+              <Tooltip
+                content={renderTooltip}
+                cursor={{ fill: 'transparent' }}
+              />
               <Legend content={renderLegend} />
               {/* <Brush
                 dataKey="time"
