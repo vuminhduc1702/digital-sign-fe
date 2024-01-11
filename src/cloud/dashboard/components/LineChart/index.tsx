@@ -33,8 +33,9 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  const TICK_COUNT = 7
-  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
+  const TICK_COUNT = 6
+  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
+  const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -271,35 +272,71 @@ export function LineChart({
   }
 
   function timeFormatter(tick: any | null) {
-    if (TICK_INTERVAL <= 1000 * 60 * 60) {
-      return d3.timeFormat('%H:%M:%S')(new Date(tick))
-    } else if (
-      60000 * 60 <= TICK_INTERVAL &&
-      TICK_INTERVAL <= 1000 * 60 * 60 * 24
-    ) {
-      return d3.timeFormat('%H:%M %d')(new Date(tick))
-    } else {
-      return d3.timeFormat('%d/%m/%y')(new Date(tick))
+    switch (TIME_PERIOD) {
+      case 1000:
+        return d3.timeFormat('%H:%M:%S')(new Date(tick))
+      case 1000 * 60:
+        return d3.timeFormat('%H:%M:%S')(new Date(tick))
+      case 1000 * 60 * 60:
+        switch (TICK_INTERVAL) {
+          case 1000:
+            return d3.timeFormat('%H:%M:%S')(new Date(tick))
+          default:
+            return d3.timeFormat('%H:%M')(new Date(tick))
+        }
+      case 1000 * 60 * 60 * 24:
+        switch(TICK_INTERVAL) {
+          case 1000: 
+            return d3.timeFormat('%H:%M:%S %d')(new Date(tick))
+          case 1000 * 60: 
+            return d3.timeFormat('%H:%M %d')(new Date(tick))
+          default: 
+            return d3.timeFormat('%H:%M %d')(new Date(tick))
+        }
+      default:
+        switch(TICK_INTERVAL) {
+          case 1000: 
+            return d3.timeFormat('%H:%M:%S %d/%m')(new Date(tick))
+          case 1000 * 60: 
+            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
+          case 1000 * 60 * 60:
+            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
+          default: 
+            return d3.timeFormat('%d/%m/%Y')(new Date(tick))
+        }
     }
   }
 
-  const initStart = new Date().getTime() - TICK_COUNT * TICK_INTERVAL
-  const initEnd = new Date().getTime()
+  const initNow = new Date().getTime()
+  const initStart = initNow - TIME_PERIOD
+  const initEnd = initNow
   const [ticks, setTicks] = useState(
-    d3.range(initStart, initEnd, TICK_INTERVAL),
+    TIME_PERIOD <= 1000
+      ? [initStart, initEnd]
+      : d3.range(initStart, initEnd + 1, TIME_PERIOD / TICK_COUNT),
   )
   const [realtimeData, setRealtimeData] = useState<
     Array<{ ts: number; [key: string]: string | number }>
   >([
     {
       ts: 0,
+      [widgetInfo.attribute_config[0].attribute_key]: 0,
     },
   ])
+
+  const [hasRenderedInit, setHasRenderedInit] = useState(false)
+
+  useEffect(() => {
+    if (newValuesRef.current !== null && !hasRenderedInit) {
+      updateScale()
+      setHasRenderedInit(true)
+    }
+  }, [newValuesRef.current])
 
   useEffect(() => {
     const interval = setInterval(() => {
       updateScale()
-    }, 1000)
+    }, TICK_INTERVAL)
 
     return () => {
       clearInterval(interval)
@@ -307,37 +344,41 @@ export function LineChart({
   }, [realtimeData, newValuesRef])
 
   function updateScale() {
-    const now = new Date()
-    const start = now.getTime() - TICK_COUNT * TICK_INTERVAL
-    const end = now.getTime()
-    const divineTick = d3.range(start, end, TICK_INTERVAL)
+    const now = new Date().getTime()
+    const start = now - TIME_PERIOD
+    const end = now
 
-    for (let widget in newValuesRef.current) {
-      const transformedNewValues: Array<{
-        ts: number
-        [key: string]: string | number
-      }> = []
-      newValuesRef.current[widget].map(item => {
-        if (item.ts > start && item.ts < ticks[ticks.length - 1]) {
-          const returnValue = {
-            ts: item.ts,
-            [widget]: parseFloat(item.value),
+    if (TIME_PERIOD <= 1000) {
+      setTicks([start, end])
+    } else {
+      const divineTick = d3.range(start, end + 1, TIME_PERIOD / TICK_COUNT)
+      for (let widget in newValuesRef.current) {
+        const transformedNewValues: Array<{
+          ts: number
+          [key: string]: string | number
+        }> = []
+        newValuesRef.current[widget].map(item => {
+          if (item.ts > start && item.ts < end) {
+            const returnValue = {
+              ts: item.ts,
+              [widget]: parseFloat(item.value),
+            }
+            transformedNewValues.push(returnValue)
           }
-          transformedNewValues.push(returnValue)
+        })
+        if (transformedNewValues.length > 0) {
+          setRealtimeData(transformedNewValues)
+        } else {
+          setRealtimeData([
+            {
+              ts: 0,
+              [widget]: 0,
+            },
+          ])
         }
-      })
-      if (transformedNewValues.length > 0) {
-        setRealtimeData(transformedNewValues)
-      } else {
-        setRealtimeData([
-          {
-            ts: 0,
-            [widget]: 0,
-          },
-        ])
       }
+      setTicks(divineTick)
     }
-    setTicks(divineTick)
   }
 
   return (
@@ -403,7 +444,7 @@ export function LineChart({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={false}
                 allowDataOverflow={true}
@@ -446,7 +487,7 @@ export function LineChart({
       ) : (
         <>
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <LineWidget>
+            <LineWidget data={realtimeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
@@ -454,7 +495,7 @@ export function LineChart({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={true}
                 allowDataOverflow={true}
@@ -468,6 +509,14 @@ export function LineChart({
                 stroke="#8884d8"
                 tickFormatter={timeFormatter}
               /> */}
+              <Line
+                connectNulls
+                type="monotone"
+                dataKey={widgetInfo.attribute_config[0].attribute_key}
+                animationDuration={250}
+                activeDot={{ r: 5 }}
+                dot={false}
+              />
             </LineWidget>
           </ResponsiveContainer>
         </>
