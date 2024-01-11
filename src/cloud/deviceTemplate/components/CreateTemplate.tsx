@@ -81,9 +81,7 @@ export default function CreateTemplate() {
      defaultValues: {
       name: '',
       rule_chain_id: '',
-       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
-      thing_id: '',
-      handle_msg_svc: '',
+      attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
      },
   })
   const { fields, append, remove } = useFieldArray({
@@ -215,7 +213,7 @@ export default function CreateTemplate() {
             />
           </div>
 
-          {!isLoadingService ? (
+          {/* {!isLoadingService ? ( */}
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
@@ -234,7 +232,7 @@ export default function CreateTemplate() {
               error={formState?.errors?.handle_msg_svc}
             />
           </div>
-          ) : null}
+          {/* ) : null} */}
 
           <SelectDropdown
             isClearable={true}

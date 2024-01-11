@@ -202,9 +202,10 @@ export default function CreateTemplateLwM2M() {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1) {
+          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true ) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-          } else {
+          } 
+          if(updatedCheckboxStates[item.id] === false) {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
@@ -384,7 +385,6 @@ const data = {
             />
           </div>
           
-          {!isLoadingService ? (
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
@@ -403,7 +403,7 @@ const data = {
               error={formState?.errors?.handle_msg_svc}
             />
           </div>
-          ) : null}
+          
           <div className="space-y-1">
             <SelectDropdown
               isClearable

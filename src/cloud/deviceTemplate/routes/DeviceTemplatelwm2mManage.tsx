@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { TemplateInfo, TemplateSidebar } from '../components'
+import { TemplateInfo, TemplateSidebar1 } from '../components'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
 import storage from '~/utils/storage'
@@ -34,7 +34,7 @@ export function DeviceTemplatelwm2mManage() {
     <ContentLayout title={t('sidebar:cloud.device_template')}>
       <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
         <div className="flex grow flex-col gap-2 md:col-span-1">
-          <TemplateSidebar />
+          <TemplateSidebar1 />
         </div>
         {projectId && templateId && !id ? (
           <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
