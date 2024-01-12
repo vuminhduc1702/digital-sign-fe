@@ -1,9 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { type z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { format } from 'date-fns'
+import ColorPicker from 'react-pick-color'
+import { type SelectInstance } from 'react-select'
+
 import { FormDialog } from '~/components/FormDialog'
-
 import { Button } from '~/components/Button'
-
 import {
   type Widget,
   type WidgetCreate,
@@ -13,12 +19,6 @@ import {
   wsInterval,
   widgetAgg,
 } from './CreateWidget'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
-import { useEffect, useMemo, useRef, useState } from 'react'
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import {
@@ -35,13 +35,12 @@ import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import ColorPicker from 'react-pick-color'
+import { Calendar, TimePicker } from '~/components/Calendar'
+
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { Calendar, TimePicker } from '~/components/Calendar'
-import { useParams } from 'react-router-dom'
-import { type SelectInstance } from 'react-select'
 
 export function UpdateWidget({
   widgetInfo,
@@ -60,7 +59,8 @@ export function UpdateWidget({
   const colorPickerRef = useRef()
   const [isDone, setIsDone] = useState(false)
 
-  const widgetInfoMemo = useMemo(() => widgetInfo, [])
+  const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
+  // console.log('widgetInfoMemo', widgetInfoMemo)
 
   const initParse =
     widgetInfoMemo?.datasource?.init_message &&
@@ -84,7 +84,7 @@ export function UpdateWidget({
     resetField,
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
-    values: {
+    defaultValues: {
       title: widgetInfoMemo?.title,
       org_id: widgetInfoMemo?.datasource?.org_id
         ? JSON.parse(widgetInfoMemo?.datasource?.org_id)
@@ -102,13 +102,12 @@ export function UpdateWidget({
       },
     },
   })
+  console.log('formState.errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,
   })
-
-  // console.log(fields, 'check fields update widget')
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
@@ -314,7 +313,7 @@ export function UpdateWidget({
                 color: item.color,
                 max: item.max,
                 min: item.min,
-                label: item.label,
+                // label: item.label,
                 unit: item.unit,
               })),
               config:
@@ -472,7 +471,7 @@ export function UpdateWidget({
                       onClick={() =>
                         append({
                           attribute_key: '',
-                          label: '',
+                          // label: '',
                           color: '',
                           unit: '',
                           max: 100,

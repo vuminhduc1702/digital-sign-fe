@@ -430,7 +430,7 @@ export function LineChart({
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <Spinner size="xl" />
+            <Spinner size="xl" showSpinner={showSpinner} />
           </div>
         )
       ) : !showSpinner && newValuesRef.current != null ? (

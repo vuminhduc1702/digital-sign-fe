@@ -270,6 +270,8 @@ export const widgetSchema = z.object({
     lastest_message: z.string(),
     realtime_message: z.string(),
     history_message: z.string(),
+    org_id: z.string(),
+    controller_message: z.string().optional(),
   }),
   attribute_config: attrWidgetSchema,
   config: z
@@ -364,11 +366,7 @@ export const widgetCreateSchema = z.object({
   id: z.string().optional(),
 })
 
-type WidgetCreateDTO = {
-  data: z.infer<typeof widgetCreateSchema> & { id: string }
-}
-
-export type WidgetCreate = WidgetCreateDTO['data']
+export type WidgetCreate = z.infer<typeof widgetCreateSchema> & { id: string }
 
 type CreateWidgetProps = {
   widgetType: WidgetType
