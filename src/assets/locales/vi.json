@@ -962,7 +962,44 @@
       "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
-      "data_point": "Số data point"
+      "data_point": "Số data point", 
+      "time_period_value": {
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "5hour": "5 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày", 
+        "7day": "7 ngày", 
+        "30day": "30 ngày"
+      }, 
+      "interval": {
+        "1second": "1 giây",
+        "5second": "5 giây",
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày"
+      }
     }
   },
   "validate": {

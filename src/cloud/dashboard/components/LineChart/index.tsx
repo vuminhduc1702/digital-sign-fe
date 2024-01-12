@@ -33,7 +33,7 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  const TICK_COUNT = 6
+  const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
@@ -207,12 +207,7 @@ export function LineChart({
                     className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
                     <div>{timeFormatter(entry.payload.ts)}</div>
-                    <div
-                      className={`
-                      color-blue-200
-                    `}
-                      style={{ color: entry.color ? entry.color : 'inherit' }}
-                    >
+                    <div style={{ color: entry.color }}>
                       {unitConfig &&
                       unitConfig.length > 0 &&
                       unitConfig[0].unit !== ''
@@ -272,37 +267,28 @@ export function LineChart({
   }
 
   function timeFormatter(tick: any | null) {
-    switch (TIME_PERIOD) {
-      case 1000:
-        return d3.timeFormat('%H:%M:%S')(new Date(tick))
-      case 1000 * 60:
-        return d3.timeFormat('%H:%M:%S')(new Date(tick))
-      case 1000 * 60 * 60:
-        switch (TICK_INTERVAL) {
-          case 1000:
+    switch (true) {
+      case TIME_PERIOD <= 1000 * 60 * 60 * 12:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
             return d3.timeFormat('%H:%M:%S')(new Date(tick))
           default:
             return d3.timeFormat('%H:%M')(new Date(tick))
         }
-      case 1000 * 60 * 60 * 24:
-        switch(TICK_INTERVAL) {
-          case 1000: 
-            return d3.timeFormat('%H:%M:%S %d')(new Date(tick))
-          case 1000 * 60: 
+      case TIME_PERIOD > 1000 * 60 * 60 * 12 &&
+        TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
             return d3.timeFormat('%H:%M %d')(new Date(tick))
-          default: 
-            return d3.timeFormat('%H:%M %d')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d')(new Date(tick))
         }
       default:
-        switch(TICK_INTERVAL) {
-          case 1000: 
-            return d3.timeFormat('%H:%M:%S %d/%m')(new Date(tick))
-          case 1000 * 60: 
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
             return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
-          case 1000 * 60 * 60:
-            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
-          default: 
-            return d3.timeFormat('%d/%m/%Y')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d/%m')(new Date(tick))
         }
     }
   }
@@ -352,31 +338,45 @@ export function LineChart({
       setTicks([start, end])
     } else {
       const divineTick = d3.range(start, end + 1, TIME_PERIOD / TICK_COUNT)
+      const widgetArray: Array<{ ts: number; [key: string]: string | number }> =
+        []
+
+      const transformedNewValues: {
+        ts: number
+        [key: string]: string | number
+      }[] = []
+
       for (let widget in newValuesRef.current) {
-        const transformedNewValues: Array<{
-          ts: number
-          [key: string]: string | number
-        }> = []
         newValuesRef.current[widget].map(item => {
+          const timeStamp = Math.floor(item.ts / 1000) * 1000
           if (item.ts > start && item.ts < end) {
             const returnValue = {
-              ts: item.ts,
+              ts: timeStamp,
               [widget]: parseFloat(item.value),
             }
-            transformedNewValues.push(returnValue)
+            const existingIndex = transformedNewValues.findIndex(
+              obj => obj.ts === timeStamp,
+            )
+            if (existingIndex === -1) {
+              transformedNewValues.push(returnValue)
+            } else {
+              transformedNewValues[existingIndex][widget] = parseFloat(
+                item.value,
+              )
+            }
           }
         })
-        if (transformedNewValues.length > 0) {
-          setRealtimeData(transformedNewValues)
-        } else {
-          setRealtimeData([
-            {
-              ts: 0,
-              [widget]: 0,
-            },
-          ])
-        }
       }
+
+      if (transformedNewValues.length > 0) {
+        widgetArray.push(...transformedNewValues)
+      } else {
+        widgetArray.push({
+          ts: 0,
+          [widgetInfo.attribute_config[0].attribute_key]: 0,
+        })
+      }
+      setRealtimeData(widgetArray)
       setTicks(divineTick)
     }
   }
@@ -452,12 +452,6 @@ export function LineChart({
               <YAxis />
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="ts"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
               {Object.keys(newValuesRef.current).map((key, index) => {
                 const colorConfig = widgetInfo.attribute_config.filter(
                   obj => obj.attribute_key === key,
@@ -503,20 +497,30 @@ export function LineChart({
               <YAxis />
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="ts"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
-              <Line
-                connectNulls
-                type="monotone"
-                dataKey={widgetInfo.attribute_config[0].attribute_key}
-                animationDuration={250}
-                activeDot={{ r: 5 }}
-                dot={false}
-              />
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key.color
+
+                return (
+                  <Line
+                    key={index.toString()}
+                    connectNulls
+                    type="monotone"
+                    dataKey={attributeKey}
+                    animationDuration={250}
+                    activeDot={{ r: 5 }}
+                    dot={false}
+                    stroke={
+                      attributeKey.includes('SMA') ||
+                      attributeKey.includes('FFT')
+                        ? '#2c2c2c'
+                        : colorKey && colorKey !== ''
+                        ? colorKey
+                        : '#e8c1a0'
+                    }
+                  />
+                )
+              })}
             </LineWidget>
           </ResponsiveContainer>
         </>
