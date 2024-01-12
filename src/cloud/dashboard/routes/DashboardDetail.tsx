@@ -497,6 +497,7 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
 
+                // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({
                     data: {
