@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
+import { type TransportConfigInfo, type ModuleConfig } from '../types'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
-import { flattenData } from '~/utils/misc'
 import { useTemplateById } from '../api/getTemplateById'
-import { type ModuleConfig } from '../types'
 
 type ComboBoxSelectDeviceProps = {
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<ModuleConfig[]>>
@@ -25,8 +25,8 @@ export function ComboBoxSelectModuleConfig({
   const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
     LwM2MDataById?.transport_config?.info?.module_config || [],
     [
-      'module_name',
       'numberOfAttributes',
+      'module_name',
       'id',
       'created_time',
     ],
@@ -40,7 +40,6 @@ export function ComboBoxSelectModuleConfig({
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
   }, [query, LwM2MDataById])
-
   return (
     <ComboBoxBase
       data={filteredData}

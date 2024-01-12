@@ -29,9 +29,9 @@ export function ComboBoxSelectAttrLwM2M({
     selectedAttributes,
     [
       'action',
+      'name',
       'id',
       'kind',
-      'name',
       'type',
     ],
   )

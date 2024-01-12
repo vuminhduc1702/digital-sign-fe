@@ -65,7 +65,6 @@ export function ComboBoxBase<T extends Record<string, any>>({
     : data
 
   const [selected, setSelected] = useState<T | {}>(selectedData || {})
-
   return (
     <FieldWrapper label={label} error={error}>
       <Combobox value={selected} onChange={setSelected}>

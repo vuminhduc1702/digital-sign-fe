@@ -343,7 +343,7 @@ const data = {
     config: { suspense: false },
   })
   //console.log('LwM2MData', LwM2MData)
-  console.log('data', data)
+  //console.log('data', data)
   const transport_Config = selectedUpdateTemplate?.transport_config
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
@@ -354,6 +354,7 @@ const data = {
       setName(name)
       const newAccordionStates: AccordionStates = {}
       const newCheckboxStates: CheckboxStates = {}
+      const newItemNames: ItemNames = {}
       const newSelectAllAttributes: CheckboxStates = {}
       module_config.forEach((moduleItem, accordionIndex) => {
         if (!newAccordionStates[accordionIndex]) {
@@ -369,9 +370,11 @@ const data = {
         })
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
+          newItemNames[attribute.id] = attribute.name
         })
         newSelectAllAttributes[moduleItem.id] = moduleItem.allcheckbox
       })
+      setItemNames(newItemNames)
       setAccordionStates(newAccordionStates)
       setCheckboxStates(newCheckboxStates)
       setSelectAllAttributes(newSelectAllAttributes)
@@ -533,7 +536,7 @@ const data = {
                 <AccordionItem
                   key={accordionIndex}
                   value={lw2m2.LWM2M.Object.Name}
-                  className="border-none"
+                  className="border-b border-gray-300"
                 >
                   <AccordionTrigger className="ml-3 justify-start hover:no-underline">
                     <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
@@ -593,7 +596,7 @@ const data = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
                                           kind: item.MultipleInstances,
-                                          name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
+                                          name: itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`] || formattedName,
                                           type: item.Type,
                                         };
                                         if (typeof e === 'boolean') {
@@ -613,8 +616,9 @@ const data = {
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
                                     className=""
-                                    value={itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formatString(defaultItemName)}
-                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`]: e.target.value }))}  
+                                    value={itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]}
+                                    defaultValue={formatString(defaultItemName)}
+                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]: e.target.value }))}  
                                     disabled={checkboxStates[itemId]}
                                   />
                                 </div>

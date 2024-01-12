@@ -15,6 +15,7 @@ import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleCo
 import { ComboBoxSelectAttrLwM2M } from '../components/ComboBoxSelectAttrLwM2M'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 
+
 export function DeviceTemplatelwm2mManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
