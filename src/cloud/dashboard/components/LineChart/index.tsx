@@ -452,26 +452,27 @@ export function LineChart({
               <YAxis />
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {Object.keys(newValuesRef.current).map((key, index) => {
-                const colorConfig = widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key.color
+
                 return (
                   <Line
                     key={index.toString()}
                     connectNulls
                     type="monotone"
-                    dataKey={key}
+                    dataKey={attributeKey}
                     animationDuration={250}
-                    stroke={
-                      key.includes('SMA') || key.includes('FFT')
-                        ? '#2c2c2c'
-                        : colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
                     activeDot={{ r: 5 }}
                     dot={false}
+                    stroke={
+                      attributeKey.includes('SMA') ||
+                      attributeKey.includes('FFT')
+                        ? '#2c2c2c'
+                        : colorKey && colorKey !== ''
+                        ? colorKey
+                        : '#e8c1a0'
+                    }
                   />
                 )
               })}

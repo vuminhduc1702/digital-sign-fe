@@ -458,26 +458,18 @@ export const BarChart = ({
                 cursor={{ fill: 'transparent' }}
               />
               <Legend content={renderLegend} />
-              {Object.keys(newValuesRef.current).map((key, index) => {
-                const colorConfig = widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key?.color
+
                 return (
                   <Bar
                     key={index.toString()}
-                    dataKey={key}
+                    dataKey={attributeKey}
                     animationDuration={250}
                     barSize={10}
-                    stroke={
-                      colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
-                    fill={
-                      colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
+                    stroke={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
+                    fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
                   />
                 )
               })}
