@@ -61,7 +61,7 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
-import { SelectOption } from '~/components/Form'
+import { type SelectOption } from '~/components/Form'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -252,7 +252,10 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
+
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>(
+    [],
+  )
 
   return (
     <div className="relative flex grow flex-col">

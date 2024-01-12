@@ -689,24 +689,6 @@ export function CreateWidget({
                           error={
                             formState?.errors?.attributeConfig?.[index]?.label
                           }
-                          customOnChange={option => {
-                            const temp = inputField.map((element, idx) => {
-                              if (idx === index) {
-                                return {
-                                  ...element,
-                                  attribute_key: option,
-                                }
-                              }
-                              return element
-                            })
-                            setInputField(temp)
-                          }}
-                        />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.label')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.label
-                          }
                           registration={register(
                             `attributeConfig.${index}.label` as const,
                           )}
