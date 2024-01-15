@@ -16,11 +16,13 @@ export function MapChart({
   widgetInfo,
   isEditMode,
   refetchData = () => {},
+  passDeviceIds
 }: {
   data: MapSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
   refetchData?: () => void
+  passDeviceIds: any
 }) {
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
@@ -137,6 +139,9 @@ export function MapChart({
               return item.entityName
             }
           })
+          // if (deviceNameArray) {
+          //   passDeviceIds(deviceNameArray)
+          // }
           return (
             <Marker position={[lat, lng]} key={index}>
               <Popup>

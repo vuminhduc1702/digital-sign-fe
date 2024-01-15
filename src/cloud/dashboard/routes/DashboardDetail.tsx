@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
-import { useGetDashboardsById, useUpdateDashboard } from '../api'
+import { useCreateAttrChart, useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
   CardChart,
@@ -94,6 +94,7 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const [deviceIds, setDeviceIds] = useState([])
   const dataFilter = useRef<SelectOption>({
     label: '',
     value: ''
@@ -113,6 +114,19 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
+  const {
+    data: attrChartData,
+    mutate: attrChartMutate,
+    isLoading: attrChartIsLoading,
+  } = useCreateAttrChart()
+  const attrSelectData = attrChartData?.entities?.flatMap((item) => {
+    const result = item.attr_keys.map(key => ({ id: item.entity_id, label: key, value: key }))
+    return result
+  })
+
+  useEffect(() => {
+    console.log(deviceIds)
+  }, [deviceIds])
 
   const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
@@ -161,10 +175,6 @@ export function DashboardDetail() {
       if (lastJsonMessage?.errorCode !== 0) {
         toast.error(lastJsonMessage.errorMsg)
       }
-      dataFilter.current = lastJsonMessage.data.map(device => ({
-        label: device.entityId.entityName,
-        value: device.entityId.id
-      }))
     }
   }, [lastJsonMessage])
 
@@ -335,6 +345,9 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
+                // if (lastJsonMessage?.id === widgetId && widgetInfo.description === 'MAP') {
+                //   setDeviceIds()
+                // }
                 return (
                   <div
                     key={widgetId}
@@ -388,6 +401,7 @@ export function DashboardDetail() {
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
                         filter={filteredComboboxData}
+                        passDeviceIds={setDeviceIds}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
