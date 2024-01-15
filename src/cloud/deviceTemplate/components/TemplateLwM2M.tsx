@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
@@ -34,14 +34,19 @@ export function TemplateLwM2M() {
   const { id: projectId } = storage.getProject()
 
   const { mutate, isLoading, isSuccess } = useDeleteTemplate()
-
+  const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
     useState<Template>()
   const [filteredComboboxData, setFilteredComboboxData] = useState<Template[]>(
     [],
   )
-
   const handleCopyId = useCopyId()
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNoTemplateMessage(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [filteredComboboxData])
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
@@ -51,7 +56,7 @@ export function TemplateLwM2M() {
         />
       </div>
       <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
-        {filteredComboboxData?.length > 0 ? (
+        {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (
               <div className="flex" key={template.id}>
@@ -169,7 +174,7 @@ export function TemplateLwM2M() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center">
-            {t('cloud:device_template.sidebar.no_template')}
+            {showNoTemplateMessage && t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
         {isOpen && selectedUpdateTemplate ? (

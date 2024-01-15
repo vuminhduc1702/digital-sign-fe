@@ -10,7 +10,6 @@ type AttrLwM2MTableProps = {
 
 export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps) {
   const { t } = useTranslation()
-  console.log('attribute_info', attribute_info)
   const columnHelper = createColumnHelper<TransportConfigAttribute>()
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [

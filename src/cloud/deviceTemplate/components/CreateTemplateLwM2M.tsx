@@ -48,7 +48,7 @@ export const templateAttrSchema = z.object({
   name: nameSchema,
   // rule_chain_id: z.string().optional(),
   thing_id: z.string(),
-  handle_msg_svc: z.string(),
+  handle_msg_svc: z.string()
 })
 
 const LwM2MSelectOptions = LWM2MData.infos.map(item => ({
@@ -202,9 +202,10 @@ export default function CreateTemplateLwM2M() {
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1) {
+          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true ) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-          } else {
+          } 
+          if(updatedCheckboxStates[item.id] === false) {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
@@ -313,7 +314,6 @@ const data = {
   thing_id: selectedThing,
   handle_msg_svc: selectedService
 }
-//console.log('data', data)
 //console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer
@@ -384,7 +384,6 @@ const data = {
             />
           </div>
           
-          {!isLoadingService ? (
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               refSelect={selectDropdownServiceRef}
@@ -403,7 +402,7 @@ const data = {
               error={formState?.errors?.handle_msg_svc}
             />
           </div>
-          ) : null}
+          
           <div className="space-y-1">
             <SelectDropdown
               isClearable
@@ -435,7 +434,7 @@ const data = {
                 <AccordionItem
                   key={accordionIndex}
                   value={lw2m2.LWM2M.Object.Name}
-                  className="border-none"
+                  className="border-b border-gray-300"
                 >
                   <AccordionTrigger className="ml-3 justify-start hover:no-underline">
                     <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
@@ -497,7 +496,7 @@ const data = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
                                           kind: item.MultipleInstances,
-                                          name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
+                                          name: itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`] || formattedName,
                                           type: item.Type,
                                         }
                                         if (typeof e === 'boolean') {
@@ -517,8 +516,9 @@ const data = {
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
                                     className=""
-                                    value={itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formatString(defaultItemName)}
-                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`]: e.target.value }))}  
+                                    value={itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]}
+                                    defaultValue={formatString(defaultItemName)}
+                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]: e.target.value }))}  
                                     disabled={checkboxStates[itemId]}
                                   />
                                 </div>

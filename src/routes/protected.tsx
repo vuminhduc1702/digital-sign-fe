@@ -22,6 +22,7 @@ import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
+import { TemplateSidebar } from '~/cloud/deviceTemplate/components'
 
 
 const { DeviceTemplateManage } = lazyImport(

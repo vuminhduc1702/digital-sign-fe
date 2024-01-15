@@ -38,8 +38,7 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
           const id = info.row.original.id
           return (
             <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/lwm2m/${templateId}/${id}`}>
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400"
-                  onClick={() => console.log(`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/${templateId}/lwm2m/${id}`)}>
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameLwM2M}
               </p>
             </Link>

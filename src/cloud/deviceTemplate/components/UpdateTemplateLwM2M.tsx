@@ -134,18 +134,16 @@ export function UpdateTemplateLwM2M({
   //     suspense: false,
   //   },
   // })
-  const XMLDataRef = useRef<LWM2MResponse[]>([])
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
-  const [XMLData, setXMLData] = useState<LWM2MResponse | null>(null)
   useEffect(() => {
     const fetchData = async () => {
       try {
         const promises = watch('rule_chain_id').map(async (id) => {
           const response = await axios.get(`/file/publishjson/${id}.json`)
-          setXMLData(response)
           return response
          })
-         //console.log('filterLWM2M', filterLWM2M)
+         const responseData = await Promise.all(promises)
+         setFilterLWM2M(responseData)
       } catch (error) {
         console.error('Error fetching data:', error)
       }
@@ -154,17 +152,7 @@ export function UpdateTemplateLwM2M({
   }, [watch('rule_chain_id')])
 
   useEffect(() => {
-    if (XMLData != null && !XMLDataRef.current.some(item => item.LWM2M.Object.ObjectID === XMLData.LWM2M.Object.ObjectID)) {
-      XMLDataRef.current = [...XMLDataRef.current, XMLData]
-    }
-    if (XMLDataRef.current.length > 0 && watch('rule_chain_id') != null) {
-      const sortedData = XMLDataRef.current.sort((a, b) => {
-        const indexA = watch('rule_chain_id').indexOf(a.LWM2M.Object.ObjectID)
-        const indexB = watch('rule_chain_id').indexOf(b.LWM2M.Object.ObjectID)
-        return indexA - indexB
-      })
-      const filterArr = sortedData.filter(item => watch('rule_chain_id').includes(item.LWM2M.Object.ObjectID))
-      setFilterLWM2M(Array.from(new Set(filterArr)))
+    if (watch('rule_chain_id') != null) {
       const filteredKeys = Object.keys(checkboxStates).filter(key => {
         const objectId = parseInt(key.split('/')[1], 10)
         return watch('rule_chain_id').includes(objectId.toString())
@@ -191,7 +179,7 @@ export function UpdateTemplateLwM2M({
       })
       setAccordionStates(filteredAccordionStates)
     }
-  }, [XMLData, watch('rule_chain_id')])
+  }, [watch('rule_chain_id')])
   const countTrueValuesForId = (checkboxStates: Record<string, boolean>, idToCount: string): number => {
     const extractIdFromKey = (key: string): number | null => {
       const idString = key.match(/\/(\d+)\/\d+\/\d+/)?.[1]
@@ -237,9 +225,11 @@ export function UpdateTemplateLwM2M({
           const attributeIndex = newStates[accordionIndex][moduleIndex].attribute_info.findIndex(
             (attribute) => attribute.id === item.id
           )
-          if (attributeIndex === -1) {
+          if (attributeIndex === -1 && updatedCheckboxStates[item.id] === true) {
             newStates[accordionIndex][moduleIndex].attribute_info.push(item)
-          } else {
+          } 
+           
+          if(updatedCheckboxStates[item.id] === false) {
             newStates[accordionIndex][moduleIndex].attribute_info.splice(attributeIndex, 1)
           }
           const attributesCount = countTrueValuesForId(prevCheckboxStates, module.id.toString())
@@ -348,13 +338,12 @@ const data = {
   thing_id: selectedThing,
   handle_msg_svc: selectedService
 }
-
   const { data: LwM2MData, isLoading: LwM2MLoading } = useTemplateById({
     templateId: selectedUpdateTemplate?.id,
     config: { suspense: false },
   })
   //console.log('LwM2MData', LwM2MData)
-
+  //console.log('data', data)
   const transport_Config = selectedUpdateTemplate?.transport_config
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map((attribute_info:[]) => attribute_info.id)
@@ -365,6 +354,7 @@ const data = {
       setName(name)
       const newAccordionStates: AccordionStates = {}
       const newCheckboxStates: CheckboxStates = {}
+      const newItemNames: ItemNames = {}
       const newSelectAllAttributes: CheckboxStates = {}
       module_config.forEach((moduleItem, accordionIndex) => {
         if (!newAccordionStates[accordionIndex]) {
@@ -380,9 +370,11 @@ const data = {
         })
         moduleItem.attribute_info.forEach((attribute) => {
           newCheckboxStates[attribute.id] = true
+          newItemNames[attribute.id] = attribute.name
         })
         newSelectAllAttributes[moduleItem.id] = moduleItem.allcheckbox
       })
+      setItemNames(newItemNames)
       setAccordionStates(newAccordionStates)
       setCheckboxStates(newCheckboxStates)
       setSelectAllAttributes(newSelectAllAttributes)
@@ -401,6 +393,8 @@ const data = {
     delay: 150,
     minDuration: 300,
   })
+  // console.log('LwM2MLoading', LwM2MLoading)
+  // console.log('loading', loading)
   return (
     <Drawer
       isOpen={isOpen}
@@ -531,7 +525,7 @@ const data = {
               {formState?.errors?.rule_chain_id?.message}
             </p>
           </div>
-          <div>
+          <div> 
             <Accordion
               type="multiple"
               value={openAccordion}
@@ -542,7 +536,7 @@ const data = {
                 <AccordionItem
                   key={accordionIndex}
                   value={lw2m2.LWM2M.Object.Name}
-                  className="border-none"
+                  className="border-b border-gray-300"
                 >
                   <AccordionTrigger className="ml-3 justify-start hover:no-underline">
                     <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
@@ -602,7 +596,7 @@ const data = {
                                           action: item.Operations,
                                           id : `/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`,
                                           kind: item.MultipleInstances,
-                                          name: itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formattedName,
+                                          name: itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`] || formattedName,
                                           type: item.Type,
                                         };
                                         if (typeof e === 'boolean') {
@@ -622,8 +616,9 @@ const data = {
                                 <div className="grid grow grid-cols-1 gap-x-10 gap-y-2 md:grid-cols-1">
                                   <InputField
                                     className=""
-                                    value={itemNames[`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`] || formatString(defaultItemName)}
-                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`${lw2m2.LWM2M.Object.ObjectID}-${item['@ID']}`]: e.target.value }))}  
+                                    value={itemNames[`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]}
+                                    defaultValue={formatString(defaultItemName)}
+                                    onChange={(e) => setItemNames((prev) => ({ ...prev, [`/${lw2m2.LWM2M.Object.ObjectID}/0/${item['@ID']}`]: e.target.value }))}  
                                     disabled={checkboxStates[itemId]}
                                   />
                                 </div>
