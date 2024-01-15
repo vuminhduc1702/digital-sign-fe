@@ -13,7 +13,7 @@ import { toast } from 'sonner'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
-import { useGetDashboardsById, useUpdateDashboard } from '../api'
+import { useCreateAttrChart, useGetDashboardsById, useUpdateDashboard } from '../api'
 import {
   BarChart,
   CardChart,
@@ -36,6 +36,7 @@ import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDevic
 
 import { WS_URL } from '~/config'
 import {
+  DataItem,
   type DashboardWS,
   type LatestData,
   type TimeSeries,
@@ -60,6 +61,7 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
+import { type SelectOption } from '~/components/Form'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -92,6 +94,11 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const [deviceIds, setDeviceIds] = useState([])
+  const dataFilter = useRef<SelectOption>({
+    label: '',
+    value: ''
+  })
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -107,6 +114,19 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
+  const {
+    data: attrChartData,
+    mutate: attrChartMutate,
+    isLoading: attrChartIsLoading,
+  } = useCreateAttrChart()
+  const attrSelectData = attrChartData?.entities?.flatMap((item) => {
+    const result = item.attr_keys.map(key => ({ id: item.entity_id, label: key, value: key }))
+    return result
+  })
+
+  useEffect(() => {
+    console.log(deviceIds)
+  }, [deviceIds])
 
   const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
@@ -242,7 +262,10 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
+
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>(
+    [],
+  )
 
   return (
     <div className="relative flex grow flex-col">
@@ -322,14 +345,9 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                const filterDeviceData =
-                  widgetInfo &&
-                  widgetInfo.attribute_config &&
-                  widgetInfo.attribute_config.length > 0
-                    ? widgetInfo.attribute_config
-                    : {}
-                // console.log(widgetInfo.attribute_config)
-
+                // if (lastJsonMessage?.id === widgetId && widgetInfo.description === 'MAP') {
+                //   setDeviceIds()
+                // }
                 return (
                   <div
                     key={widgetId}
@@ -376,13 +394,14 @@ export function DashboardDetail() {
                         }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
+                      <PieChart data={lastestValuesForMap} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
                         data={lastestValuesForMap}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
                         filter={filteredComboboxData}
+                        passDeviceIds={setDeviceIds}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
