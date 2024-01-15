@@ -1,9 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { type z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { format } from 'date-fns'
+import ColorPicker from 'react-pick-color'
+import { type SelectInstance } from 'react-select'
+
 import { FormDialog } from '~/components/FormDialog'
-
 import { Button } from '~/components/Button'
-
 import {
   type Widget,
   type WidgetCreate,
@@ -13,12 +19,6 @@ import {
   wsInterval,
   widgetAgg,
 } from './CreateWidget'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
-import { useEffect, useRef, useState } from 'react'
 import { Spinner } from '~/components/Spinner'
 import TitleBar from '~/components/Head/TitleBar'
 import {
@@ -35,13 +35,12 @@ import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import ColorPicker from 'react-pick-color'
+import { Calendar, TimePicker } from '~/components/Calendar'
+
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { Calendar as CalendarIcon } from 'lucide-react'
-import { format } from 'date-fns'
-import { Calendar, TimePicker } from '~/components/Calendar'
-import { useParams } from 'react-router-dom'
-import { type SelectInstance } from 'react-select'
 
 export function UpdateWidget({
   widgetInfo,
@@ -60,9 +59,12 @@ export function UpdateWidget({
   const colorPickerRef = useRef()
   const [isDone, setIsDone] = useState(false)
 
+  const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
+  // console.log('widgetInfoMemo', widgetInfoMemo)
+
   const initParse =
-    widgetInfo?.datasource?.init_message &&
-    JSON.parse(widgetInfo?.datasource?.init_message)
+    widgetInfoMemo?.datasource?.init_message &&
+    JSON.parse(widgetInfoMemo?.datasource?.init_message)
 
   const selectDropdownDeviceRef = useRef<SelectInstance<SelectOption[]> | null>(
     null,
@@ -82,31 +84,30 @@ export function UpdateWidget({
     resetField,
   } = useForm<WidgetCreate>({
     resolver: widgetCreateSchema && zodResolver(widgetCreateSchema),
-    values: {
-      title: widgetInfo?.title,
-      org_id: widgetInfo?.datasource?.org_id
-        ? JSON.parse(widgetInfo?.datasource?.org_id)
+    defaultValues: {
+      title: widgetInfoMemo?.title,
+      org_id: widgetInfoMemo?.datasource?.org_id
+        ? JSON.parse(widgetInfoMemo?.datasource?.org_id)
         : '',
       device: initParse?.entityDataCmds[0]?.query?.entityFilter?.entityIds,
-      attributeConfig: widgetInfo?.attribute_config,
+      attributeConfig: widgetInfoMemo?.attribute_config,
       widgetSetting: {
-        agg: widgetInfo?.config?.aggregation || 'AVG',
-        dataType: widgetInfo?.config?.chartsetting?.data_type || 'REALTIME',
-        time_period: widgetInfo?.config?.chartsetting?.time_period || 0,
-        interval: widgetInfo?.config?.timewindow?.interval,
-        data_point: widgetInfo?.config?.chartsetting?.data_point,
-        startDate: widgetInfo?.config?.chartsetting?.start_date,
-        endDate: widgetInfo?.config?.chartsetting?.end_date,
+        agg: widgetInfoMemo?.config?.aggregation || 'AVG',
+        dataType: widgetInfoMemo?.config?.chartsetting?.data_type || 'REALTIME',
+        time_period: widgetInfoMemo?.config?.chartsetting?.time_period || 0,
+        interval: widgetInfoMemo?.config?.timewindow?.interval,
+        data_point: widgetInfoMemo?.config?.chartsetting?.data_point,
+        startDate: widgetInfoMemo?.config?.chartsetting?.start_date,
+        endDate: widgetInfoMemo?.config?.chartsetting?.end_date,
       },
     },
   })
+  console.log('formState.errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
     control: control,
   })
-
-  // console.log(fields, 'check fields update widget')
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
@@ -160,7 +161,7 @@ export function UpdateWidget({
       })
     }
     setIsDone(false)
-  }, [widgetInfo])
+  }, [widgetInfoMemo])
 
   return (
     <FormDialog
@@ -289,12 +290,12 @@ export function UpdateWidget({
 
             const widget: z.infer<typeof widgetSchema> = {
               title: values.title,
-              description: widgetInfo?.description || 'LINE',
-              type: widgetInfo?.type,
+              description: widgetInfoMemo?.description || 'LINE',
+              type: widgetInfoMemo?.type,
               datasource: {
                 init_message: JSON.stringify(initMessage),
                 lastest_message:
-                  widgetInfo?.type === 'LASTEST'
+                  widgetInfoMemo?.type === 'LASTEST'
                     ? JSON.stringify(lastestMessage)
                     : '',
                 realtime_message:
@@ -312,11 +313,11 @@ export function UpdateWidget({
                 color: item.color,
                 max: item.max,
                 min: item.min,
-                label: item.label,
+                // label: item.label,
                 unit: item.unit,
               })),
               config:
-                widgetInfo?.type === 'TIMESERIES'
+                widgetInfoMemo?.type === 'TIMESERIES'
                   ? {
                       aggregation: values.widgetSetting?.agg,
                       timewindow: {
@@ -374,8 +375,6 @@ export function UpdateWidget({
                     loadingMessage={() => t('loading:org')}
                     isLoading={orgIsLoading}
                     handleClearSelectDropdown={() => {
-                      // resetField('device')
-                      // resetField('attributeConfig', [{}])
                       selectDropdownDeviceRef.current?.clearValue()
                       selectDropdownAttributeConfigRef.current?.clearValue()
                     }}
@@ -384,11 +383,11 @@ export function UpdateWidget({
                       selectDropdownAttributeConfigRef.current?.clearValue()
                     }}
                     defaultValue={
-                      widgetInfo?.datasource?.org_id
+                      widgetInfoMemo?.datasource?.org_id
                         ? orgSelectOptions?.find(
                             item =>
                               item.value ===
-                              JSON.parse(widgetInfo?.datasource?.org_id),
+                              JSON.parse(widgetInfoMemo?.datasource?.org_id),
                           )
                         : [
                             {
@@ -416,13 +415,13 @@ export function UpdateWidget({
                       isLoading={deviceIsLoading}
                       isMulti={
                         !(
-                          widgetInfo?.description === 'GAUGE' ||
-                          widgetInfo?.description === 'CARD'
+                          widgetInfoMemo?.description === 'GAUGE' ||
+                          widgetInfoMemo?.description === 'CARD'
                         )
                       }
                       closeMenuOnSelect={
-                        widgetInfo?.description === 'GAUGE' ||
-                        widgetInfo?.description === 'CARD'
+                        widgetInfoMemo?.description === 'GAUGE' ||
+                        widgetInfoMemo?.description === 'CARD'
                       }
                       isWrappedArray
                       customOnChange={option => {
@@ -431,13 +430,11 @@ export function UpdateWidget({
                             data: {
                               entity_ids: option,
                               entity_type: 'DEVICE',
-                              // time_series: true,
                             },
                           })
                         }
                       }}
                       handleClearSelectDropdown={() => {
-                        // resetField('attributeConfig', [{}])
                         selectDropdownAttributeConfigRef.current?.clearValue()
                       }}
                       handleChangeSelect={() => {
@@ -461,8 +458,8 @@ export function UpdateWidget({
                     className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   {!(
-                    widgetInfo?.description === 'GAUGE' ||
-                    widgetInfo?.description === 'CARD'
+                    widgetInfoMemo?.description === 'GAUGE' ||
+                    widgetInfoMemo?.description === 'CARD'
                   ) ? (
                     <Button
                       className="rounded-md"
@@ -474,7 +471,7 @@ export function UpdateWidget({
                       onClick={() =>
                         append({
                           attribute_key: '',
-                          label: '',
+                          // label: '',
                           color: '',
                           unit: '',
                           max: 100,
@@ -510,7 +507,7 @@ export function UpdateWidget({
                           )}
                           defaultValue={attrSelectData?.find(
                             item =>
-                              widgetInfo?.attribute_config[index]
+                              widgetInfoMemo?.attribute_config[index]
                                 ?.attribute_key === item.value,
                           )}
                           error={
@@ -520,7 +517,7 @@ export function UpdateWidget({
                         />
                       </div>
                       {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
-                        e => widgetInfo?.description === e,
+                        e => widgetInfoMemo?.description === e,
                       ) ? (
                         <div className="space-y-1">
                           <FieldWrapper
@@ -590,7 +587,7 @@ export function UpdateWidget({
                           `attributeConfig.${index}.unit` as const,
                         )}
                       />
-                      {widgetInfo?.description === 'GAUGE' && (
+                      {widgetInfoMemo?.description === 'GAUGE' && (
                         <>
                           <InputField
                             label={t('cloud:dashboard.config_chart.min')}
@@ -618,8 +615,8 @@ export function UpdateWidget({
                       )}
                     </div>
                     {!(
-                      widgetInfo?.description === 'GAUGE' ||
-                      widgetInfo?.description === 'CARD'
+                      widgetInfoMemo?.description === 'GAUGE' ||
+                      widgetInfoMemo?.description === 'CARD'
                     ) ? (
                       <Button
                         type="button"
@@ -639,7 +636,7 @@ export function UpdateWidget({
                   </section>
                 ))}
 
-                {widgetInfo?.type === 'TIMESERIES' ? (
+                {widgetInfoMemo?.type === 'TIMESERIES' ? (
                   <>
                     <TitleBar
                       title={t('cloud:dashboard.config_chart.widget_config')}

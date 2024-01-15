@@ -34,8 +34,9 @@ export const BarChart = ({
   refreshBtn?: boolean
 }) => {
   // console.log(`new bar: `, data)
-  const TICK_COUNT = 7
-  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
+  const TICK_COUNT = 5
+  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
+  const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -205,9 +206,7 @@ export const BarChart = ({
                     className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
                     <div>{timeFormatter(entry.payload.ts)}</div>
-                    <div
-                      style={{ color: entry.color ? entry.color : 'inherit' }}
-                    >
+                    <div style={{ color: entry.color }}>
                       {unitConfig &&
                       unitConfig.length > 0 &&
                       unitConfig[0].unit !== ''
@@ -267,35 +266,63 @@ export const BarChart = ({
   }
 
   function timeFormatter(tick: any | null) {
-    if (TICK_INTERVAL <= 1000 * 60 * 60) {
-      return d3.timeFormat('%H:%M:%S')(new Date(tick))
-    } else if (
-      60000 * 60 <= TICK_INTERVAL &&
-      TICK_INTERVAL <= 1000 * 60 * 60 * 24
-    ) {
-      return d3.timeFormat('%H:%M %d')(new Date(tick))
-    } else {
-      return d3.timeFormat('%d/%m/%y')(new Date(tick))
+    switch (true) {
+      case TIME_PERIOD <= 1000 * 60 * 60 * 12:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M:%S')(new Date(tick))
+          default:
+            return d3.timeFormat('%H:%M')(new Date(tick))
+        }
+      case TIME_PERIOD > 1000 * 60 * 60 * 12 &&
+        TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M %d')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d')(new Date(tick))
+        }
+      default:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d/%m')(new Date(tick))
+        }
     }
   }
 
-  const initStart = new Date().getTime() - TICK_COUNT * TICK_INTERVAL
-  const initEnd = new Date().getTime()
+  const initNow = new Date().getTime()
+  const initStart = initNow - TIME_PERIOD
+  const initEnd = initNow
   const [ticks, setTicks] = useState(
-    d3.range(initStart, initEnd, TICK_INTERVAL),
+    TIME_PERIOD <= 1000
+      ? [initStart, initEnd]
+      : d3.range(initStart, initEnd + 1, TIME_PERIOD / TICK_COUNT),
   )
+
   const [realtimeData, setRealtimeData] = useState<
     Array<{ ts: number; [key: string]: string | number }>
   >([
     {
       ts: 0,
+      [widgetInfo.attribute_config[0].attribute_key]: 0,
     },
   ])
+
+  const [hasRenderedInit, setHasRenderedInit] = useState(false)
+
+  useEffect(() => {
+    if (newValuesRef.current !== null && !hasRenderedInit) {
+      updateScale()
+      setHasRenderedInit(true)
+    }
+  }, [newValuesRef.current])
 
   useEffect(() => {
     const interval = setInterval(() => {
       updateScale()
-    }, 1000)
+    }, TICK_INTERVAL)
 
     return () => {
       clearInterval(interval)
@@ -303,38 +330,54 @@ export const BarChart = ({
   }, [realtimeData, newValuesRef])
 
   function updateScale() {
-    const now = new Date()
-    const start = now.getTime() - TICK_COUNT * TICK_INTERVAL
-    const end = now.getTime()
-    const divineTick = d3.range(start, end, TICK_INTERVAL)
+    const now = new Date().getTime()
+    const start = now - TIME_PERIOD
+    const end = now
 
-    for (let widget in newValuesRef.current) {
-      const transformedNewValues: Array<{
+    if (TIME_PERIOD <= 1000) {
+      setTicks([start, end])
+    } else {
+      const divineTick = d3.range(start, end + 1, TIME_PERIOD / TICK_COUNT)
+      const widgetArray: Array<{ ts: number; [key: string]: string | number }> =
+        []
+
+      const transformedNewValues: {
         ts: number
         [key: string]: string | number
-      }> = []
-      newValuesRef.current[widget].map(item => {
-        if (item.ts > start && item.ts < ticks[ticks.length - 1]) {
-          const returnValue = {
-            ts: item.ts,
-            [widget]: parseFloat(item.value),
-            date: dateTransformation(item.ts),
+      }[] = []
+
+      for (let widget in newValuesRef.current) {
+        newValuesRef.current[widget].map(item => {
+          if (item.ts > start && item.ts < end) {
+            const returnValue = {
+              ts: item.ts,
+              [widget]: parseFloat(item.value),
+            }
+            const existingIndex = transformedNewValues.findIndex(
+              obj => obj.ts === item.ts,
+            )
+            if (existingIndex === -1) {
+              transformedNewValues.push(returnValue)
+            } else {
+              transformedNewValues[existingIndex][widget] = parseFloat(
+                item.value,
+              )
+            }
           }
-          transformedNewValues.push(returnValue)
-        }
-      })
-      if (transformedNewValues.length > 0) {
-        setRealtimeData(transformedNewValues)
-      } else {
-        setRealtimeData([
-          {
-            ts: 0,
-            [widget]: 0,
-          },
-        ])
+        })
       }
+
+      if (transformedNewValues.length > 0) {
+        widgetArray.push(...transformedNewValues)
+      } else {
+        widgetArray.push({
+          ts: 0,
+          [widgetInfo.attribute_config[0].attribute_key]: 0,
+        })
+      }
+      setRealtimeData(widgetArray)
+      setTicks(divineTick)
     }
-    setTicks(divineTick)
   }
 
   return (
@@ -387,10 +430,7 @@ export const BarChart = ({
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <Spinner
-              //  showSpinner={showSpinner}
-              size="xl"
-            />
+            <Spinner showSpinner={showSpinner} size="xl" />
           </div>
         )
       ) : !showSpinner && newValuesRef.current != null ? (
@@ -404,7 +444,7 @@ export const BarChart = ({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={true}
                 allowDataOverflow={true}
@@ -415,32 +455,18 @@ export const BarChart = ({
                 cursor={{ fill: 'transparent' }}
               />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="time"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
-              {Object.keys(newValuesRef.current).map((key, index) => {
-                const colorConfig = widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key?.color
+
                 return (
                   <Bar
                     key={index.toString()}
-                    dataKey={key}
+                    dataKey={attributeKey}
                     animationDuration={250}
                     barSize={10}
-                    stroke={
-                      colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
-                    fill={
-                      colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
+                    stroke={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
+                    fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
                   />
                 )
               })}
@@ -451,7 +477,7 @@ export const BarChart = ({
       ) : (
         <>
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <BarReChart>
+            <BarReChart data={realtimeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
@@ -459,20 +485,29 @@ export const BarChart = ({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={true}
                 allowDataOverflow={true}
               />
               <YAxis />
-              <Tooltip />
+              <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="time"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key?.color
+
+                return (
+                  <Bar
+                    key={index.toString()}
+                    dataKey={attributeKey}
+                    animationDuration={250}
+                    barSize={10}
+                    stroke={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
+                    fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
+                  />
+                )
+              })}
             </BarReChart>
           </ResponsiveContainer>
         </>

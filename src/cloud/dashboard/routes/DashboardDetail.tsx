@@ -430,10 +430,9 @@ export function DashboardDetail() {
                           viewBox="0 0 20 20"
                           className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
                         />
-                        {/* {widgetInfo?.description === 'CONTROLLER' ? (
+                        {widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
                             widgetInfo={widgetInfo}
-                            widgetCategory={widgetInfo?.description}
                             setWidgetList={setWidgetList}
                             widgetId={widgetId}
                           />
@@ -443,7 +442,7 @@ export function DashboardDetail() {
                             setWidgetList={setWidgetList}
                             widgetId={widgetId}
                           />
-                        )} */}
+                        )}
                         <DeleteIcon
                           width={20}
                           height={20}
@@ -498,6 +497,7 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
 
+                // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({
                     data: {
@@ -765,7 +765,6 @@ export function DashboardDetail() {
           <div className="sticky bottom-0 ml-auto ">
             <Button
               className="rounded"
-              form="update-dashboard"
               size="square"
               variant="primary"
               isLoading={updateDashboardIsLoading}

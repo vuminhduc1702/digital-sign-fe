@@ -1,12 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { type SelectInstance } from 'react-select'
 import { v4 as uuidv4 } from 'uuid'
-import * as z from 'zod'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import type * as z from 'zod'
+
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 import { useThingServiceById } from '~/cloud/flowEngineV2/api/thingServiceAPI/getThingServiceById'
@@ -20,68 +19,74 @@ import {
 } from '~/components/Form'
 import { FormDialog } from '~/components/FormDialog'
 import TitleBar from '~/components/Head/TitleBar'
-import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import storage from '~/utils/storage'
-import {
-  type ControllerBtn,
-  type ControllerBtnCreateDTO,
-} from './CreateControllerButton'
-import {
-  type Widget,
-  type WidgetCategoryType,
-  type widgetSchema,
-} from './CreateWidget'
 
-export const controllerBtnUpdateSchema = z.object({
-  title: z.string(),
-  thing_id: z.string(),
-  handle_service: z.string(),
-  id: z.string().optional(),
+import {
+  type ControllerBtnList,
+  controllerBtnCreateSchema,
+  type controllerBtnSchema,
+} from './CreateControllerButton'
+
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
+
+export const controllerBtnUpdateSchema = controllerBtnCreateSchema.partial({
+  input: true,
 })
 
 export function UpdateControllerButton({
   widgetInfo,
   setWidgetList,
-  widgetCategory,
   widgetId,
 }: {
-  widgetInfo?: z.infer<typeof widgetSchema>
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
-  widgetCategory: WidgetCategoryType
+  widgetInfo?: z.infer<typeof controllerBtnSchema>
+  setWidgetList: React.Dispatch<React.SetStateAction<ControllerBtnList>>
   widgetId: string
 }) {
   const { t } = useTranslation()
-  const [isDone, setIsDone] = useState(false)
   const projectId = storage.getProject()?.id
-  const parseArrData = JSON.parse(widgetInfo?.datasource.controller_message)
-  const parseThingId = JSON.parse(widgetInfo?.datasource.thing_id)
-  const parseHandleService = JSON.parse(widgetInfo?.datasource.handle_service)
+
+  const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
+
+  const parseArrData =
+    widgetInfoMemo?.datasource.controller_message != null
+      ? JSON.parse(widgetInfoMemo?.datasource.controller_message)
+      : ''
+  const parseThingId =
+    widgetInfoMemo?.datasource.thing_id != null
+      ? JSON.parse(widgetInfoMemo?.datasource.thing_id)
+      : ''
+  const parseHandleService =
+    widgetInfoMemo?.datasource.handle_service != null
+      ? JSON.parse(widgetInfoMemo?.datasource.handle_service)
+      : ''
+
+  const [isDone, setIsDone] = useState(false)
   const [inputField, setInputField] = useState<any[]>([])
 
-  const [parseArrDataProp] = useState(parseArrData)
   const selectDropdownServiceRef = useRef<SelectInstance<
     SelectOption[]
   > | null>(null)
 
-  // console.log(widgetInfo, 'widgetInfo')
-  // console.log(parseArrDataProp, 'parseArrDataProp')
-  const { register, formState, control, handleSubmit, watch } =
-    useForm<ControllerBtnCreateDTO>({
-      resolver:
-        controllerBtnUpdateSchema && zodResolver(controllerBtnUpdateSchema),
-      values: {
-        title: widgetInfo?.title,
-        thing_id: parseThingId,
-        handle_service: parseHandleService,
-        input: parseArrDataProp.executorCmds,
-      },
-    })
+  const { register, formState, control, handleSubmit, watch } = useForm<
+    z.infer<typeof controllerBtnUpdateSchema>
+  >({
+    resolver:
+      controllerBtnUpdateSchema && zodResolver(controllerBtnUpdateSchema),
+    defaultValues: {
+      title: widgetInfoMemo?.title ?? '',
+      thing_id: parseThingId,
+      handle_service: parseHandleService,
+      input: parseArrData.executorCmds,
+    },
+  })
+  console.log('formState.errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
     control: control,
   })
-  // console.log(fields, 'fields')
 
   const { data: thingData, isLoading: thingIsLoading } = useGetEntityThings({
     projectId,
@@ -122,7 +127,7 @@ export function UpdateControllerButton({
 
   useEffect(() => {
     if (inputSelectData && inputSelectData.length > 0) {
-      const tempInput = parseArrDataProp.executorCmds[0].input
+      const tempInput = parseArrData.executorCmds[0].input
       const keyArr = Object.keys(tempInput)
       const rs = keyArr.map(item => {
         const temp = inputSelectData.find(ele => ele.value === item)
@@ -141,8 +146,7 @@ export function UpdateControllerButton({
   //   delay: 150,
   //   minDuration: 300,
   // })
-  // console.log(inputSelectData, 'inputSelectData')
-  // console.log(inputField, 'inputField')
+
   return (
     <FormDialog
       size="max"
@@ -150,13 +154,13 @@ export function UpdateControllerButton({
       isDone={isDone}
       body={
         <form
-          id="update-widget"
+          id="update-controller-widget"
           className="flex w-full flex-col justify-between space-y-5"
           onSubmit={handleSubmit(values => {
             // console.log('values update submit: ', values)
-            const controllerBtn: ControllerBtn = {
+            const controllerBtn = {
               title: values.title,
-              description: widgetCategory,
+              description: widgetInfoMemo?.description ?? 'LINE',
               datasource: {
                 controller_message: JSON.stringify({
                   executorCmds: [
@@ -194,14 +198,11 @@ export function UpdateControllerButton({
             const isValid = inputField.every(
               item => item.input && item.value !== '',
             )
-            console.log(isValid, 'check isValid')
             if (isValid) {
-              console.log(isValid, 'come herre is valid')
               setWidgetList(prev => ({
                 ...prev,
-                ...({ [widgetId]: controllerBtn } as Widget),
+                ...{ [widgetId]: controllerBtn },
               }))
-
               setIsDone(true)
             }
           })}
@@ -485,7 +486,7 @@ export function UpdateControllerButton({
       }
       confirmButton={
         <Button
-          form="update-widget"
+          form="update-controller-widget"
           type="submit"
           size="md"
           className="bg-primary-400 rounded-md border"

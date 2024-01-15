@@ -28,7 +28,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 import { Checkbox } from '~/components/Checkbox'
 
-const controllerBtnSchema = z.object({
+export const controllerBtnSchema = z.object({
   title: z.string(),
   description: widgetCategorySchema,
   datasource: z.object({
@@ -38,7 +38,8 @@ const controllerBtnSchema = z.object({
   }),
   id: z.string().optional(),
 })
-export type ControllerBtn = z.infer<typeof controllerBtnSchema>
+export const ControllerBtnListSchema = z.record(controllerBtnSchema)
+export type ControllerBtnList = z.infer<typeof ControllerBtnListSchema>
 
 export const controllerBtnCreateSchema = z.object({
   title: z.string(),
@@ -56,19 +57,13 @@ export const controllerBtnCreateSchema = z.object({
   ),
   id: z.string().optional(),
 })
-
-export type ControllerBtnCreateDTO = {
-  title: string
-  thing_id: string
-  handle_service: string
-  data: z.infer<typeof controllerBtnCreateSchema>
-}
+export type ControllerBtnCreate = z.infer<typeof controllerBtnCreateSchema>
 
 type CreateControllerButtonProps = {
   widgetCategory: WidgetCategoryType
   isOpen: boolean
   close: () => void
-  setWidgetList: React.Dispatch<React.SetStateAction<Widget>>
+  setWidgetList: React.Dispatch<React.SetStateAction<ControllerBtnList>>
 }
 
 export function CreateControllerButton({
@@ -82,12 +77,11 @@ export function CreateControllerButton({
 
   const projectId = storage.getProject()?.id
 
-  const { register, formState, control, handleSubmit, watch } = useForm<
-    ControllerBtnCreateDTO['data']
-  >({
-    resolver:
-      controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
-  })
+  const { register, formState, control, handleSubmit, watch } =
+    useForm<ControllerBtnCreate>({
+      resolver:
+        controllerBtnCreateSchema && zodResolver(controllerBtnCreateSchema),
+    })
   // console.log('zod errors', formState.errors)
 
   const { data: thingData, isLoading: thingIsLoading } = useGetEntityThings({
@@ -169,7 +163,7 @@ export function CreateControllerButton({
             onSubmit={handleSubmit(values => {
               // console.log('values: ', values)
               const widgetId = uuidv4()
-              const controllerBtn: ControllerBtn = {
+              const controllerBtn = {
                 title: values.title,
                 description: widgetCategory,
                 datasource: {
@@ -208,10 +202,10 @@ export function CreateControllerButton({
                 },
                 id: widgetId,
               }
-              // console.log(controllerBtn, 'controllerBtn')
+
               setWidgetList(prev => ({
                 ...prev,
-                ...({ [widgetId]: controllerBtn } as Widget),
+                ...{ [widgetId]: controllerBtn },
               }))
 
               close()

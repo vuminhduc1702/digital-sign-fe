@@ -33,8 +33,9 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  const TICK_COUNT = 7
-  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 10000
+  const TICK_COUNT = 5
+  const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
+  const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -206,12 +207,7 @@ export function LineChart({
                     className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
                     <div>{timeFormatter(entry.payload.ts)}</div>
-                    <div
-                      className={`
-                      color-blue-200
-                    `}
-                      style={{ color: entry.color ? entry.color : 'inherit' }}
-                    >
+                    <div style={{ color: entry.color }}>
                       {unitConfig &&
                       unitConfig.length > 0 &&
                       unitConfig[0].unit !== ''
@@ -271,35 +267,62 @@ export function LineChart({
   }
 
   function timeFormatter(tick: any | null) {
-    if (TICK_INTERVAL <= 1000 * 60 * 60) {
-      return d3.timeFormat('%H:%M:%S')(new Date(tick))
-    } else if (
-      60000 * 60 <= TICK_INTERVAL &&
-      TICK_INTERVAL <= 1000 * 60 * 60 * 24
-    ) {
-      return d3.timeFormat('%H:%M %d')(new Date(tick))
-    } else {
-      return d3.timeFormat('%d/%m/%y')(new Date(tick))
+    switch (true) {
+      case TIME_PERIOD <= 1000 * 60 * 60 * 12:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M:%S')(new Date(tick))
+          default:
+            return d3.timeFormat('%H:%M')(new Date(tick))
+        }
+      case TIME_PERIOD > 1000 * 60 * 60 * 12 &&
+        TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M %d')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d')(new Date(tick))
+        }
+      default:
+        switch (true) {
+          case TICK_INTERVAL <= 1000 * 60 * 30:
+            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
+          default:
+            return d3.timeFormat('%H %d/%m')(new Date(tick))
+        }
     }
   }
 
-  const initStart = new Date().getTime() - TICK_COUNT * TICK_INTERVAL
-  const initEnd = new Date().getTime()
+  const initNow = new Date().getTime()
+  const initStart = initNow - TIME_PERIOD
+  const initEnd = initNow
   const [ticks, setTicks] = useState(
-    d3.range(initStart, initEnd, TICK_INTERVAL),
+    TIME_PERIOD <= 1000
+      ? [initStart, initEnd]
+      : d3.range(initStart, initEnd + 1, TIME_PERIOD / TICK_COUNT),
   )
   const [realtimeData, setRealtimeData] = useState<
     Array<{ ts: number; [key: string]: string | number }>
   >([
     {
       ts: 0,
+      [widgetInfo.attribute_config[0].attribute_key]: 0,
     },
   ])
+
+  const [hasRenderedInit, setHasRenderedInit] = useState(false)
+
+  useEffect(() => {
+    if (newValuesRef.current !== null && !hasRenderedInit) {
+      updateScale()
+      setHasRenderedInit(true)
+    }
+  }, [newValuesRef.current])
 
   useEffect(() => {
     const interval = setInterval(() => {
       updateScale()
-    }, 1000)
+    }, TICK_INTERVAL)
 
     return () => {
       clearInterval(interval)
@@ -307,37 +330,55 @@ export function LineChart({
   }, [realtimeData, newValuesRef])
 
   function updateScale() {
-    const now = new Date()
-    const start = now.getTime() - TICK_COUNT * TICK_INTERVAL
-    const end = now.getTime()
-    const divineTick = d3.range(start, end, TICK_INTERVAL)
+    const now = new Date().getTime()
+    const start = now - TIME_PERIOD
+    const end = now
 
-    for (let widget in newValuesRef.current) {
-      const transformedNewValues: Array<{
+    if (TIME_PERIOD <= 1000) {
+      setTicks([start, end])
+    } else {
+      const divineTick = d3.range(start, end + 1, TIME_PERIOD / TICK_COUNT)
+      const widgetArray: Array<{ ts: number; [key: string]: string | number }> =
+        []
+
+      const transformedNewValues: {
         ts: number
         [key: string]: string | number
-      }> = []
-      newValuesRef.current[widget].map(item => {
-        if (item.ts > start && item.ts < ticks[ticks.length - 1]) {
-          const returnValue = {
-            ts: item.ts,
-            [widget]: parseFloat(item.value),
+      }[] = []
+
+      for (let widget in newValuesRef.current) {
+        newValuesRef.current[widget].map(item => {
+          const timeStamp = Math.floor(item.ts / 1000) * 1000
+          if (item.ts > start && item.ts < end) {
+            const returnValue = {
+              ts: timeStamp,
+              [widget]: parseFloat(item.value),
+            }
+            const existingIndex = transformedNewValues.findIndex(
+              obj => obj.ts === timeStamp,
+            )
+            if (existingIndex === -1) {
+              transformedNewValues.push(returnValue)
+            } else {
+              transformedNewValues[existingIndex][widget] = parseFloat(
+                item.value,
+              )
+            }
           }
-          transformedNewValues.push(returnValue)
-        }
-      })
-      if (transformedNewValues.length > 0) {
-        setRealtimeData(transformedNewValues)
-      } else {
-        setRealtimeData([
-          {
-            ts: 0,
-            [widget]: 0,
-          },
-        ])
+        })
       }
+
+      if (transformedNewValues.length > 0) {
+        widgetArray.push(...transformedNewValues)
+      } else {
+        widgetArray.push({
+          ts: 0,
+          [widgetInfo.attribute_config[0].attribute_key]: 0,
+        })
+      }
+      setRealtimeData(widgetArray)
+      setTicks(divineTick)
     }
-    setTicks(divineTick)
   }
 
   return (
@@ -389,7 +430,7 @@ export function LineChart({
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <Spinner size="xl" />
+            <Spinner size="xl" showSpinner={showSpinner} />
           </div>
         )
       ) : !showSpinner && newValuesRef.current != null ? (
@@ -403,7 +444,7 @@ export function LineChart({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={false}
                 allowDataOverflow={true}
@@ -411,32 +452,27 @@ export function LineChart({
               <YAxis />
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="ts"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
-              {Object.keys(newValuesRef.current).map((key, index) => {
-                const colorConfig = widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key.color
+
                 return (
                   <Line
                     key={index.toString()}
                     connectNulls
                     type="monotone"
-                    dataKey={key}
+                    dataKey={attributeKey}
                     animationDuration={250}
-                    stroke={
-                      key.includes('SMA') || key.includes('FFT')
-                        ? '#2c2c2c'
-                        : colorConfig && colorConfig[0].color !== ''
-                        ? colorConfig[0].color
-                        : '#e8c1a0'
-                    }
                     activeDot={{ r: 5 }}
                     dot={false}
+                    stroke={
+                      attributeKey.includes('SMA') ||
+                      attributeKey.includes('FFT')
+                        ? '#2c2c2c'
+                        : colorKey && colorKey !== ''
+                        ? colorKey
+                        : '#e8c1a0'
+                    }
                   />
                 )
               })}
@@ -446,7 +482,7 @@ export function LineChart({
       ) : (
         <>
           <ResponsiveContainer width="98%" height="90%" className="pt-8">
-            <LineWidget>
+            <LineWidget data={realtimeData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="ts"
@@ -454,7 +490,7 @@ export function LineChart({
                 type="number"
                 domain={[ticks[0], ticks[ticks.length - 1]]}
                 ticks={ticks}
-                tickCount={TICK_COUNT}
+                tickCount={TIME_PERIOD <= 1000 ? 2 : TICK_COUNT}
                 tickFormatter={timeFormatter}
                 allowDuplicatedCategory={true}
                 allowDataOverflow={true}
@@ -462,12 +498,30 @@ export function LineChart({
               <YAxis />
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
-              {/* <Brush
-                dataKey="ts"
-                height={30}
-                stroke="#8884d8"
-                tickFormatter={timeFormatter}
-              /> */}
+              {widgetInfo.attribute_config.map((key, index) => {
+                const attributeKey = key.attribute_key
+                const colorKey = key.color
+
+                return (
+                  <Line
+                    key={index.toString()}
+                    connectNulls
+                    type="monotone"
+                    dataKey={attributeKey}
+                    animationDuration={250}
+                    activeDot={{ r: 5 }}
+                    dot={false}
+                    stroke={
+                      attributeKey.includes('SMA') ||
+                      attributeKey.includes('FFT')
+                        ? '#2c2c2c'
+                        : colorKey && colorKey !== ''
+                        ? colorKey
+                        : '#e8c1a0'
+                    }
+                  />
+                )
+              })}
             </LineWidget>
           </ResponsiveContainer>
         </>
