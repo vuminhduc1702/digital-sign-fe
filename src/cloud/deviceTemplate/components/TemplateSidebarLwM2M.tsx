@@ -5,7 +5,7 @@ import { cn } from '~/utils/misc'
 import { TemplateDefault } from './TemplateDefault'
 import { TemplateLwM2M } from './TemplateLwM2M'
 
-export function TemplateSidebar1() {
+export function TemplateSidebarLwM2M() {
   const [type, setType] = useState('LwM2M')
   const DeviceType = ['Default', 'LwM2M']
   return (

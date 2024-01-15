@@ -314,7 +314,6 @@ const data = {
   thing_id: selectedThing,
   handle_msg_svc: selectedService
 }
-console.log('itemNames', itemNames)
 //console.log('checkboxStates', checkboxStates)
   return (
     <FormDrawer
