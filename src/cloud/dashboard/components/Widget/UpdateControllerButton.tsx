@@ -49,6 +49,8 @@ export function UpdateControllerButton({
 
   const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
 
+  const [isSend, setIsSend] = useState(false)
+
   const parseArrData =
     widgetInfoMemo?.datasource.controller_message != null
       ? JSON.parse(widgetInfoMemo?.datasource.controller_message)
@@ -81,19 +83,20 @@ export function UpdateControllerButton({
       input: parseArrData.executorCmds,
     },
   })
-  console.log('formState.errors', formState.errors)
+  // console.log('formState.errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
     control: control,
   })
 
-  const { data: thingData, isLoading: thingIsLoading } = useGetEntityThings({
+  const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
     config: {
       suspense: false,
     },
   })
+
   const thingSelectData = thingData?.data?.list?.map(thing => ({
     value: thing.id,
     label: thing.name,
@@ -128,17 +131,26 @@ export function UpdateControllerButton({
   useEffect(() => {
     if (inputSelectData && inputSelectData.length > 0) {
       const tempInput = parseArrData.executorCmds[0].input
-      const keyArr = Object.keys(tempInput)
-      const rs = keyArr.map(item => {
-        const temp = inputSelectData.find(ele => ele.value === item)
-        return {
-          input: temp?.value,
-          value: tempInput[item],
-          type: temp?.type,
-          id: uuidv4(),
-        }
-      })
-      setInputField(rs)
+      const rs = tempInput.map(
+        (item: { name: string; value: string | number }) => {
+          const temp = inputSelectData.find(ele => ele.value === item.name)
+          if (temp) {
+            return {
+              input: temp?.value,
+              value: temp?.value === item.name ? item.value : '',
+              type: temp?.type,
+              id: uuidv4(),
+            }
+          }
+          return null
+        },
+      )
+      if (rs.includes(null)) {
+        setInputField([])
+      } else {
+        setInputField(rs)
+      }
+      console.log(rs)
     }
   }, [thingServiceData])
 
@@ -157,7 +169,6 @@ export function UpdateControllerButton({
           id="update-controller-widget"
           className="flex w-full flex-col justify-between space-y-5"
           onSubmit={handleSubmit(values => {
-            // console.log('values update submit: ', values)
             const controllerBtn = {
               title: values.title,
               description: widgetInfoMemo?.description ?? 'LINE',
@@ -203,12 +214,18 @@ export function UpdateControllerButton({
                 ...prev,
                 ...{ [widgetId]: controllerBtn },
               }))
-              setIsDone(true)
+
+              // close the dialog
+              setInterval(() => {
+                setIsDone(true)
+                setIsSend(true)
+              }, 100)
+              setIsDone(false)
             }
           })}
         >
           <>
-            {thingIsLoading ? (
+            {isLoadingThing ? (
               <div className="flex grow items-center justify-center">
                 {/* <Spinner showSpinner={showSpinner} size="xl" /> */}
               </div>
@@ -237,7 +254,6 @@ export function UpdateControllerButton({
                     }
                     noOptionsMessage={() => t('table:no_thing')}
                     loadingMessage={() => t('loading:entity_thing')}
-                    isLoading={thingIsLoading}
                     placeholder={t('cloud:custom_protocol.thing.choose')}
                     error={formState?.errors?.thing_id}
                     defaultValue={thingSelectData?.find(
@@ -335,6 +351,7 @@ export function UpdateControllerButton({
                               name={`input.${idx}.name`}
                               // error={formState?.errors?.input?.[idx]?.name}
                               // registration={register(`input.${idx}.name`)}
+                              isLoading={isLoadingThing}
                               control={control}
                               options={
                                 thingServiceData?.data != null
@@ -376,9 +393,9 @@ export function UpdateControllerButton({
                               }}
                             />
                           </div>
-                          {!item.input && (
+                          {!item.input && isSend && (
                             <div className="text-body-sm text-primary-400">
-                              Vui lòng không bỏ trống mục này
+                              {t('cloud:dashboard.config_chart.required')}
                             </div>
                           )}
                         </div>
@@ -422,7 +439,7 @@ export function UpdateControllerButton({
                                 //   `input.${index}.value` as const,
                                 // )}
                                 name={`input.${idx}.value`}
-                                value={item.value}
+                                value={item.value.value}
                                 onChange={e => {
                                   const temp = inputField.map(element => {
                                     if (element.id === item.id) {
@@ -440,10 +457,17 @@ export function UpdateControllerButton({
                                     ? 'text'
                                     : 'number'
                                 }
+                                defaultValue={
+                                  inputSelectData?.find(ele => {
+                                    return ele.value === item.input
+                                  })?.value === item.input
+                                    ? item.value
+                                    : ''
+                                }
                               />
-                              {!item.value && (
+                              {item.value && isSend && (
                                 <div className="text-body-sm text-primary-400">
-                                  Vui lòng không bỏ trống mục này
+                                  {t('cloud:dashboard.config_chart.required')}
                                 </div>
                               )}
                             </div>

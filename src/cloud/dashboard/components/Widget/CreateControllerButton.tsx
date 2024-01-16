@@ -172,7 +172,7 @@ export function CreateControllerButton({
             id="create-controllerBtn"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
+              console.log('values: ', values)
               const widgetId = uuidv4()
               const controllerBtn = {
                 title: values.title,
@@ -193,7 +193,7 @@ export function CreateControllerButton({
                 },
                 id: widgetId,
               }
-
+              // console.log(controllerBtn)
               setWidgetList(prev => ({
                 ...prev,
                 ...{ [widgetId]: controllerBtn },
@@ -321,6 +321,7 @@ export function CreateControllerButton({
                             )}
                           /> */}
                           {inputSelectData?.map(ele => {
+                            console.log(ele)
                             if (ele.value === watch(`input.${index}.name`)) {
                               return ele.type === 'bool' ? (
                                 <FieldWrapper
