@@ -286,6 +286,7 @@ export function CreateControllerButton({
                     />
                   </div>
                   {fields.map((field, index) => {
+                    console.log('watch', watch(`input`))
                     return (
                       <section
                         className="mt-3 flex justify-between px-2"
@@ -311,18 +312,9 @@ export function CreateControllerButton({
                               error={formState?.errors?.input?.[index]?.name}
                             />
                           </div>
-                          {/* <InputField
-                            label={t(
-                              'cloud:dashboard.detail_dashboard.add_widget.controller.value',
-                            )}
-                            error={formState.errors?.input?.[index]?.value}
-                            registration={register(
-                              `input.${index}.value` as const,
-                            )}
-                          /> */}
-                          {inputSelectData?.map(ele => {
+                          {watch('input').map(ele => {
                             if (ele.value === watch(`input.${index}.name`)) {
-                              return ele.type === 'bool' ? (
+                              return typeof ele.value === 'boolean' ? (
                                 <FieldWrapper
                                   label={t(
                                     'cloud:custom_protocol.service.service_input.value',
@@ -362,62 +354,14 @@ export function CreateControllerButton({
                                     `input.${index}.value` as const,
                                   )}
                                   type={
-                                    ['json', 'str'].includes(ele.type)
+                                    ['json', 'str'].includes(typeof ele.value)
                                       ? 'text'
                                       : 'number'
                                   }
                                 />
                               )
                             }
-                            return null
                           })}
-                          {/* {watch(`input.${index}.name`) === 'bool' ? (
-                            <FieldWrapper
-                              label={t(
-                                'cloud:custom_protocol.service.service_input.value',
-                              )}
-                              error={formState.errors?.input?.[index]?.value}
-                              className="w-fit"
-                            >
-                              <Controller
-                                control={control}
-                                name={`input.${index}.value`}
-                                render={({
-                                  field: { onChange, value, ...field },
-                                }) => {
-                                  return (
-                                    <Checkbox
-                                      {...field}
-                                      checked={value as boolean}
-                                      onCheckedChange={onChange}
-                                      defaultChecked
-                                    />
-                                  )
-                                }}
-                              />
-                              <span className="pl-3">True</span>
-                            </FieldWrapper>
-                          ) : (
-                            <InputField
-                              // defaultValue={
-                              //   inputSelectData ? inputSelectData[field.name] : ''
-                              // }
-                              label={t(
-                                'cloud:custom_protocol.service.service_input.value',
-                              )}
-                              error={formState.errors?.input?.[index]?.value}
-                              registration={register(
-                                `input.${index}.value` as const,
-                              )}
-                              type={
-                                ['json', 'str'].includes(
-                                  watch(`input.${index}.name`),
-                                )
-                                  ? 'text'
-                                  : 'number'
-                              }
-                            />
-                          )} */}
                         </div>
                         <Button
                           type="button"
