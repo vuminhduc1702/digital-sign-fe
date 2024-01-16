@@ -38,6 +38,7 @@ export function LineChart({
   const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
+  console.log('widgetInfo', widgetInfo)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     Array<{ ts: string; [key: string]: string | number }>

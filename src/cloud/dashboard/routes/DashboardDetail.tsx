@@ -13,7 +13,11 @@ import { toast } from 'sonner'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
-import { useCreateAttrChart, useGetDashboardsById, useUpdateDashboard } from '../api'
+import {
+  useCreateAttrChart,
+  useGetDashboardsById,
+  useUpdateDashboard,
+} from '../api'
 import {
   BarChart,
   CardChart,
@@ -97,7 +101,7 @@ export function DashboardDetail() {
   const [deviceIds, setDeviceIds] = useState([])
   const dataFilter = useRef<SelectOption>({
     label: '',
-    value: ''
+    value: '',
   })
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
@@ -119,10 +123,15 @@ export function DashboardDetail() {
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.entities?.flatMap((item) => {
-    const result = item.attr_keys.map(key => ({ id: item.entity_id, label: key, value: key }))
+  const attrSelectData = attrChartData?.entities?.flatMap(item => {
+    const result = item.attr_keys.map(key => ({
+      id: item.entity_id,
+      label: key,
+      value: key,
+    }))
     return result
   })
+  console.log('attrSelectData', attrSelectData)
 
   useEffect(() => {
     console.log(deviceIds)
@@ -262,10 +271,7 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>(
-    [],
-  )
+  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
 
   return (
     <div className="relative flex grow flex-col">
@@ -394,7 +400,10 @@ export function DashboardDetail() {
                         }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart data={lastestValuesForMap} widgetInfo={widgetInfo} />
+                      <PieChart
+                        data={lastestValuesForMap}
+                        widgetInfo={widgetInfo}
+                      />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
                         data={lastestValuesForMap}
