@@ -172,7 +172,7 @@ export function CreateControllerButton({
             id="create-controllerBtn"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
+              console.log('values: ', values)
               const widgetId = uuidv4()
               const controllerBtn = {
                 title: values.title,
@@ -193,7 +193,7 @@ export function CreateControllerButton({
                 },
                 id: widgetId,
               }
-
+              // console.log(controllerBtn)
               setWidgetList(prev => ({
                 ...prev,
                 ...{ [widgetId]: controllerBtn },
@@ -312,7 +312,17 @@ export function CreateControllerButton({
                               error={formState?.errors?.input?.[index]?.name}
                             />
                           </div>
-                          {watch('input').map(ele => {
+                          {/* <InputField
+                            label={t(
+                              'cloud:dashboard.detail_dashboard.add_widget.controller.value',
+                            )}
+                            error={formState.errors?.input?.[index]?.value}
+                            registration={register(
+                              `input.${index}.value` as const,
+                            )}
+                          /> */}
+                          {inputSelectData?.map(ele => {
+                            console.log(ele)
                             if (ele.value === watch(`input.${index}.name`)) {
                               return typeof ele.value === 'boolean' ? (
                                 <FieldWrapper

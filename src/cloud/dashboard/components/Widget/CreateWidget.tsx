@@ -40,7 +40,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
-const WS_REALTIME_PERIOD = [
+export const WS_REALTIME_PERIOD = [
   {
     label: i18n.t('ws:filter.time_period_value.10second'),
     value: 10 * 1000,
@@ -109,9 +109,9 @@ const WS_REALTIME_PERIOD = [
     label: i18n.t('ws:filter.time_period_value.30day'),
     value: 30 * 24 * 60 * 60 * 1000,
   },
-]
+] as const
 
-const WS_REALTIME_INTERVAL = [
+export const WS_REALTIME_INTERVAL = [
   {
     label: i18n.t('ws:filter.interval.1second'),
     value: 1000,
@@ -176,9 +176,9 @@ const WS_REALTIME_INTERVAL = [
     label: i18n.t('ws:filter.interval.1day'),
     value: 24 * 60 * 60 * 1000,
   }, //16
-]
+] as const
 
-const WS_REALTIME_REF = [
+export const WS_REALTIME_REF = [
   // 1 second
   { start: 0, end: 0 },
   // 5 seconds
@@ -217,7 +217,7 @@ const WS_REALTIME_REF = [
   { start: 10, end: 16 },
   // 30 days
   { start: 11, end: 16 },
-]
+] as const
 
 export const wsInterval = [
   { label: 'Second', value: 1000 },

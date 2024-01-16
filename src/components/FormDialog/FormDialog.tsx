@@ -74,7 +74,7 @@ export const FormDialog = ({
         <div
           id={id}
           className={cn(
-            'inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:w-full sm:p-3 sm:align-middle',
+            'inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:w-full sm:p-3 sm:align-middle',
             className,
             size ? formDialogSizes[size] : 'sm:max-w-lg',
           )}
