@@ -55,9 +55,12 @@ export const controllerBtnCreateSchema = z.object({
       name: z.string().min(1, {
         message: i18n.t('cloud:custom_protocol.service.choose_input'),
       }),
-      value: z.string().min(1, {
-        message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
-      }),
+      value: z
+        .string()
+        .min(1, {
+          message: i18n.t('cloud:custom_protocol.service.choose_inputValue'),
+        })
+        .or(z.boolean()),
     }),
   ),
   id: z.string().optional(),
@@ -150,15 +153,15 @@ export function CreateControllerButton({
 
   function checkInputValueType(inputName: string, index: number) {
     const inputType = thingServiceData?.data?.input?.find(
-      (ele, idx) => ele.name === inputName && idx === index,
+      (ele) => ele.name === inputName
     )?.type
 
     if (inputType === 'bool') {
       return 'checkbox'
-    } else if (inputType === 'number') {
-      return 'number'
-    } else {
+    } else if (inputType === 'json' || inputType === 'str') {
       return 'text'
+    } else {
+      return 'number'
     }
   }
 
@@ -185,7 +188,6 @@ export function CreateControllerButton({
             id="create-controllerBtn"
             className="flex w-full flex-col justify-between space-y-5"
             onSubmit={handleSubmit(values => {
-              // console.log('values: ', values)
               const widgetId = uuidv4()
               const controllerBtn = {
                 title: values.title,
@@ -206,7 +208,6 @@ export function CreateControllerButton({
                 },
                 id: widgetId,
               }
-              // console.log(controllerBtn)
               setWidgetList(prev => ({
                 ...prev,
                 ...{ [widgetId]: controllerBtn },
@@ -303,7 +304,7 @@ export function CreateControllerButton({
                     return (
                       <section
                         className="mt-3 flex justify-between px-2"
-                        // key={field.id}
+                        key={index}
                       >
                         <div className="flex w-2/3 gap-x-2">
                           <div className="w-full">
@@ -340,15 +341,21 @@ export function CreateControllerButton({
                               <Controller
                                 control={control}
                                 name={`input.${index}.value`}
-                                render={({
+                                render={(
+                                {
                                   field: { onChange, value, ...field },
                                 }) => {
+                                  // if value === "" then set value to false
+                                  if (value === "") {
+                                    onChange(false)
+                                  }
                                   return (
                                     <Checkbox
                                       {...field}
-                                      checked={value as boolean}
+                                      checked={Boolean(value)}
                                       onCheckedChange={onChange}
                                       defaultChecked
+                                      
                                     />
                                   )
                                 }}

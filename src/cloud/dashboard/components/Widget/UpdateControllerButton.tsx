@@ -51,6 +51,8 @@ export function UpdateControllerButton({
 
   const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
 
+  const [isSend, setIsSend] = useState(false)
+
   const parseArrData =
     widgetInfoMemo?.datasource.controller_message != null
       ? JSON.parse(widgetInfoMemo?.datasource.controller_message)
@@ -127,15 +129,15 @@ export function UpdateControllerButton({
 
   function checkInputValueType(inputName: string, index: number) {
     const inputType = thingServiceData?.data?.input?.find(
-      (ele, idx) => ele.name === inputName && idx === index,
+      (ele) => ele.name === inputName
     )?.type
 
     if (inputType === 'bool') {
       return 'checkbox'
-    } else if (inputType === 'number') {
-      return 'number'
-    } else {
+    } else if (inputType === 'json' || inputType === 'str') {
       return 'text'
+    } else {
+      return 'number'
     }
   }
 
@@ -318,8 +320,7 @@ export function UpdateControllerButton({
                             <SelectDropdown
                               label={t('cloud:custom_protocol.service.input')}
                               name={`input.${index}.name`}
-                              // error={formState?.errors?.input?.[idx]?.name}
-                              // registration={register(`input.${idx}.name`)}
+                              isLoading={isLoadingThing}
                               control={control}
                               options={inputSelectData}
                               isOptionDisabled={option =>
@@ -328,7 +329,6 @@ export function UpdateControllerButton({
                               }
                               noOptionsMessage={() => t('table:no_input')}
                               loadingMessage={() => t('loading:input')}
-                              isLoading={isLoadingThing}
                               placeholder={t(
                                 'cloud:custom_protocol.service.choose_input',
                               )}
@@ -356,16 +356,17 @@ export function UpdateControllerButton({
                             <Controller
                               control={control}
                               name={`input.${index}.value`}
-                              registration={register(
-                                `input.${index}.value` as const,
-                              )}
                               render={({
                                 field: { onChange, value, ...field },
                               }) => {
+                                // if value === "" then set value to false
+                                if (value === '') {
+                                  onChange(false)
+                                }
                                 return (
                                   <Checkbox
                                     {...field}
-                                    checked={value as boolean}
+                                    checked={Boolean(value)}
                                     onCheckedChange={onChange}
                                     defaultChecked
                                   />
