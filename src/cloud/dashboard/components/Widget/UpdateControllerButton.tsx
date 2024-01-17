@@ -220,6 +220,7 @@ export function UpdateControllerButton({
                       option.label === t('loading:entity_thing') ||
                       option.label === t('table:no_thing')
                     }
+                    isLoading={isLoadingThing}
                     noOptionsMessage={() => t('table:no_thing')}
                     loadingMessage={() => t('loading:entity_thing')}
                     placeholder={t('cloud:custom_protocol.thing.choose')}
@@ -339,13 +340,12 @@ export function UpdateControllerButton({
                             />
                           </div>
                         </div>
-                        {watchInput &&
-                        (watchInput[index].name === ''
-                          ? null
-                          : checkInputValueType(
+                        {
+                        watchInput[index].name === ''
+                          ? null : checkInputValueType(
                               watchInput[index].name,
                               index,
-                            ) === 'checkbox') ? (
+                            ) === 'checkbox' ? (
                           <FieldWrapper
                             label={t(
                               'cloud:custom_protocol.service.service_input.value',
