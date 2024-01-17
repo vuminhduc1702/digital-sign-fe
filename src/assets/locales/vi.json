@@ -610,7 +610,8 @@
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
         "max": "Max",
-        "min": "Min"
+        "min": "Min", 
+        "required": "Vui lòng không bỏ trống mục này"
       },
       "detail_dashboard": {
         "add_widget": {

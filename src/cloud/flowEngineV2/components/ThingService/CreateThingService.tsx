@@ -355,7 +355,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   error={formState.errors['lock_time']}
                   registration={register('lock_time', {
                     onChange: e => {
-                      console.log(e.target.value, 'check value')
+                      // console.log(e.target.value, 'check value')
                       const regexOnlyAcceptNumber = /^\d+$/
                       let temp
                       if (regexOnlyAcceptNumber.test(e.target.value)) {

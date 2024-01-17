@@ -131,10 +131,10 @@ export function DashboardDetail() {
     }))
     return result
   })
-  console.log('attrSelectData', attrSelectData)
+  // console.log('attrSelectData', attrSelectData)
 
   useEffect(() => {
-    console.log(deviceIds)
+    // console.log(deviceIds)
   }, [deviceIds])
 
   const [widgetList, setWidgetList] = useState<Widget>({})
