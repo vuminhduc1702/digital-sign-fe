@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { DataSeries } from '../../types'
+import { type DataSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
@@ -133,14 +133,6 @@ export const PieChart = ({ data, widgetInfo }: { data: DataSeries, widgetInfo: z
                   },
                 },
               ],
-              // data: widgetInfo.attribute_config.map(item => ({
-              //   id: item.attribute_key,
-              //   label:
-              //     item.unit !== ''
-              //       ? item.attribute_key + ' (' + item.unit + ')'
-              //       : item.attribute_key,
-              //   color: item.color ? item.color : '#e8c1a0',
-              // })),
             },
           ]}
         />
@@ -152,7 +144,3 @@ export const PieChart = ({ data, widgetInfo }: { data: DataSeries, widgetInfo: z
     </>
   )
 }
-function uuidv4(): any {
-  throw new Error('Function not implemented.')
-}
-

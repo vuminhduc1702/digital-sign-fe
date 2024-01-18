@@ -98,11 +98,6 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
-  const [deviceIds, setDeviceIds] = useState([])
-  const dataFilter = useRef<SelectOption>({
-    label: '',
-    value: '',
-  })
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -118,24 +113,6 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
-  const {
-    data: attrChartData,
-    mutate: attrChartMutate,
-    isLoading: attrChartIsLoading,
-  } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(key => ({
-      id: item.entity_id,
-      label: key,
-      value: key,
-    }))
-    return result
-  })
-  // console.log('attrSelectData', attrSelectData)
-
-  useEffect(() => {
-    // console.log(deviceIds)
-  }, [deviceIds])
 
   const [widgetList, setWidgetList] = useState<Widget>({})
   // console.log('widgetList', widgetList)
@@ -329,20 +306,12 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-                const lastestValues: TimeSeries =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.latest.TIME_SERIES as LatestData,
-                        ),
-                      )
-                    : {}
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const lastestValuesForMap: TimeSeries =
+                const lastestValues: DataSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => ({
@@ -351,9 +320,7 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                // if (lastJsonMessage?.id === widgetId && widgetInfo.description === 'MAP') {
-                //   setDeviceIds()
-                // }
+
                 return (
                   <div
                     key={widgetId}
@@ -400,17 +367,13 @@ export function DashboardDetail() {
                         }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart
-                        data={lastestValuesForMap}
-                        widgetInfo={widgetInfo}
-                      />
+                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
-                        data={lastestValuesForMap}
+                        data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
                         filter={filteredComboboxData}
-                        passDeviceIds={setDeviceIds}
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
