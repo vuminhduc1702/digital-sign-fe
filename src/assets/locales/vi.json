@@ -16,7 +16,8 @@
       "flow_engine": "Flow Engine",
       "dashboard": "Bảng điều khiển",
       "role_manage": "Vai trò",
-      "custom_protocol": "Adapter"
+      "custom_protocol": "Adapter",
+      "db_template": "Danh mục dữ liệu"
     },
     "application": {
       "title": "Ứng dụng",
@@ -395,6 +396,40 @@
         "delete_template_full": "Xoá mẫu thiết bị",
         "delete_template_confirm": "Bạn có chắc chắn muốn xóa mẫu thiết bị {{TEMPLATENAME}}?",
         "no_template": "Không có mẫu thiết bị"
+      }
+    },
+    "db_template": {
+      "title": "Danh mục dữ liệu",
+      "info": {
+        "title": "Thông tin mẫu thiết bị",
+        "flow": "Flow",
+        "provision_key": "Provision key",
+        "provision_secret": "Provision secret",
+        "created_at": "Ngày tạo",
+        "create_by": "Người tạo"
+      },
+      "add_db": {
+        "title": "Tạo mới danh mục dữ liệu",
+        "header": "Danh mục dữ liệu",
+        "name": "Tên danh mục dữ liệu",
+        "add_column": "Thêm cột",
+        "column": "Tên cột",
+        "type": "Kiểu dữ liệu",
+        "success_create": "Tạo danh mục dữ liệu thành công",
+        "success_update": "Sửa danh mục dữ liệu thành công",
+        "success_delete": "Xoá danh mục dữ liệu thành công",
+        "choose_flow_id": "Vui lòng chọn flow id",
+        "success_add_column": "Thêm cột thành công",
+        "no_flow_id": "Không thuộc flow id"
+      },
+      "sidebar": {
+        "title": "Danh mục dữ liệu",
+        "id": "Mã ID",
+        "desc": "Mô tả",
+        "edit": "Sửa mẫu TB",
+        "delete_db": "Xoá danh mục dữ liệu",
+        "delete_db_confirm": "Bạn có chắc chắn muốn xóa danh mục dữ liệu {{DBNAME}}?",
+        "no_db": "Không có danh mục dữ liệu"
       }
     },
     "role_manage": {

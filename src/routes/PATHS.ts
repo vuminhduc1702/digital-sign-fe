@@ -35,6 +35,7 @@ export const PATHS = {
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
+  DB_TEMPLATE: `${BASE_PATH_CLOUD}database-template`,
 
   // Billing route
   BILLING: `${BASE_PATH_PAYMENT}billing`,
