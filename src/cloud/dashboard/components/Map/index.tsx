@@ -26,6 +26,7 @@ export function MapChart({
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
+  const searchDevice = filter[0]
 
   useEffect(() => {
     if (isEditMode) {
@@ -36,31 +37,41 @@ export function MapChart({
   }, [isEditMode])
 
   function dataManipulation() {
-    setTimeout(() => {
-      if (newValuesRef.current?.data) {
-        const dataForMapChart = Object.entries(
-          newValuesRef.current.data,
-        ).reduce((result: Array<LatLngTuple>, [, dataItem]) => {
-          const dataLatIndex = Object.keys(dataItem).findIndex(
-            key => key === 'lat',
-          )
-          const dataLongIndex = Object.keys(dataItem).findIndex(
-            key => key === 'long',
-          )
-          let dataLat = Object.values(dataItem)[dataLatIndex].value
-          let dataLong = Object.values(dataItem)[dataLongIndex].value
-          if (dataLat !== null && dataLong !== null) {
-            const coor: LatLngTuple = [
-              parseFloat(dataLat),
-              parseFloat(dataLong),
-            ]
+    if (newValuesRef.current?.data) {
+      const dataForMapChart = Object.entries(data.data).reduce(
+        (result: Array<LatLngTuple>, [, dataItem]) => {
+          if (dataItem.length === 0) {
+            const coor: LatLngTuple = [999, 0]
             result.push(coor)
+          } else {
+            const dataLatIndex = Object.keys(dataItem).findIndex(
+              key => key === 'lat',
+            )
+            const dataLongIndex = Object.keys(dataItem).findIndex(
+              key => key === 'long',
+            )
+            if (!Object.values(dataItem)[dataLatIndex]) {
+              const coor: LatLngTuple = [999, 0]
+              result.push(coor)
+            } else {
+              let dataLat = Object.values(dataItem)[dataLatIndex].value
+              let dataLong = Object.values(dataItem)[dataLongIndex].value
+              if (dataLat !== null && dataLong !== null) {
+                const coor: LatLngTuple = [
+                  parseFloat(dataLat),
+                  parseFloat(dataLong),
+                ]
+                result.push(coor)
+              }
+            }
           }
           return result
-        }, [])
-        setDataForMap(dataForMapChart)
-      }
-    }, 200)
+        },
+        [],
+      )
+      setDataForMap(dataForMapChart)
+      setDeviceDetailInfo(data.device)
+    }
   }
 
   useEffect(() => {
@@ -78,12 +89,10 @@ export function MapChart({
               newValuesRef.current?.data?.[deviceIndex]?.[key] ===
                 prevValuesRef.current?.data?.[deviceIndex]?.[key]
             ) {
-              setTimeout(() => {
-                Object.assign(
-                  newValuesRef.current?.data?.[deviceIndex]?.[key],
-                  newData,
-                )
-              }, 200)
+              Object.assign(
+                newValuesRef.current?.data?.[deviceIndex]?.[key],
+                newData,
+              )
             }
           }
         } else {
@@ -105,10 +114,25 @@ export function MapChart({
   }, [data])
 
   useEffect(() => {
-    map.current?.fitBounds(dataForMap, {
-      padding: [30, 30],
-    })
-  }, [dataForMap])
+    if (!searchDevice) {
+      map.current?.fitBounds(
+        dataForMap.filter((item: any) => item[0] !== 999),
+        {
+          padding: [30, 30],
+        },
+      )
+    } else {
+      // find index of device in dataForMap
+      const deviceIndex = deviceDetailInfo.findIndex(
+        device => device.id === searchDevice.id,
+      )
+      const [lat, lng] = dataForMap[deviceIndex]
+      if (lat === 999) {
+        return
+      }
+      map.current?.setView([lat, lng], 7)
+    }
+  }, [dataForMap, searchDevice])
 
   return (
     <>
@@ -123,6 +147,9 @@ export function MapChart({
         <TileLayer url="http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga" />
         {dataForMap.map((coor, index) => {
           const [lat, lng] = coor
+          if (lat === 999) {
+            return
+          }
           const deviceNameArray = deviceDetailInfo?.map((item: any) => {
             const deviceData = JSON.parse(widgetInfo.datasource.init_message)
               .entityDataCmds[0].query.entityFilter.entityIds
