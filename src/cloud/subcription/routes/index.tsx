@@ -17,7 +17,7 @@ const { SubcriptionTemplate } = lazyImport(
   'SubcriptionTemplate',
 )
 
-export const SubcriptionRoutes = [
+export const SubscriptionRoutes = [
   {
     element: <SubcriptionLayout />,
     children: [

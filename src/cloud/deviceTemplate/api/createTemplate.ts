@@ -6,7 +6,7 @@ import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
 
-import { type Template } from '../types'
+import { type Template, type TransportConfig } from '../types'
 import { type AttrList} from '~/utils/schemaValidation'
 
 export type CreateTemplateDTO = {
@@ -14,7 +14,10 @@ export type CreateTemplateDTO = {
     name: string
     rule_chain_id: string
     project_id: string
+    transport_config: TransportConfig
     attributes: AttrList
+    thing_id: string
+    handle_msg_svc: string
   }
 }
 export const createTemplate = ({

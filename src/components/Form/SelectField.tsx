@@ -62,7 +62,7 @@ export const SelectField = ({
         {...registration}
         {...props}
       >
-        <option value="" disabled selected hidden>
+        <option value="" disabled hidden>
           {placeholder || t('placeholder:select')}
         </option>
         {options != null ? (

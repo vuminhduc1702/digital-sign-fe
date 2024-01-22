@@ -369,22 +369,31 @@
       "title": "Mẫu thiết bị",
       "info": {
         "title": "Thông tin mẫu thiết bị",
+        "listattr": "Danh sách nhóm thuộc tính",
+        "attr": "Danh sách thuộc tính",
         "flow": "Flow",
         "provision_key": "Provision key",
         "provision_secret": "Provision secret",
         "created_at": "Ngày tạo",
         "create_by": "Người tạo"
+      }, 
+      "listLwM2M": {
+        "name": "Nhóm thuộc tính",
+        "numberAttr": "Số lượng thuộc tính",
+        "id": "ID"
       },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
         "update": "Sửa mẫu thiết bị",
         "flow": "Flow ID",
+        "lwm2m": "Mô hình đối tượng LWM2M",
         "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
         "success_delete": "Xoá mẫu thiết bị thành công",
         "choose_flow_id": "Vui lòng chọn flow id",
+        "choose_lwm2m_model": "Vui lòng chọn mô hình đối tượng LWM2M",
         "no_flow_id": "Không thuộc flow id"
       },
       "sidebar": {
@@ -599,9 +608,12 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
+        "tenant_info": "Thông tin Tenant",
+        "edit_tenant": "Sửa Tenant",
         "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?",
+        "delete_confirm": "Bạn có chắc chắn muốn xóa"
       },
       "add_dashboard": {
         "title": "Thêm mới bảng điều khiển",
@@ -633,7 +645,8 @@
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
         "max": "Max",
-        "min": "Min"
+        "min": "Min", 
+        "required": "Vui lòng không bỏ trống mục này"
       },
       "detail_dashboard": {
         "add_widget": {
@@ -884,6 +897,7 @@
     "no_template": "Không có thiết bị mẫu. Vui lòng tạo.",
     "no_in_org": "Không trực thuộc tổ chức.",
     "no_in_flow_id": "Không thuộc flow id.",
+    "no_in_lwm2m_model": "Không có mô hình đối tượng LWM2M.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subscription": "Không có dịch vụ. Vui lòng tạo.",
@@ -933,6 +947,7 @@
     "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "flow_id": "Đang tải danh sách flow id...",
+    "lwm2m_model": "Đang tải danh sách mô hình đối tượng LWM2M...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
@@ -994,7 +1009,44 @@
       "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
-      "data_point": "Số data point"
+      "data_point": "Số data point", 
+      "time_period_value": {
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "5hour": "5 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày", 
+        "7day": "7 ngày", 
+        "30day": "30 ngày"
+      }, 
+      "interval": {
+        "1second": "1 giây",
+        "5second": "5 giây",
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày"
+      }
     }
   },
   "validate": {
@@ -1036,6 +1088,7 @@
     "service_transmit_data": "Dịch vụ Sim Data truyền tải dữ liệu",
     "viettel_M2M": "Viettel M2M IoT ",
     "experience_now": "Trải nghiệm ngay",
+    "user_manual": "Hướng dẫn sử dụng",
     "pack_of_data_M2M": {
       "title": "Sản phẩm gói cước M2M",
       "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng",
@@ -1154,13 +1207,13 @@
       "name": "Tên người dùng",
       "list": "Danh sách người dùng"
     },
-    "customer": {
-      "success_delete": "Xoá khách hàng thành công",
-      "success_update": "Cập nhật khách hàng thành công",
-      "success_update_role": "Cập nhật quyền khách hàng thành công",
-      "edit": "Sửa khách hàng",
-      "delete": "Xoá khách hàng",
-      "create": "Tạo khách hàng"
+    "tenant": {
+      "success_delete": "Xoá Tenant thành công",
+      "success_update": "Cập nhật Tenant thành công",
+      "success_update_role": "Cập nhật quyền Tenant thành công",
+      "edit": "Sửa Tenant",
+      "delete": "Xoá Tenant",
+      "create": "Tạo Tenant"
     },
     "role": {
       "edit": "Sửa quyền",

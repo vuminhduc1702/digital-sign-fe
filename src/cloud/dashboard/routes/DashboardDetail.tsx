@@ -13,7 +13,11 @@ import { toast } from 'sonner'
 import { useDisclosure, useWS } from '~/utils/hooks'
 import { cn } from '~/utils/misc'
 import storage, { type UserStorage } from '~/utils/storage'
-import { useGetDashboardsById, useUpdateDashboard } from '../api'
+import {
+  useCreateAttrChart,
+  useGetDashboardsById,
+  useUpdateDashboard,
+} from '../api'
 import {
   BarChart,
   CardChart,
@@ -36,6 +40,7 @@ import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDevic
 
 import { WS_URL } from '~/config'
 import {
+  DataItem,
   type DashboardWS,
   type LatestData,
   type TimeSeries,
@@ -60,6 +65,7 @@ import {
   PlusIcon,
 } from '~/components/SVGIcons'
 import { type Device } from '~/cloud/orgManagement'
+import { type SelectOption } from '~/components/Form'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -109,7 +115,6 @@ export function DashboardDetail() {
   )
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -242,7 +247,9 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
+  const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
+    Device[]
+  >([])
 
   return (
     <div className="relative flex grow flex-col">
@@ -300,20 +307,12 @@ export function DashboardDetail() {
                         ),
                       )
                     : {}
-                const lastestValues: TimeSeries =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.latest.TIME_SERIES as LatestData,
-                        ),
-                      )
-                    : {}
                 const lastestValueOneDevice: LatestData =
                   lastJsonMessage?.id === widgetId
                     ? (lastJsonMessage?.data?.[0]?.latest
                         ?.TIME_SERIES as LatestData)
                     : {}
-                const lastestValuesForMap: TimeSeries =
+                const lastestValues: DataSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => ({
@@ -322,13 +321,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                const filterDeviceData =
-                  widgetInfo &&
-                  widgetInfo.attribute_config &&
-                  widgetInfo.attribute_config.length > 0
-                    ? widgetInfo.attribute_config
-                    : {}
-                // console.log(widgetInfo.attribute_config)
 
                 return (
                   <div
@@ -379,10 +371,14 @@ export function DashboardDetail() {
                       <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
-                        data={lastestValuesForMap}
+                        data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
-                        filter={filteredComboboxData}
+                        filter={
+                          filteredComboboxDataMap.length === 1
+                            ? filteredComboboxDataMap
+                            : []
+                        }
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
@@ -417,8 +413,8 @@ export function DashboardDetail() {
                     {widgetInfo?.description === 'MAP' ? (
                       <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
-                          setFilteredComboboxData={setFilteredComboboxData}
-                          data={undefined}
+                          setFilteredComboboxData={setFilteredComboboxDataMap}
+                          data={lastestValues.device}
                         />
                       </div>
                     ) : null}
@@ -433,7 +429,6 @@ export function DashboardDetail() {
                         {widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
                             widgetInfo={widgetInfo}
-                            widgetCategory={widgetInfo?.description}
                             setWidgetList={setWidgetList}
                             widgetId={widgetId}
                           />
@@ -498,6 +493,7 @@ export function DashboardDetail() {
               onClick={() => {
                 setIsEditMode(false)
 
+                // resize bug?
                 if (detailDashboard != null) {
                   mutateUpdateDashboard({
                     data: {
@@ -765,7 +761,6 @@ export function DashboardDetail() {
           <div className="sticky bottom-0 ml-auto ">
             <Button
               className="rounded"
-              form="update-dashboard"
               size="square"
               variant="primary"
               isLoading={updateDashboardIsLoading}

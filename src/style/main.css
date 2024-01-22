@@ -146,3 +146,23 @@
 .react-multiple-carousel__arrow:hover::before {
   color: aliceblue !important;
 }
+
+/* day-picker css */
+.rdp-dropdown_month {
+  margin-right: 18px;
+}
+
+.rdp-dropdown_month,
+.rdp-dropdown_year {
+  cursor: pointer;
+}
+
+.rdp-dropdown_month .text-table-header,
+.rdp-dropdown_year .text-table-header {
+  display: flex;
+}
+
+.rdp-dropdown_month .text-table-header > svg,
+.rdp-dropdown_year .text-table-header > svg {
+  align-self: center;
+}

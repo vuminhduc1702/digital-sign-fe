@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SectionOrderBG from '~/assets/images/landingpage/BG_sectionorder.png'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
@@ -83,7 +83,7 @@ export function SectionOrder() {
                   </div>
                 </div>
               </div>
-              <div className="pt-8">
+              <div className="flex pt-8">
                 <Button
                   type="button"
                   className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
@@ -101,6 +101,22 @@ export function SectionOrder() {
                 >
                   {t('landingpage:experience_now')}
                 </Button>
+                <Link to='https://innoway.gitbook.io/innoway/' target="_blank">
+                  <Button
+                    type="button"
+                    className="rounded-r-lg rounded-tl-lg border-none ml-7 bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                    variant="primary"
+                    endIcon={
+                      <ArrowRightUpLine
+                        width={23}
+                        height={23}
+                        viewBox="0 0 23 23"
+                      ></ArrowRightUpLine>
+                    }
+                  >
+                    {t('landingpage:user_manual')}
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

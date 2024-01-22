@@ -12,7 +12,7 @@ import { CustomerManageRoutes } from '~/cloud/customerManage'
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
-import { SubcriptionRoutes } from '~/cloud/subcription/routes'
+import { SubscriptionRoutes } from '~/cloud/subcription/routes'
 import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
@@ -22,10 +22,16 @@ import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
+import { TemplateSidebar } from '~/cloud/deviceTemplate/components'
+
 
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
+)
+const { DeviceTemplatelwm2mManage } = lazyImport(
+  () => import('~/cloud/deviceTemplate'),
+  'DeviceTemplatelwm2mManage',
 )
 const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
@@ -44,11 +50,14 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
+<<<<<<< HEAD
 const { DataBaseTemplateManage } = lazyImport(
   () => import('~/cloud/databaseTemplate'),
   'DataBaseTemplateManage',
 )
 
+=======
+>>>>>>> 88d8e277df67a044169728961d21b5be8d52397c
 export const protectedRoutes = [
   {
     element: <MainLayout />,
@@ -57,7 +66,7 @@ export const protectedRoutes = [
       ...FlowEngineV2Routes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
-      ...SubcriptionRoutes,
+      ...SubscriptionRoutes,
       ...DeviceRoutes,
       ...BillingRoutes,
       ...ApplicationRoutes,
@@ -71,6 +80,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
+      },
+      {
+        path: PATHS.DEVICE_TEMPLATELWM2M,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DeviceTemplatelwm2mManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':lwm2m/:templateId' }, { path: ':lwm2m/:templateId/:id' }] }],
       },
       {
         path: PATHS.FLOW_ENGINE,

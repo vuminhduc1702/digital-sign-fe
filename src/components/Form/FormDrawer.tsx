@@ -79,7 +79,10 @@ export const FormDrawer = ({
       </SheetTrigger>
       <Drawer
         isOpen={isOpen}
-        onClose={close}
+        onClose={() => {
+          resetData?.()
+          close()
+        }}
         title={title}
         size={size}
         renderFooter={() => (
@@ -98,6 +101,7 @@ export const FormDrawer = ({
             {submitButton}
           </>
         )}
+        resetData={resetData}
         {...props}
       >
         {children}

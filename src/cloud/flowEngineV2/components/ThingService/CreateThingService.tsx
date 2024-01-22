@@ -275,6 +275,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           id="create-serviceThing"
           className="flex w-full flex-col justify-between space-y-5"
           onSubmit={handleSubmit(values => {
+            console.log(values, 'values submit')
             const dataInput = values.input.map(item => ({
               name: item.name,
               type: item.type,
@@ -352,13 +353,30 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 <InputField
                   label={t('cloud:custom_protocol.service.lock_time')}
                   error={formState.errors['lock_time']}
-                  registration={register('lock_time')}
+                  registration={register('lock_time', {
+                    onChange: e => {
+                      // console.log(e.target.value, 'check value')
+                      const regexOnlyAcceptNumber = /^\d+$/
+                      let temp
+                      if (regexOnlyAcceptNumber.test(e.target.value)) {
+                        temp = e.target.value
+                      } else {
+                        temp = e.target.value.replace(/[^0-9]/g, '')
+                      }
+                      temp += 's'
+                      if (temp === 's') {
+                        temp = '0s'
+                      }
+
+                      setValue('lock_time', temp)
+                    },
+                  })}
                 />
               ) : null}
             </div>
             <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
               <div className={'relative flex flex-col gap-2 md:col-span-1'}>
-                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
                   <div className="flex gap-3">
                     <p className="text-table-header">
                       {t('cloud:custom_protocol.service.input')}
@@ -469,7 +487,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           type="button"
                           size="square"
                           variant="none"
-                          className={cn('h-9 hover:bg-secondary-500', {
+                          className={cn('hover:bg-secondary-500 h-9', {
                             '!justify-center': fullScreen,
                           })}
                           onClick={() => remove(index)}
@@ -523,7 +541,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   </div>
                 </div>
                 <div className="mt-1.5 flex flex-col">
-                  <div className="mb-1.5 flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="bg-secondary-400 mb-1.5 flex items-center rounded-lg px-4 py-2">
                     <div className="flex gap-3 ">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.list_service')}
@@ -549,7 +567,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               </TooltipTrigger>
                               <TooltipContent side="right">
                                 <div>
-                                  <div className="mb-4 text-table-header">
+                                  <div className="text-table-header mb-4">
                                     {item.name}
                                   </div>
                                   <div>
@@ -611,7 +629,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   style={!fullScreen ? { width: codeConsoleWidth } : {}}
                   id="code-console"
                 >
-                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.code')}
@@ -628,7 +646,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           />
                         }
                       >
-                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="p-2">
                             <div
                               className="hover:background py-1 hover:cursor-pointer"
@@ -758,7 +776,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   style={!fullScreen ? { width: resultConsoleWidth } : {}}
                   id="result-console"
                 >
-                  <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                  <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.output')}
@@ -775,7 +793,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           />
                         }
                       >
-                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="p-2">
                             <div
                               className="py-1 hover:cursor-pointer"
