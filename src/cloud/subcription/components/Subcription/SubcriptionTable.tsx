@@ -435,7 +435,7 @@ export function SubcriptionTable({
 
   return (
     <BaseTable
-      data={data}
+      data={data || []}
       columns={columns}
       onDataText={t('table:no_subscription')}
       {...props}
