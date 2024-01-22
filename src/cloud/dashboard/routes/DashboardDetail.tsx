@@ -115,7 +115,6 @@ export function DashboardDetail() {
   )
 
   const [widgetList, setWidgetList] = useState<Widget>({})
-  // console.log('widgetList', widgetList)
 
   const ReactGridLayout = useMemo(() => WidthProvider(Responsive), [])
 
@@ -248,7 +247,9 @@ export function DashboardDetail() {
     setRefetchDataState(prev => !prev)
   }
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
+  const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
+    Device[]
+  >([])
 
   return (
     <div className="relative flex grow flex-col">
@@ -373,7 +374,11 @@ export function DashboardDetail() {
                         data={lastestValues}
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
-                        filter={filteredComboboxData}
+                        filter={
+                          filteredComboboxDataMap.length === 1
+                            ? filteredComboboxDataMap
+                            : []
+                        }
                       />
                     ) : widgetInfo?.description === 'GAUGE' ? (
                       <GaugeChart
@@ -408,8 +413,8 @@ export function DashboardDetail() {
                     {widgetInfo?.description === 'MAP' ? (
                       <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
-                          setFilteredComboboxData={setFilteredComboboxData}
-                          data={undefined}
+                          setFilteredComboboxData={setFilteredComboboxDataMap}
+                          data={lastestValues.device}
                         />
                       </div>
                     ) : null}
