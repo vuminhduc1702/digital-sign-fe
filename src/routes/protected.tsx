@@ -50,14 +50,11 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
-<<<<<<< HEAD
 const { DataBaseTemplateManage } = lazyImport(
   () => import('~/cloud/databaseTemplate'),
   'DataBaseTemplateManage',
 )
 
-=======
->>>>>>> 88d8e277df67a044169728961d21b5be8d52397c
 export const protectedRoutes = [
   {
     element: <MainLayout />,
