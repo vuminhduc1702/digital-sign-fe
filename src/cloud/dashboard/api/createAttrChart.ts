@@ -10,10 +10,20 @@ export type CreateAttrDTO = {
     entity_ids: string[]
     entity_type: EntityType
     time_series?: boolean
+    version_two?: boolean
   }
 }
 
+type EntityKeyProps = {
+  attr_keys: string[]
+  entity_attrs: string[]
+  entity_id: string
+  entity_name: string
+  entity_type: string
+}
+
 type CreateAttrRes = {
+  entities: EntityKeyProps[]
   keys: string[]
 }
 
