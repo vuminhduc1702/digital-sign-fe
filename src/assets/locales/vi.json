@@ -422,6 +422,7 @@
         "header": "Danh mục dữ liệu",
         "name": "Tên danh mục dữ liệu",
         "add_column": "Thêm cột",
+        "add_row": "Thêm hàng",
         "column": "Tên cột",
         "type": "Kiểu dữ liệu",
         "success_create": "Tạo danh mục dữ liệu thành công",

@@ -7,40 +7,38 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
 
 import { type AttrList } from '~/utils/schemaValidation'
-import { type FieldsColumn } from '../types'
+import { type FieldsRows } from '../types'
 
-export type AddColumnDTO = {
-  data: {
+export type AddRowsDTO = {
+  dataSendBE: {
     table: string
-    fields: FieldsColumn[]
+    fields: FieldsRows[]
     project_id?: string
   }
 }
 
-export const addColumn = ({ data }: AddColumnDTO) => {
-  const dataSendBE = {
-    updates: data.fields.map(item => ({
-      type: 'add',
-      field: {
-        name: item.name,
-      },
-    })),
-  }
-  return axios.put(
-    `/api/fe/table/${data?.table}?project_id=${data?.project_id}`,
-    dataSendBE,
+export const addRows = ({ dataSendBE }: AddRowsDTO) => {
+  let fields = Object.keys(dataSendBE?.fields[0])
+  let data = dataSendBE?.fields?.map((x) => {
+    let items = []
+    for (let k of fields) {
+      items.push(x[k])
+    }
+    return items
+  })
+  let result = { fields, data }
+  return axios.post(
+    `/api/fe/table/${dataSendBE?.table}/insert/batch?project_id=${dataSendBE.project_id}`,
+    result,
   )
 }
 
-type UseAddColumnOptions = {
-  config?: MutationConfig<typeof addColumn>
+type UseAddRowsOptions = {
+  config?: MutationConfig<typeof addRows>
   isOnCreateTemplate?: boolean
 }
 
-export const useAddColumn = ({
-  config,
-  isOnCreateTemplate,
-}: UseAddColumnOptions = {}) => {
+export const useAddRows = ({ config }: UseAddRowsOptions = {}) => {
   const { t } = useTranslation()
 
   return useMutation({
@@ -51,6 +49,6 @@ export const useAddColumn = ({
       toast.success(t('cloud:db_template.add_db.success_add_column'))
     },
     ...config,
-    mutationFn: addColumn,
+    mutationFn: addRows,
   })
 }

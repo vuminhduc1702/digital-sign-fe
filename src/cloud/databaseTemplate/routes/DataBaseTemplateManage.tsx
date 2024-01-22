@@ -16,6 +16,7 @@ import { DataBaseSidebar, DataBaseTable } from '../components'
 import { type Attribute } from '~/types'
 import { useSelectDataBase } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
+import CreateRows from '../components/CreateRows'
 
 export function DataBaseTemplateManage() {
   const { t } = useTranslation()
@@ -57,15 +58,13 @@ export function DataBaseTemplateManage() {
             >
               <TitleBar
                 title={
-                  t('cloud:org_manage.org_manage.attr_list') ??
-                  'Device template management'
-                }
+                  t('sidebar:cloud.db_template')}
               />
               <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
-                    <CreateAttr entityId={tableName} entityType="TEMPLATE" />
+                  <CreateRows columnsProp={data?.data?.columns} />
                     {/* <ComboBoxSelectAttr
                       entityId={tableName}
                       entityType="TEMPLATE"

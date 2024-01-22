@@ -6,38 +6,46 @@ import * as z from 'zod'
 import { Button } from '~/components/Button'
 import { FormDrawer, InputField } from '~/components/Form'
 import storage from '~/utils/storage'
-import { useAddColumn, type AddColumnDTO } from '../api'
+import { useAddColumn, useCreateDataBase, type AddColumnDTO } from '../api'
 
+import { nameSchema } from '~/utils/schemaValidation'
 
-import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
-import { nameSchema } from '~/utils/schemaValidation'
+import { useParams } from 'react-router-dom'
+import { type AddRowsDTO, useAddRows } from '../api/addRows'
+import { useEffect, useState } from 'react'
+import { type FieldsRows } from '../types'
 
-export const createColumnSchema = z.object({
+export const createRowsSchema = z.object({
   fields: z.array(
-    z.object({
-      name: nameSchema
-    })
+    z.record(z.string())
   ),
 })
 
-export default function CreateColumn() {
+export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
   const { tableName } = useParams()
+  const [defaultValues, setDefaultValues] = useState<FieldsRows>({})
 
-  const { mutate, isLoading, isSuccess } = useAddColumn()
+  const { mutate, isLoading, isSuccess } = useAddRows()
+
+  useEffect(() => {
+    const result: FieldsRows = {}
+    columnsProp?.map(item => result[item] = '')
+    setDefaultValues(result)
+  }, [columnsProp])
 
   const { register, formState, watch, handleSubmit, control, reset } = useForm<
-    AddColumnDTO['data']
+    AddRowsDTO['dataSendBE']
   >({
-    resolver: createColumnSchema && zodResolver(createColumnSchema),
+    resolver: createRowsSchema && zodResolver(createRowsSchema),
     defaultValues: {
       table: '',
-      fields: [{ name: '' }],
+      fields: [defaultValues],
     },
   })
   const { fields, append, remove } = useFieldArray({
@@ -50,13 +58,13 @@ export default function CreateColumn() {
       resetData={() => reset()}
       triggerButton={
         <Button
-          className="absolute top-[57px] right-[36px] h-9 w-9 rounded-md border-none"
+          className="h-9 w-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
         />
       }
-      title={t('cloud:db_template.add_db.add_column')}
+      title={t('cloud:db_template.add_db.add_row')}
       submitButton={
         <Button
           className="rounded border-none"
@@ -74,7 +82,7 @@ export default function CreateColumn() {
         id="create-database"
         onSubmit={handleSubmit(async values => {
           mutate({
-            data: {
+            dataSendBE: {
               project_id: projectId,
               table: tableName || "",
               fields: values.fields,
@@ -89,9 +97,7 @@ export default function CreateColumn() {
             size="square"
             startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
             onClick={() =>
-              append({
-                name: '',
-              })
+              append(defaultValues)
             }
           />
           {fields.map((field, index) => (
@@ -99,12 +105,14 @@ export default function CreateColumn() {
               key={field.id}
               className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
             >
-              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-1">
-                <InputField
-                  label={t('cloud:db_template.add_db.column')}
-                  error={formState?.errors?.fields?.[index]?.name}
-                  registration={register(`fields.${index}.name` as const)}
-                />
+              <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
+                {columnsProp?.map((item) => (
+                  <InputField
+                    label={item}
+                    error={formState?.errors?.fields?.[index]?.item}
+                    registration={register(`fields.${index}.${item}` as const)}
+                  />
+                ))}
               </div>
               <Button
                 type="button"

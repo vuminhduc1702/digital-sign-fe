@@ -23,6 +23,9 @@ export type FieldsColumn = {
   name: string
 }
 
+export type FieldsRows = {
+  [key: string]: string
+}
 
 export type RuleChain = {
   id: {
