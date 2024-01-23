@@ -6,7 +6,7 @@ import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
 
 export const deleteDataBase = ({ table, project_id }: { table: string, project_id: string }) => {
-  return axios.delete(`/api/fe/table/${table}?project_id=${project_id}`, {data: {delete: 'testtt'}})
+  return axios.delete(`/api/fe/table/${table}?project_id=${project_id}`)
 }
 
 type UseDeleteDataBaseOptions = {

@@ -2,10 +2,6 @@ import { Suspense, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
-import {
-  AttrTable,
-  CreateAttr,
-} from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -13,18 +9,18 @@ import { ContentLayout } from '~/layout/ContentLayout'
 import storage from '~/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
-import { type Attribute } from '~/types'
 import { useSelectDataBase } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
 import CreateRows from '../components/CreateRows'
+import { FieldsRows } from '../types'
 
 export function DataBaseTemplateManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
-    [],
-  )
+  const [filteredComboboxData, setFilteredComboboxData] = useState<
+    FieldsRows[]
+  >([])
 
   const { tableName } = useParams()
 
@@ -38,7 +34,26 @@ export function DataBaseTemplateManage() {
     }
   }, [tableName])
 
-  console.log(data?.data?.columns)
+  const refetchData = () => {
+    if (tableName) {
+      mutate({ table: tableName, project_id: projectId })
+    }
+  }
+
+  useEffect(() => {
+    if (data?.data?.columns) {
+      let result = []
+      const lc = data?.data?.columns.length
+      const lr = data?.data?.rows.length
+      for (var i = 0; i < lr; i++) {
+        var dataRow = data?.data?.rows?.[i]
+        const row: FieldsRows = {}
+        for (var j = 0; j < lc; j++) row[data?.data?.columns?.[j]] = dataRow[j]
+        result.push(row)
+      }
+      setFilteredComboboxData(result)
+    }
+  }, [data])
 
   return (
     <ContentLayout title={t('sidebar:cloud.db_template')}>
@@ -56,15 +71,12 @@ export function DataBaseTemplateManage() {
                 </div>
               }
             >
-              <TitleBar
-                title={
-                  t('sidebar:cloud.db_template')}
-              />
+              <TitleBar title={t('sidebar:cloud.db_template')} />
               <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
                 <div className="flex justify-between">
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
-                  <CreateRows columnsProp={data?.data?.columns} />
+                    <CreateRows onClose={refetchData} columnsProp={data?.data?.columns || []} />
                     {/* <ComboBoxSelectAttr
                       entityId={tableName}
                       entityType="TEMPLATE"
@@ -76,9 +88,10 @@ export function DataBaseTemplateManage() {
                   <DataBaseTable
                     columnsProp={data?.data?.columns}
                     data={filteredComboboxData}
+                    onClose={refetchData}
                   />
                 )}
-                <CreateColumn />
+                <CreateColumn onClose={refetchData}/>
               </div>
             </Suspense>
           </div>

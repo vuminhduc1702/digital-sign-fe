@@ -4,9 +4,20 @@ import { useTranslation } from 'react-i18next'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 
-import { type DataBase } from '../types'
+export type DataSelectTable = {
+  data: {
+    columns: string[]
+    rows: [][]
+  }
+}
 
-export const selectDataBase = ({ table, project_id }: { table: string, project_id: string }): Promise<any> => {
+export const selectDataBase = ({
+  table,
+  project_id,
+}: {
+  table: string
+  project_id: string
+}): Promise<DataSelectTable> => {
   return axios.post(`/api/fe/table/${table}/select?project_id=${project_id}`)
 }
 

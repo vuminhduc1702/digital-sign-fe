@@ -8,28 +8,28 @@ import { FormDrawer, InputField } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useAddColumn, type AddColumnDTO } from '../api'
 
-
 import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema } from '~/utils/schemaValidation'
+import { useEffect } from 'react'
 
 export const createColumnSchema = z.object({
   fields: z.array(
     z.object({
-      name: nameSchema
-    })
+      name: nameSchema,
+    }),
   ),
 })
 
-export default function CreateColumn() {
+export default function CreateColumn({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
   const { tableName } = useParams()
 
-  const { mutate, isLoading, isSuccess } = useAddColumn()
+  const { mutateAsync, isLoading, isSuccess } = useAddColumn()
 
   const { register, formState, watch, handleSubmit, control, reset } = useForm<
     AddColumnDTO['data']
@@ -44,13 +44,18 @@ export default function CreateColumn() {
     name: 'fields',
     control,
   })
+
+  useEffect(() => {
+    if (isSuccess) onClose()
+  }, [isSuccess])
+
   return (
     <FormDrawer
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
         <Button
-          className="absolute top-[57px] right-[36px] h-9 w-9 rounded-md border-none"
+          className="absolute right-[36px] top-[57px] h-9 w-9 rounded-md border-none"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -62,6 +67,7 @@ export default function CreateColumn() {
           className="rounded border-none"
           form="create-database"
           type="submit"
+          isLoading={isLoading}
           size="lg"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
@@ -73,10 +79,10 @@ export default function CreateColumn() {
         className="w-full space-y-5"
         id="create-database"
         onSubmit={handleSubmit(async values => {
-          mutate({
+          mutateAsync({
             data: {
               project_id: projectId,
-              table: tableName || "",
+              table: tableName || '',
               fields: values.fields,
             },
           })

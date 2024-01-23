@@ -19,23 +19,27 @@ import { useEffect, useState } from 'react'
 import { type FieldsRows } from '../types'
 
 export const createRowsSchema = z.object({
-  fields: z.array(
-    z.record(z.string())
-  ),
+  fields: z.array(z.record(z.string())),
 })
 
-export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
+export default function CreateRows({
+  columnsProp,
+  onClose,
+}: {
+  columnsProp: string[]
+  onClose: () => void
+}) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
   const { tableName } = useParams()
   const [defaultValues, setDefaultValues] = useState<FieldsRows>({})
 
-  const { mutate, isLoading, isSuccess } = useAddRows()
+  const { mutateAsync, isLoading, isSuccess } = useAddRows()
 
   useEffect(() => {
     const result: FieldsRows = {}
-    columnsProp?.map(item => result[item] = '')
+    columnsProp?.map(item => (result[item] = ''))
     setDefaultValues(result)
   }, [columnsProp])
 
@@ -52,6 +56,10 @@ export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
     name: 'fields',
     control,
   })
+
+  useEffect(() => {
+    if (isSuccess) onClose()
+  }, [isSuccess])
   return (
     <FormDrawer
       isDone={isSuccess}
@@ -70,6 +78,7 @@ export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
           className="rounded border-none"
           form="create-database"
           type="submit"
+          isLoading={isLoading}
           size="lg"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
@@ -81,10 +90,10 @@ export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
         className="w-full space-y-5"
         id="create-database"
         onSubmit={handleSubmit(async values => {
-          mutate({
+          mutateAsync({
             dataSendBE: {
               project_id: projectId,
-              table: tableName || "",
+              table: tableName || '',
               fields: values.fields,
             },
           })
@@ -96,9 +105,7 @@ export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
             variant="trans"
             size="square"
             startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-            onClick={() =>
-              append(defaultValues)
-            }
+            onClick={() => append(defaultValues)}
           />
           {fields.map((field, index) => (
             <section
@@ -106,7 +113,7 @@ export default function CreateRows({ columnsProp }: { columnsProp: string[] }) {
               className="mt-3 flex justify-between gap-3 rounded-md bg-slate-200 px-2 py-4"
             >
               <div className="grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-3">
-                {columnsProp?.map((item) => (
+                {columnsProp?.map(item => (
                   <InputField
                     label={item}
                     error={formState?.errors?.fields?.[index]?.item}
