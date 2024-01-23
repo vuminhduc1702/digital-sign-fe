@@ -66,7 +66,7 @@ export function TemplateDefault() {
                   variant="muted"
                   onClick={() =>
                     navigate(
-                      `${PATHS.DEVICE_TEMPLATE}/${projectId}/${template.id}`,
+                      `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${template.id}`,
                     )
                   }
                 >

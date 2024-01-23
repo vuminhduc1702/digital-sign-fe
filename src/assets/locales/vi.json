@@ -366,6 +366,8 @@
     },
     "device_template": {
       "title": "Mẫu thiết bị",
+      "default": "Default",
+      "lwm2m": "LwM2M",
       "info": {
         "title": "Thông tin mẫu thiết bị",
         "listattr": "Danh sách nhóm thuộc tính",

@@ -1,5 +1,5 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BaseTable } from '~/components/Table'
 import { type TransportConfigAttribute } from '../types'
@@ -10,7 +10,15 @@ type AttrLwM2MTableProps = {
 
 export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps) {
   const { t } = useTranslation()
+  const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const columnHelper = createColumnHelper<TransportConfigAttribute>()
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNoTemplateMessage(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [attribute_info])
+  console.log('attribute_info', attribute_info)
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({
@@ -84,7 +92,7 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
     />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_template')}
+      {showNoTemplateMessage && t('table:no_template')}
     </div>
   )
 }
