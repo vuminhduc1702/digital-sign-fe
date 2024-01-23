@@ -323,7 +323,7 @@ export function BillingTable({
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-2 block"
-      data={data}
+      data={data || []}
       columns={columns}
       onDataText={t('table:no_bill')}
       {...props}
