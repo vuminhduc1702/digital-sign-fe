@@ -592,8 +592,16 @@
         "note": "Nhấn vào nút Sửa bảng điều khiển để tạo biểu đồ"
       },
       "config_chart": {
-        "title": "Tạo biểu đồ",
-        "update": "Sửa biểu đồ",
+        "title": "Tạo biểu đồ ",
+        "title0": "Tạo biểu đồ đường",
+        "title1": "Tạo biểu đồ tròn",
+        "title2": "Tạo biểu đồ cột",
+        "title3": "Tạo biểu đồ đồng hồ đo",
+        "title4": "Tạo biểu đồ bảng dữ liệu",
+        "title5": "Tạo biểu đồ dữ liệu",
+        "title6": "Tạo bảng điều khiển",
+        "title7": "Tạo biểu đồ dữ liệu",
+        "update": "Tạo bản đồ",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",

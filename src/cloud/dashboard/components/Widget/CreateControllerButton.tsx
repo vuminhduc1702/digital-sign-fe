@@ -171,7 +171,7 @@ export function CreateControllerButton({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('cloud:dashboard.config_chart.title')}
+              {t('cloud:dashboard.config_chart.title6')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
