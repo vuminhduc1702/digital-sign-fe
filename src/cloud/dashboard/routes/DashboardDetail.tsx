@@ -113,6 +113,7 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
+  // console.log('detailDashboard', detailDashboard)
 
   const [widgetList, setWidgetList] = useState<Widget>({})
 
@@ -167,6 +168,7 @@ export function DashboardDetail() {
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
       if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
+        console.log('init', dataSource.init_message)
         sendMessage(dataSource.init_message)
       }
     })
@@ -178,6 +180,8 @@ export function DashboardDetail() {
     }
     isSendInitMessageRef.current = true
   }, [widgetList])
+
+  console.log(lastJsonMessage)
 
   async function handleSendMessage() {
     if (
@@ -251,6 +255,8 @@ export function DashboardDetail() {
     Device[]
   >([])
 
+  // console.log('widgetList', widgetList)
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -321,7 +327,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-
                 return (
                   <div
                     key={widgetId}
@@ -344,7 +349,11 @@ export function DashboardDetail() {
                     className={cn('bg-secondary-500 relative')}
                     data-iseditmode={isEditMode}
                   >
-                    <p className="absolute ml-2 mt-2">
+                    <p
+                      className={`absolute ml-2
+                      ${widgetInfo?.description === 'MAP' ? 'mt-4' : 'mt-2'}
+                    `}
+                    >
                       {widgetInfo?.title ?? ''}
                     </p>
                     {widgetInfo?.description === 'LINE' ? (
@@ -411,7 +420,7 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={lastestValues.device}
@@ -419,7 +428,11 @@ export function DashboardDetail() {
                       </div>
                     ) : null}
                     {isEditMode ? (
-                      <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                      <div
+                        className={`absolute right-0 top-0 mr-2 flex gap-x-2
+                      ${widgetInfo?.description === 'MAP' ? 'mt-4' : 'mt-2'}
+                    `}
+                      >
                         <DragIcon
                           width={20}
                           height={20}
