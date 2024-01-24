@@ -375,7 +375,7 @@
         "provision_secret": "Provision secret",
         "created_at": "Ngày tạo",
         "create_by": "Người tạo"
-      }, 
+      },
       "listLwM2M": {
         "name": "Nhóm thuộc tính",
         "numberAttr": "Số lượng thuộc tính",
@@ -610,7 +610,7 @@
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
         "max": "Max",
-        "min": "Min", 
+        "min": "Min",
         "required": "Vui lòng không bỏ trống mục này"
       },
       "detail_dashboard": {
@@ -934,7 +934,8 @@
   },
   "search": {
     "title": "Tìm kiếm",
-    "no_org": "Không trực thuộc tổ chức"
+    "no_org": "Không trực thuộc tổ chức",
+    "no_group": "Không trực thuộc nhóm"
   },
   "user": {
     "login": "Đăng nhập",
@@ -974,7 +975,7 @@
       "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
-      "data_point": "Số data point", 
+      "data_point": "Số data point",
       "time_period_value": {
         "10second": "10 giây",
         "15second": "15 giây",
@@ -990,10 +991,10 @@
         "5hour": "5 giờ",
         "10hour": "10 giờ",
         "12hour": "12 giờ",
-        "1day": "1 ngày", 
-        "7day": "7 ngày", 
+        "1day": "1 ngày",
+        "7day": "7 ngày",
         "30day": "30 ngày"
-      }, 
+      },
       "interval": {
         "1second": "1 giây",
         "5second": "5 giây",
