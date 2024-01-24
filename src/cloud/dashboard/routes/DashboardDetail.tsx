@@ -168,7 +168,6 @@ export function DashboardDetail() {
     Object.values(widgetList).forEach(widget => {
       const dataSource = widget?.datasource
       if (dataSource?.init_message !== '' && dataSource?.init_message != null) {
-        console.log('init', dataSource.init_message)
         sendMessage(dataSource.init_message)
       }
     })
@@ -180,8 +179,6 @@ export function DashboardDetail() {
     }
     isSendInitMessageRef.current = true
   }, [widgetList])
-
-  console.log(lastJsonMessage)
 
   async function handleSendMessage() {
     if (
@@ -254,8 +251,6 @@ export function DashboardDetail() {
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
     Device[]
   >([])
-
-  // console.log('widgetList', widgetList)
 
   return (
     <div className="relative flex grow flex-col">

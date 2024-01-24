@@ -251,10 +251,10 @@ export function UpdateWidget({
   } = useCreateAttrChart()
   // console.log(attrChartData)
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.entity_attrs.map(attr => ({
+    const result = item.attr_keys.map(attr => ({
       deviceId: item?.entity_id,
-      label: attr?.attribute_key,
-      value: attr?.attribute_key,
+      label: attr,
+      value: attr,
     }))
     return result
   })
@@ -293,8 +293,8 @@ export function UpdateWidget({
       label: string
     }> = []
     attrChartData?.entities?.map(item => {
-      item.entity_attrs.map(attr => {
-        if (attr.attribute_key === attribute) {
+      item.attr_keys.map(attr => {
+        if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
           result.push({
             value: item.entity_id,
@@ -385,6 +385,7 @@ export function UpdateWidget({
                     ],
                     latestValues: attrData,
                   },
+                  requestType: 'INIT',
                   id: widgetId,
                 },
               ],

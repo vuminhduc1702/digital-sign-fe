@@ -467,12 +467,13 @@ export function CreateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.entity_attrs.map(attr => ({
-      label: attr?.attribute_key,
-      value: attr?.attribute_key,
+    const result = item.attr_keys.map(attr => ({
+      label: attr,
+      value: attr,
     }))
     return result
   })
+  console.log(attrChartData)
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -501,11 +502,11 @@ export function CreateWidget({
       label: string
     }> = []
     attrChartData?.entities?.map(item => {
-      item.entity_attrs.map(attr => {
-        if (attr.attribute_key === attribute) {
+      item.attr_keys.map(attr => {
+        if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
           result.push({
-            value: item.entity_id,
+            value: deviceInfo,
             label: deviceInfo,
           })
         }
@@ -952,7 +953,9 @@ export function CreateWidget({
                             )}
                           />
                         )}
-                        {!watch(`attributeConfig.${index}.attribute_key`) ? null : (
+                        {!watch(
+                          `attributeConfig.${index}.attribute_key`,
+                        ) ? null : (
                           <SelectDropdown
                             name={`attributeConfig.${index}.label`}
                             label={t('cloud:dashboard.config_chart.label')}
@@ -964,6 +967,7 @@ export function CreateWidget({
                               watch(`attributeConfig.${index}.attribute_key`),
                             )}
                             isLoading={attrChartIsLoading}
+                            // defaultValue={attrLabelData[0]}
                           />
                         )}
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
