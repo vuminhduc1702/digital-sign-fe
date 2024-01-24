@@ -72,6 +72,16 @@ import {
 import { type Device } from '~/cloud/orgManagement'
 import { type SelectOption } from '~/components/Form'
 
+// import { Image } from '@react-pdf/renderer'
+import BD_01 from '~/assets/images/landingpage/BD_01.png'
+import BD_02 from '~/assets/images/landingpage/BD_02.png'
+import DB_03 from '~/assets/images/landingpage/BD_03.png'
+import BD_04 from '~/assets/images/landingpage/BD_04.png'
+import BD_05 from '~/assets/images/landingpage/BD_05.png'
+import BD_06 from '~/assets/images/landingpage/BD_06.png'
+import BD_07 from '~/assets/images/landingpage/BD_07.png'
+import BD_08 from '~/assets/images/landingpage/BD_08.png'
+
 export type WidgetAttrDeviceType = Array<{
   id: string
   attr: string
@@ -612,7 +622,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Tạo biểu đồ đường</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_01} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -647,7 +659,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Tạo biểu đồ cột</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={DB_03} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -683,7 +697,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Tạo bảng dữ liệu</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_04} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -715,7 +731,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Tạo bảng điều khiển</p>
+                        <div className='px-[10px] py-[8px]'>
+                            <img src={BD_05} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -751,7 +769,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Biểu đồ tròn</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_02} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -786,7 +806,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Đồng hồ đo</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_06} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -821,7 +843,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Dữ liệu</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_07} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
@@ -856,7 +880,9 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <p>Map</p>
+                          <div className='px-[10px] py-[8px]'>
+                            <img src={BD_08} alt="" className='w-[165px]'/>
+                          </div>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
