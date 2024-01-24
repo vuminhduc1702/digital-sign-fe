@@ -1,7 +1,9 @@
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import { type Table } from '@tanstack/react-table'
 
 import { cn } from '~/utils/misc'
+
+import { DotsHorizontalIcon } from '@radix-ui/react-icons'
 
 const DOTS = '...'
 
@@ -11,14 +13,12 @@ const Pagination = <T extends Record<string, any>>({
   siblingCount = 1,
   currentPage,
   pageSize,
-  className,
 }: {
   table: Table<T>
   totalCount: number
   siblingCount?: number
   currentPage: number
   pageSize: number
-  className?: string
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -32,54 +32,29 @@ const Pagination = <T extends Record<string, any>>({
     return null
   }
 
-  const onNext = () => {
-    table.nextPage()
-  }
-
-  const onPrevious = () => {
-    table.previousPage()
-  }
-
   return (
-    <ul
-      className={cn('flex cursor-pointer items-center gap-x-3', {
-        className,
-      })}
-    >
-      {/* Left navigation arrow */}
-      <li
-        className={cn('', {
-          disabled: !table.getCanPreviousPage(),
-        })}
-        onClick={onPrevious}
-      ></li>
-      {paginationRange?.map((pageNumber, index) => {
-        // If the pageItem is a DOT, render the DOTS unicode character
-        if (pageNumber === DOTS) {
-          return <li key={index}>&#8230;</li>
-        }
+    <PaginationWrapper>
+      <PaginationContent>
+        {paginationRange?.map((pageNumber, index) => {
+          // If the pageItem is a DOT, render the DOTS unicode character
+          if (pageNumber === DOTS) {
+            return <PaginationEllipsis key={index} />
+          }
 
-        // Render our Page Pills
-        return typeof pageNumber === 'number' ? (
-          <li
-            className={cn('', {
-              'text-primary-400': pageNumber === currentPage + 1,
-            })}
-            onClick={() => table.setPageIndex(pageNumber - 1)}
-            key={index}
-          >
-            {pageNumber}
-          </li>
-        ) : null
-      })}
-      {/*  Right Navigation arrow */}
-      <li
-        className={cn('', {
-          disabled: !table.getCanNextPage(),
+          // Render our Page Pills
+          return typeof pageNumber === 'number' ? (
+            <PaginationItem
+              className={cn('', {
+                'text-primary-400': pageNumber === currentPage + 1,
+              })}
+              onClick={() => table.setPageIndex(pageNumber - 1)}
+            >
+              {pageNumber}
+            </PaginationItem>
+          ) : null
         })}
-        onClick={onNext}
-      ></li>
-    </ul>
+      </PaginationContent>
+    </PaginationWrapper>
   )
 }
 
@@ -169,5 +144,52 @@ function range(start: number, end: number) {
 	*/
   return Array.from({ length }, (_, idx) => idx + start)
 }
+
+const PaginationWrapper = ({
+  className,
+  ...props
+}: React.ComponentProps<'nav'>) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn('mx-auto flex w-full justify-center', className)}
+    {...props}
+  />
+)
+Pagination.displayName = 'Pagination'
+
+const PaginationContent = forwardRef<
+  HTMLUListElement,
+  React.ComponentProps<'ul'>
+>(({ className, ...props }, ref) => (
+  <ul
+    ref={ref}
+    className={cn('flex items-center gap-x-3', className)}
+    {...props}
+  />
+))
+PaginationContent.displayName = 'PaginationContent'
+
+const PaginationItem = forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(
+  ({ className, ...props }, ref) => (
+    <li ref={ref} className={cn('cursor-pointer', className)} {...props} />
+  ),
+)
+PaginationItem.displayName = 'PaginationItem'
+
+const PaginationEllipsis = ({
+  className,
+  ...props
+}: React.ComponentProps<'span'>) => (
+  <span
+    aria-hidden
+    className={cn('flex h-9 w-9 items-center justify-center', className)}
+    {...props}
+  >
+    <DotsHorizontalIcon className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
+)
+PaginationEllipsis.displayName = 'PaginationEllipsis'
 
 export default Pagination

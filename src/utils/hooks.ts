@@ -8,7 +8,6 @@ import * as z from 'zod'
 import { toast } from 'sonner'
 import i18n from '~/i18n'
 
-import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { type UploadImageDTO } from '~/layout/OrgManagementLayout/api'
 
 export const useMediaQuery = (query: string) => {
@@ -46,7 +45,11 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: boolean) => {
+export const useWS = <T>(
+  url: string,
+  sendMessageCallback: () => void,
+  rerun?: boolean,
+) => {
   const { t } = useTranslation()
 
   useEffect(() => {
@@ -60,8 +63,7 @@ export const useWS = <T>(url: string, sendMessageCallback: () => void, rerun?: b
     lastJsonMessage,
     readyState,
   } = useWebSocket<T>(url, {
-    onError: () =>
-      toast.error(t('ws:connect_error')),
+    onError: () => toast.error(t('ws:connect_error')),
     shouldReconnect: closeEvent => true,
     reconnectAttempts: 5,
     // attemptNumber will be 0 the first time it attempts to reconnect, so this equation results in a reconnect pattern of 1 second, 2 seconds, 4 seconds, 8 seconds, and then caps at 10 seconds until the maximum number of attempts is reached
@@ -109,9 +111,9 @@ export function useCopyId() {
       if (id == null || id === '') {
       } else {
         await navigator.clipboard.writeText(id)
-        typeCopy === 'token' ? 
-        toast.success(t('cloud:org_manage.org_map.copy_token_success')) :
-        toast.success(t('cloud:org_manage.org_map.copy_success'))
+        typeCopy === 'token'
+          ? toast.success(t('cloud:org_manage.org_map.copy_token_success'))
+          : toast.success(t('cloud:org_manage.org_map.copy_success'))
       }
     } catch (error) {
       console.error(error)
@@ -121,9 +123,7 @@ export function useCopyId() {
   return handleCopyId
 }
 
-export function useDefaultCombobox(
-  comboboxType: 'org' | 'device',
-): OrgMapType | undefined {
+export function useDefaultCombobox(comboboxType: 'org' | 'device' | 'group') {
   const { t } = useTranslation()
 
   switch (comboboxType) {
@@ -138,6 +138,13 @@ export function useDefaultCombobox(
         image: '',
         org_id: '',
       }
+    case 'group':
+      return {
+        id: '',
+        name: t('search:no_group'),
+      }
+    default:
+      return
   }
 }
 

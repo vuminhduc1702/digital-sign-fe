@@ -1,13 +1,1200 @@
 {
   "sidebar": {
+    "overview": "Overview",
+    "project": "Project",
+    "device": {
+      "title": "Device",
+      "devkit": "Devkit",
+      "module": "Module"
+    },
     "cloud": {
       "title": "Cloud",
-      "org_map": "Organization Map",
       "org_management": "Organization Management",
+      "flow_engine_v2": "Business Process Management",
+      "firm_ware": "Firmware Management",
       "device_template": "Device Template",
       "flow_engine": "Flow Engine",
-      "dashboard": "Dashboard"
+      "dashboard": "Dashboard",
+      "role_manage": "Role Management",
+      "custom_protocol": "Adapter"
+    },
+    "application": {
+      "title": "Application",
+      "appsdk": "App SDK",
+      "vsmart_debug": "VSmart Debug"
+    },
+    "payment": {
+      "title": "Payment",
+      "plgc": "Package Management",
+      "plkh": "Customer Management",
+      "pldk": "Service Registration Management",
+      "plhd": "Invoice Management",
+      "client": {
+        "title": "Customer",
+        "dshd": "Invoice List",
+        "cuoc": "Temporary Charges"
+      }
+    },
+    "qltb": {
+      "title": "Subscriber Management"
+    },
+    "integration": {
+      "title": "Integration",
+      "tracking": "Tracking",
+      "smarthome": "Smarthome",
+      "ai": {
+        "title": "AI",
+        "ddos": "DDOS Forecast",
+        "fuel": "Fuel Forecast"
+      }
     }
+  },
+  "nav": {
+    "hello": "Hello",
+    "friend": "Friend",
+    "qlda": "Project Management",
+    "setup": "Setup",
+    "support": "Support",
+    "manual": "User Guide",
+    "choose_lang": "Choose Language"
+  },
+  "cloud": {
+    "project_manager": {
+      "title": "Project Manager",
+      "project": "Project",
+      "no_data": "You have no projects, please create a new project",
+      "count_project": "You are managing {{NO_OF_PROJECT}} projects",
+      "backup": "Export Project",
+      "restore": "Import Project",
+      "add_project": {
+        "title": "Create New Project",
+        "avatar": "Choose Avatar Image",
+        "upload_ava": "Upload Image",
+        "upload_ava_default": "Choose Default Image",
+        "upload_instruction": "Please choose a jpg or png image with a maximum size of 5MB",
+        "restore_project": "Import Project",
+        "name": "Project Name",
+        "edit": "Edit Project",
+        "description": "Description",
+        "delete_project": "Delete Project",
+        "confirm_delete": "Are you sure you want to delete the project {{PROJECT}}",
+        "choose_file": "Please choose a file to upload",
+        "success_add": "Successfully created a new project",
+        "success_update": "Successfully edited the project",
+        "success_delete": "Successfully deleted the project",
+        "success_restore": "Successfully restored device templates"
+      }
+    },
+    "org_manage": {
+      "org_list": "Organization List",
+      "org_map": {
+        "edit": "Edit Organization",
+        "delete": "Delete Organization",
+        "copy_success": "ID copied successfully",
+        "copy_token_success": "TOKEN copied successfully",
+        "delete_org_confirm": "Are you sure you want to delete the organization {{ORGNAME}}"
+      },
+      "org_manage": {
+        "title": "Organization",
+        "overview": {
+          "title": "Overview",
+          "name": "Name",
+          "desc": "Description",
+          "choose_project": "Please click here to choose a project"
+        },
+        "breadcrumb": {
+          "device_list": "Device List",
+          "group_list": "Group List"
+        },
+        "attr_list": "Attribute List",
+        "table": {
+          "id": "ID",
+          "attr_key": "Attribute",
+          "attr_type": "Attribute Type",
+          "value_type": "Value Type",
+          "value": "Current Value",
+          "unit": "Unit",
+          "last_update_ts": "Last Update",
+          "logged": "Log History",
+          "delete_attr": "Delete Attribute",
+          "delete_attr_full": "Delete Attribute",
+          "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}"
+        },
+        "add_org": {
+          "title": "Create New Organization",
+          "edit": "Edit Organization",
+          "name": "Organization Name",
+          "parent": "Belongs to Organization",
+          "desc": "Description",
+          "avatar": "Choose Avatar Image",
+          "upload_ava": "Upload Image",
+          "note": "Please choose a jpg or png image with a maximum size of 5MB",
+          "success_uploadImage": "Avatar image uploaded successfully",
+          "success_create": "Organization created successfully",
+          "success_update": "Organization edited successfully",
+          "success_delete": "Organization deleted successfully",
+          "choose_org": "Please choose an organization",
+          "choose_avatar": "Please choose an avatar image",
+          "no_org": "Not affiliated with any organization"
+        },
+        "add_attr": {
+          "title": "Create New Attribute",
+          "edit": "Edit Attribute",
+          "edit_full": "Edit Attribute",
+          "name": "Attribute Name",
+          "value_type": "Value Type",
+          "value": "Default Value",
+          "logged": "Log History",
+          "success_update_logged": "Log history edited successfully",
+          "success_create": "Attribute created successfully",
+          "success_update": "Attribute edited successfully",
+          "success_delete": "Attribute deleted successfully",
+          "choose_attr": "Please choose an attribute"
+        }
+      },
+      "group_manage": {
+        "title": "Group",
+        "header": "Group Management",
+        "table": {
+          "name": "Name",
+          "entity_type": "Classification",
+          "org_name": "Organization",
+          "delete_group": "Delete Group",
+          "delete_group_confirm": "Are you sure you want to delete the group {{GROUPNAME}}"
+        },
+        "add_group": {
+          "title": "Create New Group",
+          "edit": "Edit Group",
+          "name": "Group Name",
+          "entity_type": "Classification",
+          "desc": "Description",
+          "parent": "Belongs to Organization",
+          "success_create": "Group created successfully",
+          "success_update": "Group edited successfully",
+          "success_delete": "Group deleted successfully",
+          "success_update_org": "Successfully transferred group to another organization"
+        }
+      },
+      "user_manage": {
+        "title": "Users",
+        "header": "User Management",
+        "table": {
+          "name": "Name",
+          "email": "Email",
+          "role_name": "Role",
+          "activate": "Activate",
+          "edit": "Edit User",
+          "delete_user": "Delete User",
+          "delete_user_full": "Delete User",
+          "delete_user_confirm": "Are you sure you want to delete the user {{USERNAME}}"
+        },
+        "add_user": {
+          "title": "Create New User",
+          "edit": "Edit User",
+          "name": "Name",
+          "email": "Email",
+          "phone": "Phone",
+          "password": "Password",
+          "confirm_password": "Confirm Password",
+          "role": "Role",
+          "activate": "Activate",
+          "parent": "Belongs to Organization",
+          "address": "Address",
+          "success_create": "User created successfully",
+          "success_update": "User edited successfully",
+          "success_delete": "User deleted successfully",
+          "province": "Province",
+          "district": "District",
+          "ward": "Ward",
+          "success_assign": "User assigned successfully",
+          "assign": "Assign User",
+          "assign_role": "Assign Role",
+          "success_assign_role": "Role assigned successfully"
+        }
+      },
+      "device_manage": {
+        "title": "Device Management",
+        "header": "Device Management",
+        "table": {
+          "payload_as_string": "Message",
+          "project": "Project",
+          "topic": "Topic",
+          "owner": "Owner",
+          "last_update_ts": "Last Update",
+          "isdn": "ISDN",
+          "select_all": "Select All",
+          "group_id": "Group ID",
+          "org_id": "Organization ID",
+          "template_id": "Template ID",
+          "token": "Token",
+          "name": "Name",
+          "group": "Group",
+          "device_type": "Device Template",
+          "org_name": "Organization",
+          "key": "Key",
+          "heartbeat": "Heartbeat",
+          "status": "Status",
+          "attributes": "Attributes",
+          "created_at": "Created At",
+          "create_by": "Created By",
+          "delete_device": "Delete Device",
+          "delete_device_full": "Delete Device",
+          "delete_device_confirm": "Are you sure you want to delete the device {{DEVICENAME}}?"
+        },
+        "mqtt_config": {
+          "update_success": "Update MQTT Successful",
+          "title": "Edit MQTT Config",
+          "clean_session": "Clean Session",
+          "dup": "Dup",
+          "keepalive": "Keepalive",
+          "message_type": "Message Type",
+          "protocol_name": "Protocol Name",
+          "protocol_version": "Protocol Version",
+          "qos": "QoS",
+          "remaining_length": "Remaining Length",
+          "retain": "Retain",
+          "will_flag": "Will Flag",
+          "will_message": "Will Message",
+          "will_qos": "Will QoS",
+          "will_retain": "Will Retain",
+          "will_topic": "Will Topic"
+        },
+        "add_device": {
+          "title": "Create New Device",
+          "edit": "Edit Device",
+          "name": "Device Name",
+          "key": "Key",
+          "group": "Group",
+          "parent": "Belongs to Organization",
+          "device_type": "Device Template",
+          "heartbeat": "Heartbeat",
+          "create_heartbeat": "Create Heartbeat",
+          "ping": "Ping Device",
+          "mqttconfig": "Edit MQTT",
+          "success_heartbeat": "Update heartbeat successful",
+          "success_create": "Create device successful",
+          "success_update": "Edit device successful",
+          "success_delete": "Delete device successful",
+          "choose_device": "Please choose a device"
+        },
+        "device_detail": {
+          "attr_list": "Attribute List",
+          "attr_log": "Attribute Log",
+          "MQTT_history_info_list": "MQTT History Information List"
+        }
+      },
+      "event_manage": {
+        "title": "Event",
+        "header": "Event Management",
+        "table": {
+          "name": "Name",
+          "group": "Group",
+          "onClick": "onClick",
+          "onClick_btn": "Activate",
+          "status": "Status",
+          "delete_event": "Delete Event",
+          "delete_event_confirm": "Are you sure you want to delete the event {{EVENTNAME}}?"
+        },
+        "add_event": {
+          "title": "Create New Event",
+          "edit": "Edit Event",
+          "name": "Event Name",
+          "parent": "Belongs to Organization",
+          "info": "Basic Information",
+          "type_event": "Event Type",
+          "schedule_type": "Schedule Type",
+          "event_type": "Event Schedule",
+          "status": "Status",
+          "retry": "Number of Retries",
+          "test_condition_time": "Check Condition Time",
+          "start": "Start",
+          "end": "End",
+          "group": "Group",
+          "condition": {
+            "title": "Activation Condition",
+            "onClick": "Onclick",
+            "device": "Device",
+            "attr": "Attribute",
+            "condition_type": {
+              "title": "Condition Type",
+              "normal": "Normal",
+              "delay": "Delay"
+            },
+            "operator": {
+              "title": "Condition",
+              "gte": "Greater Than",
+              "lte": "Less Than",
+              "not": "Not Equal"
+            },
+            "threshold": "Comparison Value",
+            "logical_operator": {
+              "title": "Combining Conditions",
+              "and": "And",
+              "or": "Or"
+            }
+          },
+          "action": {
+            "title": "Processing Action",
+            "subject": "Title",
+            "action_type": {
+              "title": "Action",
+              "sms": "SMS",
+              "email": "Email",
+              "mqtt": "MQTT",
+              "fcm": "FCM",
+              "event": "Event",
+              "eventactive": "Event Active",
+              "delay": "Delay"
+            },
+            "address": "Address",
+            "message": "Sent Content"
+          },
+          "interval": {
+            "mon": "Monday",
+            "tue": "Tuesday",
+            "wed": "Wednesday",
+            "thu": "Thursday",
+            "fri": "Friday",
+            "sat": "Saturday",
+            "sun": "Sunday"
+          },
+          "success_create": "Create event successful",
+          "success_update": "Edit event successful",
+          "success_delete": "Delete event successful",
+          "success_active": "Activate event successful"
+        }
+      }
+    },
+    "device_template": {
+      "title": "Device Template",
+      "info": {
+        "title": "Device Template Information",
+        "listattr": "List of Attribute Groups",
+        "attr": "Attribute List",
+        "flow": "Flow",
+        "provision_key": "Provision Key",
+        "provision_secret": "Provision Secret",
+        "created_at": "Creation Date",
+        "create_by": "Created By"
+      },
+      "listLwM2M": {
+        "name": "Attribute Group",
+        "numberAttr": "Number of Attributes",
+        "id": "ID"
+      },
+      "add_template": {
+        "title": "Create New Device Template",
+        "update": "Edit Device Template",
+        "flow": "Flow ID",
+        "lwm2m": "LWM2M Object Model",
+        "header": "List of Device Templates",
+        "name": "Device Template Name",
+        "success_create": "Device template created successfully",
+        "success_update": "Device template updated successfully",
+        "success_delete": "Device template deleted successfully",
+        "choose_flow_id": "Please choose a flow ID",
+        "choose_lwm2m_model": "Please choose LWM2M object model",
+        "no_flow_id": "No flow ID selected"
+      },
+      "sidebar": {
+        "title": "List of Device Templates",
+        "id": "ID",
+        "desc": "Description",
+        "edit": "Edit Device Template",
+        "delete_template": "Delete Device Template",
+        "delete_template_full": "Delete Device Template",
+        "delete_template_confirm": "Are you sure you want to delete the device template {{TEMPLATENAME}}?",
+        "no_template": "No device templates available"
+      }
+    },
+    "role_manage": {
+      "title": "Roles",
+      "header": "Role Management",
+      "sidebar": {
+        "title": "List of Roles",
+        "id": "ID",
+        "edit": "Edit Role",
+        "delete_role": "Delete Role",
+        "delete_role_confirm": "Are you sure you want to delete the role {{ROLENAME}}?",
+        "no_role": "No roles available"
+      },
+      "add_policy": {
+        "title": "List of Policies",
+        "name": "Policy Name",
+        "resources": "Resources",
+        "actions": "Actions"
+      },
+      "add_role": {
+        "title": "Create New Role",
+        "edit": "Edit Role",
+        "name": "Role Name",
+        "role_type": "Role Type",
+        "actions": "Actions",
+        "choose_role": "Please choose a role",
+        "success_create": "Role created successfully",
+        "success_update": "Role updated successfully",
+        "success_delete": "Role deleted successfully"
+      }
+    },
+    "custom_protocol": {
+      "title": "Manage Adapter",
+      "protocol": "Protocol",
+      "service": {
+        "service_input": {
+          "name": "Enter variable name",
+          "type": "Data Type",
+          "value": "Value",
+          "name_error": "Variable name does not match data type (string, boolean...)"
+        },
+        "title": "Business Logic",
+        "info": "Information",
+        "tab_2": "Message History",
+        "create": "Create Business Logic",
+        "list_service": "List of Business Logic",
+        "success_create": "Business logic created successfully",
+        "success_update": "Business logic updated successfully",
+        "success_delete": "Business logic deleted successfully",
+        "name": "Business Logic Name",
+        "fail_limit": "Number of Failures Allowed",
+        "lock_time": "Lock Time",
+        "output": "Result",
+        "input": "Input Variables",
+        "add_other": "Add Another Variable",
+        "json": "JSON",
+        "str": "String",
+        "i32": "Integer 32",
+        "i64": "Integer 64",
+        "f32": "Float 32",
+        "f64": "Float 64",
+        "bool": "Boolean",
+        "time": "Time",
+        "bin": "Binary",
+        "description": "Description",
+        "code": "Code",
+        "title_thing_service": "List of Business Logic",
+        "choose": "Please choose a Business Logic",
+        "delete": "Delete Business Logic",
+        "edit": "Edit Business Logic",
+        "info_service": "Business Logic Information",
+        "delete_service_confirm": "Are you sure you want to delete the Business Logic {{SERVICENAME}}?",
+        "note": "Note",
+        "status": "Status",
+        "run": "Run",
+        "debug": "Debug Mode",
+        "maximize_result": "Maximize Editor",
+        "minimize_result": "Minimize Editor",
+        "default_result": "Default",
+        "hide_console": "Hide Console",
+        "view_console": "Show Console",
+        "choose_input": "Please choose input variable",
+        "choose_inputValue": "Please enter variable value"
+      },
+      "thing": {
+        "title": "List of Things",
+        "create": "Create Thing",
+        "success_create": "Thing created successfully",
+        "success_update": "Thing updated successfully",
+        "success_delete": "Thing deleted successfully",
+        "name": "Thing Name",
+        "id": "Thing",
+        "type": "Thing Type",
+        "thing": "Thing",
+        "template": "Template",
+        "template_name": "Template Name",
+        "number_thing": "Number of Business Logic",
+        "shape": "Shape",
+        "base_template": "Base Template",
+        "base_shapes": "Base Shapes",
+        "description": "Description",
+        "choose": "Please choose a Thing",
+        "delete": "Delete Thing",
+        "edit": "Edit Thing",
+        "delete_thing_confirm": "Are you sure you want to delete Thing {{THINGNAME}}?"
+      },
+      "adapter": {
+        "title": "Adapter",
+        "header": "Adapter Management",
+        "create": "Create Adapter",
+        "success_create": "Adapter created successfully",
+        "success_update": "Adapter updated successfully",
+        "success_delete": "Adapter deleted successfully",
+        "table": {
+          "name": "Name",
+          "protocol": "Protocol",
+          "thing_id": "Thing",
+          "handle_service": "Business Logic",
+          "host": "Host",
+          "port": "Port",
+          "edit": "Edit Adapter",
+          "delete_adapter": "Delete Adapter",
+          "delete_adapter_confirm": "Are you sure you want to delete the adapter {{ADAPTERNAME}}?"
+        },
+        "protocol": {
+          "mqtt": "MQTT",
+          "tcp": "TCP",
+          "udp": "UDP",
+          "ftp": "FTP"
+        },
+        "content_type": {
+          "title": "Content Type",
+          "json": "JSON",
+          "hex": "Hex",
+          "text": "Text"
+        },
+        "name": "Adapter Name",
+        "host": "Host",
+        "port": "Port",
+        "username": "Username",
+        "pass": "Password",
+        "topic_list": "List of Topics",
+        "new_template": "Message Template",
+        "schema": {
+          "name": "Field Name",
+          "start_byte": "Start Byte",
+          "length_byte": "Length",
+          "length_byte_validate": "Enter a length greater than 1"
+        },
+        "topic": "Topic",
+        "ping_MQTT": {
+          "title": "Check Connection",
+          "success": "MQTT connection available",
+          "failure": "MQTT connection does not exist"
+        }
+      }
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "table": {
+        "id": "ID",
+        "name": "Dashboard Name",
+        "create_time": "Creation Date",
+        "title": "Title",
+        "tenant_id": "Tenant ID",
+        "configuration": {
+          "description": "Description",
+          "widgets": "Charts"
+        },
+        "tenant_info": "Tenant Information",
+        "edit_tenant": "Edit Tenant",
+        "delete_dashboard": "Delete Dashboard",
+        "delete_dashboard_full": "Delete Dashboard",
+        "delete_dashboard_confirm": "Are you sure you want to delete the dashboard {{DBNAME}}?",
+        "delete_confirm": "Are you sure you want to delete"
+      },
+      "add_dashboard": {
+        "title": "Add New Dashboard",
+        "name": "Dashboard Name",
+        "description": "Description",
+        "edit": "Edit Dashboard",
+        "edit_full": "Edit Dashboard",
+        "success_create": "Dashboard created successfully",
+        "success_update": "Dashboard updated successfully",
+        "success_delete": "Dashboard deleted successfully",
+        "note": "Click the Edit Dashboard button to create charts"
+      },
+      "config_chart": {
+        "title": "Create Chart",
+        "update": "Edit Chart",
+        "name": "Chart Name",
+        "device": "Device",
+        "attr": "Attribute",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "color": "Color",
+        "unit": "Unit",
+        "decimal": "Decimal",
+        "road": "Chart Type",
+        "show": "Show",
+        "pick_date": "Please select a date",
+        "pick_date_alert": "Please select a date",
+        "org": "Organization",
+        "label": "Label",
+        "widget_config": "Chart Settings",
+        "max": "Max",
+        "min": "Min",
+        "required": "Please do not leave this field empty"
+      },
+      "detail_dashboard": {
+        "add_widget": {
+          "create": "Create Chart for Dashboard",
+          "line_chart": "Line Chart",
+          "horizontal_bar_chart": "Bar Chart",
+          "pie_chart": "Pie Chart",
+          "gauge": "Gauge",
+          "map": "Map",
+          "data_chart": "Data Chart",
+          "data_table": "Data Table",
+          "controller": {
+            "title": "Controller",
+            "input_list": "List of Input Variables",
+            "input": "Enter Variable Name",
+            "value": "Value",
+            "success": "Execute {{SERVICE_NAME}} successfully. Data returned: {{DATA}}"
+          }
+        }
+      }
+    },
+    "firmware": {
+      "title": "Firmware Management",
+      "fota": "Firmware Over-The-Air (FOTA)",
+      "choose_fota": "Please choose at least 1 FOTA",
+      "choose_template": "Please choose at least 1 template device",
+      "choose_file": "Please choose the file to upload",
+      "table": {
+        "id": "ID",
+        "name": "Firmware Name",
+        "template": "Template Device",
+        "tag": "Firmware Type",
+        "version": "Firmware Version",
+        "create_time": "Creation Date",
+        "created_by": "Created By",
+        "delete_firmware": "Delete Firmware",
+        "delete_firmware_confirm": "Are you sure you want to delete Firmware {{FIRMWARE_NAME}}?"
+      },
+      "update_version": "Update Firmware Version",
+      "add_firmware": {
+        "title": "Add New Firmware",
+        "edit_firmware": "Edit Firmware",
+        "name": "Firmware Name",
+        "upload_firmware": "Upload File",
+        "template": "Template Device",
+        "tag": "Firmware Type",
+        "description": "Description",
+        "version": "Firmware Version",
+        "success_create": "Firmware created successfully",
+        "success_update": "Firmware updated successfully",
+        "success_delete": "Firmware deleted successfully",
+        "success_upload": "File uploaded successfully",
+        "success_update_version": "FOTA command sent successfully"
+      }
+    }
+  },
+  "billing": {
+    "package_manage": {
+      "list_package": "List Packages",
+      "no_package": "No packages available",
+      "title": "Package Information",
+      "create": "Add Package",
+      "delete_plan": "Delete Package",
+      "delete_plan_confirm": "Are you sure you want to delete the package {{PLAN_NAME}}?",
+      "id": "ID",
+      "description": "Description of the package:",
+      "popup": {
+        "name": "Package Name",
+        "type": "Package Type",
+        "description": "Package Description",
+        "status": "Status",
+        "payment_type": "Payment Type",
+        "type_period": "Billing Cycle Type",
+        "period": "Billing Cycle",
+        "fix_cost": "Fixed Cost per Cycle",
+        "charging_unit": "Billing Unit",
+        "estimate": "Pricing Method",
+        "estimated_payment": "Estimated Payment Amount",
+        "unit_price": "Unit Price",
+        "max": "Maximum",
+        "data_plan": "Data Package",
+        "price": "Amount",
+        "quantity_free": "Free Quantity",
+        "level": "From {{NUMBER}} to",
+        "free": "Free",
+        "tax": "VAT Tax (%)",
+        "expiry": "Renewal Time (days)",
+        "choose_period": "Please enter the billing cycle",
+        "choose_expiry": "Renewal time must be less than the billing cycle",
+        "choose_plan_price": "Please enter an amount of at least 1",
+        "expected_number": "Estimated Quantity",
+        "expected_payment": "Estimated Payment (VND)",
+        "success_create": "Package created successfully",
+        "success_update": "Package updated successfully",
+        "success_delete": "Package deleted successfully"
+      }
+    },
+    "subcription": {
+      "title": "Service Subscription Information",
+      "create": "Subscribe to Service",
+      "edit": "Edit Service Subscription Information",
+      "delete": "Cancel Subscription",
+      "delete_sub_confirm": "Are you sure you want to cancel the subscription {{SUBCRIPTION}}?",
+      "popup": {
+        "customer_info": "Customer Information",
+        "service_info": "Service Information",
+        "billing_info": "Payment Information",
+        "search_customer_with": "Search customer by: ",
+        "customer_name": "Customer Name",
+        "customer_code": "Customer Code",
+        "package": "Package",
+        "price_method": "Pricing Method",
+        "quantity": "Quantity",
+        "payment_type": "Payment Time",
+        "estimated_payment": "Payment Amount",
+        "period": "Billing Cycle",
+        "choose_user": "Please choose customer information",
+        "choose_plan": "Please choose a package",
+        "success_create": "Service subscribed successfully",
+        "success_update": "Service updated successfully",
+        "success_delete": "Service subscription canceled successfully"
+      },
+      "table": {
+        "sub_code": "Subscription Code",
+        "start_date": "Subscription Start Date",
+        "cycle_now": "Current Billing Cycle",
+        "status": "Subscription Status"
+      }
+    },
+    "manage_bill": {
+      "preview_bill": "Preview Bill",
+      "service_bill": "Service Bill",
+      "export_PDF": "Export PDF Bill",
+      "table": {
+        "id": "Bill Number",
+        "c_name": "Customer",
+        "plan_name": "Package",
+        "cost": "Amount",
+        "date_request": "Requested Payment Date",
+        "date_expiry": "Payment Expiry Date",
+        "date_payment": "Actual Payment Date",
+        "date_start": "Start Date of Usage",
+        "date_end": "End Date of Usage",
+        "status": "Status"
+      },
+      "view_PDF": {
+        "sign": "Signature",
+        "number": "Number",
+        "founding_date": "Establishment Date",
+        "address": "Address: ",
+        "tax_code": "Tax Code: ",
+        "customer_name": "Buyer's Full Name: ",
+        "buying_name": "Buying Entity Name: ",
+        "payment_form": "Payment Method: Bank Transfer/Cash",
+        "total_payment": "Total Payment Amount",
+        "money_to_text": "Amount in words",
+        "sign_by": "Signed by: ",
+        "sign_date": "Date of Signing: ",
+        "one": "01",
+        "order": "Order",
+        "s_service_type": "Service Name",
+        "quantity": "Quantity",
+        "pre_tax_cost": "Service Cost",
+        "p_tax": "Tax Rate",
+        "tax_cost": "Tax Amount",
+        "cost": "Total"
+      }
+    },
+    "customer_manage": {
+      "info": "Customer Information",
+      "payment_history": "Payment History",
+      "sign_history": "Subscription History",
+      "plan_used": "Packages Currently in Use",
+      "plan_detail": {
+        "title": "Package Details",
+        "name": "Package Name",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "payment_type": "Payment Type",
+        "quantity_purchased": "Quantity Purchased",
+        "used": "Used",
+        "result": "Remaining"
+      },
+      "table": {
+        "id_number": "Document Number",
+        "customer_code": "Customer Code",
+        "customer_name": "Customer Name",
+        "phone": "Phone Number",
+        "email": "Email",
+        "role": "Role",
+        "parent": "Parent Company",
+        "address": "Address",
+        "customer_id": "Customer ID"
+      },
+      "table_plan": {
+        "sub_id": "Subscription ID",
+        "plan_id": "Package ID",
+        "plan_name": "Package Name",
+        "cost": "Amount"
+      }
+    }
+  },
+  "overView": {
+    "dashboard": "Dashboard",
+    "add_dashboard": "Add Dashboard",
+    "total_devices": "Total Devices",
+    "total_user": "Total Users",
+    "total_user_online": "Total Users Online",
+    "request_time": "Request Time",
+    "success_rate": "Success Rate",
+    "quick_link": "Quick Link",
+    "setup_confirm": "Are you sure you want to set up the {{TITLE}} Device Template?"
+  },
+  "table": {
+    "next_page": "Next Page",
+    "prev_page": "Previous Page",
+    "no": "No.",
+    "last_updated": "Last Updated",
+    "starred": "Starred",
+    "excel": "Excel",
+    "pdf": "PDF",
+    "print": "Print",
+    "show_in": "Displaying {{PAGE}} of {{TOTAL}} results",
+    "view_detail": "View Details",
+    "edit": "Edit",
+    "copy_id": "Copy ID",
+    "copy_token": "Copy TOKEN",
+    "delete": "Delete",
+    "no_attr": "No attributes. Please create.",
+    "no_org": "No organizations. Please create.",
+    "no_device": "No devices. Please create.",
+    "no_group": "No groups. Please create.",
+    "no_log_attr": "No attribute logs",
+    "no_mqtt_hist": "No MQTT history",
+    "no_bill": "No bills",
+    "no_user": "No users. Please create.",
+    "no_policy": "No policies. Please create.",
+    "no_event": "No events. Please create.",
+    "no_adapter": "No Adapters. Please create.",
+    "no_thing": "No Things. Please create.",
+    "no_firmware": "No Firmware. Please create.",
+    "no_service": "No services. Please create or select a Thing first.",
+    "no_base_template": "No base templates. Please create or select a Thing first.",
+    "no_base_shapes": "No base shapes. Please create or select a Thing first.",
+    "no_input": "No input variables. Please create or select a service first.",
+    "no_event_service": "No Event Services. Please create.",
+    "no_dashboard": "No dashboards. Please create.",
+    "no_template": "No device templates. Please create.",
+    "no_in_org": "Not affiliated with any organization.",
+    "no_in_flow_id": "Not associated with any flow ID.",
+    "no_in_lwm2m_model": "No LWM2M object models.",
+    "no_widget": "No charts. Please create.",
+    "no_role": "No roles. Please create.",
+    "no_subscription": "No services. Please create.",
+    "no_customer": "No customer information",
+    "no_sign_history": "No sign-up history",
+    "no_payment_history": "No payment history",
+    "no_plan_used": "No used packages",
+    "no_tenant": "No tenants. Please create.",
+    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo."
+  },
+  "btn": {
+    "create": "Create New",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "add": "Add",
+    "update": "Update",
+    "save": "Save",
+    "cancel": "Cancel",
+    "setup": "Set Up"
+  },
+  "error": {
+    "no_data": "No data",
+    "not_found": "Not found",
+    "no_user": "User does not exist",
+    "error_page": {
+      "title": "Please click the Refresh button to reload the web page. If not, please press F5 to refresh the page."
+    },
+    "page_not_found": "404 - The webpage does not exist. Redirecting to the home page in 5 seconds...",
+    "server_res": {
+      "title": "Error. Please try again.",
+      "malformed_data": "Error 400: Invalid data submitted.",
+      "authorization": "Error 403: You do not have permission to access this page.",
+      "server": "Error 500: The server is currently experiencing issues, please try again.",
+      "notfound": "Error 404: The web is currently down for maintenance, apologies for the inconvenience."
+    },
+    "no_data_res": "Incorrect data returned.",
+    "default_zod_err": {
+      "select": "Please select",
+      "select_union": "Please select one of the following options:",
+      "number": "Please enter a number"
+    }
+  },
+  "loading": {
+    "base": "Loading data...",
+    "org": "Loading organization list...",
+    "flow_id": "Loading flow ID list...",
+    "lwm2m_model": "Loading LWM2M object model list...",
+    "device": "Loading device list...",
+    "attr": "Loading attribute list...",
+    "group": "Loading group list...",
+    "role": "Loading role list...",
+    "event": "Loading event list...",
+    "user": "Loading user list...",
+    "template": "Loading device template list...",
+    "entity_thing": "Loading Entity Thing list...",
+    "service_thing": "Please choose Entity Thing first",
+    "input": "Please choose a service first",
+    "loading": "Please wait..."
+  },
+  "placeholder": {
+    "select": "Please select",
+    "select_value": "Please select {{VALUE}}",
+    "search": "Enter to search",
+    "input_text": "Please enter",
+    "input_text_value": "Please enter {{VALUE}}"
+  },
+  "search": {
+    "title": "Search",
+    "no_org": "Not affiliated with any organization",
+    "no_group": "Not affiliated with any group"
+  },
+  "user": {
+    "login": "Log In",
+    "logout": "Log Out",
+    "register": "Register",
+    "password": "Password",
+    "forgot_password": "Forgot Password",
+    "reset_password": "Reset Password",
+    "change_password": "Change Password",
+    "change_info": "Change Information",
+    "change_avatar": "Change Avatar",
+    "change_email": "Change Email",
+    "change_phone": "Change Phone Number",
+    "change_address": "Change Address",
+    "create_user": "Account registration successful",
+    "copy_device_token": "Copy device token",
+    "cmp": "CMP System",
+    "user_info": "Account"
+  },
+  "flow_engine": {
+    "title": "Flow Engine"
+  },
+  "ws": {
+    "connect_success": "WebSocket connection successful",
+    "connect_error": "Unable to connect to WebSocket, please refresh the page",
+    "filter": {
+      "date": "Date",
+      "group_interval": "Time Unit",
+      "choose_group_interval": "Please choose a time unit",
+      "time_period": "Time Period",
+      "choose_time_period": "Please choose a time period",
+      "data_aggregation": "Data Aggregation",
+      "choose_agg": "Please choose a data aggregation method",
+      "dataType": "Chart Type",
+      "choose_widgetType": "Please choose a chart type",
+      "sma_window": "Number of data points for SMA line",
+      "choose_attr": "Please choose an attribute",
+      "choose_startTime": "Please enter the start time",
+      "choose_endTime": "Please enter the end time",
+      "data_point": "Number of data points",
+      "time_period_value": {
+        "10second": "10 seconds",
+        "15second": "15 seconds",
+        "30second": "30 seconds",
+        "1minute": "1 minute",
+        "2minute": "2 minutes",
+        "5minute": "5 minutes",
+        "10minute": "10 minutes",
+        "15minute": "15 minutes",
+        "30minute": "30 minutes",
+        "1hour": "1 hour",
+        "2hour": "2 hours",
+        "5hour": "5 hours",
+        "10hour": "10 hours",
+        "12hour": "12 hours",
+        "1day": "1 day",
+        "7day": "7 days",
+        "30day": "30 days"
+      },
+      "interval": {
+        "1second": "1 second",
+        "5second": "5 seconds",
+        "10second": "10 seconds",
+        "15second": "15 seconds",
+        "30second": "30 seconds",
+        "1minute": "1 minute",
+        "2minute": "2 minutes",
+        "5minute": "5 minutes",
+        "10minute": "10 minutes",
+        "15minute": "15 minutes",
+        "30minute": "30 minutes",
+        "1hour": "1 hour",
+        "2hour": "2 hours",
+        "10hour": "10 hours",
+        "12hour": "12 hours",
+        "1day": "1 day"
+      }
+    }
+  },
+  "validate": {
+    "name_max_length": "Please choose a name with a maximum length of 30 characters",
+    "image_max_size": "The image allows a maximum file size of 5MB",
+    "image_type": "Only allow uploading images in .jpg, .jpeg, .png formats",
+    "json_type": "Only allow uploading files in .json, .txt formats"
+  },
+  "auth": {
+    "footer_text_1": "© {{YEAR}} Developed by Technical Technology Center - TCT CNC VHT",
+    "footer_text_2": "Copyright by VIETTEL GROUP",
+    "checkbox": "Remember me",
+    "from_login_to_register": "Register ",
+    "forgot_password": "Forgot your password?",
+    "no_account": "Don't have an account?",
+    "change_password": "Change password",
+    "have_an_account": "Already have an account?",
+    "sent_otp": "Send OTP",
+    "require_otp": "Enter activation OTP from email",
+    "require_email": "Enter email",
+    "require_password": "Enter password ",
+    "require_password_old": "Enter old password",
+    "require_password_new": "Enter new password",
+    "success_password": "Password updated successfully",
+    "confirm_password": "Confirm password",
+    "pass_invalid": "Retyped password is incorrect",
+    "back_to_home": "Back to home"
+  },
+  "landingpage": {
+    "title": "Home | IoT Platform",
+    "logo": "viettel",
+    "introduction": "Introduction",
+    "pack_of_data": "Data Packages",
+    "product": "Product",
+    "Platform_IoT": "IoT Platform",
+    "CMP_system": "CMP System",
+    "FAQ": "FAQ",
+    "register_now": "Register Now",
+    "service_transmit_data": "Sim Data Data Transmission Service",
+    "viettel_M2M": "Viettel M2M IoT ",
+    "experience_now": "Experience Now",
+    "user_manual": "User Manual",
+    "pack_of_data_M2M": {
+      "title": "M2M Package Products",
+      "variety": "Diverse packages suitable for customer needs",
+      "monthlyFee": "Free monthly subscription fee",
+      "offerCode": "Registration code: ",
+      "submit_now": "Register Now",
+      "compare": "Compare Packages",
+      "plan": "Package: ",
+      "subscription": "Subscription: ",
+      "4G": "4G/5G",
+      "NB_IoT": "Nb-IoT",
+      "prepaid": "Prepaid",
+      "postpaid": "Postpaid"
+    },
+    "footer": {
+      "client_support": "Customer Support",
+      "full_name": "Full Name*:",
+      "email": "Email*:",
+      "phone_number": "Phone Number:",
+      "support_content": "Support Content*:",
+      "send": "Send",
+      "company": "Viettel Telecom Corporation",
+      "responsible_person": "Content Manager: Mr. Cao Anh Son",
+      "cskh": "cskh@viettel.com.vn",
+      "follow": "Follow us:",
+      "phone_used": "0123 456 789",
+      "cre": "Copyright Viettel Telecom"
+    },
+    "client": {
+      "partner": "Our Partners"
+    },
+    "introduction_section": {
+      "view_product": "View Products",
+      "service_transmit_data_accurate": "Accurate and Efficient Sim Data Data Transmission Service"
+    },
+    "news": {
+      "view_detail": "View Details",
+      "news_": "News"
+    },
+    "order1": {
+      "M2M_manage_solution": "M2M Connection Management Solution",
+      "subscription_management": "Subscription Management",
+      "contract_management": "Contract Management",
+      "order_management": "Order Management",
+      "payment_management": "Payment Management"
+    },
+    "order": {
+      "manage_platform": "Platform for Management, Automation, and Data Collection",
+      "manage_device": "Device Status Management",
+      "business_model": "Implementing No Code - Low Code Business Model",
+      "data_security": "User Data Security",
+      "support_protocol": "Support for Various Protocols"
+    },
+    "section_product": {
+      "iot": "IoT Products",
+      "variety": "Diverse products to meet customer needs"
+    },
+    "Q_A": {
+      "question": "Frequently Asked Questions"
+    },
+    "solution": {
+      "value": "Value of M2M/IoT Solutions",
+      "accuracy": "Savings, Accuracy, and Value for Customers"
+    }
+  },
+  "device": {
+    "guide_device": "DEVICE INTEGRATION GUIDE",
+    "Espressif": "Espressif System",
+    "describe": "Description",
+    "communication_methods": "- Communication Methods: ",
+    "communication_protocol": "- Communication Protocol: ",
+    "communicate_protocol": "- Communication Protocol: ",
+    "download_doc": "Download Documentation",
+    "simcom": "Simcom",
+    "download": "Download",
+    "products": "PRODUCTS",
+    "information": "Includes information on product sets, sample code, and integration guides.",
+    "method_communication": "CHOOSE COMMUNICATION METHOD",
+    "udpate_device": "Device updated successfully: {{value}}",
+    "block": "Block Device",
+    "active": "Activate Device"
+  },
+  "application": {
+    "android": "ANDROID",
+    "ios": "IOS",
+    "access_link": "Or access the link: ",
+    "debug": "Vsmart Debug",
+    "setup": "To install the application, please follow the instructions below:",
+    "download_doc": "Download Documentation",
+    "download_sdk": "Download SDK",
+    "qr_by_phone": "Scan QR code with phone",
+    "setup_deploygate": "Install the Deploygate application",
+    "qr_by_deploygate": "Scan QR code with Deploygate application"
+  },
+  "form": {
+    "title": "Update Account Information",
+    "enter_name": "Enter full name",
+    "enter_tax": "Enter tax code",
+    "enter_phone_num": "Enter phone number",
+    "enter_address": "Enter detailed address",
+    "province_city": "Province/City",
+    "district": "District",
+    "village": "Ward/Commune",
+    "dob": "Date of Birth",
+    "sex": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "detail_address": "Detailed Address",
+    "account_info": "Account Information",
+    "confirm_password": "Confirm Password",
+    "choose_project": "---Choose project---",
+    "user": {
+      "success_update": "Account updated successfully",
+      "fuel": "Fuel updated successfully",
+      "ddos": "DDOS updated successfully",
+      "name": "Username",
+      "list": "User List"
+    },
+    "tenant": {
+      "success_delete": "Tenant deleted successfully",
+      "success_update": "Tenant updated successfully",
+      "success_update_role": "Tenant role updated successfully",
+      "edit": "Edit Tenant",
+      "delete": "Delete Tenant",
+      "create": "Create Tenant"
+    },
+    "role": {
+      "edit": "Edit Role",
+      "delete": "Delete Role",
+      "add": "Add Role",
+      "choose": "---Choose role---"
+    },
+    "email": "Email",
+    "back": "Back"
+  },
+  "noti": {
+    "empty_id": "No ID"
+  },
+  "dev_role": {
+    "list": "List of Developer Roles"
   }
-  
 }
