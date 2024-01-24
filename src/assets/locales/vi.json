@@ -55,7 +55,8 @@
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
     "support": "Hỗ trợ",
-    "manual": "Hướng dẫn sử dụng"
+    "manual": "Hướng dẫn sử dụng",
+    "choose_lang": "Chọn ngôn ngữ"
   },
   "cloud": {
     "project_manager": {
