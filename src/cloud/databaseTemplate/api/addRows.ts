@@ -46,7 +46,7 @@ export const useAddRows = ({ config }: UseAddRowsOptions = {}) => {
       await queryClient.invalidateQueries({
         queryKey: ['select-dataBases'],
       })
-      toast.success(t('cloud:db_template.add_db.success_add_column'))
+      toast.success(t('cloud:db_template.add_db.success_add_rows'))
     },
     ...config,
     mutationFn: addRows,

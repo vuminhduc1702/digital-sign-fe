@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
@@ -39,11 +39,14 @@ export function DataBaseSidebar() {
     [],
   )
 
-  const handleCopyId = useCopyId()
+  useEffect(() => {
+    if (isSuccess)
+      navigate(`${PATHS.DB_TEMPLATE}/${projectId}`)
+  }, [isSuccess])
 
   return (
     <>
-      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
+      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
         <div className="flex gap-3">
           <img
             src={listIcon}
@@ -57,7 +60,7 @@ export function DataBaseSidebar() {
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="bg-secondary-500 h-[82vh] grow overflow-y-auto p-3">
         {filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((table: DataBase) => (
@@ -80,7 +83,7 @@ export function DataBaseSidebar() {
                     {table?.table_name}
                   </p>
                 </Button>
-                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
+                <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
                   <Dropdown
                     menuClass="h-10 w-6"
                     icon={
@@ -91,14 +94,12 @@ export function DataBaseSidebar() {
                       />
                     }
                   >
-                    <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Items className="divide-secondary-400 absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <div className="p-1">
                         <ConfirmationDialog
                           isDone={isSuccess}
                           icon="danger"
-                          title={t(
-                            'cloud:db_template.sidebar.delete_db',
-                          )}
+                          title={t('cloud:db_template.sidebar.delete_db')}
                           body={
                             t(
                               'cloud:db_template.sidebar.delete_db_confirm',
@@ -107,7 +108,7 @@ export function DataBaseSidebar() {
                           }
                           triggerButton={
                             <Button
-                              className="w-full justify-start border-none hover:text-primary-400"
+                              className="hover:text-primary-400 w-full justify-start border-none"
                               variant="trans"
                               size="square"
                               startIcon={
@@ -118,9 +119,7 @@ export function DataBaseSidebar() {
                                 />
                               }
                             >
-                              {t(
-                                'cloud:db_template.sidebar.delete_db',
-                              )}
+                              {t('cloud:db_template.sidebar.delete_db')}
                             </Button>
                           }
                           confirmButton={
@@ -129,7 +128,12 @@ export function DataBaseSidebar() {
                               type="button"
                               size="md"
                               className="bg-primary-400"
-                              onClick={() => mutate({ table: table.table_name, project_id: projectId })}
+                              onClick={() =>
+                                mutate({
+                                  table: table.table_name,
+                                  project_id: projectId,
+                                })
+                              }
                               startIcon={
                                 <img
                                   src={btnSubmitIcon}

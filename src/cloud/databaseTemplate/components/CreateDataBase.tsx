@@ -67,6 +67,7 @@ export default function CreateDataBase() {
           className="rounded border-none"
           form="create-database"
           type="submit"
+          isLoading={isLoading}
           size="lg"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />

@@ -1,32 +1,38 @@
+import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
+import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnEditIcon from '~/assets/icons/btn-edit.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '~/components/Button'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { Dropdown, MenuItem } from '~/components/Dropdown'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Button } from '~/components/Button'
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useDeleteDashboard } from '~/cloud/dashboard/api'
+import storage from '~/utils/storage'
+import { useDeleteRow } from '../api/deleteRow'
+import { type FieldsRows } from '../types'
+import { UpdateRow } from './UpdateRow'
 
-function DataBaseTableContextMenu({
-  id,
-  title,
-  ...props
-}: {
-  id: string
-  title: string
-  description: string
-}) {
+function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows, onClose: () => void }) {
   const { t } = useTranslation()
 
-  const { close, open, isOpen } = useDisclosure()
+  console.log(row, 'rowrowrow')
 
-  const { mutate, isLoading, isSuccess } = useDeleteDashboard()
+  const { close, open, isOpen } = useDisclosure()
+  const { tableName } = useParams()
+  const projectId = storage.getProject()?.id
+
+  const { mutate, isLoading, isSuccess } = useDeleteRow()
+
+  useEffect(() => {
+    if (isSuccess) {
+      onClose()
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -40,42 +46,39 @@ function DataBaseTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
                 <img
                   src={btnEditIcon}
-                  alt="Edit Dashboard"
+                  alt="Edit DataBase"
                   className="h-5 w-5"
                 />
               }
               onClick={open}
             >
-              {t('cloud:dashboard.add_dashboard.edit')}
+              {t('cloud:db_template.add_db.update_row')}
             </MenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
-              title={t('cloud:dashboard.table.delete_dashboard_full')}
-              body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                '{{DBNAME}}',
-                title,
-              )}
+              title={t('cloud:db_template.add_db.delete_row')}
+              body={t('cloud:db_template.add_db.delete_row_confirm')}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
-                      alt="Delete Dashboard"
+                      alt="Delete DataBase"
                       className="h-5 w-5"
                     />
                   }
                 >
-                  {t('cloud:dashboard.table.delete_dashboard')}
+                  {t('cloud:db_template.add_db.delete_row')}
                 </Button>
               }
               confirmButton={
@@ -84,7 +87,17 @@ function DataBaseTableContextMenu({
                   type="button"
                   size="md"
                   className="bg-primary-400"
-                  onClick={() => mutate({ id })}
+                  onClick={() =>
+                    mutate({
+                      table: tableName || '',
+                      project_id: projectId,
+                      data: {
+                        filter: {
+                          ...row,
+                        },
+                      },
+                    })
+                  }
                   startIcon={
                     <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                   }
@@ -94,15 +107,17 @@ function DataBaseTableContextMenu({
           </div>
         </Menu.Items>
       </Dropdown>
-      {/* {isOpen ? (
-        <UpdateDashboard
-          id={id}
-          close={close}
+      {isOpen ? (
+        <UpdateRow
+          close={() => {
+            close()
+            onClose()
+          }}
           isOpen={isOpen}
-          title={title}
+          row={row}
           {...props}
         />
-      ) : null} */}
+      ) : null}
     </>
   )
 }
@@ -110,10 +125,12 @@ function DataBaseTableContextMenu({
 export function DataBaseTable({
   columnsProp,
   data,
+  onClose,
   ...props
 }: {
   columnsProp: string[]
   data: any[]
+  onClose: () => void
 }) {
   const { t } = useTranslation()
 
@@ -121,24 +138,19 @@ export function DataBaseTable({
 
   const columns = useMemo<ColumnDef<any, any>[]>(
     () => [
-      ...columnsProp?.map(item => (
+      ...columnsProp?.map(item =>
         columnHelper.accessor(item, {
-          header: () => (
-            <span>{(item)}</span>
-          ),
+          header: () => <span>{item}</span>,
           cell: info => info?.getValue(),
           footer: info => info.column.id,
-        })
-      )),
+        }),
+      ),
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { id, title, configuration } = info.row.original
           return DataBaseTableContextMenu({
-            id,
-            title,
-            description: JSON.parse(configuration as unknown as string)
-              .description,
+            row: info.row.original,
+            onClose
           })
         },
         header: () => null,

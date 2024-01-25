@@ -428,12 +428,18 @@
         "add_row": "Thêm hàng",
         "column": "Tên cột",
         "type": "Kiểu dữ liệu",
+        "update_row": "Sửa dữ liệu",
+        "delete_row": "Xóa dữ liệu",
         "success_create": "Tạo danh mục dữ liệu thành công",
         "success_update": "Sửa danh mục dữ liệu thành công",
         "success_delete": "Xoá danh mục dữ liệu thành công",
         "choose_flow_id": "Vui lòng chọn flow id",
         "success_add_column": "Thêm cột thành công",
-        "no_flow_id": "Không thuộc flow id"
+        "no_flow_id": "Không thuộc flow id",
+        "success_add_rows": "Thêm hàng thành công",
+        "delete_row_confirm": "Bạn có chắc chắn muốn dữ liệu?",
+        "success_delete_row": "Xóa dữ liệu thành công",
+        "success_update_row": "Cập nhật dữ liệu thành công"
       },
       "sidebar": {
         "title": "Danh mục dữ liệu",

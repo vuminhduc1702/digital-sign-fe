@@ -1,12 +1,10 @@
-import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
-import type * as z from 'zod'
+import { useTranslation } from 'react-i18next'
 
-import { axios } from '~/lib/axios'
-import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
+import { axios } from '~/lib/axios'
+import { queryClient, type MutationConfig } from '~/lib/react-query'
 
-import { type AttrList } from '~/utils/schemaValidation'
 import { type FieldsColumn } from '../types'
 
 export type AddColumnDTO = {
