@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
-
+import { axios } from '~/lib/axios'
 import { type SelectInstance } from 'react-select'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI'
 import {
@@ -93,17 +93,36 @@ export function UpdateTemplate({
   >({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
-
-  const { data: serviceData, isLoading: isLoadingService } =
-  useGetServiceThings({
-    thingId: getValues('thing_id'),
-    config: { enabled: !!getValues('thing_id'), suspense: false },
-  })
-  const serviceSelectData = serviceData?.data?.map(service => ({
+  
+  // const { data: serviceData, isLoading: isLoadingService } =
+  //   useGetServiceThings({
+  //     thingId: getValues('thing_id'),
+  //     config: { enabled: !!getValues('thing_id'), suspense: false },
+  //   })
+  const [serviceData, setServiceData] = useState(null)
+  const [isLoadingService, setIsLoadingService] = useState(false)
+  useEffect(() => {
+    const thingid = getValues('thing_id')
+    if (thingid !== 'undefined' && thingid !== undefined) {
+      const fetchData = async () => {
+        try {
+          setIsLoadingService(true)
+          const response = await axios.get(`/api/fe/thing/${thingid}/service`)
+          const fetchedServiceData = response?.data
+          setServiceData(fetchedServiceData)
+        } catch (error) {
+          console.error('Error fetching data:', error)
+        } finally {
+          setIsLoadingService(false)
+        }
+      }
+      fetchData()
+    } 
+  }, [getValues('thing_id')])
+  const serviceSelectData = serviceData?.map(service => ({
     value: service?.name,
     label: service?.name,
   }))
-
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
     control,
@@ -112,9 +131,9 @@ export function UpdateTemplate({
     if (attrData != null && selectedUpdateTemplate) {
       reset({
         name: selectedUpdateTemplate.name,
-        rule_chain_id: selectedUpdateTemplate.rule_chain_id,
-        thing_id: selectedUpdateTemplate.thing_id,
-        handle_msg_svc: selectedUpdateTemplate.handle_message_svc,
+        rule_chain_id: selectedUpdateTemplate?.rule_chain_id,
+        thing_id: selectedUpdateTemplate?.thing_id,
+        handle_msg_svc: selectedUpdateTemplate?.handle_message_svc,
         attributes: attrData?.attributes.map((attribute: Attribute) => ({
           attribute_key: attribute.attribute_key,
           logged: attribute.logged,
@@ -136,7 +155,7 @@ export function UpdateTemplate({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
-
+  console.log('selectedUpdateTemplate.rule_chain_id', selectedUpdateTemplate)
   return (
     <Drawer
       isOpen={isOpen}
@@ -178,18 +197,19 @@ export function UpdateTemplate({
           onSubmit={handleSubmit(values => {
             const data = {
               name: values.name,
-              rule_chain_id: values.rule_chain_id,
+              rule_chain_id: values.rule_chain_id || '',
               attributes:
                 values.attributes && values.attributes.length > 0
                   ? values.attributes
                   : undefined,
-              thing_id: values.thing_id,
-              handle_msg_svc: values.handle_msg_svc
+              thing_id: values.thing_id || '',
+              handle_msg_svc: values.handle_msg_svc || ''
             }
             mutate({
               data,
               templateId: selectedUpdateTemplate?.id,
             })
+            console.log('data', data)
           })}
         >
           <>
@@ -223,7 +243,7 @@ export function UpdateTemplate({
                   handleChangeSelect={() =>
                     selectDropdownServiceRef.current?.clearValue()
                   }
-                  error={formState?.errors?.thing_id}
+                  //error={formState?.errors?.thing_id}
                 />
               </div>
             {!isLoadingService ? (
@@ -238,13 +258,13 @@ export function UpdateTemplate({
                     option.label === t('loading:service_thing') ||
                     option.label === t('table:no_service')
                   }
-                  isLoading={isLoadingService}
+                  isLoading={isLoading}
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
                   defaultValue={serviceSelectData?.find(
                     service => service.value === selectedUpdateTemplate.handle_message_svc,
                   )}
-                  error={formState?.errors?.handle_msg_svc}
+                  //error={formState?.errors?.handle_msg_svc}
                 />
               </div>
             ) : null}
@@ -263,11 +283,11 @@ export function UpdateTemplate({
               placeholder={t(
                 'cloud:device_template.add_template.choose_flow_id',
               )}
-              defaultValue={RuleSelectOptions.find(
+              defaultValue={RuleSelectOptions?.find(
                 ruchains =>
-                  ruchains.value === selectedUpdateTemplate.rule_chain_id,
+                  ruchains.value === selectedUpdateTemplate.rule_chain_id || '',
               )}
-              error={formState?.errors?.rule_chain_id}
+              //error={formState?.errors?.rule_chain_id}
             />
             {fields.map((field, index) => (
               <section

@@ -1,22 +1,21 @@
-import { useParams } from 'react-router-dom'
 import { Suspense, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { TemplateInfo, TemplateSidebarLwM2M } from '../components'
-import { ContentLayout } from '~/layout/ContentLayout'
 import { Spinner } from '~/components/Spinner'
+import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
+import { TemplateInfo } from '../components'
 
-import { type TransportConfigAttribute, type ModuleConfig } from '../types'
-import { LwM2MTable } from '../components/LwM2MTable'
-import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'
-import { ComboBoxSelectAttrLwM2M } from '../components/ComboBoxSelectAttrLwM2M'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
+import { ComboBoxSelectAttrLwM2M } from '../components/ComboBoxSelectAttrLwM2M'
+import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'
+import { LwM2MTable } from '../components/LwM2MTable'
+import { type ModuleConfig, type TransportConfigAttribute } from '../types'
 
 
-export function DeviceTemplatelwm2mManage() {
+export function LwM2M() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
@@ -32,11 +31,7 @@ export function DeviceTemplatelwm2mManage() {
   const id = params.id as string
   const projectId = storage.getProject()?.id
   return (
-    <ContentLayout title={t('sidebar:cloud.device_template')}>
-      <div className="grid grow grid-cols-1 gap-x-4 md:grid-cols-3">
-        <div className="flex grow flex-col gap-2 md:col-span-1">
-          <TemplateSidebarLwM2M />
-        </div>
+      <div className="grid grow grid-cols-1 gap-x-4">
         {projectId && templateId && !id ? (
           <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
             <Suspense
@@ -104,6 +99,5 @@ export function DeviceTemplatelwm2mManage() {
           </div> 
         ) : null}
       </div>
-    </ContentLayout>
   )
 }

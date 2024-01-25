@@ -42,8 +42,8 @@ export const templateAttrSchema = z.object({
   name: nameSchema,
   rule_chain_id: z.string().optional(),
   attributes: z.array(attrSchema),
-  thing_id: z.string(),
-  handle_msg_svc: z.string(),
+  thing_id: z.string().optional(),
+  handle_msg_svc: z.string().optional(),
 })
 
 export default function CreateTemplate() {
@@ -82,7 +82,7 @@ export default function CreateTemplate() {
       name: '',
       rule_chain_id: '',
       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
-     },
+    },
   })
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
@@ -166,6 +166,7 @@ export default function CreateTemplate() {
             },
             templateId: dataCreateTemplate.id,
           })
+          console.log('dataCreateTemplate.rule_chain_id', dataCreateTemplate.rule_chain_id)
         })}
       >
         <>

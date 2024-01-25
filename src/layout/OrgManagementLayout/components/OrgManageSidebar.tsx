@@ -52,7 +52,6 @@ function OrgManageSidebar() {
     projectId,
     config: { enabled: !!projectId },
   })
-
   const [selectedUpdateOrg, setSelectedUpdateOrg] = useState<OrgMapType>({
     id: '',
     name: '',
@@ -66,7 +65,6 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
-
   const [selected, setSelected] = useState<any>({})
   const [query, setQuery] = useState('')
 
@@ -148,7 +146,6 @@ function OrgManageSidebar() {
     const tree = data.filter(node => parseInt(node.level) === 1)
     return tree
   }
-
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
 
@@ -166,7 +163,6 @@ function OrgManageSidebar() {
             .replace(/\s+/g, '')
             .includes(query.toLowerCase().replace(/\s+/g, '')),
         )
-
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
