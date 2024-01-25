@@ -33,8 +33,6 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  // console.log(`new bar: `, data)
-  // console.log('widgetInfo', widgetInfo)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
@@ -311,7 +309,7 @@ export function LineChart({
     {
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key]: 0,
-      deviceId: "", 
+      deviceId: '',
     },
   ])
 
@@ -360,7 +358,7 @@ export function LineChart({
             const returnValue = {
               ts: timeStamp,
               [widget]: parseFloat(item.value),
-              // deviceId: item.label, 
+              // deviceId: item.label,
             }
             const existingIndex = transformedNewValues.findIndex(
               obj => obj.ts === timeStamp,
@@ -381,7 +379,7 @@ export function LineChart({
         widgetArray.push({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key]: 0,
-          deviceId: "", 
+          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)

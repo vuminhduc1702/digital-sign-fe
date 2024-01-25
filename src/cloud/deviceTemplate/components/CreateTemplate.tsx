@@ -24,7 +24,7 @@ import storage from '~/utils/storage'
 import {
   useCreateTemplate,
   type CreateTemplateDTO,
-  useUpdateTemplate
+  useUpdateTemplate,
 } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
 
@@ -58,7 +58,7 @@ export default function CreateTemplate() {
     mutateAsync: mutateAsyncCreateTemplate,
     isLoading: isLoadingCreateTemplate,
     isSuccess: isSuccessCreateTemplate,
-  } = useCreateTemplate() 
+  } = useCreateTemplate()
 
   const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
     { projectId },
@@ -74,11 +74,17 @@ export default function CreateTemplate() {
     label: thing.name,
   }))
 
-  const { register, formState, watch, handleSubmit, getValues, control, reset } = useForm<
-    CreateTemplateDTO['data']
-  >({
+  const {
+    register,
+    formState,
+    watch,
+    handleSubmit,
+    getValues,
+    control,
+    reset,
+  } = useForm<CreateTemplateDTO['data']>({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
-     defaultValues: {
+    defaultValues: {
       name: '',
       rule_chain_id: '',
       attributes: [{ attribute_key: '', value: '', logged: true, value_t: '' }],
@@ -87,7 +93,7 @@ export default function CreateTemplate() {
   const { fields, append, remove } = useFieldArray({
     name: 'attributes',
     control,
-  })  
+  })
   const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
     'id',
     'name',
@@ -153,7 +159,7 @@ export default function CreateTemplate() {
               name: values.name,
               attributes: values.attributes,
               thing_id: values.thing_id,
-              handle_msg_svc: values.handle_msg_svc
+              handle_msg_svc: values.handle_msg_svc,
             },
           })
           mutateUpdateTemplate({
@@ -166,7 +172,6 @@ export default function CreateTemplate() {
             },
             templateId: dataCreateTemplate.id,
           })
-          console.log('dataCreateTemplate.rule_chain_id', dataCreateTemplate.rule_chain_id)
         })}
       >
         <>
@@ -193,23 +198,23 @@ export default function CreateTemplate() {
           <div className="w-[calc(100%-2.5rem)]">
             <SelectDropdown
               label={t('cloud:custom_protocol.thing.id')}
-                name="thing_id"
-                control={control}
-                options={thingSelectData}
-                isOptionDisabled={option =>
-                  option.label === t('loading:entity_thing') ||
-                  option.label === t('table:no_thing')
-                }
-                noOptionsMessage={() => t('table:no_thing')}
-                loadingMessage={() => t('loading:entity_thing')}
-                isLoading={AdapterIsLoading}
-                placeholder={t('cloud:custom_protocol.thing.choose')}
-                handleClearSelectDropdown={() =>
-                  selectDropdownServiceRef.current?.clearValue()
-                }
-                handleChangeSelect={() =>
-                  selectDropdownServiceRef.current?.clearValue()
-                }
+              name="thing_id"
+              control={control}
+              options={thingSelectData}
+              isOptionDisabled={option =>
+                option.label === t('loading:entity_thing') ||
+                option.label === t('table:no_thing')
+              }
+              noOptionsMessage={() => t('table:no_thing')}
+              loadingMessage={() => t('loading:entity_thing')}
+              isLoading={AdapterIsLoading}
+              placeholder={t('cloud:custom_protocol.thing.choose')}
+              handleClearSelectDropdown={() =>
+                selectDropdownServiceRef.current?.clearValue()
+              }
+              handleChangeSelect={() =>
+                selectDropdownServiceRef.current?.clearValue()
+              }
               error={formState?.errors?.thing_id}
             />
           </div>
@@ -333,7 +338,7 @@ export default function CreateTemplate() {
                 }
               />
             </section>
-          ))} 
+          ))}
         </>
       </form>
       <CreateThing

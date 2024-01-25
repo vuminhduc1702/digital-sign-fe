@@ -6,9 +6,12 @@ import { type TransportConfigAttribute } from '../types'
 
 type AttrLwM2MTableProps = {
   attribute_info: TransportConfigAttribute[]
-  } 
+}
 
-export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps) {
+export function AttrLwM2MTable({
+  attribute_info,
+  ...props
+}: AttrLwM2MTableProps) {
   const { t } = useTranslation()
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const columnHelper = createColumnHelper<TransportConfigAttribute>()
@@ -18,7 +21,6 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
     }, 500)
     return () => clearTimeout(timer)
   }, [attribute_info])
-  console.log('attribute_info', attribute_info)
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({
@@ -32,20 +34,24 @@ export function AttrLwM2MTable({ attribute_info, ...props }: AttrLwM2MTableProps
       }),
       columnHelper.display({
         id: 'name',
-        header: () => <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>,
+        header: () => (
+          <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+        ),
         cell: info => {
           const nameAttrLwM2M = info.row.original.name
           return (
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameAttrLwM2M}
-              </p>
+            <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+              {nameAttrLwM2M}
+            </p>
           )
         },
         footer: info => info.column.id,
       }),
       columnHelper.display({
         id: 'typeAttr',
-        header: () => <span>{t('cloud:org_manage.org_manage.table.value_type')}</span>,
+        header: () => (
+          <span>{t('cloud:org_manage.org_manage.table.value_type')}</span>
+        ),
         cell: info => {
           const numberAttr = info.row.original.type
           return numberAttr

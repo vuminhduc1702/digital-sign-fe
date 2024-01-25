@@ -325,24 +325,6 @@ export function UpdateWidget({
     }))
   }
 
-  // // remove field when devices change
-  // function removeField() {
-  //   console.log(attrSelectData)
-  //   if (!attrSelectData) return
-  //   // if widgetInfoMemo.label isnt in attrSelectData.label then remove it in widgetInfoMemo
-  //   for (let i = fields.length - 1; i >= 0; --i) {
-  //     if (!attrSelectData.find(attr => attr.label === fields[i].label)) {
-  //       console.log('remove', i)
-  //       remove(i)
-  //     }
-  //   }
-  //   console.log('fields', fields)
-  // }
-
-  // useEffect(() => {
-  //   removeField()
-  // }, [attrChartData])
-
   return (
     <FormDialog
       size="max"

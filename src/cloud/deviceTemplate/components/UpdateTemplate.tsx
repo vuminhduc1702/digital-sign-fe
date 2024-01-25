@@ -88,12 +88,18 @@ export function UpdateTemplate({
     label: thing?.name,
   }))
 
-  const { register, formState, watch, handleSubmit,  reset, control, getValues } = useForm<
-    UpdateTemplateDTO['data']
-  >({
+  const {
+    register,
+    formState,
+    watch,
+    handleSubmit,
+    reset,
+    control,
+    getValues,
+  } = useForm<UpdateTemplateDTO['data']>({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
-  
+
   // const { data: serviceData, isLoading: isLoadingService } =
   //   useGetServiceThings({
   //     thingId: getValues('thing_id'),
@@ -117,7 +123,7 @@ export function UpdateTemplate({
         }
       }
       fetchData()
-    } 
+    }
   }, [getValues('thing_id')])
   const serviceSelectData = serviceData?.map(service => ({
     value: service?.name,
@@ -155,7 +161,6 @@ export function UpdateTemplate({
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
   )
-  console.log('selectedUpdateTemplate.rule_chain_id', selectedUpdateTemplate)
   return (
     <Drawer
       isOpen={isOpen}
@@ -203,13 +208,12 @@ export function UpdateTemplate({
                   ? values.attributes
                   : undefined,
               thing_id: values.thing_id || '',
-              handle_msg_svc: values.handle_msg_svc || ''
+              handle_msg_svc: values.handle_msg_svc || '',
             }
             mutate({
               data,
               templateId: selectedUpdateTemplate?.id,
             })
-            console.log('data', data)
           })}
         >
           <>
@@ -219,33 +223,32 @@ export function UpdateTemplate({
               registration={register('name')}
             />
 
-            
-              <div className="w-[calc(100%-2.5rem)]">
-                <SelectDropdown
-                  label={t('cloud:custom_protocol.thing.id')}
-                  name="thing_id"
-                  control={control}
-                  options={thingSelectData}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:entity_thing') ||
-                    option.label === t('table:no_thing')
-                  }
-                  noOptionsMessage={() => t('table:no_thing')}
-                  loadingMessage={() => t('loading:entity_thing')}
-                  isLoading={AdapterIsLoading}
-                  placeholder={t('cloud:custom_protocol.thing.choose')}
-                  defaultValue={thingSelectData?.find(
-                    thing => thing.value === selectedUpdateTemplate.thing_id,
-                  )}
-                  handleClearSelectDropdown={() =>
-                    selectDropdownServiceRef.current?.clearValue()
-                  }
-                  handleChangeSelect={() =>
-                    selectDropdownServiceRef.current?.clearValue()
-                  }
-                  //error={formState?.errors?.thing_id}
-                />
-              </div>
+            <div className="w-[calc(100%-2.5rem)]">
+              <SelectDropdown
+                label={t('cloud:custom_protocol.thing.id')}
+                name="thing_id"
+                control={control}
+                options={thingSelectData}
+                isOptionDisabled={option =>
+                  option.label === t('loading:entity_thing') ||
+                  option.label === t('table:no_thing')
+                }
+                noOptionsMessage={() => t('table:no_thing')}
+                loadingMessage={() => t('loading:entity_thing')}
+                isLoading={AdapterIsLoading}
+                placeholder={t('cloud:custom_protocol.thing.choose')}
+                defaultValue={thingSelectData?.find(
+                  thing => thing.value === selectedUpdateTemplate.thing_id,
+                )}
+                handleClearSelectDropdown={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+                handleChangeSelect={() =>
+                  selectDropdownServiceRef.current?.clearValue()
+                }
+                //error={formState?.errors?.thing_id}
+              />
+            </div>
             {!isLoadingService ? (
               <div className="w-[calc(100%-2.5rem)]">
                 <SelectDropdown
@@ -262,7 +265,9 @@ export function UpdateTemplate({
                   noOptionsMessage={() => t('table:no_service')}
                   placeholder={t('cloud:custom_protocol.service.choose')}
                   defaultValue={serviceSelectData?.find(
-                    service => service.value === selectedUpdateTemplate.handle_message_svc,
+                    service =>
+                      service.value ===
+                      selectedUpdateTemplate.handle_message_svc,
                   )}
                   //error={formState?.errors?.handle_msg_svc}
                 />
@@ -379,5 +384,5 @@ export function UpdateTemplate({
         classNameTriggerBtn="absolute right-0 top-[182px] mr-6"
       />
     </Drawer>
-    )
+  )
 }
