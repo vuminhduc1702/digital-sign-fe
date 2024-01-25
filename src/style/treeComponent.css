@@ -1,0 +1,27 @@
+
+.node-text {
+  font-size: 14px;
+  color: #e93fe0;
+  font-family: 'Arial', sans-serif;
+}
+.node__root > circle {
+    fill: #fff;
+    stroke: #4285f4;
+    width: 200px; 
+    height: 100px;
+    /* stroke-width: 2px; */
+  }
+  
+  .node__branch > circle {
+    fill: green;
+  }
+  
+  .node__leaf > circle {
+    fill: orange;
+  }
+  .custom-svg-class {
+    /* Add your custom styles here */
+    border: 1px solid #ccc;
+    background-color: #f8f8f8;
+    /* ... other styles */
+  }

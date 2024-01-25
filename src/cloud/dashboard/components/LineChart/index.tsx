@@ -293,6 +293,8 @@ export function LineChart({
     }
   }
 
+  // console.log(widgetInfo)
+
   const initNow = new Date().getTime()
   const initStart = initNow - TIME_PERIOD
   const initEnd = initNow
@@ -307,6 +309,7 @@ export function LineChart({
     {
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key]: 0,
+      deviceId: '',
     },
   ])
 
@@ -347,12 +350,15 @@ export function LineChart({
       }[] = []
 
       for (let widget in newValuesRef.current) {
+        // console.log('widget', newValuesRef.current[widget])
         newValuesRef.current[widget].map(item => {
+          console.log(item)
           const timeStamp = Math.floor(item.ts / 1000) * 1000
           if (item.ts > start && item.ts < end) {
             const returnValue = {
               ts: timeStamp,
               [widget]: parseFloat(item.value),
+              // deviceId: item.label,
             }
             const existingIndex = transformedNewValues.findIndex(
               obj => obj.ts === timeStamp,
@@ -367,19 +373,21 @@ export function LineChart({
           }
         })
       }
-
       if (transformedNewValues.length > 0) {
         widgetArray.push(...transformedNewValues)
       } else {
         widgetArray.push({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key]: 0,
+          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)
       setTicks(divineTick)
     }
   }
+
+  // console.log('realtimeData', realtimeData)
 
   return (
     <>

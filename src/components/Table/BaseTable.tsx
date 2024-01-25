@@ -10,14 +10,7 @@ import {
   getExpandedRowModel,
   type VisibilityState,
 } from '@tanstack/react-table'
-import {
-  Fragment,
-  createElement,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { Fragment, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -27,6 +20,8 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export function BaseTable<T extends Record<string, any>>({
@@ -86,13 +81,12 @@ export function BaseTable<T extends Record<string, any>>({
   })
 
   const totalAttrs = total || data?.length
-  const { pageSize } = table.getState().pagination
+  const { pageSize, pageIndex } = table.getState().pagination
 
   useLayoutEffect(() => {
     table.setPageSize(10)
   }, [])
 
-  const currentPage = table.getState().pagination.pageIndex
   const countLimitPaginationRef = useRef(1)
 
   function refresh() {
@@ -291,15 +285,6 @@ export function BaseTable<T extends Record<string, any>>({
                               </Fragment>
                             )
                           } else {
-                            // const cellStr = cell.getContext().getValue()
-                            // let cellStrTrigger
-                            // if (typeof cellStr == 'string') {
-                            //   cellStrTrigger =
-                            //     cellStr?.length > 10
-                            //       ? cellStr.slice(0, 10) + '...'
-                            //       : cellStr
-                            // }
-
                             return (
                               <td className="h-9" key={cell.id}>
                                 {flexRender(
@@ -308,6 +293,16 @@ export function BaseTable<T extends Record<string, any>>({
                                 )}
                               </td>
                             )
+
+                            // Tooltips all cell but some case can not
+                            // const cellStr = cell.getContext().getValue()
+                            // let cellStrTrigger
+                            // if (typeof cellStr == 'string') {
+                            //   cellStrTrigger =
+                            //     cellStr?.length > 10
+                            //       ? cellStr.slice(0, 10) + '...'
+                            //       : cellStr
+                            // }
                             // return typeof cellStr == 'string' &&
                             //   cellStr != 'true' &&
                             //   cellStr != 'false' &&
@@ -388,20 +383,20 @@ export function BaseTable<T extends Record<string, any>>({
               if (
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
-                (currentPage + 1) * pageSize <=
+                (pageIndex + 1) * pageSize <=
                   limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
               table.previousPage()
             }}
-            disabled={currentPage === 0 || isPreviousData}
+            disabled={pageIndex === 0 || isPreviousData}
             variant="secondaryLight"
           >
-            {'Prev'}
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Pagination
-            currentPage={currentPage}
+            currentPage={pageIndex}
             totalCount={totalAttrs}
             pageSize={pageSize}
             table={table}
@@ -411,7 +406,7 @@ export function BaseTable<T extends Record<string, any>>({
             onClick={() => {
               if (
                 limitPagination < totalAttrs &&
-                (currentPage + 1) * pageSize >
+                (pageIndex + 1) * pageSize >
                   limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
@@ -420,11 +415,11 @@ export function BaseTable<T extends Record<string, any>>({
               table.nextPage()
             }}
             disabled={
-              (currentPage + 1) * pageSize >= totalAttrs || isPreviousData
+              (pageIndex + 1) * pageSize >= totalAttrs || isPreviousData
             }
             variant="secondaryLight"
           >
-            {'Next'}
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

@@ -10,8 +10,7 @@ export const resources = {
   viText,
 } as const
 
-i18n.use(initReactI18next).use(LanguageDetector).init({
-  lng: 'viText',
+i18n.use(LanguageDetector).use(initReactI18next).init({
   resources,
   fallbackLng: 'enText',
 })

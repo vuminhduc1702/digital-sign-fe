@@ -59,7 +59,6 @@ axios.interceptors.response.use(
     if (errMessage === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
       const customError = { ...response?.data, message }
-
       toast.error(customError)
       return Promise.reject(customError)
     }

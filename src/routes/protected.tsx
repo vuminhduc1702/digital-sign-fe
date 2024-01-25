@@ -22,16 +22,14 @@ import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
-import { TemplateSidebar } from '~/cloud/deviceTemplate/components'
-
-
+import { Default } from '~/cloud/deviceTemplate/routes/Default'
+import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
+import { Navigate } from 'react-router-dom'
+import storage from '~/utils/storage'
+const projectId  = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
-)
-const { DeviceTemplatelwm2mManage } = lazyImport(
-  () => import('~/cloud/deviceTemplate'),
-  'DeviceTemplatelwm2mManage',
 )
 const { BillingPackageManage } = lazyImport(
   () => import('~/cloud/billingPackage'),
@@ -70,22 +68,55 @@ export const protectedRoutes = [
       ...AiRoutes,
       ...CustomerManageRoutes,
       {
-        path: PATHS.DEVICE_TEMPLATE,
+        path: PATHS.DEVICE_TEMPLATE ,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <DeviceTemplateManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
-      },
-      {
-        path: PATHS.DEVICE_TEMPLATELWM2M,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <DeviceTemplatelwm2mManage />
-          </ErrorBoundary>
-        ),
-        children: [{ path: ':projectId', children: [{ path: ':lwm2m/:templateId' }, { path: ':lwm2m/:templateId/:id' }] }],
+        children: [
+          {
+            index: true,
+            element: (
+              <Navigate
+                to={`${
+                  projectId != null
+                    ? PATHS.TEMPLATE_DEFAULT + '/' + projectId.id
+                    : PATHS.TEMPLATE_DEFAULT
+                }`}
+                replace
+              />
+            ),
+          },
+          { 
+            path: PATHS.TEMPLATE_DEFAULT,
+            children: [
+              { 
+                path: ':projectId',
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <Default/>
+                  </ErrorBoundary>
+                ),
+                 children: [{ path: ':templateId' }]
+              }
+            ] 
+          },
+          { 
+            path: PATHS.TEMPLATE_LWM2M, 
+            children: [
+              { 
+                path: ':projectId', 
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <LwM2M />
+                  </ErrorBoundary>
+                ),
+                children: [{ path: ':templateId' }, { path: ':templateId/:id' }],
+              }
+            ]
+          }
+        ],
       },
       {
         path: PATHS.FLOW_ENGINE,
