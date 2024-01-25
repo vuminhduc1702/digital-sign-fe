@@ -33,7 +33,7 @@ export function DeviceManage() {
     orgId,
     projectId,
     offset,
-    config: { keepPreviousData: true, suspense: false },
+    config: { keepPreviousData: true },
   })
 
   return (

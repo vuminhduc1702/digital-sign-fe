@@ -81,13 +81,12 @@ export function BaseTable<T extends Record<string, any>>({
   })
 
   const totalAttrs = total || data?.length
-  const { pageSize } = table.getState().pagination
+  const { pageSize, pageIndex } = table.getState().pagination
 
   useLayoutEffect(() => {
     table.setPageSize(10)
   }, [])
 
-  const currentPage = table.getState().pagination.pageIndex
   const countLimitPaginationRef = useRef(1)
 
   function refresh() {
@@ -384,20 +383,20 @@ export function BaseTable<T extends Record<string, any>>({
               if (
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
-                (currentPage + 1) * pageSize <=
+                (pageIndex + 1) * pageSize <=
                   limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
               table.previousPage()
             }}
-            disabled={currentPage === 0 || isPreviousData}
+            disabled={pageIndex === 0 || isPreviousData}
             variant="secondaryLight"
           >
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Pagination
-            currentPage={currentPage}
+            currentPage={pageIndex}
             totalCount={totalAttrs}
             pageSize={pageSize}
             table={table}
@@ -407,7 +406,7 @@ export function BaseTable<T extends Record<string, any>>({
             onClick={() => {
               if (
                 limitPagination < totalAttrs &&
-                (currentPage + 1) * pageSize >
+                (pageIndex + 1) * pageSize >
                   limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
@@ -416,7 +415,7 @@ export function BaseTable<T extends Record<string, any>>({
               table.nextPage()
             }}
             disabled={
-              (currentPage + 1) * pageSize >= totalAttrs || isPreviousData
+              (pageIndex + 1) * pageSize >= totalAttrs || isPreviousData
             }
             variant="secondaryLight"
           >
