@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -17,7 +17,7 @@ import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
 
-function DataBaseTableContextMenu({ row, ...props }: { row: FieldsRows }) {
+function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows, onClose: () => void }) {
   const { t } = useTranslation()
 
   console.log(row, 'rowrowrow')
@@ -27,6 +27,12 @@ function DataBaseTableContextMenu({ row, ...props }: { row: FieldsRows }) {
   const projectId = storage.getProject()?.id
 
   const { mutate, isLoading, isSuccess } = useDeleteRow()
+
+  useEffect(() => {
+    if (isSuccess) {
+      onClose()
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -87,7 +93,7 @@ function DataBaseTableContextMenu({ row, ...props }: { row: FieldsRows }) {
                       project_id: projectId,
                       data: {
                         filter: {
-                          ...row
+                          ...row,
                         },
                       },
                     })
@@ -103,7 +109,10 @@ function DataBaseTableContextMenu({ row, ...props }: { row: FieldsRows }) {
       </Dropdown>
       {isOpen ? (
         <UpdateRow
-          close={close}
+          close={() => {
+            close()
+            onClose()
+          }}
           isOpen={isOpen}
           row={row}
           {...props}
@@ -141,6 +150,7 @@ export function DataBaseTable({
         cell: info => {
           return DataBaseTableContextMenu({
             row: info.row.original,
+            onClose
           })
         },
         header: () => null,
