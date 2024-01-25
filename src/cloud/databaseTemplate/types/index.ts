@@ -24,7 +24,7 @@ export type FieldsColumn = {
 }
 
 export type FieldsRows = {
-  [key: string]: string
+  [key: string]: any
 }
 
 export type RuleChain = {

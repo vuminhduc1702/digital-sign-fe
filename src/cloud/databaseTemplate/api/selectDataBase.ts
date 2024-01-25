@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
+import { type FieldsRows } from '../types'
 
 export type DataSelectTable = {
   data: {
@@ -14,11 +15,17 @@ export type DataSelectTable = {
 export const selectDataBase = ({
   table,
   project_id,
+  data,
 }: {
   table: string
   project_id: string
+  data?: {
+    struct_scan: boolean
+    limit: number | null
+    filter: FieldsRows
+  }
 }): Promise<DataSelectTable> => {
-  return axios.post(`/api/fe/table/${table}/select?project_id=${project_id}`)
+  return axios.post(`/api/fe/table/${table}/select?project_id=${project_id}`, data)
 }
 
 type UseSelectDataBaseOptions = {

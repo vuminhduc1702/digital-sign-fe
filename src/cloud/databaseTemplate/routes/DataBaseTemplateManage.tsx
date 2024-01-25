@@ -13,6 +13,19 @@ import { useSelectDataBase } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
 import CreateRows from '../components/CreateRows'
 import { FieldsRows } from '../types'
+import { InputField, SelectDropdown, SelectOption } from '~/components/Form'
+import { Button } from '~/components/Button'
+import { SearchIcon } from '~/components/SVGIcons'
+import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Switch } from '~/components/Switch'
+import * as z from 'zod'
+
+export const searchDataBaseSchema = z.object({
+  key: z.string().optional(),
+  limit: z.string(),
+})
 
 export function DataBaseTemplateManage() {
   const { t } = useTranslation()
@@ -22,22 +35,49 @@ export function DataBaseTemplateManage() {
     FieldsRows[]
   >([])
 
+  const [isShow, setIsShow] = useState(false)
+  const [key, setKey] = useState<SelectOption | undefined>({ label: 'AND', value: '$and' })
+  const [dataConvert, setDataConvert] = useState<FieldsRows[]>([])
+
   const { tableName } = useParams()
 
   const projectId = storage.getProject()?.id
 
   const { data, mutate, isLoading } = useSelectDataBase()
 
+  const keySelect = [
+    { label: 'AND', value: '$and' },
+    { label: 'OR', value: '$or' },
+    { label: 'ONLY', value: '$only' },
+  ]
+
+  const { register, formState, control, handleSubmit, setValue, getValues } = useForm({
+    resolver: searchDataBaseSchema && zodResolver(searchDataBaseSchema),
+    values: { limit: '', key: '$and' },
+  })
+
   useEffect(() => {
     if (tableName) {
       mutate({ table: tableName, project_id: projectId })
     }
+    setIsShow(false)
+    setValue('key', '$and')
+    setValue('limit', '')
+    setKey({ label: 'AND', value: '$and' })
   }, [tableName])
 
   const refetchData = () => {
     if (tableName) {
       mutate({ table: tableName, project_id: projectId })
     }
+  }
+
+  const onSearch = (value: FieldsRows) => {
+    let keys = Object.keys(value)
+    const data = keys.map(item => ({
+      [item]: value[item],
+    }))
+    setDataConvert(data)
   }
 
   useEffect(() => {
@@ -77,21 +117,69 @@ export function DataBaseTemplateManage() {
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
                     <CreateRows onClose={refetchData} columnsProp={data?.data?.columns || []} />
-                    {/* <ComboBoxSelectAttr
-                      entityId={tableName}
-                      entityType="TEMPLATE"
-                      setFilteredComboboxData={setFilteredComboboxData}
-                    /> */}
+                    <form
+                      id="search-subcription"
+                      className="flex flex-col justify-between space-y-6"
+                      onSubmit={handleSubmit(values => {
+                        const data = {
+                          struct_scan: false,
+                          limit: parseInt(values.limit) || null,
+                          filter: {
+                            [values.key]: dataConvert
+                          }
+                        }
+                        mutate({ table: tableName, project_id: projectId, data })
+                      })}
+                    >
+                      <div className="flex items-center gap-x-3">
+                        <SelectDropdown
+                          isClearable={false}
+                          name="key"
+                          control={control}
+                          value={key}
+                          customOnChange={e => {
+                            const result = keySelect.find(
+                              item => item.value === e,
+                            )
+                            setKey(result)
+                          }}
+                          options={keySelect}
+                        />
+                        <InputField
+                          className="h-[37px]"
+                          error={formState.errors['limit']}
+                          registration={register('limit')}
+                        />
+                        <Switch
+                          onCheckedChange={checked =>
+                            setIsShow(checked)
+                          }
+                          checked={isShow}
+                        />
+                        <Button
+                          className="rounded-md"
+                          variant="trans"
+                          size="square"
+                          startIcon={
+                            <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+                          }
+                          form="search-subcription"
+                          type="submit"
+                        />
+                      </div>
+                    </form>
                   </div>
                 </div>
                 {data?.data?.columns && (
                   <DataBaseTable
+                    isShow={isShow}
                     columnsProp={data?.data?.columns}
                     data={filteredComboboxData}
                     onClose={refetchData}
+                    onSearch={onSearch}
                   />
                 )}
-                <CreateColumn onClose={refetchData}/>
+                <CreateColumn onClose={refetchData} />
               </div>
             </Suspense>
           </div>

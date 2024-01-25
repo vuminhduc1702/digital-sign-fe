@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -16,11 +16,10 @@ import storage from '~/utils/storage'
 import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
+import { InputField } from '~/components/Form'
 
 function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows, onClose: () => void }) {
   const { t } = useTranslation()
-
-  console.log(row, 'rowrowrow')
 
   const { close, open, isOpen } = useDisclosure()
   const { tableName } = useParams()
@@ -123,16 +122,32 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
 }
 
 export function DataBaseTable({
+  isShow,
   columnsProp,
   data,
   onClose,
+  onSearch,
   ...props
 }: {
+  isShow: boolean
   columnsProp: string[]
   data: any[]
   onClose: () => void
+  onSearch: (value: FieldsRows) => void
 }) {
   const { t } = useTranslation()
+  const [filter, setFilter] = useState<FieldsRows>({})
+
+  const handleSearch = (row: string, value: string) => {
+    let result: FieldsRows = {}
+    result[row] = value
+    setFilter(pre => ({ ...pre, ...result }))
+  }
+
+  useEffect(() => {
+    onSearch(filter)
+  }, [filter])
+
 
   const columnHelper = createColumnHelper<any>()
 
@@ -140,7 +155,16 @@ export function DataBaseTable({
     () => [
       ...columnsProp?.map(item =>
         columnHelper.accessor(item, {
-          header: () => <span>{item}</span>,
+          header: () =>
+            <div>
+              <span>{item}</span>
+              {isShow &&
+                <InputField
+                  onClick={e => e.stopPropagation()}
+                  onChange={e => handleSearch(item, e.target.value)}
+                />
+              }
+            </div>,
           cell: info => info?.getValue(),
           footer: info => info.column.id,
         }),
@@ -157,7 +181,7 @@ export function DataBaseTable({
         footer: info => info.column.id,
       }),
     ],
-    [columnsProp],
+    [columnsProp, isShow],
   )
 
   return (
