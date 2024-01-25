@@ -20,6 +20,7 @@ type CodeSandboxEditorProps = {
   defaultValue?: string
   showRunButton?: boolean
   style?: CSSProperties
+  isUpdate?: boolean
   }
 
 type SimpleCodeProps = {
@@ -46,7 +47,8 @@ export function CodeSandboxEditor({
   defaultValue,
   className,
   showRunButton,
-  style
+  style,
+  isUpdate = false
   }: CodeSandboxEditorProps) {
   const [textDefault, setTextDefault] = useState(defaultValue)
   let files = {
@@ -75,9 +77,12 @@ export function CodeSandboxEditor({
       <SandpackLayout className={cn('', className)}>
         <SimpleCodeViewer onChangeSimple={onChangeSimple} />
         <SandpackCodeEditor
-          className={cn('', {
-            'border-0 border-b border-solid border-inherit': !isFullScreen,
-            '!h-[600px] border-0': !isFullScreen && !isShowLog
+          className={cn('border-0 border-0 border-b border-solid border-inherit', {
+            '!h-[600px]': !isFullScreen && !isShowLog,
+            '!h-[530px]': isFullScreen && !isUpdate && isShowLog,
+            '!h-[830px]': isFullScreen && !isUpdate && !isShowLog,
+            '!h-[440px]': isFullScreen && isUpdate && isShowLog,
+            '!h-[740px]': isFullScreen && isUpdate && !isShowLog,
           })}
           showInlineErrors
           showLineNumbers
