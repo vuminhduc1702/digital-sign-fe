@@ -622,8 +622,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_01} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={BD_01} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -659,8 +659,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={DB_03} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={DB_03} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -697,8 +697,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_04} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={BD_04} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -731,8 +731,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                        <div className='px-[10px] py-[8px]'>
-                            <img src={BD_05} alt="" className='w-[165px]'/>
+                        <div className=''>
+                            <img src={BD_05} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -769,8 +769,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_02} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={BD_02} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -806,8 +806,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_06} alt="" className='w-[165px]'/>
+                          <div className='px-[8px] py-[8px]'>
+                            <img src={BD_06} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -843,8 +843,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_07} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={BD_07} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -880,8 +880,8 @@ export function DashboardDetail() {
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>
-                          <div className='px-[10px] py-[8px]'>
-                            <img src={BD_08} alt="" className='w-[165px]'/>
+                          <div className=''>
+                            <img src={BD_08} alt="" className='w-[88px]'/>
                           </div>
                         </TooltipContent>
                       </Tooltip>
