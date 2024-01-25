@@ -632,6 +632,9 @@
             "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
           }
         }
+      }, 
+      "map": {
+        "device_not_found": "Không tìm thấy thiết bị nào"
       }
     },
     "firmware": {
