@@ -38,6 +38,7 @@ export function UpdateOrg({
   selectedUpdateOrg: OrgMapType
 }) {
   const { t } = useTranslation()
+  console.log('selectedUpdateOrg', selectedUpdateOrg)
 
   const {
     handleResetDefaultImage,
@@ -88,10 +89,7 @@ export function UpdateOrg({
       resolver: orgUpdateSchema && zodResolver(orgUpdateSchema),
       defaultValues: {
         name: selectedUpdateOrg.name,
-        description:
-          selectedUpdateOrg.description !== 'undefined'
-            ? selectedUpdateOrg.description
-            : '',
+        description: selectedUpdateOrg.description,
         org_id: selectedUpdateOrg.org_id,
       },
     })
@@ -105,12 +103,7 @@ export function UpdateOrg({
   useEffect(() => {
     if (selectedUpdateOrg) {
       setValue('name', selectedUpdateOrg.name)
-      setValue(
-        'description',
-        selectedUpdateOrg.description !== 'undefined'
-          ? selectedUpdateOrg.description
-          : '',
-      )
+      setValue('description', selectedUpdateOrg.description)
       setValue('org_id', selectedUpdateOrg.org_id)
     }
     setUploadImageErr('')

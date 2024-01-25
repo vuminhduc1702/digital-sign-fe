@@ -22,20 +22,20 @@ import {
   type SelectOption,
 } from '~/components/Form'
 import { Spinner } from '~/components/Spinner'
-import { type Attribute } from '~/types'
 import { flattenData } from '~/utils/misc.ts'
 import storage from '~/utils/storage'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
-import { type Template } from '../types'
 import { templateAttrSchema } from './CreateTemplate'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
+
+import { type Attribute } from '~/types'
+import { type Template } from '../types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { CreateService } from '~/cloud/customProtocol/components/CreateService'
-import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 
 type UpdateTemplateProps = {
   selectedUpdateTemplate: Template
@@ -99,12 +99,8 @@ export function UpdateTemplate({
   } = useForm<UpdateTemplateDTO['data']>({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
+  console.log('watch', watch('thing_id'))
 
-  // const { data: serviceData, isLoading: isLoadingService } =
-  //   useGetServiceThings({
-  //     thingId: getValues('thing_id'),
-  //     config: { enabled: !!getValues('thing_id'), suspense: false },
-  //   })
   const [serviceData, setServiceData] = useState(null)
   const [isLoadingService, setIsLoadingService] = useState(false)
   useEffect(() => {
@@ -246,7 +242,7 @@ export function UpdateTemplate({
                 handleChangeSelect={() =>
                   selectDropdownServiceRef.current?.clearValue()
                 }
-                //error={formState?.errors?.thing_id}
+                error={formState?.errors?.thing_id}
               />
             </div>
             {!isLoadingService ? (
@@ -269,7 +265,7 @@ export function UpdateTemplate({
                       service.value ===
                       selectedUpdateTemplate.handle_message_svc,
                   )}
-                  //error={formState?.errors?.handle_msg_svc}
+                  error={formState?.errors?.handle_msg_svc}
                 />
               </div>
             ) : null}
@@ -292,7 +288,7 @@ export function UpdateTemplate({
                 ruchains =>
                   ruchains.value === selectedUpdateTemplate.rule_chain_id || '',
               )}
-              //error={formState?.errors?.rule_chain_id}
+              error={formState?.errors?.rule_chain_id}
             />
             {fields.map((field, index) => (
               <section

@@ -27,7 +27,7 @@ export const entitySubcriptionSchema = z.object({
   user_id: z
     .string()
     .min(1, { message: i18n.t('billing:subcription.popup.choose_user') }),
-  register: z.string().optional(),
+  register: z.number().optional(),
 })
 
 export function CreateSubcription() {
@@ -208,13 +208,13 @@ export function CreateSubcription() {
                 project_id: projectId,
                 plan_id: planValue || '',
                 user_id: userId || '',
-                register: parseInt(values?.register || ''),
+                register: values.register,
               },
             })
           })}
         >
           <>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.customer_info')}
@@ -226,12 +226,11 @@ export function CreateSubcription() {
                 isClearable={false}
                 label={t('billing:subcription.popup.search_customer_with')}
                 name="user_id"
-                // error={formState?.errors?.user_id}
+                error={formState?.errors?.user_id}
                 classnamefieldwrapper="flex items-center gap-x-3"
                 classlabel="w-3/12"
                 classchild="w-9/12"
                 control={control}
-                // value={userValue}
                 customOnChange={e => {
                   const arrValue = e.split(' - ')
                   setValue('user_id', e)
@@ -265,7 +264,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.service_info')}
@@ -277,9 +276,8 @@ export function CreateSubcription() {
                 isClearable={false}
                 label={t('billing:subcription.popup.package')}
                 name="plan_id"
-                // error={formState?.errors?.plan_id}
+                error={formState?.errors?.plan_id}
                 control={control}
-                // value={planValue}
                 customOnChange={e => {
                   setValue('plan_id', e)
                   setPlanValue(e)
@@ -301,7 +299,9 @@ export function CreateSubcription() {
                   label={t('billing:subcription.popup.quantity')}
                   error={formState.errors['register']}
                   onChange={e => handleOnChange(e.target.value)}
-                  registration={register('register')}
+                  registration={register('register', {
+                    valueAsNumber: true,
+                  })}
                 />
               )}
               <InputField
@@ -316,7 +316,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.billing_info')}

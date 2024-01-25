@@ -10,7 +10,7 @@ type GetTemplates = {
   projectId: string
   offset?: number
   limit?: number
-  protocol?: string
+  protocol?: 'default' | 'Lw2m2'
 }
 
 export const getTemplates = ({
