@@ -74,3 +74,5 @@ export const widgetCategorySchema = z.enum([
   'TABLE',
   'CONTROLLER',
 ] as const)
+
+

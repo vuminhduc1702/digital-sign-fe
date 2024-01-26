@@ -400,6 +400,8 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
 
+  console.log(widgetCategory)
+
   const {
     register,
     formState,
@@ -455,13 +457,17 @@ export function CreateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.entities?.flatMap((item) => {
-    const result = item.attr_keys.map(key => ({ id: item.entity_id, label: key, value: key }))
+  const attrSelectData = attrChartData?.entities?.flatMap(item => {
+    const result = item.attr_keys.map(key => ({
+      id: item.entity_id,
+      label: key,
+      value: key,
+    }))
     return result
   })
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
-    { value: 'long', label: 'longitude' }
+    { value: 'long', label: 'longitude' },
   ]
 
   useEffect(() => {
@@ -502,22 +508,134 @@ export function CreateWidget({
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
-          <div className="mb-5 flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
-
-              {t('cloud:dashboard.config_chart.title')}
-              
-            </DialogTitle>
-            <div className="ml-3 flex h-7 items-center">
-              <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                onClick={close}
-              >
-                <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
+          {widgetCategory === 'LINE' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title0')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
             </div>
-          </div>
+          ) : null}
+          {widgetCategory === 'BAR' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title2')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'TABLE' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title4')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'CONTROLLER' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title6')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'PIE' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title1')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'GAUGE' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title3')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'CARD' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title5')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {widgetCategory === 'MAP' ? (
+            <div className="mb-5 flex items-center justify-between">
+              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+                {t('cloud:dashboard.config_chart.title7')}
+              </DialogTitle>
+              <div className="ml-3 flex h-7 items-center">
+                <button
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  onClick={close}
+                >
+                  <span className="sr-only">Close panel</span>
+                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+          ) : null}
 
           <form
             id="create-widget"
@@ -781,7 +899,7 @@ export function CreateWidget({
                               entity_ids: option,
                               entity_type: 'DEVICE',
                               // time_series: true,
-                              version_two: true
+                              version_two: true,
                             },
                           })
                         }
@@ -840,51 +958,49 @@ export function CreateWidget({
                       key={field.id}
                     >
                       <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                        {
-                          widgetCategory === 'MAP' ? (
-                            <SelectDropdown
-                              label={t('cloud:dashboard.config_chart.attr')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.attribute_key
-                              }
-                              name={`attributeConfig.${index}.attribute_key`}
-                              control={control}
-                              options={attrSelectDataForMap}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:input') ||
-                                option.label === t('table:no_attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              loadingMessage={() => t('loading:attr')}
-                              isLoading={attrChartIsLoading}
-                              placeholder={t(
-                                'cloud:org_manage.org_manage.add_attr.choose_attr',
-                              )}
-                            />
-                          ) : (
-                            <SelectDropdown
-                              label={t('cloud:dashboard.config_chart.attr')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.attribute_key
-                              }
-                              name={`attributeConfig.${index}.attribute_key`}
-                              control={control}
-                              options={attrSelectData}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:input') ||
-                                option.label === t('table:no_attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              loadingMessage={() => t('loading:attr')}
-                              isLoading={attrChartIsLoading}
-                              placeholder={t(
-                                'cloud:org_manage.org_manage.add_attr.choose_attr',
-                              )}
-                            />
-                          )
-                        }
+                        {widgetCategory === 'MAP' ? (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectDataForMap}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        ) : (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectData}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        )}
                         {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={
