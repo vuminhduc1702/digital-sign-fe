@@ -632,7 +632,7 @@ export function UpdateThingService({
                           >
                             <ResizablePanel
                               defaultSize={50}
-                              minSize={fullScreen ? 6 : 10}
+                              minSize={fullScreen ? 13 : 20.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
@@ -733,7 +733,7 @@ export function UpdateThingService({
                             <ResizableHandle className="w-2" withHandle />
                             <ResizablePanel
                               defaultSize={50}
-                              minSize={fullScreen ? 6 : 10}
+                              minSize={fullScreen ? 10.5 : 16.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
