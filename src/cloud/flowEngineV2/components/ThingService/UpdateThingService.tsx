@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -54,8 +54,12 @@ import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/Resizable'
-import { ImperativePanelHandle } from 'react-resizable-panels'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '~/components/Resizable'
+import { type ImperativePanelHandle } from 'react-resizable-panels'
 
 type UpdateThingProps = {
   name: string
@@ -167,7 +171,7 @@ export function UpdateThingService({
 
   function resizePanel(ref: RefObject<ImperativePanelHandle>, type: string) {
     if (ref) {
-      switch(type) {
+      switch (type) {
         case 'max':
           if (fullScreen) {
             ref.current?.resize(94)
@@ -627,12 +631,12 @@ export function UpdateThingService({
                           <ResizablePanelGroup
                             direction="horizontal"
                             className={cn('flex w-[100%] md:col-span-3', {
-                              'flex-col': fullScreen
+                              'flex-col': fullScreen,
                             })}
                           >
                             <ResizablePanel
                               defaultSize={50}
-                              minSize={fullScreen ? 6 : 10}
+                              minSize={fullScreen ? 13 : 20.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
@@ -659,7 +663,12 @@ export function UpdateThingService({
                                       <div className="p-2">
                                         <div
                                           className="hover:background py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.MAX)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.maximize_result',
@@ -667,7 +676,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.MAX)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.minimize_result',
@@ -675,7 +689,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.DEFAULT,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.default_result',
@@ -724,7 +743,7 @@ export function UpdateThingService({
                                 isShowLog={isShowConsole}
                                 defaultValue={thingServiceData?.data.code}
                                 value={codeInput}
-                                className='!block'
+                                className="!block"
                                 setCodeInput={setCodeInput}
                                 isFullScreen={fullScreen}
                                 isUpdate={true}
@@ -733,7 +752,7 @@ export function UpdateThingService({
                             <ResizableHandle className="w-2" withHandle />
                             <ResizablePanel
                               defaultSize={50}
-                              minSize={fullScreen ? 6 : 10}
+                              minSize={fullScreen ? 10.5 : 16.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
@@ -760,7 +779,12 @@ export function UpdateThingService({
                                       <div className="p-2">
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(resultEditorRef, PANEL_SIZE.MAX)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.maximize_result',
@@ -768,7 +792,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(resultEditorRef, PANEL_SIZE.MIN)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MIN,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.minimize_result',
@@ -776,7 +805,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => resizePanel(resultEditorRef, PANEL_SIZE.DEFAULT)}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.DEFAULT,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.default_result',
@@ -793,6 +827,7 @@ export function UpdateThingService({
                                 setCodeInput={setCodeOutput}
                                 isFullScreen={fullScreen}
                                 isUpdate={true}
+                                showRunButton={false}
                               />
                             </ResizablePanel>
                           </ResizablePanelGroup>
