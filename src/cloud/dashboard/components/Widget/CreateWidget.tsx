@@ -243,7 +243,7 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    label: z.string(),
+    // label: z.string(),
     color: z.string(),
     unit: z.string(),
     max: z.number(),
@@ -452,75 +452,28 @@ export function CreateWidget({
     label: device.name,
   }))
 
-  const getDeviceInfo = (id: string) => {
-    let device = null
-    for (const d of deviceData?.devices || []) {
-      if (d.id === id) {
-        device = d
-        break
-      }
-    }
-    return device?.name + ' - ' + device?.id
-  }
-
   const {
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(attr => ({
-      label: attr,
-      value: attr,
+    const result = item.attr_keys.map(key => ({
+      id: item.entity_id,
+      label: key,
+      value: key,
     }))
     return result
   })
-  console.log(attrChartData)
-
-  // remove duplicate in attrSelectData
-  function removeDup(
-    array: Array<{ label: string; value: string }> | undefined,
-  ) {
-    if (!array) return
-    // remove duplicate element
-    const result = array.filter((item, index) => {
-      return (
-        array.findIndex(
-          item2 => item2.label === item.label && item2.value === item.value,
-        ) === index
-      )
-    })
-    return result
-  }
-
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
     { value: 'long', label: 'longitude' },
   ]
 
-  const setDeviceOption = (attribute: string) => {
-    const result: Array<{
-      value: string
-      label: string
-    }> = []
-    attrChartData?.entities?.map(item => {
-      item.attr_keys.map(attr => {
-        if (attr === attribute) {
-          const deviceInfo = getDeviceInfo(item.entity_id)
-          result.push({
-            value: deviceInfo,
-            label: deviceInfo,
-          })
-        }
-      })
-    })
-    return result
-  }
-
   useEffect(() => {
     append({
       attribute_key: '',
-      label: '',
+      // label: '',
       color: '',
       unit: '',
       max: 100,
@@ -551,156 +504,44 @@ export function CreateWidget({
     }))
   }
 
-  // // remove field when devices change
-  // function removeField() {
-  //   if (!attrChartData) return
-  //   for (let i = fields.length; i >= 0; i--) {
-  //     if (
-  //       !attrSelectData?.find(item => {
-  //         return item?.label === fields[i]?.label
-  //       })
-  //     ) {
-  //       remove(i)
-  //     }
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   removeField()
-  // }, [attrChartData])
-
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
-          {widgetCategory === 'LINE' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title0')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
+          <div className="mb-5 flex items-center justify-between">
+            <DialogTitle
+              as="h3"
+              className="text-h1 text-secondary-900"
+            >
+              {widgetCategory==='LINE'?(
+                t('cloud:dashboard.config_chart.title0')
+              ):widgetCategory==='BAR'?(
+                t('cloud:dashboard.config_chart.title2')
+              ):widgetCategory==='TABLE'?(
+                t('cloud:dashboard.config_chart.title4')
+              ):widgetCategory==='CONTROLLER'?(
+                t('cloud:dashboard.config_chart.title6')
+              ):widgetCategory==='PIE'?(
+                t('cloud:dashboard.config_chart.title1')
+              ):widgetCategory==='GAUGE'?(
+                t('cloud:dashboard.config_chart.title3')
+              ):widgetCategory==='CARD'?(
+                t('cloud:dashboard.config_chart.title5')
+              ):widgetCategory==='MAP'?(
+                t('cloud:dashboard.config_chart.title7')
+              ):null}
+              
+            </DialogTitle>
+            <div className="ml-3 flex h-7 items-center">
+              <button
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                onClick={close}
+              >
+                <span className="sr-only">Close panel</span>
+                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+              </button>
             </div>
-          ) : null}
-          {widgetCategory === 'BAR' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title2')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'TABLE' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title4')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'CONTROLLER' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title6')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'PIE' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title1')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'GAUGE' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title3')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'CARD' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title5')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {widgetCategory === 'MAP' ? (
-            <div className="mb-5 flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
-                {t('cloud:dashboard.config_chart.title7')}
-              </DialogTitle>
-              <div className="ml-3 flex h-7 items-center">
-                <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                  onClick={close}
-                >
-                  <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-              </div>
-            </div>
-          ) : null}
+          </div>
 
           <form
             id="create-widget"
@@ -847,7 +688,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
-                  label: item.label,
+                  // label: item.label,
                   min: item.min,
                   unit: item.unit,
                 })),
@@ -916,7 +757,6 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
-                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -931,7 +771,6 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
-                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -976,7 +815,6 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
-                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -1009,7 +847,7 @@ export function CreateWidget({
                         onClick={() =>
                           append({
                             attribute_key: '',
-                            label: '',
+                            // label: '',
                             color: '',
                             unit: '',
                             max: 100,
@@ -1056,7 +894,7 @@ export function CreateWidget({
                             }
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}
-                            options={removeDup(attrSelectData)}
+                            options={attrSelectData}
                             isOptionDisabled={option =>
                               option.label === t('loading:input') ||
                               option.label === t('table:no_attr')
@@ -1069,23 +907,15 @@ export function CreateWidget({
                             )}
                           />
                         )}
-                        {!watch(
-                          `attributeConfig.${index}.attribute_key`,
-                        ) ? null : (
-                          <SelectDropdown
-                            name={`attributeConfig.${index}.label`}
-                            label={t('cloud:dashboard.config_chart.label')}
-                            error={
-                              formState?.errors?.attributeConfig?.[index]?.label
-                            }
-                            control={control}
-                            options={setDeviceOption(
-                              watch(`attributeConfig.${index}.attribute_key`),
-                            )}
-                            isLoading={attrChartIsLoading}
-                            // defaultValue={attrLabelData[0]}
-                          />
-                        )}
+                        {/* <InputField
+                          label={t('cloud:dashboard.config_chart.label')}
+                          error={
+                            formState?.errors?.attributeConfig?.[index]?.label
+                          }
+                          registration={register(
+                            `attributeConfig.${index}.label` as const,
+                          )}
+                        /> */}
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                           e => widgetCategory === e,
                         ) ? (
