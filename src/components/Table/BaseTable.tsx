@@ -156,8 +156,6 @@ export function BaseTable<T extends Record<string, any>>({
     }, 1000)
   }
 
-  // TODO: Pagination Previous button is not working correctly
-
   return (
     <div
       className={cn(
