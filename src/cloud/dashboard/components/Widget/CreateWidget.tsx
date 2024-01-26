@@ -573,7 +573,21 @@ export function CreateWidget({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('cloud:dashboard.config_chart.title')}
+              {widgetCategory === 'LINE'
+                ? t('cloud:dashboard.config_chart.title_line')
+                : widgetCategory === 'BAR'
+                ? t('cloud:dashboard.config_chart.title_bar')
+                : widgetCategory === 'TABLE'
+                ? t('cloud:dashboard.config_chart.title_table')
+                : widgetCategory === 'PIE'
+                ? t('cloud:dashboard.config_chart.title_pie')
+                : widgetCategory === 'GAUGE'
+                ? t('cloud:dashboard.config_chart.title_gauge')
+                : widgetCategory === 'CARD'
+                ? t('cloud:dashboard.config_chart.title_card')
+                : widgetCategory === 'MAP'
+                ? t('cloud:dashboard.config_chart.title_map')
+                : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
