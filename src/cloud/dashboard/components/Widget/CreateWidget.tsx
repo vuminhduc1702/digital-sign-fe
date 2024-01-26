@@ -465,10 +465,46 @@ export function CreateWidget({
     }))
     return result
   })
+
+  // remove duplicate in attrSelectData
+  function removeDup(
+    array: Array<{ label: string; value: string }> | undefined,
+  ) {
+    if (!array) return
+    // remove duplicate element
+    const result = array.filter((item, index) => {
+      return (
+        array.findIndex(
+          item2 => item2.label === item.label && item2.value === item.value,
+        ) === index
+      )
+    })
+    return result
+  }
+
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
     { value: 'long', label: 'longitude' },
   ]
+
+  const setDeviceOption = (attribute: string) => {
+    const result: Array<{
+      value: string
+      label: string
+    }> = []
+    attrChartData?.entities?.map(item => {
+      item.attr_keys.map(attr => {
+        if (attr === attribute) {
+          const deviceInfo = getDeviceInfo(item.entity_id)
+          result.push({
+            value: item.entity_id,
+            label: deviceInfo,
+          })
+        }
+      })
+    })
+    return result
+  }
 
   useEffect(() => {
     append({

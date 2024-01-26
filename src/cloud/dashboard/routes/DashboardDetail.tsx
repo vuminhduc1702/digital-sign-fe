@@ -74,6 +74,7 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
+import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -260,6 +261,32 @@ export function DashboardDetail() {
     Device[]
   >([])
 
+  const projectId = storage.getProject()?.id
+
+  const { data: deviceData } = useGetDevices({
+    orgId: widgetDetailDB?.[
+      Object.keys(widgetDetailDB)?.[0]
+    ]?.datasource?.org_id?.slice(
+      widgetDetailDB?.[
+        Object.keys(widgetDetailDB)?.[0]
+      ]?.datasource?.org_id?.indexOf('"') + 1,
+      widgetDetailDB?.[
+        Object.keys(widgetDetailDB)?.[0]
+      ]?.datasource?.org_id?.lastIndexOf('"'),
+    ),
+    projectId,
+    config: {
+      suspense: false,
+    },
+  })
+
+  function getDeviceInfo(deviceId: string) {
+    const deviceInfo = deviceData?.devices.find(
+      device => device.id === deviceId,
+    )
+    return deviceInfo
+  }
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -308,6 +335,15 @@ export function DashboardDetail() {
               Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
+                widgetInfo?.attribute_config.map(item => {
+                  if (getDeviceInfo(item.label)?.name !== undefined) {
+                    item.label =
+                      getDeviceInfo(item.label)?.name + ' - ' + item.label
+                  } else {
+                    item.label = item.label
+                  }
+                })
+
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -328,6 +364,26 @@ export function DashboardDetail() {
                           data: device.latest.TIME_SERIES as LatestData,
                           device: device.entityId,
                         })),
+                      )
+                    : {}
+                const realtimeValues2: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => {
+                          const modifiedTimeseries: {
+                            [key: string]: (typeof device.timeseries)[key]
+                          } = {}
+                          for (const key in device?.timeseries) {
+                            const newKey =
+                              key +
+                              ' - ' +
+                              device?.entityId?.entityName +
+                              ' - ' +
+                              device?.entityId?.id
+                            modifiedTimeseries[newKey] = device?.timeseries[key]
+                          }
+                          return modifiedTimeseries
+                        }),
                       )
                     : {}
                 return (
@@ -361,7 +417,7 @@ export function DashboardDetail() {
                     </p>
                     {widgetInfo?.description === 'LINE' ? (
                       <LineChart
-                        data={realtimeValues}
+                        data={realtimeValues2}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
                         refreshBtn={
@@ -371,7 +427,7 @@ export function DashboardDetail() {
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
-                        data={realtimeValues}
+                        data={realtimeValues2}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
                         refreshBtn={
@@ -380,7 +436,10 @@ export function DashboardDetail() {
                         }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
+                      <PieChart
+                        data={realtimeValues2}
+                        widgetInfo={widgetInfo}
+                      />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
                         data={lastestValues}
