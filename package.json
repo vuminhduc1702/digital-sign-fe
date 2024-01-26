@@ -67,6 +67,7 @@
     "react-multi-carousel": "^2.8.4",
     "react-pick-color": "^2.0.0",
     "react-query-auth": "^2.2.0",
+    "react-resizable-panels": "^1.0.9",
     "react-router-dom": "^6.9.0",
     "react-select": "^5.7.3",
     "react-stately": "^3.27.1",
