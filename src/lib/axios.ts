@@ -56,17 +56,17 @@ axios.interceptors.response.use(
     let message = ''
     const errCode = response?.data?.code
     const errMessage = response?.data?.message
+
     if (errMessage === 'malformed entity specification') {
       message = i18n.t('error:server_res.malformed_data')
       const customError = { ...response?.data, message }
-      toast.error(customError)
+
       return Promise.reject(customError)
     }
     if (errCode != null && errCode !== 0) {
       message = errMessage ?? i18n.t('error:server_res.server')
       const customError = { ...response?.data, message }
 
-      toast.error(customError)
       return Promise.reject(customError)
     } else {
       return response.data
@@ -74,8 +74,10 @@ axios.interceptors.response.use(
   },
   (error: AxiosError<{ error?: string; message?: string }>) => {
     console.error('res error: ', error)
+
     let message = ''
     const errRes = error.response
+
     switch (errRes?.status) {
       case 401:
         if (window.location.pathname === PATHS.HOME) {
@@ -104,7 +106,6 @@ axios.interceptors.response.use(
 
     const customError = { ...error, message }
 
-    toast.error(message)
     return Promise.reject(customError)
   },
 )
