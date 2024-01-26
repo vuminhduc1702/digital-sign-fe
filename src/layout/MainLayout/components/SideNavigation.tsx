@@ -106,7 +106,7 @@ function SideNavigation() {
               {t('sidebar:cloud.firm_ware')}
             </AccordionContent>
           </NavLink>
-          <NavLink to={`${PATHS.DEVICE_TEMPLATE}/${projectId}`}>
+          <NavLink to={`${PATHS.DEVICE_TEMPLATE}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.device_template')}
             </AccordionContent>

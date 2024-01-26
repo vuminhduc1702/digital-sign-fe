@@ -121,45 +121,48 @@ export function UpdateWidget({
                 errorMap: () => ({ message: i18n.t('ws:filter.choose_agg') }),
               },
             ),
-            interval: z.number({
-              required_error: i18n.t('ws:filter.choose_group_interval'),
-            }).optional(),
+            interval: z
+              .number({
+                required_error: i18n.t('ws:filter.choose_group_interval'),
+              })
+              .optional(),
           }),
         ]),
       )
       .and(
-        z.discriminatedUnion('dataType', [
-          z.object({
-            dataType: z.literal('HISTORY'),
-            startDate: z.date({
-              required_error: i18n.t(
-                'cloud:dashboard.config_chart.pick_date_alert',
-              ),
+        z
+          .discriminatedUnion('dataType', [
+            z.object({
+              dataType: z.literal('HISTORY'),
+              startDate: z.date({
+                required_error: i18n.t(
+                  'cloud:dashboard.config_chart.pick_date_alert',
+                ),
+              }),
+              endDate: z.date({
+                required_error: i18n.t(
+                  'cloud:dashboard.config_chart.pick_date_alert',
+                ),
+              }),
             }),
-            endDate: z.date({
-              required_error: i18n.t(
-                'cloud:dashboard.config_chart.pick_date_alert',
-              ),
+            z.object({
+              dataType: z.literal('REALTIME'),
+              time_period: z.number({
+                required_error: i18n.t('ws:filter.choose_time_period'),
+              }),
             }),
-          }),
-          z.object({
-            dataType: z.literal('REALTIME'),
-            time_period: z.number({
-              required_error: i18n.t('ws:filter.choose_time_period'),
-            }),
-          }),
-        ]).optional(),
+          ])
+          .optional(),
       )
       .optional(),
     id: z.string().optional(),
   })
-  
+
   function handleSchema() {
     if (widgetInfoMemo?.description === 'MAP') {
       return mapWidgetSchema
-    } else {
-      return widgetCreateSchema
     }
+    return widgetCreateSchema
   }
 
   const widgetSchema = handleSchema()
@@ -172,6 +175,7 @@ export function UpdateWidget({
     watch,
     getValues,
     setValue,
+    reset,
   } = useForm<WidgetCreate>({
     resolver: widgetSchema && zodResolver(widgetSchema),
     defaultValues: {
@@ -192,7 +196,6 @@ export function UpdateWidget({
       },
     },
   })
-  // console.log('formState.errors', formState.errors)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -230,37 +233,78 @@ export function UpdateWidget({
     label: device.name,
   }))
 
+  const getDeviceInfo = (id: string) => {
+    let device = null
+    for (const d of deviceData?.devices || []) {
+      if (d.id === id) {
+        device = d
+        break
+      }
+    }
+    return device?.name + ' - ' + device?.id
+  }
+
   const {
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.keys?.map(item => ({
-    value: item,
-    label: item,
-  }))
+  // console.log(attrChartData)
+  const attrSelectData = attrChartData?.entities?.flatMap(item => {
+    const result = item.attr_keys.map(attr => ({
+      deviceId: item?.entity_id,
+      label: attr,
+      value: attr,
+    }))
+    return result
+  })
 
   useEffect(() => {
     attrChartMutate({
       data: {
         entity_ids: watch('device') || [],
         entity_type: 'DEVICE',
+        version_two: true,
       },
     })
   }, [])
 
-  // useEffect(() => {
-  //   if (initParse?.entityDataCmds[0]?.query?.entityFilter?.entityIds) {
-  //     attrChartMutate({
-  //       data: {
-  //         entity_ids:
-  //           initParse?.entityDataCmds[0]?.query?.entityFilter?.entityIds,
-  //         entity_type: 'DEVICE',
-  //       },
-  //     })
-  //   }
-  //   setIsDone(false)
-  // }, [widgetInfoMemo])
+  // remove duplicate in attrSelectData
+  function removeDup(
+    array:
+      | Array<{ label: string; value: string; deviceId: string }>
+      | undefined,
+  ) {
+    if (!array) return
+    // remove duplicate element
+    const result = array.filter((item, index) => {
+      return (
+        array.findIndex(
+          item2 => item2.label === item.label && item2.value === item.value,
+        ) === index
+      )
+    })
+    return result
+  }
+
+  const setDeviceOption = (attribute: string) => {
+    const result: Array<{
+      value: string
+      label: string
+    }> = []
+    attrChartData?.entities?.map(item => {
+      item.attr_keys.map(attr => {
+        if (attr === attribute) {
+          const deviceInfo = getDeviceInfo(item.entity_id)
+          result.push({
+            value: item.entity_id,
+            label: deviceInfo,
+          })
+        }
+      })
+    })
+    return result
+  }
 
   function intervalOptionHandler() {
     const timePeriod = watch('widgetSetting.time_period')
@@ -323,6 +367,7 @@ export function UpdateWidget({
                     ],
                     latestValues: attrData,
                   },
+                  requestType: 'INIT',
                   id: widgetId,
                 },
               ],
@@ -431,7 +476,7 @@ export function UpdateWidget({
                 color: item.color,
                 max: item.max,
                 min: item.min,
-                // label: item.label,
+                label: item.label,
                 unit: item.unit,
               })),
               config:
@@ -553,6 +598,7 @@ export function UpdateWidget({
                             data: {
                               entity_ids: option,
                               entity_type: 'DEVICE',
+                              version_two: true,
                             },
                           })
                         }
@@ -594,7 +640,7 @@ export function UpdateWidget({
                       onClick={() =>
                         append({
                           attribute_key: '',
-                          // label: '',
+                          label: '',
                           color: '',
                           unit: '',
                           max: 100,
@@ -617,7 +663,7 @@ export function UpdateWidget({
                           label={t('cloud:dashboard.config_chart.attr')}
                           name={`attributeConfig.${index}.attribute_key`}
                           control={control}
-                          options={attrSelectData}
+                          options={removeDup(attrSelectData)}
                           isOptionDisabled={option =>
                             option.label === t('loading:input') ||
                             option.label === t('table:no_attr')
@@ -628,17 +674,49 @@ export function UpdateWidget({
                           placeholder={t(
                             'cloud:org_manage.org_manage.add_attr.choose_attr',
                           )}
-                          defaultValue={attrSelectData?.find(
-                            item =>
+                          defaultValue={{
+                            label:
                               widgetInfoMemo?.attribute_config[index]
-                                ?.attribute_key === item.value,
-                          )}
+                                ?.attribute_key,
+                            value:
+                              widgetInfoMemo?.attribute_config[index]
+                                ?.attribute_key,
+                          }}
                           error={
                             formState?.errors?.attributeConfig?.[index]
                               ?.attribute_key
                           }
                         />
                       </div>
+                      {!watch(
+                        `attributeConfig.${index}.attribute_key`,
+                      ) ? null : (
+                        <SelectDropdown
+                          name={`attributeConfig.${index}.label`}
+                          label={t('cloud:dashboard.config_chart.label')}
+                          error={
+                            formState?.errors?.attributeConfig?.[index]?.label
+                          }
+                          control={control}
+                          options={setDeviceOption(
+                            watch(`attributeConfig.${index}.attribute_key`),
+                          )}
+                          isLoading={attrChartIsLoading}
+                          defaultValue={
+                            widgetInfoMemo?.attribute_config[index]?.label
+                              ? {
+                                  value:
+                                    widgetInfoMemo?.attribute_config[index]
+                                      ?.label,
+                                  label: getDeviceInfo(
+                                    widgetInfoMemo?.attribute_config[index]
+                                      ?.label || '',
+                                  ),
+                                }
+                              : null
+                          }
+                        />
+                      )}
                       {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                         e => widgetInfoMemo?.description === e,
                       ) ? (

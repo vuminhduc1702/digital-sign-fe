@@ -20,6 +20,7 @@ type SelectProps<
   classnamefieldwrapper?: string
   onChange?: (e: any) => void
   customOnChange?: (e?: any) => void
+  customSelect?: (e?: any) => void
   handleClearSelectDropdown?: () => void
   handleChangeSelect?: () => void
   refSelect?: any
@@ -46,6 +47,7 @@ export function SelectDropdown<
   icon,
   isMulti,
   customOnChange,
+  customSelect,
   handleClearSelectDropdown,
   handleChangeSelect,
   isWrappedArray,
@@ -88,6 +90,7 @@ export function SelectDropdown<
                   // console.log('option', option)
                   onChange(option)
                   customOnChange?.(option)
+                  customSelect?.(e)
                   if (action === 'clear') {
                     handleClearSelectDropdown?.()
                   }

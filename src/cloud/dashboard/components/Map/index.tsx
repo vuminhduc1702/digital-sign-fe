@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
+import { useTranslation } from 'react-i18next'
 
 import { type WSWidgetMapData, type MapSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 import { type LatLngTuple, type Map } from 'leaflet'
 import { type Device } from '~/cloud/orgManagement'
+import { toast } from 'sonner'
 
 export function MapChart({
   data,
@@ -18,6 +20,7 @@ export function MapChart({
   isEditMode: boolean
   filter: Device[]
 }) {
+  const { t } = useTranslation()
   const [dragMode, setDragMode] = useState(true)
   const [dataForMap, setDataForMap] = useState<Array<LatLngTuple>>([])
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>(
@@ -26,7 +29,7 @@ export function MapChart({
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
-  const searchDevice = filter[0]
+  const searchDevice = filter[0] 
 
   useEffect(() => {
     if (isEditMode) {
@@ -128,11 +131,15 @@ export function MapChart({
       )
       const [lat, lng] = dataForMap[deviceIndex]
       if (lat === 999) {
+        toast.error(t('cloud:dashboard.map.device_not_found'))
         return
       }
       map.current?.setView([lat, lng], 7)
     }
   }, [dataForMap, searchDevice])
+
+  // console.log(dataForMap)
+  // console.log(searchDevice)
 
   return (
     <>

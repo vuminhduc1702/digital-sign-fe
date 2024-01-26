@@ -25,7 +25,6 @@ interface TreeViewProps {
   handleEditTreeView: (data: OrgMapType) => void
   isShow: boolean
 }
-
 interface TreeProps {
   data: OrgMapType
   handleEdit: (data: OrgMapType) => void

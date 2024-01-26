@@ -1,5 +1,5 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Link } from '~/components/Link'
@@ -10,13 +10,20 @@ import storage from '~/utils/storage'
 import { type ModuleConfig } from '../types'
 
 type LwM2MTableProps = {
-    module_config: ModuleConfig[]
-} 
+  module_config: ModuleConfig[]
+}
 
 export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+  const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
   const params = useParams()
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNoTemplateMessage(true)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [module_config])
   const templateId = params.templateId as string
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
@@ -37,7 +44,9 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
           const nameLwM2M = info.row.original.module_name
           const id = info.row.original.id
           return (
-            <Link to={`${PATHS.DEVICE_TEMPLATELWM2M}/${projectId}/lwm2m/${templateId}/${id}`}>
+            <Link
+              to={`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`}
+            >
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameLwM2M}
               </p>
@@ -57,23 +66,15 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
       }),
       columnHelper.display({
         id: 'numberAttr',
-        header: () => <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>,
+        header: () => (
+          <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>
+        ),
         cell: info => {
           const numberAttr = info.row.original.numberOfAttributes
           return numberAttr
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.display({
-      //   id: 'createtime',
-      //   header: () => <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>,
-      //   cell: info => {
-      //     const timestamp = info.row.original.last_update_ts
-      //     console.log('Timestamp:', timestamp)
-      //     return timestamp
-      //   },
-      //   footer: info => info.column.id,
-      // }),
     ],
     [],
   )
@@ -86,7 +87,7 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
     />
   ) : (
     <div className="flex grow items-center justify-center">
-      {t('table:no_template')}
+      {showNoTemplateMessage && t('table:no_template')}
     </div>
   )
 }

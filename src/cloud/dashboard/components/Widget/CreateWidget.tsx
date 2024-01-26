@@ -243,7 +243,7 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    // label: z.string(),
+    label: z.string(),
     color: z.string(),
     unit: z.string(),
     max: z.number(),
@@ -452,28 +452,75 @@ export function CreateWidget({
     label: device.name,
   }))
 
+  const getDeviceInfo = (id: string) => {
+    let device = null
+    for (const d of deviceData?.devices || []) {
+      if (d.id === id) {
+        device = d
+        break
+      }
+    }
+    return device?.name + ' - ' + device?.id
+  }
+
   const {
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(key => ({
-      id: item.entity_id,
-      label: key,
-      value: key,
+    const result = item.attr_keys.map(attr => ({
+      label: attr,
+      value: attr,
     }))
     return result
   })
+  console.log(attrChartData)
+
+  // remove duplicate in attrSelectData
+  function removeDup(
+    array: Array<{ label: string; value: string }> | undefined,
+  ) {
+    if (!array) return
+    // remove duplicate element
+    const result = array.filter((item, index) => {
+      return (
+        array.findIndex(
+          item2 => item2.label === item.label && item2.value === item.value,
+        ) === index
+      )
+    })
+    return result
+  }
+
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
     { value: 'long', label: 'longitude' },
   ]
 
+  const setDeviceOption = (attribute: string) => {
+    const result: Array<{
+      value: string
+      label: string
+    }> = []
+    attrChartData?.entities?.map(item => {
+      item.attr_keys.map(attr => {
+        if (attr === attribute) {
+          const deviceInfo = getDeviceInfo(item.entity_id)
+          result.push({
+            value: deviceInfo,
+            label: deviceInfo,
+          })
+        }
+      })
+    })
+    return result
+  }
+
   useEffect(() => {
     append({
       attribute_key: '',
-      // label: '',
+      label: '',
       color: '',
       unit: '',
       max: 100,
@@ -503,6 +550,24 @@ export function CreateWidget({
       value: interval.value,
     }))
   }
+
+  // // remove field when devices change
+  // function removeField() {
+  //   if (!attrChartData) return
+  //   for (let i = fields.length; i >= 0; i--) {
+  //     if (
+  //       !attrSelectData?.find(item => {
+  //         return item?.label === fields[i]?.label
+  //       })
+  //     ) {
+  //       remove(i)
+  //     }
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   removeField()
+  // }, [attrChartData])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -782,7 +847,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
-                  // label: item.label,
+                  label: item.label,
                   min: item.min,
                   unit: item.unit,
                 })),
@@ -851,6 +916,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -865,6 +931,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -909,6 +976,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -941,7 +1009,7 @@ export function CreateWidget({
                         onClick={() =>
                           append({
                             attribute_key: '',
-                            // label: '',
+                            label: '',
                             color: '',
                             unit: '',
                             max: 100,
@@ -988,7 +1056,7 @@ export function CreateWidget({
                             }
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}
-                            options={attrSelectData}
+                            options={removeDup(attrSelectData)}
                             isOptionDisabled={option =>
                               option.label === t('loading:input') ||
                               option.label === t('table:no_attr')
@@ -1001,15 +1069,23 @@ export function CreateWidget({
                             )}
                           />
                         )}
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.label')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.label
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.label` as const,
-                          )}
-                        /> */}
+                        {!watch(
+                          `attributeConfig.${index}.attribute_key`,
+                        ) ? null : (
+                          <SelectDropdown
+                            name={`attributeConfig.${index}.label`}
+                            label={t('cloud:dashboard.config_chart.label')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.label
+                            }
+                            control={control}
+                            options={setDeviceOption(
+                              watch(`attributeConfig.${index}.attribute_key`),
+                            )}
+                            isLoading={attrChartIsLoading}
+                            // defaultValue={attrLabelData[0]}
+                          />
+                        )}
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                           e => widgetCategory === e,
                         ) ? (

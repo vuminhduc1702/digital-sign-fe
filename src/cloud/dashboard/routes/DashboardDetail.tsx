@@ -128,6 +128,7 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
+  // console.log('detailDashboard', detailDashboard)
 
   const [widgetList, setWidgetList] = useState<Widget>({})
 
@@ -336,7 +337,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-
                 return (
                   <div
                     key={widgetId}
@@ -359,7 +359,11 @@ export function DashboardDetail() {
                     className={cn('bg-secondary-500 relative')}
                     data-iseditmode={isEditMode}
                   >
-                    <p className="absolute ml-2 mt-2">
+                    <p
+                      className={`absolute ml-2
+                      ${widgetInfo?.description === 'MAP' ? 'mt-4' : 'mt-2'}
+                    `}
+                    >
                       {widgetInfo?.title ?? ''}
                     </p>
                     {widgetInfo?.description === 'LINE' ? (
@@ -426,7 +430,7 @@ export function DashboardDetail() {
                       />
                     ) : null}
                     {widgetInfo?.description === 'MAP' ? (
-                      <div className="absolute right-[10%] top-0 mr-2 mt-2 flex gap-x-2">
+                      <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={lastestValues.device}
@@ -434,7 +438,11 @@ export function DashboardDetail() {
                       </div>
                     ) : null}
                     {isEditMode ? (
-                      <div className="absolute right-0 top-0 mr-2 mt-2 flex gap-x-2">
+                      <div
+                        className={`absolute right-0 top-0 mr-2 flex gap-x-2
+                      ${widgetInfo?.description === 'MAP' ? 'mt-4' : 'mt-2'}
+                    `}
+                      >
                         <DragIcon
                           width={20}
                           height={20}

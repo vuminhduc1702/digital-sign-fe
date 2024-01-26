@@ -82,7 +82,7 @@ export function UpdateUser({
       defaultValues: {
         name,
         email,
-        phone: phone !== 'undefined' ? phone : '',
+        phone,
         org_id,
         role_id,
         profile: dataProfile,
