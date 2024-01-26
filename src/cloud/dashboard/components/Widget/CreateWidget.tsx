@@ -473,7 +473,6 @@ export function CreateWidget({
     }))
     return result
   })
-  console.log(attrChartData)
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -506,7 +505,7 @@ export function CreateWidget({
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
           result.push({
-            value: deviceInfo,
+            value: item.entity_id,
             label: deviceInfo,
           })
         }

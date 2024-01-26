@@ -34,7 +34,6 @@ export const BarChart = ({
   refreshBtn?: boolean
 }) => {
   // console.log(`new bar: `, data)
-  // console.log(widgetInfo)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
@@ -190,6 +189,39 @@ export const BarChart = ({
     minDuration: 500,
   })
 
+  function extractDatakey(dataKey: string) {
+    const dataKeyArray = dataKey.split(' - ')
+    const dataKeyObject = [
+      dataKeyArray[0],
+      dataKeyArray[1] + ' - ' + dataKeyArray[2],
+    ]
+    return dataKeyObject
+  }
+
+  function formatDatakey(dataKey: string) {
+    const extract = extractDatakey(dataKey)
+    const dataKeyAttr = extract[0]
+    const dataKeyLabel = extract[1]
+    const dataKeyAttrArray = widgetInfo.attribute_config.map(
+      item => item.attribute_key,
+    )
+
+    const dataKeyAttrIndex = dataKeyAttrArray.indexOf(dataKeyAttr)
+
+    if (dataKeyAttrIndex !== -1) {
+      const dataKeyAttrIndexArray = widgetInfo.attribute_config
+        .map(item => item.attribute_key)
+        .filter(item => item.includes(dataKeyAttr))
+      if (dataKeyAttrIndexArray.length > 1) {
+        return dataKeyAttr + ' - ' + dataKeyLabel
+      } else {
+        return dataKeyAttr
+      }
+    } else {
+      return dataKeyAttr
+    }
+  }
+
   const renderTooltip = (props: any) => {
     const { payload } = props
     return (
@@ -198,7 +230,7 @@ export const BarChart = ({
           <>
             {payload?.map((entry: any, index: number) => {
               const unitConfig = widgetInfo.attribute_config.filter(
-                obj => obj.attribute_key === entry.dataKey,
+                obj => obj.attribute_key + ' - ' + obj.label === entry.dataKey,
               )
               if (entry.payload.ts !== 0) {
                 return (
@@ -211,7 +243,11 @@ export const BarChart = ({
                       {unitConfig &&
                       unitConfig.length > 0 &&
                       unitConfig[0].unit !== ''
-                        ? unitConfig[0].attribute_key +
+                        ? formatDatakey(
+                            unitConfig[0].attribute_key +
+                              ' - ' +
+                              unitConfig[0].label
+                          ) +
                           ': ' +
                           entry.value +
                           ' (' +
@@ -235,8 +271,12 @@ export const BarChart = ({
       <div className="pt-3 text-center">
         {payload?.reverse().map((entry: any, index: number) => {
           const unitConfig = widgetInfo.attribute_config.filter(
-            obj => obj.attribute_key === entry.dataKey,
+            obj => obj.attribute_key + ' - ' + obj.label === entry.dataKey,
           )
+          const splitDataKey = entry.value.split(' - ')
+          const display = splitDataKey[1]
+            ? splitDataKey[0] + ' - ' + splitDataKey[1]
+            : splitDataKey[0]
           return (
             <span key={`item-${index}`} className="pr-4">
               <div
@@ -249,8 +289,8 @@ export const BarChart = ({
                 }}
               ></div>
               {unitConfig && unitConfig.length > 0 && unitConfig[0].unit !== ''
-                ? entry.value + ' (' + unitConfig[0].unit + ')'
-                : entry.value}
+                ? display + ' (' + unitConfig[0].unit + ')'
+                : display}
             </span>
           )
         })}
@@ -307,7 +347,10 @@ export const BarChart = ({
   >([
     {
       ts: 0,
-      [widgetInfo.attribute_config[0].attribute_key]: 0,
+      [widgetInfo.attribute_config[0].attribute_key +
+      ' - ' +
+      widgetInfo.attribute_config[0].label]: 0,
+      deviceId: '',
     },
   ])
 
@@ -373,7 +416,10 @@ export const BarChart = ({
       } else {
         widgetArray.push({
           ts: 0,
-          [widgetInfo.attribute_config[0].attribute_key]: 0,
+          [widgetInfo.attribute_config[0].attribute_key +
+          ' - ' +
+          widgetInfo.attribute_config[0].label]: 0,
+          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)
@@ -457,7 +503,7 @@ export const BarChart = ({
               />
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
-                const attributeKey = key.attribute_key
+                const attributeKey = key.attribute_key + ' - ' + key.label
                 const colorKey = key?.color
 
                 return (
@@ -495,7 +541,7 @@ export const BarChart = ({
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
-                const attributeKey = key.attribute_key
+                const attributeKey = key.attribute_key + ' - ' + key.label
                 const colorKey = key?.color
 
                 return (
