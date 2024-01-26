@@ -10,8 +10,8 @@ import storage from '~/utils/storage'
 import { type ModuleConfig } from '../types'
 
 type LwM2MTableProps = {
-    module_config: ModuleConfig[]
-} 
+  module_config: ModuleConfig[]
+}
 
 export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
@@ -44,7 +44,9 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
           const nameLwM2M = info.row.original.module_name
           const id = info.row.original.id
           return (
-            <Link to={`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`}>
+            <Link
+              to={`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`}
+            >
               <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
                 {nameLwM2M}
               </p>
@@ -64,23 +66,15 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
       }),
       columnHelper.display({
         id: 'numberAttr',
-        header: () => <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>,
+        header: () => (
+          <span>{t('cloud:device_template.listLwM2M.numberAttr')}</span>
+        ),
         cell: info => {
           const numberAttr = info.row.original.numberOfAttributes
           return numberAttr
         },
         footer: info => info.column.id,
       }),
-      // columnHelper.display({
-      //   id: 'createtime',
-      //   header: () => <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>,
-      //   cell: info => {
-      //     const timestamp = info.row.original.last_update_ts
-      //     console.log('Timestamp:', timestamp)
-      //     return timestamp
-      //   },
-      //   footer: info => info.column.id,
-      // }),
     ],
     [],
   )

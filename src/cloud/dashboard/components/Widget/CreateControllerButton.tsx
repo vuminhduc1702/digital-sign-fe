@@ -153,7 +153,7 @@ export function CreateControllerButton({
 
   function checkInputValueType(inputName: string, index: number) {
     const inputType = thingServiceData?.data?.input?.find(
-      (ele) => ele.name === inputName
+      ele => ele.name === inputName,
     )?.type
 
     if (inputType === 'bool') {
@@ -171,7 +171,7 @@ export function CreateControllerButton({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('cloud:dashboard.config_chart.title')}
+              {t('cloud:dashboard.config_chart.title_controller')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -341,12 +341,11 @@ export function CreateControllerButton({
                               <Controller
                                 control={control}
                                 name={`input.${index}.value`}
-                                render={(
-                                {
+                                render={({
                                   field: { onChange, value, ...field },
                                 }) => {
                                   // if value === "" then set value to false
-                                  if (value === "") {
+                                  if (value === '') {
                                     onChange(false)
                                   }
                                   return (
@@ -355,7 +354,6 @@ export function CreateControllerButton({
                                       checked={Boolean(value)}
                                       onCheckedChange={onChange}
                                       defaultChecked
-                                      
                                     />
                                   )
                                 }}

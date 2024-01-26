@@ -10,7 +10,14 @@ import {
   getExpandedRowModel,
   type VisibilityState,
 } from '@tanstack/react-table'
-import { Fragment, useLayoutEffect, useRef, useState } from 'react'
+import {
+  Fragment,
+  type HTMLProps,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 
 import Pagination from './components/Pagination'
@@ -62,6 +69,55 @@ export function BaseTable<T extends Record<string, any>>({
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
+  const [rowSelection, setRowSelection] = useState({})
+
+  function IndeterminateCheckbox({
+    indeterminate,
+    className = '',
+    ...rest
+  }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+    const ref = useRef<HTMLInputElement>(null!)
+
+    useEffect(() => {
+      if (typeof indeterminate === 'boolean') {
+        ref.current.indeterminate = !rest.checked && indeterminate
+      }
+    }, [ref, indeterminate])
+
+    return (
+      <input
+        type="checkbox"
+        ref={ref}
+        className={className + ' cursor-pointer'}
+        {...rest}
+      />
+    )
+  }
+
+  columns.unshift({
+    id: 'select',
+    header: info => (
+      <IndeterminateCheckbox
+        {...{
+          checked: info?.table.getIsAllRowsSelected(),
+          indeterminate: info?.table.getIsSomeRowsSelected(),
+          onChange: info?.table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <IndeterminateCheckbox
+          {...{
+            checked: row.getIsSelected(),
+            disabled: !row.getCanSelect(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  })
 
   const table = useReactTable({
     data,
@@ -69,6 +125,7 @@ export function BaseTable<T extends Record<string, any>>({
     state: {
       sorting,
       columnVisibility,
+      rowSelection,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -78,16 +135,17 @@ export function BaseTable<T extends Record<string, any>>({
     getRowCanExpand,
     onColumnVisibilityChange: setColumnVisibility,
     getExpandedRowModel: getExpandedRowModel(),
+    enableRowSelection: true, //enable row selection for all rows
+    onRowSelectionChange: setRowSelection,
   })
 
   const totalAttrs = total || data?.length
-  const { pageSize } = table.getState().pagination
+  const { pageSize, pageIndex } = table.getState().pagination
 
   useLayoutEffect(() => {
     table.setPageSize(10)
   }, [])
 
-  const currentPage = table.getState().pagination.pageIndex
   const countLimitPaginationRef = useRef(1)
 
   function refresh() {
@@ -97,8 +155,6 @@ export function BaseTable<T extends Record<string, any>>({
       setIsRefresh(false)
     }, 1000)
   }
-
-  // TODO: Pagination Previous button is not working correctly
 
   return (
     <div
@@ -384,20 +440,20 @@ export function BaseTable<T extends Record<string, any>>({
               if (
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
-                (currentPage + 1) * pageSize <=
+                (pageIndex + 1) * pageSize <=
                   limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
               table.previousPage()
             }}
-            disabled={currentPage === 0 || isPreviousData}
+            disabled={pageIndex === 0 || isPreviousData}
             variant="secondaryLight"
           >
             <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Pagination
-            currentPage={currentPage}
+            currentPage={pageIndex}
             totalCount={totalAttrs}
             pageSize={pageSize}
             table={table}
@@ -407,7 +463,7 @@ export function BaseTable<T extends Record<string, any>>({
             onClick={() => {
               if (
                 limitPagination < totalAttrs &&
-                (currentPage + 1) * pageSize >
+                (pageIndex + 1) * pageSize >
                   limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
@@ -416,7 +472,7 @@ export function BaseTable<T extends Record<string, any>>({
               table.nextPage()
             }}
             disabled={
-              (currentPage + 1) * pageSize >= totalAttrs || isPreviousData
+              (pageIndex + 1) * pageSize >= totalAttrs || isPreviousData
             }
             variant="secondaryLight"
           >

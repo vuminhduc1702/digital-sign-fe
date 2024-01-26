@@ -595,7 +595,15 @@
         "note": "Nhấn vào nút Sửa bảng điều khiển để tạo biểu đồ"
       },
       "config_chart": {
-        "title": "Tạo biểu đồ",
+        "title": "Tạo biểu đồ ",
+        "title_line": "Tạo biểu đồ đường",
+        "title_pie": "Tạo biểu đồ tròn",
+        "title_bar": "Tạo biểu đồ cột",
+        "title_gauge": "Tạo biểu đồ đồng hồ đo",
+        "title_table": "Tạo biểu đồ bảng dữ liệu",
+        "title_card": "Tạo biểu đồ dữ liệu",
+        "title_controller": "Tạo biểu đồ điều khiển",
+        "title_map": "Tạo biểu đồ bản đồ",
         "update": "Sửa biểu đồ",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
@@ -634,6 +642,9 @@
             "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
           }
         }
+      },
+      "map": {
+        "device_not_found": "Không tìm thấy thiết bị nào"
       }
     },
     "firmware": {

@@ -400,6 +400,8 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
 
+  console.log(widgetCategory)
+
   const {
     register,
     formState,
@@ -455,13 +457,17 @@ export function CreateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.entities?.flatMap((item) => {
-    const result = item.attr_keys.map(key => ({ id: item.entity_id, label: key, value: key }))
+  const attrSelectData = attrChartData?.entities?.flatMap(item => {
+    const result = item.attr_keys.map(key => ({
+      id: item.entity_id,
+      label: key,
+      value: key,
+    }))
     return result
   })
   const attrSelectDataForMap = [
     { value: 'lat', label: 'latitude' },
-    { value: 'long', label: 'longitude' }
+    { value: 'long', label: 'longitude' },
   ]
 
   useEffect(() => {
@@ -504,7 +510,21 @@ export function CreateWidget({
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('cloud:dashboard.config_chart.title')}
+              {widgetCategory === 'LINE'
+                ? t('cloud:dashboard.config_chart.title_line')
+                : widgetCategory === 'BAR'
+                ? t('cloud:dashboard.config_chart.title_bar')
+                : widgetCategory === 'TABLE'
+                ? t('cloud:dashboard.config_chart.title_table')
+                : widgetCategory === 'PIE'
+                ? t('cloud:dashboard.config_chart.title_pie')
+                : widgetCategory === 'GAUGE'
+                ? t('cloud:dashboard.config_chart.title_gauge')
+                : widgetCategory === 'CARD'
+                ? t('cloud:dashboard.config_chart.title_card')
+                : widgetCategory === 'MAP'
+                ? t('cloud:dashboard.config_chart.title_map')
+                : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -779,7 +799,7 @@ export function CreateWidget({
                               entity_ids: option,
                               entity_type: 'DEVICE',
                               // time_series: true,
-                              version_two: true
+                              version_two: true,
                             },
                           })
                         }
@@ -838,51 +858,49 @@ export function CreateWidget({
                       key={field.id}
                     >
                       <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                        {
-                          widgetCategory === 'MAP' ? (
-                            <SelectDropdown
-                              label={t('cloud:dashboard.config_chart.attr')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.attribute_key
-                              }
-                              name={`attributeConfig.${index}.attribute_key`}
-                              control={control}
-                              options={attrSelectDataForMap}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:input') ||
-                                option.label === t('table:no_attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              loadingMessage={() => t('loading:attr')}
-                              isLoading={attrChartIsLoading}
-                              placeholder={t(
-                                'cloud:org_manage.org_manage.add_attr.choose_attr',
-                              )}
-                            />
-                          ) : (
-                            <SelectDropdown
-                              label={t('cloud:dashboard.config_chart.attr')}
-                              error={
-                                formState?.errors?.attributeConfig?.[index]
-                                  ?.attribute_key
-                              }
-                              name={`attributeConfig.${index}.attribute_key`}
-                              control={control}
-                              options={attrSelectData}
-                              isOptionDisabled={option =>
-                                option.label === t('loading:input') ||
-                                option.label === t('table:no_attr')
-                              }
-                              noOptionsMessage={() => t('table:no_attr')}
-                              loadingMessage={() => t('loading:attr')}
-                              isLoading={attrChartIsLoading}
-                              placeholder={t(
-                                'cloud:org_manage.org_manage.add_attr.choose_attr',
-                              )}
-                            />
-                          )
-                        }
+                        {widgetCategory === 'MAP' ? (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectDataForMap}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        ) : (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectData}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        )}
                         {/* <InputField
                           label={t('cloud:dashboard.config_chart.label')}
                           error={

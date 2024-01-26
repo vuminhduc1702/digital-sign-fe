@@ -57,7 +57,6 @@ function App() {
 
   // Global error messages
   const customErrorMap: z.ZodErrorMap = (error, ctx) => {
-    // console.log('customErrorMap', error)
     switch (error.code) {
       case z.ZodIssueCode.invalid_type:
         if (error.expected === 'string' || error.expected === 'object') {
