@@ -579,7 +579,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
               >
                 <ResizablePanel
                   defaultSize={50}
-                  minSize={fullScreen ? 6 : 10}
+                  minSize={fullScreen ? 13 : 20.5}
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={codeEditorRef}
                 >
@@ -599,6 +599,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             className="text-secondary-700 hover:text-primary-400"
                           />
                         }
+                        
                       >
                         <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="p-2">
@@ -669,7 +670,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 <ResizableHandle className="w-2" withHandle />
                 <ResizablePanel
                   defaultSize={50}
-                  minSize={fullScreen ? 6 : 10}
+                  minSize={fullScreen ? 10.5 : 16.5}
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={resultEditorRef}
                 >
