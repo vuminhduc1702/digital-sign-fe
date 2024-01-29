@@ -86,16 +86,21 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
                   type="button"
                   size="md"
                   className="bg-primary-400"
-                  onClick={() =>
+                  onClick={() => {
+                    let keys = Object.keys(row)
+                    const dataFilter = keys.map(item => ({
+                      [item]: row[item],
+                    }))
                     mutate({
                       table: tableName || '',
                       project_id: projectId,
                       data: {
                         filter: {
-                          ...row,
+                          "$and": dataFilter
                         },
                       },
                     })
+                  }
                   }
                   startIcon={
                     <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />

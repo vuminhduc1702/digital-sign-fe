@@ -9,7 +9,7 @@ import { ContentLayout } from '~/layout/ContentLayout'
 import storage from '~/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
-import { useSelectDataBase } from '../api/selectDataBase'
+import { DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
 import CreateRows from '../components/CreateRows'
 import { FieldsRows } from '../types'
@@ -37,7 +37,11 @@ export function DataBaseTemplateManage() {
 
   const [isShow, setIsShow] = useState(false)
   const [key, setKey] = useState<SelectOption | undefined>({ label: 'AND', value: '$and' })
-  const [dataConvert, setDataConvert] = useState<FieldsRows[]>([])
+  const [keySearch, setKeySearch] = useState<string[]>([])
+  const [dataLike, setDataLike] = useState<FieldsRows[]>([])
+  const [dataExact, setDataExact] = useState<FieldsRows[]>([])
+  const [textValidate, setTextValidate] = useState('')
+  const [searchExact, setSearchExact] = useState(false)
 
   const { tableName } = useParams()
 
@@ -61,9 +65,12 @@ export function DataBaseTemplateManage() {
       mutate({ table: tableName, project_id: projectId })
     }
     setIsShow(false)
+    setSearchExact(false)
     setValue('key', '$and')
     setValue('limit', '')
     setKey({ label: 'AND', value: '$and' })
+    setKeySearch([])
+    setTextValidate('')
   }, [tableName])
 
   const refetchData = () => {
@@ -74,10 +81,15 @@ export function DataBaseTemplateManage() {
 
   const onSearch = (value: FieldsRows) => {
     let keys = Object.keys(value)
-    const data = keys.map(item => ({
+    const dataExactConvert = keys.map(item => ({
       [item]: value[item],
     }))
-    setDataConvert(data)
+    const dataLikeConvert = keys.map(item => ({
+      [item]: { $like: value[item] },
+    }))
+    setKeySearch(keys)
+    setDataExact(dataExactConvert)
+    setDataLike(dataLikeConvert)
   }
 
   useEffect(() => {
@@ -121,14 +133,61 @@ export function DataBaseTemplateManage() {
                       id="search-subcription"
                       className="flex flex-col justify-between space-y-6"
                       onSubmit={handleSubmit(values => {
-                        const data = {
-                          struct_scan: false,
-                          limit: parseInt(values.limit) || null,
-                          filter: {
-                            [values.key]: dataConvert
+                        setIsShow(true)
+                        let data: DataSearchTable = {}
+                        if (values.key === '$and' || values.key === '$or') {
+                          data = {
+                            struct_scan: false,
+                            limit: parseInt(values.limit) || null,
+                            filter: {
+                              [values.key]: searchExact ? dataExact : dataLike
+                            }
+                          }
+                          if (searchExact) {
+                            const checkData = dataExact?.map((item, index) => item[keySearch[index]])
+                            const checkDataValue = checkData?.filter(item => item)
+                            if (checkDataValue?.length < 2) {
+                              setTextValidate('* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR')
+                            } else {
+                              setTextValidate('')
+                              mutate({ table: tableName, project_id: projectId, data })
+                            }
+                          } else {
+                            const checkData = dataLike?.map((item, index) => item[keySearch[index]])
+                            const checkDataValue = checkData?.filter(item => item.$like)
+                            if (checkDataValue?.length < 2) {
+                              setTextValidate('* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR')
+                            } else {
+                              setTextValidate('')
+                              mutate({ table: tableName, project_id: projectId, data })
+                            }
+                          }
+                        } else if (values.key === '$only') {
+                          data = {
+                            struct_scan: false,
+                            limit: parseInt(values.limit) || null,
+                            filter: searchExact ? dataExact[0] : dataLike[0]
+                          }
+                          if (searchExact) {
+                            const checkData = dataExact?.map((item, index) => item[keySearch[index]])
+                            const checkDataValue = checkData?.filter(item => item)
+                            if(checkDataValue?.length === 1) {
+                              setTextValidate('')
+                              mutate({ table: tableName, project_id: projectId, data })
+                            } else {
+                              setTextValidate('* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY')
+                            }
+                          } else {
+                            const checkData = dataLike?.map((item, index) => item[keySearch[index]])
+                            const checkDataValue = checkData?.filter(item => item.$like)
+                            if(checkDataValue?.length === 1) {
+                              setTextValidate('')
+                              mutate({ table: tableName, project_id: projectId, data })
+                            } else {
+                              setTextValidate('* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY')
+                            }
                           }
                         }
-                        mutate({ table: tableName, project_id: projectId, data })
                       })}
                     >
                       <div className="flex items-center gap-x-3">
@@ -150,11 +209,17 @@ export function DataBaseTemplateManage() {
                           error={formState.errors['limit']}
                           registration={register('limit')}
                         />
-                        <Switch
+                        {/* <Switch
                           onCheckedChange={checked =>
                             setIsShow(checked)
                           }
                           checked={isShow}
+                        /> */}
+                        <Switch
+                          onCheckedChange={checked =>
+                            setSearchExact(checked)
+                          }
+                          checked={searchExact}
                         />
                         <Button
                           className="rounded-md"
@@ -170,6 +235,7 @@ export function DataBaseTemplateManage() {
                     </form>
                   </div>
                 </div>
+                {textValidate && <div className='mt-2 text-red-500'>{textValidate}</div>}
                 {data?.data?.columns && (
                   <DataBaseTable
                     isShow={isShow}

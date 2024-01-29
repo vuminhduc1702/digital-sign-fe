@@ -18,7 +18,7 @@ export const deleteRow = ({
     }
   }
 }) => {
-  return axios.delete(`/fe/table/${table}/delete?project_id=${project_id}`, {data})
+  return axios.delete(`/api/fe/table/${table}/delete?project_id=${project_id}`, {data})
 }
 
 type UseDeleteRowOptions = {

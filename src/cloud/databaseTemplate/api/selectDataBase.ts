@@ -12,6 +12,12 @@ export type DataSelectTable = {
   }
 }
 
+export type DataSearchTable = {
+  struct_scan?: boolean
+  limit?: number | null
+  filter?: FieldsRows
+}
+
 export const selectDataBase = ({
   table,
   project_id,
@@ -19,13 +25,12 @@ export const selectDataBase = ({
 }: {
   table: string
   project_id: string
-  data?: {
-    struct_scan: boolean
-    limit: number | null
-    filter: FieldsRows
-  }
+  data?: DataSearchTable
 }): Promise<DataSelectTable> => {
-  return axios.post(`/api/fe/table/${table}/select?project_id=${project_id}`, data)
+  return axios.post(
+    `/api/fe/table/${table}/select?project_id=${project_id}`,
+    data,
+  )
 }
 
 type UseSelectDataBaseOptions = {
