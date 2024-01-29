@@ -228,19 +228,17 @@ export function UpdateWidget({
       suspense: false,
     },
   })
-  const deviceSelectData = deviceData?.devices.map(device => ({
-    value: device.id,
-    label: device.name,
-  }))
+  const deviceSelectData = deviceData?.devices.map(
+    (device: { id: string; name: string }) => ({
+      value: device.id,
+      label: device.name,
+    }),
+  )
 
   const getDeviceInfo = (id: string) => {
-    let device = null
-    for (const d of deviceData?.devices || []) {
-      if (d.id === id) {
-        device = d
-        break
-      }
-    }
+    const device = deviceData?.devices.find(
+      device => device.id === id,
+    ) as { name: string; id: string }
     return device?.name + ' - ' + device?.id
   }
 
@@ -296,6 +294,7 @@ export function UpdateWidget({
       item.attr_keys.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
+          if (deviceInfo.includes('undefined')) return 
           result.push({
             value: item.entity_id,
             label: deviceInfo,
@@ -328,7 +327,16 @@ export function UpdateWidget({
   return (
     <FormDialog
       size="max"
-      title={t('cloud:dashboard.config_chart.update')}
+      title={
+         widgetInfo?.description==='LINE' ? t('cloud:dashboard.config_chart.update_line')
+         :widgetInfo?.description==='BAR' ? t('cloud:dashboard.config_chart.update_bar')
+         :widgetInfo?.description==='TABLE' ? t('cloud:dashboard.config_chart.update_table')
+         :widgetInfo?.description==='CONTROLLER' ? t('cloud:dashboard.config_chart.update_controller')
+         :widgetInfo?.description==='PIE' ? t('cloud:dashboard.config_chart.update_pie')
+         :widgetInfo?.description==='GAUGE' ? t('cloud:dashboard.config_chart.update_gauge')
+         :widgetInfo?.description==='CARD' ? t('cloud:dashboard.config_chart.update_card')
+         :null
+      }
       isDone={isDone}
       body={
         <form
@@ -706,11 +714,13 @@ export function UpdateWidget({
                             widgetInfoMemo?.attribute_config[index]?.label
                               ? {
                                   value:
-                                    widgetInfoMemo?.attribute_config[index]
-                                      ?.label,
+                                    widgetInfoMemo?.attribute_config[
+                                      index
+                                    ]?.label.split(' - ')[1],
                                   label: getDeviceInfo(
-                                    widgetInfoMemo?.attribute_config[index]
-                                      ?.label || '',
+                                    widgetInfoMemo?.attribute_config[
+                                      index
+                                    ]?.label.split(' - ')[1],
                                   ),
                                 }
                               : null

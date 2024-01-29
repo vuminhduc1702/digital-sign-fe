@@ -58,7 +58,6 @@ type UpdateTemplateProps = {
 
 export const templateAttrSchema = z.object({
   name: nameSchema,
-  // rule_chain_id: z.string().optional(),
   thing_id: z.string(),
   handle_msg_svc: z.string(),
 })
@@ -142,12 +141,7 @@ export function UpdateTemplateLwM2M({
   useEffect(() => {
     setValue('rule_chain_id', selectedModuleNames.map(String))
   }, [setValue, selectedModuleNames])
-  // const { data: XMLData } = useGetXMLdata({
-  //   fileId: watch('rule_chain_id')?.[watch('rule_chain_id')?.length - 1] ?? '',
-  //   config: {
-  //     suspense: false,
-  //   },
-  // })
+
   const [filterLWM2M, setFilterLWM2M] = useState<LWM2MResponse[]>([])
   useEffect(() => {
     const fetchData = async () => {

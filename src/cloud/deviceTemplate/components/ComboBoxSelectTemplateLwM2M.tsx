@@ -18,7 +18,13 @@ export function ComboBoxSelectTemplateLwM2M({
   const [query, setQuery] = useState('')
 
   const projectId = storage.getProject()?.id
-  const { data } = useGetTemplates({ projectId , protocol: 'lwm2m' })
+  const { data } = useGetTemplates({
+    projectId,
+    protocol: 'lwm2m',
+    config: {
+      suspense: false,
+    },
+  })
   const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
     data?.templates,
     [
@@ -30,7 +36,7 @@ export function ComboBoxSelectTemplateLwM2M({
       'created_time',
       'transport_config',
       'thing_id',
-      'handle_message_svc'
+      'handle_message_svc',
     ],
   )
   const filteredData = filteredComboboxData(

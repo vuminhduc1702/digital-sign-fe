@@ -44,7 +44,7 @@ export function flattenData<T>(
         if (typeof value === 'object' && value != null) {
           return { ...newObj, [key]: JSON.stringify(value) }
         }
-        return { ...newObj, [key]: String(value) }
+        return { ...newObj, [key]: value == null ? value : String(value) }
       },
       {} as T,
     )

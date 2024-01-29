@@ -1,27 +1,61 @@
 
-.node-text {
-  font-size: 14px;
-  color: #e93fe0;
-  font-family: 'Arial', sans-serif;
+.custom-node-0 rect {
+  fill: #ffcc00; 
+  stroke: #ffcc00;
+  stroke-width: 2px;
+  filter: drop-shadow(3px 7px 0px rgba(0, 0, 0, 0.4));
+  rx: 10px;
+  ry: 10px;
 }
-.node__root > circle {
-    fill: #fff;
-    stroke: #4285f4;
-    width: 200px; 
-    height: 100px;
-    /* stroke-width: 2px; */
+
+.custom-node-1 rect {
+  fill: #66ccff; 
+  stroke: #66ccff;
+  stroke-width: 2px;
+  filter: drop-shadow(3px 7px 0px rgba(0, 0, 0, 0.4));
+  rx: 10px; 
+  ry: 10px;
+}
+
+
+.custom-node-2 rect {
+  fill: #99ff99; 
+  stroke: #99ff99;
+  stroke-width: 2px;
+  filter: drop-shadow(3px 7px 0px rgba(0, 0, 0, 0.4));
+  rx: 10px; 
+  ry: 10px;
+}
+.custom-node-3 rect {
+  fill: #ee85e0; 
+  stroke: #ee85e0;
+  stroke-width: 2px;
+  filter: drop-shadow(3px 7px 0px rgba(0, 0, 0, 0.4));
+  rx: 10px; 
+  ry: 10px;
+}
+
+.custom-svg-class {
+  border: 1px solid #ccc;
+  background-color: #f8f8f8;
   }
-  
-  .node__branch > circle {
-    fill: green;
-  }
-  
-  .node__leaf > circle {
-    fill: orange;
-  }
-  .custom-svg-class {
-    /* Add your custom styles here */
-    border: 1px solid #ccc;
-    background-color: #f8f8f8;
-    /* ... other styles */
-  }
+.custom-svg-class-0 path {
+  stroke: #2c02c2; 
+  stroke-width: 1.5px; 
+}
+.custom-svg-class-1 path {
+  stroke: #ee85e0; 
+  stroke-width: 2px; 
+}
+.custom-svg-class-2 path {
+  stroke: #42c421; 
+  stroke-width: 2px; 
+}
+.custom-svg-class-3 path {
+  stroke: #bad810; 
+  stroke-width: 2px; 
+}
+.clicked-text {
+  fill: red; /* Hoặc màu sắc khác tùy chọn */
+  cursor: pointer; /* Đổi con trỏ chuột khi click */
+}
