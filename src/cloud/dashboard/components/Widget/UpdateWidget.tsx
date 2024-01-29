@@ -236,9 +236,10 @@ export function UpdateWidget({
   )
 
   const getDeviceInfo = (id: string) => {
-    const device = deviceData?.devices.find(
-      device => device.id === id,
-    ) as { name: string; id: string }
+    const device = deviceData?.devices.find(device => device.id === id) as {
+      name: string
+      id: string
+    }
     return device?.name + ' - ' + device?.id
   }
 
@@ -294,7 +295,7 @@ export function UpdateWidget({
       item.attr_keys.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
-          if (deviceInfo.includes('undefined')) return 
+          if (deviceInfo.includes('undefined')) return
           result.push({
             value: item.entity_id,
             label: deviceInfo,
@@ -328,14 +329,21 @@ export function UpdateWidget({
     <FormDialog
       size="max"
       title={
-         widgetInfo?.description==='LINE' ? t('cloud:dashboard.config_chart.update_line')
-         :widgetInfo?.description==='BAR' ? t('cloud:dashboard.config_chart.update_bar')
-         :widgetInfo?.description==='TABLE' ? t('cloud:dashboard.config_chart.update_table')
-         :widgetInfo?.description==='CONTROLLER' ? t('cloud:dashboard.config_chart.update_controller')
-         :widgetInfo?.description==='PIE' ? t('cloud:dashboard.config_chart.update_pie')
-         :widgetInfo?.description==='GAUGE' ? t('cloud:dashboard.config_chart.update_gauge')
-         :widgetInfo?.description==='CARD' ? t('cloud:dashboard.config_chart.update_card')
-         :null
+        widgetInfo?.description === 'LINE'
+          ? t('cloud:dashboard.config_chart.update_line')
+          : widgetInfo?.description === 'BAR'
+          ? t('cloud:dashboard.config_chart.update_bar')
+          : widgetInfo?.description === 'TABLE'
+          ? t('cloud:dashboard.config_chart.update_table')
+          : widgetInfo?.description === 'PIE'
+          ? t('cloud:dashboard.config_chart.update_pie')
+          : widgetInfo?.description === 'GAUGE'
+          ? t('cloud:dashboard.config_chart.update_gauge')
+          : widgetInfo?.description === 'CARD'
+          ? t('cloud:dashboard.config_chart.update_card')
+          : widgetInfo?.description === 'MAP'
+          ? t('cloud:dashboard.config_chart.update_card')
+          : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
       body={
