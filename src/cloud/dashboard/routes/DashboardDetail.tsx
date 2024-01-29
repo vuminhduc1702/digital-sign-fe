@@ -683,7 +683,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_01} alt="" className="w-[98px]" />
+                            <img src={BD_01} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -720,7 +720,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={DB_03} alt="" className="w-[98px]" />
+                            <img src={DB_03} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -758,7 +758,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_04} alt="" className="w-[98px]" />
+                            <img src={BD_04} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -792,7 +792,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_05} alt="" className="w-[98px]" />
+                            <img src={BD_05} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -830,7 +830,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_02} alt="" className="w-[98px]" />
+                            <img src={BD_02} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -867,7 +867,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="p-[8px]">
-                            <img src={BD_06} alt="" className="w-[98px]" />
+                            <img src={BD_06} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -904,7 +904,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_07} alt="" className="w-[98px]" />
+                            <img src={BD_07} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
@@ -941,7 +941,7 @@ export function DashboardDetail() {
                         </TooltipTrigger>
                         <TooltipContent>
                           <div className="">
-                            <img src={BD_08} alt="" className="w-[98px]" />
+                            <img src={BD_08} alt="" className="w-[200px]" />
                           </div>
                         </TooltipContent>
                       </Tooltip>
