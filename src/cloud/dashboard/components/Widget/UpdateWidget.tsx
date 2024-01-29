@@ -327,7 +327,16 @@ export function UpdateWidget({
   return (
     <FormDialog
       size="max"
-      title={t('cloud:dashboard.config_chart.update')}
+      title={
+         widgetInfo?.description==='LINE' ? t('cloud:dashboard.config_chart.update_line')
+         :widgetInfo?.description==='BAR' ? t('cloud:dashboard.config_chart.update_bar')
+         :widgetInfo?.description==='TABLE' ? t('cloud:dashboard.config_chart.update_table')
+         :widgetInfo?.description==='CONTROLLER' ? t('cloud:dashboard.config_chart.update_controller')
+         :widgetInfo?.description==='PIE' ? t('cloud:dashboard.config_chart.update_pie')
+         :widgetInfo?.description==='GAUGE' ? t('cloud:dashboard.config_chart.update_gauge')
+         :widgetInfo?.description==='CARD' ? t('cloud:dashboard.config_chart.update_card')
+         :null
+      }
       isDone={isDone}
       body={
         <form
