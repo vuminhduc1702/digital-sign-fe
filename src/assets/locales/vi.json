@@ -1072,7 +1072,7 @@
     "CMP_system": "Hệ thống CMP",
     "FAQ": "FAQ",
     "register_now": "Đăng ký ngay",
-    "service_transmit_data": "Dịch vụ Sim Data truyền tải dữ liệu",
+    "service_transmit_data": "Innoway IoT Platform: Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý ứng dụng",
     "viettel_M2M": "Viettel M2M IoT ",
     "experience_now": "Trải nghiệm ngay",
     "user_manual": "Hướng dẫn sử dụng",
@@ -1120,7 +1120,8 @@
       "subscription_management": "Quản lý thuê bao",
       "contract_management": "Quản lý hợp đồng",
       "order_management": "Quản lý đơn hàng",
-      "payment_management": "Quản lý thanh toán"
+      "payment_management": "Quản lý thanh toán",
+      "subscription_locating": "Định vị thuê bao"
     },
     "order": {
       "manage_platform": "Nền tảng IoT Viettel ",
