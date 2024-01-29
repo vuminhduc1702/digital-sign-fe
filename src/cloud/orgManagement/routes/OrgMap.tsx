@@ -1,6 +1,7 @@
 import Tooltip from "rc-tooltip"
 import "rc-tooltip/assets/bootstrap.css"
-import { RenderCustomNodeElementFn, Tree } from 'react-d3-tree'
+import { useState } from "react"
+import { type RenderCustomNodeElementFn, Tree } from 'react-d3-tree'
 import { useNavigate } from 'react-router-dom'
 import { useProjectById } from '~/cloud/project/api'
 import { useGetOrgs } from '~/layout/MainLayout/api'
@@ -8,6 +9,7 @@ import { type Org } from '~/layout/MainLayout/types'
 import { PATHS } from '~/routes/PATHS'
 import '~/style/treeComponent.css'
 import storage from '~/utils/storage'
+
 export function OrgMap() {
   const projectId = storage.getProject()?.id
   const navigate = useNavigate()
@@ -15,6 +17,7 @@ export function OrgMap() {
     projectId,
     config: { enabled: !!projectId },
   })
+
   const { data: orgData } = useGetOrgs({ projectId });
   
   function convertOrgToTree(org: Org): any {
@@ -24,22 +27,20 @@ export function OrgMap() {
       children: org.sub_orgs ? org.sub_orgs.map(convertOrgToTree) : [],
     }
   }
+
   const handleTextClick = (nodeDatum) => {
     return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${nodeDatum?.attributes.id}`)
   }
-  const renderRectSvgNode: RenderCustomNodeElementFn = ({ nodeDatum, toggleNode, foreignObjectProps={} }) => {
+
+  const renderRectSvgNode: RenderCustomNodeElementFn = ({ nodeDatum, toggleNode }) => {
     const levelString: string | undefined = nodeDatum.attributes?.level?.toString()
     const hasChildren = nodeDatum.children?.length
-    const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true;
-
-    const handleToggleNode = () => {
-    toggleNode();
-  };
+    const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true
+    const handleToggleNode = () => { toggleNode() }
     return (
       <g className={`custom-node custom-node-${levelString || '0'}`}>
-        <rect width="140" height="80" x="-70" y="-40" />
         <Tooltip
-        placement="rightBottom"
+        placement="rightTop"
         overlay={
           <div>
             {/* <p>ID:  {nodeDatum.attributes?.id}</p> */}
@@ -48,6 +49,8 @@ export function OrgMap() {
           </div>
         }
         >
+        <rect width="140" height="80" x="-70" y="-40" onClick={() => {handleTextClick(nodeDatum)}}/>
+        </Tooltip>
         <text 
           fill="black"
           strokeWidth="1" x="0" y="0" 
@@ -55,11 +58,9 @@ export function OrgMap() {
           fontSize="15px" 
           text-anchor="middle" 
           dominant-baseline="middle"
-          onClick={() => {handleTextClick(nodeDatum)}}
         >
           {nodeDatum.name.length > 9 ? `${nodeDatum.name.slice(0, 9)}...` : nodeDatum.name}
         </text>
-        </Tooltip>
         {hasChildren ? (
           <g>
             <circle cx={0} cy={40} r={12} fill="white" stroke="black" strokeWidth={1} onClick={handleToggleNode} style={{ cursor: "pointer" }} />
@@ -71,12 +72,25 @@ export function OrgMap() {
       </g>
     )
   }
+
+  const [isButtonClicked, setButtonClicked] = useState(false)
+  const handleButtonClick = () => {
+    setButtonClicked((prevIsButtonClicked) => !prevIsButtonClicked);
+  }
+
   const treeData: any = {
     name: projectByIdData?.name || 'Default Project',
     children: orgData?.organizations.map(convertOrgToTree),
   }
+
   return (
     <div className="grow items-center justify-center">
+      <button 
+        className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
+        onClick={handleButtonClick}
+      >
+        {isButtonClicked ? 'Collapse' : 'Expand'}
+      </button>
       <Tree
         data={treeData}
         orientation="vertical"
@@ -89,7 +103,7 @@ export function OrgMap() {
         renderCustomNodeElement={(rd3tProps) =>
           renderRectSvgNode({ ...rd3tProps })
         }
-        initialDepth={1}
+        initialDepth={isButtonClicked ? treeData.depth : 1}
       />
     </div>
   )
