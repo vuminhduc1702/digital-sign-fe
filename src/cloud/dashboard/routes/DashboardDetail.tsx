@@ -335,7 +335,7 @@ export function DashboardDetail() {
               Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
-                widgetInfo?.attribute_config.map(item => {
+                widgetInfo?.attribute_config?.map(item => {
                   if (getDeviceInfo(item.label)?.name !== undefined) {
                     item.label =
                       getDeviceInfo(item.label)?.name + ' - ' + item.label
@@ -343,7 +343,6 @@ export function DashboardDetail() {
                     item.label = item.label
                   }
                 })
-
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -364,6 +363,29 @@ export function DashboardDetail() {
                           data: device.latest.TIME_SERIES as LatestData,
                           device: device.entityId,
                         })),
+                      )
+                    : {}
+                const lastestValues2: TimeSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => {
+                          const modifiedTimeseries: {
+                            [
+                              key: string
+                            ]: (typeof device.latest.TIME_SERIES)[key]
+                          } = {}
+                          for (const key in device?.latest.TIME_SERIES) {
+                            const newKey =
+                              key +
+                              ' - ' +
+                              device?.entityId?.entityName +
+                              ' - ' +
+                              device?.entityId?.id
+                            modifiedTimeseries[newKey] =
+                              device?.latest.TIME_SERIES[key]
+                          }
+                          return modifiedTimeseries
+                        }),
                       )
                     : {}
                 const realtimeValues2: TimeSeries =
@@ -436,10 +458,7 @@ export function DashboardDetail() {
                         }
                       />
                     ) : widgetInfo?.description === 'PIE' ? (
-                      <PieChart
-                        data={realtimeValues2}
-                        widgetInfo={widgetInfo}
-                      />
+                      <PieChart data={lastestValues} widgetInfo={widgetInfo} />
                     ) : widgetInfo?.description === 'MAP' ? (
                       <MapChart
                         data={lastestValues}
@@ -458,7 +477,7 @@ export function DashboardDetail() {
                       />
                     ) : widgetInfo?.description === 'TABLE' ? (
                       <TableChart
-                        data={realtimeValues}
+                        data={realtimeValues2}
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
                         refetchData={refetchData}

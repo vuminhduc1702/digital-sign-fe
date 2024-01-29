@@ -116,6 +116,7 @@
           "unit": "Đơn vị",
           "last_update_ts": "Lần cập nhật cuối",
           "logged": "Lưu lịch sử",
+          "label": "Nhãn",
           "delete_attr": "Xoá TT",
           "delete_attr_full": "Xoá thuộc tính",
           "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?"

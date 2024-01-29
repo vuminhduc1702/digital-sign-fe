@@ -41,10 +41,10 @@ export const BarChart = ({
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
-    Array<{ time: string; [key: string]: string | number }>
+    Array<{ ts: number; [key: string]: string | number }>
   >([
     {
-      time: '',
+      ts: '',
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
@@ -108,7 +108,7 @@ export const BarChart = ({
       barWidgetDataType.map(item => {
         return {
           ...item,
-          time: dateTransformation(item.time),
+          ts: item.time,
         }
       }),
     )
@@ -184,7 +184,7 @@ export const BarChart = ({
     return ''
   }
 
-  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].time === '', {
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === 0, {
     delay: 400,
     minDuration: 500,
   })
@@ -246,7 +246,7 @@ export const BarChart = ({
                         ? formatDatakey(
                             unitConfig[0].attribute_key +
                               ' - ' +
-                              unitConfig[0].label
+                              unitConfig[0].label,
                           ) +
                           ': ' +
                           entry.value +
@@ -443,31 +443,35 @@ export const BarChart = ({
             <ResponsiveContainer width="98%" height="90%" className="pt-8">
               <BarReChart data={dataTransformedFeedToChart}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="time" />
+                <XAxis
+                  dataKey="ts"
+                  allowDuplicatedCategory={true}
+                  tickFormatter={timeFormatter}
+                />
                 <YAxis />
-                <Tooltip />
+                <Tooltip content={renderTooltip} />
                 <Legend content={renderLegend} />
-                <Brush dataKey="time" height={30} stroke="#8884d8" />
-                {Object.keys(newValuesRef.current).map((key, index) => {
-                  const colorConfig = widgetInfo.attribute_config.filter(
-                    obj => obj.attribute_key === key,
-                  )
+                <Brush
+                  dataKey="time"
+                  height={30}
+                  stroke="#8884d8"
+                  tickFormatter={timeFormatter}
+                />
+                {widgetInfo.attribute_config.map((key, index) => {
+                  const attributeKey = key.attribute_key + ' - ' + key.label
+                  const colorKey = key?.color
+
                   return (
                     <Bar
                       key={index.toString()}
-                      dataKey={key}
+                      dataKey={attributeKey}
                       animationDuration={250}
+                      stackId={key.label}
                       barSize={10}
                       stroke={
-                        colorConfig && colorConfig[0].color !== ''
-                          ? colorConfig[0].color
-                          : '#e8c1a0'
+                        colorKey && colorKey !== '' ? colorKey : '#e8c1a0'
                       }
-                      fill={
-                        colorConfig && colorConfig[0].color !== ''
-                          ? colorConfig[0].color
-                          : '#e8c1a0'
-                      }
+                      fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
                     />
                   )
                 })}
@@ -511,6 +515,7 @@ export const BarChart = ({
                     key={index.toString()}
                     dataKey={attributeKey}
                     animationDuration={250}
+                    stackId={key.label}
                     barSize={10}
                     stroke={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
                     fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
@@ -549,6 +554,7 @@ export const BarChart = ({
                     key={index.toString()}
                     dataKey={attributeKey}
                     animationDuration={250}
+                    stackId={key.label}
                     barSize={10}
                     stroke={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}
                     fill={colorKey && colorKey !== '' ? colorKey : '#e8c1a0'}

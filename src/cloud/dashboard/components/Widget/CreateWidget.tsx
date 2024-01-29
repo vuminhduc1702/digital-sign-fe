@@ -937,15 +937,23 @@ export function CreateWidget({
                             )}
                           />
                         )}
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.label')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.label
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.label` as const,
-                          )}
-                        /> */}
+                        {!watch(`attributeConfig.${index}.attribute_key`) ||
+                        widgetCategory === 'GAUGE' ||
+                        widgetCategory === 'CARD' ? null : (
+                          <SelectDropdown
+                            name={`attributeConfig.${index}.label`}
+                            label={t('cloud:dashboard.config_chart.label')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.label
+                            }
+                            control={control}
+                            options={setDeviceOption(
+                              watch(`attributeConfig.${index}.attribute_key`),
+                            )}
+                            isLoading={attrChartIsLoading}
+                            // defaultValue={attrLabelData[0]}
+                          />
+                        )}
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                           e => widgetCategory === e,
                         ) ? (

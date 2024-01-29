@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { type DataSeries } from '../../types'
+import { type DataSeries, type TimeSeries } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
@@ -16,66 +16,100 @@ type PieWidgetDataType = {
   [key: string]: string | number
 }
 
-export const PieChart = ({ data, widgetInfo }: { data: DataSeries, widgetInfo: z.infer<typeof widgetSchema> }) => {
-
+export const PieChart = ({
+  data,
+  widgetInfo,
+}: {
+  data: DataSeries
+  widgetInfo: z.infer<typeof widgetSchema>
+}) => {
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
   const newValuesRef = useRef<DataSeries | null>(null)
   const prevValuesRef = useRef<DataSeries | null>(null)
 
+  function getColor(
+    attributeKey: string,
+    deviceName: string,
+    deviceId: string,
+  ) {
+    const attributeConfig = widgetInfo.attribute_config.filter(
+      obj =>
+        obj.attribute_key === attributeKey &&
+        obj.label === deviceName + ' - ' + deviceId,
+    )
+    if (attributeConfig.length > 0) {
+      return attributeConfig[0].color
+    } else {
+      return '#e8c1a0'
+    }
+  }
+
   function dataManipulation() {
     if (newValuesRef.current?.data && newValuesRef.current.device) {
-      const pieWidgetData = Object.entries(newValuesRef.current.data).reduce((result: Array<PieWidgetDataType>, item, index) => {
-        const parseResult = Object.entries(item[1]).map(([key, value]) => ({
-          id: key + ' (' + newValuesRef.current?.device?.[index].entityName + ')',
-          label: key + ' (' + newValuesRef.current?.device?.[index].entityName + ')',
-          value: parseFloat(value.value),
-          [key + ' (' + newValuesRef.current?.device?.[index].entityName + ')' + 'Color']:
-            widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) &&
-            widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)
-              .length > 0 &&
-            widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0]
-              .color !== ''
-              ? widgetInfo.attribute_config.filter(
-                  obj => obj.attribute_key === key,
-                )[0].color
-              : '#e8c1a0',
-        }))
-        result.push(parseResult)
-        return result
-      }, []).flat()
+      const pieWidgetData = Object.entries(newValuesRef.current.data)
+        .reduce((result: Array<PieWidgetDataType>, item, index) => {
+          const parseResult = Object.entries(item[1]).map(([key, value]) => ({
+            id:
+              key +
+              ' (' +
+              newValuesRef.current?.device?.[index].entityName +
+              ')',
+            label:
+              key +
+              ' (' +
+              newValuesRef.current?.device?.[index].entityName +
+              ')',
+            value: parseFloat(value.value),
+            [key +
+            ' (' +
+            newValuesRef.current?.device?.[index].entityName +
+            ')' +
+            'Color']: getColor(
+              key,
+              newValuesRef.current?.device?.[index].entityName,
+              newValuesRef.current?.device?.[index].id,
+            ),
+          }))
+          result.push(parseResult)
+          return result
+        }, [])
+        .flat()
       setDataTransformedFeedToChart(pieWidgetData)
     }
   }
 
   useEffect(() => {
-    if (data.data) {
-        prevValuesRef.current = newValuesRef.current || data
-        if (newValuesRef.current !== null) {
-          const deviceIndex = newValuesRef.current.device.findIndex(
-            device => device.id === data.device[0].id,
-          )
-          if (deviceIndex !== -1 && data.data[0]) {
-            for (const [key, newData] of Object.entries(data.data[0])) {
-              if (
-                key !== null &&
-                newData !== null &&
-                newValuesRef.current?.data?.[deviceIndex]?.[key] ===
-                  prevValuesRef.current?.data?.[deviceIndex]?.[key]
-              ) {
-                setTimeout(() => {
-                  Object.assign(newValuesRef.current?.data?.[deviceIndex]?.[key], newData)
-                }, 200)
-              }
+    if (Object.keys(data).length > 0) {
+      prevValuesRef.current = newValuesRef.current || data
+      if (newValuesRef.current !== null) {
+        const deviceIndex = newValuesRef.current.device.findIndex(
+          device => device.id === data.device[0].id,
+        )
+        if (deviceIndex !== -1 && data.data[0]) {
+          for (const [key, newData] of Object.entries(data.data[0])) {
+            if (
+              key !== null &&
+              newData !== null &&
+              newValuesRef.current?.data?.[deviceIndex]?.[key] ===
+                prevValuesRef.current?.data?.[deviceIndex]?.[key]
+            ) {
+              setTimeout(() => {
+                Object.assign(
+                  newValuesRef.current?.data?.[deviceIndex]?.[key],
+                  newData,
+                )
+              }, 200)
             }
-          } else {
-            prevValuesRef.current = data
           }
-          dataManipulation()
         } else {
-          newValuesRef.current = data
-          dataManipulation()
+          prevValuesRef.current = data
+        }
+        dataManipulation()
+      } else {
+        newValuesRef.current = data
+        dataManipulation()
       }
     }
   }, [data])
@@ -91,7 +125,9 @@ export const PieChart = ({ data, widgetInfo }: { data: DataSeries, widgetInfo: z
         <ResponsivePie
           data={dataTransformedFeedToChart}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-          colors={({ id, data }) => data[`${id}Color`]}
+          colors={({ id, data }) => {
+            return data[`${id}Color`] as string
+          }}
           innerRadius={0.5}
           padAngle={0.7}
           cornerRadius={3}
@@ -117,7 +153,7 @@ export const PieChart = ({ data, widgetInfo }: { data: DataSeries, widgetInfo: z
               justify: false,
               translateX: 0,
               translateY: 56,
-              itemsSpacing: 0,
+              itemsSpacing: 20,
               itemWidth: 100,
               itemHeight: 18,
               itemTextColor: '#999',

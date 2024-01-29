@@ -29,7 +29,7 @@ export function MapChart({
   const newValuesRef = useRef<MapSeries | null>(null)
   const prevValuesRef = useRef<MapSeries | null>(null)
   const map = useRef<Map>(null)
-  const searchDevice = filter[0] 
+  const searchDevice = filter[0]
 
   useEffect(() => {
     if (isEditMode) {
@@ -124,6 +124,7 @@ export function MapChart({
           padding: [30, 30],
         },
       )
+      // map.current?.setZoom(7)
     } else {
       // find index of device in dataForMap
       const deviceIndex = deviceDetailInfo.findIndex(
@@ -137,9 +138,6 @@ export function MapChart({
       map.current?.setView([lat, lng], 7)
     }
   }, [dataForMap, searchDevice])
-
-  // console.log(dataForMap)
-  // console.log(searchDevice)
 
   return (
     <>
