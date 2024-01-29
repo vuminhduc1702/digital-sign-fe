@@ -87,7 +87,7 @@ function App() {
 
     return { message: ctx.defaultError }
   }
-  z.setErrorMap(customErrorMap)
+  // z.setErrorMap(customErrorMap)
 
   return (
     <Suspense
