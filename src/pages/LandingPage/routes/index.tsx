@@ -209,7 +209,7 @@ export function LandingPage() {
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                      className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                      className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
                       sideOffset={5}
                     >
                       <Link
@@ -217,16 +217,16 @@ export function LandingPage() {
                         target="_blank"
                         className="cursor-pointer"
                       >
-                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                           {t('user:cmp')}
                         </DropdownMenu.Item>
                       </Link>
                       <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                           {t('user:user_info')}
                         </DropdownMenu.Item>
                       </Link>
-                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {userDataFromStorage ? (
                           <p
                             className="cursor-pointer"
@@ -238,7 +238,7 @@ export function LandingPage() {
                           </p>
                         ) : null}
                       </DropdownMenu.Item>
-                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         <p
                           className="cursor-pointer"
                           onClick={() => logout.mutate({})}
@@ -269,20 +269,19 @@ export function LandingPage() {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className="text-[47px] font-bold text-center leading-[54px] px-[170px]">
+              <h2 className="px-[170px] text-center text-7xl font-bold leading-[54px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-[1.0rem] flex w-1/2 items-center justify-center pl-20 text-white">
-                <p className="text-base">
-                  M2M là công nghệ cho phép các thiết bị có thể trao đổi với các
-                  hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là dịch vụ
-                  trong đó sim data được sử dụng để truyền tải dữ liệu.
+              <div className="mt-10 flex w-1/2 items-center justify-center text-white">
+                <p className="text-2xl">
+                  Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
+                  ứng dụng.
                 </p>
               </div>
             </div>
-            <div className="mt-3 flex max-w-full items-center justify-center gap-4">
+            <div className="mt-10 flex max-w-full items-center justify-center gap-4">
               <div className="mx-1 flex min-w-fit items-center justify-center text-white">
                 <Button
                   onClick={() => scrollToIntro(ProductRef)}
