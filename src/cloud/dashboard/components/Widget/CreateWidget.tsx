@@ -952,9 +952,9 @@ export function CreateWidget({
                             )}
                           />
                         )}
-                        {!watch(
-                          `attributeConfig.${index}.attribute_key`,
-                        ) ? null : (
+                        {!watch(`attributeConfig.${index}.attribute_key`) ||
+                        widgetCategory === 'GAUGE' ||
+                        widgetCategory === 'CARD' ? null : (
                           <SelectDropdown
                             name={`attributeConfig.${index}.label`}
                             label={t('cloud:dashboard.config_chart.label')}

@@ -191,8 +191,8 @@ export function UpdateWidget({
         time_period: widgetInfoMemo?.config?.chartsetting?.time_period || 0,
         interval: widgetInfoMemo?.config?.timewindow?.interval,
         data_point: widgetInfoMemo?.config?.chartsetting?.data_point,
-        startDate: widgetInfoMemo?.config?.chartsetting?.start_date,
-        endDate: widgetInfoMemo?.config?.chartsetting?.end_date,
+        startDate: new Date(widgetInfoMemo?.config?.chartsetting?.start_date),
+        endDate: new Date(widgetInfoMemo?.config?.chartsetting?.end_date),
       },
     },
   })
@@ -236,9 +236,10 @@ export function UpdateWidget({
   )
 
   const getDeviceInfo = (id: string) => {
-    const device = deviceData?.devices.find(
-      device => device.id === id,
-    ) as { name: string; id: string }
+    const device = deviceData?.devices.find(device => device.id === id) as {
+      name: string
+      id: string
+    }
     return device?.name + ' - ' + device?.id
   }
 
@@ -247,7 +248,6 @@ export function UpdateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  // console.log(attrChartData)
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
     const result = item.attr_keys.map(attr => ({
       deviceId: item?.entity_id,
@@ -294,7 +294,7 @@ export function UpdateWidget({
       item.attr_keys.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
-          if (deviceInfo.includes('undefined')) return 
+          if (deviceInfo.includes('undefined')) return
           result.push({
             value: item.entity_id,
             label: deviceInfo,
@@ -341,6 +341,8 @@ export function UpdateWidget({
   // useEffect(() => {
   //   removeField()
   // }, [attrChartData])
+
+  console.log(watch())
 
   return (
     <FormDialog
@@ -705,9 +707,9 @@ export function UpdateWidget({
                           }
                         />
                       </div>
-                      {!watch(
-                        `attributeConfig.${index}.attribute_key`,
-                      ) ? null : (
+                      {!watch(`attributeConfig.${index}.attribute_key`) ||
+                      widgetInfoMemo?.description === 'GAUGE' ||
+                      widgetInfoMemo?.description === 'CARD' ? null : (
                         <SelectDropdown
                           name={`attributeConfig.${index}.label`}
                           label={t('cloud:dashboard.config_chart.label')}
@@ -1055,7 +1057,7 @@ export function UpdateWidget({
                                 getValues('widgetSetting.dataType') ===
                                 'REALTIME'
                                   ? ''
-                                  : formState?.errors?.widgetSetting?.startDate
+                                  : formState?.errors?.widgetSetting?.endDate
                               }
                             >
                               <Controller
@@ -1158,6 +1160,9 @@ export function UpdateWidget({
                             },
                           )}
                           options={intervalOptionHandler()}
+                          // defaultValue={
+                          //   intervalOptionHandler()?.[0].value
+                          // }
                         />
                       )}
                     </div>

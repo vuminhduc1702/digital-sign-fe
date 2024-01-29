@@ -41,10 +41,10 @@ export function LineChart({
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
-    Array<{ ts: string; [key: string]: string | number }>
+    Array<{ ts: number; [key: string]: string | number }>
   >([
     {
-      ts: '',
+      ts: 0,
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
@@ -105,12 +105,12 @@ export function LineChart({
     )
 
     const lineWidgetDataTypeToChart: Array<{
-      ts: string
+      ts: number
       [key: string]: string | number
     }> = lineWidgetDataType.map(item => {
       return {
         ...item,
-        ts: dateTransformation(item.ts),
+        ts: item.ts,
       }
     })
     setDataTransformedFeedToChart(lineWidgetDataTypeToChart)
@@ -186,7 +186,7 @@ export function LineChart({
     return ''
   }
 
-  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === '', {
+  const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === 0, {
     delay: 400,
     minDuration: 500,
   })
@@ -445,31 +445,41 @@ export function LineChart({
             <ResponsiveContainer width="98%" height="90%" className="pt-8">
               <LineWidget data={dataTransformedFeedToChart}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="ts" allowDuplicatedCategory={false} />
+                <XAxis
+                  dataKey="ts"
+                  allowDuplicatedCategory={false}
+                  tickFormatter={timeFormatter}
+                />
                 <YAxis />
-                <Tooltip />
+                <Tooltip content={renderTooltip} />
                 <Legend content={renderLegend} />
-                <Brush dataKey="ts" height={30} stroke="#8884d8" />
-                {Object.keys(newValuesRef.current).map((key, index) => {
-                  const colorConfig = widgetInfo.attribute_config.filter(
-                    obj => obj.attribute_key === key,
-                  )
+                <Brush
+                  dataKey="ts"
+                  height={30}
+                  stroke="#8884d8"
+                  tickFormatter={timeFormatter}
+                />
+                {widgetInfo.attribute_config.map((key, index) => {
+                  const attributeKey = key.attribute_key + ' - ' + key.label
+                  const colorKey = key.color
+
                   return (
                     <Line
                       key={index.toString()}
                       connectNulls
                       type="monotone"
-                      dataKey={key}
+                      dataKey={attributeKey}
                       animationDuration={250}
-                      stroke={
-                        key.includes('SMA') || key.includes('FFT')
-                          ? '#2c2c2c'
-                          : colorConfig && colorConfig[0].color !== ''
-                          ? colorConfig[0].color
-                          : '#e8c1a0'
-                      }
                       activeDot={{ r: 5 }}
                       dot={false}
+                      stroke={
+                        attributeKey.includes('SMA') ||
+                        attributeKey.includes('FFT')
+                          ? '#2c2c2c'
+                          : colorKey && colorKey !== ''
+                          ? colorKey
+                          : '#e8c1a0'
+                      }
                     />
                   )
                 })}
