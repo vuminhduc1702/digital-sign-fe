@@ -16,10 +16,20 @@ export function SectionOrder1() {
             <div className="w-[320px] text-[35px] leading-[43px] text-black">
               {t('landingpage:order1.M2M_manage_solution')}
             </div>
-            <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
+            {/* <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
               Hệ thống quản lý thuê bao Innoway của Viettel cho phép doanh
               nghiệp quản lý danh sách thuê bao, trình trạng cước, thanh toán,…
               và nhiều tiện ích khác
+            </div> */}
+            <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
+              Nền tảng tiên phong tại Việt Nam, cung cấp đồng thời 2 dịch vụ nền
+              tảng quản lý kết nối (CMP) và quản lý ứng dụng (AEP). Hỗ trợ toàn
+              trình cho các dịch vụ IoT dùng công nghệ cellular (2G/4G/Nb-IoT).
+            </div>
+            <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
+              Nền tảng quản lý kết nối của Viettel cho phép doanh nghiệp quản lý
+              danh sách thuê bao, trình trạng cước thanh toán, định vị thuê
+              bao... và nhiều tiện ích khác
             </div>
             <div className="flex h-fit pt-[20px]">
               <div className="h-fit w-fit">
@@ -41,6 +51,16 @@ export function SectionOrder1() {
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
                     {t('landingpage:order1.contract_management')}
+                  </p>
+                </div>
+                <div className="mb-[-8px] border-t border-[#E2E2E2] pt-2">
+                  <CheckboxCircleLine
+                    width={24}
+                    height={25}
+                    viewBox="0 0 24 25"
+                  ></CheckboxCircleLine>
+                  <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
+                    {t('landingpage:order1.subscription_locating')}
                   </p>
                 </div>
               </div>
@@ -65,13 +85,14 @@ export function SectionOrder1() {
                     {t('landingpage:order1.payment_management')}
                   </p>
                 </div>
+                
               </div>
             </div>
             <div className="pt-8">
               <Link to="https://iot.viettel.vn/" target="_blank">
                 <Button
                   type="button"
-                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 text-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  className="bg-primary-400 rounded-r-lg rounded-tl-lg border-none text-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
                   endIcon={
                     <ArrowRightUpLine

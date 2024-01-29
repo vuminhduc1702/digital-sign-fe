@@ -268,13 +268,13 @@ export function LandingPage() {
                 </a>
               </div>
             </div>
-            <div className="mt-[4.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className="text-[56px] font-bold">
+            <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
+              <h2 className="text-[47px] font-bold text-center leading-[54px] px-[170px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-[3.5rem] flex w-1/2 items-center justify-center pl-20 text-white">
+              <div className="mt-[1.0rem] flex w-1/2 items-center justify-center pl-20 text-white">
                 <p className="text-base">
                   M2M là công nghệ cho phép các thiết bị có thể trao đổi với các
                   hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là dịch vụ
