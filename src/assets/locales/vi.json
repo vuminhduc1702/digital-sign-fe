@@ -605,6 +605,13 @@
         "title_controller": "Tạo biểu đồ điều khiển",
         "title_map": "Tạo biểu đồ bản đồ",
         "update": "Sửa biểu đồ",
+        "update_line": "Sửa biểu đồ",
+        "update_bar": "Sửa biểu đồ cột",
+        "update_table": "Sửa bảng dữ liệu",
+        "update_controller": "Sửa bảng điều khiển",
+        "update_pie": "Sửa biểu đồ tròn",
+        "update_gauge": "Sửa biểu đồ đồng hồ đo",
+        "update_card": "Sửa biểu đồ dữ liệu",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
@@ -1116,7 +1123,7 @@
       "payment_management": "Quản lý thanh toán"
     },
     "order": {
-      "manage_platform": "Nền tảng quản lý, tự động hóa và thu thập dữ liệu",
+      "manage_platform": "Nền tảng IoT Viettel ",
       "manage_device": "Quản lý trạng thái thiết bị",
       "business_model": "Triển khai mô hình nghiệp vụ no code - low code",
       "data_security": "Bảo mật dữ liệu người dùng",
