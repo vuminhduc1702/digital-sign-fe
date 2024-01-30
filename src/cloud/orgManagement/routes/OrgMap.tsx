@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useProjectById } from '~/cloud/project/api'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { type Org } from '~/layout/MainLayout/types'
+import TreeView from "~/layout/OrgManagementLayout/components/Tree"
 import { PATHS } from '~/routes/PATHS'
 import '~/style/treeComponent.css'
 import storage from '~/utils/storage'
@@ -19,7 +20,6 @@ export function OrgMap() {
   })
 
   const { data: orgData } = useGetOrgs({ projectId });
-  
   function convertOrgToTree(org: Org): any {
     return {
       name: org.name,
@@ -27,16 +27,23 @@ export function OrgMap() {
       children: org.sub_orgs ? org.sub_orgs.map(convertOrgToTree) : [],
     }
   }
-
+  const [isButtonClicked, setButtonClicked] = useState(false)
+  const handleButtonClick = () => {
+    setButtonClicked((prevIsButtonClicked) => !prevIsButtonClicked)
+  }
   const handleTextClick = (nodeDatum) => {
     return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${nodeDatum?.attributes.id}`)
   }
-
   const renderRectSvgNode: RenderCustomNodeElementFn = ({ nodeDatum, toggleNode }) => {
     const levelString: string | undefined = nodeDatum.attributes?.level?.toString()
     const hasChildren = nodeDatum.children?.length
     const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true
-    const handleToggleNode = () => { toggleNode() }
+    const handleToggleNode = () => { 
+      toggleNode()
+      if(nodeDatum.name === projectByIdData?.name && isNodeExpanded === true ){
+        setButtonClicked(!isNodeExpanded)
+      }
+    }
     return (
       <g className={`custom-node custom-node-${levelString || '0'}`}>
         <Tooltip
@@ -73,24 +80,19 @@ export function OrgMap() {
     )
   }
 
-  const [isButtonClicked, setButtonClicked] = useState(false)
-  const handleButtonClick = () => {
-    setButtonClicked((prevIsButtonClicked) => !prevIsButtonClicked);
-  }
-
   const treeData: any = {
     name: projectByIdData?.name || 'Default Project',
     children: orgData?.organizations.map(convertOrgToTree),
   }
-
   return (
     <div className="grow items-center justify-center">
       <button 
         className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
         onClick={handleButtonClick}
       >
-        {isButtonClicked ? 'Collapse' : 'Expand'}
+        {isButtonClicked ?'Collapse' : 'Expand'}
       </button>
+      <TreeView {...{ isButtonClicked }} />
       <Tree
         data={treeData}
         orientation="vertical"
@@ -103,7 +105,7 @@ export function OrgMap() {
         renderCustomNodeElement={(rd3tProps) =>
           renderRectSvgNode({ ...rd3tProps })
         }
-        initialDepth={isButtonClicked ? treeData.depth : 1}
+        initialDepth={isButtonClicked ? treeData.depth : 0}
       />
     </div>
   )

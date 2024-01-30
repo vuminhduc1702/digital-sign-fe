@@ -24,28 +24,32 @@ interface TreeViewProps {
   data: OrgMapType[]
   handleEditTreeView: (data: OrgMapType) => void
   isShow: boolean
+  isButtonClicked: boolean
 }
 interface TreeProps {
   data: OrgMapType
   handleEdit: (data: OrgMapType) => void
   isShow: boolean
+  isButtonClicked: boolean
 }
 
-const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
-  const dataSorted = data.sort((a, b) =>
+const TreeView = ({ data, handleEditTreeView, isShow, isButtonClicked }: TreeViewProps) => {
+  console.log('aaaaaaaaaaaaaaa', isButtonClicked)
+  const dataSorted = data?.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
-  return dataSorted.map(item => (
+  return dataSorted?.map(item => (
     <Tree
       key={item.id}
       data={item}
       handleEdit={(data: OrgMapType) => handleEditTreeView(data)}
       isShow={isShow}
+      isButtonClicked={isButtonClicked}
     />
   ))
 }
-
-const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
+const Tree = ({ data, handleEdit, isShow, isButtonClicked }: TreeProps) => {
+  console.log('isButtonClicked', isButtonClicked)
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(false)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
@@ -63,6 +67,13 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
     }
   }, [isShow])
 
+  useEffect(() => {
+    // Lắng nghe thay đổi của isButtonClicked và cập nhật showChildren
+    setShowChildren(isButtonClicked);
+  }, [isButtonClicked])
+
+
+  console.log('showChildren', showChildren)
   if (!data) return null
   const dataSorted = data.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
@@ -74,7 +85,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
         <div className="flex items-center" key={data.id}>
           <div
             className="h-5 w-5"
-            onClick={() => setShowChildren(!showChildren)}
+            onClick={() => setShowChildren(!showChildren) }
           >
             {data.children.length ? (
               <img
