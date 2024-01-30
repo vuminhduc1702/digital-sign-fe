@@ -243,7 +243,7 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    // label: z.string(),
+    label: z.string(),
     color: z.string(),
     unit: z.string(),
     max: z.number(),
@@ -452,19 +452,30 @@ export function CreateWidget({
     label: device.name,
   }))
 
+  const getDeviceInfo = (id: string) => {
+    let device = null
+    for (const d of deviceData?.devices || []) {
+      if (d.id === id) {
+        device = d
+        break
+      }
+    }
+    return device?.name + ' - ' + device?.id
+  }
+
   const {
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(key => ({
-      id: item.entity_id,
-      label: key,
-      value: key,
+    const result = item.attr_keys.map(attr => ({
+      label: attr,
+      value: attr,
     }))
     return result
   })
+  console.log(attrChartData)
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -509,7 +520,7 @@ export function CreateWidget({
   useEffect(() => {
     append({
       attribute_key: '',
-      // label: '',
+      label: '',
       color: '',
       unit: '',
       max: 100,
@@ -539,6 +550,24 @@ export function CreateWidget({
       value: interval.value,
     }))
   }
+
+  // // remove field when devices change
+  // function removeField() {
+  //   if (!attrChartData) return
+  //   for (let i = fields.length; i >= 0; i--) {
+  //     if (
+  //       !attrSelectData?.find(item => {
+  //         return item?.label === fields[i]?.label
+  //       })
+  //     ) {
+  //       remove(i)
+  //     }
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   removeField()
+  // }, [attrChartData])
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -718,7 +747,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
-                  // label: item.label,
+                  label: item.label,
                   min: item.min,
                   unit: item.unit,
                 })),
@@ -787,6 +816,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -801,6 +831,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -834,8 +865,8 @@ export function CreateWidget({
                             data: {
                               entity_ids: option,
                               entity_type: 'DEVICE',
-                              // time_series: true,
                               version_two: true,
+                              // time_series: true,
                             },
                           })
                         }
@@ -845,6 +876,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -877,7 +909,7 @@ export function CreateWidget({
                         onClick={() =>
                           append({
                             attribute_key: '',
-                            // label: '',
+                            label: '',
                             color: '',
                             unit: '',
                             max: 100,
@@ -924,7 +956,7 @@ export function CreateWidget({
                             }
                             name={`attributeConfig.${index}.attribute_key`}
                             control={control}
-                            options={attrSelectData}
+                            options={removeDup(attrSelectData)}
                             isOptionDisabled={option =>
                               option.label === t('loading:input') ||
                               option.label === t('table:no_attr')
