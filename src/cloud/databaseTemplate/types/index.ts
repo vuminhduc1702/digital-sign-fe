@@ -1,5 +1,4 @@
 import { type BasePagination } from '~/types'
-import { type AttrList } from '~/utils/schemaValidation'
 
 export type DataBase = {
   id: string
@@ -25,19 +24,4 @@ export type FieldsColumn = {
 
 export type FieldsRows = {
   [key: string]: any
-}
-
-export type RuleChain = {
-  id: {
-    entityType: string
-    id: string
-  }
-  name: string
-}
-
-export type RulechainList = {
-  data: RuleChain[]
-  totalPages: number
-  totalElements: number
-  hasNext: boolean
 }
