@@ -110,14 +110,7 @@ export function SectionFooter() {
               <div className="w-[491px] pb-[10px] text-[20px] leading-[23.64px] text-white">
                 {t('landingpage:footer.company')}
               </div>
-              <div className="w-[600px] text-[16px] leading-[20.8px] text-white">
-                Mã số doanh nghiệp: 0100109106-011 do Sở Kế hoạch và Đầu tư
-                Thành phố Hà Nội cấp lần đầu ngày 18/07/2005, sửa đổi lần thứ 15
-                ngày 18/12/2018
-              </div>
-              <div className="w-[588px] text-[16px] leading-[20.8px] text-white">
-                {t('landingpage:footer.responsible_person')}
-              </div>
+             
             </div>
             <div className="pl-[20px]">
               <a
@@ -139,9 +132,7 @@ export function SectionFooter() {
           </div>
 
           <div className="relative flex h-[50px] items-center">
-            <div className="text-[16px] leading-[20.8px] text-[#B1B1B1]">
-              {t('landingpage:footer.cre')} {new Date().getFullYear()}
-            </div>
+            
             <div className="absolute right-0 flex">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 {t('landingpage:footer.follow')}

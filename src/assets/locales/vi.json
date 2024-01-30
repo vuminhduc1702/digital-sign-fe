@@ -600,11 +600,11 @@
         "title_line": "Tạo biểu đồ đường",
         "title_pie": "Tạo biểu đồ tròn",
         "title_bar": "Tạo biểu đồ cột",
-        "title_gauge": "Tạo biểu đồ đồng hồ đo",
+        "title_gauge": "Tạo đồng hồ đo",
         "title_table": "Tạo biểu đồ bảng dữ liệu",
         "title_card": "Tạo biểu đồ dữ liệu",
-        "title_controller": "Tạo biểu đồ điều khiển",
-        "title_map": "Tạo biểu đồ bản đồ",
+        "title_controller": "Tạo bảng điều khiển",
+        "title_map": "Tạo bản đồ",
         "update": "Sửa biểu đồ",
         "update_line": "Sửa biểu đồ đường",
         "update_bar": "Sửa biểu đồ cột",
@@ -729,6 +729,14 @@
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
+      },
+      "input": {
+        "iname":"Nhập tên gói cước",
+        "lofficial":"Chính thức",
+        "ltrial":"Dùng thử",
+        "tdescribe":"Nội dung mô tả ngắn",
+        "ldisplay":"Hiển thị",
+        "lhide":"Ẩn"
       }
     },
     "subcription": {
