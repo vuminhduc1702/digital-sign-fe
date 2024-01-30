@@ -113,10 +113,8 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
       </Dropdown>
       {isOpen ? (
         <UpdateRow
-          close={() => {
-            close()
-            onClose()
-          }}
+          close={close}
+          onClose={onClose}
           isOpen={isOpen}
           row={row}
           {...props}

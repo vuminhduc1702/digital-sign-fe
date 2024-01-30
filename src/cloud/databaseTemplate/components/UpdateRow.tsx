@@ -18,12 +18,13 @@ import { type FieldsRows } from '../types'
 export const updateeRowsSchema = z.record(z.string())
 
 type UpdateRowProps = {
+  onClose: () => void
   close: () => void
   isOpen: boolean
   row: FieldsRows
 }
 
-export function UpdateRow({ close, isOpen, row }: UpdateRowProps) {
+export function UpdateRow({ onClose, close, isOpen, row }: UpdateRowProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const { tableName } = useParams()
@@ -46,6 +47,7 @@ export function UpdateRow({ close, isOpen, row }: UpdateRowProps) {
   useEffect(() => {
     if (isSuccess) {
       close()
+      onClose()
     }
   }, [isSuccess, close])
 
