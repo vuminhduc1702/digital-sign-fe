@@ -310,7 +310,7 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                     classlabel="w-full"
                     classchild="w-full"
-                    placeholder="Nhập tên gói cước"
+                    placeholder={t('billing:package_manage.input.iname')}
                   />
                   <SelectField
                     label={t('billing:package_manage.popup.type')}
@@ -322,8 +322,8 @@ export function CreatePackage() {
                       },
                     })}
                     options={[
-                      { label: 'Chính thức', value: 'official' },
-                      { label: 'Dùng thử', value: 'trial' },
+                      { label: t('billing:package_manage.input.lofficial'), value: 'official' },
+                      { label: t('billing:package_manage.input.ltrial'), value: 'trial' },
                     ]}
                     classlabel="w-full"
                     classchild="w-full"
@@ -336,14 +336,14 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                     classlabel="w-full"
                     classchild="w-full"
-                    placeholder="Nội dung mô tả ngắn"
+                    placeholder={t('billing:package_manage.input.tdescribe')}
                   />
                   <div className="relative w-full">
                     <label>{t('billing:package_manage.popup.status')}</label>
                     <div className="mt-1 items-center">
                       {[
-                        { label: 'Hiển thị', value: 'present' },
-                        { label: 'Ẩn', value: 'hidden' },
+                        { label: t('billing:package_manage.input.ldisplay'), value: 'present' },
+                        { label: t('billing:package_manage.input.lhide'), value: 'hidden' },
                       ].map((option, idx) => (
                         <div key={idx} className="my-2 mr-4 flex items-center">
                           <input

@@ -28,7 +28,7 @@ export function SectionOrder() {
                 className="h-full w-[496px] rounded-lg"
               ></iframe>
             </div>
-            <div className="ml-10">
+            <div className="ml-10 ">
               <div className="w-[373px] text-[35px] leading-[43px] text-white">
                 {t('landingpage:order.manage_platform')}
               </div>
@@ -83,17 +83,24 @@ export function SectionOrder() {
                   </div>
                 </div>
               </div> */}
-              <div className="pt-5 text-[16px] leading-[20.8px] text-white">
+              <div className="pt-5 text-[16px] leading-[16.8px] text-white">
                 Nền tảng của chúng tôi đã hỗ trợ rút ngắn thời gian phát triển
                 các giải pháp IoT của Viettel tới 70%. Tiết kiệm chi phí vận
                 hành tới 80%.
               </div>
-              <div className="pt-4 text-[16px] leading-[20.8px] text-white">
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white">
                 Nếu các bạn có 1 ý tưởng cung cấp dịch vụ IoT xuất sắc, các bạn
                 muốn thử nghiệm nhanh? chúng tôi sẽ giúp bạn miễn phí (dưới 100
                 thiết bị)
               </div>
-              <div className="pt-4 text-[16px] leading-[20.8px] text-white">
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white">
+                Nếu dịch vụ của bạn đang dùng thiết bị nhập, phần mềm nước
+                ngoài, hoàn toàn không kiểm soát được dữ liệu của khách hàng?
+                Nền tảng của chúng tôi sẽ hỗ trợ tích hợp tất các thiết bị, với
+                giao thức bất kỳ và đảm bảo dữ liệu được kiểm soát tuyệt đối
+                theo yêu cầu.
+              </div>
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white">
                 Nếu các bạn đang triển khai 1 dự án đầu tư công, mà các nhà cung
                 cấp nền tảng nước ngoài không thể đáp ứng yêu cầu? Nền tảng của
                 chúng tôi phát triển hoàn toàn bởi đội ngũ Viettel, hỗ trợ tùy

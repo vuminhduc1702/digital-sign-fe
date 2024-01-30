@@ -594,7 +594,22 @@
       },
       "config_chart": {
         "title": "Create Chart",
+        "title_line": "Create Line Chart",
+        "title_pie": "Create Pie Chart",
+        "title_bar": "Create Column Chart",
+        "title_gauge": "Create Gauge",
+        "title_table": "Create Data Table",
+        "title_card": "Create Data Chart",
+        "title_controller": "Create Controller",
+        "title_map": "Create Map",
         "update": "Edit Chart",
+        "update_line": "Edit Line Chart",
+        "update_bar": "Edit Column Chart",
+        "update_table": "Edit Data Table",
+        "update_controller": "Edit Controller",
+        "update_pie": "Edit Pie Chart",
+        "update_gauge": "Edit Gauge",
+        "update_card": "Edit Data Chart",
         "name": "Chart Name",
         "device": "Device",
         "attr": "Attribute",
@@ -708,6 +723,14 @@
         "success_create": "Package created successfully",
         "success_update": "Package updated successfully",
         "success_delete": "Package deleted successfully"
+      },
+      "input": {
+        "iname":"Enter package name",
+        "lofficial":"Official",
+        "ltrial":"Trial",
+        "tdescribe":"Short description content",
+        "ldisplay":"Display",
+        "lhide":"Hide"
       }
     },
     "subcription": {
@@ -1077,7 +1100,7 @@
       "phone_number": "Phone Number:",
       "support_content": "Support Content*:",
       "send": "Send",
-      "company": "Viettel Telecom Corporation",
+      "company": "Tổng Công ty Viễn thông Viettel (Viettel Telecom)",
       "responsible_person": "Content Manager: Mr. Cao Anh Son",
       "cskh": "cskh@viettel.com.vn",
       "follow": "Follow us:",

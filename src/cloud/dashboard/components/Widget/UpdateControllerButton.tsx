@@ -129,7 +129,7 @@ export function UpdateControllerButton({
 
   function checkInputValueType(inputName: string, index: number) {
     const inputType = thingServiceData?.data?.input?.find(
-      (ele) => ele.name === inputName
+      ele => ele.name === inputName,
     )?.type
 
     if (inputType === 'bool') {
@@ -153,7 +153,7 @@ export function UpdateControllerButton({
   return (
     <FormDialog
       size="max"
-      title={t('cloud:dashboard.config_chart.update')}
+      title={t('cloud:dashboard.config_chart.update_controller')}
       isDone={isDone}
       body={
         <form
@@ -340,12 +340,11 @@ export function UpdateControllerButton({
                             />
                           </div>
                         </div>
-                        {
-                        watchInput[index].name === ''
-                          ? null : checkInputValueType(
-                              watchInput[index].name,
-                              index,
-                            ) === 'checkbox' ? (
+                        {watchInput[index].name ===
+                        '' ? null : checkInputValueType(
+                            watchInput[index].name,
+                            index,
+                          ) === 'checkbox' ? (
                           <FieldWrapper
                             label={t(
                               'cloud:custom_protocol.service.service_input.value',

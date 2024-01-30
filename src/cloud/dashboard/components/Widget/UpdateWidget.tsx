@@ -191,8 +191,8 @@ export function UpdateWidget({
         time_period: widgetInfoMemo?.config?.chartsetting?.time_period || 0,
         interval: widgetInfoMemo?.config?.timewindow?.interval,
         data_point: widgetInfoMemo?.config?.chartsetting?.data_point,
-        startDate: widgetInfoMemo?.config?.chartsetting?.start_date,
-        endDate: widgetInfoMemo?.config?.chartsetting?.end_date,
+        startDate: new Date(widgetInfoMemo?.config?.chartsetting?.start_date),
+        endDate: new Date(widgetInfoMemo?.config?.chartsetting?.end_date),
       },
     },
   })
@@ -236,9 +236,10 @@ export function UpdateWidget({
   )
 
   const getDeviceInfo = (id: string) => {
-    const device = deviceData?.devices.find(
-      device => device.id === id,
-    ) as { name: string; id: string }
+    const device = deviceData?.devices.find(device => device.id === id) as {
+      name: string
+      id: string
+    }
     return device?.name + ' - ' + device?.id
   }
 
@@ -247,7 +248,6 @@ export function UpdateWidget({
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  // console.log(attrChartData)
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
     const result = item.attr_keys.map(attr => ({
       deviceId: item?.entity_id,
@@ -294,7 +294,7 @@ export function UpdateWidget({
       item.attr_keys.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
-          if (deviceInfo.includes('undefined')) return 
+          if (deviceInfo.includes('undefined')) return
           result.push({
             value: item.entity_id,
             label: deviceInfo,
@@ -324,18 +324,45 @@ export function UpdateWidget({
     }))
   }
 
+  // // remove field when devices change
+  // function removeField() {
+  //   console.log(attrSelectData)
+  //   if (!attrSelectData) return
+  //   // if widgetInfoMemo.label isnt in attrSelectData.label then remove it in widgetInfoMemo
+  //   for (let i = fields.length - 1; i >= 0; --i) {
+  //     if (!attrSelectData.find(attr => attr.label === fields[i].label)) {
+  //       console.log('remove', i)
+  //       remove(i)
+  //     }
+  //   }
+  //   console.log('fields', fields)
+  // }
+
+  // useEffect(() => {
+  //   removeField()
+  // }, [attrChartData])
+
+  console.log(watch())
+
   return (
     <FormDialog
       size="max"
       title={
-         widgetInfo?.description==='LINE' ? t('cloud:dashboard.config_chart.update_line')
-         :widgetInfo?.description==='BAR' ? t('cloud:dashboard.config_chart.update_bar')
-         :widgetInfo?.description==='TABLE' ? t('cloud:dashboard.config_chart.update_table')
-         :widgetInfo?.description==='CONTROLLER' ? t('cloud:dashboard.config_chart.update_controller')
-         :widgetInfo?.description==='PIE' ? t('cloud:dashboard.config_chart.update_pie')
-         :widgetInfo?.description==='GAUGE' ? t('cloud:dashboard.config_chart.update_gauge')
-         :widgetInfo?.description==='CARD' ? t('cloud:dashboard.config_chart.update_card')
-         :null
+        widgetInfo?.description === 'LINE'
+          ? t('cloud:dashboard.config_chart.update_line')
+          : widgetInfo?.description === 'BAR'
+          ? t('cloud:dashboard.config_chart.update_bar')
+          : widgetInfo?.description === 'TABLE'
+          ? t('cloud:dashboard.config_chart.update_table')
+          : widgetInfo?.description === 'PIE'
+          ? t('cloud:dashboard.config_chart.update_pie')
+          : widgetInfo?.description === 'GAUGE'
+          ? t('cloud:dashboard.config_chart.update_gauge')
+          : widgetInfo?.description === 'CARD'
+          ? t('cloud:dashboard.config_chart.update_card')
+          : widgetInfo?.description === 'MAP'
+          ? t('cloud:dashboard.config_chart.update_card')
+          : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
       body={
@@ -696,9 +723,9 @@ export function UpdateWidget({
                           }
                         />
                       </div>
-                      {!watch(
-                        `attributeConfig.${index}.attribute_key`,
-                      ) ? null : (
+                      {!watch(`attributeConfig.${index}.attribute_key`) ||
+                      widgetInfoMemo?.description === 'GAUGE' ||
+                      widgetInfoMemo?.description === 'CARD' ? null : (
                         <SelectDropdown
                           name={`attributeConfig.${index}.label`}
                           label={t('cloud:dashboard.config_chart.label')}
@@ -1046,7 +1073,7 @@ export function UpdateWidget({
                                 getValues('widgetSetting.dataType') ===
                                 'REALTIME'
                                   ? ''
-                                  : formState?.errors?.widgetSetting?.startDate
+                                  : formState?.errors?.widgetSetting?.endDate
                               }
                             >
                               <Controller
@@ -1149,6 +1176,9 @@ export function UpdateWidget({
                             },
                           )}
                           options={intervalOptionHandler()}
+                          // defaultValue={
+                          //   intervalOptionHandler()?.[0].value
+                          // }
                         />
                       )}
                     </div>
