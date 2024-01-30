@@ -36,7 +36,10 @@ export function DataBaseTemplateManage() {
   >([])
 
   const [isShow, setIsShow] = useState(false)
-  const [key, setKey] = useState<SelectOption | undefined>({ label: 'AND', value: '$and' })
+  const [key, setKey] = useState<SelectOption | undefined>({
+    label: 'AND',
+    value: '$and',
+  })
   const [keySearch, setKeySearch] = useState<string[]>([])
   const [dataLike, setDataLike] = useState<FieldsRows[]>([])
   const [dataExact, setDataExact] = useState<FieldsRows[]>([])
@@ -55,10 +58,11 @@ export function DataBaseTemplateManage() {
     { label: 'ONLY', value: '$only' },
   ]
 
-  const { register, formState, control, handleSubmit, setValue, getValues } = useForm({
-    resolver: searchDataBaseSchema && zodResolver(searchDataBaseSchema),
-    values: { limit: '', key: '$and' },
-  })
+  const { register, formState, control, handleSubmit, setValue, getValues } =
+    useForm({
+      resolver: searchDataBaseSchema && zodResolver(searchDataBaseSchema),
+      values: { limit: '', key: '$and' },
+    })
 
   useEffect(() => {
     if (tableName) {
@@ -128,7 +132,10 @@ export function DataBaseTemplateManage() {
                 <div className="flex justify-between">
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
-                    <CreateRows onClose={refetchData} columnsProp={data?.data?.columns || []} />
+                    <CreateRows
+                      onClose={refetchData}
+                      columnsProp={data?.data?.columns || []}
+                    />
                     <form
                       id="search-subcription"
                       className="flex flex-col justify-between space-y-6"
@@ -140,51 +147,91 @@ export function DataBaseTemplateManage() {
                             struct_scan: false,
                             limit: parseInt(values.limit) || null,
                             filter: {
-                              [values.key]: searchExact ? dataExact : dataLike
-                            }
+                              [values.key]: searchExact ? dataExact : dataLike,
+                            },
                           }
                           if (searchExact) {
-                            const checkData = dataExact?.map((item, index) => item[keySearch[index]])
-                            const checkDataValue = checkData?.filter(item => item)
+                            const checkData = dataExact?.map(
+                              (item, index) => item[keySearch[index]],
+                            )
+                            const checkDataValue = checkData?.filter(
+                              item => item,
+                            )
                             if (checkDataValue?.length < 2) {
-                              setTextValidate('* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR')
+                              setTextValidate(
+                                '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
+                              )
                             } else {
                               setTextValidate('')
-                              mutate({ table: tableName, project_id: projectId, data })
+                              mutate({
+                                table: tableName,
+                                project_id: projectId,
+                                data,
+                              })
                             }
                           } else {
-                            const checkData = dataLike?.map((item, index) => item[keySearch[index]])
-                            const checkDataValue = checkData?.filter(item => item.$like)
+                            const checkData = dataLike?.map(
+                              (item, index) => item[keySearch[index]],
+                            )
+                            const checkDataValue = checkData?.filter(
+                              item => item.$like,
+                            )
                             if (checkDataValue?.length < 2) {
-                              setTextValidate('* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR')
+                              setTextValidate(
+                                '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
+                              )
                             } else {
                               setTextValidate('')
-                              mutate({ table: tableName, project_id: projectId, data })
+                              mutate({
+                                table: tableName,
+                                project_id: projectId,
+                                data,
+                              })
                             }
                           }
                         } else if (values.key === '$only') {
                           data = {
                             struct_scan: false,
                             limit: parseInt(values.limit) || null,
-                            filter: searchExact ? dataExact[0] : dataLike[0]
+                            filter: searchExact ? dataExact[0] : dataLike[0],
                           }
                           if (searchExact) {
-                            const checkData = dataExact?.map((item, index) => item[keySearch[index]])
-                            const checkDataValue = checkData?.filter(item => item)
-                            if(checkDataValue?.length === 1) {
+                            const checkData = dataExact?.map(
+                              (item, index) => item[keySearch[index]],
+                            )
+                            const checkDataValue = checkData?.filter(
+                              item => item,
+                            )
+                            if (checkDataValue?.length === 1) {
                               setTextValidate('')
-                              mutate({ table: tableName, project_id: projectId, data })
+                              mutate({
+                                table: tableName,
+                                project_id: projectId,
+                                data,
+                              })
                             } else {
-                              setTextValidate('* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY')
+                              setTextValidate(
+                                '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
+                              )
                             }
                           } else {
-                            const checkData = dataLike?.map((item, index) => item[keySearch[index]])
-                            const checkDataValue = checkData?.filter(item => item.$like)
-                            if(checkDataValue?.length === 1) {
+                            const checkData = dataLike?.map(
+                              (item, index) => item[keySearch[index]],
+                            )
+                            const checkDataValue = checkData?.filter(
+                              item => item.$like,
+                            )
+                            if (checkDataValue?.length === 1) {
                               setTextValidate('')
-                              mutate({ table: tableName, project_id: projectId, data })
+                              mutate({
+                                table: tableName,
+                                project_id: projectId,
+                                data,
+                              })
                             } else {
-                              setTextValidate('* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY')
+                              setTextValidate(
+                                '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
+                              )
                             }
                           }
                         }
@@ -216,9 +263,7 @@ export function DataBaseTemplateManage() {
                           checked={isShow}
                         /> */}
                         <Switch
-                          onCheckedChange={checked =>
-                            setSearchExact(checked)
-                          }
+                          onCheckedChange={checked => setSearchExact(checked)}
                           checked={searchExact}
                         />
                         <Button
@@ -226,7 +271,11 @@ export function DataBaseTemplateManage() {
                           variant="trans"
                           size="square"
                           startIcon={
-                            <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+                            <SearchIcon
+                              width={16}
+                              height={16}
+                              viewBox="0 0 16 16"
+                            />
                           }
                           form="search-subcription"
                           type="submit"
@@ -235,7 +284,9 @@ export function DataBaseTemplateManage() {
                     </form>
                   </div>
                 </div>
-                {textValidate && <div className='mt-2 text-red-500'>{textValidate}</div>}
+                {textValidate && (
+                  <div className="mt-2 text-red-500">{textValidate}</div>
+                )}
                 {data?.data?.columns && (
                   <DataBaseTable
                     isShow={isShow}
@@ -245,7 +296,13 @@ export function DataBaseTemplateManage() {
                     onSearch={onSearch}
                   />
                 )}
-                <CreateColumn onClose={refetchData} />
+                {data?.data?.columns && (
+                  <CreateColumn
+                    isSearch={isShow}
+                    isValidate={textValidate}
+                    onClose={refetchData}
+                  />
+                )}
               </div>
             </Suspense>
           </div>

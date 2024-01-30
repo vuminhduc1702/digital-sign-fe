@@ -14,6 +14,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema } from '~/utils/schemaValidation'
 import { useEffect } from 'react'
+import { cn } from '~/utils/misc'
 
 export const createColumnSchema = z.object({
   fields: z.array(
@@ -23,7 +24,15 @@ export const createColumnSchema = z.object({
   ),
 })
 
-export default function CreateColumn({ onClose }: { onClose: () => void }) {
+export default function CreateColumn({
+  isSearch,
+  isValidate,
+  onClose,
+}: {
+  isSearch?: boolean
+  isValidate?: string
+  onClose: () => void
+}) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
@@ -55,7 +64,11 @@ export default function CreateColumn({ onClose }: { onClose: () => void }) {
       resetData={() => reset()}
       triggerButton={
         <Button
-          className="absolute right-[36px] top-[57px] h-9 w-9 rounded-md border-none"
+          className={cn('absolute right-[36px] top-[57px] h-9 w-9 rounded-md border-none shadow-none', {
+            'top-[57px]': !isSearch && !isValidate,
+            'top-[50px]': isSearch,
+            'top-[77px]': isValidate,
+          })}
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
