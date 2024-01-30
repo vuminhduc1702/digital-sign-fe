@@ -723,6 +723,14 @@
         "success_create": "Package created successfully",
         "success_update": "Package updated successfully",
         "success_delete": "Package deleted successfully"
+      },
+      "input": {
+        "iname":"Enter package name",
+        "lofficial":"Official",
+        "ltrial":"Trial",
+        "tdescribe":"Short description content",
+        "ldisplay":"Display",
+        "lhide":"Hide"
       }
     },
     "subcription": {
@@ -1092,7 +1100,7 @@
       "phone_number": "Phone Number:",
       "support_content": "Support Content*:",
       "send": "Send",
-      "company": "Viettel Telecom Corporation",
+      "company": "Tổng Công ty Viễn thông Viettel (Viettel Telecom)",
       "responsible_person": "Content Manager: Mr. Cao Anh Son",
       "cskh": "cskh@viettel.com.vn",
       "follow": "Follow us:",

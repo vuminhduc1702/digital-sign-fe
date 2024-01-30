@@ -728,6 +728,14 @@
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
+      },
+      "input": {
+        "iname":"Nhập tên gói cước",
+        "lofficial":"Chính thức",
+        "ltrial":"Dùng thử",
+        "tdescribe":"Nội dung mô tả ngắn",
+        "ldisplay":"Hiển thị",
+        "lhide":"Ẩn"
       }
     },
     "subcription": {
