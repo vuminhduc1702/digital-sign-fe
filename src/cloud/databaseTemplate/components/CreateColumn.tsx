@@ -15,6 +15,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema } from '~/utils/schemaValidation'
 import { useEffect } from 'react'
 import { cn } from '~/utils/misc'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/Tooltip'
 
 export const createColumnSchema = z.object({
   fields: z.array(
@@ -63,16 +64,27 @@ export default function CreateColumn({
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className={cn('absolute right-[36px] top-[57px] h-9 w-9 rounded-md border-none shadow-none', {
-            'top-[57px]': !isSearch && !isValidate,
-            'top-[50px]': isSearch,
-            'top-[77px]': isValidate,
-          })}
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <TooltipProvider >
+          <Tooltip>
+            <TooltipTrigger className={cn('absolute right-[36px] top-[102px] h-9 w-9 rounded-md border-none shadow-none', {
+              'top-[102px]': !isSearch && !isValidate,
+              'top-[98px]': isSearch,
+              'top-[125px]': isValidate,
+            })}>
+              <Button
+                className='border-none shadow-none'
+                variant="trans"
+                size="square"
+                startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+              />
+            </TooltipTrigger>
+            <TooltipContent >
+              <div className="">
+                {t('cloud:db_template.add_db.add_column')}
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       }
       title={t('cloud:db_template.add_db.add_column')}
       submitButton={
