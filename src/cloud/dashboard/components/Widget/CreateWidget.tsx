@@ -400,8 +400,6 @@ export function CreateWidget({
   const cancelButtonRef = useRef(null)
   const colorPickerRef = useRef()
 
-  console.log(widgetCategory)
-
   const {
     register,
     formState,
@@ -475,7 +473,6 @@ export function CreateWidget({
     }))
     return result
   })
-  console.log(attrChartData)
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -504,9 +501,10 @@ export function CreateWidget({
       label: string
     }> = []
     attrChartData?.entities?.map(item => {
-      item.attr_keys.map(attr => {
+      item?.attr_keys?.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
+          if (deviceInfo.includes('undefined')) return
           result.push({
             value: item.entity_id,
             label: deviceInfo,
