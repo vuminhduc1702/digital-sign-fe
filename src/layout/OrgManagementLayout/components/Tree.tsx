@@ -24,17 +24,14 @@ interface TreeViewProps {
   data: OrgMapType[]
   handleEditTreeView: (data: OrgMapType) => void
   isShow: boolean
-  isButtonClicked: boolean
 }
 interface TreeProps {
   data: OrgMapType
   handleEdit: (data: OrgMapType) => void
   isShow: boolean
-  isButtonClicked: boolean
 }
 
-const TreeView = ({ data, handleEditTreeView, isShow, isButtonClicked }: TreeViewProps) => {
-  console.log('aaaaaaaaaaaaaaa', isButtonClicked)
+const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
   const dataSorted = data?.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
@@ -44,12 +41,10 @@ const TreeView = ({ data, handleEditTreeView, isShow, isButtonClicked }: TreeVie
       data={item}
       handleEdit={(data: OrgMapType) => handleEditTreeView(data)}
       isShow={isShow}
-      isButtonClicked={isButtonClicked}
     />
   ))
 }
-const Tree = ({ data, handleEdit, isShow, isButtonClicked }: TreeProps) => {
-  console.log('isButtonClicked', isButtonClicked)
+const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(false)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
@@ -66,14 +61,7 @@ const Tree = ({ data, handleEdit, isShow, isButtonClicked }: TreeProps) => {
       setShowChildren(data?.isShow)
     }
   }, [isShow])
-
-  useEffect(() => {
-    // Lắng nghe thay đổi của isButtonClicked và cập nhật showChildren
-    setShowChildren(isButtonClicked);
-  }, [isButtonClicked])
-
-
-  console.log('showChildren', showChildren)
+  
   if (!data) return null
   const dataSorted = data.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,

@@ -11,7 +11,6 @@ import storage from '~/utils/storage'
 
 import { type Org } from '../types'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
-
 import { SearchIcon } from '~/components/SVGIcons'
 
 type ComboBoxSelectOrgProps = {
@@ -27,7 +26,6 @@ export function ComboBoxSelectOrg({
 
   const projectId = storage.getProject()?.id
   const { data: orgData } = useGetOrgs({ projectId })
-  console.log('data', orgData)
   const { acc: orgFlattenData, extractedPropertyKeys } = flattenData(
     orgData?.organizations,
     ['id', 'name', 'level', 'description', 'parent_name', 'org_id', 'image'],

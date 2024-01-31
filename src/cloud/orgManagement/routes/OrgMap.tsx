@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom'
 import { useProjectById } from '~/cloud/project/api'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { type Org } from '~/layout/MainLayout/types'
-import TreeView from "~/layout/OrgManagementLayout/components/Tree"
 import { PATHS } from '~/routes/PATHS'
 import '~/style/treeComponent.css'
 import storage from '~/utils/storage'
@@ -19,80 +18,123 @@ export function OrgMap() {
     config: { enabled: !!projectId },
   })
 
-  const { data: orgData } = useGetOrgs({ projectId });
+  const { data: orgData } = useGetOrgs({ projectId })
+
   function convertOrgToTree(org: Org): any {
     return {
       name: org.name,
-      attributes: { id:org.id, level: org.level, description:org.description },
+      attributes: { id: org.id, level: org.level, description: org.description },
       children: org.sub_orgs ? org.sub_orgs.map(convertOrgToTree) : [],
     }
   }
+
   const [isButtonClicked, setButtonClicked] = useState(false)
+
   const handleButtonClick = () => {
     setButtonClicked((prevIsButtonClicked) => !prevIsButtonClicked)
   }
+
   const handleTextClick = (nodeDatum) => {
-    return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${nodeDatum?.attributes.id}`)
+    navigate(`${PATHS.ORG_MANAGE}/${projectId}/${nodeDatum?.attributes.id}`)
   }
-  const renderRectSvgNode: RenderCustomNodeElementFn = ({ nodeDatum, toggleNode }) => {
+
+  const renderRectSvgNode: RenderCustomNodeElementFn = ({
+    nodeDatum,
+    toggleNode,
+  }) => {
     const levelString: string | undefined = nodeDatum.attributes?.level?.toString()
+    console.log('levelString', levelString)
     const hasChildren = nodeDatum.children?.length
     const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true
-    const handleToggleNode = () => { 
+
+    const handleToggleNode = () => {
       toggleNode()
-      if(nodeDatum.name === projectByIdData?.name && isNodeExpanded === true ){
+
+      if (
+        nodeDatum.name === projectByIdData?.name &&
+        isNodeExpanded === true
+      ) {
         setButtonClicked(!isNodeExpanded)
       }
     }
+
     return (
       <g className={`custom-node custom-node-${levelString || '0'}`}>
         <Tooltip
-        placement="rightTop"
-        overlay={
-          <div>
-            {/* <p>ID:  {nodeDatum.attributes?.id}</p> */}
-            <p>Tên:  {nodeDatum.name}</p>
-            <p>Mô tả:  {nodeDatum.attributes?.description}</p>
-          </div>
-        }
+          placement="rightTop"
+          overlay={
+            <div>
+              <p>Tên: {nodeDatum.name}</p>
+              <p>Mô tả: {nodeDatum.attributes?.description}</p>
+            </div>
+          }
         >
-        <rect width="140" height="80" x="-70" y="-40" onClick={() => {handleTextClick(nodeDatum)}}/>
+          <rect
+            width="140"
+            height="80"
+            x="-70"
+            y="-40"
+            onClick={() => {
+              handleTextClick(nodeDatum);
+            }}
+          />
         </Tooltip>
-        <text 
+        <text
           fill="black"
-          strokeWidth="1" x="0" y="0" 
-          fontWeight="normal" 
-          fontSize="15px" 
-          text-anchor="middle" 
+          strokeWidth="1"
+          x="0"
+          y="0"
+          fontWeight="normal"
+          fontSize="15px"
+          textAnchor="middle"
           dominant-baseline="middle"
+          onClick={() => handleTextClick(nodeDatum)}
         >
-          {nodeDatum.name.length > 9 ? `${nodeDatum.name.slice(0, 9)}...` : nodeDatum.name}
+          {nodeDatum.name.length > 9
+            ? `${nodeDatum.name.slice(0, 9)}...`
+            : nodeDatum.name}
         </text>
         {hasChildren ? (
           <g>
-            <circle cx={0} cy={40} r={12} fill="white" stroke="black" strokeWidth={1} onClick={handleToggleNode} style={{ cursor: "pointer" }} />
-            <text x={0} y={40} fontSize="15px" textAnchor="middle" dy=".3em" onClick={handleToggleNode} style={{ cursor: "pointer"}}>
+            <circle
+              cx={0}
+              cy={40}
+              r={12}
+              fill="white"
+              stroke="black"
+              strokeWidth={1}
+              onClick={handleToggleNode}
+              style={{ cursor: 'pointer' }}
+            />
+            <text
+              x={0}
+              y={40}
+              fontSize="15px"
+              textAnchor="middle"
+              dy=".3em"
+              onClick={handleToggleNode}
+              style={{ cursor: 'pointer' }}
+            >
               {isNodeExpanded ? '-' : '+'}
             </text>
           </g>
         ) : null}
       </g>
-    )
-  }
+    );
+  };
 
   const treeData: any = {
     name: projectByIdData?.name || 'Default Project',
     children: orgData?.organizations.map(convertOrgToTree),
-  }
+  };
   return (
     <div className="grow items-center justify-center">
-      <button 
+      <button
         className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded"
         onClick={handleButtonClick}
       >
-        {isButtonClicked ?'Collapse' : 'Expand'}
+        {isButtonClicked ? 'Collapse' : 'Expand'}
       </button>
-      <TreeView {...{ isButtonClicked }} />
       <Tree
         data={treeData}
         orientation="vertical"
@@ -110,3 +152,5 @@ export function OrgMap() {
     </div>
   )
 }
+
+
