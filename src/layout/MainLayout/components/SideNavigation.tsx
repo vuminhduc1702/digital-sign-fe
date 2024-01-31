@@ -131,6 +131,11 @@ function SideNavigation() {
               {t('sidebar:cloud.custom_protocol')}
             </AccordionContent>
           </NavLink>
+          <NavLink to={`${PATHS.DB_TEMPLATE}/${projectId}`}>
+            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+              {t('sidebar:cloud.db_template')}
+            </AccordionContent>
+          </NavLink>
         </AccordionItem>
 
         <AccordionItem value="application" className="border-none">

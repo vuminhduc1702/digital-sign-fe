@@ -48,6 +48,11 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
+const { DataBaseTemplateManage } = lazyImport(
+  () => import('~/cloud/databaseTemplate'),
+  'DataBaseTemplateManage',
+)
+
 export const protectedRoutes = [
   {
     element: <MainLayout />,
@@ -157,6 +162,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
+      },
+      {
+        path: PATHS.DB_TEMPLATE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DataBaseTemplateManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
       },
     ],
   },
