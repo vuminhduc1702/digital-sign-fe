@@ -33,7 +33,7 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  console.log(`new bar: `, data)
+  // console.log(`new bar: `, data)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD =

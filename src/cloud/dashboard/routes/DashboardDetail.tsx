@@ -263,13 +263,13 @@ export function DashboardDetail() {
   const projectId = storage.getProject()?.id
 
   function findOrg() {
-    for (const key in widgetDetailDB) {
-      if (widgetDetailDB[key].datasource.org_id != null) {
-        return widgetDetailDB[key].datasource?.org_id?.slice(
-          widgetDetailDB?.[key]?.datasource?.org_id?.indexOf(
+    for (const key in widgetList) {
+      if (widgetList[key].datasource.org_id != null) {
+        return widgetList[key].datasource?.org_id?.slice(
+          widgetList?.[key]?.datasource?.org_id?.indexOf(
             '"',
           ) + 1,
-          widgetDetailDB?.[
+          widgetList?.[
             key
           ]?.datasource?.org_id?.lastIndexOf('"'),
         )
@@ -286,6 +286,9 @@ export function DashboardDetail() {
   })
 
   function getDeviceInfo(deviceId: string) {
+    console.log(widgetDetailDB)
+    console.log(deviceData)
+    console.log(deviceId)
     const deviceInfo = deviceData?.devices.find(
       device => device.id === deviceId,
     )
@@ -341,6 +344,7 @@ export function DashboardDetail() {
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
                 widgetInfo?.attribute_config?.map(item => {
+                  // console.log(getDeviceInfo(item.label))
                   if (getDeviceInfo(item.label)?.name !== undefined) {
                     item.label =
                       getDeviceInfo(item.label)?.name + ' - ' + item.label
@@ -382,6 +386,8 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
+                console.log(widgetList?.[widgetId])
+                // console.log(widgetInfo)
                 return (
                   <div
                     key={widgetId}
