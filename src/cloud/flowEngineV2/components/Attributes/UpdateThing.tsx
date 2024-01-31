@@ -110,7 +110,7 @@ export function UpdateThing({
           />
           <Button
             isLoading={isLoading}
-            disabled={!formState.isDirty}
+            disabled={!formState.isDirty || isLoading}
             form="update-entityThing"
             type="submit"
             size="md"

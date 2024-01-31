@@ -872,7 +872,7 @@ export function UpdateThingService({
             isLoading={isLoading}
             form="create-serviceThing"
             type="submit"
-            disabled={fullScreen}
+            disabled={fullScreen || isLoading}
             onClick={() => setTypeInput('Submit')}
             size="md"
             className="bg-primary-400"

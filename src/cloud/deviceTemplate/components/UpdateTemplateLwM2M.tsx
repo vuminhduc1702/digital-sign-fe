@@ -467,7 +467,7 @@ export function UpdateTemplateLwM2M({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={!formState.isDirty}
+            disabled={!formState.isDirty || isLoading}
           />
         </>
       )}
