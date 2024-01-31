@@ -286,9 +286,6 @@ export function DashboardDetail() {
   })
 
   function getDeviceInfo(deviceId: string) {
-    console.log(widgetDetailDB)
-    console.log(deviceData)
-    console.log(deviceId)
     const deviceInfo = deviceData?.devices.find(
       device => device.id === deviceId,
     )
@@ -386,7 +383,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                console.log(widgetList?.[widgetId])
                 // console.log(widgetInfo)
                 return (
                   <div
