@@ -43,7 +43,6 @@ export function GroupManage() {
     isSuccess: isSuccessDeleteMultipleGroups,
   } = useDeleteMultipleGroup()
   const rowSelectionKey = Object.keys(rowSelection)
-  console.log(rowSelectionKey, 'rowSelectionKey')
 
   const aoo = filteredComboboxData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
