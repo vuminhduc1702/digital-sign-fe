@@ -80,6 +80,8 @@ export function DataBaseTemplateManage() {
 
   const refetchData = () => {
     if (tableName) {
+      setIsShow(false)
+      setTextValidate('')
       mutate({ table: tableName, project_id: projectId })
     }
   }
