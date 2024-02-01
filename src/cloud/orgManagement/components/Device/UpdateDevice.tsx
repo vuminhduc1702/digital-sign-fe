@@ -336,7 +336,7 @@ export function UpdateDevice({
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
-              disabled={disableUpdateHeartbeat}
+              disabled={disableUpdateHeartbeat || isLoadingUpdateHeartBeat}
               onClick={() => {
                 mutateUpdateHeartBeat({ deviceId })
               }}

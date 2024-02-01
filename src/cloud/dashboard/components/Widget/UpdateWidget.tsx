@@ -249,7 +249,8 @@ export function UpdateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(attr => ({
+    // console.log(item)
+    const result = item?.attr_keys?.map(attr => ({
       deviceId: item?.entity_id,
       label: attr,
       value: attr,
@@ -291,7 +292,7 @@ export function UpdateWidget({
       label: string
     }> = []
     attrChartData?.entities?.map(item => {
-      item.attr_keys.map(attr => {
+      item?.attr_keys?.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
           if (deviceInfo.includes('undefined')) return
@@ -340,10 +341,8 @@ export function UpdateWidget({
 
   // useEffect(() => {
   //   removeField()
-  // }, [attrChartData])
-
-  console.log(watch())
-
+    // }, [attrChartData])
+    
   return (
     <FormDialog
       size="max"
@@ -744,11 +743,10 @@ export function UpdateWidget({
                                     widgetInfoMemo?.attribute_config[
                                       index
                                     ]?.label.split(' - ')[1],
-                                  label: getDeviceInfo(
+                                  label:
                                     widgetInfoMemo?.attribute_config[
                                       index
-                                    ]?.label.split(' - ')[1],
-                                  ),
+                                    ]?.label,
                                 }
                               : null
                           }

@@ -122,7 +122,6 @@ export function DashboardDetail() {
     () => detailDashboard?.configuration?.widgets ?? {},
     [detailDashboard?.configuration?.widgets],
   )
-  // console.log('detailDashboard', detailDashboard)
 
   const [widgetList, setWidgetList] = useState<Widget>({})
 
@@ -263,17 +262,23 @@ export function DashboardDetail() {
 
   const projectId = storage.getProject()?.id
 
+  function findOrg() {
+    for (const key in widgetList) {
+      if (widgetList[key].datasource.org_id != null) {
+        return widgetList[key].datasource?.org_id?.slice(
+          widgetList?.[key]?.datasource?.org_id?.indexOf(
+            '"',
+          ) + 1,
+          widgetList?.[
+            key
+          ]?.datasource?.org_id?.lastIndexOf('"'),
+        )
+      }
+    }
+  }
+
   const { data: deviceData } = useGetDevices({
-    orgId: widgetDetailDB?.[
-      Object.keys(widgetDetailDB)?.[0]
-    ]?.datasource?.org_id?.slice(
-      widgetDetailDB?.[
-        Object.keys(widgetDetailDB)?.[0]
-      ]?.datasource?.org_id?.indexOf('"') + 1,
-      widgetDetailDB?.[
-        Object.keys(widgetDetailDB)?.[0]
-      ]?.datasource?.org_id?.lastIndexOf('"'),
-    ),
+    orgId: findOrg(),
     projectId,
     config: {
       suspense: false,
@@ -336,6 +341,7 @@ export function DashboardDetail() {
               Object.keys(widgetList).map((widgetId, index) => {
                 const widgetInfo = widgetList?.[widgetId]
                 widgetInfo?.attribute_config?.map(item => {
+                  // console.log(getDeviceInfo(item.label))
                   if (getDeviceInfo(item.label)?.name !== undefined) {
                     item.label =
                       getDeviceInfo(item.label)?.name + ' - ' + item.label
@@ -344,51 +350,6 @@ export function DashboardDetail() {
                   }
                 })
                 const realtimeValues: TimeSeries =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(
-                          device => device.timeseries as TimeSeries,
-                        ),
-                      )
-                    : {}
-                const lastestValueOneDevice: LatestData =
-                  lastJsonMessage?.id === widgetId
-                    ? (lastJsonMessage?.data?.[0]?.latest
-                        ?.TIME_SERIES as LatestData)
-                    : {}
-                const lastestValues: DataSeries =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(device => ({
-                          data: device.latest.TIME_SERIES as LatestData,
-                          device: device.entityId,
-                        })),
-                      )
-                    : {}
-                const lastestValues2: TimeSeries =
-                  lastJsonMessage?.id === widgetId
-                    ? combinedObject(
-                        lastJsonMessage?.data?.map(device => {
-                          const modifiedTimeseries: {
-                            [
-                              key: string
-                            ]: (typeof device.latest.TIME_SERIES)[key]
-                          } = {}
-                          for (const key in device?.latest.TIME_SERIES) {
-                            const newKey =
-                              key +
-                              ' - ' +
-                              device?.entityId?.entityName +
-                              ' - ' +
-                              device?.entityId?.id
-                            modifiedTimeseries[newKey] =
-                              device?.latest.TIME_SERIES[key]
-                          }
-                          return modifiedTimeseries
-                        }),
-                      )
-                    : {}
-                const realtimeValues2: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
                         lastJsonMessage?.data?.map(device => {
@@ -408,6 +369,21 @@ export function DashboardDetail() {
                         }),
                       )
                     : {}
+                const lastestValueOneDevice: LatestData =
+                  lastJsonMessage?.id === widgetId
+                    ? (lastJsonMessage?.data?.[0]?.latest
+                        ?.TIME_SERIES as LatestData)
+                    : {}
+                const lastestValues: DataSeries =
+                  lastJsonMessage?.id === widgetId
+                    ? combinedObject(
+                        lastJsonMessage?.data?.map(device => ({
+                          data: device.latest.TIME_SERIES as LatestData,
+                          device: device.entityId,
+                        })),
+                      )
+                    : {}
+                // console.log(widgetInfo)
                 return (
                   <div
                     key={widgetId}
@@ -439,7 +415,7 @@ export function DashboardDetail() {
                     </p>
                     {widgetInfo?.description === 'LINE' ? (
                       <LineChart
-                        data={realtimeValues2}
+                        data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
                         refreshBtn={
@@ -449,7 +425,7 @@ export function DashboardDetail() {
                       />
                     ) : widgetInfo?.description === 'BAR' ? (
                       <BarChart
-                        data={realtimeValues2}
+                        data={realtimeValues}
                         widgetInfo={widgetInfo}
                         refetchData={refetchData}
                         refreshBtn={
@@ -465,7 +441,7 @@ export function DashboardDetail() {
                         widgetInfo={widgetInfo}
                         isEditMode={isEditMode}
                         filter={
-                          filteredComboboxDataMap.length === 1
+                          filteredComboboxDataMap.length >= 1
                             ? filteredComboboxDataMap
                             : []
                         }
@@ -477,7 +453,7 @@ export function DashboardDetail() {
                       />
                     ) : widgetInfo?.description === 'TABLE' ? (
                       <TableChart
-                        data={realtimeValues2}
+                        data={realtimeValues}
                         widgetInfo={widgetInfo}
                         className="h-full p-5"
                         refetchData={refetchData}
