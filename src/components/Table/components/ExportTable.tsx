@@ -51,7 +51,7 @@ export function ExportTable({ refComponent, rowSelection, aoo }: ButtonProps) {
           imgWidth * radio,
           imgHeight * radio,
         )
-        pdf.save('InowayTable.pdf')
+        pdf.save('InnowayTable.pdf')
       })
   }
 
