@@ -47,7 +47,7 @@ function OrgManageSidebar() {
 
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
-
+  console.log('orgId', orgId)
   const { data: projectByIdData } = useProjectById({
     projectId,
     config: { enabled: !!projectId },
@@ -148,7 +148,6 @@ function OrgManageSidebar() {
   }
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
-
   const handleEdit = (data: OrgMapType) => {
     open()
     setSelectedUpdateOrg(data)

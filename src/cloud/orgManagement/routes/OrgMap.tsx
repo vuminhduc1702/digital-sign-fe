@@ -43,7 +43,6 @@ export function OrgMap() {
     toggleNode,
   }) => {
     const levelString: string | undefined = nodeDatum.attributes?.level?.toString()
-    console.log('levelString', levelString)
     const hasChildren = nodeDatum.children?.length
     const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true
 

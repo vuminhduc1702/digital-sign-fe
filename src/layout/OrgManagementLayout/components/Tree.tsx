@@ -32,6 +32,8 @@ interface TreeProps {
 }
 
 const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
+  console.log('data', data)
+  console.log('isShow', isShow)
   const dataSorted = data?.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
@@ -45,37 +47,66 @@ const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
   ))
 }
 const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
+  const [newdata, setNewdata] = useState(data)
+  const [newdisShow, setNewisShow] = useState(isShow)
+  console.log('isShow', isShow)
+  //console.log('data123', data)
+  //console.log('newdata', newdata)
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(false)
+  console.log('showChildren', showChildren)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
+  const orgIdURL = window.location.pathname.split('/')[5]
   const navigate = useNavigate()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
+  const handleClick = () => {
+  //const { isShow, ...newDataWithoutIsShow } = newdata
+  const newData = { ...newdata, isShow: !newdata.isShow }
+  // //const { isShow, ...dataWithoutIsShow } = data
+
+  //   // Cập nhật treeData bằng newDataWithoutIsShow
+    setNewdata(newData)
+  //   setNewisShow(newData?.isShow)
+    setShowChildren(!showChildren)
+  }
+  //console.log('orgIdURL', orgIdURL)
+  
+  // useEffect(() => {
+  //   if (isShow) {
+  //     console.log('aaaaaaaaaa')
+  //     setShowChildren(isShow)
+  //   } else {
+  //     setShowChildren(newdata?.isShow)
+  //   }
+  // }, [isShow])
 
   useEffect(() => {
     if (isShow) {
+      console.log('aaaaaaaaaa')
       setShowChildren(isShow)
     } else {
-      setShowChildren(data?.isShow)
+      setShowChildren(newdata?.isShow)
     }
-  }, [isShow])
+  }, [newdata?.isShow])
+  console.log('newdata?.isShow', newdata?.isShow)
   
-  if (!data) return null
-  const dataSorted = data.children.sort((a, b) =>
+  if (!newdata) return null
+  const dataSorted = newdata.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
-
+  //console.log('showChildren', showChildren)
   return (
     <ul className="mt-4 pl-6">
       <li>
-        <div className="flex items-center" key={data.id}>
+        <div className="flex items-center" >
           <div
             className="h-5 w-5"
-            onClick={() => setShowChildren(!showChildren) }
+            onClick={handleClick}
           >
-            {data.children.length ? (
+            {newdata.children.length ? (
               <img
                 src={showChildren ? btnCloseToggle : btnOpenToggle}
                 alt="Show child organization"
@@ -89,42 +120,42 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             className={cn(
               'ml-1 h-10 gap-y-3 rounded-l-md border-none px-4 py-0',
               {
-                '!bg-primary-300': data.isSearch,
+                '!bg-primary-300': newdata.isSearch,
               },
             )}
-            key={data.id}
+            key={newdata.id}
             variant="muted"
             onClick={() => {
               switch (entityTypeURL) {
                 case 'org':
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`)
                 case 'event':
                   return navigate(
-                    `${PATHS.EVENT_MANAGE}/${projectId}/${data.id}`,
+                    `${PATHS.EVENT_MANAGE}/${projectId}/${newdata.id}`,
                   )
                 case 'group':
                   return navigate(
-                    `${PATHS.GROUP_MANAGE}/${projectId}/${data.id}`,
+                    `${PATHS.GROUP_MANAGE}/${projectId}/${newdata.id}`,
                   )
                 case 'user':
                   return navigate(
-                    `${PATHS.USER_MANAGE}/${projectId}/${data.id}`,
+                    `${PATHS.USER_MANAGE}/${projectId}/${newdata.id}`,
                   )
                 case 'device':
                   return navigate(
-                    `${PATHS.DEVICE_MANAGE}/${projectId}/${data.id}`,
+                    `${PATHS.DEVICE_MANAGE}/${projectId}/${newdata.id}`,
                   )
                 default:
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`)
               }
             }}
           >
             <p
               className={clsx('my-auto', {
-                'text-primary-400': orgId === data.id,
+                'text-primary-400': orgId === newdata.id,
               })}
             >
-              {data.name}
+              {newdata.name}
             </p>
           </Button>
           <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
@@ -145,7 +176,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                       />
                     }
                     onClick={() => {
-                      handleEdit(data)
+                      handleEdit(newdata)
                     }}
                   >
                     {t('cloud:org_manage.org_map.edit')}
@@ -158,7 +189,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                         className="h-5 w-5"
                       />
                     }
-                    onClick={() => handleCopyId(data.id)}
+                    onClick={() => handleCopyId(newdata.id)}
                   >
                     {t('table:copy_id')}
                   </MenuItem>
@@ -168,7 +199,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                     title={t('cloud:org_manage.org_map.delete')}
                     body={t(
                       'cloud:org_manage.org_map.delete_org_confirm',
-                    ).replace('{{ORGNAME}}', data.name)}
+                    ).replace('{{ORGNAME}}', newdata.name)}
                     triggerButton={
                       <Button
                         className="w-full justify-start border-none hover:text-primary-400"
@@ -191,7 +222,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                         type="button"
                         size="md"
                         className="bg-primary-400"
-                        onClick={() => mutate({ orgId: data.id })}
+                        onClick={() => mutate({ orgId: newdata.id })}
                         startIcon={
                           <img
                             src={btnSubmitIcon}
@@ -209,7 +240,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
         </div>
       </li>
       {showChildren &&
-        data.children &&
+        newdata.children &&
         dataSorted.map((child: OrgMapType) => {
           return (
             <Tree
