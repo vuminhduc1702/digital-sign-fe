@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Switch } from '~/components/Switch'
 import * as z from 'zod'
+import { ReloadIcon } from '@radix-ui/react-icons'
 
 export const searchDataBaseSchema = z.object({
   key: z.string().optional(),
@@ -79,6 +80,8 @@ export function DataBaseTemplateManage() {
 
   const refetchData = () => {
     if (tableName) {
+      setIsShow(false)
+      setTextValidate('')
       mutate({ table: tableName, project_id: projectId })
     }
   }
@@ -132,157 +135,176 @@ export function DataBaseTemplateManage() {
                 <div className="flex justify-between">
                   <ExportTable refComponent={ref} />
                   <div className="flex items-center gap-x-3">
-                    <CreateRows
-                      onClose={refetchData}
-                      columnsProp={data?.data?.columns || []}
-                    />
-                    <form
-                      id="search-subcription"
-                      className="flex flex-col justify-between space-y-6"
-                      onSubmit={handleSubmit(values => {
-                        setIsShow(true)
-                        let data: DataSearchTable = {}
-                        if (values.key === '$and' || values.key === '$or') {
-                          data = {
-                            struct_scan: false,
-                            limit: parseInt(values.limit) || null,
-                            filter: {
-                              [values.key]: searchExact ? dataExact : dataLike,
-                            },
-                          }
-                          if (searchExact) {
-                            const checkData = dataExact?.map(
-                              (item, index) => item[keySearch[index]],
+                    <div className='flex items-center gap-x-2'>
+                      <CreateRows
+                        onClose={refetchData}
+                        columnsProp={data?.data?.columns || []}
+                      />
+                      <div className='relative w-full'>{t('cloud:db_template.add_db.add_row')}</div>
+                    </div>
+                    <div className='flex items-center gap-x-2'>
+                      <Button
+                        className="h-9 w-9 rounded-md"
+                        variant="trans"
+                        size="square"
+                        onClick={refetchData}
+                        startIcon={<ReloadIcon width={16} height={16} viewBox="0 0 16 16" />}
+                      />
+                      <div className='relative w-full'>{t('cloud:db_template.add_db.reload')}</div>
+                    </div>
+                  </div>
+
+                </div>
+                <div className="mt-2 flex justify-end">
+                  <form
+                    id="search-subcription"
+                    className="flex flex-col justify-between space-y-6"
+                    onSubmit={handleSubmit(values => {
+                      setIsShow(true)
+                      let data: DataSearchTable = {}
+                      if (values.key === '$and' || values.key === '$or') {
+                        data = {
+                          struct_scan: false,
+                          limit: parseInt(values.limit) || null,
+                          filter: {
+                            [values.key]: searchExact ? dataExact : dataLike,
+                          },
+                        }
+                        if (searchExact) {
+                          const checkData = dataExact?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item,
+                          )
+                          if (checkDataValue?.length < 2) {
+                            setTextValidate(
+                              '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
                             )
-                            const checkDataValue = checkData?.filter(
-                              item => item,
-                            )
-                            if (checkDataValue?.length < 2) {
-                              setTextValidate(
-                                '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
-                              )
-                            } else {
-                              setTextValidate('')
-                              mutate({
-                                table: tableName,
-                                project_id: projectId,
-                                data,
-                              })
-                            }
                           } else {
-                            const checkData = dataLike?.map(
-                              (item, index) => item[keySearch[index]],
-                            )
-                            const checkDataValue = checkData?.filter(
-                              item => item.$like,
-                            )
-                            if (checkDataValue?.length < 2) {
-                              setTextValidate(
-                                '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
-                              )
-                            } else {
-                              setTextValidate('')
-                              mutate({
-                                table: tableName,
-                                project_id: projectId,
-                                data,
-                              })
-                            }
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
                           }
-                        } else if (values.key === '$only') {
-                          data = {
-                            struct_scan: false,
-                            limit: parseInt(values.limit) || null,
-                            filter: searchExact ? dataExact[0] : dataLike[0],
-                          }
-                          if (searchExact) {
-                            const checkData = dataExact?.map(
-                              (item, index) => item[keySearch[index]],
+                        } else {
+                          const checkData = dataLike?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item.$like,
+                          )
+                          if (checkDataValue?.length < 2) {
+                            setTextValidate(
+                              '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
                             )
-                            const checkDataValue = checkData?.filter(
-                              item => item,
-                            )
-                            if (checkDataValue?.length === 1) {
-                              setTextValidate('')
-                              mutate({
-                                table: tableName,
-                                project_id: projectId,
-                                data,
-                              })
-                            } else {
-                              setTextValidate(
-                                '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
-                              )
-                            }
                           } else {
-                            const checkData = dataLike?.map(
-                              (item, index) => item[keySearch[index]],
-                            )
-                            const checkDataValue = checkData?.filter(
-                              item => item.$like,
-                            )
-                            if (checkDataValue?.length === 1) {
-                              setTextValidate('')
-                              mutate({
-                                table: tableName,
-                                project_id: projectId,
-                                data,
-                              })
-                            } else {
-                              setTextValidate(
-                                '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
-                              )
-                            }
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
                           }
                         }
-                      })}
-                    >
-                      <div className="flex items-center gap-x-3">
-                        <SelectDropdown
-                          isClearable={false}
-                          name="key"
-                          control={control}
-                          value={key}
-                          customOnChange={e => {
-                            const result = keySelect.find(
-                              item => item.value === e,
+                      } else if (values.key === '$only') {
+                        data = {
+                          struct_scan: false,
+                          limit: parseInt(values.limit) || null,
+                          filter: searchExact ? dataExact[0] : dataLike[0],
+                        }
+                        if (searchExact) {
+                          const checkData = dataExact?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item,
+                          )
+                          if (checkDataValue?.length === 1) {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
+                          } else {
+                            setTextValidate(
+                              '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
                             )
-                            setKey(result)
-                          }}
-                          options={keySelect}
-                        />
-                        <InputField
-                          className="h-[37px]"
-                          error={formState.errors['limit']}
-                          registration={register('limit')}
-                        />
-                        {/* <Switch
+                          }
+                        } else {
+                          const checkData = dataLike?.map(
+                            (item, index) => item[keySearch[index]],
+                          )
+                          const checkDataValue = checkData?.filter(
+                            item => item.$like,
+                          )
+                          if (checkDataValue?.length === 1) {
+                            setTextValidate('')
+                            mutate({
+                              table: tableName,
+                              project_id: projectId,
+                              data,
+                            })
+                          } else {
+                            setTextValidate(
+                              '* Vui lòng nhập 1 trường tìm kiếm với phương thức ONLY',
+                            )
+                          }
+                        }
+                      }
+                    })}
+                  >
+                    <div className="flex items-center gap-x-3">
+                      <SelectDropdown
+                        isClearable={false}
+                        name="key"
+                        control={control}
+                        value={key}
+                        customOnChange={e => {
+                          const result = keySelect.find(
+                            item => item.value === e,
+                          )
+                          setKey(result)
+                        }}
+                        options={keySelect}
+                      />
+                      <InputField
+                        className="h-[37px]"
+                        error={formState.errors['limit']}
+                        registration={register('limit')}
+                        type='number'
+                      />
+                      <span className='relative w-1/2'>{t('cloud:db_template.add_db.limit')}</span>
+                      {/* <Switch
                           onCheckedChange={checked =>
                             setIsShow(checked)
                           }
                           checked={isShow}
                         /> */}
-                        <Switch
-                          onCheckedChange={checked => setSearchExact(checked)}
-                          checked={searchExact}
-                        />
-                        <Button
-                          className="rounded-md"
-                          variant="trans"
-                          size="square"
-                          startIcon={
-                            <SearchIcon
-                              width={16}
-                              height={16}
-                              viewBox="0 0 16 16"
-                            />
-                          }
-                          form="search-subcription"
-                          type="submit"
-                        />
-                      </div>
-                    </form>
-                  </div>
+                      <Switch
+                        onCheckedChange={checked => setSearchExact(checked)}
+                        checked={searchExact}
+                      />
+                      <span className='relative w-3/4'>{t('cloud:db_template.add_db.search_exact')}</span>
+                      <Button
+                        className="rounded-md"
+                        variant="trans"
+                        size="square"
+                        startIcon={
+                          <SearchIcon
+                            width={16}
+                            height={16}
+                            viewBox="0 0 16 16"
+                          />
+                        }
+                        form="search-subcription"
+                        type="submit"
+                      />
+                    </div>
+                  </form>
                 </div>
                 {textValidate && (
                   <div className="mt-2 text-red-500">{textValidate}</div>
