@@ -12,7 +12,11 @@ interface ButtonProps {
   aoo: any
 }
 
-export function ExportTable({ refComponent, rowSelection, aoo }: ButtonProps) {
+export function ExportTable({
+  refComponent,
+  rowSelection = {},
+  aoo,
+}: ButtonProps) {
   const { t } = useTranslation()
 
   const handleExcel = () => {
