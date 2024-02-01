@@ -47,6 +47,8 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText,
   refreshBtn,
   callbackParent,
+  rowSelection = {},
+  setRowSelection,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -63,13 +65,14 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText?: string
   refreshBtn?: boolean
   callbackParent?: () => void
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
 
   function IndeterminateCheckbox({
     indeterminate,
@@ -86,6 +89,9 @@ export function BaseTable<T extends Record<string, any>>({
 
     return (
       <input
+        style={{
+          accentColor: '#e74c3c',
+        }}
         type="checkbox"
         ref={ref}
         className={className + ' cursor-pointer'}
@@ -137,6 +143,7 @@ export function BaseTable<T extends Record<string, any>>({
     getExpandedRowModel: getExpandedRowModel(),
     enableRowSelection: true, //enable row selection for all rows
     onRowSelectionChange: setRowSelection,
+    getRowId: row => row.id,
   })
 
   const totalAttrs = total || data?.length

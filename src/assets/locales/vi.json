@@ -162,7 +162,8 @@
           "entity_type": "Phân loại",
           "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
-          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?"
+          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?",
+          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?"
         },
         "add_group": {
           "title": "Tạo mới nhóm",
