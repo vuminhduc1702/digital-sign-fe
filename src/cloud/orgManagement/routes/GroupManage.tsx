@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -36,6 +36,15 @@ export function GroupManage() {
   })
 
   const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:org_manage.org_manage.overview.name'),
+      t('cloud:org_manage.group_manage.table.entity_type'),
+      t('cloud:org_manage.org_manage.title'),
+    ],
+    [],
+  )
 
   const {
     mutate: mutateDeleteMultipleGroups,
@@ -47,12 +56,13 @@ export function GroupManage() {
   const aoo = filteredComboboxData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
       const temp = {
-        STT: (index + 1).toString(),
-        Tên: curr.name,
-        'Phân loại': uppercaseTheFirstLetter(curr.entity_type),
-        'Tổ chức': curr.organization
+        [t('table:no')]: (index + 1).toString(),
+        [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+        [t('cloud:org_manage.group_manage.table.entity_type')]:
+          uppercaseTheFirstLetter(curr.entity_type),
+        [t('cloud:org_manage.org_manage.title')]: curr.organization
           ? curr.organization
-          : 'Không trực thuộc tổ chức',
+          : t('table:no_in_org'),
       }
       acc.push(temp)
     }
@@ -68,6 +78,7 @@ export function GroupManage() {
             refComponent={ref}
             rowSelection={rowSelection}
             aoo={aoo}
+            pdfHeader={pdfHeader}
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
