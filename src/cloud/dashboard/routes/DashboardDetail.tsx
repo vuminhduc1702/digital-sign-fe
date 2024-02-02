@@ -144,6 +144,31 @@ export function DashboardDetail() {
 
   const [rerenderLayout, setRerenderLayout] = useState(false)
 
+  const projectId = storage.getProject()?.id
+
+  // only return findOrg once
+  function findOrg() {
+    let result = ''
+    for (const key in widgetList) {
+      if (widgetList[key].datasource.org_id != null) {
+        result = widgetList[key].datasource?.org_id?.slice(
+          widgetList?.[key]?.datasource?.org_id?.indexOf('"') + 1,
+          widgetList?.[key]?.datasource?.org_id?.lastIndexOf('"'),
+        )
+        break
+      }
+    }
+    return result
+  }
+
+  const { data: deviceData } = useGetDevices({
+    orgId: findOrg(),
+    projectId,
+    config: {
+      suspense: false,
+    },
+  })
+
   function triggerRerenderLayout() {
     setRerenderLayout(true)
     setTimeout(() => {
@@ -259,31 +284,6 @@ export function DashboardDetail() {
   const [filteredComboboxDataMap, setFilteredComboboxDataMap] = useState<
     Device[]
   >([])
-
-  const projectId = storage.getProject()?.id
-
-  function findOrg() {
-    for (const key in widgetList) {
-      if (widgetList[key].datasource.org_id != null) {
-        return widgetList[key].datasource?.org_id?.slice(
-          widgetList?.[key]?.datasource?.org_id?.indexOf(
-            '"',
-          ) + 1,
-          widgetList?.[
-            key
-          ]?.datasource?.org_id?.lastIndexOf('"'),
-        )
-      }
-    }
-  }
-
-  const { data: deviceData } = useGetDevices({
-    orgId: findOrg(),
-    projectId,
-    config: {
-      suspense: false,
-    },
-  })
 
   function getDeviceInfo(deviceId: string) {
     const deviceInfo = deviceData?.devices.find(

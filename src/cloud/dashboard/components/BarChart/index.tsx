@@ -50,7 +50,7 @@ export const BarChart = ({
     Array<{ ts: number; [key: string]: string | number }>
   >([
     {
-      ts: '',
+      ts: 0,
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
@@ -356,21 +356,15 @@ export const BarChart = ({
       [widgetInfo.attribute_config[0].attribute_key +
       ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
-      deviceId: '',
     },
   ])
-
-  const [hasRenderedInit, setHasRenderedInit] = useState(false)
-
+  
   useEffect(() => {
     if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
       return
     }
-    if (newValuesRef.current !== null && !hasRenderedInit) {
-      updateScale()
-      setHasRenderedInit(true)
-    }
-  }, [newValuesRef.current])
+    updateScale()
+  }, [widgetInfo])
 
   useEffect(() => {
     if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
