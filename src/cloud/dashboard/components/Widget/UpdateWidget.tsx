@@ -1000,6 +1000,7 @@ export function UpdateWidget({
                                 render={({
                                   field: { onChange, value, ...field },
                                 }) => {
+                                  console.log(value)
                                   return (
                                     <Popover>
                                       <PopoverTrigger asChild>
