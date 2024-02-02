@@ -32,8 +32,6 @@ interface TreeProps {
 }
 
 const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
-  console.log('data', data)
-  console.log('isShow', isShow)
   const dataSorted = data?.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
@@ -47,57 +45,47 @@ const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
   ))
 }
 const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
-  const [newdata, setNewdata] = useState(data)
-  const [newdisShow, setNewisShow] = useState(isShow)
-  console.log('isShow', isShow)
-  //console.log('data123', data)
-  //console.log('newdata', newdata)
+  console.log('data', data)
   const { t } = useTranslation()
+  const [newdata, setNewdata] = useState(data)
   const [showChildren, setShowChildren] = useState(false)
-  console.log('showChildren', showChildren)
+  // console.log('showChildren', showChildren)
+  // console.log('newdata', newdata)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
-  const orgIdURL = window.location.pathname.split('/')[5]
   const navigate = useNavigate()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
-  const handleClick = () => {
-  //const { isShow, ...newDataWithoutIsShow } = newdata
-  const newData = { ...newdata, isShow: !newdata.isShow }
-  // //const { isShow, ...dataWithoutIsShow } = data
+  //console.log('orgId', orgId)
 
-  //   // Cập nhật treeData bằng newDataWithoutIsShow
-    setNewdata(newData)
-  //   setNewisShow(newData?.isShow)
-    setShowChildren(!showChildren)
-  }
-  //console.log('orgIdURL', orgIdURL)
-  
-  // useEffect(() => {
-  //   if (isShow) {
-  //     console.log('aaaaaaaaaa')
-  //     setShowChildren(isShow)
-  //   } else {
-  //     setShowChildren(newdata?.isShow)
-  //   }
-  // }, [isShow])
+  const handleClick = () => {
+    // const newshowChildren = !showChildren
+    //   setShowChildren(newshowChildren)
+    // const newData = { ...newdata, abc: !newdata?.isShow }
+    //   setNewdata(newData)
+      setShowChildren(!showChildren)
+    // setNewdata(data)
+    }
+
+  console.log('newData', newdata)
+  //  if(orgId === undefined){
+  //   const newData = { ...newdata, isShow: false }
+  //     setNewdata(newData)
+  //  }
 
   useEffect(() => {
     if (isShow) {
-      console.log('aaaaaaaaaa')
       setShowChildren(isShow)
     } else {
       setShowChildren(newdata?.isShow)
     }
   }, [newdata?.isShow])
-  console.log('newdata?.isShow', newdata?.isShow)
-  
+
   if (!newdata) return null
   const dataSorted = newdata.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
-  //console.log('showChildren', showChildren)
   return (
     <ul className="mt-4 pl-6">
       <li>
