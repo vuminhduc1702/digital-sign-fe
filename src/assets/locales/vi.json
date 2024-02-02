@@ -777,12 +777,12 @@
         "success_delete": "Xoá gói cước thành công"
       },
       "input": {
-        "iname":"Nhập tên gói cước",
-        "lofficial":"Chính thức",
-        "ltrial":"Dùng thử",
-        "tdescribe":"Nội dung mô tả ngắn",
-        "ldisplay":"Hiển thị",
-        "lhide":"Ẩn"
+        "iname": "Nhập tên gói cước",
+        "lofficial": "Chính thức",
+        "ltrial": "Dùng thử",
+        "tdescribe": "Nội dung mô tả ngắn",
+        "ldisplay": "Hiển thị",
+        "lhide": "Ẩn"
       }
     },
     "subcription": {
@@ -982,7 +982,8 @@
       "select": "Vui lòng chọn",
       "select_union": "Vui lòng chọn 1 trong các option sau:",
       "number": "Vui lòng nhập số"
-    }
+    },
+    "refresh": "Tải lại trang"
   },
   "loading": {
     "base": "Đang tải dữ liệu...",
