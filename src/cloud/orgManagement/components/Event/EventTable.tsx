@@ -216,7 +216,14 @@ function EventTableContextMenu({
   )
 }
 
-export function EventTable({ data, ...props }: { data: EventType[] }) {
+export function EventTable({
+  data,
+  ...props
+}: {
+  data: EventType[]
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+}) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useTriggerEvent()
@@ -226,7 +233,11 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => {
+          // const orderId = parseInt(info.row.id) + 1
+          // return orderId
+          return info.row.index + 1
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

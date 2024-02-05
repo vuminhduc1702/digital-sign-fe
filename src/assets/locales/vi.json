@@ -189,7 +189,8 @@
           "edit": "Sửa user",
           "delete_user": "Xoá user",
           "delete_user_full": "Xoá người dùng",
-          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?"
+          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?",
+          "delete_multiple_user_confirm": "Bạn có chắc chắn muốn xóa những người dùng đã chọn?"
         },
         "add_user": {
           "title": "Tạo mới người dùng",
@@ -242,7 +243,8 @@
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
           "delete_device_full": "Xoá thiết bị",
-          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
+          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?",
+          "delete_multiple_device_confirm": "Bạn có chắc chắn muốn xóa những thiết bị đã chọn?"
         },
         "mqtt_config": {
           "update_success": "Cập nhật MQTT thành công",
@@ -296,7 +298,8 @@
           "onClick_btn": "Kích hoạt",
           "status": "Trạng thái",
           "delete_event": "Xoá sự kiện",
-          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
+          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?",
+          "delete_multiple_event_confirm": "Bạn có chắc chắn muốn xóa các sự kiện đã chọn?"
         },
         "add_event": {
           "title": "Tạo mới sự kiện",
@@ -558,7 +561,8 @@
         "choose": "Vui lòng chọn Thing",
         "delete": "Xóa Thing",
         "edit": " Sửa Thing",
-        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?"
+        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?",
+        "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
       },
       "adapter": {
         "title": "adapter",
