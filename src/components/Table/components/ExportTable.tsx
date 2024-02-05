@@ -1,4 +1,3 @@
-import html2canvas from 'html2canvas'
 import { type MutableRefObject } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactToPrint } from 'react-to-print'
@@ -17,7 +16,7 @@ import {
 interface ButtonProps {
   refComponent: MutableRefObject<HTMLElement> | MutableRefObject<null>
   rowSelection: {}
-  aoo: any
+  aoo: Array<{ [key: string]: string }>
   pdfHeader: string[]
 }
 
@@ -51,59 +50,18 @@ const styles = StyleSheet.create({
 export function ExportTable({
   refComponent,
   rowSelection = {},
-  aoo,
+  aoo = [],
   pdfHeader = [],
 }: ButtonProps) {
   const { t } = useTranslation()
 
   const handleExcel = () => {
-    // const data = document.getElementById('table-ref')
-    // if (data) {
-    //   const excelFile = XLSX.utils.table_to_book(data, { sheet: 'sheet1' })
-    //   XLSX.write(excelFile, { bookType: 'xlsx', bookSST: true, type: 'base64' })
-    //   XLSX.writeFile(excelFile, 'ExportedFile' + '.xlsx')
-    // }
-
     /* create worksheet */
     const ws = XLSX.utils.json_to_sheet(aoo)
     /* create workbook and export */
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
     XLSX.writeFile(wb, 'ExportedFile.xlsx')
-  }
-
-  const handlePdf = () => {
-    // refComponent.current &&
-    //   html2canvas(refComponent.current).then(canvas => {
-    //     const imgData = canvas.toDataURL('image/png')
-    //     const pdf = new jsPDF()
-    //     const pdfWidth = pdf.internal.pageSize.getWidth()
-    //     const pdfHeight = pdf.internal.pageSize.getHeight()
-    //     const imgWidth = canvas.width
-    //     const imgHeight = canvas.height
-    //     const radio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight)
-    //     const imgX = (pdfWidth - imgWidth * radio) / 2
-    //     const imgY = 30
-    //     pdf.addImage(
-    //       imgData,
-    //       'PNG',
-    //       imgX,
-    //       imgY,
-    //       imgWidth * radio,
-    //       imgHeight * radio,
-    //     )
-    //     pdf.save('InnowayTable.pdf')
-    //   })
-    // ;<Document>
-    //   <Page size="A4" style={styles.page}>
-    //     <View style={styles.tableContainer}>
-    //       <View style={styles.row} key="zzzz">
-    //         <Text style={styles.description}>123</Text>
-    //         <Text style={styles.xyz}>huy ne</Text>
-    //       </View>
-    //     </View>
-    //   </Page>
-    // </Document>
   }
 
   const handlePrint = useReactToPrint({

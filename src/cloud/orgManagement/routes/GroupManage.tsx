@@ -53,21 +53,24 @@ export function GroupManage() {
   } = useDeleteMultipleGroup()
   const rowSelectionKey = Object.keys(rowSelection)
 
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.id)) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-        [t('cloud:org_manage.group_manage.table.entity_type')]:
-          uppercaseTheFirstLetter(curr.entity_type),
-        [t('cloud:org_manage.org_manage.title')]: curr.organization
-          ? curr.organization
-          : t('table:no_in_org'),
+  const aoo: Array<{ [key: string]: string }> = filteredComboboxData.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+          [t('cloud:org_manage.group_manage.table.entity_type')]:
+            uppercaseTheFirstLetter(curr.entity_type),
+          [t('cloud:org_manage.org_manage.title')]: curr.organization
+            ? curr.organization
+            : t('table:no_in_org'),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    },
+    [],
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
