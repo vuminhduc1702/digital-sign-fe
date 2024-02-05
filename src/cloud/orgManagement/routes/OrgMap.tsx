@@ -1,6 +1,7 @@
 import Tooltip from "rc-tooltip"
 import "rc-tooltip/assets/bootstrap.css"
-import { useState } from "react"
+import React from "react"
+import { useState, useMemo } from "react"
 import { type RenderCustomNodeElementFn, Tree } from 'react-d3-tree'
 import { useNavigate } from 'react-router-dom'
 import { useProjectById } from '~/cloud/project/api'
@@ -20,14 +21,14 @@ export function OrgMap() {
 
   const { data: orgData } = useGetOrgs({ projectId })
 
-  function convertOrgToTree(org: Org): any {
+  const convertOrgToTree = useMemo(() => (org: Org): {} => {
     return {
       name: org.name,
-      attributes: { id: org.id, level: org.level, description: org.description },
+      attributes: { level: org.level, description: org.description },
       children: org.sub_orgs ? org.sub_orgs.map(convertOrgToTree) : [],
-    }
-  }
-
+    };
+  }, [orgData])
+  
   const [isButtonClicked, setButtonClicked] = useState(false)
 
   const handleButtonClick = () => {
@@ -37,15 +38,17 @@ export function OrgMap() {
   const handleTextClick = (nodeDatum) => {
     navigate(`${PATHS.ORG_MANAGE}/${projectId}/${nodeDatum?.attributes.id}`)
   }
-
-  const renderRectSvgNode: RenderCustomNodeElementFn = ({
+  interface RenderRectSvgNodeProps {
+    nodeDatum: any
+    toggleNode: () => void
+  }
+  const RenderRectSvgNode: React.FC<RenderRectSvgNodeProps> = React.memo(({
     nodeDatum,
     toggleNode,
   }) => {
     const levelString: string | undefined = nodeDatum.attributes?.level?.toString()
     const hasChildren = nodeDatum.children?.length
     const isNodeExpanded = nodeDatum.__rd3t.collapsed !== true
-
     const handleToggleNode = () => {
       toggleNode()
 
@@ -119,13 +122,18 @@ export function OrgMap() {
           </g>
         ) : null}
       </g>
-    );
-  };
+    )
+  }, (prevProps, nextProps) => {
+    return (
+      prevProps.nodeDatum === nextProps.nodeDatum &&
+      prevProps.toggleNode === nextProps.toggleNode
+    )
+  })
 
   const treeData: any = {
     name: projectByIdData?.name || 'Default Project',
     children: orgData?.organizations.map(convertOrgToTree),
-  };
+  }
   return (
     <div className="grow items-center justify-center">
       <button
@@ -144,7 +152,7 @@ export function OrgMap() {
         scaleExtent={{ min: 0.5, max: 2 }}
         separation={{ siblings: 2, nonSiblings: 2 }}
         renderCustomNodeElement={(rd3tProps) =>
-          renderRectSvgNode({ ...rd3tProps })
+          <RenderRectSvgNode {...rd3tProps} />
         }
         initialDepth={isButtonClicked ? treeData.depth : 0}
       />

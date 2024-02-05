@@ -45,7 +45,7 @@ const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
   ))
 }
 const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
-  console.log('data', data)
+  //console.log('data', data)
   const { t } = useTranslation()
   const [newdata, setNewdata] = useState(data)
   const [showChildren, setShowChildren] = useState(false)
@@ -68,7 +68,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
     // setNewdata(data)
     }
 
-  console.log('newData', newdata)
+  //console.log('newData', newdata)
   //  if(orgId === undefined){
   //   const newData = { ...newdata, isShow: false }
   //     setNewdata(newData)
