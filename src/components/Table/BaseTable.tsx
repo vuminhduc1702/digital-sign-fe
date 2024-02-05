@@ -143,7 +143,7 @@ export function BaseTable<T extends Record<string, any>>({
     getExpandedRowModel: getExpandedRowModel(),
     enableRowSelection: true, //enable row selection for all rows
     onRowSelectionChange: setRowSelection,
-    getRowId: row => row.id,
+    getRowId: row => (row.id ? row.id : row.user_id),
   })
 
   const totalAttrs = total || data?.length

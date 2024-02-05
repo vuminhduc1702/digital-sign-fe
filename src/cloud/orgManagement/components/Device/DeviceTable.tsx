@@ -250,6 +250,8 @@ function DeviceTableContextMenu({
 
 type DeviceTableProps = {
   data: Device[]
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
 } & BaseTablePagination
 
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
@@ -280,7 +282,11 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => {
+          // const orderId = parseInt(info.row.id) + 1
+          // return orderId
+          return info.row.index + 1
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

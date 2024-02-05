@@ -51,6 +51,7 @@ export function GroupManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleGroups,
   } = useDeleteMultipleGroup()
+
   const rowSelectionKey = Object.keys(rowSelection)
 
   const aoo: Array<{ [key: string]: string }> = filteredComboboxData.reduce(

@@ -92,7 +92,9 @@ export function ExportTable({
                       <Text
                         style={[
                           styles.cell,
-                          { width: `100%/${pdfHeader.length}` },
+                          {
+                            width: `100%/${pdfHeader.length}`,
+                          },
                         ]}
                       >
                         {ele}
@@ -123,23 +125,28 @@ export function ExportTable({
           ? `${t('table:excel')}: ${Object.keys(rowSelection).length}`
           : t('table:excel')}
       </Button>
-      <PDFDownloadLink document={<PdfComponent />} fileName="InnowayTable.pdf">
-        {({ blob, url, loading, error }) => (
-          <Button
-            className={`pointer-events-none rounded border-none opacity-50 ${
-              Object.keys(rowSelection).length > 0 &&
-              'pointer-events-auto opacity-100'
-            }`}
-            size="sm"
-            // onClick={handlePdf}
-            variant="secondaryLight"
-          >
-            {Object.keys(rowSelection).length > 0
-              ? `${t('table:pdf')}: ${Object.keys(rowSelection).length}`
-              : t('table:pdf')}
-          </Button>
-        )}
-      </PDFDownloadLink>
+      {pdfHeader.length > 0 && (
+        <PDFDownloadLink
+          document={<PdfComponent />}
+          fileName="InnowayTable.pdf"
+        >
+          {({ blob, url, loading, error }) => (
+            <Button
+              className={`pointer-events-none rounded border-none opacity-50 ${
+                Object.keys(rowSelection).length > 0 &&
+                'pointer-events-auto opacity-100'
+              }`}
+              size="sm"
+              // onClick={handlePdf}
+              variant="secondaryLight"
+            >
+              {Object.keys(rowSelection).length > 0
+                ? `${t('table:pdf')}: ${Object.keys(rowSelection).length}`
+                : t('table:pdf')}
+            </Button>
+          )}
+        </PDFDownloadLink>
+      )}
       <Button
         className="rounded border-none"
         size="sm"
