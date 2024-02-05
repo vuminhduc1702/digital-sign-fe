@@ -35,7 +35,7 @@ function EventServiceTableContextMenu({
         width={10}
         onClick={open}
         viewBox="0 0 1 20"
-        className="cursor-pointer text-secondary-700 hover:text-primary-400"
+        className="text-secondary-700 hover:text-primary-400 cursor-pointer"
       />
       {isOpen ? (
         <ViewInputOutput
@@ -64,10 +64,7 @@ export function EventServiceTable({ data, ...props }: EventServiceTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

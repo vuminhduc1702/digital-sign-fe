@@ -95,7 +95,10 @@ export function TableChart({
           unit: widgetInfo.attribute_config.filter(
             obj =>
               obj.attribute_key === extractKey(attribute_key)[0] &&
-              obj.label === extractKey(attribute_key)[1] + ' - ' + extractKey(attribute_key)[2],
+              obj.label ===
+                extractKey(attribute_key)[1] +
+                  ' - ' +
+                  extractKey(attribute_key)[2],
           )[0].unit,
           entity_name: '',
         })),
@@ -113,10 +116,7 @@ export function TableChart({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

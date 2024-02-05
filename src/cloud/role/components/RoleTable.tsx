@@ -146,10 +146,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -172,12 +169,12 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
           const origin = JSON.parse(JSON.stringify(info.row.original))
           const policiesData = JSON.parse(origin.policies)
           const actionsParsed = policiesData[0].actions
-            // .filter(action => actionsList.some(item => item.value === action))
+            .filter(action => actionsList.some(item => item.value === action))
             .map((policy: string) => {
               const filterVal = actionsList.find(
                 action => action.value === policy,
               )
-              return ' ' + filterVal.label
+              return ' ' + filterVal?.label
             })
           return String(actionsParsed)
         },
