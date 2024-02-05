@@ -491,8 +491,8 @@ export function CreateWidget({
   }
 
   const attrSelectDataForMap = [
-    { value: 'lat', label: 'latitude' },
-    { value: 'long', label: 'longitude' },
+    { value: 'latitude', label: 'latitude' },
+    { value: 'longitude', label: 'longitude' },
   ]
 
   const setDeviceOption = (attribute: string) => {
@@ -1122,6 +1122,19 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
+                          // onChange={e => {
+                          //   if (e.target.value === 'REALTIME') {
+                          //     setValue('widgetSetting.agg', 'AVG')
+                          //     setValue('widgetSetting.time_period', 0)
+                          //     setValue('widgetSetting.interval', 0)
+                          //     setValue('widgetSetting.data_point', 0)
+                          //   } else {
+                          //     setValue('widgetSetting.agg', 'AVG')
+                          //     setValue('widgetSetting.time_period', 0)
+                          //     // setValue('widgetSetting.interval', 0)
+                          //     // setValue('widgetSetting.data_point', 0)
+                          //   }
+                          // }}
                         />
 
                         <SelectField

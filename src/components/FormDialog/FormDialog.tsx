@@ -58,6 +58,7 @@ export const FormDialog = ({
 
   const trigger = cloneElement(triggerButton, {
     onClick: () => {
+      triggerButton.props.onClick?.()
       open()
       resetData?.()
     },
