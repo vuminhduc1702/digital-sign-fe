@@ -6,6 +6,8 @@ import {
   type WSWidgetMapData,
   type MapSeries,
   type DataSeries,
+  type TimeSeries,
+  LatestData,
 } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
@@ -30,8 +32,6 @@ export function MapChart({
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>(
     [],
   )
-  const newValuesRef = useRef<DataSeries | null>(null)
-  const prevValuesRef = useRef<DataSeries | null>(null)
   const map = useRef<Map>(null)
   const searchDevice = filter[0]
 
@@ -42,20 +42,29 @@ export function MapChart({
       setDragMode(true)
     }
   }, [isEditMode])
+  
+  useEffect(() => {
+    if (data?.data) {
+      const dataList = data.data
+      const deviceList = data.device
+      const parseData = extractData(dataList)
+      setDataForMap(parseData)
+      setDeviceDetailInfo(deviceList)
+    }
+  }, [data])
 
-  function dataManipulation() {
-    if (newValuesRef.current?.data) {
-      const dataForMapChart = Object.entries(data.data).reduce(
+  function extractData(dataList: LatestData) {
+      const dataForMapChart = Object.entries(dataList).reduce(
         (result: Array<LatLngTuple>, [, dataItem]) => {
           if (Object.keys(dataItem).length === 0) {
             const coor: LatLngTuple = [999, 0]
             result.push(coor)
           } else {
             const dataLatIndex = Object.keys(dataItem).findIndex(
-              key => key === 'lat',
+              key => key === 'latitude',
             )
             const dataLongIndex = Object.keys(dataItem).findIndex(
-              key => key === 'long',
+              key => key === 'longitude',
             )
             if (!Object.values(dataItem)[dataLatIndex]) {
               const coor: LatLngTuple = [999, 0]
@@ -75,50 +84,9 @@ export function MapChart({
           return result
         },
         [],
-      )
-      setDataForMap(dataForMapChart)
-      setDeviceDetailInfo(data.device)
-    }
+      )    
+      return dataForMapChart
   }
-
-  useEffect(() => {
-    if (data.data) {
-      prevValuesRef.current = newValuesRef.current || data
-      if (newValuesRef.current !== null) {
-        const deviceIndex = newValuesRef.current.device.findIndex(
-          device => device.id === data.device[0].id,
-        )
-        if (deviceIndex !== -1 && data.data[0]) {
-          for (const [key, newData] of Object.entries(data.data[0])) {
-            if (
-              key !== null &&
-              newData !== null &&
-              newValuesRef.current?.data?.[deviceIndex]?.[key] ===
-                prevValuesRef.current?.data?.[deviceIndex]?.[key]
-            ) {
-              Object.assign(
-                newValuesRef.current?.data?.[deviceIndex]?.[key],
-                newData,
-              )
-            }
-          }
-        } else {
-          prevValuesRef.current = data
-        }
-        dataManipulation()
-      } else {
-        newValuesRef.current = data
-        dataManipulation()
-      }
-    }
-    if (
-      data.device &&
-      data.device.length !== 0 &&
-      data.device.length === newValuesRef.current?.device.length
-    ) {
-      setDeviceDetailInfo(data.device)
-    }
-  }, [data])
 
   const [renderedInit, setRenderedInit] = useState(false)
 
@@ -126,12 +94,15 @@ export function MapChart({
     const filterData = dataForMap.filter((item: any) => item[0] !== 999)
     if (filterData.length === 1) {
       const [lat, lng] = filterData[0]
-      map.current?.setView([lat, lng], 7)
+      map.current?.setView([lat, lng], 20)
       return
     }
-    map.current?.fitBounds(dataForMap.filter((item: any) => item[0] !== 999), {
-      padding: [30, 30],
-    })
+    map.current?.fitBounds(
+      dataForMap.filter((item: any) => item[0] !== 999),
+      {
+        padding: [30, 30],
+      },
+    )
   }
 
   useEffect(() => {
@@ -158,8 +129,8 @@ export function MapChart({
       if (lat === 999) {
         toast.error(t('cloud:dashboard.map.device_not_found'))
         return
-      } 
-      map.current?.setView([lat, lng], 7)
+      }
+      map.current?.setView([lat, lng], 20)
     }
   }, [dataForMap, searchDevice])
 

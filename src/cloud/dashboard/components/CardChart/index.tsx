@@ -6,6 +6,7 @@ import { Spinner } from '~/components/Spinner'
 
 import { type LatestData } from '../../types'
 import { type widgetSchema } from '../Widget'
+import { useTranslation } from 'react-i18next'
 
 export function CardChart({
   data,
@@ -15,6 +16,7 @@ export function CardChart({
   widgetInfo: z.infer<typeof widgetSchema>
 }) {
   // console.log('new card: ', data)
+  const { t } = useTranslation()
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState({
     key: '',
     value: '',
@@ -36,13 +38,21 @@ export function CardChart({
         <div className="flex h-full flex-col items-center justify-center border border-secondary-400 bg-white shadow hover:bg-gray-100">
           <p className="mb-2 text-body-sm opacity-70">
             {dataTransformedFeedToChart.key}
-            {' ('}
-            {widgetInfo?.attribute_config[0]?.unit}
-            {')'}
+            {widgetInfo?.attribute_config[0]?.unit && (
+              <>
+                {' ('}
+                {widgetInfo?.attribute_config[0]?.unit}
+                {')'}
+              </>
+            )}
           </p>
-          <h2 className="text-4xl font-bold">
-            {dataTransformedFeedToChart.value}
-          </h2>
+          {dataTransformedFeedToChart.value ? (
+            <h2 className="text-4xl font-bold">
+              {dataTransformedFeedToChart.value}
+            </h2>
+          ) : (
+            <h2 className="text">{t('cloud:dashboard.card.no_log_attr')}</h2>
+          )}
         </div>
       ) : (
         <div className="flex h-full items-center justify-center">

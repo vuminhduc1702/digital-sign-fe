@@ -68,7 +68,6 @@ export function UpdateWidget({
   const [isDone, setIsDone] = useState(false)
 
   const widgetInfoMemo = useMemo(() => widgetInfo, [widgetInfo])
-  // console.log('widgetInfoMemo', widgetInfoMemo)
 
   const initParse =
     widgetInfoMemo?.datasource?.init_message &&
@@ -82,6 +81,11 @@ export function UpdateWidget({
   > | null>(null)
 
   const [fetchData, setFetchData] = useState(false)
+
+  const attrSelectDataForMap = [
+    { value: 'latitude', label: 'latitude' },
+    { value: 'longitude', label: 'longitude' },
+  ]
 
   // map schema
   const mapWidgetSchema = z.object({
@@ -191,7 +195,7 @@ export function UpdateWidget({
         agg: widgetInfoMemo?.config?.aggregation || 'AVG',
         dataType: widgetInfoMemo?.config?.chartsetting?.data_type || 'REALTIME',
         time_period: widgetInfoMemo?.config?.chartsetting?.time_period || 0,
-        interval: widgetInfoMemo?.config?.timewindow?.interval,
+        interval: widgetInfoMemo?.config?.timewindow?.interval || 0,
         data_point: widgetInfoMemo?.config?.chartsetting?.data_point,
         startDate: new Date(widgetInfoMemo?.config?.chartsetting?.start_date),
         endDate: new Date(widgetInfoMemo?.config?.chartsetting?.end_date),
@@ -308,8 +312,7 @@ export function UpdateWidget({
     return result
   }
 
-  function intervalOptionHandler() {
-    const timePeriod = watch('widgetSetting.time_period')
+  function intervalOptionHandler(timePeriod: number) {
     const timePeriodPosition = WS_REALTIME_PERIOD.findIndex(
       period => period.value === timePeriod,
     )
@@ -327,24 +330,22 @@ export function UpdateWidget({
     }))
   }
 
-  // remove field when devices change
-  function removeField() {
-    if (!attrSelectData) return
-    const deviceList = watch('device')
-    for (let i = fields.length - 1; i >= 0; i--) {
-      const attr = fields[i].label
-      for (const j in deviceList) {
-        if (attr.includes(deviceList[j])) {
-          break
-        }
-        remove(i)
-      }
-    }
-  }
+  // // remove field when devices change
+  // function removeField(deviceList: string[]) {
+  //   for (let i = fields.length - 1; i >= 0; i--) {
+  //     if (!deviceList.includes(fields[i].label)) {
+  //       remove(i)
+  //     }
+  //   }
+  // }
 
-  // useEffect(() => {
-  //   removeField()
-  // }, [attrChartData])
+  useEffect(() => {
+    const defaultOption =
+      intervalOptionHandler(watch('widgetSetting.time_period')) || []
+    if (defaultOption.length > 0) {
+      setValue('widgetSetting.interval', defaultOption[0].value)
+    }
+  }, [watch('widgetSetting.time_period')])
 
   return (
     <FormDialog
@@ -461,7 +462,7 @@ export function UpdateWidget({
               endTs: Date.parse(
                 values.widgetSetting?.endDate?.toISOString() as string,
               ),
-              interval: values.widgetSetting?.interval,
+              interval: values.widgetSetting?.interval || 0,
               limit: 5000,
               offset: 0,
               agg: values.widgetSetting?.agg,
@@ -638,11 +639,11 @@ export function UpdateWidget({
                               version_two: true,
                             },
                           })
+                          // removeField(option)
                         }
                       }}
                       handleClearSelectDropdown={() => {
                         selectDropdownAttributeConfigRef.current?.clearValue()
-                        removeField()
                       }}
                       handleChangeSelect={() => {
                         selectDropdownAttributeConfigRef.current?.clearValue()
@@ -696,35 +697,66 @@ export function UpdateWidget({
                   >
                     <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
                       <div className="w-full">
-                        <SelectDropdown
-                          // refSelect={selectDropdownAttributeConfigRef}
-                          label={t('cloud:dashboard.config_chart.attr')}
-                          name={`attributeConfig.${index}.attribute_key`}
-                          control={control}
-                          options={removeDup(attrSelectData)}
-                          isOptionDisabled={option =>
-                            option.label === t('loading:input') ||
-                            option.label === t('table:no_attr')
-                          }
-                          noOptionsMessage={() => t('table:no_attr')}
-                          loadingMessage={() => t('loading:attr')}
-                          isLoading={attrChartIsLoading}
-                          placeholder={t(
-                            'cloud:org_manage.org_manage.add_attr.choose_attr',
-                          )}
-                          defaultValue={{
-                            label:
-                              widgetInfoMemo?.attribute_config[index]
-                                ?.attribute_key,
-                            value:
-                              widgetInfoMemo?.attribute_config[index]
-                                ?.attribute_key,
-                          }}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]
-                              ?.attribute_key
-                          }
-                        />
+                        {widgetInfoMemo?.description === 'MAP' ? (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectDataForMap}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                            defaultValue={{
+                              label:
+                                widgetInfoMemo?.attribute_config[index]
+                                  ?.attribute_key,
+                              value:
+                                widgetInfoMemo?.attribute_config[index]
+                                  ?.attribute_key,
+                            }}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                          />
+                        ) : (
+                          <SelectDropdown
+                            // refSelect={selectDropdownAttributeConfigRef}
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={removeDup(attrSelectData)}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                            defaultValue={{
+                              label:
+                                widgetInfoMemo?.attribute_config[index]
+                                  ?.attribute_key,
+                              value:
+                                widgetInfoMemo?.attribute_config[index]
+                                  ?.attribute_key,
+                            }}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                          />
+                        )}
                       </div>
                       {!watch(`attributeConfig.${index}.attribute_key`) ||
                       widgetInfoMemo?.description === 'GAUGE' ||
@@ -744,12 +776,12 @@ export function UpdateWidget({
                             widgetInfoMemo?.attribute_config[index]?.label
                               ? {
                                   value:
-                                    widgetInfoMemo?.attribute_config[
-                                      index
-                                    ]?.label.split(' - ')[1],
-                                  label:
                                     widgetInfoMemo?.attribute_config[index]
                                       ?.label,
+                                  label: getDeviceInfo(
+                                    widgetInfoMemo?.attribute_config[index]
+                                      ?.label,
+                                  ),
                                 }
                               : null
                           }
@@ -941,7 +973,7 @@ export function UpdateWidget({
                               valueAsNumber: true,
                             },
                           )}
-                          options={WS_REALTIME_INTERVAL.map(interval => ({
+                          options={wsInterval.map(interval => ({
                             label: interval.label,
                             value: interval.value,
                           }))}
@@ -1182,8 +1214,9 @@ export function UpdateWidget({
                               valueAsNumber: true,
                             },
                           )}
-                          options={intervalOptionHandler()}
-                          // defaultValue={undefined}
+                          options={intervalOptionHandler(
+                            watch('widgetSetting.time_period'),
+                          )}
                         />
                       )}
                     </div>

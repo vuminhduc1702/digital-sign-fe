@@ -647,6 +647,12 @@
             "success": "Execute {{SERVICE_NAME}} successfully. Data returned: {{DATA}}"
           }
         }
+      },
+      "map": {
+        "device_not_found": "Device not found"
+      }, 
+      "card": {
+        "no_log_attr": "No attribute logs"
       }
     },
     "firmware": {

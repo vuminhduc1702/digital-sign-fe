@@ -4,7 +4,7 @@ import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { type DataSeries, type TimeSeries } from '../../types'
+import { type DataSeries, type TimeSeries, type LatestData } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
@@ -26,18 +26,10 @@ export const PieChart = ({
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
-  const newValuesRef = useRef<DataSeries | null>(null)
-  const prevValuesRef = useRef<DataSeries | null>(null)
 
-  function getColor(
-    attributeKey: string,
-    deviceName: string,
-    deviceId: string,
-  ) {
+  function getColor(attributeKey: string, deviceId: string) {
     const attributeConfig = widgetInfo.attribute_config.filter(
-      obj =>
-        obj.attribute_key === attributeKey &&
-        obj.label === deviceName + ' - ' + deviceId,
+      obj => obj.attribute_key === attributeKey && obj.label === deviceId,
     )
     if (attributeConfig.length > 0) {
       return attributeConfig[0].color
@@ -46,73 +38,46 @@ export const PieChart = ({
     }
   }
 
-  function dataManipulation() {
-    if (newValuesRef.current?.data && newValuesRef.current.device) {
-      const pieWidgetData = Object.entries(newValuesRef.current.data)
-        .reduce((result: Array<PieWidgetDataType>, item, index) => {
-          const parseResult = Object.entries(item[1]).map(([key, value]) => ({
-            id:
-              key +
-              ' (' +
-              newValuesRef.current?.device?.[index].entityName +
-              ')',
-            label:
-              key +
-              ' (' +
-              newValuesRef.current?.device?.[index].entityName +
-              ')',
-            value: parseFloat(value.value),
-            [key +
-            ' (' +
-            newValuesRef.current?.device?.[index].entityName +
-            ')' +
-            'Color']: getColor(
-              key,
-              newValuesRef.current?.device?.[index].entityName,
-              newValuesRef.current?.device?.[index].id,
-            ),
-          }))
-          result.push(parseResult)
-          return result
-        }, [])
-        .flat()
-      setDataTransformedFeedToChart(pieWidgetData)
-    }
-  }
-
   useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      prevValuesRef.current = newValuesRef.current || data
-      if (newValuesRef.current !== null) {
-        const deviceIndex = newValuesRef.current.device.findIndex(
-          device => device.id === data.device[0].id,
-        )
-        if (deviceIndex !== -1 && data.data[0]) {
-          for (const [key, newData] of Object.entries(data.data[0])) {
-            if (
-              key !== null &&
-              newData !== null &&
-              newValuesRef.current?.data?.[deviceIndex]?.[key] ===
-                prevValuesRef.current?.data?.[deviceIndex]?.[key]
-            ) {
-              setTimeout(() => {
-                Object.assign(
-                  newValuesRef.current?.data?.[deviceIndex]?.[key],
-                  newData,
-                )
-              }, 200)
-            }
-          }
-        } else {
-          prevValuesRef.current = data
-        }
-        dataManipulation()
-      } else {
-        newValuesRef.current = data
-        dataManipulation()
-      }
+    if (data?.data) {
+      const dataList = data.data
+      const deviceList = data.device
+      const parseResult = extractData(dataList, deviceList)
+      setDataTransformedFeedToChart(dataManipulation(parseResult))
     }
   }, [data])
+
+  function extractData(dataList: LatestData, deviceList: any[]) {
+    const parseResult: Array<{
+      name: string
+      deviceName: string
+      deviceId: string
+      color: string
+      value: any
+    }> = []
+    for (let i = 0; i < deviceList.length; i++) {
+      for (const [key, value] of Object.entries(dataList[i])) {
+        parseResult.push({
+          name: key,
+          deviceName: deviceList[i].entityName,
+          deviceId: deviceList[i].id,
+          color: getColor(key, deviceList[i].id),
+          value: value.value,
+        })
+      }
+    }
+    return parseResult
+  }
+
+  function dataManipulation(parseResult : any[]) {
+    return parseResult.map((item, index) => ({
+      keyId: index, 
+      id: item.name + ' (' + item.deviceName + ')',
+      label: item.name + ' (' + item.deviceName + ')',
+      value: item.value,
+      [item.name + ' (' + item.deviceName + ')' + 'Color']: item.color,
+    }))
+  }
 
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
