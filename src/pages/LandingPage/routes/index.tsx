@@ -27,8 +27,11 @@ import { Spinner } from '~/components/Spinner'
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
+import { Bars3Icon } from '@heroicons/react/20/solid'
+import MobileLP from './MobileLP'
 
-export function LandingPage() {
+
+export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -79,56 +82,77 @@ export function LandingPage() {
     minDuration: 300,
   })
 
+  const [sidebarOpen1, setSidebarOpen1] = useState(false)
+
   return (
     <ContentLayout title={t('landingpage:title')}>
-      <div className="h-[500px]">
+      <div className="max-xs:h-[850px] h-[500px] max-xl:h-[600px] max-md:h-[750px]">
         <div
-          className="h-full"
+          className="max-xs:h-[850px] h-full max-xl:h-[600px] max-md:h-[750px]"
           style={{
             backgroundImage: `url(${bannerLandingPage})`,
+            backgroundSize: 'cover',
           }}
         >
-          <div className="px-4 py-2">
-            <div className="flex h-20 px-48">
+          <div className="px-4 py-4">
+            <div className="flex h-20 px-48 max-xl:px-[47px] max-lg:h-auto max-lg:justify-between">
               <div className="flex items-center">
                 <a href="/" className="text-5xl font-bold text-white">
                   {t('landingpage:logo')}
                 </a>
               </div>
-              <div className="flex w-full justify-center">
-                <div className="flex justify-start">
+              {hasSideBar ? (
+                <button
+                  className=" px-4 text-white lg:hidden ml-49"
+                  onClick={() => setSidebarOpen1(true)}
+                >
+                  <span className="sr-only">Open sidebar</span>
+                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              ) : null}
+              {hasSideBar ? (
+                <>
+                  <MobileLP
+                    sidebarOpen={sidebarOpen1}
+                    setSidebarOpen={setSidebarOpen1}
+                  />
+                </>
+              ) : null}
+              
+              <div className="flex w-full lg:justify-center max-lg:hidden ">
+                <div className="flex justify-start max-lg:flex-col">
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(introRef)}
                   >
                     <button>{t('landingpage:introduction')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(PackOfDataRef)}
                   >
                     <button>{t('landingpage:pack_of_data')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(ProductRef)}
                   >
                     <button>{t('landingpage:product')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(OrderRef)}
                   >
                     <button>{t('landingpage:Platform_IoT')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white max-lg:py-5"
                     onClick={() => scrollToIntro(Order1Ref)}
                   >
                     <button>{t('landingpage:CMP_system')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(FAQRef)}
                   >
                     <button>{t('landingpage:FAQ')}</button>
@@ -144,7 +168,7 @@ export function LandingPage() {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="ml-auto flex">
+                <div className="flex max-lg:px-3 max-lg:hidden">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
@@ -172,8 +196,8 @@ export function LandingPage() {
                     asChild
                     className="flex items-center gap-x-2"
                   >
-                    <div className="ml-auto flex">
-                      <div className="flex w-max ">
+                    <div className="flex max-lg:hidden lg:ml-auto">
+                      <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
                           src={`${
                             userInfoData?.profile?.profile_image !== ''
@@ -269,19 +293,19 @@ export function LandingPage() {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className="px-[170px] text-center text-7xl font-bold leading-[54px]">
+              <h2 className="max-xs:text-[46px] px-[170px] text-center text-7xl  font-bold leading-[54px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-10 flex w-1/2 items-center justify-center text-white">
-                <p className="text-2xl">
+              <div className="max-xs:w-[270px] mt-10 flex w-1/2 items-center justify-center text-white">
+                <p className="text-2xl ">
                   Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
                   ứng dụng.
                 </p>
               </div>
             </div>
-            <div className="mt-10 flex max-w-full items-center justify-center gap-4">
+            <div className="my-10 flex  max-w-full items-center justify-center gap-4">
               <div className="mx-1 flex min-w-fit items-center justify-center text-white">
                 <Button
                   onClick={() => scrollToIntro(ProductRef)}

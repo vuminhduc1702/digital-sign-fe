@@ -103,8 +103,8 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center pt-5">
-                <div className="flex items-center px-10">
+              <div className="flex justify-center max-md:flex-col max-md:items-center max-md:py-8 pt-5">
+                <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}
                   </p>
@@ -120,7 +120,7 @@ export function SectionPackageData() {
                     {t('landingpage:pack_of_data_M2M.NB_IoT')}
                   </p>
                 </div>
-                <div className="flex items-center px-10">
+                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.subscription')}
                   </p>
@@ -139,7 +139,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
                     variant="primary"
                     onClick={open}
                   >

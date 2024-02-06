@@ -55,10 +55,10 @@ export function QandA() {
         style={{ backgroundImage: `url(${Q_A})` }}
       >
         <div className="w-[1040px]">
-          <div className="pb-[40px] pt-[60px] text-center text-[16px] leading-[18.91px] text-primary-400">
+          <div className="pb-[40px] pt-[60px] text-center text-[36px] leading-[18.91px] text-primary-400 max-sm:text-[24px] max-xs:text-[24px]">
             {t('landingpage:Q_A.question')}
           </div>
-          <div className="flex w-full">
+          <div className="flex max-lg:flex-col max-lg:items-center w-full">
             <div className="w-1/2 pr-[30px]">
               <Accordion type="single" collapsible ref={accordionRef_1}>
                 {items.map((item, idx) => (
@@ -88,7 +88,7 @@ export function QandA() {
                 ))}
               </Accordion>
             </div>
-            <div className="w-1/2 pl-[30px]">
+            <div className="w-1/2 pl-[30px] max-lg:pl-0">
               <Accordion type="single" collapsible ref={accordionRef_2}>
                 {items.map((item, idx) => (
                   <AccordionItem value={item.value} key={idx}>

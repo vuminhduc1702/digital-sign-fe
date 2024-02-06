@@ -36,47 +36,49 @@ export function SectionSolution() {
       <div className="mb-20 flex justify-center">
         <div className="w-[1040px]">
           <div>
-            <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
+            <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033] max-sm:text-[18.7px]  max-sm:leading-[37px]">
               {t('landingpage:solution.value')}
             </p>
             <div className="flex justify-center">
-              <h3 className="w-[588px] px-5 text-center text-[35px] leading-[43px]">
+              <h3 className="max-xs:w-[360px] max-xs:text-[24px] w-[588px] px-5 text-center text-[35px] leading-[43px] max-sm:w-[380px] max-sm:text-[30px]">
                 {t('landingpage:solution.accuracy')}
               </h3>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4 pt-8">
+          <div className="max-xs:gap-w grid grid-cols-4 gap-4 pt-8 max-lg:flex max-lg:flex-wrap max-lg:items-center max-lg:justify-center max-sm:gap-2 ">
             {slides.map((item, idx) => (
               <div
                 key={idx}
-                className="h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px]"
+                className="max-max-sm:w-[420px] max-xs:w-[320px] h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px] max-sm:h-[120px]"
                 style={{
                   backgroundImage:
                     'linear-gradient(132.92deg, #EE0033 0%, rgba(238, 0, 51, 0) 52.48%, rgba(238, 0, 51, 0.8) 101.78%)',
                 }}
               >
                 <div
-                  className="h-full w-full  bg-white shadow-md"
+                  className="h-full w-full bg-white shadow-md max-sm:flex max-sm:items-center max-sm:justify-center max-sm:gap-16"
                   style={{
                     borderRadius: 'inherit',
                   }}
                 >
-                  <div className="flex justify-center pt-[50px]">
+                  <div className="flex justify-center pt-[50px] max-sm:pt-0">
                     {item.icon}
                   </div>
-                  <div className="flex justify-center pt-[10px] text-[20px] leading-[23px] text-black">
-                    {item.title_1}
-                  </div>
-                  <div className="flex justify-center pt-[8px] ">
-                    <div className="max-w-[174px] text-center text-[16px] leading-[20.8px] text-[#4D4D4D]">
-                      {item.title_2}
+                  <div>
+                    <div className="flex justify-center pt-[10px] text-[20px] leading-[23px] text-black">
+                      {item.title_1}
+                    </div>
+                    <div className="flex justify-center pt-[8px] ">
+                      <div className="max-w-[174px] text-center text-[16px] leading-[20.8px] text-[#4D4D4D]">
+                        {item.title_2}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             ))}
           </div>
-          <div className="grid  justify-items-end pt-[40px]">
+          <div className="grid justify-items-end pt-[40px] max-lg:flex max-lg:justify-center max-md:flex max-md:justify-center max-sm:flex max-sm:justify-center">
             <div className="h-fit w-fit ">
               <a
                 href="https://cmp.innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
@@ -85,7 +87,7 @@ export function SectionSolution() {
               >
                 <Button
                   type="button"
-                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  className="bg-primary-400 rounded-r-lg rounded-tl-lg border-none hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
                   endIcon={
                     <ArrowRightUpLine

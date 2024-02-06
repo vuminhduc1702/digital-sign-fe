@@ -774,12 +774,12 @@
         "success_delete": "Xoá gói cước thành công"
       },
       "input": {
-        "iname":"Nhập tên gói cước",
-        "lofficial":"Chính thức",
-        "ltrial":"Dùng thử",
-        "tdescribe":"Nội dung mô tả ngắn",
-        "ldisplay":"Hiển thị",
-        "lhide":"Ẩn"
+        "iname": "Nhập tên gói cước",
+        "lofficial": "Chính thức",
+        "ltrial": "Dùng thử",
+        "tdescribe": "Nội dung mô tả ngắn",
+        "ldisplay": "Hiển thị",
+        "lhide": "Ẩn"
       }
     },
     "subcription": {
