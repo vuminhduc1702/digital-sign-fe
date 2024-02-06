@@ -81,7 +81,7 @@ export default function FuelTemplate() {
             { 'md:col-span-1': viewMode === 'minimize_code' },
           )}
         >
-          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+          <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.code')}
@@ -98,7 +98,7 @@ export default function FuelTemplate() {
                   />
                 }
               >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="p-2">
                     <div
                       className="hover:background py-1 hover:cursor-pointer"
@@ -131,7 +131,7 @@ export default function FuelTemplate() {
                 width={20}
                 height={20}
                 viewBox="0 0 50 50"
-                className="cursor-pointer hover:text-primary-400"
+                className="hover:text-primary-400 cursor-pointer"
                 onClick={() => setIsOpen(true)}
               />
               <button onClick={callApiFuel}>
@@ -167,7 +167,7 @@ export default function FuelTemplate() {
             },
           )}
         >
-          <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+          <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.output')}
@@ -184,7 +184,7 @@ export default function FuelTemplate() {
                   />
                 }
               >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="p-2">
                     <div
                       className="py-1 hover:cursor-pointer"
@@ -231,12 +231,12 @@ export default function FuelTemplate() {
         <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
           <div className="mt-3 text-center sm:mt-0 sm:text-left">
             <div className="flex items-center justify-between">
-              <DialogTitle as="h3" className="text-h1 text-secondary-900">
+              <DialogTitle className="text-h1 text-secondary-900">
                 {t('cloud:custom_protocol.service.info')}
               </DialogTitle>
               <div className="ml-3 flex h-7 items-center">
                 <button
-                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="sr-only">Close panel</span>

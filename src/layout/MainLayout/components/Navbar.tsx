@@ -52,8 +52,8 @@ function Navbar() {
   }
 
   const languages = [
-    { code: 'viText', name: 'Tiếng Việt' },
-    { code: 'enText', name: 'English' },
+    { code: 'vi', name: 'Tiếng Việt' },
+    { code: 'en', name: 'English' },
   ]
 
   return (

@@ -125,11 +125,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          // const orderId = parseInt(info.row.id) + 1
-          // return orderId
-          return info.row.index + 1
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

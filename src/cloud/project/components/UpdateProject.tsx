@@ -103,12 +103,12 @@ export function UpdateProject({
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[48rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-4 flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('cloud:project_manager.add_project.edit')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -241,7 +241,7 @@ export function UpdateProject({
                 >
                   {t('cloud:project_manager.add_project.upload_ava_default')}
                 </Button>
-                <div className="mb-3 text-body-xs">
+                <div className="text-body-xs mb-3">
                   {t('cloud:project_manager.add_project.upload_instruction')}
                 </div>
                 <div className="mb-3 space-y-1">
@@ -276,7 +276,7 @@ export function UpdateProject({
                       }
                     }}
                   />
-                  <div className="flex items-center text-body-sm">
+                  <div className="text-body-sm flex items-center">
                     {restoreProjectFileName}
                     {restoreProjectFileName ? (
                       <div className="pl-4">
@@ -284,7 +284,7 @@ export function UpdateProject({
                           height={12}
                           width={12}
                           src={btnRemoveIcon}
-                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
+                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
                           onClick={() => handleResetRestoreProject}
                           alt="restore project"
                         />
@@ -303,7 +303,7 @@ export function UpdateProject({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />

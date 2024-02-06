@@ -82,7 +82,7 @@ export function UpdateCustomer({
       <div className="inline-block h-screen w-full transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('cloud:dashboard.table.edit_tenant')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
