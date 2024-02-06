@@ -81,6 +81,8 @@ export function UpdateWidget({
     SelectOption[]
   > | null>(null)
 
+  const [fetchData, setFetchData] = useState(false)
+
   // map schema
   const mapWidgetSchema = z.object({
     title: nameSchema,
@@ -249,7 +251,7 @@ export function UpdateWidget({
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
   const attrSelectData = attrChartData?.entities?.flatMap(item => {
-    const result = item.attr_keys.map(attr => ({
+    const result = item?.attr_keys?.map(attr => ({
       deviceId: item?.entity_id,
       label: attr,
       value: attr,
@@ -258,6 +260,7 @@ export function UpdateWidget({
   })
 
   useEffect(() => {
+    if (!fetchData) return
     attrChartMutate({
       data: {
         entity_ids: watch('device') || [],
@@ -265,7 +268,7 @@ export function UpdateWidget({
         version_two: true,
       },
     })
-  }, [])
+  }, [fetchData])
 
   // remove duplicate in attrSelectData
   function removeDup(
@@ -278,7 +281,7 @@ export function UpdateWidget({
     const result = array.filter((item, index) => {
       return (
         array.findIndex(
-          item2 => item2.label === item.label && item2.value === item.value,
+          item2 => item2?.label === item?.label && item2?.value === item?.value,
         ) === index
       )
     })
@@ -291,7 +294,7 @@ export function UpdateWidget({
       label: string
     }> = []
     attrChartData?.entities?.map(item => {
-      item.attr_keys.map(attr => {
+      item?.attr_keys?.map(attr => {
         if (attr === attribute) {
           const deviceInfo = getDeviceInfo(item.entity_id)
           if (deviceInfo.includes('undefined')) return
@@ -324,25 +327,24 @@ export function UpdateWidget({
     }))
   }
 
-  // // remove field when devices change
-  // function removeField() {
-  //   console.log(attrSelectData)
-  //   if (!attrSelectData) return
-  //   // if widgetInfoMemo.label isnt in attrSelectData.label then remove it in widgetInfoMemo
-  //   for (let i = fields.length - 1; i >= 0; --i) {
-  //     if (!attrSelectData.find(attr => attr.label === fields[i].label)) {
-  //       console.log('remove', i)
-  //       remove(i)
-  //     }
-  //   }
-  //   console.log('fields', fields)
-  // }
+  // remove field when devices change
+  function removeField() {
+    if (!attrSelectData) return
+    const deviceList = watch('device')
+    for (let i = fields.length - 1; i >= 0; i--) {
+      const attr = fields[i].label
+      for (const j in deviceList) {
+        if (attr.includes(deviceList[j])) {
+          break
+        }
+        remove(i)
+      }
+    }
+  }
 
   // useEffect(() => {
   //   removeField()
   // }, [attrChartData])
-
-  console.log(watch())
 
   return (
     <FormDialog
@@ -640,6 +642,7 @@ export function UpdateWidget({
                       }}
                       handleClearSelectDropdown={() => {
                         selectDropdownAttributeConfigRef.current?.clearValue()
+                        removeField()
                       }}
                       handleChangeSelect={() => {
                         selectDropdownAttributeConfigRef.current?.clearValue()
@@ -744,11 +747,9 @@ export function UpdateWidget({
                                     widgetInfoMemo?.attribute_config[
                                       index
                                     ]?.label.split(' - ')[1],
-                                  label: getDeviceInfo(
-                                    widgetInfoMemo?.attribute_config[
-                                      index
-                                    ]?.label.split(' - ')[1],
-                                  ),
+                                  label:
+                                    widgetInfoMemo?.attribute_config[index]
+                                      ?.label,
                                 }
                               : null
                           }
@@ -973,6 +974,12 @@ export function UpdateWidget({
                               valueAsNumber: true,
                             },
                           )}
+                          // onChange={() => {
+                          //   setValue(
+                          //     'widgetSetting.interval',
+                          //     setDefaultInterval() || 0,
+                          //   )
+                          // }}
                         />
                       ) : null}
 
@@ -1176,9 +1183,7 @@ export function UpdateWidget({
                             },
                           )}
                           options={intervalOptionHandler()}
-                          // defaultValue={
-                          //   intervalOptionHandler()?.[0].value
-                          // }
+                          // defaultValue={undefined}
                         />
                       )}
                     </div>
@@ -1195,6 +1200,9 @@ export function UpdateWidget({
           variant="none"
           size="square"
           startIcon={<EditBtnIcon width={20} height={17} viewBox="0 0 20 17" />}
+          onClick={() => {
+            setFetchData(true)
+          }}
         />
       }
       confirmButton={

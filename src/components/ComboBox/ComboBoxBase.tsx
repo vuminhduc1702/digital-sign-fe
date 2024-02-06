@@ -35,7 +35,7 @@ export function filteredComboboxData<T, K extends keyof T>(
           const searchValue = query.toLowerCase().replace(/\s+/g, '')
           return extractedPropertyKeys.some(key =>
             (data[key] as unknown as string)
-              .toString()
+              ?.toString()
               .toLowerCase()
               .replace(/\s+/g, '')
               .includes(searchValue),

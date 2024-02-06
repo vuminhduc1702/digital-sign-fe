@@ -36,7 +36,13 @@ export const BarChart = ({
   // console.log(`new bar: `, data)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
-  const TIME_PERIOD = widgetInfo?.config?.chartsetting?.time_period || 10000
+  const TIME_PERIOD =
+    widgetInfo?.config?.chartsetting?.time_period ||
+    (widgetInfo?.config?.chartsetting?.end_date &&
+    widgetInfo?.config?.chartsetting?.start_date
+      ? widgetInfo.config.chartsetting.end_date -
+        widgetInfo.config.chartsetting.start_date
+      : 10000)
   const newValuesRef = useRef<TimeSeries | null>(null)
   const prevValuesRef = useRef<TimeSeries | null>(null)
 
@@ -44,7 +50,7 @@ export const BarChart = ({
     Array<{ ts: number; [key: string]: string | number }>
   >([
     {
-      ts: '',
+      ts: 0,
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
@@ -324,12 +330,12 @@ export const BarChart = ({
             return d3.timeFormat('%H %d')(new Date(tick))
         }
       default:
-        switch (true) {
-          case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%H:%M %d/%m')(new Date(tick))
-          default:
-            return d3.timeFormat('%H %d/%m')(new Date(tick))
-        }
+        // switch (true) {
+        //   case TICK_INTERVAL <= 1000 * 60 * 30:
+        //     return d3.timeFormat('%H:%M %d %b')(new Date(tick))
+        //   default:
+            return d3.timeFormat('%d-%b')(new Date(tick))
+        // }
     }
   }
 
@@ -350,20 +356,20 @@ export const BarChart = ({
       [widgetInfo.attribute_config[0].attribute_key +
       ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
-      deviceId: '',
     },
   ])
-
-  const [hasRenderedInit, setHasRenderedInit] = useState(false)
-
+  
   useEffect(() => {
-    if (newValuesRef.current !== null && !hasRenderedInit) {
-      updateScale()
-      setHasRenderedInit(true)
+    if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
+      return
     }
-  }, [newValuesRef.current])
+    updateScale()
+  }, [widgetInfo])
 
   useEffect(() => {
+    if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
+      return
+    }
     const interval = setInterval(() => {
       updateScale()
     }, TICK_INTERVAL)
@@ -481,7 +487,7 @@ export const BarChart = ({
           </>
         ) : (
           <div className="flex h-full items-center justify-center">
-            <Spinner showSpinner={showSpinner} size="xl" />
+            <Spinner size="xl" />
           </div>
         )
       ) : !showSpinner && newValuesRef.current != null ? (

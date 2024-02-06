@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from 'react'
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet'
 import { useTranslation } from 'react-i18next'
 
-import { type WSWidgetMapData, type MapSeries } from '../../types'
+import {
+  type WSWidgetMapData,
+  type MapSeries,
+  type DataSeries,
+} from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 import { type LatLngTuple, type Map } from 'leaflet'
@@ -15,7 +19,7 @@ export function MapChart({
   isEditMode,
   filter,
 }: {
-  data: MapSeries
+  data: DataSeries
   widgetInfo: z.infer<typeof widgetSchema>
   isEditMode: boolean
   filter: Device[]
@@ -26,8 +30,8 @@ export function MapChart({
   const [deviceDetailInfo, setDeviceDetailInfo] = useState<WSWidgetMapData[]>(
     [],
   )
-  const newValuesRef = useRef<MapSeries | null>(null)
-  const prevValuesRef = useRef<MapSeries | null>(null)
+  const newValuesRef = useRef<DataSeries | null>(null)
+  const prevValuesRef = useRef<DataSeries | null>(null)
   const map = useRef<Map>(null)
   const searchDevice = filter[0]
 
@@ -43,7 +47,7 @@ export function MapChart({
     if (newValuesRef.current?.data) {
       const dataForMapChart = Object.entries(data.data).reduce(
         (result: Array<LatLngTuple>, [, dataItem]) => {
-          if (dataItem.length === 0) {
+          if (Object.keys(dataItem).length === 0) {
             const coor: LatLngTuple = [999, 0]
             result.push(coor)
           } else {
@@ -57,8 +61,8 @@ export function MapChart({
               const coor: LatLngTuple = [999, 0]
               result.push(coor)
             } else {
-              let dataLat = Object.values(dataItem)[dataLatIndex].value
-              let dataLong = Object.values(dataItem)[dataLongIndex].value
+              let dataLat = Object.values(dataItem)[dataLatIndex]?.value
+              let dataLong = Object.values(dataItem)[dataLongIndex]?.value
               if (dataLat !== null && dataLong !== null) {
                 const coor: LatLngTuple = [
                   parseFloat(dataLat),
@@ -116,16 +120,36 @@ export function MapChart({
     }
   }, [data])
 
+  const [renderedInit, setRenderedInit] = useState(false)
+
+  function getDefaultPosition() {
+    const filterData = dataForMap.filter((item: any) => item[0] !== 999)
+    if (filterData.length === 1) {
+      const [lat, lng] = filterData[0]
+      map.current?.setView([lat, lng], 7)
+      return
+    }
+    map.current?.fitBounds(dataForMap.filter((item: any) => item[0] !== 999), {
+      padding: [30, 30],
+    })
+  }
+
   useEffect(() => {
+    if (!renderedInit && dataForMap.length > 0) {
+      getDefaultPosition()
+      setRenderedInit(true)
+      return
+    }
+    if (filter.length > 1 || filter.length === 0 || filter[0] === undefined) {
+      return
+    }
     if (!searchDevice) {
-      map.current?.fitBounds(
-        dataForMap.filter((item: any) => item[0] !== 999),
-        {
-          padding: [30, 30],
-        },
-      )
-      // map.current?.setZoom(7)
+      getDefaultPosition()
+      return
     } else {
+      if (dataForMap.length === 0) {
+        return
+      }
       // find index of device in dataForMap
       const deviceIndex = deviceDetailInfo.findIndex(
         device => device.id === searchDevice.id,
@@ -134,7 +158,7 @@ export function MapChart({
       if (lat === 999) {
         toast.error(t('cloud:dashboard.map.device_not_found'))
         return
-      }
+      } 
       map.current?.setView([lat, lng], 7)
     }
   }, [dataForMap, searchDevice])

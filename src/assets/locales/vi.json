@@ -16,7 +16,8 @@
       "flow_engine": "Flow Engine",
       "dashboard": "Bảng điều khiển",
       "role_manage": "Vai trò",
-      "custom_protocol": "Adapter"
+      "custom_protocol": "Adapter",
+      "db_template": "Danh mục dữ liệu"
     },
     "application": {
       "title": "Ứng dụng",
@@ -161,7 +162,8 @@
           "entity_type": "Phân loại",
           "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
-          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?"
+          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?",
+          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?"
         },
         "add_group": {
           "title": "Tạo mới nhóm",
@@ -187,7 +189,8 @@
           "edit": "Sửa user",
           "delete_user": "Xoá user",
           "delete_user_full": "Xoá người dùng",
-          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?"
+          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?",
+          "delete_multiple_user_confirm": "Bạn có chắc chắn muốn xóa những người dùng đã chọn?"
         },
         "add_user": {
           "title": "Tạo mới người dùng",
@@ -240,7 +243,8 @@
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
           "delete_device_full": "Xoá thiết bị",
-          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
+          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?",
+          "delete_multiple_device_confirm": "Bạn có chắc chắn muốn xóa những thiết bị đã chọn?"
         },
         "mqtt_config": {
           "update_success": "Cập nhật MQTT thành công",
@@ -294,7 +298,8 @@
           "onClick_btn": "Kích hoạt",
           "status": "Trạng thái",
           "delete_event": "Xoá sự kiện",
-          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
+          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?",
+          "delete_multiple_event_confirm": "Bạn có chắc chắn muốn xóa các sự kiện đã chọn?"
         },
         "add_event": {
           "title": "Tạo mới sự kiện",
@@ -410,6 +415,50 @@
         "no_template": "Không có mẫu thiết bị"
       }
     },
+    "db_template": {
+      "title": "Danh mục dữ liệu",
+      "info": {
+        "title": "Thông tin mẫu thiết bị",
+        "flow": "Flow",
+        "provision_key": "Provision key",
+        "provision_secret": "Provision secret",
+        "created_at": "Ngày tạo",
+        "create_by": "Người tạo"
+      },
+      "add_db": {
+        "title": "Tạo mới danh mục dữ liệu",
+        "header": "Danh mục dữ liệu",
+        "name": "Tên danh mục dữ liệu",
+        "limit": "Số lượng",
+        "search_exact": "Tìm chính xác",
+        "reload": "Tải tất cả dữ liệu",
+        "add_column": "Thêm cột",
+        "add_row": "Thêm hàng",
+        "column": "Tên cột",
+        "type": "Kiểu dữ liệu",
+        "update_row": "Sửa dữ liệu",
+        "delete_row": "Xóa dữ liệu",
+        "success_create": "Tạo danh mục dữ liệu thành công",
+        "success_update": "Sửa danh mục dữ liệu thành công",
+        "success_delete": "Xoá danh mục dữ liệu thành công",
+        "choose_flow_id": "Vui lòng chọn flow id",
+        "success_add_column": "Thêm cột thành công",
+        "no_flow_id": "Không thuộc flow id",
+        "success_add_rows": "Thêm hàng thành công",
+        "delete_row_confirm": "Bạn có chắc chắn muốn dữ liệu?",
+        "success_delete_row": "Xóa dữ liệu thành công",
+        "success_update_row": "Cập nhật dữ liệu thành công"
+      },
+      "sidebar": {
+        "title": "Danh mục dữ liệu",
+        "id": "Mã ID",
+        "desc": "Mô tả",
+        "edit": "Sửa mẫu TB",
+        "delete_db": "Xoá danh mục dữ liệu",
+        "delete_db_confirm": "Bạn có chắc chắn muốn xóa danh mục dữ liệu {{DBNAME}}?",
+        "no_db": "Không có danh mục dữ liệu"
+      }
+    },
     "role_manage": {
       "title": "Vai trò",
       "header": "Quản lý vai trò",
@@ -512,7 +561,8 @@
         "choose": "Vui lòng chọn Thing",
         "delete": "Xóa Thing",
         "edit": " Sửa Thing",
-        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?"
+        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?",
+        "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
       },
       "adapter": {
         "title": "adapter",
@@ -600,11 +650,11 @@
         "title_line": "Tạo biểu đồ đường",
         "title_pie": "Tạo biểu đồ tròn",
         "title_bar": "Tạo biểu đồ cột",
-        "title_gauge": "Tạo biểu đồ đồng hồ đo",
+        "title_gauge": "Tạo đồng hồ đo",
         "title_table": "Tạo biểu đồ bảng dữ liệu",
         "title_card": "Tạo biểu đồ dữ liệu",
-        "title_controller": "Tạo biểu đồ điều khiển",
-        "title_map": "Tạo biểu đồ bản đồ",
+        "title_controller": "Tạo bảng điều khiển",
+        "title_map": "Tạo bản đồ",
         "update": "Sửa biểu đồ",
         "update_line": "Sửa biểu đồ đường",
         "update_bar": "Sửa biểu đồ cột",
@@ -729,6 +779,14 @@
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
+      },
+      "input": {
+        "iname": "Nhập tên gói cước",
+        "lofficial": "Chính thức",
+        "ltrial": "Dùng thử",
+        "tdescribe": "Nội dung mô tả ngắn",
+        "ldisplay": "Hiển thị",
+        "lhide": "Ẩn"
       }
     },
     "subcription": {
@@ -928,7 +986,8 @@
       "select": "Vui lòng chọn",
       "select_union": "Vui lòng chọn 1 trong các option sau:",
       "number": "Vui lòng nhập số"
-    }
+    },
+    "refresh": "Tải lại trang"
   },
   "loading": {
     "base": "Đang tải dữ liệu...",

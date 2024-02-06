@@ -50,7 +50,7 @@ function ThingServiceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
@@ -69,7 +69,7 @@ function ThingServiceTableContextMenu({
               ).replace('{{SERVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -126,10 +126,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

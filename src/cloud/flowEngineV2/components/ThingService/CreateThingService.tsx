@@ -762,7 +762,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           isLoading={isLoadingService}
           form="create-serviceThing"
           type="submit"
-          disabled={fullScreen}
+          disabled={fullScreen || isLoadingService}
           size="md"
           className="bg-primary-400"
           onClick={() => setTypeInput('Submit')}

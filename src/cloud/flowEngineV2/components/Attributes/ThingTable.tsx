@@ -114,6 +114,8 @@ function ThingTableContextMenu({
 
 type ThingTableProps = {
   data: EntityThing[]
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
 } & BaseTablePagination
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
@@ -123,10 +125,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

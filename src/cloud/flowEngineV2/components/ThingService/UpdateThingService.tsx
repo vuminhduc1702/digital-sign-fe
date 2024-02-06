@@ -201,7 +201,7 @@ export function UpdateThingService({
       >
         <div className="mt-3 h-[95%] text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('cloud:custom_protocol.service.info_service')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
@@ -872,7 +872,7 @@ export function UpdateThingService({
             isLoading={isLoading}
             form="create-serviceThing"
             type="submit"
-            disabled={fullScreen}
+            disabled={fullScreen || isLoading}
             onClick={() => setTypeInput('Submit')}
             size="md"
             className="bg-primary-400"

@@ -51,15 +51,17 @@ export default function App() {
     renderToolbar
   })
   return (
-    <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
-      <div style={{ height: "100%" }}>
-        <Viewer
-          fileUrl="/VHT_IOT_PLATFORM30_1-1.pdf" 
-          plugins={[defaultLayoutPluginInstance]}
-          defaultScale={1}
-        />
-      </div>
-    </Worker>
+    <div className=" z-0">
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
+        <div style={{ height: "100%" }}>
+          <Viewer
+            fileUrl="/VHT_IOT_PLATFORM30_1-1.pdf" 
+            plugins={[defaultLayoutPluginInstance]}
+            defaultScale={1}
+          />
+        </div>
+      </Worker>
+    </div>
   )
 }
 

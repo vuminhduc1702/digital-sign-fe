@@ -39,7 +39,7 @@ function App() {
     // @ts-ignore
     window.toggleDevtools = () => setShowDevtools(old => !old)
   }, [])
-  if (import.meta.env.NODE_ENV === 'production') {
+  if (import.meta.env.PROD) {
     disableReactDevTools()
   }
 
@@ -87,7 +87,15 @@ function App() {
 
     return { message: ctx.defaultError }
   }
-  // z.setErrorMap(customErrorMap)
+  if (import.meta.env.PROD) {
+    z.setErrorMap(customErrorMap)
+  }
+
+  if (import.meta.env.PROD) {
+    console.log = () => {}
+    // console.error = () => {}
+    console.debug = () => {}
+  }
 
   return (
     <Suspense
@@ -118,7 +126,7 @@ function App() {
                 <AppRoutes />
               </Router>
             </AuthLoader>
-            {import.meta.env.NODE_ENV !== 'test' && (
+            {import.meta.env.PROD && (
               <ReactQueryDevtools initialIsOpen={false} />
             )}
             {showDevtools && (
