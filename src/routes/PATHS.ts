@@ -72,6 +72,7 @@ export const PATHS = {
   // Common routes
   HOME: `${BASE_PATH}`,
   USER_INFO: `${BASE_PATH}user-info`,
+  PDF_VIEWER: `${BASE_PATH}pdf-viewer`,
   VERSION: `${BASE_PATH}version`,
   MAINTAIN: `${BASE_PATH}maintain`,
   NOTFOUND: `${BASE_PATH}*`,

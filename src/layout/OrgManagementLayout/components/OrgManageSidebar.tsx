@@ -47,7 +47,6 @@ function OrgManageSidebar() {
 
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
-
   const { data: projectByIdData } = useProjectById({
     projectId,
     config: { enabled: !!projectId },
@@ -116,13 +115,19 @@ function OrgManageSidebar() {
                 if (data[i].level === '1') {
                   break
                 }
-              } else {
-                data[i].isShow = false
+              // } else {
+              //   data[i].isShow = false
               }
             }
           }
         }
       }
+    } else {
+      data.forEach(item => {
+        if (item) {
+          item.isShow = false
+        }
+      })
     }
 
     data.forEach(node => {
@@ -148,7 +153,6 @@ function OrgManageSidebar() {
   }
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
-
   const handleEdit = (data: OrgMapType) => {
     open()
     setSelectedUpdateOrg(data)

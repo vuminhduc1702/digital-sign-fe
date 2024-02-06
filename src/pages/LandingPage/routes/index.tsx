@@ -133,6 +133,12 @@ export function LandingPage() {
                   >
                     <button>{t('landingpage:FAQ')}</button>
                   </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => navigate(PATHS.PDF_VIEWER)}
+                  >
+                    <button>{t('landingpage:category')}</button>
+                  </div>
                 </div>
               </div>
               {showSpinner && userInfoData != null ? (

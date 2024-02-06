@@ -16,7 +16,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen overflow-hidden md:h-screen">
+    <div className="relative flex min-h-screen overflow-hidden md:h-screen">
       {hasSideBar ? (
         <>
           <MobileSidebar
