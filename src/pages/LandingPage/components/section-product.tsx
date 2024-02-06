@@ -85,7 +85,7 @@ export function SectionProduct() {
 
   return (
     <>
-      <div>
+      <div className='mt-[80px]'>
         <div>
           <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
             {t('landingpage:section_product.iot')}

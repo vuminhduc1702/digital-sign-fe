@@ -120,23 +120,28 @@
   min-height: 36px !important;
   opacity: 1;
   cursor: pointer !important;
+ 
 }
 
 .react-multiple-carousel__arrow--left::before {
   content: '\e824';
   color: red !important;
   font-size: 16px !important;
+
 }
 .react-multiple-carousel__arrow--left {
   left: calc(3% - 30px) !important;
+
 }
 .react-multiple-carousel__arrow--right {
   right: calc(3% - 30px) !important;
+ 
 }
 .react-multiple-carousel__arrow--right::before {
   content: '\e825';
   color: red !important;
   font-size: 16px !important;
+
 }
 
 .react-multiple-carousel__arrow:hover {
@@ -145,6 +150,26 @@
 
 .react-multiple-carousel__arrow:hover::before {
   color: aliceblue !important;
+}
+
+@media only screen and (max-width: 1000px) {
+  .react-multiple-carousel__arrow {
+    visibility: hidden;
+  }.react-multiple-carousel__arrow--left::before {
+    visibility: hidden;
+  }.react-multiple-carousel__arrow--left{
+    visibility: hidden;
+  }.react-multiple-carousel__arrow--right{
+    visibility: hidden;
+  }.react-multiple-carousel__arrow--right::before{
+    visibility: hidden;
+  }.react-multiple-carousel__arrow:hover {
+    vertical-align: hidden;
+  }
+  .react-multiple-carousel__arrow:hover::before {
+    visibility: hidden;
+  }
+
 }
 
 /* day-picker css */
