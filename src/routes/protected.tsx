@@ -27,7 +27,7 @@ import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate } from 'react-router-dom'
 import storage from '~/utils/storage'
 import PdfViewer from '~/pages/LandingPage/components/PdfViewer'
-const projectId  = storage.getProject()
+const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
@@ -69,7 +69,7 @@ export const protectedRoutes = [
       ...AiRoutes,
       ...CustomerManageRoutes,
       {
-        path: PATHS.DEVICE_TEMPLATE ,
+        path: PATHS.DEVICE_TEMPLATE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <DeviceTemplateManage />
@@ -89,34 +89,37 @@ export const protectedRoutes = [
               />
             ),
           },
-          { 
+          {
             path: PATHS.TEMPLATE_DEFAULT,
             children: [
-              { 
+              {
                 path: ':projectId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
-                    <Default/>
+                    <Default />
                   </ErrorBoundary>
                 ),
-                 children: [{ path: ':templateId' }]
-              }
-            ] 
+                children: [{ path: ':templateId' }],
+              },
+            ],
           },
-          { 
-            path: PATHS.TEMPLATE_LWM2M, 
+          {
+            path: PATHS.TEMPLATE_LWM2M,
             children: [
-              { 
-                path: ':projectId', 
+              {
+                path: ':projectId',
                 element: (
                   <ErrorBoundary FallbackComponent={ErrorFallback}>
                     <LwM2M />
                   </ErrorBoundary>
                 ),
-                children: [{ path: ':templateId' }, { path: ':templateId/:id' }],
-              }
-            ]
-          }
+                children: [
+                  { path: ':templateId' },
+                  { path: ':templateId/:id' },
+                ],
+              },
+            ],
+          },
         ],
       },
       {
@@ -192,14 +195,6 @@ export const protectedRoutes = [
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
             <SelfAccount />
-          </ErrorBoundary>
-        ),
-      },
-      {
-        path: PATHS.PDF_VIEWER,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <PdfViewer />
           </ErrorBoundary>
         ),
       },

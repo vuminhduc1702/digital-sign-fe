@@ -1,12 +1,14 @@
 import { useLocation, useNavigate, useRoutes } from 'react-router-dom'
+import { useEffect } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 
 import { BASE_PATH, PATHS } from './PATHS'
 import { useUser } from '~/lib/auth'
 import { lazyImport } from '~/utils/lazyImport'
-
 import { protectedRoutes } from './protected'
 import { publicRoutes } from './public'
-import { useEffect } from 'react'
+import { ErrorFallback } from '~/pages/ErrorPage'
+import { PDFViewer } from '~/pages/LandingPage/components/PdfViewer'
 
 const { LandingPage } = lazyImport(
   () => import('~/pages/LandingPage'),
@@ -44,6 +46,14 @@ export const AppRoutes = () => {
     {
       path: PATHS.VERSION,
       element: <VersionPage />,
+    },
+    {
+      path: PATHS.PDF_VIEWER,
+      element: (
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
+          <PDFViewer />
+        </ErrorBoundary>
+      ),
     },
   ]
 

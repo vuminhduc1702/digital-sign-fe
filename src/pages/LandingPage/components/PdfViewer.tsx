@@ -1,12 +1,12 @@
-import { Worker, Viewer } from "@react-pdf-viewer/core"
-import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout"
-import "@react-pdf-viewer/core/lib/styles/index.css"
-import "@react-pdf-viewer/default-layout/lib/styles/index.css"
+import { Worker, Viewer } from '@react-pdf-viewer/core'
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
+import '@react-pdf-viewer/core/lib/styles/index.css'
+import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 
-export default function App() {
-  const renderToolbar = (Toolbar) => (
+export function PDFViewer() {
+  const renderToolbar = Toolbar => (
     <Toolbar>
-      {(slots) => {
+      {slots => {
         const {
           CurrentPageLabel,
           Download,
@@ -15,10 +15,10 @@ export default function App() {
           NumberOfPages,
           Zoom,
           ZoomIn,
-          ZoomOut
-        } = slots;
+          ZoomOut,
+        } = slots
         return (
-          <div className="flex items-center justify-between w-full font-helvetica">
+          <div className="font-helvetica flex w-full items-center justify-between">
             <div className="p-2">
               <GoToPreviousPage />
             </div>
@@ -28,7 +28,7 @@ export default function App() {
             <div className="p-2">
               <GoToNextPage />
             </div>
-            <div className="p-2 ml-auto">
+            <div className="ml-auto p-2">
               <ZoomOut />
             </div>
             <div className="p-2">
@@ -37,7 +37,7 @@ export default function App() {
             <div className="p-2">
               <ZoomIn />
             </div>
-            <div className="p-2 ml-auto">
+            <div className="ml-auto p-2">
               <Download />
             </div>
           </div>
@@ -47,15 +47,15 @@ export default function App() {
   )
 
   const defaultLayoutPluginInstance = defaultLayoutPlugin({
-    sidebarTabs: (defaultTabs) => [],
-    renderToolbar
+    sidebarTabs: defaultTabs => [],
+    renderToolbar,
   })
   return (
     <div className=" z-0">
       <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
-        <div style={{ height: "100%" }}>
+        <div style={{ height: '100%' }}>
           <Viewer
-            fileUrl="/VHT_IOT_PLATFORM30_1-1.pdf" 
+            fileUrl="/VHT_IOT_PLATFORM30_1-1.pdf"
             plugins={[defaultLayoutPluginInstance]}
             defaultScale={1}
           />
@@ -64,4 +64,3 @@ export default function App() {
     </div>
   )
 }
-
