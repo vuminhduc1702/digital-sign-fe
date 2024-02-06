@@ -74,6 +74,8 @@ export function TableChart({
         newValuesRef.current = data
         dataManipulation()
       }
+    } else {
+      setDataTransformedFeedToChart([])
     }
   }, [data])
 
@@ -95,13 +97,12 @@ export function TableChart({
           unit: widgetInfo.attribute_config.filter(
             obj =>
               obj.attribute_key === extractKey(attribute_key)[0] &&
-              obj.label === extractKey(attribute_key)[1] + ' - ' + extractKey(attribute_key)[2],
-          )[0].unit,
+              obj.label === extractKey(attribute_key)[2]
+          )[0]?.unit,
           entity_name: '',
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
-
     setDataTransformedFeedToChart(tableWidgetDataType)
   }
 

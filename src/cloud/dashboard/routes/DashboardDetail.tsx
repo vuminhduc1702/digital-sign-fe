@@ -75,6 +75,7 @@ import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
 import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
+import { EntityId } from '../types'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -146,7 +147,6 @@ export function DashboardDetail() {
 
   const projectId = storage.getProject()?.id
 
-  // only return findOrg once
   function findOrg() {
     let result = ''
     for (const key in widgetList) {
@@ -292,6 +292,27 @@ export function DashboardDetail() {
     return deviceInfo
   }
 
+  // get device search list
+  function getMapDeviceList(widgetInfo: any) {
+    const result: EntityId[] = []
+    widgetInfo?.attribute_config?.map(item => {
+      const entityName = item.deviceName
+      const id = item.label
+      if (
+        result.findIndex(
+          entity => entity.id === id && entity.entityName === entityName,
+        ) === -1
+      ) {
+        result.push({
+          entityName: entityName,
+          entityType: 'DEVICE',
+          id: id,
+        })
+      }
+    })
+    return result
+  }
+
   return (
     <div className="relative flex grow flex-col">
       <TitleBar
@@ -339,15 +360,9 @@ export function DashboardDetail() {
             {(Object.keys(widgetDetailDB).length !== 0 ||
               Object.keys(widgetList).length > 0) &&
               Object.keys(widgetList).map((widgetId, index) => {
-                const widgetInfo = widgetList?.[widgetId]
+                const widgetInfo = { ...widgetList?.[widgetId] }
                 widgetInfo?.attribute_config?.map(item => {
-                  // console.log(getDeviceInfo(item.label))
-                  if (getDeviceInfo(item.label)?.name !== undefined) {
-                    item.label =
-                      getDeviceInfo(item.label)?.name + ' - ' + item.label
-                  } else {
-                    item.label = item.label
-                  }
+                  item.deviceName = getDeviceInfo(item.label)?.name
                 })
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
@@ -383,7 +398,6 @@ export function DashboardDetail() {
                         })),
                       )
                     : {}
-                // console.log(widgetInfo)
                 return (
                   <div
                     key={widgetId}
@@ -480,7 +494,7 @@ export function DashboardDetail() {
                       <div className="absolute right-[10%] top-0 mr-8 mt-2 flex gap-x-2">
                         <ComboBoxSelectDeviceDashboard
                           setFilteredComboboxData={setFilteredComboboxDataMap}
-                          data={lastestValues.device}
+                          data={getMapDeviceList(widgetInfo)}
                         />
                       </div>
                     ) : null}

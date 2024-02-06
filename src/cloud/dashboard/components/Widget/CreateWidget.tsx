@@ -248,6 +248,7 @@ export const attrWidgetSchema = z.array(
     unit: z.string(),
     max: z.number(),
     min: z.number(),
+    deviceName: z.string().optional(),
   }),
 )
 
@@ -530,8 +531,7 @@ export function CreateWidget({
     null,
   )
 
-  function intervalOptionHandler() {
-    const timePeriod = watch('widgetSetting.time_period')
+  function intervalOptionHandler(timePeriod: number) {
     const timePeriodPosition = WS_REALTIME_PERIOD.findIndex(
       period => period.value === timePeriod,
     )
@@ -549,23 +549,25 @@ export function CreateWidget({
     }))
   }
 
-  // // remove field when devices change
-  // function removeField() {
-  //   if (!attrChartData) return
-  //   for (let i = fields.length; i >= 0; i--) {
+  // remove field when devices change
+  // function removeField(deviceList: string[]) {
+  //   for (let i = fields.length - 1; i >= 0; i--) {
   //     if (
-  //       !attrSelectData?.find(item => {
-  //         return item?.label === fields[i]?.label
-  //       })
+  //       !deviceList.includes(fields[i].label.split(' - ')[1] || fields[i].label)
   //     ) {
   //       remove(i)
   //     }
   //   }
   // }
 
-  // useEffect(() => {
-  //   removeField()
-  // }, [attrChartData])
+  useEffect(() => {
+    const defaultOption =
+      intervalOptionHandler(watch('widgetSetting.time_period')) || []
+    if (defaultOption.length > 0) {
+      setValue('widgetSetting.interval', defaultOption[0].value)
+    }
+  }, [watch('widgetSetting.time_period')])
+
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
@@ -867,6 +869,7 @@ export function CreateWidget({
                               // time_series: true,
                             },
                           })
+                          // removeField(option)
                         }
                       }}
                       handleClearSelectDropdown={() => {
@@ -1423,7 +1426,9 @@ export function CreateWidget({
                                 valueAsNumber: true,
                               },
                             )}
-                            options={intervalOptionHandler()}
+                            options={intervalOptionHandler(
+                              watch('widgetSetting.time_period'),
+                            )}
                           />
                         )}
                       </div>

@@ -120,113 +120,10 @@ export const BarChart = ({
     )
   }
 
-  function dateTransformation(date: number) {
-    if (widgetInfo?.config != null) {
-      const { year, month, day, ...dateTimeOptionsWithoutYearMonthDay } =
-        defaultDateConfig
-      const timePeriod =
-        widgetInfo.config.chartsetting.time_period ||
-        widgetInfo.config.chartsetting.end_date -
-          widgetInfo.config.chartsetting.start_date
-      let dateVNFormat = ''
-      if (timePeriod <= 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            ...dateTimeOptionsWithoutYearMonthDay,
-            second: '2-digit',
-          },
-        })
-      } else if (timePeriod <= 1 * 24 * 60 * 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            ...dateTimeOptionsWithoutYearMonthDay,
-          },
-        })
-      } else if (timePeriod <= 7 * 24 * 60 * 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            day,
-            ...dateTimeOptionsWithoutYearMonthDay,
-          },
-        })
-      } else if (timePeriod <= 180 * 24 * 60 * 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            month,
-            day,
-          },
-        })
-      } else if (timePeriod <= 365 * 24 * 60 * 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            month,
-          },
-        })
-      } else if (timePeriod <= 5 * 365 * 24 * 60 * 60 * 1000) {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            year,
-            month,
-          },
-        })
-      } else {
-        dateVNFormat = getVNDateFormat({
-          date,
-          config: {
-            year,
-          },
-        })
-      }
-
-      return dateVNFormat
-    }
-
-    return ''
-  }
-
   const showSpinner = useSpinDelay(dataTransformedFeedToChart[0].ts === 0, {
     delay: 400,
     minDuration: 500,
   })
-
-  function extractDatakey(dataKey: string) {
-    const dataKeyArray = dataKey.split(' - ')
-    const dataKeyObject = [
-      dataKeyArray[0],
-      dataKeyArray[1] + ' - ' + dataKeyArray[2],
-    ]
-    return dataKeyObject
-  }
-
-  function formatDatakey(dataKey: string) {
-    const extract = extractDatakey(dataKey)
-    const dataKeyAttr = extract[0]
-    const dataKeyLabel = extract[1]
-    const dataKeyAttrArray = widgetInfo.attribute_config.map(
-      item => item.attribute_key,
-    )
-
-    const dataKeyAttrIndex = dataKeyAttrArray.indexOf(dataKeyAttr)
-
-    if (dataKeyAttrIndex !== -1) {
-      const dataKeyAttrIndexArray = widgetInfo.attribute_config
-        .map(item => item.attribute_key)
-        .filter(item => item.includes(dataKeyAttr))
-      if (dataKeyAttrIndexArray.length > 1) {
-        return dataKeyAttr + ' - ' + dataKeyLabel
-      } else {
-        return dataKeyAttr
-      }
-    } else {
-      return dataKeyAttr
-    }
-  }
 
   const renderTooltip = (props: any) => {
     const { payload } = props
@@ -236,7 +133,13 @@ export const BarChart = ({
           <>
             {payload?.map((entry: any, index: number) => {
               const unitConfig = widgetInfo.attribute_config.filter(
-                obj => obj.attribute_key + ' - ' + obj.label === entry.dataKey,
+                obj =>
+                  obj.attribute_key +
+                    ' - ' +
+                    obj.deviceName +
+                    ' - ' +
+                    obj.label ===
+                  entry.dataKey,
               )
               if (entry.payload.ts !== 0) {
                 return (
@@ -249,11 +152,7 @@ export const BarChart = ({
                       {unitConfig &&
                       unitConfig.length > 0 &&
                       unitConfig[0].unit !== ''
-                        ? formatDatakey(
-                            unitConfig[0].attribute_key +
-                              ' - ' +
-                              unitConfig[0].label,
-                          ) +
+                        ? unitConfig[0].deviceName +
                           ': ' +
                           entry.value +
                           ' (' +
@@ -277,12 +176,12 @@ export const BarChart = ({
       <div className="pt-3 text-center">
         {payload?.reverse().map((entry: any, index: number) => {
           const unitConfig = widgetInfo.attribute_config.filter(
-            obj => obj.attribute_key + ' - ' + obj.label === entry.dataKey,
+            obj =>
+              obj.attribute_key + ' - ' + obj.deviceName + ' - ' + obj.label ===
+              entry.dataKey,
           )
-          const splitDataKey = entry.value.split(' - ')
-          const display = splitDataKey[1]
-            ? splitDataKey[0] + ' - ' + splitDataKey[1]
-            : splitDataKey[0]
+          const display =
+            unitConfig[0].attribute_key + ' - ' + unitConfig[0].deviceName
           return (
             <span key={`item-${index}`} className="pr-4">
               <div
@@ -312,7 +211,7 @@ export const BarChart = ({
     }, 1000)
   }
 
-  function timeFormatter(tick: any | null) {
+  function timeFormatter(tick: number) {
     switch (true) {
       case TIME_PERIOD <= 1000 * 60 * 60 * 12:
         switch (true) {
@@ -325,17 +224,17 @@ export const BarChart = ({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%H:%M %d')(new Date(tick))
+            return d3.timeFormat('%H:%M %d-%b')(new Date(tick))
           default:
-            return d3.timeFormat('%H %d')(new Date(tick))
+            return d3.timeFormat('%I %p, %d-%b')(new Date(tick))
         }
       default:
         // switch (true) {
         //   case TICK_INTERVAL <= 1000 * 60 * 30:
         //     return d3.timeFormat('%H:%M %d %b')(new Date(tick))
         //   default:
-            return d3.timeFormat('%d-%b')(new Date(tick))
-        // }
+        return d3.timeFormat('%d-%b')(new Date(tick))
+      // }
     }
   }
 
@@ -358,7 +257,7 @@ export const BarChart = ({
       widgetInfo.attribute_config[0].label]: 0,
     },
   ])
-  
+
   useEffect(() => {
     if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
       return
@@ -464,7 +363,12 @@ export const BarChart = ({
                   tickFormatter={timeFormatter}
                 />
                 {widgetInfo.attribute_config.map((key, index) => {
-                  const attributeKey = key.attribute_key + ' - ' + key.label
+                  const attributeKey =
+                    key.attribute_key +
+                    ' - ' +
+                    key.deviceName +
+                    ' - ' +
+                    key.label
                   const colorKey = key?.color
 
                   return (
@@ -513,7 +417,8 @@ export const BarChart = ({
               />
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
-                const attributeKey = key.attribute_key + ' - ' + key.label
+                const attributeKey =
+                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
                 const colorKey = key?.color
 
                 return (
@@ -552,7 +457,8 @@ export const BarChart = ({
               <Tooltip content={renderTooltip} />
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
-                const attributeKey = key.attribute_key + ' - ' + key.label
+                const attributeKey =
+                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
                 const colorKey = key?.color
 
                 return (
