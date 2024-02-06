@@ -32,10 +32,10 @@ interface TreeProps {
 }
 
 const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
-  const dataSorted = data.sort((a, b) =>
+  const dataSorted = data?.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
-  return dataSorted.map(item => (
+  return dataSorted?.map(item => (
     <Tree
       key={item.id}
       data={item}
@@ -44,7 +44,6 @@ const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
     />
   ))
 }
-
 const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const { t } = useTranslation()
   const [showChildren, setShowChildren] = useState(false)
@@ -62,7 +61,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
       setShowChildren(data?.isShow)
     }
   }, [isShow])
-
+  
   if (!data) return null
   const dataSorted = data.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
@@ -74,7 +73,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
         <div className="flex items-center" key={data.id}>
           <div
             className="h-5 w-5"
-            onClick={() => setShowChildren(!showChildren)}
+            onClick={() => setShowChildren(!showChildren) }
           >
             {data.children.length ? (
               <img

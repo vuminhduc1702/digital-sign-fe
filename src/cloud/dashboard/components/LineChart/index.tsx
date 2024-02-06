@@ -33,7 +33,6 @@ export function LineChart({
   refetchData?: () => void
   refreshBtn?: boolean
 }) {
-  // console.log(`new bar: `, data)
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
   const TIME_PERIOD =
@@ -329,15 +328,15 @@ export function LineChart({
           case TICK_INTERVAL <= 1000 * 60 * 30:
             return d3.timeFormat('%H:%M %d')(new Date(tick))
           default:
-            return d3.timeFormat('%H %d')(new Date(tick))
+            return d3.timeFormat('%H %d %b')(new Date(tick))
         }
       default:
         // switch (true) {
         //   case TICK_INTERVAL <= 1000 * 60 * 30:
         //     return d3.timeFormat('%H:%M %d %b')(new Date(tick))
         //   default:
-            return d3.timeFormat('%d %b')(new Date(tick))
-        // }
+        return d3.timeFormat('%d %b')(new Date(tick))
+      // }
     }
   }
 
@@ -357,21 +356,15 @@ export function LineChart({
       [widgetInfo.attribute_config[0].attribute_key +
       ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
-      deviceId: '',
     },
   ])
-
-  const [hasRenderedInit, setHasRenderedInit] = useState(false)
 
   useEffect(() => {
     if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
       return
     }
-    if (newValuesRef.current !== null && !hasRenderedInit) {
-      updateScale()
-      setHasRenderedInit(true)
-    }
-  }, [newValuesRef.current])
+    updateScale()
+  }, [widgetInfo])
 
   useEffect(() => {
     if (widgetInfo?.config?.chartsetting.data_type === 'HISTORY') {
@@ -433,7 +426,6 @@ export function LineChart({
           [widgetInfo.attribute_config[0].attribute_key +
           ' - ' +
           widgetInfo.attribute_config[0].label]: 0,
-          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)

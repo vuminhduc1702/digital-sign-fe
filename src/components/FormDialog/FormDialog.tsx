@@ -58,6 +58,7 @@ export const FormDialog = ({
 
   const trigger = cloneElement(triggerButton, {
     onClick: () => {
+      triggerButton.props.onClick?.()
       open()
       resetData?.()
     },
@@ -80,19 +81,22 @@ export const FormDialog = ({
           )}
         >
           <div
-            className={cn('mt-3 text-center pl-5 pb-5 pr-5 sm:mt-0 sm:text-left', {
-              'h-[95%]': isFullScreen,
-            })}
+            className={cn(
+              'mt-3 pb-5 pl-5 pr-5 text-center sm:mt-0 sm:text-left',
+              {
+                'h-[95%]': isFullScreen,
+              },
+            )}
           >
             <div className="flex items-center justify-between">
               <div className="mx-auto">
-                <DialogTitle as="h3" className="text-2xl font-semibold ">
+                <DialogTitle className="text-2xl font-semibold ">
                   {title}
                 </DialogTitle>
               </div>
               <div className="flex h-7 ">
                 <button
-                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                   onClick={close}
                 >
                   <span className="sr-only">Close panel</span>
@@ -114,7 +118,7 @@ export const FormDialog = ({
             <Button
               type="button"
               variant="secondary"
-              className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+              className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
               onClick={close}
               ref={cancelButtonRef}
               startIcon={

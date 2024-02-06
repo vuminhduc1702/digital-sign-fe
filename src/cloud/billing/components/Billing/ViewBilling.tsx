@@ -1,7 +1,6 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { PDFViewer } from '@react-pdf/renderer'
 import * as z from 'zod'
@@ -19,11 +18,7 @@ type ViewBillingProps = {
   close: () => void
   isOpen: boolean
 }
-export function ViewBilling({
-  id,
-  close,
-  isOpen,
-}: ViewBillingProps) {
+export function ViewBilling({ id, close, isOpen }: ViewBillingProps) {
   const { t } = useTranslation()
   const cancelButtonRef = useRef(null)
 
@@ -37,12 +32,12 @@ export function ViewBilling({
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[60rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('billing:manage_bill.service_bill')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -50,7 +45,7 @@ export function ViewBilling({
               </button>
             </div>
           </div>
-          <PDFViewer className='mt-4' height={700} width={"100%"}>
+          <PDFViewer className="mt-4" height={700} width={'100%'}>
             <BillingPDF dataPdf={data?.data} />
           </PDFViewer>
         </div>
@@ -67,7 +62,6 @@ export function ViewBilling({
           </Button>
         </div>
       </div>
-
     </Dialog>
   )
 }

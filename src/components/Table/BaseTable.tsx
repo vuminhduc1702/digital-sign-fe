@@ -129,8 +129,6 @@ export function BaseTable<T extends Record<string, any>>({
     })
   }
 
-
-
   const table = useReactTable({
     data,
     columns,
