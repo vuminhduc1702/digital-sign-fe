@@ -1,45 +1,65 @@
-import React, { useState } from 'react';
-import { Document, Page } from 'react-pdf';
-import { pdfjs } from 'react-pdf';
-import { saveAs } from 'file-saver';
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+import { Worker, Viewer } from "@react-pdf-viewer/core"
+import { defaultLayoutPlugin } from "@react-pdf-viewer/default-layout"
+import "@react-pdf-viewer/core/lib/styles/index.css"
+import "@react-pdf-viewer/default-layout/lib/styles/index.css"
 
-interface PDFViewerProps {
-  pdfUrl: '/sample.pdf';
+export default function App() {
+  const renderToolbar = (Toolbar) => (
+    <Toolbar>
+      {(slots) => {
+        const {
+          CurrentPageLabel,
+          Download,
+          GoToNextPage,
+          GoToPreviousPage,
+          NumberOfPages,
+          Zoom,
+          ZoomIn,
+          ZoomOut
+        } = slots;
+        return (
+          <div className="flex items-center justify-between w-full font-helvetica">
+            <div className="p-2">
+              <GoToPreviousPage />
+            </div>
+            <div className="p-2">
+              <CurrentPageLabel /> / <NumberOfPages />
+            </div>
+            <div className="p-2">
+              <GoToNextPage />
+            </div>
+            <div className="p-2 ml-auto">
+              <ZoomOut />
+            </div>
+            <div className="p-2">
+              <Zoom />
+            </div>
+            <div className="p-2">
+              <ZoomIn />
+            </div>
+            <div className="p-2 ml-auto">
+              <Download />
+            </div>
+          </div>
+        )
+      }}
+    </Toolbar>
+  )
+
+  const defaultLayoutPluginInstance = defaultLayoutPlugin({
+    sidebarTabs: (defaultTabs) => [],
+    renderToolbar
+  })
+  return (
+    <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.6.347/build/pdf.worker.min.js">
+      <div style={{ height: "100%" }}>
+        <Viewer
+          fileUrl="/VHT_IOT_PLATFORM30_1-1.pdf" 
+          plugins={[defaultLayoutPluginInstance]}
+          defaultScale={1}
+        />
+      </div>
+    </Worker>
+  )
 }
 
-const PDFViewer: React.FC<PDFViewerProps> = () => {
-  const [numPages, setNumPages] = useState<number | null>(null);
-  const [pageNumber, setPageNumber] = useState(1);
-
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-  };
-
-  const handleDownload = async () => {
-    try {
-      const response = await fetch('/sample.pdf');
-      const blob = await response.blob();
-      saveAs(blob, 'downloadedFile.pdf');
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-    }
-  };
-
-  return (
-    <div style={{display: "flex", justifyContent: "center"}}>
-      <div style={{width: "700px", border: "3px solid gray"}}>
-        <Document className="custom-document" file="/sample.pdf" onLoadSuccess={onDocumentLoadSuccess}>
-          {Array(numPages)
-            .fill()
-            .map((_, i) => (
-              <Page key={i + 1} pageNumber={i + 1} />
-            ))}
-        </Document>
-      </div>
-      <button onClick={handleDownload}>Download PDF</button>
-    </div>
-  );
-};
-
-export default PDFViewer;
