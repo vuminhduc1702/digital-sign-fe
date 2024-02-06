@@ -66,22 +66,16 @@ export default function CreateColumn({
       triggerButton={
         <TooltipProvider >
           <Tooltip>
-            <TooltipTrigger className={cn('absolute right-[36px] top-[102px] h-9 w-9 rounded-md border-none shadow-none', {
-              'top-[102px]': !isSearch && !isValidate,
-              'top-[98px]': isSearch,
-              'top-[125px]': isValidate,
-            })}>
+            <TooltipTrigger className={cn('absolute right-[6px] top-[108px] rounded-md')}>
               <Button
-                className='border-none shadow-none'
+                className='h-6 w-6 rounded-md'
                 variant="trans"
                 size="square"
                 startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
               />
             </TooltipTrigger>
-            <TooltipContent >
-              <div className="">
+            <TooltipContent side="left">
                 {t('cloud:db_template.add_db.add_column')}
-              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

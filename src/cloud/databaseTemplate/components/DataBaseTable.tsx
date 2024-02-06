@@ -192,6 +192,7 @@ export function DataBaseTable({
       popoverClassName="absolute right-0 top-1 block"
       data={data || []}
       columns={columns}
+      isHiddenCheckbox={true}
       {...props}
     />
   )

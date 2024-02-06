@@ -140,17 +140,17 @@ export function DataBaseTemplateManage() {
                         onClose={refetchData}
                         columnsProp={data?.data?.columns || []}
                       />
-                      <div className='relative w-full'>{t('cloud:db_template.add_db.add_row')}</div>
                     </div>
                     <div className='flex items-center gap-x-2'>
                       <Button
-                        className="h-9 w-9 rounded-md"
+                        className="w-full justify-start rounded-md "
                         variant="trans"
                         size="square"
                         onClick={refetchData}
-                        startIcon={<ReloadIcon width={16} height={16} viewBox="0 0 16 16" />}
-                      />
-                      <div className='relative w-full'>{t('cloud:db_template.add_db.reload')}</div>
+                        startIcon={<ReloadIcon className='mt-0.5' width={16} height={16} viewBox="0 0 16 16" />}
+                      >
+                        {t('cloud:db_template.add_db.reload')}
+                      </Button>
                     </div>
                   </div>
 
@@ -276,8 +276,8 @@ export function DataBaseTemplateManage() {
                         error={formState.errors['limit']}
                         registration={register('limit')}
                         type='number'
+                        placeholder={t('cloud:db_template.add_db.limit')}
                       />
-                      <span className='relative w-1/2'>{t('cloud:db_template.add_db.limit')}</span>
                       {/* <Switch
                           onCheckedChange={checked =>
                             setIsShow(checked)

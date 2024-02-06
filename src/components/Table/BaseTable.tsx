@@ -47,6 +47,9 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText,
   refreshBtn,
   callbackParent,
+  rowSelection = {},
+  setRowSelection,
+  isHiddenCheckbox
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -63,13 +66,15 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText?: string
   refreshBtn?: boolean
   callbackParent?: () => void
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  isHiddenCheckbox?: boolean
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
-  const [rowSelection, setRowSelection] = useState({})
 
   function IndeterminateCheckbox({
     indeterminate,
@@ -79,13 +84,16 @@ export function BaseTable<T extends Record<string, any>>({
     const ref = useRef<HTMLInputElement>(null!)
 
     useEffect(() => {
-      if (typeof indeterminate === 'boolean') {
+      if (typeof indeterminate === 'boolean' && ref.current) {
         ref.current.indeterminate = !rest.checked && indeterminate
       }
     }, [ref, indeterminate])
 
     return (
       <input
+        style={{
+          accentColor: '#e74c3c',
+        }}
         type="checkbox"
         ref={ref}
         className={className + ' cursor-pointer'}
@@ -94,30 +102,34 @@ export function BaseTable<T extends Record<string, any>>({
     )
   }
 
-  columns.unshift({
-    id: 'select',
-    header: info => (
-      <IndeterminateCheckbox
-        {...{
-          checked: info?.table.getIsAllRowsSelected(),
-          indeterminate: info?.table.getIsSomeRowsSelected(),
-          onChange: info?.table.getToggleAllRowsSelectedHandler(),
-        }}
-      />
-    ),
-    cell: ({ row }) => (
-      <div className="px-1">
+  if (!isHiddenCheckbox) {
+    columns.unshift({
+      id: 'select',
+      header: info => (
         <IndeterminateCheckbox
           {...{
-            checked: row.getIsSelected(),
-            disabled: !row.getCanSelect(),
-            indeterminate: row.getIsSomeSelected(),
-            onChange: row.getToggleSelectedHandler(),
+            checked: info?.table.getIsAllRowsSelected(),
+            indeterminate: info?.table.getIsSomeRowsSelected(),
+            onChange: info?.table.getToggleAllRowsSelectedHandler(),
           }}
         />
-      </div>
-    ),
-  })
+      ),
+      cell: ({ row }) => (
+        <div className="px-1">
+          <IndeterminateCheckbox
+            {...{
+              checked: row.getIsSelected(),
+              disabled: !row.getCanSelect(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+          />
+        </div>
+      ),
+    })
+  }
+
+
 
   const table = useReactTable({
     data,
@@ -137,6 +149,7 @@ export function BaseTable<T extends Record<string, any>>({
     getExpandedRowModel: getExpandedRowModel(),
     enableRowSelection: true, //enable row selection for all rows
     onRowSelectionChange: setRowSelection,
+    getRowId: row => (row.id ? row.id : row.user_id),
   })
 
   const totalAttrs = total || data?.length
@@ -187,12 +200,14 @@ export function BaseTable<T extends Record<string, any>>({
                           <div
                             className={`text-table-header ${
                               header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
-                                : ''
-                            }`}
+                              ? 'cursor-pointer select-none'
+                              : ''
+                              }`}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            <div className="text-table-header relative flex items-center justify-center">
+                            <div className={cn('text-table-header relative flex items-center justify-center', {
+                              'px-3': headerGroup.headers.length > 8,
+                            })}>
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -441,7 +456,7 @@ export function BaseTable<T extends Record<string, any>>({
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
                 (pageIndex + 1) * pageSize <=
-                  limitPagination * countLimitPaginationRef.current
+                limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
@@ -464,7 +479,7 @@ export function BaseTable<T extends Record<string, any>>({
               if (
                 limitPagination < totalAttrs &&
                 (pageIndex + 1) * pageSize >
-                  limitPagination * countLimitPaginationRef.current
+                limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
                 setOffset?.(offset => offset + limitPagination)
