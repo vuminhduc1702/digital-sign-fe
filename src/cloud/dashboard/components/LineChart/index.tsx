@@ -126,7 +126,6 @@ export function LineChart({
 
   const renderTooltip = (props: any) => {
     const { payload } = props
-
     return (
       <div>
         {payload?.length === 0 ? null : (
@@ -253,6 +252,8 @@ export function LineChart({
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key +
       ' - ' +
+      widgetInfo.attribute_config[0].deviceName +
+      ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
     },
   ])
@@ -322,6 +323,8 @@ export function LineChart({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key +
           ' - ' +
+          widgetInfo.attribute_config[0].deviceName +
+          ' - ' +
           widgetInfo.attribute_config[0].label]: 0,
         })
       }
@@ -329,8 +332,6 @@ export function LineChart({
       setTicks(divineTick)
     }
   }
-  
-  console.log(realtimeData)
 
   return (
     <>
@@ -420,8 +421,12 @@ export function LineChart({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
-                const colorKey = key.color
+                  key?.attribute_key +
+                  ' - ' +
+                  key?.deviceName +
+                  ' - ' +
+                  key?.label
+                const colorKey = key?.color
 
                 return (
                   <Line
