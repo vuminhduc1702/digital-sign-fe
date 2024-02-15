@@ -33,4 +33,26 @@ const convertEpochToDate = (timestamp: number) => {
   return formattedDate
 }
 
-export { uppercaseTheFirstLetter, createExportHeaders, convertEpochToDate }
+const convertType = (str: string) => {
+  switch (str) {
+    case 'STR':
+      return 'String'
+    case 'BOOL':
+      return 'Boolean'
+    case 'LONG':
+      return 'Long'
+    case 'DBL':
+      return 'Double'
+    case 'JSON':
+      return 'JSON'
+    default:
+      return ''
+  }
+}
+
+export {
+  uppercaseTheFirstLetter,
+  createExportHeaders,
+  convertEpochToDate,
+  convertType,
+}
