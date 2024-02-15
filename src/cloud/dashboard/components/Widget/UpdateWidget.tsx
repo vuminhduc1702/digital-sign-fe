@@ -241,6 +241,8 @@ export function UpdateWidget({
     }),
   )
 
+  console.log(widgetInfoMemo)
+
   const getDeviceInfo = (id: string) => {
     const device = deviceData?.devices.find(device => device.id === id) as {
       name: string
@@ -778,10 +780,12 @@ export function UpdateWidget({
                                   value:
                                     widgetInfoMemo?.attribute_config[index]
                                       ?.label,
-                                  label: getDeviceInfo(
+                                  label:
+                                    widgetInfoMemo?.attribute_config[index]
+                                      ?.deviceName +
+                                    ' - ' +
                                     widgetInfoMemo?.attribute_config[index]
                                       ?.label,
-                                  ),
                                 }
                               : null
                           }

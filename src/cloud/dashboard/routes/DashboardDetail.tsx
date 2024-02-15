@@ -74,7 +74,7 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
-import { useGetDevicesMultiOrg } from '~/cloud/orgManagement/api/deviceAPI'
+import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 import { EntityId } from '../types'
 
 export type WidgetAttrDeviceType = Array<{
@@ -165,11 +165,13 @@ export function DashboardDetail() {
     return result
   }
 
-  const { data: deviceData } = useGetDevicesMultiOrg({
+  const { data: deviceData } = useGetDevices({
     orgIds: findOrgs(),
     projectId,
     config: {
       suspense: false,
+      retry: 5,
+      retryDelay: 5000,
     },
   })
 

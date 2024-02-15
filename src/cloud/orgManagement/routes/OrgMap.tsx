@@ -89,7 +89,7 @@ export function OrgMap() {
           fontWeight="normal"
           fontSize="15px"
           textAnchor="middle"
-          dominant-baseline="middle"
+          dominantBaseline="middle"
           onClick={() => handleTextClick(nodeDatum)}
         >
           {nodeDatum.name.length > 9

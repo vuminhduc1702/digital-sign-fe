@@ -181,7 +181,8 @@ export const BarChart = ({
               entry.dataKey,
           )
           const display =
-            unitConfig[0].attribute_key + ' - ' + unitConfig[0].deviceName
+            unitConfig[0].attribute_key +
+            (unitConfig[0].deviceName ? ' - ' + unitConfig[0].deviceName : '')
           return (
             <span key={`item-${index}`} className="pr-4">
               <div
