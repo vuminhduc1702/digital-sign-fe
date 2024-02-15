@@ -83,7 +83,7 @@ export function SectionClient() {
                 </div>
               </div>
             ))}
-          </Carousel>
+          </Carousel> 
         </div>
       </div>
       <div className="h-[100px]"></div>
