@@ -142,6 +142,8 @@ export function AttrTable({
   data: Attribute[]
   entityId: string
   entityType: EntityType
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
 }) {
   const { t } = useTranslation()
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
