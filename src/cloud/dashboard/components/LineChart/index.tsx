@@ -126,7 +126,6 @@ export function LineChart({
 
   const renderTooltip = (props: any) => {
     const { payload } = props
-
     return (
       <div>
         {payload?.length === 0 ? null : (
@@ -215,7 +214,7 @@ export function LineChart({
     switch (true) {
       case TIME_PERIOD <= 1000 * 60 * 60 * 12:
         switch (true) {
-          case TICK_INTERVAL <= 1000 * 60 * 30:
+          case TICK_INTERVAL <= 1000 * 30:
             return d3.timeFormat('%H:%M:%S')(new Date(tick))
           default:
             return d3.timeFormat('%H:%M')(new Date(tick))
@@ -224,17 +223,12 @@ export function LineChart({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%H:%M %d-%b')(new Date(tick))
+            return d3.timeFormat('%I:%M %p, %d-%b')(new Date(tick))
           default:
             return d3.timeFormat('%I %p, %d-%b')(new Date(tick))
         }
       default:
-        // switch (true) {
-        //   case TICK_INTERVAL <= 1000 * 60 * 30:
-        //     return d3.timeFormat('%H:%M %d %b')(new Date(tick))
-        //   default:
         return d3.timeFormat('%d-%b')(new Date(tick))
-      // }
     }
   }
 
@@ -252,6 +246,8 @@ export function LineChart({
     {
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key +
+      ' - ' +
+      widgetInfo.attribute_config[0].deviceName +
       ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
     },
@@ -322,6 +318,8 @@ export function LineChart({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key +
           ' - ' +
+          widgetInfo.attribute_config[0].deviceName +
+          ' - ' +
           widgetInfo.attribute_config[0].label]: 0,
         })
       }
@@ -329,8 +327,6 @@ export function LineChart({
       setTicks(divineTick)
     }
   }
-  
-  console.log(realtimeData)
 
   return (
     <>
@@ -420,8 +416,12 @@ export function LineChart({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
-                const colorKey = key.color
+                  key?.attribute_key +
+                  ' - ' +
+                  key?.deviceName +
+                  ' - ' +
+                  key?.label
+                const colorKey = key?.color
 
                 return (
                   <Line

@@ -215,7 +215,7 @@ export const BarChart = ({
     switch (true) {
       case TIME_PERIOD <= 1000 * 60 * 60 * 12:
         switch (true) {
-          case TICK_INTERVAL <= 1000 * 60 * 30:
+          case TICK_INTERVAL <= 1000 * 30:
             return d3.timeFormat('%H:%M:%S')(new Date(tick))
           default:
             return d3.timeFormat('%H:%M')(new Date(tick))
@@ -224,17 +224,12 @@ export const BarChart = ({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%H:%M %d-%b')(new Date(tick))
+            return d3.timeFormat('%I:%M %p, %d-%b')(new Date(tick))
           default:
             return d3.timeFormat('%I %p, %d-%b')(new Date(tick))
         }
       default:
-        // switch (true) {
-        //   case TICK_INTERVAL <= 1000 * 60 * 30:
-        //     return d3.timeFormat('%H:%M %d %b')(new Date(tick))
-        //   default:
         return d3.timeFormat('%d-%b')(new Date(tick))
-      // }
     }
   }
 
@@ -253,6 +248,8 @@ export const BarChart = ({
     {
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key +
+      ' - ' +
+      widgetInfo.attribute_config[0].deviceName +
       ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
     },
@@ -297,13 +294,14 @@ export const BarChart = ({
 
       for (let widget in newValuesRef.current) {
         newValuesRef.current[widget].map(item => {
+          const timeStamp = Math.floor(item.ts / 1000) * 1000
           if (item.ts > start && item.ts < end) {
             const returnValue = {
-              ts: item.ts,
+              ts: timeStamp,
               [widget]: parseFloat(item.value),
             }
             const existingIndex = transformedNewValues.findIndex(
-              obj => obj.ts === item.ts,
+              obj => obj.ts === timeStamp,
             )
             if (existingIndex === -1) {
               transformedNewValues.push(returnValue)
@@ -323,8 +321,9 @@ export const BarChart = ({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key +
           ' - ' +
+          widgetInfo.attribute_config[0].deviceName +
+          ' - ' +
           widgetInfo.attribute_config[0].label]: 0,
-          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)
@@ -418,7 +417,7 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
+                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
                 const colorKey = key?.color
 
                 return (
@@ -433,7 +432,6 @@ export const BarChart = ({
                   />
                 )
               })}
-              {/* stackId="a" */}
             </BarReChart>
           </ResponsiveContainer>
         </>
@@ -458,7 +456,7 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
+                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
                 const colorKey = key?.color
 
                 return (

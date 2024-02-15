@@ -74,7 +74,7 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
-import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
+import { useGetDevicesMultiOrg } from '~/cloud/orgManagement/api/deviceAPI'
 import { EntityId } from '../types'
 
 export type WidgetAttrDeviceType = Array<{
@@ -147,22 +147,26 @@ export function DashboardDetail() {
 
   const projectId = storage.getProject()?.id
 
-  function findOrg() {
-    let result = ''
+  function findOrgs() {
+    let result: string[] = []
     for (const key in widgetList) {
-      if (widgetList[key].datasource.org_id != null) {
-        result = widgetList[key].datasource?.org_id?.slice(
+      if (
+        widgetList[key].datasource.org_id !== null
+      ) {
+        const orgId = widgetList[key].datasource?.org_id?.slice(
           widgetList?.[key]?.datasource?.org_id?.indexOf('"') + 1,
           widgetList?.[key]?.datasource?.org_id?.lastIndexOf('"'),
         )
-        break
+        if (!result.includes(orgId)) {
+          result.push(orgId)
+        }
       }
     }
     return result
   }
 
-  const { data: deviceData } = useGetDevices({
-    orgId: findOrg(),
+  const { data: deviceData } = useGetDevicesMultiOrg({
+    orgIds: findOrgs(),
     projectId,
     config: {
       suspense: false,
