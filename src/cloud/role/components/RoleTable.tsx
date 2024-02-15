@@ -136,6 +136,8 @@ function RoleTableContextMenu({
 type RoleTableProps = {
   data: Role[]
   project_id: string
+  rowSelection: object
+  setRowSelection: React.Dispatch<React.SetStateAction<object>>
 } & BaseTablePagination
 
 export function RoleTable({ data, ...props }: RoleTableProps) {

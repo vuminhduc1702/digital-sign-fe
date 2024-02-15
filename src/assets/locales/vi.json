@@ -120,7 +120,8 @@
           "label": "Nhãn",
           "delete_attr": "Xoá TT",
           "delete_attr_full": "Xoá thuộc tính",
-          "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?"
+          "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?",
+          "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?"
         },
         "add_org": {
           "title": "Tạo mới tổ chức",
@@ -468,6 +469,7 @@
         "edit": "Sửa vai trò",
         "delete_role": "Xoá vai trò",
         "delete_role_confirm": "Bạn có chắc chắn muốn xóa vai trò {{ROLENAME}}?",
+        "delete_multiple_roles": "Bạn có chắc chắn muốn xóa những vai trò đã chọn?",
         "no_role": "Không có vai trò"
       },
       "add_policy": {

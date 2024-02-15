@@ -180,6 +180,7 @@ function Navbar() {
             >
               {languages.map(language => (
                 <DropdownMenu.Item
+                  key={language.code}
                   className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
                   onClick={() => changeLanguage(language.code)}
                 >

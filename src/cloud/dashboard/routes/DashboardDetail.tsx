@@ -38,6 +38,7 @@ import {
   type WidgetCategoryType,
 } from '../components/Widget'
 import { ComboBoxSelectDeviceDashboard } from '../components/ComboBoxSelectDeviceDashboard'
+import { useGetDevices } from '~/cloud/orgManagement/api/deviceAPI'
 
 import { WS_URL } from '~/config'
 import {
@@ -48,6 +49,7 @@ import {
   type WidgetType,
 } from '../types'
 import { type Device } from '~/cloud/orgManagement'
+import { type EntityId } from '../types'
 
 import { StarFilledIcon } from '@radix-ui/react-icons'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -74,8 +76,6 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
-import { useGetDevicesMultiOrg } from '~/cloud/orgManagement/api/deviceAPI'
-import { type EntityId } from '../types'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -163,11 +163,13 @@ export function DashboardDetail() {
     return result
   }
 
-  const { data: deviceData } = useGetDevicesMultiOrg({
+  const { data: deviceData } = useGetDevices({
     orgIds: findOrgs(),
     projectId,
     config: {
       suspense: false,
+      retry: 5,
+      retryDelay: 5000,
     },
   })
 
