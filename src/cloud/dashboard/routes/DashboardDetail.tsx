@@ -75,7 +75,7 @@ import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
 import { useGetDevicesMultiOrg } from '~/cloud/orgManagement/api/deviceAPI'
-import { EntityId } from '../types'
+import { type EntityId } from '../types'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -150,9 +150,7 @@ export function DashboardDetail() {
   function findOrgs() {
     let result: string[] = []
     for (const key in widgetList) {
-      if (
-        widgetList[key].datasource.org_id !== null
-      ) {
+      if (widgetList[key].datasource.org_id !== null) {
         const orgId = widgetList[key].datasource?.org_id?.slice(
           widgetList?.[key]?.datasource?.org_id?.indexOf('"') + 1,
           widgetList?.[key]?.datasource?.org_id?.lastIndexOf('"'),
@@ -971,6 +969,7 @@ export function DashboardDetail() {
               size="square"
               variant="primary"
               isLoading={updateDashboardIsLoading}
+              disabled={updateDashboardIsLoading}
               onClick={() => setIsEditMode(true)}
               startIcon={
                 <EditBtnIcon

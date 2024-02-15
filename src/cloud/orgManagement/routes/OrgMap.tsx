@@ -24,7 +24,7 @@ export function OrgMap() {
   const convertOrgToTree = useMemo(() => (org: Org): {} => {
     return {
       name: org.name,
-      attributes: { level: org.level, description: org.description },
+      attributes: { level: org.level, id: org.id, description: org.description },
       children: org.sub_orgs ? org.sub_orgs.map(convertOrgToTree) : [],
     };
   }, [orgData])
