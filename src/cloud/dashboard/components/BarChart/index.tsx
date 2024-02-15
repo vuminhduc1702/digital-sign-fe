@@ -254,6 +254,8 @@ export const BarChart = ({
       ts: 0,
       [widgetInfo.attribute_config[0].attribute_key +
       ' - ' +
+      widgetInfo.attribute_config[0].deviceName +
+      ' - ' +
       widgetInfo.attribute_config[0].label]: 0,
     },
   ])
@@ -297,13 +299,14 @@ export const BarChart = ({
 
       for (let widget in newValuesRef.current) {
         newValuesRef.current[widget].map(item => {
+          const timeStamp = Math.floor(item.ts / 1000) * 1000
           if (item.ts > start && item.ts < end) {
             const returnValue = {
-              ts: item.ts,
+              ts: timeStamp,
               [widget]: parseFloat(item.value),
             }
             const existingIndex = transformedNewValues.findIndex(
-              obj => obj.ts === item.ts,
+              obj => obj.ts === timeStamp,
             )
             if (existingIndex === -1) {
               transformedNewValues.push(returnValue)
@@ -323,8 +326,9 @@ export const BarChart = ({
           ts: 0,
           [widgetInfo.attribute_config[0].attribute_key +
           ' - ' +
+          widgetInfo.attribute_config[0].deviceName +
+          ' - ' +
           widgetInfo.attribute_config[0].label]: 0,
-          deviceId: '',
         })
       }
       setRealtimeData(widgetArray)
@@ -418,7 +422,7 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
+                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
                 const colorKey = key?.color
 
                 return (
@@ -433,7 +437,6 @@ export const BarChart = ({
                   />
                 )
               })}
-              {/* stackId="a" */}
             </BarReChart>
           </ResponsiveContainer>
         </>
@@ -458,7 +461,7 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key.attribute_key + ' - ' + key.deviceName + ' - ' + key.label
+                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
                 const colorKey = key?.color
 
                 return (
