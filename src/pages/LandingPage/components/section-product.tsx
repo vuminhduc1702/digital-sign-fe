@@ -1,7 +1,14 @@
 import { useTranslation } from 'react-i18next'
-import Carousel from 'react-multi-carousel'
+// import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { Button } from '~/components/Button'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '~/components/NewCarousel'
 
 export function SectionProduct() {
   const slides = [
@@ -64,28 +71,28 @@ export function SectionProduct() {
   ]
 
   const { t } = useTranslation()
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  }
+  // const responsive = {
+  //   superLargeDesktop: {
+  //     breakpoint: { max: 4000, min: 3000 },
+  //     items: 5,
+  //   },
+  //   desktop: {
+  //     breakpoint: { max: 3000, min: 1024 },
+  //     items: 4,
+  //   },
+  //   tablet: {
+  //     breakpoint: { max: 1024, min: 464 },
+  //     items: 2,
+  //   },
+  //   mobile: {
+  //     breakpoint: { max: 464, min: 0 },
+  //     items: 1,
+  //   },
+  // }
 
   return (
     <>
-      <div className='mt-[80px]'>
+      <div className="mt-[80px]">
         <div>
           <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033]">
             {t('landingpage:section_product.iot')}
@@ -97,38 +104,39 @@ export function SectionProduct() {
           </div>
         </div>
         <div className="flex w-full justify-center">
-          <div className="w-[1200px] pt-[50px]">
-            <Carousel
-              containerClass="carousel-container p-[0px]"
-              responsive={responsive}
-              transitionDuration={300}
-              infinite
-              itemClass="w-fit flex justify-center"
-              autoPlay
-              autoPlaySpeed={3000}
-            >
-              {slides.map((item, idx) => (
-                <div className="rounded-lg shadow-md" key={idx}>
-                  <div className="h-fit w-[200px]">
-                    <img src={item.src} alt={item.alt} />
-                  </div>
-                  <div className="text-body-h2 pb-[10px] pt-[20px] text-center font-bold">
-                    {item.title_h1}
-                  </div>
-                  <div className="text-center text-base">{item.title_h2}</div>
-                  <div className="flex justify-center pb-[30px] pt-[40px]">
-                    <a href={item.href} target="_blank" rel="noreferrer">
-                      <Button
-                        type="button"
-                        className="rounded-r-lg rounded-tl-lg border-[#EA0033] bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
-                        variant="primary"
-                      >
-                        {item.launching}
-                      </Button>
-                    </a>
-                  </div>
-                </div>
-              ))}
+          <div className="pt-[50px]">
+
+            <Carousel className="xl:w-[1200px] sm:w-[620px] lg:w-[870px] md:w-[870px] max-sm:w-[320px]">
+              <CarouselContent className="">
+                {slides.map(item => (
+                  <CarouselItem className=" basis-1/4 ">
+                    <div className="rounded-lg shadow-md">
+                      <div className="h-fit w-[200px]">
+                        <img src={item.src} alt={item.alt} />
+                      </div>
+                      <div className="text-body-h2 pb-[10px] pt-[20px] text-center font-bold">
+                        {item.title_h1}
+                      </div>
+                      <div className="text-center text-base">
+                        {item.title_h2}
+                      </div>
+                      <div className="flex justify-center pb-[30px] pt-[40px]">
+                        <a href={item.href} target="_blank" rel="noreferrer">
+                          <Button
+                            type="button"
+                            className="rounded-r-lg rounded-tl-lg border-[#EA0033] bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                            variant="primary"
+                          >
+                            {item.launching}
+                          </Button>
+                        </a>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
           </div>
         </div>
