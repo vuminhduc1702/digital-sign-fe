@@ -1,10 +1,11 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -13,11 +14,15 @@ import {
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
-import { flattenData } from '~/utils/misc'
+import { cn, flattenData } from '~/utils/misc'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { ComplexTree } from '~/components/ComplexTree'
+import { format } from 'date-fns'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -29,7 +34,7 @@ export const entityTypeList = [
 const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  org_id: z.string().optional(),
+  // org_id: z.string().optional()
 })
 
 export function CreateGroup() {
@@ -53,11 +58,15 @@ export function CreateGroup() {
   }))
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit, reset } = useForm<
+  const { register, formState, control, handleSubmit, reset, getValues } = useForm<
     CreateGroupDTO['data']
   >({
     resolver: groupCreateSchema && zodResolver(groupCreateSchema),
   })
+
+  // function orgSelection(val: any) {
+  //   console.log(val)
+  // }
 
   return (
     <FormDrawer
@@ -88,13 +97,14 @@ export function CreateGroup() {
       <form
         id="create-group"
         className="w-full space-y-6"
-        onSubmit={handleSubmit(values => {
+        onSubmit={
+          handleSubmit(values => {
           mutate({
             data: {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: getValues('org_id').toString(),
             },
           })
         })}
@@ -111,8 +121,7 @@ export function CreateGroup() {
             registration={register('entity_type')}
             options={entityTypeOptions}
           />
-
-          <SelectDropdown
+          {/* <SelectDropdown
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             name="org_id"
             control={control}
@@ -126,7 +135,46 @@ export function CreateGroup() {
             isLoading={orgIsLoading}
             placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
             error={formState?.errors?.org_id}
-          />
+          /> */}
+          <FieldWrapper
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            error={formState?.errors?.org_id}
+          >
+            <Controller
+              control={control}
+              name={"org_id"}
+              render={({ field: { onChange, value, ...field } }) => {
+                return (
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        id="org_id"
+                        variant="trans"
+                        size="square"
+                        className={cn(
+                          'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 px-3',
+                          !value && 'text-secondary-700',
+                        )}
+                      >
+                        {value ? (
+                          <span>
+                            {value}
+                          </span>
+                        ) : (
+                          <span>
+                           {t('cloud:org_manage.org_manage.add_org.choose_org')}
+                          </span>
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-2" align="start">
+                      <ComplexTree items={orgData?.organizations} selectOrg={onChange} currentValue={value} {...field}></ComplexTree>
+                    </PopoverContent>
+                  </Popover>
+                )
+              }}
+            />
+          </FieldWrapper>
         </>
       </form>
     </FormDrawer>
