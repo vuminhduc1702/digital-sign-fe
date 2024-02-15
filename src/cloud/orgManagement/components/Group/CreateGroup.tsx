@@ -34,7 +34,7 @@ export const entityTypeList = [
 const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  org_id: z.string().optional(),
+  // org_id: z.string().optional()
 })
 
 export function CreateGroup() {
@@ -58,7 +58,7 @@ export function CreateGroup() {
   }))
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit, reset } = useForm<
+  const { register, formState, control, handleSubmit, reset, getValues } = useForm<
     CreateGroupDTO['data']
   >({
     resolver: groupCreateSchema && zodResolver(groupCreateSchema),
@@ -97,13 +97,14 @@ export function CreateGroup() {
       <form
         id="create-group"
         className="w-full space-y-6"
-        onSubmit={handleSubmit(values => {
+        onSubmit={
+          handleSubmit(values => {
           mutate({
             data: {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: getValues('org_id').toString(),
             },
           })
         })}
@@ -141,7 +142,7 @@ export function CreateGroup() {
           >
             <Controller
               control={control}
-              name="org_id"
+              name={"org_id"}
               render={({ field: { onChange, value, ...field } }) => {
                 return (
                   <Popover>
@@ -167,7 +168,7 @@ export function CreateGroup() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-2" align="start">
-                      <ComplexTree items={orgData?.organizations} selectOrg={onChange} currentValue={value}></ComplexTree>
+                      <ComplexTree items={orgData?.organizations} selectOrg={onChange} currentValue={value} {...field}></ComplexTree>
                     </PopoverContent>
                   </Popover>
                 )

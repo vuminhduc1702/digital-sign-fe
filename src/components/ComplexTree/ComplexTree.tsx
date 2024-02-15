@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ControlledTreeEnvironment, InteractionMode, StaticTreeDataProvider, Tree, TreeItem, TreeItemIndex, UncontrolledTreeEnvironment } from "react-complex-tree"
+import { InteractionMode, StaticTreeDataProvider, Tree, TreeItem, TreeItemIndex, UncontrolledTreeEnvironment } from "react-complex-tree"
 import 'react-complex-tree/lib/style-modern.css'
 
 type ComplexTreeProps = {
@@ -48,6 +48,7 @@ const ComplexTree = ({
         [data.name]: {
           index: data.name,
           data: data.name,
+          label: data.name,
           parent: data.parent_name,
           isFolder: true,
           children: childrenArr
@@ -59,6 +60,7 @@ const ComplexTree = ({
         [data.name]: {
           index: data.name,
           data: data.name,
+          label: data.name,
           parent: data.parent_name,
           isFolder: false,
         }
@@ -89,22 +91,18 @@ const ComplexTree = ({
 
   useEffect(() => {
     if (selectedItems) {
-      const test = getParent(selectedItems)
-      setExpandedItems(test)
+      const expanded = getParent(selectedItems)
+      setExpandedItems(expanded)
     } else {
       setExpandedItems(getParent(currentValue))
     }
   }, [selectedItems, currentValue])
 
-  useEffect(() => {
-    console.log(currentValue)
-  }, [currentValue])
-
   return (
     <>
       <UncontrolledTreeEnvironment
         viewState={{
-          ['complex-tree']: {
+          'complex-tree': {
             focusedItem,
             expandedItems: expandedItems,
             selectedItems: selectedItems ? [selectedItems] : [],

@@ -73,7 +73,6 @@ export function UpdateGroup({
     resolver: groupUpdateSchema && zodResolver(groupUpdateSchema),
     defaultValues: { name: name, org_id: organization },
   })
-  console.log('formState.errors', formState.errors)
 
   return (
     <Drawer
@@ -123,7 +122,7 @@ export function UpdateGroup({
           mutate({
             data: {
               name: values.name,
-              org_id: values.org_id,
+              org_id: values.org_id.toString(),
             },
             groupId,
           })
