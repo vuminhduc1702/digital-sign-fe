@@ -110,6 +110,7 @@
         "attr_list": "Attribute List",
         "table": {
           "id": "ID",
+          "label": "Label",
           "attr_key": "Attribute",
           "attr_type": "Attribute Type",
           "value_type": "Value Type",
@@ -119,7 +120,8 @@
           "logged": "Log History",
           "delete_attr": "Delete Attribute",
           "delete_attr_full": "Delete Attribute",
-          "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}"
+          "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
+          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?"
         },
         "add_org": {
           "title": "Create New Organization",
@@ -161,6 +163,7 @@
           "entity_type": "Classification",
           "org_name": "Organization",
           "delete_group": "Delete Group",
+          "delete_multiple_group_confirm": "Are you sure you want to delete the selected groups?",
           "delete_group_confirm": "Are you sure you want to delete the group {{GROUPNAME}}"
         },
         "add_group": {
@@ -187,6 +190,7 @@
           "edit": "Edit User",
           "delete_user": "Delete User",
           "delete_user_full": "Delete User",
+          "delete_multiple_group_confirm": "Are you sure you want to delete the selected groups?",
           "delete_user_confirm": "Are you sure you want to delete the user {{USERNAME}}"
         },
         "add_user": {
@@ -240,7 +244,8 @@
           "create_by": "Created By",
           "delete_device": "Delete Device",
           "delete_device_full": "Delete Device",
-          "delete_device_confirm": "Are you sure you want to delete the device {{DEVICENAME}}?"
+          "delete_device_confirm": "Are you sure you want to delete the device {{DEVICENAME}}?",
+          "delete_multiple_device_confirm": "Are you sure you want to delete the selected devices?"
         },
         "mqtt_config": {
           "update_success": "Update MQTT Successful",
@@ -294,7 +299,8 @@
           "onClick_btn": "Activate",
           "status": "Status",
           "delete_event": "Delete Event",
-          "delete_event_confirm": "Are you sure you want to delete the event {{EVENTNAME}}?"
+          "delete_event_confirm": "Are you sure you want to delete the event {{EVENTNAME}}?",
+          "delete_multiple_event_confirm": "Are you sure you want to delete the selected events?"
         },
         "add_event": {
           "title": "Create New Event",
@@ -368,6 +374,7 @@
     },
     "device_template": {
       "title": "Device Template",
+      "default": "Default",
       "info": {
         "title": "Device Template Information",
         "listattr": "List of Attribute Groups",
@@ -397,6 +404,7 @@
         "choose_lwm2m_model": "Please choose LWM2M object model",
         "no_flow_id": "No flow ID selected"
       },
+      "lwm2m": "LwM2M",
       "sidebar": {
         "title": "List of Device Templates",
         "id": "ID",
@@ -461,6 +469,7 @@
         "edit": "Edit Role",
         "delete_role": "Delete Role",
         "delete_role_confirm": "Are you sure you want to delete the role {{ROLENAME}}?",
+        "delete_multiple_roles": "Are you sure you want to delete the selected roles?",
         "no_role": "No roles available"
       },
       "add_policy": {
@@ -554,7 +563,8 @@
         "choose": "Please choose a Thing",
         "delete": "Delete Thing",
         "edit": "Edit Thing",
-        "delete_thing_confirm": "Are you sure you want to delete Thing {{THINGNAME}}?"
+        "delete_thing_confirm": "Are you sure you want to delete Thing {{THINGNAME}}?",
+        "delete_multiple_thing_confirm": "Are you sure you want to delete the selected things?"
       },
       "adapter": {
         "title": "Adapter",
@@ -1159,6 +1169,7 @@
       "phone_used": "0123 456 789",
       "cre": "Copyright Viettel Telecom"
     },
+    "category": "Category",
     "client": {
       "partner": "Our Partners"
     },
@@ -1175,7 +1186,8 @@
       "subscription_management": "Subscription Management",
       "contract_management": "Contract Management",
       "order_management": "Order Management",
-      "payment_management": "Payment Management"
+      "payment_management": "Payment Management",
+      "subscription_locating": "Locating subscribers"
     },
     "order": {
       "manage_platform": "Platform for Management, Automation, and Data Collection",
