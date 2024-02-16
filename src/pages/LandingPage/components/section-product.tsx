@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-// import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import { Button } from '~/components/Button'
 import {

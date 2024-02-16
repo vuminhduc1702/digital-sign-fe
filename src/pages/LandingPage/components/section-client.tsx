@@ -1,5 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import Carousel from 'react-multi-carousel'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '~/components/Carousel'
 
 export function SectionClient() {
   const slides = [
@@ -41,24 +47,6 @@ export function SectionClient() {
     },
   ]
   const { t } = useTranslation()
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  }
   return (
     <>
       <div className="h-[100px]"></div>
@@ -67,23 +55,21 @@ export function SectionClient() {
           {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center">
-          <Carousel
-            containerClass="carousel-container w-[1200px]"
-            responsive={responsive}
-            transitionDuration={300}
-            infinite
-            itemClass="flex justify-center"
-            autoPlay
-            autoPlaySpeed={3000}
-          >
-            {slides.map((item, idx) => (
-              <div key={idx}>
-                <div className="h-fit w-[200px]">
-                  <img src={item.src} alt={item.alt} />
-                </div>
-              </div>
-            ))}
-          </Carousel> 
+          <Carousel className='max-sm:w-[320px] sm:w-[620px] md:w-[870px] lg:w-[870px] xl:w-[1200px]'>
+            <CarouselContent>
+              {slides.map(item => (
+                <CarouselItem>
+                  <div>
+                    <div className="h-fit w-[200px]">
+                      <img src={item.src} alt={item.alt} />
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
         </div>
       </div>
       <div className="h-[100px]"></div>
