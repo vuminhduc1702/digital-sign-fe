@@ -18,7 +18,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '~/components/NewCarousel'
+} from '~/components/Carousel'
 
 import { CheckboxCircleLine } from '~/components/SVGIcons'
 
@@ -71,24 +71,6 @@ export function SectionPackageData() {
     }
   }
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  }
   return (
     <>
       <div
@@ -176,7 +158,7 @@ export function SectionPackageData() {
 
               <div className="flex w-full justify-center">
                 <div className="w-[1200px] pt-[50px]">
-                  <Carousel className='xl:w-[1200px] sm:w-[620px] lg:w-[870px] md:w-[870px] max-sm:w-[320px]'>
+                  <Carousel className="max-sm:w-[320px] sm:w-[620px] md:w-[870px] lg:w-[870px] xl:w-[1200px]">
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
@@ -189,7 +171,7 @@ export function SectionPackageData() {
                                 item.payType === payType,
                           )
                           .map(item => (
-                            <CarouselItem className='basis-1/4 '>
+                            <CarouselItem className="basis-1/4 ">
                               <div className="w-60 rounded-lg shadow-md">
                                 <div className="bg-primary-400 flex justify-center rounded-t-lg py-2 text-center text-xl font-medium text-white">
                                   <Checkbox
