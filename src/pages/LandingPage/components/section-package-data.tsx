@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
-// import Carousel from 'react-multi-carousel'
 import { useRef, useState } from 'react'
 
 import bg_pack_of_data from '~/assets/images/landingpage/bg_pack_of_data.png'
