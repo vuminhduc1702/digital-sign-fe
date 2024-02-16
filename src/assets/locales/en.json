@@ -16,7 +16,8 @@
       "flow_engine": "Flow Engine",
       "dashboard": "Dashboard",
       "role_manage": "Role Management",
-      "custom_protocol": "Adapter"
+      "custom_protocol": "Adapter",
+      "db_template": "Custom Database"
     },
     "application": {
       "title": "Application",
@@ -407,6 +408,50 @@
         "no_template": "No device templates available"
       }
     },
+    "db_template": {
+      "title": "Custom Database",
+      "info": {
+        "title": "Device Template Information",
+        "flow": "Flow",
+        "provision_key": "Provision Key",
+        "provision_secret": "Provision Secret",
+        "created_at": "Created At",
+        "create_by": "Created By"
+      },
+      "add_db": {
+        "title": "Create New Custom Database",
+        "header": "Custom Database",
+        "name": "Custom Database Name",
+        "limit": "Limit",
+        "search_exact": "Exact Search",
+        "reload": "Reload All Data",
+        "add_column": "Add Column",
+        "add_row": "Add Row",
+        "column": "Column Name",
+        "type": "Data Type",
+        "update_row": "Update Data",
+        "delete_row": "Delete Data",
+        "success_create": "Custom Database created successfully",
+        "success_update": "Custom Database updated successfully",
+        "success_delete": "Custom Database deleted successfully",
+        "choose_flow_id": "Please select flow ID",
+        "success_add_column": "Column added successfully",
+        "no_flow_id": "Does not belong to flow ID",
+        "success_add_rows": "Rows added successfully",
+        "delete_row_confirm": "Are you sure you want to delete the data?",
+        "success_delete_row": "Data deleted successfully",
+        "success_update_row": "Data updated successfully"
+      },
+      "sidebar": {
+        "title": "Custom Database",
+        "id": "ID",
+        "desc": "Description",
+        "edit": "Edit Device Template",
+        "delete_db": "Delete Custom Database",
+        "delete_db_confirm": "Are you sure you want to delete the Custom Database {{DBNAME}}?",
+        "no_db": "No Custom Database available"
+      }
+    },
     "role_manage": {
       "title": "Roles",
       "header": "Role Management",
@@ -650,7 +695,7 @@
       },
       "map": {
         "device_not_found": "Device not found"
-      }, 
+      },
       "card": {
         "no_log_attr": "No attribute logs"
       }
