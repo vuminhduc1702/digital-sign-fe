@@ -24,7 +24,7 @@ import { ComplexTree } from '~/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
-  org_id: z.string(),
+  org_id: z.string().optional().or(z.array(z.string())),
 })
 
 type UpdateGroupProps = {
@@ -115,7 +115,7 @@ export function UpdateGroup({
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id: values.org_id,
+                org_id: values.org_id.toString(),
               },
             })
           }
@@ -177,7 +177,7 @@ export function UpdateGroup({
               control={control}
               name="org_id"
               render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = orgSelectOptions?.find(org => org.value === getValues('org_id'))?.label
+                const parseValue = orgSelectOptions?.find(org => org.value === getValues('org_id').toString())?.label
                 return (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -192,7 +192,7 @@ export function UpdateGroup({
                       >
                         {value ? (
                           <span>
-                            { parseValue }
+                            {parseValue ? parseValue : value}
                           </span>
                         ) : (
                           <span>

@@ -144,6 +144,7 @@ export function CreateGroup() {
               control={control}
               name={"org_id"}
               render={({ field: { onChange, value, ...field } }) => {
+                const parseValue = getValues('org_id') ? orgSelectOptions?.find(org => org.value === getValues('org_id').toString())?.label : ''
                 return (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -158,7 +159,7 @@ export function CreateGroup() {
                       >
                         {value ? (
                           <span>
-                            {value}
+                            {parseValue ? parseValue : value}
                           </span>
                         ) : (
                           <span>
