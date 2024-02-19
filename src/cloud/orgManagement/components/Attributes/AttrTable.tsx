@@ -142,8 +142,10 @@ export function AttrTable({
   data: Attribute[]
   entityId: string
   entityType: EntityType
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }) {
   const { t } = useTranslation()
   const { mutate: mutateUpdateLogged } = useUpdateLogged()

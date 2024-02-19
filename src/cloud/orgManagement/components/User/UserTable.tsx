@@ -143,8 +143,10 @@ function UserTableContextMenu({
 
 type UserInfoTableProps = {
   data: UserInfo[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function UserTable({ data, ...props }: UserInfoTableProps) {

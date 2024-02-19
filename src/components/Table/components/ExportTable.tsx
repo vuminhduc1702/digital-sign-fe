@@ -15,7 +15,7 @@ import {
 
 interface ButtonProps {
   refComponent: MutableRefObject<HTMLElement> | MutableRefObject<null>
-  rowSelection: {}
+  rowSelection: { [key: string]: boolean }
   aoo: Array<{ [key: string]: string }>
   pdfHeader: string[]
 }

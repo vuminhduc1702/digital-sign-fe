@@ -250,8 +250,10 @@ function DeviceTableContextMenu({
 
 type DeviceTableProps = {
   data: Device[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
