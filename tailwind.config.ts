@@ -79,6 +79,8 @@ export default {
         'max-sm': { max: '575.98px' },
         // => @media (max-width: 767.98px) { ... }
         'max-md': { max: '767.98px' },
+        // => @media (max-width: 767.98px) { ... }
+        
         // => @media (max-width: 1024px) { ... }
         'max-lg': { max: '1023.98px' },
         // => @media (max-width: 1280px) { ... }

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import i18n from '~/i18n'
 
 import { useNavigate } from 'react-router-dom'
 import AssetManagement from '~/assets/images/SolutionMaketplace/AssetManagement.png'
@@ -54,31 +55,27 @@ export function LayoutOverView() {
 
   const sampleDivices = [
     {
-      title: 'Giải pháp Fleet Management',
+      title: i18n.t('title:fleet_management'),
       img: SmartTracking,
-      content:
-        'Giải pháp quản lý đội xe giúp bạn quản lý hoạt động của đội xe, dẫn đến giảm chi phí, cải thiện hiệu quả và nâng cao tính tuân thủ. Giải pháp quản lý đội xe phù hợp có thể là công cụ trong việc điều phối các hoạt động quản lý đội xe của bạn.',
-      content2: 'Chức năng chính:',
-      content3: '- Cảnh báo vùng an toàn qua SMS hoặc App Notification',
-      content4: '- Cảnh báo pin yếu qua SMS hoặc App Notification',
-      content5: '- Định vị được vị trí qua bản tin thiết bị bắn lên',
+      content: i18n.t('document:fleet_management.content'),
+      content2: i18n.t('document:fleet_management.content2'),
+      content3: i18n.t('document:fleet_management.content3'),
+      content4: i18n.t('document:fleet_management.content4'),
+      content5: i18n.t('document:fleet_management.content5'),
       jsonData: fleetManagementData,
     },
     {
-      title: 'Giải pháp Asset Management',
+      title: i18n.t('title:asset_management'),
       img: AssetManagement,
-      content:
-        'Giải pháp quản lý tài sản giúp bạn theo dõi tài sản thông qua việc sử dụng các thẻ RFID được gắn vào chúng. Các thẻ được đọc bằng máy quét cố định được gắn ở vị trí cố đinh. Mỗi khi một thẻ được đọc, nó sẽ được lưu tổng hợp thành một chuỗi và bán tổng tất cả các RFID đã quét được lên hệ thống. Bên cạnh đó, giải pháp còn cảnh báo cho bạn những RFID bị thiếu hoặc RFID lạ để giúp bạn tránh bị thiếu sót tài sản.',
-      content2: 'Chức năng chính:',
-      content3:
-        '- Cảnh báo RFID bị thiếu, RFID lạ qua SMS hoặc App Notification',
-      content4:
-        '- Xử lý tập bản tin thiết bị gửi lên (gộp bản tin, kiểm tra trùng)',
-      content5: '- Đăng ký RFID mới theo danh sách hoặc chỉnh sửa số lượng nhỏ',
+      content: i18n.t('document:asset_management.content'),
+      content2: i18n.t('document:asset_management.content2'),
+      content3: i18n.t('document:asset_management.content3'),
+      content4: i18n.t('document:asset_management.content4'),
+      content5: i18n.t('document:asset_management.content5'),
       jsonData: assetManagementData,
     },
     {
-      title: 'Giải pháp Smart Water Meter',
+      title: i18n.t('title:smart_water_meter'),
       img: SmartMetering,
       content:
         'Giải pháp đồng hồ nước thông mình giúp bạn theo dõi lưu lượng sử dụng, cảnh bảo về các vấn đề liên quan đến đường dẫn nước trong nhà bạn, dẫn đến giảm chi phí, giải thiếu các rủi ro. Giải pháp đồng hồ nước thông minh cung cấp hệ thông đo lường từ xa và tổng hợp lại số lượng đã sử dụng mà không cần đội ngũ đến kiểm tra.',
@@ -89,7 +86,7 @@ export function LayoutOverView() {
       jsonData: smartWaterData,
     },
     {
-      title: 'Giải pháp Smart Farm',
+      title: i18n.t('title:smart_farm'),
       img: SmartFarming,
       content:
         'Giải pháp nông nghiệp thông minh giúp bạn theo dõi lưu lượng sử dụng, cảnh báo về các vấn đề liên quan độ ẩm cho vườn cây nhà bạn, giảm thiếu các rủi ro.',
@@ -100,7 +97,7 @@ export function LayoutOverView() {
       jsonData: smartFarmData,
     },
     {
-      title: 'Giải pháp Smarthome',
+      title: i18n.t('title:smart_home'),
       img: SmartHome,
       content:
         'Giải pháp hỗ trợ các ngữ cảnh thông minh được đặt theo giờ hoặc theo ngoại cảnh để người sử dụng có trải nghiệm và sức khỏe tinh thần tốt nhất trong căn nhà.',

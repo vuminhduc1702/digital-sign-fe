@@ -76,8 +76,8 @@ export function BillingTemplate() {
                 name="key"
                 control={control}
                 options={[
-                  { label: 'Số hóa đơn', value: 'id' },
-                  { label: 'Tên khách hàng', value: 'customer_name' },
+                  { label: t('scheam:bill'), value: 'id' },
+                  { label: t('scheam:customer_name'), value: 'customer_name' },
                 ]}
                 // error={formState?.errors?.key}
               />
