@@ -16,20 +16,23 @@ export function SectionOrder() {
   return (
     <>
       <div className="h-[100px]"></div>
-      <div className="h-[559px] max-xl:h-auto bg-[#EA0033] mb-[100px]">
+      <div className="mb-[100px] h-[559px] bg-[#EA0033] max-xl:h-auto">
         <div
-          className="flex h-full w-full items-center justify-center bg-no-repeat p-20 opacity-100 "
-          style={{ backgroundImage: `url(${SectionOrderBG})`, backgroundSize:'cover' }}
+          className="flex h-full w-full items-center justify-center bg-no-repeat p-20 opacity-100 lg:gap-10 lg:h-auto"
+          style={{
+            backgroundImage: `url(${SectionOrderBG})`,
+            backgroundSize: 'cover',
+          }}
         >
-          <div className="flex h-full w-[992px] max-sm:w-[392px] max-xs:w-[300px] max-xl:gap-10 max-lg:flex-col max-lg:h-auto ">
+          <div className="flex h-full w-[992px] max-lg:h-auto max-lg:flex-col sm:w-[540px] xs2:w-[300px] xs2:gap-0 ">
             <div className="w-1/2">
               <iframe
                 src="https://www.youtube.com/embed/KvNhWGB5nuk?rel=1&controls=1&showinfo=0&start=1&autoplay=0&enablejsapi=1"
-                className="h-full w-[496px] rounded-lg max-lg:h-[370px] max-sm:w-[390px] max-xs:w-[300px] max-xs:h-[245px]"
+                className="h-full w-[496px] rounded-lg  sm:w-[500px] sm:h-[345px] xs:h-[245px] xs:w-[300px] xs2:h-[245px] xs2:w-[300px]"
               ></iframe>
             </div>
-            <div className="ml-10 max-lg:ml-0">
-              <div className="w-[373px] text-[35px] leading-[43px] text-white">
+            <div className="ml-10 xs2:ml-0">
+              <div className="w-[373px] text-[35px] leading-[43px] text-white sm:text-[40px] sm:my-4 sm:w-[500px] xs2:w-[346px] xs2:text-[20px]">
                 {t('landingpage:order.manage_platform')}
               </div>
               <div className="pt-5 text-[16px] leading-[16.8px] text-white">
@@ -56,10 +59,10 @@ export function SectionOrder() {
                 biến không giới hạn, chúng tôi sẽ đồng hành cùng các bạn trọn
                 vòng đời sản phẩm.
               </div>
-              <div className="flex max-sm:flex-col max-sm:items-center pt-8">
+              <div className="flex pt-8 max-sm:flex-col max-sm:items-center">
                 <Button
                   type="button"
-                  className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:w-[220px] max-sm:mb-[14px]"
+                  className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:mb-[14px] max-sm:w-[220px]"
                   variant="primary"
                   onClick={() => {
                     navigate(PATHS.PROJECT_MANAGE)

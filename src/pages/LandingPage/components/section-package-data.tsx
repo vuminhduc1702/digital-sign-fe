@@ -70,7 +70,6 @@ export function SectionPackageData() {
     }
   }
 
- 
   return (
     <>
       <div
@@ -83,7 +82,7 @@ export function SectionPackageData() {
             {t('landingpage:pack_of_data_M2M.title')}
           </p>
           <div className="flex justify-center">
-            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px]">
+            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px] xs:w-[400px] xs:px-0 ">
               {t('landingpage:pack_of_data_M2M.variety')}
             </h3>
           </div>
@@ -129,7 +128,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="border-primary-400 text-primary-400 rounded-r-lg rounded-tl-lg border bg-white hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
                     variant="primary"
                     onClick={open}
                   >
@@ -144,9 +143,9 @@ export function SectionPackageData() {
                     <button
                       key={idx}
                       onClick={() => setCategory(categories[idx])}
-                      className={`hover:text-primary-400 flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider ${
+                      className={`flex cursor-pointer items-center justify-center px-2 py-1 text-base tracking-wider hover:text-primary-400 ${
                         category === categories[idx]
-                          ? 'text-primary-400 bg-white'
+                          ? 'bg-white text-primary-400'
                           : ''
                       }`}
                     >
@@ -157,8 +156,8 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="w-[1200px] pt-[50px]">
-                  <Carousel className='xl:w-[1200px] sm:w-[620px] lg:w-[870px] md:w-[870px] max-sm:w-[320px]'>
+                <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px]">
+                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] ">
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
@@ -171,9 +170,9 @@ export function SectionPackageData() {
                                 item.payType === payType,
                           )
                           .map(item => (
-                            <CarouselItem className='basis-1/4 '>
+                            <CarouselItem className="basis-1/4 ">
                               <div className="w-60 rounded-lg shadow-md">
-                                <div className="bg-primary-400 flex justify-center rounded-t-lg py-2 text-center text-xl font-medium text-white">
+                                <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
                                   <Checkbox
                                     defaultChecked={
                                       PackofDataRef.current?.find(
@@ -199,7 +198,7 @@ export function SectionPackageData() {
                                         )
                                       }
                                     }}
-                                    className={`data-[state=checked]:text-primary-400 mr-4 bg-white data-[state=checked]:bg-white`}
+                                    className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
                                   />
                                   {item.name}
                                 </div>

@@ -51,11 +51,11 @@ export function SectionClient() {
     <>
       <div className="h-[100px]"></div>
       <div>
-        <div className="pb-[50px] text-center text-[35px] leading-[43px]">
+        <div className="pb-[50px] text-center text-[35px] leading-[43px] lg:mt-[180px]">
           {t('landingpage:client.partner')}
         </div>
-        <div className="flex justify-center">
-          <Carousel className='max-sm:w-[320px] sm:w-[620px] md:w-[870px] lg:w-[870px] xl:w-[1200px]'>
+        <div className="flex justify-center ">
+          <Carousel className=" xs2:w-[280px] xs:w-[280px] md:w-[620px] lg:w-[870px] xl:w-[1200px]">
             <CarouselContent>
               {slides.map(item => (
                 <CarouselItem>

@@ -78,14 +78,14 @@ export function SectionProduct() {
             {t('landingpage:section_product.iot')}
           </p>
           <div className="flex justify-center">
-            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px]">
+            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px] xs2:w-[360px] xs2:text-[28px] xs:w-[400px]">
               {t('landingpage:section_product.variety')}
             </h3>
           </div>
         </div>
-        <div className="flex w-full justify-center">
-          <div className="pt-[50px]">
-            <Carousel className="max-sm:w-[320px] sm:w-[620px] md:w-[870px] lg:w-[870px] xl:w-[1200px]">
+        <div className="flex w-full justify-center ">
+          <div className="xsw-[70px] pt-[50px] xs2:w-[260px] sm:w-[270px] md:w-[570px] lg:w-[870px]">
+            <Carousel className="xs2:w-[320px] sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] ">
               <CarouselContent className="">
                 {slides.map(item => (
                   <CarouselItem className=" basis-1/4 ">

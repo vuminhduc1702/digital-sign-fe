@@ -36,11 +36,11 @@ export function SectionSolution() {
       <div className="mb-20 flex justify-center">
         <div className="w-[1040px]">
           <div>
-            <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033] max-sm:text-[18.7px]  max-sm:leading-[37px]">
+            <p className="py-2 pb-8 text-center text-[28px] font-bold text-[#EA0033] xs2:text-[24px]  xs2:leading-[37px]">
               {t('landingpage:solution.value')}
             </p>
             <div className="flex justify-center">
-              <h3 className="max-xs:w-[360px] max-xs:text-[24px] w-[588px] px-5 text-center text-[35px] leading-[43px] max-sm:w-[380px] max-sm:text-[30px]">
+              <h3 className="  w-[588px] px-5 text-center text-[35px] leading-[43px] xs2:w-[380px] xs2:text-[45px] hidden">
                 {t('landingpage:solution.accuracy')}
               </h3>
             </div>

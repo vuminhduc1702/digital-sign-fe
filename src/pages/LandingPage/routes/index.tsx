@@ -29,7 +29,7 @@ import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
-
+import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -86,24 +86,24 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
   return (
     <ContentLayout title={t('landingpage:title')}>
-      <div className="max-xs:h-[850px] h-[500px] max-xl:h-[600px] max-md:h-[750px]">
+      <div className="h-[500px] xs2:h-[640px] xs:h-[670p]">
         <div
-          className="max-xs:h-[850px] h-full max-xl:h-[600px] max-md:h-[750px]"
+          className="h-full"
           style={{
             backgroundImage: `url(${bannerLandingPage})`,
             backgroundSize: 'cover',
           }}
         >
           <div className="px-4 py-4">
-            <div className="flex h-20 px-48 max-xl:px-[47px] max-lg:h-auto max-lg:justify-between">
-              <div className="flex items-center">
-                <a href="/" className="text-5xl font-bold text-white">
-                  {t('landingpage:logo')}
+            <div className="flex h-20 w-full px-48 max-lg:justify-between">
+              <div className="flex items-center max-lg:hidden">
+                <a href="/" className="  text-white">
+                  <img src={LogoViettel} alt="" />
                 </a>
               </div>
               {hasSideBar ? (
                 <button
-                  className=" px-4 text-white lg:hidden ml-49"
+                  className=" ml-[-200px] px-4 text-white lg:hidden"
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
@@ -118,8 +118,8 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </>
               ) : null}
-              
-              <div className="flex w-full lg:justify-center max-lg:hidden ">
+
+              <div className="flex w-full max-lg:hidden lg:justify-center ">
                 <div className="flex justify-start max-lg:flex-col">
                   <div
                     className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
@@ -174,7 +174,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="flex max-lg:px-3 max-lg:hidden">
+                <div className="flex max-lg:hidden max-lg:px-3">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
@@ -239,7 +239,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                      className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                      className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                       sideOffset={5}
                     >
                       <Link
@@ -247,16 +247,16 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         target="_blank"
                         className="cursor-pointer"
                       >
-                        <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                           {t('user:cmp')}
                         </DropdownMenu.Item>
                       </Link>
                       <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                        <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                           {t('user:user_info')}
                         </DropdownMenu.Item>
                       </Link>
-                      <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {userDataFromStorage ? (
                           <p
                             className="cursor-pointer"
@@ -268,7 +268,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                           </p>
                         ) : null}
                       </DropdownMenu.Item>
-                      <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         <p
                           className="cursor-pointer"
                           onClick={() => logout.mutate({})}
@@ -282,8 +282,8 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               )}
             </div>
 
-            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center">
-              <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2">
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[40px]">
+              <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
                   className="flex text-center text-2xl font-bold text-[#DBFF00]"
@@ -299,12 +299,12 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className="max-xs:text-[46px] px-[170px] text-center text-7xl  font-bold leading-[54px]">
+              <h2 className=" text-center text-7xl font-bold leading-[54px] xs2:text-[37.5px]  xs:px-[8px] lg:px-[170px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="max-xs:w-[270px] mt-10 flex w-1/2 items-center justify-center text-white">
+              <div className="mt-10 flex w-1/2 items-center justify-center text-white max-xs:w-[270px]">
                 <p className="text-2xl ">
                   Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
                   ứng dụng.
