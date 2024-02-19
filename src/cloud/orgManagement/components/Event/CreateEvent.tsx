@@ -30,12 +30,13 @@ import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 
 import { outputList } from '~/cloud/customProtocol/components/CreateService'
-import { inputSchema } from '~/cloud/flowEngineV2/components/ThingService'
+import { inputListSchema } from '~/cloud/flowEngineV2/components/ThingService'
 import { type SelectInstance } from 'react-select'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { type ActionType } from '../../types'
 
 export const logicalOperatorOption = [
   {
@@ -188,7 +189,7 @@ const eventIntervalSchema = z.object({
   end_time: z.string().min(1, { message: i18n.t('ws:filter.choose_endTime') }),
 })
 
-const eventActionSchema = z
+export const eventActionSchema = z
   .array(
     z
       .object({
@@ -244,25 +245,45 @@ const eventActionSchema = z
   )
   .optional()
 
-const cmdSchema = z.object({
-  thing_id: z.string().min(1, {
-    message: i18n
-      .t('placeholder:input_text_value')
-      .replace(
-        '{{VALUE}}',
-        i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
-      ),
-  }),
-  handle_service: z.string().min(1, {
-    message: i18n
-      .t('placeholder:input_text_value')
-      .replace(
-        '{{VALUE}}',
-        i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
-      ),
-  }),
-  input: inputSchema,
+export const cmdSchema = z.object({
+  thing_id: z
+    .string()
+    .min(1, {
+      message: i18n
+        .t('placeholder:input_text_value')
+        .replace(
+          '{{VALUE}}',
+          i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+        ),
+    })
+    .optional(),
+  handle_service: z
+    .string()
+    .min(1, {
+      message: i18n
+        .t('placeholder:input_text_value')
+        .replace(
+          '{{VALUE}}',
+          i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+        ),
+    })
+    .optional(),
+  input: inputListSchema.optional(),
 })
+
+export const eventTypeSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('event'),
+    condition: eventConditionSchema,
+    interval: eventIntervalSchema,
+  }),
+  z.object({
+    type: z.literal('schedule'),
+    interval: eventIntervalSchema
+      .omit({ end_time: true })
+      .and(z.object({ end_time: z.string().optional() })),
+  }),
+])
 
 export const createEventSchema = z
   .object({
@@ -274,23 +295,9 @@ export const createEventSchema = z
     status: z.boolean().optional(),
     retry: z.number().optional(),
     onClick: z.boolean(),
-    cmd: cmdSchema,
+    cmd: cmdSchema.optional(),
   })
-  .and(
-    z.discriminatedUnion('type', [
-      z.object({
-        type: z.literal('event'),
-        condition: eventConditionSchema,
-        interval: eventIntervalSchema,
-      }),
-      z.object({
-        type: z.literal('schedule'),
-        interval: eventIntervalSchema
-          .omit({ end_time: true })
-          .and(z.object({ end_time: z.string().optional() })),
-      }),
-    ]),
-  )
+  .and(eventTypeSchema)
 
 export interface IntervalData {
   [key: string]: boolean
@@ -320,6 +327,8 @@ export function CreateEvent() {
       retry: 0,
     },
   })
+  console.log('formState.errors', formState.errors)
+
   const {
     append: conditionAppend,
     fields: conditionFields,
@@ -385,7 +394,7 @@ export function CreateEvent() {
 
   const [todos, setTodos] = useState(initialTodos)
 
-  const [actionType, setActionType] = useState('')
+  const [actionType, setActionType] = useState<ActionType>('sms')
 
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
@@ -415,6 +424,7 @@ export function CreateEvent() {
   const clearData = () => {
     reset()
     setTodos(initialTodos)
+    setActionType('sms')
   }
 
   const todoClicked = (e: any) => {
@@ -460,7 +470,7 @@ export function CreateEvent() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -527,13 +537,16 @@ export function CreateEvent() {
               interval,
               type: getValues('type'),
               cmd: {
-                thing_id: values.cmd.thing_id,
-                service_name: values.cmd.handle_service,
+                thing_id: values?.cmd?.thing_id,
+                service_name: values?.cmd?.handle_service,
                 project_id: projectId,
-                input: values.cmd.input.reduce((accumulator, currentValue) => {
-                  accumulator[currentValue.name] = currentValue.value
-                  return accumulator
-                }, {}),
+                input: values?.cmd?.input?.reduce(
+                  (accumulator, currentValue) => {
+                    accumulator[currentValue.name] = currentValue.value
+                    return accumulator
+                  },
+                  {},
+                ),
               },
             },
           })
@@ -828,7 +841,7 @@ export function CreateEvent() {
                             <img
                               src={btnDeleteIcon}
                               alt="Delete condition"
-                              className="h-10 w-10"
+                              className="size-10"
                             />
                           }
                         />
@@ -922,7 +935,9 @@ export function CreateEvent() {
                         option.label === t('loading:service_thing') ||
                         option.label === t('table:no_service')
                       }
-                      isLoading={watch('cmd.thing_id') != null ? isLoadingService : false}
+                      isLoading={
+                        watch('cmd.thing_id') != null ? isLoadingService : false
+                      }
                       loadingMessage={() => t('loading:service_thing')}
                       noOptionsMessage={() => t('table:no_service')}
                       placeholder={t('cloud:custom_protocol.service.choose')}
@@ -1048,14 +1063,14 @@ export function CreateEvent() {
                       variant="trans"
                       className="mt-3 border-none"
                       onClick={() => {
-                        setActionType('')
+                        setActionType('sms')
                         actionRemove(index)
                       }}
                       startIcon={
                         <img
                           src={btnDeleteIcon}
                           alt="Delete condition"
-                          className="h-10 w-10"
+                          className="size-10"
                         />
                       }
                     />

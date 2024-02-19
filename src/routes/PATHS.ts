@@ -49,7 +49,7 @@ export const PATHS = {
   TENANT_MANAGE: `${BASE_PATH_TENANT}`,
   DEV_ROLE: `${BASE_PATH_DEV_ROLE}`,
 
-  // Intergration route
+  // Integration route
   AI: `${BASE_PATH_INTEGRATION}ai`,
   DDOS: `${BASE_PATH_INTEGRATION}ai/ddos`,
   FUEL: `${BASE_PATH_INTEGRATION}ai/fuel`,

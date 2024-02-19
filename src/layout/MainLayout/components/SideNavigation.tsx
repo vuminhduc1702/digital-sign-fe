@@ -67,7 +67,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:device.title')}</div>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.DEVKIT}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -89,7 +89,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:cloud.title')}</div>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.ORG}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -146,7 +146,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:application.title')}</div>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.APPSDK}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -168,7 +168,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:payment.title')}</div>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.BILLING_PACKAGE}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -196,15 +196,15 @@ function SideNavigation() {
           <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
             <img
               src={tichhopIcon}
-              alt="Intergration"
+              alt="integration"
               className="aspect-square w-5"
             />
-            <div>{t('sidebar:intergration.title')}</div>
-            <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+            <div>{t('sidebar:integration.title')}</div>
+            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.AI}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
-              {t('sidebar:intergration.ai.title')}
+              {t('sidebar:integration.ai.title')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>

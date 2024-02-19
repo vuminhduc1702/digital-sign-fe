@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -41,24 +41,27 @@ import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
-import { ImperativePanelHandle } from 'react-resizable-panels'
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '~/components/Resizable'
+import { type ImperativePanelHandle } from 'react-resizable-panels'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '~/components/Resizable'
 
-export const inputSchema = z.array(
-  z.object({
-    name: z
-      .string()
-      .min(1, { message: 'Tên biến quá ngắn' })
-      .max(64, { message: 'Tên biến quá dài' }),
-    type: z.string(),
-    value: z.string().optional().or(z.boolean()),
-  }),
-)
+export const inputSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: 'Tên biến quá ngắn' })
+    .max(64, { message: 'Tên biến quá dài' }),
+  type: z.string(),
+  value: z.string().optional().or(z.boolean()),
+})
+export const inputListSchema = z.array(inputSchema)
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
   description: z.string(),
-  input: inputSchema,
+  input: inputListSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   fail_limit: z.number().optional(),
   lock_time: z.string().optional(),
@@ -89,7 +92,7 @@ const defaultJSType = [
 export const PANEL_SIZE = {
   MAX: 'max',
   MIN: 'min',
-  DEFAULT: 'default'
+  DEFAULT: 'default',
 }
 
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
@@ -197,7 +200,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   function resizePanel(ref: RefObject<ImperativePanelHandle>, type: string) {
     if (ref) {
-      switch(type) {
+      switch (type) {
         case 'max':
           if (fullScreen) {
             ref.current?.resize(94)
@@ -330,7 +333,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
             </div>
             <div className={cn('grid grid-cols-1 gap-x-4 md:grid-cols-4')}>
               <div className={'relative flex flex-col gap-2 md:col-span-1'}>
-                <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+                <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                   <div className="flex gap-3">
                     <p className="text-table-header">
                       {t('cloud:custom_protocol.service.input')}
@@ -441,7 +444,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           type="button"
                           size="square"
                           variant="none"
-                          className={cn('hover:bg-secondary-500 h-9', {
+                          className={cn('h-9 hover:bg-secondary-500', {
                             '!justify-center': fullScreen,
                           })}
                           onClick={() => remove(index)}
@@ -449,7 +452,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             <img
                               src={btnDeleteIcon}
                               alt="Delete input"
-                              className={cn('h-10 w-10')}
+                              className={cn('size-10')}
                             />
                           }
                         />
@@ -471,7 +474,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   <img
                     src={btnAddIcon}
                     alt="add-icon"
-                    className="h-5 w-5 cursor-pointer"
+                    className="size-5 cursor-pointer"
                   />
                   <label className="ml-2 cursor-pointer">
                     {t('cloud:custom_protocol.service.add_other')}
@@ -495,7 +498,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   </div>
                 </div>
                 <div className="mt-1.5 flex flex-col">
-                  <div className="bg-secondary-400 mb-1.5 flex items-center rounded-lg px-4 py-2">
+                  <div className="mb-1.5 flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3 ">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.list_service')}
@@ -521,7 +524,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                               </TooltipTrigger>
                               <TooltipContent side="right">
                                 <div>
-                                  <div className="text-table-header mb-4">
+                                  <div className="mb-4 text-table-header">
                                     {item.name}
                                   </div>
                                   <div>
@@ -574,7 +577,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
               <ResizablePanelGroup
                 direction="horizontal"
                 className={cn('flex w-[100%] md:col-span-3', {
-                  'flex-col': fullScreen
+                  'flex-col': fullScreen,
                 })}
               >
                 <ResizablePanel
@@ -583,7 +586,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={codeEditorRef}
                 >
-                  <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+                  <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
                       <p className="text-table-header">
                         {t('cloud:custom_protocol.service.code')}
@@ -599,13 +602,14 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             className="text-secondary-700 hover:text-primary-400"
                           />
                         }
-                        
                       >
-                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="p-2">
                             <div
                               className="hover:background py-1 hover:cursor-pointer"
-                              onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.MAX)}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.MAX)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.maximize_result',
@@ -613,7 +617,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.MIN)}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.MIN)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.minimize_result',
@@ -621,7 +627,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.default_result',
@@ -654,7 +662,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           onClick={() => setTypeInput('Run')}
                           src={btnRunCode}
                           alt="Submit"
-                          className="h-5 w-5 cursor-pointer"
+                          className="size-5 cursor-pointer"
                         />
                       </button>
                     </div>
@@ -662,7 +670,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   <CodeSandboxEditor
                     isShowLog={isShowConsole}
                     value={codeInput}
-                    className='!block'
+                    className="!block"
                     setCodeInput={setCodeInput}
                     isFullScreen={fullScreen}
                   />
@@ -674,9 +682,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
                   ref={resultEditorRef}
                 >
-                  <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+                  <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
-                      <p className="text-table-header overflow-hidden text-ellipsis whitespace-nowrap">
+                      <p className="truncate text-table-header">
                         {t('cloud:custom_protocol.service.output')}
                       </p>
                     </div>
@@ -691,7 +699,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           />
                         }
                       >
-                        <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="p-2">
                             <div
                               className="py-1 hover:cursor-pointer"
@@ -743,7 +751,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 onClick={handleFullScreen}
                 src={btnFullScreen}
                 alt="fullscreen-create-service"
-                className="h-5 w-5 cursor-pointer"
+                className="size-5 cursor-pointer"
               />
             </div>
           </div>
@@ -767,7 +775,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           className="bg-primary-400"
           onClick={() => setTypeInput('Submit')}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }

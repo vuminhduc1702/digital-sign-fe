@@ -178,7 +178,7 @@ export function LayoutOverView() {
       link: `${PATHS.BILLING}/${projectId}`,
     },
     {
-      content: t('sidebar:intergration.ai.title'),
+      content: t('sidebar:integration.ai.title'),
       link: `${PATHS.AI}`,
     },
   ]
@@ -247,7 +247,7 @@ export function LayoutOverView() {
             <p className="text-table-header">{t('overView:total_user')}</p>
             <div className="mt-2 flex justify-between">
               <span>{registedUserData?.total}</span>
-              <AvatarIcon className="h-5 w-5 text-primary-400" />
+              <AvatarIcon className="size-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
@@ -256,21 +256,21 @@ export function LayoutOverView() {
             </p>
             <div className="mt-2 flex justify-between">
               <span>{concurrentUserData?.total}</span>
-              <RadiobuttonIcon className="h-5 w-5 text-primary-400" />
+              <RadiobuttonIcon className="size-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:request_time')}</p>
             <div className="mt-2 flex justify-between">
               <span>{RequestHandlingTimeData?.avg_latency}</span>
-              <TimerIcon className="h-5 w-5 text-primary-400" />
+              <TimerIcon className="size-5 text-primary-400" />
             </div>
           </div>
           <div className="rounded-md border border-solid border-[#ccc] bg-white p-4">
             <p className="text-table-header">{t('overView:success_rate')}</p>
             <div className="mt-2 flex justify-between">
               <span>{SuccessRateData?.success_rate}</span>
-              <CheckCircledIcon className="h-5 w-5 text-primary-400" />
+              <CheckCircledIcon className="size-5 text-primary-400" />
             </div>
           </div>
         </div>
@@ -287,7 +287,7 @@ export function LayoutOverView() {
               }
             >
               <div className="flex items-center gap-x-2">
-                <ChevronLeftIcon className="h-5 w-5" />
+                <ChevronLeftIcon className="size-5" />
               </div>
             </Tab>
             <Tab
@@ -299,7 +299,7 @@ export function LayoutOverView() {
               }
             >
               <div className="flex items-center gap-x-2">
-                <ChevronRightIcon className="h-5 w-5" />
+                <ChevronRightIcon className="size-5" />
               </div>
             </Tab>
           </Tab.List>
@@ -382,7 +382,7 @@ export function LayoutOverView() {
                                 <img
                                   src={btnSubmitIcon}
                                   alt="Submit"
-                                  className="h-5 w-5"
+                                  className="size-5"
                                 />
                               }
                             />
@@ -472,7 +472,7 @@ export function LayoutOverView() {
                                 <img
                                   src={btnSubmitIcon}
                                   alt="Submit"
-                                  className="h-5 w-5"
+                                  className="size-5"
                                 />
                               }
                             />
@@ -495,7 +495,7 @@ export function LayoutOverView() {
               onClick={() => navigate(`${PATHS.DASHBOARD}/${projectId}`)}
             >
               <p className="text-table-header">{t('overView:dashboard')}</p>
-              <ArrowTopRightIcon className="h-5 w-5" />
+              <ArrowTopRightIcon className="size-5" />
             </div>
             <div className="flex ">
               <div className="w-fit rounded-2xl bg-slate-200">

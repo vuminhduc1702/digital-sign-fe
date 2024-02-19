@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,23 +29,32 @@ import { Checkbox } from '~/components/Checkbox'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { Spinner } from '~/components/Spinner'
 import { outputList } from '~/cloud/customProtocol/components/CreateService'
-import { type Action, type Condition, type EventType } from '../../types'
+import {
+  type ActionType,
+  type Action,
+  type Condition,
+  type EventType,
+} from '../../types'
 import {
   conditionTypeOptions,
-  createEventSchema,
   operatorOptions,
   type IntervalData,
   logicalOperatorOption,
   actionTypeOptions,
   eventTypeOptions,
+  eventActionSchema,
+  cmdSchema,
+  eventTypeSchema,
 } from './CreateEvent'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { nameSchema } from '~/utils/schemaValidation'
+import { inputSchema } from '~/cloud/flowEngineV2/components/ThingService'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 
 type UpdateEventProps = {
   eventId: string
@@ -59,6 +69,24 @@ type UpdateEventProps = {
   startTimeProps: string
   endTimeProps: string
 }
+
+const updateCmdSchema = cmdSchema
+  .omit({ input: true })
+  .and(z.object({ input: inputSchema.pick({ value: true }) }))
+
+export const updateEventSchema = z
+  .object({
+    project_id: z.string().optional(),
+    org_id: z.string().optional(),
+    group_id: z.string().optional(),
+    name: nameSchema,
+    action: eventActionSchema,
+    status: z.boolean().optional(),
+    retry: z.number().optional(),
+    onClick: z.boolean(),
+    cmd: updateCmdSchema,
+  })
+  .and(eventTypeSchema)
 
 export function UpdateEvent({
   eventId,
@@ -77,16 +105,12 @@ export function UpdateEvent({
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
 
-  const actionTypeProp = JSON.parse(data.action)[0].action_type
+  const actionTypeProp: ActionType = JSON.parse(data.action)[0].action_type
   const thingIdOptionProp = JSON.parse(data.cmd).thing_id
-  const serviceNameOptionProp = JSON.parse(data.cmd).service_name
+  const serviceOptionProp = JSON.parse(data.cmd).service_name
   const inputDataProp = JSON.parse(data.cmd).input
 
-  const [actionType, setActionType] = useState(actionTypeProp)
-  const [serviceNameOption, setServiceNameOption] = useState(
-    serviceNameOptionProp,
-  )
-  const [inputData, setInputData] = useState(inputDataProp)
+  const [actionType, setActionType] = useState<ActionType>(actionTypeProp)
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
     projectId,
     type: 'thing',
@@ -106,7 +130,7 @@ export function UpdateEvent({
     setValue,
     resetField,
   } = useForm<UpdateEventDTO['data']>({
-    resolver: createEventSchema && zodResolver(createEventSchema),
+    resolver: updateEventSchema && zodResolver(updateEventSchema),
     defaultValues: {
       onClick: (data.onClick as unknown as string) === 'true',
       name,
@@ -120,10 +144,12 @@ export function UpdateEvent({
       group_id: data.group_id,
       cmd: {
         thing_id: thingIdOptionProp,
-        handle_service: serviceNameOption,
+        handle_service: serviceOptionProp,
+        input: inputDataProp,
       },
     },
   })
+  console.log('formState.errors', formState.errors)
 
   const {
     append: conditionAppend,
@@ -141,7 +167,6 @@ export function UpdateEvent({
     name: 'action',
     control,
   })
-  // console.log('formState.errors', formState.errors)
 
   const { mutate, isLoading, isSuccess } = useUpdateEvent()
 
@@ -200,20 +225,15 @@ export function UpdateEvent({
       config: {
         suspense: false,
         enabled: !!watch('cmd.thing_id'),
-        select: value => {
-          if (value.message === 'success') {
-            const serviceSelectData = value?.data.map(item => ({
-              value: item.name,
-              label: item.name,
-            }))
-            const serviceInput = value?.data.find(item => {
-              return item.name === serviceNameOption
-            })?.input
-            return { serviceSelectData, serviceInput }
-          }
-        },
       },
     })
+  const serviceSelectData = serviceData?.data?.map(service => ({
+    value: service.name,
+    label: service.name,
+  }))
+  const serviceInput = serviceData?.data?.find(
+    item => item.name === watch('cmd.handle_service'),
+  )?.input
 
   const todoClicked = (e: any) => {
     setTodos(
@@ -226,20 +246,15 @@ export function UpdateEvent({
   }
 
   useEffect(() => {
-    setServiceNameOption(watch('cmd.handle_service'))
-    setInputData({})
-  }, [watch('cmd.handle_service')])
-
-  useEffect(() => {
-    serviceData?.serviceInput?.forEach((element, idx) => {
+    serviceInput?.forEach((element, idx) => {
       setValue(`cmd.input.${idx}.name`, element.name)
       setValue(
         `cmd.input.${idx}.type`,
         element.type === 'string' ? 'str' : element.type,
       )
-      setValue(`cmd.input.${idx}.value`, inputData[element.name])
+      setValue(`cmd.input.${idx}.value`, inputDataProp[element.name])
     })
-  }, [serviceData?.serviceInput])
+  }, [watch('cmd.handle_service')])
 
   const selectDropdownServiceRef = useRef<SelectInstance<SelectOption> | null>(
     null,
@@ -285,7 +300,7 @@ export function UpdateEvent({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -295,7 +310,7 @@ export function UpdateEvent({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={isLoading}
           />
@@ -306,6 +321,7 @@ export function UpdateEvent({
         id="update-event"
         className="w-full space-y-5"
         onSubmit={handleSubmit(values => {
+          console.log('check values submit form:', values)
           const dataFilter = todos.filter(item => item.selected)
           let repeat = ''
           dataFilter.map(item => {
@@ -357,13 +373,10 @@ export function UpdateEvent({
               interval,
               type: getValues('type'),
               cmd: {
-                thing_id: values.cmd.thing_id,
-                service_name: values.cmd.handle_service,
+                thing_id: values?.cmd?.thing_id,
+                service_name: values?.cmd?.handle_service,
                 project_id: projectId,
-                input: values.cmd.input.reduce((accumulator, currentValue) => {
-                  accumulator[currentValue.name] = currentValue.value
-                  return accumulator
-                }, {}),
+                input: values?.cmd?.input,
               },
             },
             eventId,
@@ -375,7 +388,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -488,7 +501,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -527,7 +540,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -667,7 +680,7 @@ export function UpdateEvent({
                               <img
                                 src={btnDeleteIcon}
                                 alt="Delete condition"
-                                className="h-10 w-10"
+                                className="size-10"
                               />
                             }
                           />
@@ -683,7 +696,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               {actionType !== 'report' && (
                 <Button
@@ -722,34 +735,30 @@ export function UpdateEvent({
                       }
                     />
                     {actionType === 'report' ? (
-                      <div className="space-y-1">
-                        <SelectDropdown
-                          label={t('cloud:custom_protocol.thing.id')}
-                          name="cmd.thing_id"
-                          control={control}
-                          options={thingSelectData}
-                          isOptionDisabled={option =>
-                            option.label === t('loading:entity_thing') ||
-                            option.label === t('table:no_thing')
-                          }
-                          noOptionsMessage={() => t('table:no_thing')}
-                          loadingMessage={() => t('loading:entity_thing')}
-                          isLoading={isLoadingThing}
-                          placeholder={t('cloud:custom_protocol.thing.choose')}
-                          handleClearSelectDropdown={() =>
-                            selectDropdownServiceRef.current?.clearValue()
-                          }
-                          handleChangeSelect={() =>
-                            selectDropdownServiceRef.current?.clearValue()
-                          }
-                          defaultValue={thingSelectData.find(
-                            ele => ele.value === thingIdOptionProp,
-                          )}
-                        />
-                        <p className="text-body-sm text-primary-400">
-                          {formState?.errors?.cmd?.thing_id?.message}
-                        </p>
-                      </div>
+                      <SelectDropdown
+                        label={t('cloud:custom_protocol.thing.id')}
+                        name="cmd.thing_id"
+                        control={control}
+                        options={thingSelectData}
+                        isOptionDisabled={option =>
+                          option.label === t('loading:entity_thing') ||
+                          option.label === t('table:no_thing')
+                        }
+                        noOptionsMessage={() => t('table:no_thing')}
+                        loadingMessage={() => t('loading:entity_thing')}
+                        isLoading={isLoadingThing}
+                        placeholder={t('cloud:custom_protocol.thing.choose')}
+                        handleClearSelectDropdown={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                        handleChangeSelect={() =>
+                          selectDropdownServiceRef.current?.clearValue()
+                        }
+                        defaultValue={thingSelectData?.find(
+                          ele => ele.value === thingIdOptionProp,
+                        )}
+                        error={formState?.errors?.cmd?.thing_id}
+                      />
                     ) : (
                       <div className="space-y-1">
                         <InputField
@@ -762,13 +771,13 @@ export function UpdateEvent({
                       </div>
                     )}
                     {actionType === 'report' ? (
-                      <div className="space-y-1">
+                      isLoadingService ? null : (
                         <SelectDropdown
                           refSelect={selectDropdownServiceRef}
                           label={t('cloud:custom_protocol.service.title')}
                           name="cmd.handle_service"
                           control={control}
-                          options={serviceData?.serviceSelectData}
+                          options={serviceSelectData}
                           isOptionDisabled={option =>
                             option.label === t('loading:service_thing') ||
                             option.label === t('table:no_service')
@@ -782,14 +791,12 @@ export function UpdateEvent({
                           customOnChange={() =>
                             resetField(`cmd.input.${index}.value`)
                           }
-                          defaultValue={serviceData?.serviceSelectData.find(
-                            ele => ele.label === serviceNameOption,
+                          defaultValue={serviceSelectData?.find(
+                            ele => ele.label === serviceOptionProp,
                           )}
+                          error={formState?.errors?.cmd?.handle_service}
                         />
-                        <p className="text-body-sm text-primary-400">
-                          {formState?.errors?.cmd?.handle_service?.message}
-                        </p>
-                      </div>
+                      )
                     ) : (
                       <div className="space-y-1">
                         <InputField
@@ -804,7 +811,7 @@ export function UpdateEvent({
                     <div className="flex justify-end">
                       {actionType === 'report' ? (
                         <div className="max-h-44 overflow-auto">
-                          {serviceData?.serviceInput?.map((element, index) => {
+                          {serviceInput?.map((element, index) => {
                             return (
                               <div
                                 key={`key-${index}`}
@@ -875,11 +882,7 @@ export function UpdateEvent({
                                   </FieldWrapper>
                                 ) : (
                                   <InputField
-                                    defaultValue={
-                                      inputData[element.name]
-                                        ? inputData[element.name]
-                                        : ''
-                                    }
+                                    defaultValue={inputDataProp[element.name]}
                                     label={t(
                                       'cloud:custom_protocol.service.service_input.value',
                                     )}
@@ -918,14 +921,14 @@ export function UpdateEvent({
                         variant="trans"
                         className="ml-5 mt-3 border-none"
                         onClick={() => {
-                          setActionType('')
+                          setActionType('sms')
                           actionRemove(index)
                         }}
                         startIcon={
                           <img
                             src={btnDeleteIcon}
                             alt="Delete condition"
-                            className="h-10 w-10"
+                            className="size-10"
                           />
                         }
                       />

@@ -136,11 +136,11 @@ function EventTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit event" className="size-5" />
               }
               onClick={open}
             >
@@ -151,7 +151,7 @@ function EventTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy event's ID"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -167,14 +167,14 @@ function EventTableContextMenu({
               ).replace('{{EVENTNAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete event"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -189,7 +189,7 @@ function EventTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id, projectId })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }

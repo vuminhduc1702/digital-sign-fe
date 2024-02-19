@@ -16,7 +16,7 @@ export default function AiNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('sidebar:intergration.ai.ddos')}
+          {t('sidebar:integration.ai.ddos')}
         </p>
       </NavLink>
       <NavLink to={PATHS.FUEL} className="flex cursor-pointer gap-2">
@@ -27,7 +27,7 @@ export default function AiNavbar() {
           viewBox="0 0 20 20"
         />
         <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-          {t('sidebar:intergration.ai.fuel')}
+          {t('sidebar:integration.ai.fuel')}
         </p>
       </NavLink>
     </div>
