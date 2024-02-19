@@ -1,50 +1,51 @@
 import { z, type ZodTypeAny } from 'zod'
+import i18n from '~/i18n'
 
 export const nameSchema = z
   .string()
-  .min(1, { message: 'Tên quá ngắn' })
-  .max(64, { message: 'Tên quá dài' })
+  .min(1, { message: i18n.t('scheam:name_short') })
+  .max(64, { message: i18n.t('scheam:name_long') })
 
 export const nameSchemaRegex = z
   .string()
-  .min(1, { message: 'Tên quá ngắn' })
-  .max(64, { message: 'Tên quá dài' })
+  .min(1, { message: i18n.t('scheam:name_short')})
+  .max(64, { message: i18n.t('scheam:name_long') })
   .regex(new RegExp('^[a-zA-Z0-9_]*$'), {
     message:
-      'Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt',
+    i18n.t('scheam:name_regex')
   })
 
 export const versionSchema = z
   .string()
   .regex(new RegExp('^[1-9]d*(.[1-9]d*)*'), {
-    message: 'Vui lòng nhập số phiên bản có dạng x.x.x | VD 1.0.0',
+    message: i18n.t('scheam:version_scheam'),
   })
 
 export const otpSchema = z
   .string()
-  .min(6, { message: 'Vui lòng nhập đúng OTP' })
+  .min(6, { message: i18n.t('scheam:otp') })
 
 export const descSchema = z.string()
 
 export const emailSchema = z
   .string()
-  .email({ message: 'Nhập sai định dạng email' })
-  .min(3, { message: 'Email quá ngắn' })
-  .max(64, { message: 'Email quá dài' })
+  .email({ message: i18n.t('scheam:wrong_email') })
+  .min(3, { message: i18n.t('scheam:email_short') })
+  .max(64, { message: i18n.t('scheam:email_long') })
 
 export const passwordSchema = z
   .string()
-  .min(6, { message: 'Password quá ngắn' })
-  .max(64, { message: 'Password quá dài' })
+  .min(6, { message: i18n.t('scheam:password_short') })
+  .max(64, { message: i18n.t('scheam:password_long') })
 
 export const attrSchema = z.object({
   attribute_key: z
     .string()
-    .min(1, { message: 'Tên thuộc tính quá ngắn' })
-    .max(64, { message: 'Tên thuộc tính quá dài' }),
+    .min(1, { message: i18n.t('scheam:attributename_short') })
+    .max(64, { message: i18n.t('scheam:attributename_long') }),
   value: z.string().optional(),
   logged: z.boolean().default(true),
-  value_t: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
+  value_t: z.string().min(1, { message: i18n.t('scheam:value_type') }),
 })
 
 export const attrListSchema = z.array(attrSchema)
@@ -65,18 +66,18 @@ export const BasePaginationSchema = z.object({
 
 export const phoneSchemaRegex = z
   .string()
-  .min(1, { message: 'Vui lòng không bỏ trống mục này' })
+  .min(1, { message: i18n.t('scheam:leave_item') })
   .regex(new RegExp(/(0[3|5|7|8|9])+([0-9]{8})\b/g), {
-    message: 'Số điện thoại chưa đúng định dạng',
+    message: i18n.t('scheam:phone_correct')
   })
 
 export const emptyInputSchema = z
   .string()
-  .min(1, { message: 'Vui lòng không bỏ trống mục này' })
+  .min(1, { message: i18n.t('scheam:leave_item') })
 
 export const emptySelectSchema = z
   .string()
-  .min(1, { message: 'Vui lòng chọn mục này' })
+  .min(1, { message: i18n.t('scheam:select_item') })
 
 export const attributeInfoSchema = z.object({
     id: z.string(),

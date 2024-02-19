@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import i18n from '~/i18n'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
@@ -20,21 +21,21 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
 export const resourcesList = [
-  { value: 'users', label: 'Người dùng' },
-  { value: 'groups', label: 'Nhóm' },
-  { value: 'templates', label: 'Mẫu thiết bị' },
-  { value: 'events', label: 'Sự kiện' },
-  { value: 'organizations', label: 'Tổ chức' },
-  { value: 'roles', label: 'Vai trò' },
-  { value: 'projects', label: 'Dự án' },
-  { value: 'devices', label: 'Thiết bị' },
+  { value: 'users', label: i18n.t("scheam:users") },
+  { value: 'groups', label: i18n.t("scheam:groups") },
+  { value: 'templates', label: i18n.t("scheam:templates") },
+  { value: 'events', label: i18n.t("scheam:events") },
+  { value: 'organizations', label: i18n.t("scheam:organizations") },
+  { value: 'roles', label: i18n.t("scheam:roles") },
+  { value: 'projects', label: i18n.t("scheam:projects") },
+  { value: 'devices', label: i18n.t("scheam:devices") },
 ] as const
 
 export const actionsList = [
-  { value: 'read', label: 'Xem' },
-  { value: 'create', label: 'Tạo mới' },
-  { value: 'modify', label: 'Chỉnh sửa' },
-  { value: 'delete', label: 'Xoá' },
+  { value: 'read', label: i18n.t("scheam:read") },
+  { value: 'create', label: i18n.t("scheam:create") },
+  { value: 'modify', label: i18n.t("scheam:modify") },
+  { value: 'delete', label: i18n.t("scheam:delete") },
 ] as const
 
 export const roleSchema = z
@@ -50,10 +51,10 @@ export const roleSchema = z
             policy_name: nameSchema,
             resources: z
               .array(z.string())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 tài nguyên' }),
+              .nonempty({ message: i18n.t('scheam:select_resource') }),
             actions: z
               .array(z.string())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
+              .nonempty({ message: i18n.t('scheam:select_action') }),
           }),
         ),
       }),

@@ -21,8 +21,7 @@ export function AppDebug() {
                 {t('application:debug')}
               </h5>
               <p className="mb-4 text-base">
-                Vsmart debug là ứng dụng hỗ trợ các nhà phát triển theo dõi dữ
-                liệu của các thiết bị đã tích hợp với nền tảng Innoway.
+                {t('document:vsmart_debug')}
               </p>
               <p className="mb-4 text-base">{t('application:setup')}</p>
               <div className="my-5 flex w-full items-center justify-center">
