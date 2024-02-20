@@ -5,9 +5,8 @@ import { FieldWrapper } from '~/components/Form'
 import i18n from '~/i18n'
 
 export function Module() {
-
   const Module = [
-    i18n.t('scheam:all'),
+    i18n.t('schema:all'),
     'NB-IoT',
     '2G',
     'Wifi',
@@ -131,7 +130,7 @@ export function Module() {
               <div className="mb-6 flex h-[36px] w-full items-center rounded-md bg-[#EC1B2E] px-2.5 text-base text-white opacity-[.85] shadow-lg">
                 {Module[selectedItem]}
               </div>
-              <div className="border-opacity-15 mb-4 grid h-[55vh] grid-cols-2 overflow-auto rounded-md border-x border-solid border-white bg-white">
+              <div className="mb-4 grid h-[55vh] grid-cols-2 overflow-auto rounded-md border-x border-solid border-white border-opacity-15 bg-white">
                 {filteredModuleDevices.map((item: any, idx) => (
                   <div className="p-4" key={idx}>
                     <div className="shadow-md">

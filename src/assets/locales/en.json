@@ -754,7 +754,8 @@
       "delete_plan": "Delete Package",
       "delete_plan_confirm": "Are you sure you want to delete the package {{PLAN_NAME}}?",
       "id": "ID",
-      "description": "Description of the package:",
+      "description": "Description of the package: ",
+      "choose_package": "Please choose a package for see details",
       "popup": {
         "name": "Package Name",
         "type": "Package Type",
@@ -1305,7 +1306,7 @@
   "dev_role": {
     "list": "List of Developer Roles"
   },
-  "scheam": {
+  "schema": {
     "name_long": "Name is too long",
     "name_short": "Name is too short",
     "name_regex": "Service names must only include letters, numbers, or _ characters, not spaces or special characters",
@@ -1337,37 +1338,37 @@
     "roles": "Rroles",
     "projects": "Projects",
     "devices": "Devices",
-    "developing":"Developing",
-    "bill":"Some bill",
-    "customer_name":"Customer name",
-    "customer_code":"Customer code",
-    "customer_phone":"Phone Number",
-    "registration_code":"Registration code"
+    "developing": "Developing",
+    "bill": "Some bill",
+    "customer_name": "Customer name",
+    "customer_code": "Customer code",
+    "customer_phone": "Phone Number",
+    "registration_code": "Registration code"
   },
   "document": {
     "document_devkit": "This area includes information about DevKits with sample code, integration documentation and SDKs to connect your device to InnoWay.",
     "application": "The application allows connecting and managing smart devices in the home",
-    "vsmart_debug":"Vsmart debug is an application that helps developers monitor data of devices integrated with the Innoway platform.",
-    "fleet_management":{
-      "content":"Fleet management solutions help you manage fleet operations, leading to reduced costs, improved efficiency and increased compliance. The right fleet management solution can be instrumental in coordinating your fleet management activities.",
-      "content2":"Main function:",
-      "content3":"- Safe zone warning via SMS or App Notification",
-      "content4":"- Low battery warning via SMS or App Notification",
-      "content5":"- Locate location via device message"
+    "vsmart_debug": "Vsmart debug is an application that helps developers monitor data of devices integrated with the Innoway platform.",
+    "fleet_management": {
+      "content": "Fleet management solutions help you manage fleet operations, leading to reduced costs, improved efficiency and increased compliance. The right fleet management solution can be instrumental in coordinating your fleet management activities.",
+      "content2": "Main function:",
+      "content3": "- Safe zone warning via SMS or App Notification",
+      "content4": "- Low battery warning via SMS or App Notification",
+      "content5": "- Locate location via device message"
     },
-    "asset_management":{
-      "content":"Asset management solutions help you track assets through the use of RFID tags attached to them. Tags are read by a fixed scanner mounted in a fixed position. Every time a tag is read, it will be aggregated into a string and sold to the system as a total of all scanned RFIDs. Besides, the solution also warns you of missing RFIDs or strange RFIDs to help you avoid missing assets.",
-      "content2":"Main function:",
-      "content3":"- Warning of missing RFID, strange RFID via SMS or App Notification",
-      "content4":"- Process message sets sent by devices (merge messages, check duplicates)",
-      "content5":"- Register new RFID by list or edit small quantity"
+    "asset_management": {
+      "content": "Asset management solutions help you track assets through the use of RFID tags attached to them. Tags are read by a fixed scanner mounted in a fixed position. Every time a tag is read, it will be aggregated into a string and sold to the system as a total of all scanned RFIDs. Besides, the solution also warns you of missing RFIDs or strange RFIDs to help you avoid missing assets.",
+      "content2": "Main function:",
+      "content3": "- Warning of missing RFID, strange RFID via SMS or App Notification",
+      "content4": "- Process message sets sent by devices (merge messages, check duplicates)",
+      "content5": "- Register new RFID by list or edit small quantity"
     }
   },
-  "title":{
-    "fleet_management":"Fleet Management Solution",
-    "asset_management":"Asset Management Solution",
-    "smart_water_meter":"Smart Water Meter Solution",
-    "smart_farm":"Smart Farm Solution",
-    "smart_home":"Smarthome Solution"
+  "title": {
+    "fleet_management": "Fleet Management Solution",
+    "asset_management": "Asset Management Solution",
+    "smart_water_meter": "Smart Water Meter Solution",
+    "smart_farm": "Smart Farm Solution",
+    "smart_home": "Smarthome Solution"
   }
 }

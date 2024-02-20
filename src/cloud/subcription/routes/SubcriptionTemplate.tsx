@@ -68,9 +68,15 @@ export function SubcriptionTemplate() {
                   name="key"
                   control={control}
                   options={[
-                    { label: t('scheam:registration_code'), value: 'subscription' },
-                    { label: t('scheam:customer_code'), value: 'customer_code' },
-                    { label: t('scheam:customer_name'), value: 'name' },
+                    {
+                      label: t('schema:registration_code'),
+                      value: 'subscription',
+                    },
+                    {
+                      label: t('schema:customer_code'),
+                      value: 'customer_code',
+                    },
+                    { label: t('schema:customer_name'), value: 'name' },
                   ]}
                   // error={formState?.errors?.key}
                 />

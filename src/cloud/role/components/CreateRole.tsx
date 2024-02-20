@@ -21,21 +21,21 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
 export const resourcesList = [
-  { value: 'users', label: i18n.t("scheam:users") },
-  { value: 'groups', label: i18n.t("scheam:groups") },
-  { value: 'templates', label: i18n.t("scheam:templates") },
-  { value: 'events', label: i18n.t("scheam:events") },
-  { value: 'organizations', label: i18n.t("scheam:organizations") },
-  { value: 'roles', label: i18n.t("scheam:roles") },
-  { value: 'projects', label: i18n.t("scheam:projects") },
-  { value: 'devices', label: i18n.t("scheam:devices") },
+  { value: 'users', label: i18n.t('schema:users') },
+  { value: 'groups', label: i18n.t('schema:groups') },
+  { value: 'templates', label: i18n.t('schema:templates') },
+  { value: 'events', label: i18n.t('schema:events') },
+  { value: 'organizations', label: i18n.t('schema:organizations') },
+  { value: 'roles', label: i18n.t('schema:roles') },
+  { value: 'projects', label: i18n.t('schema:projects') },
+  { value: 'devices', label: i18n.t('schema:devices') },
 ] as const
 
 export const actionsList = [
-  { value: 'read', label: i18n.t("scheam:read") },
-  { value: 'create', label: i18n.t("scheam:create") },
-  { value: 'modify', label: i18n.t("scheam:modify") },
-  { value: 'delete', label: i18n.t("scheam:delete") },
+  { value: 'read', label: i18n.t('schema:read') },
+  { value: 'create', label: i18n.t('schema:create') },
+  { value: 'modify', label: i18n.t('schema:modify') },
+  { value: 'delete', label: i18n.t('schema:delete') },
 ] as const
 
 export const roleSchema = z
@@ -51,10 +51,10 @@ export const roleSchema = z
             policy_name: nameSchema,
             resources: z
               .array(z.string())
-              .nonempty({ message: i18n.t('scheam:select_resource') }),
+              .nonempty({ message: i18n.t('schema:select_resource') }),
             actions: z
               .array(z.string())
-              .nonempty({ message: i18n.t('scheam:select_action') }),
+              .nonempty({ message: i18n.t('schema:select_action') }),
           }),
         ),
       }),
@@ -270,7 +270,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     setType(item)
                   }}
                   className={cn('px-4 py-2 text-slate-400', {
-                    'bg-primary-400 rounded-2xl text-white': type === item,
+                    'rounded-2xl bg-primary-400 text-white': type === item,
                   })}
                 >
                   {item}
@@ -286,7 +286,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"

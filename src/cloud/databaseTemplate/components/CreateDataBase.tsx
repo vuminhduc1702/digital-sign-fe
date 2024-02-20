@@ -21,7 +21,7 @@ export const dataBaseAttrSchema = z.object({
   fields: z.array(
     z.object({
       name: z.string(),
-      type: z.string().min(1, { message: i18n.t('scheam:value_type') }),
+      type: z.string().min(1, { message: i18n.t('schema:value_type') }),
     }),
   ),
 })
@@ -31,11 +31,7 @@ export default function CreateDataBase() {
 
   const projectId = storage.getProject()?.id
 
-  const {
-    mutate,
-    isLoading,
-    isSuccess,
-  } = useCreateDataBase()
+  const { mutate, isLoading, isSuccess } = useCreateDataBase()
 
   const { register, formState, watch, handleSubmit, control, reset } = useForm<
     CreateDataBaseDTO['data']

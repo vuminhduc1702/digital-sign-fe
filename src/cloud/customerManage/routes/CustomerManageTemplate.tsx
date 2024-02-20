@@ -51,9 +51,9 @@ export function CustomerManageTemplate() {
                 name="key"
                 control={control}
                 options={[
-                  { label: t('scheam:customer_name'), value: 'name' },
-                  { label: t('scheam:customer_code'), value: 'customer_code' },
-                  { label: t('scheam:customer_phone'), value: 'phone' },
+                  { label: t('schema:customer_name'), value: 'name' },
+                  { label: t('schema:customer_code'), value: 'customer_code' },
+                  { label: t('schema:customer_phone'), value: 'phone' },
                 ]}
                 // error={formState?.errors?.key}
               />

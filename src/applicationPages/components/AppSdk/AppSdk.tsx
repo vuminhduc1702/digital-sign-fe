@@ -10,24 +10,24 @@ export function AppSdk() {
     {
       name: 'Smarthome SDK',
       exist: 'true',
-      info: i18n.t("document:application"),
+      info: i18n.t('document:application'),
       image: 'https://cmp.innoway.vn/assets/images/overview/appSdk.png',
       link: 'http://203.113.138.18:4447/s/r2mdFKfdA28otJt/download',
     },
     {
       name: 'Smart Tracking SDK',
       exist: 'false',
-      info: i18n.t("scheam:developing"),
+      info: i18n.t('schema:developing'),
     },
     {
       name: 'Smart Packing SDK',
       exist: 'false',
-      info: i18n.t("scheam:developing"),
+      info: i18n.t('schema:developing'),
     },
     {
       name: 'Industry SDK',
       exist: 'false',
-      info: i18n.t("scheam:developing"),
+      info: i18n.t('schema:developing'),
     },
   ]
 

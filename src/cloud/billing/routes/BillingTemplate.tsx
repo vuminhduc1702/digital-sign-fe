@@ -76,8 +76,8 @@ export function BillingTemplate() {
                 name="key"
                 control={control}
                 options={[
-                  { label: t('scheam:bill'), value: 'id' },
-                  { label: t('scheam:customer_name'), value: 'customer_name' },
+                  { label: t('schema:bill'), value: 'id' },
+                  { label: t('schema:customer_name'), value: 'customer_name' },
                 ]}
                 // error={formState?.errors?.key}
               />

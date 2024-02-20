@@ -16,28 +16,28 @@ export function BillingPackageManage() {
 
   return (
     <ContentLayout title={t('sidebar:payment.plgc')}>
-      <div className="grid grow grid-cols-1 gap-x-4 pt-2 pr-2 pl-2 md:grid-cols-4">
+      <div className="grid grow grid-cols-1 gap-x-4 px-2 pt-2 md:grid-cols-4">
         <div className="flex grow flex-col gap-2 md:col-span-1">
           <PackageSidebar />
         </div>
 
-        {projectId && packageId ? (
-          <div className="flex flex-col gap-2 pr-5 pb-2 pl-5 md:col-span-3 overflow-y-auto">
-            <Suspense
-              fallback={
-                <div className="flex grow items-center justify-center md:col-span-4">
-                  <Spinner size="xl" />
-                </div>
-              }
-            >
+        <div className="flex flex-col gap-2 overflow-y-auto px-5 pb-2 md:col-span-3">
+          <Suspense
+            fallback={
+              <div className="flex grow items-center justify-center md:col-span-4">
+                <Spinner size="xl" />
+              </div>
+            }
+          >
+            {projectId && packageId ? (
               <PackageInfo />
-            </Suspense>
-          </div>
-        ) : (
-          <div className="flex flex-col gap-2 md:col-span-4">
-            Vui lòng chọn gói cước để xem chi tiết
-          </div>
-        )}
+            ) : (
+              <div className="flex grow items-center justify-center md:col-span-4">
+                {t('billing:package_manage.choose_package')}
+              </div>
+            )}
+          </Suspense>
+        </div>
       </div>
     </ContentLayout>
   )
