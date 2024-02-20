@@ -7,16 +7,17 @@ import { toast } from 'sonner'
 import narrowLeft from '~/assets/icons/narrow-left.svg'
 import frameAuth from '~/assets/images/frame-auth-layout.svg'
 import logo from '~/assets/images/logo.svg'
+import { ContentLayout } from '~/layout/ContentLayout'
 
 export const ChangePassword = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   return (
-    <>
+    <ContentLayout title={t('user:change_password')}>
       <div className="h-full p-4">
         <div className="flex items-center pt-2 sm:px-14 lg:px-60">
           <div
-            className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
+            className="border-secondary-700 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
             onClick={() => navigate(-1)}
           >
             <img
@@ -58,6 +59,6 @@ export const ChangePassword = () => {
           </div>
         </div>
       </div>
-    </>
+    </ContentLayout>
   )
 }
