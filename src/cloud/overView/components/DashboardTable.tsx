@@ -15,6 +15,7 @@ import { StarFilledIcon } from '@radix-ui/react-icons'
 
 type DashboardTableProps = {
   data: DashboardRes[]
+  isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 export function DashboardTable({ data, ...props }: DashboardTableProps) {

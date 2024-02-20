@@ -187,6 +187,7 @@ export function UpdateCustomer({
           <CustomerRoleTable
             data={permissions}
             otherData={{ customerId: customerId }}
+            isHiddenCheckbox={true}
           />
         </div>
       </div>

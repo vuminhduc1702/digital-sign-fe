@@ -110,6 +110,7 @@ export function SubcriptionTemplate() {
           handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isHiddenCheckbox={true}
         />
       </div>
     </>

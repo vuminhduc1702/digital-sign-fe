@@ -432,7 +432,7 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="relative mt-4 flex items-center justify-between gap-2">
+      <div className="relative mt-4 flex h-12 items-center justify-between gap-2">
         <div
           className={cn('flex gap-3', {
             'absolute bottom-5': isAbsoluteBtn,
