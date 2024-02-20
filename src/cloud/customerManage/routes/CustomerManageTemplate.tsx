@@ -81,6 +81,7 @@ export function CustomerManageTemplate() {
           setOffset={setOffset}
           total={data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isHiddenCheckbox={true}
         />
       </div>
     </>

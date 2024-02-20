@@ -274,11 +274,11 @@ export function LayoutOverView() {
       </div>
       <div>
         <Tab.Group>
-          <Tab.List className="flex justify-end gap-x-2 bg-secondary-500 px-10">
+          <Tab.List className="bg-secondary-500 flex justify-end gap-x-2 px-10">
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                   { 'text-primary-400': selected },
                 )
               }
@@ -290,7 +290,7 @@ export function LayoutOverView() {
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                   { 'text-primary-400': selected },
                 )
               }
@@ -303,7 +303,7 @@ export function LayoutOverView() {
           <Tab.Panels className="flex grow flex-col">
             <Tab.Panel
               className={clsx(
-                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
               )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
@@ -311,13 +311,13 @@ export function LayoutOverView() {
                   return (
                     <div
                       key={item.title}
-                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
                     >
                       <div className="alignItemCenter">
                         <img src={item.img} alt="" width="100%" height="300" />
                       </div>
                       <div className="text p-3">
-                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <h4 className="text-table-header mt-3">{item.title}</h4>
                         <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
@@ -356,7 +356,7 @@ export function LayoutOverView() {
                             <Button
                               type="button"
                               size="square"
-                              className="border-none bg-primary-400"
+                              className="bg-primary-400 border-none"
                             >
                               {t('btn:setup')}
                             </Button>
@@ -393,7 +393,7 @@ export function LayoutOverView() {
             </Tab.Panel>
             <Tab.Panel
               className={clsx(
-                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
               )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
@@ -401,13 +401,13 @@ export function LayoutOverView() {
                   return (
                     <div
                       key={item.title}
-                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
                     >
                       <div className="alignItemCenter">
                         <img src={item.img} alt="" width="100%" height="300" />
                       </div>
                       <div className="text p-3">
-                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <h4 className="text-table-header mt-3">{item.title}</h4>
                         <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
@@ -446,7 +446,7 @@ export function LayoutOverView() {
                             <Button
                               type="button"
                               size="square"
-                              className="border-none bg-primary-400"
+                              className="bg-primary-400 border-none"
                             >
                               {t('btn:setup')}
                             </Button>
@@ -485,7 +485,7 @@ export function LayoutOverView() {
         </Tab.Group>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -505,7 +505,7 @@ export function LayoutOverView() {
                         setType(item)
                       }}
                       className={cn('px-4 py-2 text-slate-400', {
-                        'rounded-2xl bg-primary-400 text-white': type === item,
+                        'bg-primary-400 rounded-2xl text-white': type === item,
                       })}
                     >
                       {item}
@@ -519,7 +519,7 @@ export function LayoutOverView() {
                 onClick={() =>
                   navigate(`${PATHS.DASHBOARD}/${projectId}?openDrawer=true`)
                 }
-                className="ml-3 border-none bg-primary-400"
+                className="bg-primary-400 ml-3 border-none"
               >
                 {t('overView:add_dashboard')}
               </Button>
@@ -532,6 +532,7 @@ export function LayoutOverView() {
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
+              isHiddenCheckbox={true}
             />
           ) : (
             <DashboardTable
@@ -540,10 +541,11 @@ export function LayoutOverView() {
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
+              isHiddenCheckbox={true}
             />
           )}
         </div>
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>
