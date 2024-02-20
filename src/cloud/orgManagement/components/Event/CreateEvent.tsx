@@ -274,7 +274,6 @@ export const cmdSchema = z.object({
 export const eventTypeSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('event'),
-    condition: eventConditionSchema,
     interval: eventIntervalSchema,
   }),
   z.object({
@@ -298,6 +297,18 @@ export const createEventSchema = z
     cmd: cmdSchema.optional(),
   })
   .and(eventTypeSchema)
+  .and(
+    z.discriminatedUnion('onClick', [
+      z.object({
+        onClick: z.literal(true),
+        condition: z.tuple([]),
+      }),
+      z.object({
+        onClick: z.literal(false),
+        condition: eventConditionSchema,
+      }),
+    ]),
+  )
 
 export interface IntervalData {
   [key: string]: boolean
@@ -323,7 +334,7 @@ export function CreateEvent() {
       onClick: false,
       status: true,
       action: [{}],
-      condition: [{}],
+      condition: [],
       retry: 0,
     },
   })
@@ -426,6 +437,14 @@ export function CreateEvent() {
     setTodos(initialTodos)
     setActionType('sms')
   }
+
+  useEffect(() => {
+   if(!watch('onClick') && watch('type') === 'event') {
+    conditionAppend([{}])
+   } else {
+    setValue('condition', [])
+   }
+  }, [watch('onClick'), watch('type')])
 
   const todoClicked = (e: any) => {
     setTodos(
