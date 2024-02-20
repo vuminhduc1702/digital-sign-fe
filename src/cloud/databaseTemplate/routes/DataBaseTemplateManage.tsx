@@ -132,8 +132,8 @@ export function DataBaseTemplateManage() {
             >
               <TitleBar title={t('sidebar:cloud.db_template')} />
               <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-                <div className="flex justify-between">
-                  <ExportTable refComponent={ref} />
+                <div className="flex justify-end">
+                  {/* <ExportTable refComponent={ref} /> */}
                   <div className="flex items-center gap-x-3">
                     <div className='flex items-center gap-x-2'>
                       <CreateRows
@@ -141,6 +141,15 @@ export function DataBaseTemplateManage() {
                         columnsProp={data?.data?.columns || []}
                       />
                     </div>
+                    {data?.data?.columns && (
+                      <div className='flex items-center gap-x-2'>
+                        <CreateColumn
+                          isSearch={isShow}
+                          isValidate={textValidate}
+                          onClose={refetchData}
+                        />
+                      </div>
+                    )}
                     <div className='flex items-center gap-x-2'>
                       <Button
                         className="w-full justify-start rounded-md "
@@ -318,13 +327,7 @@ export function DataBaseTemplateManage() {
                     onSearch={onSearch}
                   />
                 )}
-                {data?.data?.columns && (
-                  <CreateColumn
-                    isSearch={isShow}
-                    isValidate={textValidate}
-                    onClose={refetchData}
-                  />
-                )}
+
               </div>
             </Suspense>
           </div>

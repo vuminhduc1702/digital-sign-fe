@@ -363,8 +363,7 @@ export function UpdateEvent({
               org_id: values.org_id,
               group_id: values.group_id,
               name: values.name,
-              onClick:
-                getValues('type') === 'event' ? values.onClick === true : false,
+              onClick: values.onClick,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: values.status === true,
