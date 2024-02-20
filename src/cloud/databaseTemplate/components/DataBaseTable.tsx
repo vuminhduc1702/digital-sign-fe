@@ -151,16 +151,21 @@ export function DataBaseTable({
     onSearch(filter)
   }, [filter])
 
-
   const columnHelper = createColumnHelper<any>()
 
   const columns = useMemo<ColumnDef<any, any>[]>(
     () => [
+      columnHelper.display({
+        id: 'stt',
+        cell: info => info.row.index + 1,
+        header: () => <span>{t('table:no')}</span>,
+        footer: info => info.column.id,
+      }),
       ...columnsProp?.map(item =>
         columnHelper.accessor(item, {
           header: () =>
             <div>
-              <span>{item}</span>
+              <span className='text-table-header'>{item}</span>
               {isShow &&
                 <InputField
                   onClick={e => e.stopPropagation()}
@@ -168,7 +173,7 @@ export function DataBaseTable({
                 />
               }
             </div>,
-          cell: info => info?.getValue(),
+          cell: info => (info.getValue() !== 'null' ? (typeof (info.getValue()) === 'boolean' ? info.getValue() ? 'true' : 'false' : info.getValue()) : ''),
           footer: info => info.column.id,
         }),
       ),
