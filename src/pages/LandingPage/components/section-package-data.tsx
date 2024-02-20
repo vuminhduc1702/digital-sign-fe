@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { useSpinDelay } from 'spin-delay'
-import Carousel from 'react-multi-carousel'
 import { useRef, useState } from 'react'
 
 import bg_pack_of_data from '~/assets/images/landingpage/bg_pack_of_data.png'
@@ -11,6 +10,14 @@ import { Checkbox } from '~/components/Checkbox'
 import { useDisclosure } from '~/utils/hooks'
 import { ComparePackOfData } from './compare-packofdata'
 import { Spinner } from '~/components/Spinner'
+
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '~/components/Carousel'
 
 import { CheckboxCircleLine } from '~/components/SVGIcons'
 
@@ -63,24 +70,6 @@ export function SectionPackageData() {
     }
   }
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
-  }
   return (
     <>
       <div
@@ -93,7 +82,7 @@ export function SectionPackageData() {
             {t('landingpage:pack_of_data_M2M.title')}
           </p>
           <div className="flex justify-center">
-            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px]">
+            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px] xs:w-[400px] xs:px-0 ">
               {t('landingpage:pack_of_data_M2M.variety')}
             </h3>
           </div>
@@ -103,8 +92,8 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center pt-5">
-                <div className="flex items-center px-10">
+              <div className="flex justify-center pt-5 max-md:flex-col max-md:items-center max-md:py-8">
+                <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}
                   </p>
@@ -120,7 +109,7 @@ export function SectionPackageData() {
                     {t('landingpage:pack_of_data_M2M.NB_IoT')}
                   </p>
                 </div>
-                <div className="flex items-center px-10">
+                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.subscription')}
                   </p>
@@ -139,7 +128,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
                     variant="primary"
                     onClick={open}
                   >
@@ -167,118 +156,100 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="w-[1400px] pt-[50px]">
-                  <Carousel
-                    containerClass="carousel-container p-[0px]"
-                    responsive={responsive}
-                    transitionDuration={300}
-                    itemClass="w-fit flex justify-center"
-                    autoPlay
-                    autoPlaySpeed={3000}
-                  >
-                    {Array.isArray(PackofData?.data) &&
-                      PackofData?.data
-                        .filter(item =>
-                          category !== 'Tất cả'
-                            ? item.offerType === offerType &&
-                              item.payType === payType &&
-                              item.categoryName === category
-                            : item.offerType === offerType &&
-                              item.payType === payType,
-                        )
-                        .map((item, idx) => (
-                          <div className="w-60 rounded-lg shadow-md" key={idx}>
-                            <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
-                              <Checkbox
-                                defaultChecked={
-                                  PackofDataRef.current?.find(
-                                    item_ => item_.name === item.name,
-                                  )?.state === 'true'
-                                    ? true
-                                    : false
-                                }
-                                key={item.name}
-                                onClick={event => {
-                                  const ariaCheckedPrevValue =
-                                    event.currentTarget.getAttribute(
-                                      'aria-checked',
-                                    )
-                                  const ariaCheckedCurrentValue =
-                                    ariaCheckedPrevValue === 'true'
-                                      ? 'false'
-                                      : 'true'
-                                  if (ariaCheckedPrevValue != null) {
-                                    updateItemStateByName(
-                                      item.name,
-                                      ariaCheckedCurrentValue,
-                                    )
-                                  }
-                                }}
-                                className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
-                              />
-                              {item.name}
-                            </div>
-                            <div className="rounded-b-lg bg-white">
-                              <div className="py-2 pb-4 text-center text-lg font-medium">
-                                {item.fee}
+                <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px]">
+                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] ">
+                    <CarouselContent>
+                      {Array.isArray(PackofData?.data) &&
+                        PackofData?.data
+                          .filter(item =>
+                            category !== 'Tất cả'
+                              ? item.offerType === offerType &&
+                                item.payType === payType &&
+                                item.categoryName === category
+                              : item.offerType === offerType &&
+                                item.payType === payType,
+                          )
+                          .map(item => (
+                            <CarouselItem className="basis-1/4 ">
+                              <div className="w-60 rounded-lg shadow-md">
+                                <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
+                                  <Checkbox
+                                    defaultChecked={
+                                      PackofDataRef.current?.find(
+                                        item_ => item_.name === item.name,
+                                      )?.state === 'true'
+                                        ? true
+                                        : false
+                                    }
+                                    key={item.name}
+                                    onClick={event => {
+                                      const ariaCheckedPrevValue =
+                                        event.currentTarget.getAttribute(
+                                          'aria-checked',
+                                        )
+                                      const ariaCheckedCurrentValue =
+                                        ariaCheckedPrevValue === 'true'
+                                          ? 'false'
+                                          : 'true'
+                                      if (ariaCheckedPrevValue != null) {
+                                        updateItemStateByName(
+                                          item.name,
+                                          ariaCheckedCurrentValue,
+                                        )
+                                      }
+                                    }}
+                                    className={`mr-4 bg-white data-[state=checked]:bg-white data-[state=checked]:text-primary-400`}
+                                  />
+                                  {item.name}
+                                </div>
+                                <div className="rounded-b-lg bg-white">
+                                  <div className="py-2 pb-4 text-center text-lg font-medium">
+                                    {item.fee}
+                                  </div>
+                                  <div className="h-60 px-2">
+                                    <div className="mb-[-8px]">
+                                      <CheckboxCircleLine
+                                        width={25}
+                                        height={25}
+                                        viewBox="0 0 25 25"
+                                      ></CheckboxCircleLine>
+                                      <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
+                                        {item.discountPromotionData}
+                                      </p>
+                                    </div>
+                                    <div className="mb-[-8px]">
+                                      <CheckboxCircleLine
+                                        width={25}
+                                        height={25}
+                                        viewBox="0 0 25 25"
+                                      ></CheckboxCircleLine>
+                                      <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
+                                        {t(
+                                          'landingpage:pack_of_data_M2M.monthlyFee',
+                                        )}
+                                      </p>
+                                    </div>
+                                    <div className="mb-[-8px]">
+                                      <CheckboxCircleLine
+                                        width={25}
+                                        height={25}
+                                        viewBox="0 0 25 25"
+                                      ></CheckboxCircleLine>
+                                      <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
+                                        {t(
+                                          'landingpage:pack_of_data_M2M.offerCode',
+                                        )}
+                                        {item.offerCode}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
                               </div>
-                              <div className="h-60 px-2">
-                                <div className="mb-[-8px]">
-                                  <CheckboxCircleLine
-                                    width={25}
-                                    height={25}
-                                    viewBox="0 0 25 25"
-                                  ></CheckboxCircleLine>
-                                  <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                                    {item.discountPromotionData}
-                                  </p>
-                                </div>
-                                <div className="mb-[-8px]">
-                                  <CheckboxCircleLine
-                                    width={25}
-                                    height={25}
-                                    viewBox="0 0 25 25"
-                                  ></CheckboxCircleLine>
-                                  <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                                    {t(
-                                      'landingpage:pack_of_data_M2M.monthlyFee',
-                                    )}
-                                  </p>
-                                </div>
-                                <div className="mb-[-8px]">
-                                  <CheckboxCircleLine
-                                    width={25}
-                                    height={25}
-                                    viewBox="0 0 25 25"
-                                  ></CheckboxCircleLine>
-                                  <p className="relative top-[-25px] pl-[30px] text-[16px] leading-[20.8px] text-black">
-                                    {t(
-                                      'landingpage:pack_of_data_M2M.offerCode',
-                                    )}
-                                    {item.offerCode}
-                                  </p>
-                                </div>
-                                {/* <div className="absolute bottom-2 px-6">
-                                <Button
-                                  type="button"
-                                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
-                                  variant="primary"
-                                  endIcon={
-                                    <ArrowRightUpLine
-                                      width={23}
-                                      height={23}
-                                      viewBox="0 0 23 23"
-                                      
-                                    ></ArrowRightUpLine>
-                                  }
-                                >
-                                  {t('landingpage:pack_of_data_M2M.submit_now')}
-                                </Button>
-                              </div> */}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
+                            </CarouselItem>
+                          ))}
+                    </CarouselContent>
+                    <CarouselPrevious />
+                    <CarouselNext />
                   </Carousel>
                 </div>
               </div>

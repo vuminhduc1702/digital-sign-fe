@@ -53,7 +53,7 @@ export function ViewPopup({
       <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[60rem] sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="mx-auto text-3xl font-semibold">
+            <DialogTitle className="mx-auto text-3xl font-semibold">
               {type === 'payment'
                 ? t('billing:customer_manage.payment_history')
                 : t('billing:customer_manage.sign_history')}

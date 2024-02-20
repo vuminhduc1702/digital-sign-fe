@@ -27,10 +27,7 @@ export function AttrLogTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

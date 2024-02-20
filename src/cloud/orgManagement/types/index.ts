@@ -58,6 +58,7 @@ export type ActionType =
   | 'event'
   | 'eventactive'
   | 'delay'
+  | 'report'
 
 export type Action = {
   receiver: string

@@ -34,7 +34,6 @@ export function ComboBoxSelectAttr({
   )
 
   useEffect(() => {
-    console.log(filteredData)
     setFilteredComboboxData?.(filteredData)
   }, [query, attrsData])
 

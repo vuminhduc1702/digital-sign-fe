@@ -1,14 +1,15 @@
 import { ResponsivePie } from '@nivo/pie'
-import { SetStateAction, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSpinDelay } from 'spin-delay'
 
 import { Spinner } from '~/components/Spinner'
 
-import { type TimeSeries } from '../../types'
+import { type DataSeries, type TimeSeries, type LatestData } from '../../types'
 import { type z } from 'zod'
 import { type widgetSchema } from '../Widget'
 
 type PieWidgetDataType = {
+  keyId: string
   id: string
   label: string
   value: number
@@ -19,64 +20,69 @@ export const PieChart = ({
   data,
   widgetInfo,
 }: {
-  data: TimeSeries
+  data: DataSeries
   widgetInfo: z.infer<typeof widgetSchema>
 }) => {
   const [dataTransformedFeedToChart, setDataTransformedFeedToChart] = useState<
     PieWidgetDataType[]
   >([])
-  const newValuesRef = useRef<TimeSeries | null>(null)
-  const prevValuesRef = useRef<TimeSeries | null>(null)
 
-  function dataManipulation() {
-    const pieWidgetData = Object.entries(
-      newValuesRef.current as TimeSeries,
-    ).map(([key, value]) => ({
-      id: key,
-      label: key,
-      value: parseFloat(value[0].value),
-      [key + 'Color']:
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key) &&
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)
-          .length > 0 &&
-        widgetInfo.attribute_config.filter(obj => obj.attribute_key === key)[0]
-          .color !== ''
-          ? widgetInfo.attribute_config.filter(
-              obj => obj.attribute_key === key,
-            )[0].color
-          : '#e8c1a0',
-    }))
-    setDataTransformedFeedToChart(pieWidgetData)
+  function getColor(attributeKey: string, deviceId: string) {
+    const attributeConfig = widgetInfo.attribute_config.filter(
+      obj => obj.attribute_key === attributeKey && obj.label === deviceId,
+    )
+    if (attributeConfig.length > 0) {
+      return attributeConfig[0].color
+    } else {
+      return '#e8c1a0'
+    }
   }
 
   useEffect(() => {
-    if (Object.keys(data).length > 0) {
-      prevValuesRef.current = newValuesRef.current || data
-      if (newValuesRef.current !== null) {
-        for (const [key, value] of Object.entries(data)) {
-          if (
-            newValuesRef.current[key] != null &&
-            newValuesRef.current[key] === prevValuesRef.current[key]
-          ) {
-            newValuesRef.current[key] = [...value]
-          } else {
-            prevValuesRef.current = data
-          }
-          dataManipulation()
-        }
-      } else {
-        newValuesRef.current = data
-        dataManipulation()
-      }
+    if (data?.data) {
+      const dataList = data.data
+      const deviceList = data.device
+      const parseResult = extractData(dataList, deviceList)
+      setDataTransformedFeedToChart(dataManipulation(parseResult))
     }
   }, [data])
+
+  function extractData(dataList: LatestData, deviceList: any[]) {
+    const parseResult: Array<{
+      name: string
+      deviceName: string
+      deviceId: string
+      color: string
+      value: any
+    }> = []
+    for (let i = 0; i < deviceList.length; i++) {
+      for (const [key, value] of Object.entries(dataList[i])) {
+        parseResult.push({
+          name: key,
+          deviceName: deviceList[i].entityName,
+          deviceId: deviceList[i].id,
+          color: getColor(key, deviceList[i].id),
+          value: value.value,
+        })
+      }
+    }
+    return parseResult
+  }
+
+  function dataManipulation(parseResult : any[]) {
+    return parseResult.map((item, index) => ({
+      keyId: index, 
+      id: item.name + ' (' + item.deviceName + ')',
+      label: item.name + ' (' + item.deviceName + ')',
+      value: item.value,
+      [item.name + ' (' + item.deviceName + ')' + 'Color']: item.color,
+    }))
+  }
 
   const showSpinner = useSpinDelay(dataTransformedFeedToChart.length === 0, {
     delay: 150,
     minDuration: 300,
   })
-
-  // console.log('transform pie', dataTransformedFeedToChart)
 
   return (
     <>
@@ -84,7 +90,9 @@ export const PieChart = ({
         <ResponsivePie
           data={dataTransformedFeedToChart}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}
-          colors={({ id, data }) => data[`${id}Color`]}
+          colors={({ id, data }) => {
+            return data[`${id}Color`] as string
+          }}
           innerRadius={0.5}
           padAngle={0.7}
           cornerRadius={3}
@@ -110,7 +118,7 @@ export const PieChart = ({
               justify: false,
               translateX: 0,
               translateY: 56,
-              itemsSpacing: 0,
+              itemsSpacing: 20,
               itemWidth: 100,
               itemHeight: 18,
               itemTextColor: '#999',
@@ -126,14 +134,6 @@ export const PieChart = ({
                   },
                 },
               ],
-              data: widgetInfo.attribute_config.map(item => ({
-                id: item.attribute_key,
-                label:
-                  item.unit !== ''
-                    ? item.attribute_key + ' (' + item.unit + ')'
-                    : item.attribute_key,
-                color: item.color ? item.color : '#e8c1a0',
-              })),
             },
           ]}
         />

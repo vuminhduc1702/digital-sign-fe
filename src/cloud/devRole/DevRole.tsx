@@ -50,7 +50,6 @@ export default function DevRole() {
     }
   }, [])
 
-  console.log(filteredComboboxData, 'filteredComboboxData')
   return (
     <>
       <div

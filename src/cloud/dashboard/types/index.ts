@@ -22,10 +22,15 @@ export type TimeSeries = {
   [key: string]: WSWidgetData[]
 }
 
+export type DataSeries = {
+  data: LatestData
+  device: EntityId[]
+}
+
 export type WSWidgetMapData = { id: string; name: string; value: string }
 
 export type MapSeries = {
-  data: TimeSeries
+  data: LatestData
   device: WSWidgetMapData[]
 }
 

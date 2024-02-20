@@ -12,6 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
 import { useCopyId } from '~/utils/hooks'
 import storage from '~/utils/storage'
+import i18n from '~/i18n'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -22,6 +23,7 @@ import manualIcon from '~/assets/icons/nav-manual.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
+import { Languages } from 'lucide-react'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -44,6 +46,15 @@ function Navbar() {
     delay: 150,
     minDuration: 300,
   })
+
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
+
+  const languages = [
+    { code: 'vi', name: 'Tiếng Việt' },
+    { code: 'en', name: 'English' },
+  ]
 
   return (
     <div className="flex w-full">
@@ -87,8 +98,8 @@ function Navbar() {
           </div>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-1 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={40}
+              className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={20}
             >
               {projectsData?.projects.map((project: Project) => {
                 return (
@@ -128,7 +139,8 @@ function Navbar() {
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
-        <div className="flex cursor-pointer items-center gap-x-2">
+
+        {/* <div className="flex cursor-pointer items-center gap-x-2">
           <img
             src={caidatIcon}
             alt="Setting"
@@ -143,7 +155,41 @@ function Navbar() {
             className="aspect-square w-[20px]"
           />
           <p className="text-white">{t('nav:support')}</p>
-        </div>
+        </div> */}
+
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+            <div className="cursor-pointer">
+              <Languages className="text-white" />
+              <p className="text-white">
+                {languages.find(language => i18n.language === language.code)
+                  ?.name ?? t('nav:choose_lang')}
+              </p>
+              <SidebarDropDownIcon
+                width={12}
+                height={7}
+                viewBox="0 0 12 7"
+                className="text-white"
+              />
+            </div>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={-15}
+            >
+              {languages.map(language => (
+                <DropdownMenu.Item
+                  key={language.code}
+                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
+                  onClick={() => changeLanguage(language.code)}
+                >
+                  {language.name}
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
 
         {userInfoIsLoading ? (
           <div className="flex items-center justify-center">
@@ -179,7 +225,7 @@ function Navbar() {
             <DropdownMenu.Portal>
               <DropdownMenu.Content
                 className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-                sideOffset={5}
+                sideOffset={-15}
               >
                 <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   {userData ? (

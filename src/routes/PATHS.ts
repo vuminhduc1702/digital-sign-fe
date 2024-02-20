@@ -31,10 +31,13 @@ export const PATHS = {
   FIRM_WARE: `${BASE_PATH_CLOUD}firmware`,
 
   DEVICE_TEMPLATE: `${BASE_PATH_CLOUD}device-template`,
+  TEMPLATE_DEFAULT: `${BASE_PATH_CLOUD}device-template/default`,
+  TEMPLATE_LWM2M: `${BASE_PATH_CLOUD}device-template/lwm2m`,
   FLOW_ENGINE: `${BASE_PATH_CLOUD}flow-engine`,
   DASHBOARD: `${BASE_PATH_CLOUD}dashboard`,
   ROLE_MANAGE: `${BASE_PATH_CLOUD}role`,
   CUSTOM_PROTOCOL: `${BASE_PATH_CLOUD}custom-protocol`,
+  DB_TEMPLATE: `${BASE_PATH_CLOUD}database-template`,
 
   // Billing route
   BILLING: `${BASE_PATH_PAYMENT}billing`,
@@ -46,7 +49,7 @@ export const PATHS = {
   TENANT_MANAGE: `${BASE_PATH_TENANT}`,
   DEV_ROLE: `${BASE_PATH_DEV_ROLE}`,
 
-  // Intergration route
+  // Integration route
   AI: `${BASE_PATH_INTEGRATION}ai`,
   DDOS: `${BASE_PATH_INTEGRATION}ai/ddos`,
   FUEL: `${BASE_PATH_INTEGRATION}ai/fuel`,
@@ -69,6 +72,7 @@ export const PATHS = {
   // Common routes
   HOME: `${BASE_PATH}`,
   USER_INFO: `${BASE_PATH}user-info`,
+  PDF_VIEWER: `${BASE_PATH}pdf-viewer`,
   VERSION: `${BASE_PATH}version`,
   MAINTAIN: `${BASE_PATH}maintain`,
   NOTFOUND: `${BASE_PATH}*`,

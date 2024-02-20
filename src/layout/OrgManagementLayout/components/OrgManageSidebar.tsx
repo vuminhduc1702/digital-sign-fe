@@ -47,12 +47,10 @@ function OrgManageSidebar() {
 
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
-
   const { data: projectByIdData } = useProjectById({
     projectId,
     config: { enabled: !!projectId },
   })
-
   const [selectedUpdateOrg, setSelectedUpdateOrg] = useState<OrgMapType>({
     id: '',
     name: '',
@@ -66,7 +64,6 @@ function OrgManageSidebar() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<
     OrgMapType[]
   >([])
-
   const [selected, setSelected] = useState<any>({})
   const [query, setQuery] = useState('')
 
@@ -118,13 +115,19 @@ function OrgManageSidebar() {
                 if (data[i].level === '1') {
                   break
                 }
-              } else {
-                data[i].isShow = false
+              // } else {
+              //   data[i].isShow = false
               }
             }
           }
         }
       }
+    } else {
+      data.forEach(item => {
+        if (item) {
+          item.isShow = false
+        }
+      })
     }
 
     data.forEach(node => {
@@ -148,10 +151,8 @@ function OrgManageSidebar() {
     const tree = data.filter(node => parseInt(node.level) === 1)
     return tree
   }
-
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const orgIdURL = window.location.pathname.split('/')[5]
-
   const handleEdit = (data: OrgMapType) => {
     open()
     setSelectedUpdateOrg(data)
@@ -166,7 +167,6 @@ function OrgManageSidebar() {
             .replace(/\s+/g, '')
             .includes(query.toLowerCase().replace(/\s+/g, '')),
         )
-
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">

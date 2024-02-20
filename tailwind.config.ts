@@ -58,6 +58,8 @@ export default {
         ],
       },
       screens: {
+        // => @media (min-width: 275.98px) { ... }
+        xs2: '275.98px',
         // => @media (min-width: 399.98px) { ... }
         xs: '399.98px',
         // => @media (min-width: 575.98px) { ... }

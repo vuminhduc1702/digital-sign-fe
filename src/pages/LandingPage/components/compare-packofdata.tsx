@@ -20,16 +20,16 @@ export function ComparePackOfData({
   const cancelButtonRef = useRef(null)
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-[60rem] sm:p-6 sm:align-middle">
-        <div className="mt-3 text-center sm:mt-0 sm:text-left">
+      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all max-sm:my-8 max-sm:w-full max-sm:max-w-[60rem] max-sm:p-6 max-sm:align-middle">
+        <div className="mt-3 text-center max-sm:mt-0 max-sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('landingpage:pack_of_data_M2M.compare')}
             </DialogTitle>
 
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -39,19 +39,19 @@ export function ComparePackOfData({
           </div>
           <div className="h-fit max-h-[70vh] overflow-auto">
             <div className="grid grid-flow-col grid-rows-6">
-              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+              <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base font-medium uppercase">
                 Tên gói
               </div>
               <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
                 Phí cước
               </div>
-              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+              <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base font-medium uppercase">
                 Mã đăng ký
               </div>
               <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
                 Gói cước
               </div>
-              <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base font-medium uppercase">
+              <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base font-medium uppercase">
                 Ưu đãi data/tháng
               </div>
               <div className="border border-solid px-6 py-3 text-left text-base font-medium uppercase">
@@ -59,19 +59,19 @@ export function ComparePackOfData({
               </div>
               {listPackofData?.map((item, idx) => (
                 <>
-                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                  <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base">
                     {item.name}
                   </div>
                   <div className="border border-solid px-6 py-3 text-left text-base">
                     {item.fee}
                   </div>
-                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                  <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base">
                     {item.offerCode}
                   </div>
                   <div className="border border-solid px-6 py-3 text-left text-base">
                     {item.offerType}
                   </div>
-                  <div className="border border-solid bg-secondary-400 px-6 py-3 text-left text-base">
+                  <div className="bg-secondary-400 border border-solid px-6 py-3 text-left text-base">
                     {item.discountPromotionData}
                   </div>
                   <div className="border border-solid px-6 py-3 text-left text-base">

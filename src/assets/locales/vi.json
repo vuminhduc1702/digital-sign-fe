@@ -16,7 +16,8 @@
       "flow_engine": "Flow Engine",
       "dashboard": "Bảng điều khiển",
       "role_manage": "Vai trò",
-      "custom_protocol": "Adapter"
+      "custom_protocol": "Adapter",
+      "db_template": "Danh mục dữ liệu"
     },
     "application": {
       "title": "Ứng dụng",
@@ -38,7 +39,7 @@
     "qltb": {
       "title": "Quản lý thuê bao"
     },
-    "intergration": {
+    "integration": {
       "title": "Tích hợp",
       "tracking": "Tracking",
       "smarthome": "Smarthome",
@@ -55,7 +56,8 @@
     "qlda": "Quản lý dự án",
     "setup": "Cài đặt",
     "support": "Hỗ trợ",
-    "manual": "Hướng dẫn sử dụng"
+    "manual": "Hướng dẫn sử dụng",
+    "choose_lang": "Chọn ngôn ngữ"
   },
   "cloud": {
     "project_manager": {
@@ -115,9 +117,11 @@
           "unit": "Đơn vị",
           "last_update_ts": "Lần cập nhật cuối",
           "logged": "Lưu lịch sử",
+          "label": "Nhãn",
           "delete_attr": "Xoá TT",
           "delete_attr_full": "Xoá thuộc tính",
-          "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?"
+          "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?",
+          "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?"
         },
         "add_org": {
           "title": "Tạo mới tổ chức",
@@ -159,7 +163,8 @@
           "entity_type": "Phân loại",
           "org_name": "Tổ chức",
           "delete_group": "Xoá nhóm",
-          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?"
+          "delete_group_confirm": "Bạn có chắc chắn muốn xóa nhóm {{GROUPNAME}}?",
+          "delete_multiple_group_confirm": "Bạn có chắc chắn muốn xóa các nhóm đã chọn?"
         },
         "add_group": {
           "title": "Tạo mới nhóm",
@@ -185,7 +190,8 @@
           "edit": "Sửa user",
           "delete_user": "Xoá user",
           "delete_user_full": "Xoá người dùng",
-          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?"
+          "delete_user_confirm": "Bạn có chắc chắn muốn xóa người dùng {{USERNAME}}?",
+          "delete_multiple_user_confirm": "Bạn có chắc chắn muốn xóa những người dùng đã chọn?"
         },
         "add_user": {
           "title": "Tạo mới người dùng",
@@ -238,7 +244,8 @@
           "create_by": "Người tạo",
           "delete_device": "Xoá TB",
           "delete_device_full": "Xoá thiết bị",
-          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?"
+          "delete_device_confirm": "Bạn có chắc chắn muốn xóa thiết bị {{DEVICENAME}}?",
+          "delete_multiple_device_confirm": "Bạn có chắc chắn muốn xóa những thiết bị đã chọn?"
         },
         "mqtt_config": {
           "update_success": "Cập nhật MQTT thành công",
@@ -292,7 +299,8 @@
           "onClick_btn": "Kích hoạt",
           "status": "Trạng thái",
           "delete_event": "Xoá sự kiện",
-          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?"
+          "delete_event_confirm": "Bạn có chắc chắn muốn xóa sự kiện {{EVENTNAME}}?",
+          "delete_multiple_event_confirm": "Bạn có chắc chắn muốn xóa các sự kiện đã chọn?"
         },
         "add_event": {
           "title": "Tạo mới sự kiện",
@@ -366,24 +374,35 @@
     },
     "device_template": {
       "title": "Mẫu thiết bị",
+      "default": "Default",
+      "lwm2m": "LwM2M",
       "info": {
         "title": "Thông tin mẫu thiết bị",
+        "listattr": "Danh sách nhóm thuộc tính",
+        "attr": "Danh sách thuộc tính",
         "flow": "Flow",
         "provision_key": "Provision key",
         "provision_secret": "Provision secret",
         "created_at": "Ngày tạo",
         "create_by": "Người tạo"
       },
+      "listLwM2M": {
+        "name": "Nhóm thuộc tính",
+        "numberAttr": "Số lượng thuộc tính",
+        "id": "ID"
+      },
       "add_template": {
         "title": "Tạo mới mẫu thiết bị",
         "update": "Sửa mẫu thiết bị",
         "flow": "Flow ID",
+        "lwm2m": "Mô hình đối tượng LWM2M",
         "header": "Danh sách mẫu thiết bị",
         "name": "Tên mẫu thiết bị",
         "success_create": "Tạo mẫu thiết bị thành công",
         "success_update": "Sửa mẫu thiết bị thành công",
         "success_delete": "Xoá mẫu thiết bị thành công",
         "choose_flow_id": "Vui lòng chọn flow id",
+        "choose_lwm2m_model": "Vui lòng chọn mô hình đối tượng LWM2M",
         "no_flow_id": "Không thuộc flow id"
       },
       "sidebar": {
@@ -397,6 +416,50 @@
         "no_template": "Không có mẫu thiết bị"
       }
     },
+    "db_template": {
+      "title": "Danh mục dữ liệu",
+      "info": {
+        "title": "Thông tin mẫu thiết bị",
+        "flow": "Flow",
+        "provision_key": "Provision key",
+        "provision_secret": "Provision secret",
+        "created_at": "Ngày tạo",
+        "create_by": "Người tạo"
+      },
+      "add_db": {
+        "title": "Tạo mới danh mục dữ liệu",
+        "header": "Danh mục dữ liệu",
+        "name": "Tên danh mục dữ liệu",
+        "limit": "Số lượng",
+        "search_exact": "Tìm chính xác",
+        "reload": "Tải tất cả dữ liệu",
+        "add_column": "Thêm cột",
+        "add_row": "Thêm hàng",
+        "column": "Tên cột",
+        "type": "Kiểu dữ liệu",
+        "update_row": "Sửa dữ liệu",
+        "delete_row": "Xóa dữ liệu",
+        "success_create": "Tạo danh mục dữ liệu thành công",
+        "success_update": "Sửa danh mục dữ liệu thành công",
+        "success_delete": "Xoá danh mục dữ liệu thành công",
+        "choose_flow_id": "Vui lòng chọn flow id",
+        "success_add_column": "Thêm cột thành công",
+        "no_flow_id": "Không thuộc flow id",
+        "success_add_rows": "Thêm hàng thành công",
+        "delete_row_confirm": "Bạn có chắc chắn muốn dữ liệu?",
+        "success_delete_row": "Xóa dữ liệu thành công",
+        "success_update_row": "Cập nhật dữ liệu thành công"
+      },
+      "sidebar": {
+        "title": "Danh mục dữ liệu",
+        "id": "Mã ID",
+        "desc": "Mô tả",
+        "edit": "Sửa mẫu TB",
+        "delete_db": "Xoá danh mục dữ liệu",
+        "delete_db_confirm": "Bạn có chắc chắn muốn xóa danh mục dữ liệu {{DBNAME}}?",
+        "no_db": "Không có danh mục dữ liệu"
+      }
+    },
     "role_manage": {
       "title": "Vai trò",
       "header": "Quản lý vai trò",
@@ -406,6 +469,7 @@
         "edit": "Sửa vai trò",
         "delete_role": "Xoá vai trò",
         "delete_role_confirm": "Bạn có chắc chắn muốn xóa vai trò {{ROLENAME}}?",
+        "delete_multiple_roles": "Bạn có chắc chắn muốn xóa những vai trò đã chọn?",
         "no_role": "Không có vai trò"
       },
       "add_policy": {
@@ -499,7 +563,8 @@
         "choose": "Vui lòng chọn Thing",
         "delete": "Xóa Thing",
         "edit": " Sửa Thing",
-        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?"
+        "delete_thing_confirm": "Bạn có chắc chắn muốn xóa Thing {{THINGNAME}}?",
+        "delete_multiple_thing_confirm": "Bạn có chắc chắn muốn xóa các thing đã chọn?"
       },
       "adapter": {
         "title": "adapter",
@@ -564,9 +629,12 @@
           "description": "Mô tả",
           "widgets": "Biểu đồ"
         },
+        "tenant_info": "Thông tin Tenant",
+        "edit_tenant": "Sửa Tenant",
         "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
-        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?"
+        "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?",
+        "delete_confirm": "Bạn có chắc chắn muốn xóa"
       },
       "add_dashboard": {
         "title": "Thêm mới bảng điều khiển",
@@ -580,8 +648,23 @@
         "note": "Nhấn vào nút Sửa bảng điều khiển để tạo biểu đồ"
       },
       "config_chart": {
-        "title": "Tạo biểu đồ",
+        "title": "Tạo biểu đồ ",
+        "title_line": "Tạo biểu đồ đường",
+        "title_pie": "Tạo biểu đồ tròn",
+        "title_bar": "Tạo biểu đồ cột",
+        "title_gauge": "Tạo đồng hồ đo",
+        "title_table": "Tạo biểu đồ bảng dữ liệu",
+        "title_card": "Tạo biểu đồ dữ liệu",
+        "title_controller": "Tạo bảng điều khiển",
+        "title_map": "Tạo bản đồ",
         "update": "Sửa biểu đồ",
+        "update_line": "Sửa biểu đồ đường",
+        "update_bar": "Sửa biểu đồ cột",
+        "update_table": "Sửa biểu đồ bảng dữ liệu",
+        "update_controller": "Sửa biểu đồ điều khiển",
+        "update_pie": "Sửa biểu đồ tròn",
+        "update_gauge": "Sửa biểu đồ đồng hồ đo",
+        "update_card": "Sửa biểu đồ dữ liệu",
         "name": "Tên biểu đồ",
         "device": "Thiết bị",
         "attr": "Thuộc tính",
@@ -598,7 +681,8 @@
         "label": "Nhãn",
         "widget_config": "Cài đặt biểu đồ",
         "max": "Max",
-        "min": "Min"
+        "min": "Min",
+        "required": "Vui lòng không bỏ trống mục này"
       },
       "detail_dashboard": {
         "add_widget": {
@@ -618,6 +702,12 @@
             "success": "Thực thi nghiệp vụ {{SERVICE_NAME}} thành công. Dữ liệu trả về: {{DATA}}"
           }
         }
+      },
+      "map": {
+        "device_not_found": "Không tìm thấy thiết bị nào"
+      },
+      "card": {
+        "no_log_attr": "Không có bản tin thuộc tính"
       }
     },
     "firmware": {
@@ -665,17 +755,39 @@
       "delete_plan_confirm": "Bạn có chắc chắn muốn xóa gói cước {{PLAN_NAME}}?",
       "id": "ID",
       "description": "Nội dung mô tả gói cước :",
+      "choose_package": "Vui lòng chọn gói cước để xem chi tiết",
       "popup": {
         "name": "Tên gói cước",
         "type": "Loại gói",
+        "official": "Chính thức",
+        "trial": "Dùng thử",
         "description": "Mô tả gói",
         "status": "Trạng thái",
         "payment_type": "Loại thanh toán",
+        "pre_pay": "trả trước",
+        "post_paid": "trả sau",
         "type_period": "Loại chu kỳ tính tiền",
+        "periodic": "Định ký",
+        "once": "Một lần",
         "period": "Chu kỳ tính tiền",
+        "day": "ngày",
+        "week": "tuấn",
+        "month": "tháng",
+        "year": "năm",
         "fix_cost": "Chi phí cố định hàng kỳ",
         "charging_unit": "Đơn vị tính",
+        "connect": "Kết nối",
+        "device": "thiết bị",
         "estimate": "Phương pháp định giá",
+        "permanent": "Cố định",
+        "by_unit": "Theo thiết bị",
+        "mass": "Theo khối lượng",
+        "fix": "Cố định",
+        "unit": "Theo đơn vị",
+        "accumulate": "Theo lũy kế",
+        "step": "Theo bậc thang",
+        "quantity": "Số lượng",
+        "enter_quantity": "Nhập số lượng",
         "estimated_payment": "Ước tính số tiền thanh toán",
         "unit_price": "Đơn giá",
         "max": "Tối đa",
@@ -694,6 +806,14 @@
         "success_create": "Tạo gói cước thành công",
         "success_update": "Cập nhật gói cước thành công",
         "success_delete": "Xoá gói cước thành công"
+      },
+      "input": {
+        "iname": "Nhập tên gói cước",
+        "lofficial": "Chính thức",
+        "ltrial": "Dùng thử",
+        "tdescribe": "Nội dung mô tả ngắn",
+        "ldisplay": "Hiển thị",
+        "lhide": "Ẩn"
       }
     },
     "subcription": {
@@ -849,6 +969,7 @@
     "no_template": "Không có thiết bị mẫu. Vui lòng tạo.",
     "no_in_org": "Không trực thuộc tổ chức.",
     "no_in_flow_id": "Không thuộc flow id.",
+    "no_in_lwm2m_model": "Không có mô hình đối tượng LWM2M.",
     "no_widget": "Không có biểu đồ. Vui lòng tạo.",
     "no_role": "Không có vai trò. Vui lòng tạo.",
     "no_subscription": "Không có dịch vụ. Vui lòng tạo.",
@@ -892,12 +1013,14 @@
       "select": "Vui lòng chọn",
       "select_union": "Vui lòng chọn 1 trong các option sau:",
       "number": "Vui lòng nhập số"
-    }
+    },
+    "refresh": "Tải lại trang"
   },
   "loading": {
     "base": "Đang tải dữ liệu...",
     "org": "Đang tải danh sách tổ chức...",
     "flow_id": "Đang tải danh sách flow id...",
+    "lwm2m_model": "Đang tải danh sách mô hình đối tượng LWM2M...",
     "device": "Đang tải danh sách thiết bị...",
     "attr": "Đang tải danh sách thuộc tính...",
     "group": "Đang tải danh sách nhóm...",
@@ -919,7 +1042,8 @@
   },
   "search": {
     "title": "Tìm kiếm",
-    "no_org": "Không trực thuộc tổ chức"
+    "no_org": "Không trực thuộc tổ chức",
+    "no_group": "Không trực thuộc nhóm"
   },
   "user": {
     "login": "Đăng nhập",
@@ -959,7 +1083,44 @@
       "choose_attr": "Vui lòng chọn thuộc tính",
       "choose_startTime": "Vui lòng nhập thời gian bắt đầu",
       "choose_endTime": "Vui lòng nhập thời gian kết thúc",
-      "data_point": "Số data point"
+      "data_point": "Số data point",
+      "time_period_value": {
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "5hour": "5 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày",
+        "7day": "7 ngày",
+        "30day": "30 ngày"
+      },
+      "interval": {
+        "1second": "1 giây",
+        "5second": "5 giây",
+        "10second": "10 giây",
+        "15second": "15 giây",
+        "30second": "30 giây",
+        "1minute": "1 phút",
+        "2minute": "2 phút",
+        "5minute": "5 phút",
+        "10minute": "10 phút",
+        "15minute": "15 phút",
+        "30minute": "30 phút",
+        "1hour": "1 giờ",
+        "2hour": "2 giờ",
+        "10hour": "10 giờ",
+        "12hour": "12 giờ",
+        "1day": "1 ngày"
+      }
     }
   },
   "validate": {
@@ -997,10 +1158,12 @@
     "Platform_IoT": "Platform IoT",
     "CMP_system": "Hệ thống CMP",
     "FAQ": "FAQ",
+    "category": "Category",
     "register_now": "Đăng ký ngay",
-    "service_transmit_data": "Dịch vụ Sim Data truyền tải dữ liệu",
+    "service_transmit_data": "Innoway IoT Platform",
     "viettel_M2M": "Viettel M2M IoT ",
     "experience_now": "Trải nghiệm ngay",
+    "user_manual": "Hướng dẫn sử dụng",
     "pack_of_data_M2M": {
       "title": "Sản phẩm gói cước M2M",
       "variety": "Đa dạng gói cước phù hợp nhu cầu khách hàng",
@@ -1022,12 +1185,12 @@
       "phone_number": "Số điện thoại:",
       "support_content": "Nội dung cần hỗ trợ*:",
       "send": "Gửi",
-      "company": "Tổng Công ty Viễn thông Viettel (Viettel Telecom)",
-      "responsible_person": "Chịu trách nhiệm nội dung: Ông Cao Anh Sơn",
-      "cskh": "cskh@viettel.com.vn",
+      "company": "Tổng Công ty Công nghiệp công nghệ cao Viettel",
+      "responsible_person": "Chịu trách nhiệm nội dung: Ông Lê Ngọc Quý",
+      "cskh": "quyln3@viettel.com.vn",
       "follow": "Follow us:",
-      "phone_used": "0123 456 789",
-      "cre": "Copyright Viettel Telecom"
+      "phone_used": "0869 9999 904",
+      "cre": "Copyright Viettel High Tech"
     },
     "client": {
       "partner": "Đối tác của chúng tôi"
@@ -1045,10 +1208,11 @@
       "subscription_management": "Quản lý thuê bao",
       "contract_management": "Quản lý hợp đồng",
       "order_management": "Quản lý đơn hàng",
-      "payment_management": "Quản lý thanh toán"
+      "payment_management": "Quản lý thanh toán",
+      "subscription_locating": "Định vị thuê bao"
     },
     "order": {
-      "manage_platform": "Nền tảng quản lý, tự động hóa và thu thập dữ liệu",
+      "manage_platform": "Nền tảng IoT Viettel ",
       "manage_device": "Quản lý trạng thái thiết bị",
       "business_model": "Triển khai mô hình nghiệp vụ no code - low code",
       "data_security": "Bảo mật dữ liệu người dùng",
@@ -1119,13 +1283,13 @@
       "name": "Tên người dùng",
       "list": "Danh sách người dùng"
     },
-    "customer": {
-      "success_delete": "Xoá khách hàng thành công",
-      "success_update": "Cập nhật khách hàng thành công",
-      "success_update_role": "Cập nhật quyền khách hàng thành công",
-      "edit": "Sửa khách hàng",
-      "delete": "Xoá khách hàng",
-      "create": "Tạo khách hàng"
+    "tenant": {
+      "success_delete": "Xoá Tenant thành công",
+      "success_update": "Cập nhật Tenant thành công",
+      "success_update_role": "Cập nhật quyền Tenant thành công",
+      "edit": "Sửa Tenant",
+      "delete": "Xoá Tenant",
+      "create": "Tạo Tenant"
     },
     "role": {
       "edit": "Sửa quyền",
@@ -1141,5 +1305,70 @@
   },
   "dev_role": {
     "list": "Danh sách dev role"
+  },
+  "schema": {
+    "name_long": "Tên quá dài",
+    "name_short": "Tên quá ngắn",
+    "name_regex": "Tên service chỉ bao gồm chữ, số, hoặc kí tự _, không bao gồm khoảng trống hoặc kí tự đặc biệt",
+    "version_scheam": "Please enter the version number in the form x.x.x | Example 1.0.0",
+    "otp": "Vui lòng nhập đúng OTP",
+    "wrong_email": "Nhập sai định dạng email",
+    "email_long": "Email quá dài",
+    "email_short": "Email quá ngắn",
+    "password_long": "Mật khẩu quá dài",
+    "password_short": "Mật khẩu quá ngắn",
+    "attributename_long": "Tên thuộc tính quá dài",
+    "attributename_short": "Tên thuộc tính quá ngắn",
+    "value_type": "Vui lòng chọn loại giá trị",
+    "leave_item": "Vui lòng không bỏ trống mục này",
+    "select_item": "Vui lòng chọn mục này",
+    "phone_correct": "Số điện thoại chưa đúng định dạng",
+    "all": "Tất cả",
+    "select_resource": "Vui lòng chọn ít nhất 1 tài nguyên",
+    "select_action": "Vui lòng chọn ít nhất 1 hành động",
+    "read": "Xem",
+    "create": "Tạo mới",
+    "modify": "Chỉnh sửa",
+    "delete": "Xóa",
+    "users": "Người dùng",
+    "groups": "Nhóm",
+    "templates": "Mẫu thiết bị",
+    "events": "Sự kiện",
+    "organizations": "Tổ chức",
+    "roles": "Vai trò",
+    "projects": "Dự án",
+    "devices": "Thiết bị",
+    "developing": "Đang phát triển",
+    "bill": "Số hóa đơn",
+    "customer_name": "Tên khách hàng",
+    "customer_code": "Mã khách hàng",
+    "customer_phone": "Số điện thoại",
+    "registration_code": "Mã đăng ký"
+  },
+  "document": {
+    "document_devkit": "Khu vực này bao gồm thông tin các bộ DevKit đi kèm code mẫu, tài liệu hướng dẫn tích hợp và bộ SDK để kết nối thiết bị của bạn với InnoWay.",
+    "application": "Ứng dụng cho phép kết nối và quản lý các thiết bị thông minh trong nhà",
+    "vsmart_debug": "Vsmart debug là ứng dụng hỗ trợ các nhà phát triển theo dõi dữ liệu của các thiết bị đã tích hợp với nền tảng Innoway.",
+    "fleet_management": {
+      "content": "Giải pháp quản lý đội xe giúp bạn quản lý hoạt động của đội xe, dẫn đến giảm chi phí, cải thiện hiệu quả và nâng cao tính tuân thủ. Giải pháp quản lý đội xe phù hợp có thể là công cụ trong việc điều phối các hoạt động quản lý đội xe của bạn.",
+      "content2": "Chức năng chính:",
+      "content3": "- Cảnh báo vùng an toàn qua SMS hoặc App Notification",
+      "content4": "- Cảnh báo pin yếu qua SMS hoặc App Notification",
+      "content5": "- Định vị được vị trí qua bản tin thiết bị bắn lên"
+    },
+    "asset_management": {
+      "content": "Giải pháp quản lý tài sản giúp bạn theo dõi tài sản thông qua việc sử dụng các thẻ RFID được gắn vào chúng. Các thẻ được đọc bằng máy quét cố định được gắn ở vị trí cố đinh. Mỗi khi một thẻ được đọc, nó sẽ được lưu tổng hợp thành một chuỗi và bán tổng tất cả các RFID đã quét được lên hệ thống. Bên cạnh đó, giải pháp còn cảnh báo cho bạn những RFID bị thiếu hoặc RFID lạ để giúp bạn tránh bị thiếu sót tài sản.",
+      "content2": "Chức năng chính:",
+      "content3": "- Cảnh báo RFID bị thiếu, RFID lạ qua SMS hoặc App Notification",
+      "content4": "- Xử lý tập bản tin thiết bị gửi lên (gộp bản tin, kiểm tra trùng)",
+      "content5": "- Đăng ký RFID mới theo danh sách hoặc chỉnh sửa số lượng nhỏ"
+    }
+  },
+  "title": {
+    "fleet_management": "Giải pháp Fleet Management",
+    "asset_management": "Giải pháp Asset Management",
+    "smart_water_meter": "Giải pháp Smart Water Meter",
+    "smart_farm": "Giải pháp Smart Farm",
+    "smart_home": "Giải pháp Smarthome"
   }
 }

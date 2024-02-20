@@ -3,30 +3,31 @@ import { useTranslation } from 'react-i18next'
 import { Link } from '~/components/Link'
 import { DownloadSdk } from '~/components/SVGIcons'
 import { ContentLayout } from '~/layout/ContentLayout'
+import i18n from '~/i18n'
 
 export function AppSdk() {
   const Sdks = [
     {
       name: 'Smarthome SDK',
       exist: 'true',
-      info: 'Ứng dụng cho phép kết nối và quản lý các thiết bị thông minh trong nhà',
+      info: i18n.t('document:application'),
       image: 'https://cmp.innoway.vn/assets/images/overview/appSdk.png',
       link: 'http://203.113.138.18:4447/s/r2mdFKfdA28otJt/download',
     },
     {
       name: 'Smart Tracking SDK',
       exist: 'false',
-      info: 'Đang phát triển',
+      info: i18n.t('schema:developing'),
     },
     {
       name: 'Smart Packing SDK',
       exist: 'false',
-      info: 'Đang phát triển',
+      info: i18n.t('schema:developing'),
     },
     {
       name: 'Industry SDK',
       exist: 'false',
-      info: 'Đang phát triển',
+      info: i18n.t('schema:developing'),
     },
   ]
 

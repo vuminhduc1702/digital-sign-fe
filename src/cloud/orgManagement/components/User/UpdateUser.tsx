@@ -82,7 +82,7 @@ export function UpdateUser({
       defaultValues: {
         name,
         email,
-        phone: phone !== 'undefined' ? phone : '',
+        phone,
         org_id,
         role_id,
         profile: dataProfile,
@@ -163,7 +163,7 @@ export function UpdateUser({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={!formState.isDirty}
+            disabled={!formState.isDirty || isLoading}
           />
         </>
       )}

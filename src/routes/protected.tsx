@@ -12,7 +12,7 @@ import { CustomerManageRoutes } from '~/cloud/customerManage'
 import { ErrorFallback } from '~/pages/ErrorPage'
 import { ProjectManagementRoutes } from '~/cloud/project'
 import { DashboardManagementRoutes } from '~/cloud/dashboard/routes'
-import { SubcriptionRoutes } from '~/cloud/subcription/routes'
+import { SubscriptionRoutes } from '~/cloud/subcription/routes'
 import { BillingRoutes } from '~/cloud/billing/routes'
 
 import { ChangePassword } from '~/features/auth/routes/ChangePassword'
@@ -22,7 +22,12 @@ import SelfAccount from '~/layout/MainLayout/components/UserAccount/SelfAccount'
 import { AiRoutes } from '~/cloud/ai'
 import MainTenant from '~/cloud/tenant/MainTenant'
 import DevRole from '~/cloud/devRole/DevRole'
-
+import { Default } from '~/cloud/deviceTemplate/routes/Default'
+import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
+import { Navigate } from 'react-router-dom'
+import storage from '~/utils/storage'
+import PdfViewer from '~/pages/LandingPage/components/PdfViewer'
+const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),
   'DeviceTemplateManage',
@@ -44,6 +49,10 @@ const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
   'CustomProtocolManage',
 )
+const { DataBaseTemplateManage } = lazyImport(
+  () => import('~/cloud/databaseTemplate'),
+  'DataBaseTemplateManage',
+)
 
 export const protectedRoutes = [
   {
@@ -53,7 +62,7 @@ export const protectedRoutes = [
       ...FlowEngineV2Routes,
       ...DashboardManagementRoutes,
       ...FirmWareRoutes,
-      ...SubcriptionRoutes,
+      ...SubscriptionRoutes,
       ...DeviceRoutes,
       ...BillingRoutes,
       ...ApplicationRoutes,
@@ -66,7 +75,52 @@ export const protectedRoutes = [
             <DeviceTemplateManage />
           </ErrorBoundary>
         ),
-        children: [{ path: ':projectId', children: [{ path: ':templateId' }] }],
+        children: [
+          {
+            index: true,
+            element: (
+              <Navigate
+                to={`${
+                  projectId != null
+                    ? PATHS.TEMPLATE_DEFAULT + '/' + projectId.id
+                    : PATHS.TEMPLATE_DEFAULT
+                }`}
+                replace
+              />
+            ),
+          },
+          {
+            path: PATHS.TEMPLATE_DEFAULT,
+            children: [
+              {
+                path: ':projectId',
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <Default />
+                  </ErrorBoundary>
+                ),
+                children: [{ path: ':templateId' }],
+              },
+            ],
+          },
+          {
+            path: PATHS.TEMPLATE_LWM2M,
+            children: [
+              {
+                path: ':projectId',
+                element: (
+                  <ErrorBoundary FallbackComponent={ErrorFallback}>
+                    <LwM2M />
+                  </ErrorBoundary>
+                ),
+                children: [
+                  { path: ':templateId' },
+                  { path: ':templateId/:id' },
+                ],
+              },
+            ],
+          },
+        ],
       },
       {
         path: PATHS.FLOW_ENGINE,
@@ -112,6 +166,15 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':packageId' }] }],
+      },
+      {
+        path: PATHS.DB_TEMPLATE,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <DataBaseTemplateManage />
+          </ErrorBoundary>
+        ),
+        children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
       },
     ],
   },

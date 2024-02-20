@@ -16,7 +16,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen overflow-hidden md:h-screen">
+    <div className="relative flex min-h-screen overflow-hidden md:h-screen">
       {hasSideBar ? (
         <>
           <MobileSidebar
@@ -37,6 +37,7 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           ) : null}
+
           {hasSideBar ? null : (
             <div className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white">
               <img
@@ -49,6 +50,9 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           )}
           <Navbar />
         </div>
+
+
+        
         <Suspense
           fallback={
             <div className="flex grow items-center justify-center">

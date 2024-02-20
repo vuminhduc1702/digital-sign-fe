@@ -17,7 +17,7 @@ type ComboBoxSelectDeviceProps = {
 
 export function ComboBoxSelectThing({
   data,
-  setFilteredComboboxData,
+  setFilteredComboboxData, 
   offset,
   ...props
 }: ComboBoxSelectDeviceProps) {

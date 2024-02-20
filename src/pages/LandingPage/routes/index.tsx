@@ -27,8 +27,11 @@ import { Spinner } from '~/components/Spinner'
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
+import { Bars3Icon } from '@heroicons/react/20/solid'
+import MobileLP from './MobileLP'
+import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
-export function LandingPage() {
+export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -79,59 +82,86 @@ export function LandingPage() {
     minDuration: 300,
   })
 
+  const [sidebarOpen1, setSidebarOpen1] = useState(false)
+
   return (
     <ContentLayout title={t('landingpage:title')}>
-      <div className="h-[500px]">
+      <div className="h-[500px] xs2:h-[640px] xs:h-[670p]">
         <div
           className="h-full"
           style={{
             backgroundImage: `url(${bannerLandingPage})`,
+            backgroundSize: 'cover',
           }}
         >
-          <div className="px-4 py-2">
-            <div className="flex h-20 px-48">
-              <div className="flex items-center">
-                <a href="/" className="text-5xl font-bold text-white">
-                  {t('landingpage:logo')}
+          <div className="px-4 py-4">
+            <div className="flex h-20 w-full px-48 max-lg:justify-between">
+              <div className="flex items-center max-lg:hidden">
+                <a href="/" className="  text-white">
+                  <img src={LogoViettel} alt="" />
                 </a>
               </div>
-              <div className="flex w-full justify-center">
-                <div className="flex justify-start">
+              {hasSideBar ? (
+                <button
+                  className=" ml-[-200px] px-4 text-white lg:hidden"
+                  onClick={() => setSidebarOpen1(true)}
+                >
+                  <span className="sr-only">Open sidebar</span>
+                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                </button>
+              ) : null}
+              {hasSideBar ? (
+                <>
+                  <MobileLP
+                    sidebarOpen={sidebarOpen1}
+                    setSidebarOpen={setSidebarOpen1}
+                  />
+                </>
+              ) : null}
+
+              <div className="flex w-full max-lg:hidden lg:justify-center ">
+                <div className="flex justify-start max-lg:flex-col">
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(introRef)}
                   >
                     <button>{t('landingpage:introduction')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(PackOfDataRef)}
                   >
                     <button>{t('landingpage:pack_of_data')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(ProductRef)}
                   >
                     <button>{t('landingpage:product')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(OrderRef)}
                   >
                     <button>{t('landingpage:Platform_IoT')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white max-lg:py-5"
                     onClick={() => scrollToIntro(Order1Ref)}
                   >
                     <button>{t('landingpage:CMP_system')}</button>
                   </div>
                   <div
-                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
                     onClick={() => scrollToIntro(FAQRef)}
                   >
                     <button>{t('landingpage:FAQ')}</button>
+                  </div>
+                  <div
+                    className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white"
+                    onClick={() => navigate(PATHS.PDF_VIEWER)}
+                  >
+                    <button>{t('landingpage:category')}</button>
                   </div>
                 </div>
               </div>
@@ -144,7 +174,7 @@ export function LandingPage() {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="ml-auto flex">
+                <div className="flex max-lg:hidden max-lg:px-3">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
@@ -172,8 +202,8 @@ export function LandingPage() {
                     asChild
                     className="flex items-center gap-x-2"
                   >
-                    <div className="ml-auto flex">
-                      <div className="flex w-max ">
+                    <div className="flex max-lg:hidden lg:ml-auto">
+                      <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
                           src={`${
                             userInfoData?.profile?.profile_image !== ''
@@ -252,8 +282,8 @@ export function LandingPage() {
               )}
             </div>
 
-            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center">
-              <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2">
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[40px]">
+              <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
                   className="flex text-center text-2xl font-bold text-[#DBFF00]"
@@ -268,21 +298,20 @@ export function LandingPage() {
                 </a>
               </div>
             </div>
-            <div className="mt-[4.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className="text-[56px] font-bold">
+            <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
+              <h2 className=" text-center text-7xl font-bold leading-[54px] xs2:text-[37.5px]  xs:px-[8px] lg:px-[170px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-[3.5rem] flex w-1/2 items-center justify-center pl-20 text-white">
-                <p className="text-base">
-                  M2M là công nghệ cho phép các thiết bị có thể trao đổi với các
-                  hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là dịch vụ
-                  trong đó sim data được sử dụng để truyền tải dữ liệu.
+              <div className="mt-10 flex w-1/2 items-center justify-center text-white max-xs:w-[270px]">
+                <p className="text-2xl ">
+                  Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
+                  ứng dụng.
                 </p>
               </div>
             </div>
-            <div className="mt-3 flex max-w-full items-center justify-center gap-4">
+            <div className="my-10 flex  max-w-full items-center justify-center gap-4">
               <div className="mx-1 flex min-w-fit items-center justify-center text-white">
                 <Button
                   onClick={() => scrollToIntro(ProductRef)}

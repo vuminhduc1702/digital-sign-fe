@@ -35,7 +35,7 @@ export function filteredComboboxData<T, K extends keyof T>(
           const searchValue = query.toLowerCase().replace(/\s+/g, '')
           return extractedPropertyKeys.some(key =>
             (data[key] as unknown as string)
-              .toString()
+              ?.toString()
               .toLowerCase()
               .replace(/\s+/g, '')
               .includes(searchValue),
@@ -65,7 +65,6 @@ export function ComboBoxBase<T extends Record<string, any>>({
     : data
 
   const [selected, setSelected] = useState<T | {}>(selectedData || {})
-
   return (
     <FieldWrapper label={label} error={error}>
       <Combobox value={selected} onChange={setSelected}>

@@ -140,7 +140,7 @@ function EventTableContextMenu({
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit event" className="size-5" />
               }
               onClick={open}
             >
@@ -151,7 +151,7 @@ function EventTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy event's ID"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -174,7 +174,7 @@ function EventTableContextMenu({
                     <img
                       src={btnDeleteIcon}
                       alt="Delete event"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -189,7 +189,7 @@ function EventTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id, projectId })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -216,7 +216,16 @@ function EventTableContextMenu({
   )
 }
 
-export function EventTable({ data, ...props }: { data: EventType[] }) {
+export function EventTable({
+  data,
+  ...props
+}: {
+  data: EventType[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
+}) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useTriggerEvent()
@@ -226,10 +235,7 @@ export function EventTable({ data, ...props }: { data: EventType[] }) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

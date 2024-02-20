@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
+import { z } from 'zod'
+import { type SelectInstance } from 'react-select'
 
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
@@ -18,16 +20,15 @@ import { useGetGroups } from '../../api/groupAPI'
 import { deviceSchema } from './CreateDevice'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { useGetOrgs } from '~/layout/MainLayout/api'
-
-import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { useDefaultCombobox } from '~/utils/hooks'
 import {
   type HeartBeatDTO,
   useHeartBeat,
   useUpdateHeartBeat,
 } from '../../api/deviceAPI/heartbeatDevice'
-import { z } from 'zod'
-import { type SelectInstance } from 'react-select'
+
+import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -110,6 +111,7 @@ export function UpdateDevice({
     value: org?.id,
   }))
 
+  const defaultComboboxGroupData = useDefaultCombobox('group')
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id') || orgId,
     projectId,
@@ -119,7 +121,10 @@ export function UpdateDevice({
       suspense: false,
     },
   })
-  const groupSelectOptions = groupData?.groups?.map(groups => ({
+  const groupSelectOptions = [
+    defaultComboboxGroupData,
+    ...(groupData?.groups || []),
+  ]?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
   }))
@@ -173,7 +178,7 @@ export function UpdateDevice({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-            disabled={!formState.isDirty}
+            disabled={!formState.isDirty || isLoading}
           />
         </>
       )}
@@ -242,9 +247,10 @@ export function UpdateDevice({
               noOptionsMessage={() => t('table:no_group')}
               loadingMessage={() => t('loading:group')}
               isLoading={groupIsLoading}
-              defaultValue={groupSelectOptions?.find(
-                group => group.value === group_id,
-              )}
+              defaultValue={
+                groupSelectOptions?.find(group => group.value === group_id) ??
+                ''
+              }
               error={formState?.errors?.group_id}
             />
 
@@ -330,7 +336,7 @@ export function UpdateDevice({
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}
-              disabled={disableUpdateHeartbeat}
+              disabled={disableUpdateHeartbeat || isLoadingUpdateHeartBeat}
               onClick={() => {
                 mutateUpdateHeartBeat({ deviceId })
               }}

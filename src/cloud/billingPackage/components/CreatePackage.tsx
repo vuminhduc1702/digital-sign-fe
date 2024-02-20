@@ -310,7 +310,7 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                     classlabel="w-full"
                     classchild="w-full"
-                    placeholder="Nhập tên gói cước"
+                    placeholder={t('billing:package_manage.input.iname')}
                   />
                   <SelectField
                     label={t('billing:package_manage.popup.type')}
@@ -322,8 +322,8 @@ export function CreatePackage() {
                       },
                     })}
                     options={[
-                      { label: 'Chính thức', value: 'official' },
-                      { label: 'Dùng thử', value: 'trial' },
+                      { label: t('billing:package_manage.input.lofficial'), value: 'official' },
+                      { label: t('billing:package_manage.input.ltrial'), value: 'trial' },
                     ]}
                     classlabel="w-full"
                     classchild="w-full"
@@ -336,14 +336,14 @@ export function CreatePackage() {
                     classnamefieldwrapper=""
                     classlabel="w-full"
                     classchild="w-full"
-                    placeholder="Nội dung mô tả ngắn"
+                    placeholder={t('billing:package_manage.input.tdescribe')}
                   />
                   <div className="relative w-full">
                     <label>{t('billing:package_manage.popup.status')}</label>
                     <div className="mt-1 items-center">
                       {[
-                        { label: 'Hiển thị', value: 'present' },
-                        { label: 'Ẩn', value: 'hidden' },
+                        { label: t('billing:package_manage.input.ldisplay'), value: 'present' },
+                        { label: t('billing:package_manage.input.lhide'), value: 'hidden' },
                       ].map((option, idx) => (
                         <div key={idx} className="my-2 mr-4 flex items-center">
                           <input
@@ -384,10 +384,10 @@ export function CreatePackage() {
                     })}
                     options={
                       type === 'trial'
-                        ? [{ label: 'Trả trước', value: 'PREPAY' }]
+                        ? [{ label: t('billing:package_manage.popup.pre_pay'), value: 'PREPAY' }]
                         : [
-                            { label: 'Trả trước', value: 'PREPAY' },
-                            { label: 'Trả sau', value: 'POSTPAID' },
+                            { label: t('billing:package_manage.popup.pre_pay'), value: 'PREPAY' },
+                            { label: t('billing:package_manage.popup.post_paid'), value: 'POSTPAID' },
                           ]
                     }
                     classlabel="w-full"
@@ -432,10 +432,10 @@ export function CreatePackage() {
                     options={
                       type === 'official' && paymentType === 'PREPAY'
                         ? [
-                            { label: 'Định kỳ', value: 'PERIODIC' },
-                            { label: 'Một lần', value: 'ONCE' },
+                            { label: t('billing:package_manage.popup.periodic'), value: 'PERIODIC' },
+                            { label: t('billing:package_manage.popup.once'), value: 'ONCE' },
                           ]
-                        : [{ label: 'Định kỳ', value: 'PERIODIC' }]
+                        : [{ label: t('billing:package_manage.popup.periodic'), value: 'PERIODIC' }]
                     }
                     classlabel="w-full"
                     classchild="w-full"
@@ -465,10 +465,10 @@ export function CreatePackage() {
                             error={formState.errors['cal_unit']}
                             registration={register('cal_unit')}
                             options={[
-                              { label: 'Ngày', value: 'day' },
-                              { label: 'Tuần', value: 'week' },
-                              { label: 'Tháng', value: 'month' },
-                              { label: 'Năm', value: 'year' },
+                              { label: t('billing:package_manage.popup.day'), value: 'day' },
+                              { label: t('billing:package_manage.popup.week'), value: 'week' },
+                              { label: t('billing:package_manage.popup.month'), value: 'month' },
+                              { label: t('billing:package_manage.popup.year'), value: 'year' },
                             ]}
                             className="px-2"
                           />
@@ -501,8 +501,8 @@ export function CreatePackage() {
                     error={formState.errors['charging_unit']}
                     registration={register('charging_unit')}
                     options={[
-                      { label: 'Kết nối', value: 'message' },
-                      { label: 'Thiết bị', value: 'device' },
+                      { label: t('billing:package_manage.popup.connect'), value: 'message' },
+                      { label: t('billing:package_manage.popup.device'), value: 'device' },
                       { label: 'API', value: 'api' },
                     ]}
                     className="!mt-0"
@@ -538,15 +538,15 @@ export function CreatePackage() {
                         paymentType === 'POSTPAID' &&
                         periodType === 'PERIODIC'
                           ? [
-                              { label: 'Theo khối lượng', value: 'mass' },
-                              { label: 'Cố định', value: 'fix' },
-                              { label: 'Theo đơn vị', value: 'unit' },
-                              { label: 'Theo lũy kế', value: 'accumulated' },
-                              { label: 'Theo bậc thang', value: 'step' },
+                              { label: t('billing:package_manage.popup.mass'), value: 'mass' },
+                              { label: t('billing:package_manage.popup.fix'), value: 'fix' },
+                              { label: t('billing:package_manage.popup.unit'), value: 'unit' },
+                              { label: t('billing:package_manage.popup.accumulate'), value: 'accumulated' },
+                              { label: t('billing:package_manage.popup.step'), value: 'step' },
                             ]
                           : [
-                              { label: 'Cố định', value: 'fix' },
-                              { label: 'Theo đơn vị', value: 'unit' },
+                              { label: t('billing:package_manage.popup.permanent'), value: 'fix' },
+                              { label: t('billing:package_manage.popup.by_unit'), value: 'unit' },
                             ]
                       }
                       classlabel="w-full"
@@ -754,7 +754,7 @@ export function CreatePackage() {
                           classlabel="w-1/5"
                           classchild="w-full"
                           type="number"
-                          placeholder="Số lượng"
+                          placeholder={t('billing:package_manage.popup.quantity')}
                         />
                       )}
                     </div>
@@ -777,7 +777,7 @@ export function CreatePackage() {
                     classchild="w-full"
                     classnamefieldwrapper="flex items-center gap-x-2"
                   />
-                  <div className="flex items-center">(mặc định 10%)</div>
+                  <div className="flex items-center">(default 10%)</div>
                   {/* <div className="flex items-center"></div> */}
                   {estimates !== 'fix' && (
                     <InputField
@@ -797,7 +797,7 @@ export function CreatePackage() {
                       classlabel="w-3/5"
                       classchild="w-full"
                       classnamefieldwrapper="flex items-center gap-x-2"
-                      placeholder="Nhập số lượng"
+                      placeholder={t('billing:package_manage.popup.enter_quantity')}
                     />
                   )}
                   <InputField

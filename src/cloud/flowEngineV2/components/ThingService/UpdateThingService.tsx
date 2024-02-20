@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useEffect, useRef, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -27,6 +27,7 @@ import {
   serviceThingSchema,
   type dataRun,
   numberServiceInput,
+  PANEL_SIZE,
 } from './CreateThingService'
 import { ThingEventServices } from './ThingEventService'
 import { Spinner } from '~/components/Spinner'
@@ -53,6 +54,12 @@ import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '~/components/Resizable'
+import { type ImperativePanelHandle } from 'react-resizable-panels'
 
 type UpdateThingProps = {
   name: string
@@ -79,15 +86,14 @@ export function UpdateThingService({
       // config: { suspense: false },
     })
 
-  const { register, formState, control, handleSubmit, watch } = useForm<
-    CreateServiceThingDTO['data']
-  >({
-    resolver: serviceThingSchema && zodResolver(serviceThingSchema),
-    defaultValues: {
-      ...thingServiceData?.data,
-      description: thingServiceData?.data?.description ?? '',
-    },
-  })
+  const { register, formState, control, handleSubmit, watch, setValue } =
+    useForm<CreateServiceThingDTO['data']>({
+      resolver: serviceThingSchema && zodResolver(serviceThingSchema),
+      defaultValues: {
+        ...thingServiceData?.data,
+        description: thingServiceData?.data?.description ?? '',
+      },
+    })
 
   const { fields, append, remove } = useFieldArray({
     name: 'input',
@@ -97,28 +103,10 @@ export function UpdateThingService({
   const [codeInput, setCodeInput] = useState('')
   const [fullScreen, setFullScreen] = useState(false)
   const [codeOutput, setCodeOutput] = useState('')
-  const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
   const [, setInputTypeValue] = useState('')
-  // Resize console window
-  const resizerWidth = 8
-  const minWidthCode = 126
-  const minWidthResult = 120
-  const minHeightCode = 70
-  const minHeightResult = 70
-  const defaultHeightForCodeEditor = 344
-  const [isResizable, setIsResizable] = useState(false)
-  const consolePanelEle = document.getElementById('console-panel')
-  let defaultWidthConsole =
-    (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
-  let defaultHeightConsole = (defaultHeightForCodeEditor * 2 - resizerWidth) / 2
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState(defaultWidthConsole)
-  const [resultConsoleWidth, setResultConsoleWidth] =
-    useState(defaultWidthConsole)
-  const [codeConsoleHeight, setCodeConsoleHeight] =
-    useState(defaultHeightConsole)
-  const [resultConsoleHeight, setResultConsoleHeight] =
-    useState(defaultHeightConsole)
+  const codeEditorRef = useRef<ImperativePanelHandle>(null)
+  const resultEditorRef = useRef<ImperativePanelHandle>(null)
 
   const projectId = storage.getProject()?.id
 
@@ -156,7 +144,6 @@ export function UpdateThingService({
 
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
-    setViewMode('default')
     if (!fullScreen) {
       const elem = document.getElementById('update-service-screen')
       if (elem?.requestFullscreen) {
@@ -182,44 +169,29 @@ export function UpdateThingService({
     }
   }, [])
 
-  function handleResize() {
-    setIsResizable(true)
-  }
-
-  function handleMouseUp() {
-    setIsResizable(false)
-  }
-
-  function handleMouseMove(event: MouseEvent) {
-    if (isResizable && !fullScreen) {
-      event.preventDefault()
-      let offsetCode = event.clientX - 660
-      let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
-      if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
-        setCodeConsoleWidth(offsetCode)
-        setResultConsoleWidth(offsetResult)
-      }
-    } else if (isResizable && fullScreen) {
-      event.preventDefault()
-      let offsetCode = event.clientY - 256
-      let offsetResult = defaultHeightConsole * 2 - offsetCode
-
-      if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
-        setCodeConsoleHeight(offsetCode)
-        setResultConsoleHeight(offsetResult)
+  function resizePanel(ref: RefObject<ImperativePanelHandle>, type: string) {
+    if (ref) {
+      switch (type) {
+        case 'max':
+          if (fullScreen) {
+            ref.current?.resize(94)
+          } else {
+            ref.current?.resize(90)
+          }
+          break
+        case 'min':
+          if (fullScreen) {
+            ref.current?.resize(6)
+          } else {
+            ref.current?.resize(10)
+          }
+          break
+        case 'default':
+          ref.current?.resize(50)
+          break
       }
     }
   }
-
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isResizable])
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -229,12 +201,12 @@ export function UpdateThingService({
       >
         <div className="mt-3 h-[95%] text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
+            <DialogTitle className="text-h1 text-secondary-900">
               {t('cloud:custom_protocol.service.info_service')}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -316,20 +288,36 @@ export function UpdateThingService({
                   })}
                   min={0}
                 />
-                {watch('fail_limit') > 0 && (
+                {watch('fail_limit') > 0 ? (
                   <InputField
                     label={t('cloud:custom_protocol.service.lock_time')}
                     error={formState.errors['lock_time']}
-                    registration={register('lock_time')}
+                    registration={register('lock_time', {
+                      onChange: e => {
+                        const regexOnlyAcceptNumber = /^\d+$/
+                        let temp
+                        if (regexOnlyAcceptNumber.test(e.target.value)) {
+                          temp = e.target.value
+                        } else {
+                          temp = e.target.value.replace(/[^0-9]/g, '')
+                        }
+                        temp += 's'
+                        if (temp === 's') {
+                          temp = '0s'
+                        }
+
+                        setValue('lock_time', temp)
+                      },
+                    })}
                   />
-                )}
+                ) : null}
               </div>
               <Tab.Group>
-                <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
+                <Tab.List className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
                   <Tab
                     className={({ selected }) =>
                       clsx(
-                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                        'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
                         { 'text-primary-400': selected },
                       )
                     }
@@ -341,7 +329,7 @@ export function UpdateThingService({
                   <Tab
                     className={({ selected }) =>
                       clsx(
-                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                        'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
                         { 'text-primary-400': selected },
                       )
                     }
@@ -369,7 +357,7 @@ export function UpdateThingService({
                           )}
                         >
                           <div className="relative flex flex-col gap-2 md:col-span-1">
-                            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.input')}
@@ -493,7 +481,7 @@ export function UpdateThingService({
                                     size="square"
                                     variant="none"
                                     className={cn(
-                                      'h-9 hover:bg-secondary-500',
+                                      'hover:bg-secondary-500 h-9',
                                       {
                                         '!justify-center': fullScreen,
                                       },
@@ -553,7 +541,7 @@ export function UpdateThingService({
                               </div>
                             </div>
                             <div className="mt-1.5 flex flex-col gap-y-3">
-                              <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                              <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
                                 <div className="flex gap-3 ">
                                   <p className="text-table-header">
                                     {t(
@@ -584,7 +572,7 @@ export function UpdateThingService({
                                           </TooltipTrigger>
                                           <TooltipContent side="right">
                                             <div>
-                                              <div className="mb-4 text-table-header">
+                                              <div className="text-table-header mb-4">
                                                 {item.name}
                                               </div>
                                               <div>
@@ -640,23 +628,21 @@ export function UpdateThingService({
                               </div>
                             </div>
                           </div>
-                          <div
+                          <ResizablePanelGroup
+                            direction="horizontal"
                             className={cn('flex w-[100%] md:col-span-3', {
                               'flex-col': fullScreen,
-                              'md:grid-cols-6': viewMode !== 'default',
                             })}
-                            id="console-panel"
                           >
-                            <div
+                            <ResizablePanel
+                              defaultSize={50}
+                              minSize={fullScreen ? 13 : 20.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
-                              style={
-                                !fullScreen ? { width: codeConsoleWidth } : {}
-                              }
-                              id="code-console"
+                              ref={codeEditorRef}
                             >
-                              <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                              <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
                                 <div className="flex gap-3">
                                   <p className="text-table-header">
                                     {t('cloud:custom_protocol.service.code')}
@@ -673,32 +659,16 @@ export function UpdateThingService({
                                       />
                                     }
                                   >
-                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                       <div className="p-2">
                                         <div
                                           className="hover:background py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('maximize_code')
-                                            if (!fullScreen) {
-                                              setCodeConsoleWidth(
-                                                Number(
-                                                  consolePanelEle?.offsetWidth,
-                                                ) - minWidthResult,
-                                              )
-                                              setResultConsoleWidth(
-                                                minWidthResult,
-                                              )
-                                            } else {
-                                              setCodeConsoleHeight(
-                                                defaultHeightForCodeEditor * 2 -
-                                                  resizerWidth -
-                                                  minHeightResult,
-                                              )
-                                              setResultConsoleHeight(
-                                                minHeightResult,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.maximize_result',
@@ -706,26 +676,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('minimize_code')
-                                            if (!fullScreen) {
-                                              setResultConsoleWidth(
-                                                Number(
-                                                  consolePanelEle?.offsetWidth,
-                                                ) - minWidthCode,
-                                              )
-                                              setCodeConsoleWidth(minWidthCode)
-                                            } else {
-                                              setCodeConsoleHeight(
-                                                minHeightCode,
-                                              )
-                                              setResultConsoleHeight(
-                                                defaultHeightForCodeEditor * 2 -
-                                                  resizerWidth -
-                                                  minHeightCode,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.minimize_result',
@@ -733,24 +689,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('default')
-                                            if (!fullScreen) {
-                                              setCodeConsoleWidth(
-                                                defaultWidthConsole,
-                                              )
-                                              setResultConsoleWidth(
-                                                defaultWidthConsole,
-                                              )
-                                            } else {
-                                              setCodeConsoleHeight(
-                                                defaultHeightConsole,
-                                              )
-                                              setResultConsoleHeight(
-                                                defaultHeightConsole,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.DEFAULT,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.default_result',
@@ -799,39 +743,22 @@ export function UpdateThingService({
                                 isShowLog={isShowConsole}
                                 defaultValue={thingServiceData?.data.code}
                                 value={codeInput}
-                                className={`${fullScreen ? '' : '!block'}`}
+                                className="!block"
                                 setCodeInput={setCodeInput}
                                 isFullScreen={fullScreen}
-                                style={
-                                  fullScreen
-                                    ? { height: codeConsoleHeight }
-                                    : {}
-                                }
+                                isUpdate={true}
                               />
-                            </div>
-                            {!fullScreen ? (
-                              <div
-                                className="h-[100%] cursor-col-resize"
-                                style={{ width: resizerWidth }}
-                                onMouseDown={handleResize}
-                              ></div>
-                            ) : (
-                              <div
-                                className=" w-[100%] cursor-row-resize"
-                                style={{ height: resizerWidth }}
-                                onMouseDown={handleResize}
-                              ></div>
-                            )}
-                            <div
+                            </ResizablePanel>
+                            <ResizableHandle className="w-2" withHandle />
+                            <ResizablePanel
+                              defaultSize={50}
+                              minSize={fullScreen ? 10.5 : 16.5}
                               className={cn(
                                 'flex w-[100%] flex-col gap-2 md:col-span-1',
                               )}
-                              style={
-                                !fullScreen ? { width: resultConsoleWidth } : {}
-                              }
-                              id="result-console"
+                              ref={resultEditorRef}
                             >
-                              <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                              <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
                                 <div className="flex gap-3">
                                   <p className="text-table-header">
                                     {t('cloud:custom_protocol.service.output')}
@@ -848,30 +775,16 @@ export function UpdateThingService({
                                       />
                                     }
                                   >
-                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                       <div className="p-2">
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('maximize_result')
-                                            if (!fullScreen) {
-                                              setResultConsoleWidth(
-                                                Number(
-                                                  consolePanelEle?.offsetWidth,
-                                                ) - minWidthCode,
-                                              )
-                                              setCodeConsoleWidth(minWidthCode)
-                                            } else {
-                                              setCodeConsoleHeight(
-                                                minHeightCode,
-                                              )
-                                              setResultConsoleHeight(
-                                                defaultHeightForCodeEditor * 2 -
-                                                  resizerWidth -
-                                                  minHeightCode,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.maximize_result',
@@ -879,28 +792,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('minimize_result')
-                                            if (!fullScreen) {
-                                              setCodeConsoleWidth(
-                                                Number(
-                                                  consolePanelEle?.offsetWidth,
-                                                ) - minWidthResult,
-                                              )
-                                              setResultConsoleWidth(
-                                                minWidthResult,
-                                              )
-                                            } else {
-                                              setResultConsoleHeight(
-                                                minHeightResult,
-                                              )
-                                              setCodeConsoleHeight(
-                                                defaultHeightForCodeEditor * 2 -
-                                                  resizerWidth -
-                                                  minHeightResult,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MIN,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.minimize_result',
@@ -908,24 +805,12 @@ export function UpdateThingService({
                                         </div>
                                         <div
                                           className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setViewMode('default')
-                                            if (!fullScreen) {
-                                              setCodeConsoleWidth(
-                                                defaultWidthConsole,
-                                              )
-                                              setResultConsoleWidth(
-                                                defaultWidthConsole,
-                                              )
-                                            } else {
-                                              setCodeConsoleHeight(
-                                                defaultHeightConsole,
-                                              )
-                                              setResultConsoleHeight(
-                                                defaultHeightConsole,
-                                              )
-                                            }
-                                          }}
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.DEFAULT,
+                                            )
+                                          }
                                         >
                                           {t(
                                             'cloud:custom_protocol.service.default_result',
@@ -941,14 +826,11 @@ export function UpdateThingService({
                                 readOnly={true}
                                 setCodeInput={setCodeOutput}
                                 isFullScreen={fullScreen}
-                                style={
-                                  fullScreen
-                                    ? { height: resultConsoleHeight }
-                                    : {}
-                                }
+                                isUpdate={true}
+                                showRunButton={false}
                               />
-                            </div>
-                          </div>
+                            </ResizablePanel>
+                          </ResizablePanelGroup>
                           <div className="absolute bottom-6 right-6 flex gap-3">
                             <img
                               onClick={handleFullScreen}
@@ -979,7 +861,7 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
@@ -990,7 +872,7 @@ export function UpdateThingService({
             isLoading={isLoading}
             form="create-serviceThing"
             type="submit"
-            disabled={fullScreen}
+            disabled={fullScreen || isLoading}
             onClick={() => setTypeInput('Submit')}
             size="md"
             className="bg-primary-400"

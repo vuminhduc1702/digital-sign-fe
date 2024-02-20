@@ -12,6 +12,7 @@ import { type widgetSchema } from '../Widget'
 
 type TableChartDataType = DeviceAttrLog & {
   entity_name: string
+  label: string
 }
 
 export function TableChart({
@@ -27,6 +28,7 @@ export function TableChart({
   refreshBtn?: boolean
   className?: string
 }) {
+  // console.log(data)
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<TableChartDataType>()
@@ -39,7 +41,7 @@ export function TableChart({
       Array<
         Pick<
           TableChartDataType,
-          'ts' | 'value' | 'attribute_key' | 'entity_name' | 'unit'
+          'ts' | 'value' | 'attribute_key' | 'label' | 'entity_name' | 'unit'
         >
       >
     >()
@@ -72,8 +74,15 @@ export function TableChart({
         newValuesRef.current = data
         dataManipulation()
       }
+    } else {
+      setDataTransformedFeedToChart([])
     }
   }, [data])
+
+  // extract data from attribute_key. eg: 'device1 - attr1 - 123' => ['device1', 'attr1', '123']
+  function extractKey(label: string) {
+    return label.split(' - ')
+  }
 
   function dataManipulation() {
     const tableWidgetDataType = Object.entries(
@@ -82,31 +91,30 @@ export function TableChart({
       .flatMap(([attribute_key, values]) =>
         values.map(({ ts, value }) => ({
           ts: ts,
-          attribute_key,
+          attribute_key: extractKey(attribute_key)[0],
+          label: extractKey(attribute_key)[1],
           value,
           unit: widgetInfo.attribute_config.filter(
-            obj => obj.attribute_key === attribute_key,
-          )[0].unit,
+            obj =>
+              obj.attribute_key === extractKey(attribute_key)[0] &&
+              obj.label === extractKey(attribute_key)[2],
+          )[0]?.unit,
           entity_name: '',
         })),
       )
       .toSorted((a, b) => b.ts - a.ts)
-
     setDataTransformedFeedToChart(tableWidgetDataType)
   }
 
   function signalParent() {
-    refetchData();
+    refetchData()
   }
 
   const columns = useMemo<ColumnDef<TableChartDataType, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => {
-          const orderId = parseInt(info.row.id) + 1
-          return orderId
-        },
+        cell: info => info.row.index + 1,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -127,6 +135,13 @@ export function TableChart({
       columnHelper.accessor('attribute_key', {
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.attr_key')}</span>
+        ),
+        cell: info => info.getValue(),
+        footer: info => info.column.id,
+      }),
+      columnHelper.accessor('label', {
+        header: () => (
+          <span>{t('cloud:org_manage.org_manage.table.label')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,

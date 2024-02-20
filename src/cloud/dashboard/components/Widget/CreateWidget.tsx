@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import ColorPicker from 'react-pick-color'
@@ -40,6 +40,185 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
+export const WS_REALTIME_PERIOD = [
+  {
+    label: i18n.t('ws:filter.time_period_value.10second'),
+    value: 10 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.15second'),
+    value: 15 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.30second'),
+    value: 30 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.1minute'),
+    value: 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.2minute'),
+    value: 2 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.5minute'),
+    value: 5 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.10minute'),
+    value: 10 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.15minute'),
+    value: 15 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.30minute'),
+    value: 30 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.1hour'),
+    value: 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.2hour'),
+    value: 2 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.5hour'),
+    value: 5 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.10hour'),
+    value: 10 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.12hour'),
+    value: 12 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.1day'),
+    value: 24 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.7day'),
+    value: 7 * 24 * 60 * 60 * 1000,
+  },
+  {
+    label: i18n.t('ws:filter.time_period_value.30day'),
+    value: 30 * 24 * 60 * 60 * 1000,
+  },
+] as const
+
+export const WS_REALTIME_INTERVAL = [
+  {
+    label: i18n.t('ws:filter.interval.1second'),
+    value: 1000,
+  }, //0
+  {
+    label: i18n.t('ws:filter.interval.5second'),
+    value: 5 * 1000,
+  }, //1
+  {
+    label: i18n.t('ws:filter.interval.10second'),
+    value: 10 * 1000,
+  }, //2
+  {
+    label: i18n.t('ws:filter.interval.15second'),
+    value: 15 * 1000,
+  }, //3
+  {
+    label: i18n.t('ws:filter.interval.30second'),
+    value: 30 * 1000,
+  }, //4
+  {
+    label: i18n.t('ws:filter.interval.1minute'),
+    value: 60 * 1000,
+  }, //5
+  {
+    label: i18n.t('ws:filter.interval.2minute'),
+    value: 2 * 60 * 1000,
+  }, //6
+  {
+    label: i18n.t('ws:filter.interval.5minute'),
+    value: 5 * 60 * 1000,
+  }, //7
+  {
+    label: i18n.t('ws:filter.interval.10minute'),
+    value: 10 * 60 * 1000,
+  }, //8
+  {
+    label: i18n.t('ws:filter.interval.15minute'),
+    value: 15 * 60 * 1000,
+  }, //9
+  {
+    label: i18n.t('ws:filter.interval.30minute'),
+    value: 30 * 60 * 1000,
+  }, //10
+  {
+    label: i18n.t('ws:filter.interval.1hour'),
+    value: 60 * 60 * 1000,
+  }, //11
+  {
+    label: i18n.t('ws:filter.interval.2hour'),
+    value: 2 * 60 * 60 * 1000,
+  }, //12
+  {
+    label: i18n.t('ws:filter.interval.10hour'),
+    value: 10 * 60 * 60 * 1000,
+  }, //14
+  {
+    label: i18n.t('ws:filter.interval.12hour'),
+    value: 12 * 60 * 60 * 1000,
+  }, //15
+  {
+    label: i18n.t('ws:filter.interval.1day'),
+    value: 24 * 60 * 60 * 1000,
+  }, //16
+] as const
+
+export const WS_REALTIME_REF = [
+  // 1 second
+  { start: 0, end: 0 },
+  // 5 seconds
+  { start: 0, end: 0 },
+  // 10 seconds
+  { start: 0, end: 0 },
+  // 15 seconds
+  { start: 0, end: 0 },
+  // 30 seconds
+  { start: 0, end: 0 },
+  // 1 minute
+  { start: 0, end: 1 },
+  // 2 minutes
+  { start: 0, end: 3 },
+  // 5 minutes
+  { start: 0, end: 3 },
+  // 10 minutes
+  { start: 1, end: 5 },
+  // 15 minutes
+  { start: 1, end: 6 },
+  // 30 minutes
+  { start: 1, end: 6 },
+  // 1 hour
+  { start: 2, end: 7 },
+  // 2 hours
+  { start: 3, end: 8 },
+  // 5 hours
+  { start: 5, end: 10 },
+  // 10 hours
+  { start: 6, end: 11 },
+  // 12 hours
+  { start: 6, end: 11 },
+  // 1 day
+  { start: 7, end: 12 },
+  // 7 days
+  { start: 10, end: 16 },
+  // 30 days
+  { start: 11, end: 16 },
+] as const
+
 export const wsInterval = [
   { label: 'Second', value: 1000 },
   { label: 'Minute', value: 60 * 1000 },
@@ -64,11 +243,12 @@ export const attrWidgetSchema = z.array(
     attribute_key: z
       .string()
       .min(1, { message: i18n.t('ws:filter.choose_attr') }),
-    // label: z.string(),
+    label: z.string(),
     color: z.string(),
     unit: z.string(),
     max: z.number(),
     min: z.number(),
+    deviceName: z.string().optional(),
   }),
 )
 
@@ -91,6 +271,8 @@ export const widgetSchema = z.object({
     lastest_message: z.string(),
     realtime_message: z.string(),
     history_message: z.string(),
+    org_id: z.string(),
+    controller_message: z.string().optional(),
   }),
   attribute_config: attrWidgetSchema,
   config: z
@@ -185,11 +367,7 @@ export const widgetCreateSchema = z.object({
   id: z.string().optional(),
 })
 
-type WidgetCreateDTO = {
-  data: z.infer<typeof widgetCreateSchema> & { id: string }
-}
-
-export type WidgetCreate = WidgetCreateDTO['data']
+export type WidgetCreate = z.infer<typeof widgetCreateSchema> & { id: string }
 
 type CreateWidgetProps = {
   widgetType: WidgetType
@@ -273,20 +451,75 @@ export function CreateWidget({
     label: device.name,
   }))
 
+  const getDeviceInfo = (id: string) => {
+    let device = null
+    for (const d of deviceData?.devices || []) {
+      if (d.id === id) {
+        device = d
+        break
+      }
+    }
+    return device?.name + ' - ' + device?.id
+  }
+
   const {
     data: attrChartData,
     mutate: attrChartMutate,
     isLoading: attrChartIsLoading,
   } = useCreateAttrChart()
-  const attrSelectData = attrChartData?.keys?.map(item => ({
-    value: item,
-    label: item,
-  }))
+  const attrSelectData = attrChartData?.entities?.flatMap(item => {
+    const result = item.attr_keys.map(attr => ({
+      label: attr,
+      value: attr,
+    }))
+    return result
+  })
+
+  // remove duplicate in attrSelectData
+  function removeDup(
+    array: Array<{ label: string; value: string }> | undefined,
+  ) {
+    if (!array) return
+    // remove duplicate element
+    const result = array.filter((item, index) => {
+      return (
+        array.findIndex(
+          item2 => item2.label === item.label && item2.value === item.value,
+        ) === index
+      )
+    })
+    return result
+  }
+
+  const attrSelectDataForMap = [
+    { value: 'latitude', label: 'latitude' },
+    { value: 'longitude', label: 'longitude' },
+  ]
+
+  const setDeviceOption = (attribute: string) => {
+    const result: Array<{
+      value: string
+      label: string
+    }> = []
+    attrChartData?.entities?.map(item => {
+      item?.attr_keys?.map(attr => {
+        if (attr === attribute) {
+          const deviceInfo = getDeviceInfo(item.entity_id)
+          if (deviceInfo.includes('undefined')) return
+          result.push({
+            value: item.entity_id,
+            label: deviceInfo,
+          })
+        }
+      })
+    })
+    return result
+  }
 
   useEffect(() => {
     append({
       attribute_key: '',
-      // label: '',
+      label: '',
       color: '',
       unit: '',
       max: 100,
@@ -298,13 +531,64 @@ export function CreateWidget({
     null,
   )
 
+  function intervalOptionHandler(timePeriod: number) {
+    const timePeriodPosition = WS_REALTIME_PERIOD.findIndex(
+      period => period.value === timePeriod,
+    )
+    if (timePeriodPosition === -1) return
+    const timePeriodRef = WS_REALTIME_REF[timePeriodPosition]
+
+    // get the start and end position in WS_REALTIME_INTERVAL from WS_REALTIME_REF
+    const start = timePeriodRef.start
+    const end = timePeriodRef.end
+
+    const intervalOptions = WS_REALTIME_INTERVAL.slice(start, end + 1)
+    return intervalOptions.map(interval => ({
+      label: interval.label,
+      value: interval.value,
+    }))
+  }
+
+  // remove field when devices change
+  // function removeField(deviceList: string[]) {
+  //   for (let i = fields.length - 1; i >= 0; i--) {
+  //     if (
+  //       !deviceList.includes(fields[i].label.split(' - ')[1] || fields[i].label)
+  //     ) {
+  //       remove(i)
+  //     }
+  //   }
+  // }
+
+  useEffect(() => {
+    const defaultOption =
+      intervalOptionHandler(watch('widgetSetting.time_period')) || []
+    if (defaultOption.length > 0) {
+      setValue('widgetSetting.interval', defaultOption[0].value)
+    }
+  }, [watch('widgetSetting.time_period')])
+
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
       <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
-            <DialogTitle as="h3" className="text-h1 text-secondary-900">
-              {t('cloud:dashboard.config_chart.title')}
+            <DialogTitle className="text-h1 text-secondary-900">
+              {widgetCategory === 'LINE'
+                ? t('cloud:dashboard.config_chart.title_line')
+                : widgetCategory === 'BAR'
+                ? t('cloud:dashboard.config_chart.title_bar')
+                : widgetCategory === 'TABLE'
+                ? t('cloud:dashboard.config_chart.title_table')
+                : widgetCategory === 'PIE'
+                ? t('cloud:dashboard.config_chart.title_pie')
+                : widgetCategory === 'GAUGE'
+                ? t('cloud:dashboard.config_chart.title_gauge')
+                : widgetCategory === 'CARD'
+                ? t('cloud:dashboard.config_chart.title_card')
+                : widgetCategory === 'MAP'
+                ? t('cloud:dashboard.config_chart.title_map')
+                : null}
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
@@ -462,7 +746,7 @@ export function CreateWidget({
                   attribute_key: item.attribute_key,
                   color: item.color,
                   max: item.max,
-                  // label: item.label,
+                  label: item.label,
                   min: item.min,
                   unit: item.unit,
                 })),
@@ -531,6 +815,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -545,6 +830,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -578,9 +864,11 @@ export function CreateWidget({
                             data: {
                               entity_ids: option,
                               entity_type: 'DEVICE',
+                              version_two: true,
                               // time_series: true,
                             },
                           })
+                          // removeField(option)
                         }
                       }}
                       handleClearSelectDropdown={() => {
@@ -588,6 +876,7 @@ export function CreateWidget({
                           defaultValue: [
                             {
                               attribute_key: '',
+                              label: '',
                               color: '',
                               max: 100,
                               min: 0,
@@ -620,7 +909,7 @@ export function CreateWidget({
                         onClick={() =>
                           append({
                             attribute_key: '',
-                            // label: '',
+                            label: '',
                             color: '',
                             unit: '',
                             max: 100,
@@ -637,35 +926,66 @@ export function CreateWidget({
                       key={field.id}
                     >
                       <div className="grid w-full grid-cols-1 gap-x-4 px-2 md:grid-cols-4">
-                        <SelectDropdown
-                          label={t('cloud:dashboard.config_chart.attr')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]
-                              ?.attribute_key
-                          }
-                          name={`attributeConfig.${index}.attribute_key`}
-                          control={control}
-                          options={attrSelectData}
-                          isOptionDisabled={option =>
-                            option.label === t('loading:input') ||
-                            option.label === t('table:no_attr')
-                          }
-                          noOptionsMessage={() => t('table:no_attr')}
-                          loadingMessage={() => t('loading:attr')}
-                          isLoading={attrChartIsLoading}
-                          placeholder={t(
-                            'cloud:org_manage.org_manage.add_attr.choose_attr',
-                          )}
-                        />
-                        {/* <InputField
-                          label={t('cloud:dashboard.config_chart.label')}
-                          error={
-                            formState?.errors?.attributeConfig?.[index]?.label
-                          }
-                          registration={register(
-                            `attributeConfig.${index}.label` as const,
-                          )}
-                        /> */}
+                        {widgetCategory === 'MAP' ? (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={attrSelectDataForMap}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        ) : (
+                          <SelectDropdown
+                            label={t('cloud:dashboard.config_chart.attr')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]
+                                ?.attribute_key
+                            }
+                            name={`attributeConfig.${index}.attribute_key`}
+                            control={control}
+                            options={removeDup(attrSelectData)}
+                            isOptionDisabled={option =>
+                              option.label === t('loading:input') ||
+                              option.label === t('table:no_attr')
+                            }
+                            noOptionsMessage={() => t('table:no_attr')}
+                            loadingMessage={() => t('loading:attr')}
+                            isLoading={attrChartIsLoading}
+                            placeholder={t(
+                              'cloud:org_manage.org_manage.add_attr.choose_attr',
+                            )}
+                          />
+                        )}
+                        {!watch(`attributeConfig.${index}.attribute_key`) ||
+                        widgetCategory === 'GAUGE' ||
+                        widgetCategory === 'CARD' ? null : (
+                          <SelectDropdown
+                            name={`attributeConfig.${index}.label`}
+                            label={t('cloud:dashboard.config_chart.label')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.label
+                            }
+                            control={control}
+                            options={setDeviceOption(
+                              watch(`attributeConfig.${index}.attribute_key`),
+                            )}
+                            isLoading={attrChartIsLoading}
+                            // defaultValue={attrLabelData[0]}
+                          />
+                        )}
                         {!['GAUGE', 'TABLE', 'MAP', 'CONTROLLER', 'CARD'].find(
                           e => widgetCategory === e,
                         ) ? (
@@ -804,6 +1124,19 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
+                          // onChange={e => {
+                          //   if (e.target.value === 'REALTIME') {
+                          //     setValue('widgetSetting.agg', 'AVG')
+                          //     setValue('widgetSetting.time_period', 0)
+                          //     setValue('widgetSetting.interval', 0)
+                          //     setValue('widgetSetting.data_point', 0)
+                          //   } else {
+                          //     setValue('widgetSetting.agg', 'AVG')
+                          //     setValue('widgetSetting.time_period', 0)
+                          //     // setValue('widgetSetting.interval', 0)
+                          //     // setValue('widgetSetting.data_point', 0)
+                          //   }
+                          // }}
                         />
 
                         <SelectField
@@ -844,7 +1177,7 @@ export function CreateWidget({
                           />
                         ) : null}
 
-                        {watch('widgetSetting.agg') === 'NONE' ? (
+                        {watch('widgetSetting.agg') == 'NONE' ? (
                           <InputField
                             type="number"
                             label={t('ws:filter.data_point')}
@@ -856,7 +1189,7 @@ export function CreateWidget({
                               },
                             )}
                           />
-                        ) : (
+                        ) : watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <SelectField
                             label={t('ws:filter.group_interval')}
                             error={formState?.errors?.widgetSetting?.interval}
@@ -869,6 +1202,23 @@ export function CreateWidget({
                             options={wsInterval.map(interval => ({
                               label: interval.label,
                               value: interval.value,
+                            }))}
+                          />
+                        ) : (
+                          <SelectField
+                            label={t('ws:filter.time_period')}
+                            error={
+                              formState?.errors?.widgetSetting?.time_period
+                            }
+                            registration={register(
+                              `widgetSetting.time_period` as const,
+                              {
+                                valueAsNumber: true,
+                              },
+                            )}
+                            options={WS_REALTIME_PERIOD.map(period => ({
+                              label: period.label,
+                              value: period.value,
                             }))}
                           />
                         )}
@@ -1067,20 +1417,17 @@ export function CreateWidget({
                           </div>
                         ) : (
                           <SelectField
-                            label={t('ws:filter.time_period')}
-                            error={
-                              formState?.errors?.widgetSetting?.time_period
-                            }
+                            label={t('ws:filter.group_interval')}
+                            error={formState?.errors?.widgetSetting?.interval}
                             registration={register(
-                              `widgetSetting.time_period` as const,
+                              `widgetSetting.interval` as const,
                               {
                                 valueAsNumber: true,
                               },
                             )}
-                            options={wsInterval.map(interval => ({
-                              label: interval.label,
-                              value: interval.value,
-                            }))}
+                            options={intervalOptionHandler(
+                              watch('widgetSetting.time_period'),
+                            )}
                           />
                         )}
                       </div>

@@ -1,4 +1,3 @@
-import Carousel from 'react-multi-carousel'
 import Pict_6 from '~/assets/images/landingpage/Pict_6.png'
 import Pict_7 from '~/assets/images/landingpage/Pict_7.png'
 import Pict_8 from '~/assets/images/landingpage/Pict_8.png'

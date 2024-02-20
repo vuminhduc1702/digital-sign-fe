@@ -23,19 +23,19 @@ export function SectionFooter() {
   return (
     <>
       <div
-        className="flex h-[357px] justify-center bg-no-repeat"
-        style={{ backgroundImage: `url(${BgFooter})` }}
+        className="flex h-[357px] justify-center  bg-no-repeat max-lg:h-auto"
+        style={{ backgroundImage: `url(${BgFooter})`, backgroundSize: 'cover' }}
       >
-        <div className="flex h-fit w-[1040px]">
-          <div className="ml-[40px] w-[250px] pt-[60px] text-[48px] leading-[56.74px] text-white">
+        <div className="max-md:item-center flex h-fit w-[1040px] max-lg:h-auto max-lg:flex-col max-lg:items-center">
+          <div className="ml-[40px] w-[250px] pt-[60px] text-[48px] leading-[56.74px] text-white max-lg:ml-0  max-lg:w-[350px]">
             {t('landingpage:footer.client_support')}
           </div>
-          <div className="w-[750px] pl-[150px] pt-[20px]">
-            <div className="flex py-2">
+          <div className="w-[750px] pl-[150px] pt-[20px] max-md:flex max-md:flex-col max-md:items-center max-md:pl-0 xs2:w-[250px]">
+            <div className="flex py-2 max-md:flex-col">
               <div className="h-[36px] w-1/3 text-[16px] font-normal leading-[20.8px] text-white">
                 {t('landingpage:footer.full_name')}
               </div>
-              <div>
+              <div className="">
                 <input
                   type="text"
                   maxLength={50}
@@ -43,7 +43,7 @@ export function SectionFooter() {
                 />
               </div>
             </div>
-            <div className="flex py-2">
+            <div className="flex py-2 max-md:flex-col">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
                 {t('landingpage:footer.email')}
               </div>
@@ -55,7 +55,7 @@ export function SectionFooter() {
                 />
               </div>
             </div>
-            <div className="flex py-2">
+            <div className="flex py-2 max-md:flex-col">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
                 {t('landingpage:footer.phone_number')}
               </div>
@@ -63,12 +63,12 @@ export function SectionFooter() {
                 <input
                   type="number"
                   maxLength={50}
-                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 "
+                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 xs2:mt-3 "
                 />
               </div>
             </div>
-            <div className="flex pt-2">
-              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
+            <div className="flex pt-2 max-md:flex-col">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white max-md:mb-6">
                 {t('landingpage:footer.support_content')}
               </div>
               <div>
@@ -86,7 +86,7 @@ export function SectionFooter() {
                 </p>
               </div>
             </div>
-            <div className="flex">
+            <div className="flex max-lg:pb-[16px] max-md:w-[300px]">
               <div className="w-1/3"></div>
               <div className="flex w-[300px] justify-end">
                 <Button
@@ -100,26 +100,18 @@ export function SectionFooter() {
           </div>
         </div>
       </div>
-      <div className="flex h-[250px] justify-center bg-[#3A3A3A]">
-        <div className="w-[1040px]">
-          <div className="flex h-[200px] border-b border-[#4D4D4D] pt-[60px]">
-            <div className="pr-[20px] pt-[5px]">
+      <div className="flex h-[250px] justify-center  bg-[#3A3A3A] max-lg:h-auto">
+        <div className="w-[1040px] xs:w-[425px]">
+          <div className="flex h-[200px] border-b border-[#4D4D4D] pt-[60px] max-lg:h-auto max-lg:flex-col max-sm:mx-2">
+            <div className="pr-[20px] pt-[5px] max-lg:my-5">
               <img src={LogoViettel} alt="" />
             </div>
             <div>
-              <div className="w-[491px] pb-[10px] text-[20px] leading-[23.64px] text-white">
+              <div className="w-[491px] pb-[10px] text-[20px] leading-[23.64px] text-white max-sm:w-[320px]">
                 {t('landingpage:footer.company')}
               </div>
-              <div className="w-[600px] text-[16px] leading-[20.8px] text-white">
-                Mã số doanh nghiệp: 0100109106-011 do Sở Kế hoạch và Đầu tư
-                Thành phố Hà Nội cấp lần đầu ngày 18/07/2005, sửa đổi lần thứ 15
-                ngày 18/12/2018
-              </div>
-              <div className="w-[588px] text-[16px] leading-[20.8px] text-white">
-                {t('landingpage:footer.responsible_person')}
-              </div>
             </div>
-            <div className="pl-[20px]">
+            <div className="pl-[20px] max-lg:pl-0">
               <a
                 className="flex pb-[15px] pt-[10px]"
                 href="mailto:cskh@viettel.com.vn"
@@ -129,7 +121,7 @@ export function SectionFooter() {
                   {t('landingpage:footer.cskh')}
                 </div>
               </a>
-              <a className="flex pb-[15px]" href="tel:0123456789">
+              <a className="flex pb-[15px]" href="tel:08699999904">
                 <PhoneFill width={33} height={33} viewBox="0 0 33 33" />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   {t('landingpage:footer.phone_used')}
@@ -139,10 +131,7 @@ export function SectionFooter() {
           </div>
 
           <div className="relative flex h-[50px] items-center">
-            <div className="text-[16px] leading-[20.8px] text-[#B1B1B1]">
-              {t('landingpage:footer.cre')} {new Date().getFullYear()}
-            </div>
-            <div className="absolute right-0 flex">
+            <div className="absolute right-0 flex max-sm:left-0 max-sm:mx-2">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 {t('landingpage:footer.follow')}
               </div>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
@@ -41,22 +41,27 @@ import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
+import { type ImperativePanelHandle } from 'react-resizable-panels'
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from '~/components/Resizable'
 
-export const inputSchema = z.array(
-  z.object({
-    name: z
-      .string()
-      .min(1, { message: 'Tên biến quá ngắn' })
-      .max(64, { message: 'Tên biến quá dài' }),
-    type: z.string(),
-    value: z.string().optional().or(z.boolean()),
-  }),
-)
+export const inputSchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: 'Tên biến quá ngắn' })
+    .max(64, { message: 'Tên biến quá dài' }),
+  type: z.string(),
+  value: z.string().optional().or(z.boolean()),
+})
+export const inputListSchema = z.array(inputSchema)
 
 export const serviceThingSchema = z.object({
   name: nameSchemaRegex,
   description: z.string(),
-  input: inputSchema,
+  input: inputListSchema,
   output: z.enum(['json', 'str', 'i32', 'i64', 'f32', 'f64', 'bool'] as const),
   fail_limit: z.number().optional(),
   lock_time: z.string().optional(),
@@ -84,6 +89,12 @@ const defaultJSType = [
   'object',
 ]
 
+export const PANEL_SIZE = {
+  MAX: 'max',
+  MIN: 'min',
+  DEFAULT: 'default',
+}
+
 export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
@@ -94,32 +105,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
   const [codeInput, setCodeInput] = useState('')
   const [codeOutput, setCodeOutput] = useState('')
   const [, setInputTypeValue] = useState('')
-  const [viewMode, setViewMode] = useState('default')
   const [isShowConsole, setIsShowConsole] = useState(false)
   const thingId = params.thingId as string
   const { mutate: mutateService, isLoading: isLoadingService } =
     useCreateServiceThing()
-
-  // Resize console window
-  const resizerWidth = 8
-  const minWidthCode = 126
-  const minWidthResult = 120
-  const minHeightCode = 70
-  const minHeightResult = 70
-  const defaultHeightForCodeEditor = 382
-  const [isResizable, setIsResizable] = useState(false)
-  const consolePanelEle = document.getElementById('console-panel')
-  const defaultWidthConsole =
-    (Number(consolePanelEle?.offsetWidth) - resizerWidth) / 2
-  const defaultHeightConsole =
-    (defaultHeightForCodeEditor * 2 - resizerWidth) / 2
-  const [codeConsoleWidth, setCodeConsoleWidth] = useState(defaultWidthConsole)
-  const [resultConsoleWidth, setResultConsoleWidth] =
-    useState(defaultWidthConsole)
-  const [codeConsoleHeight, setCodeConsoleHeight] =
-    useState(defaultHeightConsole)
-  const [resultConsoleHeight, setResultConsoleHeight] =
-    useState(defaultHeightConsole)
+  const codeEditorRef = useRef<ImperativePanelHandle>(null)
+  const resultEditorRef = useRef<ImperativePanelHandle>(null)
 
   const {
     mutate: mutateExecuteService,
@@ -171,7 +162,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
 
   const handleFullScreen = () => {
     setFullScreen(!fullScreen)
-    setViewMode('default')
     if (!fullScreen) {
       const elem = document.getElementById('create-service-screen')
       if (elem?.requestFullscreen) {
@@ -193,11 +183,6 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     setFullScreen(false)
     setIsShowConsole(false)
     setInputTypeValue('')
-    setViewMode('default')
-    setCodeConsoleWidth(defaultWidthConsole)
-    setResultConsoleWidth(defaultWidthConsole)
-    setCodeConsoleHeight(defaultHeightConsole)
-    setResultConsoleHeight(defaultHeightConsole)
   }
 
   useEffect(() => {
@@ -213,55 +198,29 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
     }
   }, [])
 
-  function handleResize() {
-    setIsResizable(true)
-  }
-
-  function handleMouseUp() {
-    setIsResizable(false)
-  }
-
-  function handleMouseMove(event: MouseEvent) {
-    // if(event.stopPropagation) {
-    //   event.stopPropagation();
-    // }
-    // if(event.preventDefault) {
-    //   event.preventDefault();
-    // }
-    if (isResizable && !fullScreen) {
-      let offsetCode = event.clientX - 660
-      let offsetResult = Number(consolePanelEle?.offsetWidth) - offsetCode
-      if (offsetCode > minWidthCode && offsetResult > minWidthResult) {
-        setCodeConsoleWidth(offsetCode)
-        setResultConsoleWidth(offsetResult)
-      }
-    } else if (isResizable && fullScreen) {
-      let offsetCode = event.clientY - 186
-      let offsetResult = defaultHeightConsole * 2 - offsetCode
-
-      if (offsetCode > minHeightCode && offsetResult > minHeightResult) {
-        setCodeConsoleHeight(offsetCode)
-        setResultConsoleHeight(offsetResult)
+  function resizePanel(ref: RefObject<ImperativePanelHandle>, type: string) {
+    if (ref) {
+      switch (type) {
+        case 'max':
+          if (fullScreen) {
+            ref.current?.resize(94)
+          } else {
+            ref.current?.resize(90)
+          }
+          break
+        case 'min':
+          if (fullScreen) {
+            ref.current?.resize(6)
+          } else {
+            ref.current?.resize(10)
+          }
+          break
+        case 'default':
+          ref.current?.resize(50)
+          break
       }
     }
   }
-
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-  }, [isResizable])
-
-  // useEffect(() => {
-  //   if (defaultWidthConsole) {
-  //     setCodeConsoleWidth(defaultWidthConsole)
-  //     setResultConsoleWidth(defaultWidthConsole)
-  //   }
-  // }, [viewMode])
 
   return (
     <FormDialog
@@ -352,7 +311,23 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 <InputField
                   label={t('cloud:custom_protocol.service.lock_time')}
                   error={formState.errors['lock_time']}
-                  registration={register('lock_time')}
+                  registration={register('lock_time', {
+                    onChange: e => {
+                      const regexOnlyAcceptNumber = /^\d+$/
+                      let temp
+                      if (regexOnlyAcceptNumber.test(e.target.value)) {
+                        temp = e.target.value
+                      } else {
+                        temp = e.target.value.replace(/[^0-9]/g, '')
+                      }
+                      temp += 's'
+                      if (temp === 's') {
+                        temp = '0s'
+                      }
+
+                      setValue('lock_time', temp)
+                    },
+                  })}
                 />
               ) : null}
             </div>
@@ -477,7 +452,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             <img
                               src={btnDeleteIcon}
                               alt="Delete input"
-                              className={cn('h-10 w-10')}
+                              className={cn('size-10')}
                             />
                           }
                         />
@@ -499,7 +474,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   <img
                     src={btnAddIcon}
                     alt="add-icon"
-                    className="h-5 w-5 cursor-pointer"
+                    className="size-5 cursor-pointer"
                   />
                   <label className="ml-2 cursor-pointer">
                     {t('cloud:custom_protocol.service.add_other')}
@@ -599,17 +574,17 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 </div>
               </div>
 
-              <div
+              <ResizablePanelGroup
+                direction="horizontal"
                 className={cn('flex w-[100%] md:col-span-3', {
                   'flex-col': fullScreen,
-                  'md:grid-cols-6': viewMode !== 'default',
                 })}
-                id="console-panel"
               >
-                <div
+                <ResizablePanel
+                  defaultSize={50}
+                  minSize={fullScreen ? 13 : 20.5}
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
-                  style={!fullScreen ? { width: codeConsoleWidth } : {}}
-                  id="code-console"
+                  ref={codeEditorRef}
                 >
                   <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
@@ -632,23 +607,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           <div className="p-2">
                             <div
                               className="hover:background py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('maximize_code')
-                                if (!fullScreen) {
-                                  setCodeConsoleWidth(
-                                    Number(consolePanelEle?.offsetWidth) -
-                                      minWidthResult,
-                                  )
-                                  setResultConsoleWidth(minWidthResult)
-                                } else {
-                                  setCodeConsoleHeight(
-                                    defaultHeightForCodeEditor * 2 -
-                                      resizerWidth -
-                                      minHeightResult,
-                                  )
-                                  setResultConsoleHeight(minHeightResult)
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.MAX)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.maximize_result',
@@ -656,23 +617,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('minimize_code')
-                                if (!fullScreen) {
-                                  setResultConsoleWidth(
-                                    Number(consolePanelEle?.offsetWidth) -
-                                      minWidthCode,
-                                  )
-                                  setCodeConsoleWidth(minWidthCode)
-                                } else {
-                                  setCodeConsoleHeight(minHeightCode)
-                                  setResultConsoleHeight(
-                                    defaultHeightForCodeEditor * 2 -
-                                      resizerWidth -
-                                      minHeightCode,
-                                  )
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.MIN)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.minimize_result',
@@ -680,16 +627,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('default')
-                                if (!fullScreen) {
-                                  setCodeConsoleWidth(defaultWidthConsole)
-                                  setResultConsoleWidth(defaultWidthConsole)
-                                } else {
-                                  setCodeConsoleHeight(defaultHeightConsole)
-                                  setResultConsoleHeight(defaultHeightConsole)
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.default_result',
@@ -698,9 +638,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             {isShowConsole ? (
                               <div
                                 className="py-1 hover:cursor-pointer"
-                                onClick={() => {
-                                  setIsShowConsole(false)
-                                }}
+                                onClick={() => setIsShowConsole(false)}
                               >
                                 {t(
                                   'cloud:custom_protocol.service.hide_console',
@@ -709,9 +647,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             ) : (
                               <div
                                 className="py-1 hover:cursor-pointer"
-                                onClick={() => {
-                                  setIsShowConsole(true)
-                                }}
+                                onClick={() => setIsShowConsole(true)}
                               >
                                 {t(
                                   'cloud:custom_protocol.service.view_console',
@@ -726,7 +662,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           onClick={() => setTypeInput('Run')}
                           src={btnRunCode}
                           alt="Submit"
-                          className="h-5 w-5 cursor-pointer"
+                          className="size-5 cursor-pointer"
                         />
                       </button>
                     </div>
@@ -734,33 +670,21 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   <CodeSandboxEditor
                     isShowLog={isShowConsole}
                     value={codeInput}
-                    className={`${fullScreen ? '' : '!block'}`}
+                    className="!block"
                     setCodeInput={setCodeInput}
                     isFullScreen={fullScreen}
-                    style={fullScreen ? { height: codeConsoleHeight } : {}}
                   />
-                </div>
-                {!fullScreen ? (
-                  <div
-                    className="h-[100%] cursor-col-resize"
-                    style={{ width: resizerWidth }}
-                    onMouseDown={handleResize}
-                  ></div>
-                ) : (
-                  <div
-                    className=" w-[100%] cursor-row-resize"
-                    style={{ height: resizerWidth }}
-                    onMouseDown={handleResize}
-                  ></div>
-                )}
-                <div
+                </ResizablePanel>
+                <ResizableHandle className="w-2" withHandle />
+                <ResizablePanel
+                  defaultSize={50}
+                  minSize={fullScreen ? 10.5 : 16.5}
                   className={cn('flex w-[100%] flex-col gap-2 md:col-span-1')}
-                  style={!fullScreen ? { width: resultConsoleWidth } : {}}
-                  id="result-console"
+                  ref={resultEditorRef}
                 >
                   <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                     <div className="flex gap-3">
-                      <p className="text-table-header">
+                      <p className="truncate text-table-header">
                         {t('cloud:custom_protocol.service.output')}
                       </p>
                     </div>
@@ -779,23 +703,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                           <div className="p-2">
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('maximize_result')
-                                if (!fullScreen) {
-                                  setResultConsoleWidth(
-                                    Number(consolePanelEle?.offsetWidth) -
-                                      minWidthCode,
-                                  )
-                                  setCodeConsoleWidth(minWidthCode)
-                                } else {
-                                  setCodeConsoleHeight(minHeightCode)
-                                  setResultConsoleHeight(
-                                    defaultHeightForCodeEditor * 2 -
-                                      resizerWidth -
-                                      minHeightCode,
-                                  )
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(resultEditorRef, PANEL_SIZE.MAX)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.maximize_result',
@@ -803,23 +713,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('minimize_result')
-                                if (!fullScreen) {
-                                  setCodeConsoleWidth(
-                                    Number(consolePanelEle?.offsetWidth) -
-                                      minWidthResult,
-                                  )
-                                  setResultConsoleWidth(minWidthResult)
-                                } else {
-                                  setResultConsoleHeight(minHeightResult)
-                                  setCodeConsoleHeight(
-                                    defaultHeightForCodeEditor * 2 -
-                                      resizerWidth -
-                                      minHeightResult,
-                                  )
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(resultEditorRef, PANEL_SIZE.MIN)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.minimize_result',
@@ -827,16 +723,9 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                             </div>
                             <div
                               className="py-1 hover:cursor-pointer"
-                              onClick={() => {
-                                setViewMode('default')
-                                if (!fullScreen) {
-                                  setCodeConsoleWidth(defaultWidthConsole)
-                                  setResultConsoleWidth(defaultWidthConsole)
-                                } else {
-                                  setCodeConsoleHeight(defaultHeightConsole)
-                                  setResultConsoleHeight(defaultHeightConsole)
-                                }
-                              }}
+                              onClick={() =>
+                                resizePanel(resultEditorRef, PANEL_SIZE.DEFAULT)
+                              }
                             >
                               {t(
                                 'cloud:custom_protocol.service.default_result',
@@ -853,17 +742,16 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     showRunButton={false}
                     setCodeInput={setCodeOutput}
                     isFullScreen={fullScreen}
-                    style={fullScreen ? { height: resultConsoleHeight } : {}}
                   />
-                </div>
-              </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
             </div>
             <div className="absolute bottom-6 right-6 flex gap-3">
               <img
                 onClick={handleFullScreen}
                 src={btnFullScreen}
                 alt="fullscreen-create-service"
-                className="h-5 w-5 cursor-pointer"
+                className="size-5 cursor-pointer"
               />
             </div>
           </div>
@@ -882,12 +770,12 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
           isLoading={isLoadingService}
           form="create-serviceThing"
           type="submit"
-          disabled={fullScreen}
+          disabled={fullScreen || isLoadingService}
           size="md"
           className="bg-primary-400"
           onClick={() => setTypeInput('Submit')}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }

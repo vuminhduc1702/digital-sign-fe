@@ -165,7 +165,7 @@ export function UpdateAdapter({
             type="submit"
             size="lg"
             isLoading={isLoading}
-            disabled={!formState.isDirty}
+            disabled={!formState.isDirty || isLoading}
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }

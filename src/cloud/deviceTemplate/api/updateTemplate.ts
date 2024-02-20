@@ -4,15 +4,18 @@ import type * as z from 'zod'
 
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
-import { toast } from 'sonner'
-
+import { type TransportConfig } from '../types'
 import { type AttrList} from '~/utils/schemaValidation'
+import { toast } from 'sonner'
 
 export type UpdateTemplateDTO = {
   data: {
     name: string
     rule_chain_id: string
+    transport_config?: TransportConfig
     attributes?: AttrList
+    thing_id: string
+    handle_msg_svc: string
   }
   templateId: string
 }

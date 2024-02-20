@@ -11,7 +11,6 @@ import storage from '~/utils/storage'
 
 import { type Org } from '../types'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
-
 import { SearchIcon } from '~/components/SVGIcons'
 
 type ComboBoxSelectOrgProps = {

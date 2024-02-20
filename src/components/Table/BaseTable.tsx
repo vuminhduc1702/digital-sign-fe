@@ -12,9 +12,9 @@ import {
 } from '@tanstack/react-table'
 import {
   Fragment,
-  createElement,
+  type HTMLProps,
+  useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -27,6 +27,8 @@ import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+
+import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 export function BaseTable<T extends Record<string, any>>({
@@ -45,6 +47,9 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText,
   refreshBtn,
   callbackParent,
+  rowSelection = {},
+  setRowSelection,
+  isHiddenCheckbox,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -61,6 +66,11 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText?: string
   refreshBtn?: boolean
   callbackParent?: () => void
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
+  isHiddenCheckbox?: boolean
 }) {
   const { t } = useTranslation()
 
@@ -68,12 +78,66 @@ export function BaseTable<T extends Record<string, any>>({
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
 
+  function IndeterminateCheckbox({
+    indeterminate,
+    className = '',
+    ...rest
+  }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+    const ref = useRef<HTMLInputElement>(null!)
+
+    useEffect(() => {
+      if (typeof indeterminate === 'boolean' && ref.current) {
+        ref.current.indeterminate = !rest.checked && indeterminate
+      }
+    }, [ref, indeterminate])
+
+    return (
+      <input
+        style={{
+          accentColor: '#e74c3c',
+        }}
+        type="checkbox"
+        ref={ref}
+        className={className + ' cursor-pointer'}
+        {...rest}
+      />
+    )
+  }
+
+  if (!isHiddenCheckbox) {
+    columns.unshift({
+      id: 'select',
+      header: info => (
+        <IndeterminateCheckbox
+          {...{
+            checked: info?.table.getIsAllRowsSelected(),
+            indeterminate: info?.table.getIsSomeRowsSelected(),
+            onChange: info?.table.getToggleAllRowsSelectedHandler(),
+          }}
+        />
+      ),
+      cell: ({ row }) => (
+        <div className="px-1">
+          <IndeterminateCheckbox
+            {...{
+              checked: row.getIsSelected(),
+              disabled: !row.getCanSelect(),
+              indeterminate: row.getIsSomeSelected(),
+              onChange: row.getToggleSelectedHandler(),
+            }}
+          />
+        </div>
+      ),
+    })
+  }
+
   const table = useReactTable({
     data,
     columns,
     state: {
       sorting,
       columnVisibility,
+      rowSelection,
     },
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -83,16 +147,18 @@ export function BaseTable<T extends Record<string, any>>({
     getRowCanExpand,
     onColumnVisibilityChange: setColumnVisibility,
     getExpandedRowModel: getExpandedRowModel(),
+    enableRowSelection: true, //enable row selection for all rows
+    onRowSelectionChange: setRowSelection,
+    getRowId: row => (row.id ? row.id : row.user_id),
   })
 
   const totalAttrs = total || data?.length
-  const { pageSize } = table.getState().pagination
+  const { pageSize, pageIndex } = table.getState().pagination
 
   useLayoutEffect(() => {
     table.setPageSize(10)
   }, [])
 
-  const pageIndexRef = useRef(0)
   const countLimitPaginationRef = useRef(1)
 
   function refresh() {
@@ -102,8 +168,6 @@ export function BaseTable<T extends Record<string, any>>({
       setIsRefresh(false)
     }, 1000)
   }
-
-  // TODO: Pagination Previous button is not working correctly
 
   return (
     <div
@@ -141,7 +205,14 @@ export function BaseTable<T extends Record<string, any>>({
                             }`}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            <div className="text-table-header relative flex items-center justify-center">
+                            <div
+                              className={cn(
+                                'text-table-header relative flex items-center justify-center',
+                                {
+                                  'px-3': headerGroup.headers.length > 8,
+                                },
+                              )}
+                            >
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -291,15 +362,6 @@ export function BaseTable<T extends Record<string, any>>({
                               </Fragment>
                             )
                           } else {
-                            // const cellStr = cell.getContext().getValue()
-                            // let cellStrTrigger
-                            // if (typeof cellStr == 'string') {
-                            //   cellStrTrigger =
-                            //     cellStr?.length > 10
-                            //       ? cellStr.slice(0, 10) + '...'
-                            //       : cellStr
-                            // }
-
                             return (
                               <td className="h-9" key={cell.id}>
                                 {flexRender(
@@ -308,6 +370,16 @@ export function BaseTable<T extends Record<string, any>>({
                                 )}
                               </td>
                             )
+
+                            // Tooltips all cell but some case can not
+                            // const cellStr = cell.getContext().getValue()
+                            // let cellStrTrigger
+                            // if (typeof cellStr == 'string') {
+                            //   cellStrTrigger =
+                            //     cellStr?.length > 10
+                            //       ? cellStr.slice(0, 10) + '...'
+                            //       : cellStr
+                            // }
                             // return typeof cellStr == 'string' &&
                             //   cellStr != 'true' &&
                             //   cellStr != 'false' &&
@@ -362,11 +434,9 @@ export function BaseTable<T extends Record<string, any>>({
       )}
       <div className="relative mt-4 flex items-center justify-between gap-2">
         <div
-          className={cn('flex gap-3', 
-          {
+          className={cn('flex gap-3', {
             'absolute bottom-5': isAbsoluteBtn,
-          }
-          )}
+          })}
         >
           <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
@@ -380,33 +450,30 @@ export function BaseTable<T extends Record<string, any>>({
           </span>
         </div>
         <div
-          className={cn('flex gap-x-2', 
-          {
+          className={cn('flex gap-x-2', {
             'absolute bottom-5 right-6': isAbsoluteBtn,
-          }
-          )}
+          })}
         >
           <Button
             className="rounded-l-md border-none"
             onClick={() => {
-              pageIndexRef.current--
               if (
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
-                (pageIndexRef.current + 1) * pageSize <=
+                (pageIndex + 1) * pageSize <=
                   limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
               table.previousPage()
             }}
-            disabled={pageIndexRef.current === 0 || isPreviousData}
+            disabled={pageIndex === 0 || isPreviousData}
             variant="secondaryLight"
           >
-            {'Prev'}
+            <ChevronLeftIcon className="h-4 w-4" />
           </Button>
           <Pagination
-            currentPage={pageIndexRef.current}
+            currentPage={pageIndex}
             totalCount={totalAttrs}
             pageSize={pageSize}
             table={table}
@@ -414,10 +481,9 @@ export function BaseTable<T extends Record<string, any>>({
           <Button
             className="rounded-r-md border-none"
             onClick={() => {
-              pageIndexRef.current++
               if (
                 limitPagination < totalAttrs &&
-                (pageIndexRef.current + 1) * pageSize >
+                (pageIndex + 1) * pageSize >
                   limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
@@ -426,12 +492,11 @@ export function BaseTable<T extends Record<string, any>>({
               table.nextPage()
             }}
             disabled={
-              (pageIndexRef.current + 1) * pageSize >= totalAttrs ||
-              isPreviousData
+              (pageIndex + 1) * pageSize >= totalAttrs || isPreviousData
             }
             variant="secondaryLight"
           >
-            {'Next'}
+            <ChevronRightIcon className="h-4 w-4" />
           </Button>
         </div>
       </div>

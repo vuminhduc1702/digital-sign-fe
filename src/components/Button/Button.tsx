@@ -61,12 +61,10 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           sizes[size],
           className,
         )}
-        disabled={showSpinner}
         {...props}
       >
         {showSpinner && (
           <Spinner
-            showSpinner={showSpinner}
             size="sm"
             variant="light"
             className="text-current"
