@@ -18,21 +18,21 @@ export function SectionOrder() {
       <div className="h-[100px]"></div>
       <div className="mb-[100px] h-[559px] bg-[#EA0033] max-xl:h-auto">
         <div
-          className="flex h-full w-full items-center justify-center bg-no-repeat p-20 opacity-100 lg:gap-10 lg:h-auto"
+          className="flex h-full w-full items-center justify-center bg-no-repeat p-20 opacity-100 lg:h-auto lg:gap-10"
           style={{
             backgroundImage: `url(${SectionOrderBG})`,
             backgroundSize: 'cover',
           }}
         >
-          <div className="flex h-full w-[992px] max-lg:h-auto max-lg:flex-col sm:w-[540px] xs2:w-[300px] xs2:gap-0 ">
+          <div className="flex  h-full max-xl:flex-col max-lg:h-auto xs2:w-[300px] xs2:gap-0 sm:w-[540px] lg:w-[800px] lg:items-center lg:gap-5 xl:w-[992px] xl:items-center xl:gap-12 ">
             <div className="w-1/2">
               <iframe
                 src="https://www.youtube.com/embed/KvNhWGB5nuk?rel=1&controls=1&showinfo=0&start=1&autoplay=0&enablejsapi=1"
-                className="h-full w-[496px] rounded-lg  sm:w-[500px] sm:h-[345px] xs:h-[245px] xs:w-[300px] xs2:h-[245px] xs2:w-[300px]"
+                className="h-full rounded-lg xs2:h-[245px] xs2:w-[300px] xs:h-[245px] xs:w-[300px] sm:h-[345px] sm:w-[500px] xl:w-[496px]"
               ></iframe>
             </div>
             <div className="ml-10 xs2:ml-0">
-              <div className="w-[373px] text-[35px] leading-[43px] text-white sm:text-[40px] sm:my-4 sm:w-[500px] xs2:w-[346px] xs2:text-[20px]">
+              <div className="w-[373px] text-[35px] leading-[43px] text-white xs2:w-[346px] xs2:text-[20px] sm:my-4 sm:w-[500px] sm:text-[40px]">
                 {t('landingpage:order.manage_platform')}
               </div>
               <div className="pt-5 text-[16px] leading-[16.8px] text-white">

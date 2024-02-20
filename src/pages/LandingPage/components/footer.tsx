@@ -101,7 +101,7 @@ export function SectionFooter() {
         </div>
       </div>
       <div className="flex h-[250px] max-lg:h-auto  justify-center bg-[#3A3A3A]">
-        <div className="w-[1040px] xs:w-[425px]">
+        <div className="w-[1040px] xs2:w-[360px] xs:w-[425px]">
           <div className="flex max-lg:flex-col max-lg:h-auto h-[200px] max-sm:mx-2 border-b border-[#4D4D4D] pt-[60px]">
             <div className="pr-[20px] pt-[5px] max-lg:my-5">
               <img src={LogoViettel} alt="" />
