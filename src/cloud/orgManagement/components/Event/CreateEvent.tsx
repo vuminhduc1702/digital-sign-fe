@@ -521,6 +521,8 @@ export function CreateEvent() {
             return { action_type: item.action_type }
           })
 
+          console.log(values.type)
+
           mutate({
             data: {
               project_id: projectId,
@@ -534,7 +536,7 @@ export function CreateEvent() {
               retry: values.retry,
               schedule: scheduleValue,
               interval,
-              type: getValues('type'),
+              type: values.type,
               cmd: {
                 thing_id: values?.cmd?.thing_id,
                 service_name: values?.cmd?.handle_service,
@@ -628,10 +630,10 @@ export function CreateEvent() {
                       <Checkbox
                         {...field}
                         checked={value}
-                        onCheckedChange={onChange}
-                        onClick={() => {
-                          if (getValues('type') === 'event') {
-                            setValue('type', 'schedule')
+                        onCheckedChange={(e) => {
+                          onChange(e)
+                          if (e) {
+                            setValue('type', 'event')
                           }
                         }}
                       />
