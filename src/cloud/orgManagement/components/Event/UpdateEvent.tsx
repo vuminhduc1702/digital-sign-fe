@@ -466,10 +466,10 @@ export function UpdateEvent({
                         <Checkbox
                           {...field}
                           checked={value}
-                          onCheckedChange={onChange}
-                          onClick={() => {
-                            if (getValues('type') === 'event') {
-                              setValue('type', 'schedule')
+                          onCheckedChange={(e) => {
+                            onChange(e)
+                            if (e) {
+                              setValue('type', 'event')
                             }
                           }}
                         />
