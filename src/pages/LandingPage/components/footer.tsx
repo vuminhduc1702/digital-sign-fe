@@ -30,7 +30,7 @@ export function SectionFooter() {
           <div className="ml-[40px] max-lg:ml-0 w-[250px] max-lg:w-[350px] pt-[60px] text-[48px] leading-[56.74px]  text-white">
             {t('landingpage:footer.client_support')}
           </div>
-          <div className="w-[750px] pl-[150px] max-md:pl-0 max-md:items-center max-md:flex max-md:flex-col pt-[20px]">
+          <div className="w-[750px] xs2:w-[250px] pl-[150px] max-md:pl-0 max-md:items-center max-md:flex max-md:flex-col pt-[20px]">
             <div className="flex max-md:flex-col py-2">
               <div className="h-[36px] w-1/3 text-[16px] font-normal leading-[20.8px] text-white">
                 {t('landingpage:footer.full_name')}
@@ -63,7 +63,7 @@ export function SectionFooter() {
                 <input
                   type="number"
                   maxLength={50}
-                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 "
+                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 xs2:mt-3 "
                 />
               </div>
             </div>
@@ -101,7 +101,7 @@ export function SectionFooter() {
         </div>
       </div>
       <div className="flex h-[250px] max-lg:h-auto  justify-center bg-[#3A3A3A]">
-        <div className="w-[1040px] max-lg:w-[800px] max-sm:w-[520px]">
+        <div className="w-[1040px] xs:w-[425px]">
           <div className="flex max-lg:flex-col max-lg:h-auto h-[200px] max-sm:mx-2 border-b border-[#4D4D4D] pt-[60px]">
             <div className="pr-[20px] pt-[5px] max-lg:my-5">
               <img src={LogoViettel} alt="" />
@@ -132,7 +132,6 @@ export function SectionFooter() {
           </div>
 
           <div className="relative flex h-[50px] items-center">
-            
             <div className="absolute right-0 max-sm:left-0 max-sm:mx-2 flex">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 {t('landingpage:footer.follow')}

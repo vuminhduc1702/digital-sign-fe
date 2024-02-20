@@ -82,7 +82,7 @@ export function SectionPackageData() {
             {t('landingpage:pack_of_data_M2M.title')}
           </p>
           <div className="flex justify-center">
-            <h3 className="px-[50px] text-center text-[35px] leading-[43px]">
+            <h3 className="w-[588px] px-[50px] text-center text-[35px] leading-[43px] xs:w-[400px] xs:px-0 ">
               {t('landingpage:pack_of_data_M2M.variety')}
             </h3>
           </div>
@@ -109,7 +109,7 @@ export function SectionPackageData() {
                     {t('landingpage:pack_of_data_M2M.NB_IoT')}
                   </p>
                 </div>
-                <div className="flex items-center px-10 max-md:py-5 max-lg:px-2">
+                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.subscription')}
                   </p>
@@ -156,8 +156,8 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="">
-                  <Carousel className="sm:w-[320px] md:w-[600px] lg:w-[900px] xl:w-[1200px] max-sm:w-[320px]">
+                <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px]">
+                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] ">
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
@@ -171,7 +171,7 @@ export function SectionPackageData() {
                           )
                           .map(item => (
                             <CarouselItem className="basis-1/4 ">
-                              <div className="rounded-lg shadow-md">
+                              <div className="w-60 rounded-lg shadow-md">
                                 <div className="flex justify-center rounded-t-lg bg-primary-400 py-2 text-center text-xl font-medium text-white">
                                   <Checkbox
                                     defaultChecked={

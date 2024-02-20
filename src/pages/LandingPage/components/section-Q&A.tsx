@@ -59,7 +59,7 @@ export function QandA() {
             {t('landingpage:Q_A.question')}
           </div>
           <div className="flex max-lg:flex-col max-lg:items-center w-full">
-            <div className="w-1/2 pr-[30px]">
+            <div className="w-1/2 pr-[30px] xs2:w-3/4">
               <Accordion type="single" collapsible ref={accordionRef_1}>
                 {items.map((item, idx) => (
                   <AccordionItem value={item.value} key={idx}>
@@ -88,7 +88,7 @@ export function QandA() {
                 ))}
               </Accordion>
             </div>
-            <div className="w-1/2 pl-[30px] max-lg:pl-0">
+            <div className="w-1/2 pl-[30px] xs2:w-3/4 xs2:pl-0">
               <Accordion type="single" collapsible ref={accordionRef_2}>
                 {items.map((item, idx) => (
                   <AccordionItem value={item.value} key={idx}>

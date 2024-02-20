@@ -13,21 +13,21 @@ export function SectionIntro({
   const { t } = useTranslation()
   return (
     <>
-      <div className="flex h-[620px] justify-center max-lg:mt-[72px] max-lg:h-auto max-md:mt-[370px] max-sm:mt-[200px]  ">
-        <div className="max-xs:w-[340px] flex w-[1040px] flex-row  rounded-2xl bg-white shadow-md max-lg:h-auto  max-lg:flex-col-reverse">
+      <div className="flex h-[620px] justify-center xs2:mt-[690px] xs:mt-[640px] sm:mt-[2px] sm:h-auto    ">
+        <div className="flex w-[1040px] flex-row rounded-2xl bg-white shadow-md  max-lg:flex-col-reverse xs2:h-auto xs2:w-[340px] xs:h-auto xs:w-[340px] sm:h-auto sm:w-[510px] md:w-[700px] lg:w-[900px] xl:w-[1024px]">
           <div className="basis-1/2 px-4">
-            <div className="max-xs:mx-0 max-xs:pl-0 pl-[40px] pt-[50px] max-lg:mx-[40px] max-md:mx-[40px] max-sm:mx-[40px]">
-              <p className="text-primary-400 text-xl font-bold">
+            <div className="pl-[40px] pt-[50px] xs2:mx-[40px] xs2:pl-0">
+              <p className="text-xl font-bold text-primary-400 xs2:text-[32px]">
                 {t('landingpage:introduction')}
               </p>
             </div>
-            <div className="xs:mx-0 max-lg:mx-[40px] max-md:mx-[40px] max-sm:mx-[40px]">
-              <div className="max-xs:pl-0 pl-[40px] pt-[13px] text-3xl leading-tight text-black">
+            <div className="  xs2:mx-[40px]">
+              <div className="pl-[40px] pt-[13px] text-3xl leading-tight text-black max-xs:pl-0">
                 {t(
                   'landingpage:introduction_section.service_transmit_data_accurate',
                 )}
               </div>
-              <div className="max-xs:pl-0 max-xs:w-[90%] pl-[40px] pt-[20px]">
+              <div className="pl-[40px] pt-[20px] xs2:w-[100%] xs2:pl-0">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
                     width={24}
@@ -67,10 +67,10 @@ export function SectionIntro({
                   </p>
                 </div>
               </div>
-              <div className="max-xs:pl-0 pl-[40px] pt-[15px] max-lg:pb-[37px]">
+              <div className="pl-[40px] pt-[15px] xs2:pb-[37px] xs2:pl-0">
                 <Button
                   type="button"
-                  className="bg-primary-400 rounded-r-lg rounded-tl-lg border-none hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
                   endIcon={
                     <ArrowRightUpLine
@@ -88,7 +88,7 @@ export function SectionIntro({
           </div>
           <div className="flex h-full w-full basis-1/2 items-center justify-center">
             <div
-              className="max-xs:w-[80%] max-xs:h-[255px] h-[375px] w-[502px]  bg-no-repeat px-2 "
+              className=": h-[375px] w-[502px] bg-no-repeat  px-2 xs2:h-[255px] xs2:w-[340px] xs:h-[255px] xs:w-[340px]"
               style={{
                 backgroundImage: `url(${Group45})`,
                 backgroundSize: 'contain',

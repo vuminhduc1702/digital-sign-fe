@@ -72,19 +72,6 @@ export default {
         xl: '1279.98px',
         // => @media (min-width: 1536px) { ... }
         '2xl': '1535.98px',
-
-        // => @media (max-width: 399.98px) { ... }
-        'max-xs': { max: '399.98px' },
-        // => @media (max-width: 575.98px) { ... }
-        'max-sm': { max: '575.98px' },
-        // => @media (max-width: 767.98px) { ... }
-        'max-md': { max: '767.98px' },
-        // => @media (max-width: 1024px) { ... }
-        'max-lg': { max: '1023.98px' },
-        // => @media (max-width: 1280px) { ... }
-        'max-xl': { max: '1279.98px' },
-        // => @media (max-width: 1536px) { ... }
-        'max-2xl': { max: '1535.98px' },
       },
       keyframes: {
         slideDown: {
