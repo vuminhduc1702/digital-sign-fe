@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { InteractionMode, StaticTreeDataProvider, Tree, TreeItem, TreeItemIndex, ControlledTreeEnvironment } from "react-complex-tree"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { InteractionMode, StaticTreeDataProvider, Tree, TreeItem, TreeItemIndex, UncontrolledTreeEnvironment } from "react-complex-tree"
 import 'react-complex-tree/lib/style-modern.css'
-import { Org } from "~/layout/MainLayout/types";
+import { type Org } from "~/layout/MainLayout/types";
+import { InputField } from "../Form";
 
 type ComplexTreeProps = {
   items: Org[],
-  selectOrg: (item: any) => void,
+  selectOrg: (item: Org) => void,
   currentValue: string
 }
 const ComplexTree = ({
@@ -13,12 +14,13 @@ const ComplexTree = ({
   selectOrg,
   currentValue
 }: ComplexTreeProps) => {
-  const [selectedItems, setSelectedItems] = useState();
-  const [focusedItem, setFocusedItem] = useState<TreeItemIndex | string>();
-  const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([]);
+  const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([])
+  const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([])
   const [dataItem, setDataItem] = useState<Record<TreeItemIndex, TreeItem>>({})
   let treeData = {}
-  let parentArr: Org[] = []
+
+  const [search, setSearch] = useState('');
+  const tree = useRef(null)
 
   function parseData(data: Org[]) {
     if (data) {
@@ -49,7 +51,7 @@ const ComplexTree = ({
         [data.id]: {
           index: data.id,
           data: { detailData: data.id, name: data.name },
-          parent: data.parent_name,
+          parent: data.org_id,
           isFolder: true,
           children: childrenArr
         },
@@ -60,7 +62,7 @@ const ComplexTree = ({
         [data.id]: {
           index: data.id,
           data: { detailData: data.id, name: data.name },
-          parent: data.parent_name,
+          parent: data.org_id,
           isFolder: false,
         }
       }
@@ -69,11 +71,57 @@ const ComplexTree = ({
     return treeData
   }
 
+  const dataProvider = useMemo(
+    () =>
+      new StaticTreeDataProvider(dataItem, (item, data) => ({
+        ...item,
+        data,
+      })),
+    []
+  );
+
+  const findItemPath = useCallback(
+    async (search, searchRoot = 'root') => {
+      const item = await dataProvider.getTreeItem(searchRoot);
+      if (item.data.toLowerCase().includes(search.toLowerCase())) {
+        return [item.index];
+      }
+      const searchedItems = await Promise.all(
+        item.children && item.children.map(child => findItemPath(search, child)) || []
+      );
+      const result = searchedItems.find(item => item !== null);
+      if (!result) {
+        return null;
+      }
+      return [item.index, ...result];
+    },
+    [dataProvider]
+  )
+
+  const find = useCallback(
+    e => {
+      e.preventDefault();
+      if (search) {
+        findItemPath(search).then(path => {
+          if (path) {
+            tree.current
+              .expandSubsequently(path.slice(0, path.length - 1))
+              .then(() => {
+                tree.current.selectItems([path[path.length - 1]]);
+                tree.current.focusItem(path[path.length - 1]);
+              });
+          }
+        });
+      }
+    },
+    [findItemPath, search]
+  );
+
   // function getParent(item: any) {
   //   if (item && dataItem[item] && dataItem[item].parent) {
-  //     const newItem = dataItem[dataItem[item].data].parent
-  //     parentArr = parentArr.concat(dataItem[item].parent)
-  //     if (newItem) {
+  //     const newItem = dataItem[dataItem[item].data.detailData].parent
+  //     parentArr.current = parentArr.current.concat(dataItem[item].parent)
+  //     if (newItem && newItem != '') {
   //       getParent(newItem)
   //     }
   //   } else if (!dataItem[item] || !dataItem[item].parent) {
@@ -88,40 +136,41 @@ const ComplexTree = ({
     }
   }, [items])
 
-  // useEffect(() => {
-  //   if (selectedItems) {
-  //     const expanded = getParent(selectedItems)
-  //     setExpandedItems(expanded)
-  //   } else {
-  //     setExpandedItems(getParent(currentValue))
-  //   }
-  // }, [selectedItems, currentValue])
+  useEffect(() => {
+    if (currentValue) {
+    }
+  }, [currentValue])
 
   return (
     <>
-      <ControlledTreeEnvironment
+      <form onSubmit={find}>
+        <div className="flex">
+          <InputField
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search..."
+          />
+        </div>
+      </form>
+      <UncontrolledTreeEnvironment
         viewState={{
           'complex-tree': {
-            focusedItem,
-            expandedItems: expandedItems,
-            selectedItems: selectedItems ? [selectedItems] : [],
+            focusedItem: currentValue ? currentValue : selectedItems?.toString(),
+            expandedItems,
+            selectedItems,
           }
         }}
         getItemTitle={item => item.data.name}
-        items={dataItem}
-        onFocusItem={item => setFocusedItem(item.index)}
-        onExpandItem={item => setExpandedItems([...expandedItems, item.index])}
-        onCollapseItem={item =>
-          setExpandedItems(expandedItems.filter((expandedItemIndex: any) => expandedItemIndex !== item.index))
-        }
+        dataProvider={new StaticTreeDataProvider(dataItem, (item, data) => ({ ...item, data }))}
         onSelectItems={(items: any) => {
           setSelectedItems(items)
           selectOrg(items)
         }}
         defaultInteractionMode={InteractionMode.ClickArrowToExpand}
+        canSearchByStartingTyping={true}
       >
-        <Tree treeId={'complex-tree'} rootItem={'root'}></Tree>
-      </ControlledTreeEnvironment>
+        <Tree treeId={'complex-tree'} rootItem={'root'} ref={tree}></Tree>
+      </UncontrolledTreeEnvironment>
     </>
   )
 }
