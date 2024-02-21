@@ -21,7 +21,7 @@ import { API_URL } from '~/config'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
-
+import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
 function LPnavigation() {
   const navigate = useNavigate()
@@ -62,47 +62,10 @@ function LPnavigation() {
 
   return (
     <div className="px-8 py-7">
-      <div className="flex w-full  lg:justify-center ">
-        <div className="flex w-full lg:justify-center ">
-          <div className="flex justify-start max-lg:flex-col">
-            <div
-              className="flex min-w-fit px-3 py-5 text-base font-bold text-white lg:items-center lg:justify-center"
-              onClick={() => scrollToIntro(introRef)}
-            >
-              <button>{t('landingpage:introduction')}</button>
-            </div>
-            <div
-              className="flex min-w-fit px-3 py-5 text-base font-bold text-white lg:items-center lg:justify-center"
-              onClick={() => scrollToIntro(PackOfDataRef)}
-            >
-              <button>{t('landingpage:pack_of_data')}</button>
-            </div>
-            <div
-              className="flex min-w-fit px-3 py-5 text-base font-bold text-white lg:items-center lg:justify-center"
-              onClick={() => scrollToIntro(ProductRef)}
-            >
-              <button>{t('landingpage:product')}</button>
-            </div>
-            <div
-              className="flex min-w-fit px-3 py-5 text-base font-bold text-white lg:items-center lg:justify-center"
-              onClick={() => scrollToIntro(OrderRef)}
-            >
-              <button>{t('landingpage:Platform_IoT')}</button>
-            </div>
-            <div
-              className="flex min-w-fit items-center justify-center px-3 text-base font-bold text-white max-lg:py-5"
-              onClick={() => scrollToIntro(Order1Ref)}
-            >
-              <button>{t('landingpage:CMP_system')}</button>
-            </div>
-            <div
-              className="flex min-w-fit px-3 py-5 text-base font-bold text-white lg:items-center lg:justify-center"
-              onClick={() => scrollToIntro(FAQRef)}
-            >
-              <button>{t('landingpage:FAQ')}</button>
-            </div>
-          </div>
-        </div>
+      <div className="mb-[20px] w-[140px]">
+        <a href="/" className=" text-white ">
+          <img src={LogoViettel} alt="" />
+        </a>
       </div>
       {showSpinner && userInfoData != null ? (
         <div className="flex items-center justify-center">
@@ -135,7 +98,7 @@ function LPnavigation() {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild className="flex items-center gap-x-2 ">
             <div className="flex lg:ml-auto">
-              <div className="flex w-max max-lg:px-3 py-5">
+              <div className="flex w-max py-5 max-lg:px-3">
                 <img
                   src={`${
                     userInfoData?.profile?.profile_image !== ''
@@ -170,7 +133,7 @@ function LPnavigation() {
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="z-50 data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+              className="z-50 flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={5}
             >
               <Link
@@ -178,16 +141,16 @@ function LPnavigation() {
                 target="_blank"
                 className="cursor-pointer"
               >
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   {t('user:cmp')}
                 </DropdownMenu.Item>
               </Link>
               <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   {t('user:user_info')}
                 </DropdownMenu.Item>
               </Link>
-              <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 {userDataFromStorage ? (
                   <p
                     className="cursor-pointer"
@@ -199,7 +162,7 @@ function LPnavigation() {
                   </p>
                 ) : null}
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                   {t('user:logout')}
                 </p>
@@ -208,7 +171,49 @@ function LPnavigation() {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       )}
-      
+
+      <div className="flex w-full  lg:justify-center ">
+        <div className="flex w-full lg:justify-center ">
+          <div className="flex justify-start max-lg:flex-col">
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
+              onClick={() => scrollToIntro(introRef)}
+            >
+              <button>{t('landingpage:introduction')}</button>
+            </div>
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white  "
+              onClick={() => scrollToIntro(PackOfDataRef)}
+            >
+              <button>{t('landingpage:pack_of_data')}</button>
+            </div>
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
+              onClick={() => scrollToIntro(ProductRef)}
+            >
+              <button>{t('landingpage:product')}</button>
+            </div>
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
+              onClick={() => scrollToIntro(OrderRef)}
+            >
+              <button>{t('landingpage:Platform_IoT')}</button>
+            </div>
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
+              onClick={() => scrollToIntro(Order1Ref)}
+            >
+              <button>{t('landingpage:CMP_system')}</button>
+            </div>
+            <div
+              className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
+              onClick={() => scrollToIntro(FAQRef)}
+            >
+              <button>{t('landingpage:FAQ')}</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

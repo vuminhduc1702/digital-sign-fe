@@ -10,7 +10,7 @@ export function SectionOrder1() {
   return (
     <>
       {/* <div className="h-[100px] xs:h-0"></div> */}
-      <div className="flex h-[422px] justify-center max-lg:my-[0px]  max-lg:h-auto">
+      <div className="flex h-[422px] justify-center max-lg:my-[0px] max-lg:h-auto">
         <div className="flex h-full w-[1040px] max-lg:gap-20 max-md:flex-col-reverse  max-md:items-center xs:mx-[10px] xs:w-[500px] sm:w-[540px]">
           <div className="flex w-1/2 xs2:flex-col xs2:items-center xs:w-[400px]  xs:flex-col  xs:items-center  sm:w-[520px]">
             <div className="w-[320px]  text-[35px] leading-[43px] text-black xs2:w-[300px] xs:w-[300px] sm:mt-16 sm:w-[520px] ">

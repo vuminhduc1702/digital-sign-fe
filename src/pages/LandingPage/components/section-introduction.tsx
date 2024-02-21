@@ -13,7 +13,7 @@ export function SectionIntro({
   const { t } = useTranslation()
   return (
     <>
-      <div className="flex h-[620px] justify-center xs2:mt-[690px] xs:mt-[640px] sm:mt-[2px] sm:h-auto    ">
+      <div className="flex h-[620px] justify-center  xs2:mt-[2px] xs2:h-auto xs:mt-[47px] sm:mt-[-42px] sm:h-auto lg:mt-[-127px] xl:mt-[-147px]">
         <div className="flex w-[1040px] flex-row rounded-2xl bg-white shadow-md  max-lg:flex-col-reverse xs2:h-auto xs2:w-[340px] xs:h-auto xs:w-[340px] sm:h-auto sm:w-[510px] md:w-[700px] lg:w-[900px] xl:w-[1024px]">
           <div className="basis-1/2 px-4">
             <div className="pl-[40px] pt-[50px] xs2:mx-[40px] xs2:pl-0">

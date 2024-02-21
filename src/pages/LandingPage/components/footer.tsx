@@ -101,7 +101,7 @@ export function SectionFooter() {
         </div>
       </div>
       <div className="flex h-[250px] justify-center  bg-[#3A3A3A] max-lg:h-auto">
-        <div className="w-[1040px] xs:w-[425px]">
+        <div className="w-[1040px] xs2:w-[360px] xs:w-[425px]">
           <div className="flex h-[200px] border-b border-[#4D4D4D] pt-[60px] max-lg:h-auto max-lg:flex-col max-sm:mx-2">
             <div className="pr-[20px] pt-[5px] max-lg:my-5">
               <img src={LogoViettel} alt="" />
@@ -114,7 +114,7 @@ export function SectionFooter() {
             <div className="pl-[20px] max-lg:pl-0">
               <a
                 className="flex pb-[15px] pt-[10px]"
-                href="mailto:cskh@viettel.com.vn"
+                href="mailto:quyln3@viettel.com.vn"
               >
                 <MailSendFill width={33} height={33} viewBox="0 0 33 33" />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">

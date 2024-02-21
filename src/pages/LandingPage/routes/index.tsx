@@ -86,7 +86,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
   return (
     <ContentLayout title={t('landingpage:title')}>
-      <div className="h-[500px] xs2:h-[640px] xs:h-[670p]">
+      <div className="h-[500px] xs2:h-[720px] xs:h-[670p]">
         <div
           className="h-full"
           style={{
@@ -95,15 +95,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className="px-4 py-4">
-            <div className="flex h-20 w-full px-48 max-lg:justify-between">
+            <div className=" flex h-20 w-full xl:px-48 max-lg:justify-between xs2:px-[0px] ">
               <div className="flex items-center max-lg:hidden">
-                <a href="/" className="  text-white">
+                <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
                 </a>
               </div>
               {hasSideBar ? (
                 <button
-                  className=" ml-[-200px] px-4 text-white lg:hidden"
+                  className=" ml-[5px] px-4 text-white xs2:w-[300px] xs2:px-0 lg:hidden"
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
@@ -282,7 +282,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               )}
             </div>
 
-            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[40px]">
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xl:pt-[57px] xs2:pt-[24px]">
               <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
@@ -299,12 +299,12 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className=" text-center text-7xl font-bold leading-[54px] xs2:text-[37.5px]  xs:px-[8px] lg:px-[170px]">
+              <h2 className=" text-center xl:text-7xl font-bold leading-[54px] xs2:text-[35px]  xs:px-[8px] lg:px-[170px]">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-10 flex w-1/2 items-center justify-center text-white max-xs:w-[270px]">
+              <div className="mt-10 flex xl:w-1/2 items-center justify-center text-white md:w-[470px] xs2:w-[270px] xs:w-[270px]">
                 <p className="text-2xl ">
                   Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
                   ứng dụng.
