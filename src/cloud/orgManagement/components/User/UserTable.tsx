@@ -157,7 +157,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -219,7 +219,7 @@ export function UserTable({ data, ...props }: UserInfoTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

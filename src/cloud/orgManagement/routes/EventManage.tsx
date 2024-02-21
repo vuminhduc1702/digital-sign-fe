@@ -15,6 +15,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { type EventType } from '../types'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
 import { Button } from '~/components/Button'
+import { flattenData } from '~/utils/misc'
 
 export function EventManage() {
   const { t } = useTranslation()
@@ -23,7 +24,6 @@ export function EventManage() {
   const [filteredComboboxData, setFilteredComboboxData] = useState<EventType[]>(
     [],
   )
-
   const params = useParams()
 
   const orgId = params.orgId as string
@@ -68,6 +68,26 @@ export function EventManage() {
     }
     return acc
   }, [])
+
+  // flatten the data
+  const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
+    eventData?.events,
+    [
+      'id',
+      'name',
+      'group_name',
+      'onClick',
+      'status',
+      'interval',
+      'retry',
+      'schedule',
+      'action',
+      'condition',
+      'org_id',
+      'group_id',
+      'cmd',
+    ],
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -121,16 +141,16 @@ export function EventManage() {
               />
             )}
             <CreateEvent />
-            {isSuccess ? (
+            {/* {isSuccess ? (
               <ComboBoxSelectEvent
                 data={eventData}
                 setFilteredComboboxData={setFilteredComboboxData}
               />
-            ) : null}
+            ) : null} */}
           </div>
         </div>
         <EventTable
-          data={filteredComboboxData}
+          data={eventFlattenData}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

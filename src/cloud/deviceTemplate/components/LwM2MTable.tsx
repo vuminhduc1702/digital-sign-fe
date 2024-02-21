@@ -8,12 +8,12 @@ import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 
 import { type ModuleConfig } from '../types'
+import { BaseTablePagination } from '~/types'
 
 type LwM2MTableProps = {
-  module_config: ModuleConfig[]
-}
-
-export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
+  moduleConfig: ModuleConfig[]
+} 
+export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const [showNoTemplateMessage, setShowNoTemplateMessage] = useState(false)
@@ -23,7 +23,7 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
       setShowNoTemplateMessage(true)
     }, 500)
     return () => clearTimeout(timer)
-  }, [module_config])
+  }, [moduleConfig])
   const templateId = params.templateId as string
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
@@ -75,10 +75,10 @@ export function LwM2MTable({ module_config, ...props }: LwM2MTableProps) {
     ],
     [],
   )
-  return module_config != null && module_config?.length !== 0 ? (
+  return moduleConfig != null && moduleConfig?.length !== 0 ? (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={module_config}
+      data={moduleConfig}
       columns={columns}
       {...props}
     />

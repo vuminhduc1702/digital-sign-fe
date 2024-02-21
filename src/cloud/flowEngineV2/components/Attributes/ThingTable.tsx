@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,12 +16,15 @@ import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
-import { type EntityThing } from '~/cloud/customProtocol'
+import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+
+import { flattenData } from '~/utils/misc'
 
 function ThingTableContextMenu({
   id,
@@ -122,12 +125,13 @@ type ThingTableProps = {
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -178,7 +182,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

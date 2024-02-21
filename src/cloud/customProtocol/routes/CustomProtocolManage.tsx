@@ -6,12 +6,12 @@ import storage from '~/utils/storage'
 import { useGetAdapters } from '../api/adapter'
 import {
   AdapterTable,
-  ComboBoxSelectAdapter,
   CreateAdapter,
 } from '../components'
 import { ContentLayout } from '~/layout/ContentLayout'
 
 import { type Adapter } from '../types'
+import { flattenData } from '~/utils/misc'
 
 export function CustomProtocolManage() {
   const { t } = useTranslation()
@@ -32,6 +32,23 @@ export function CustomProtocolManage() {
     config: { keepPreviousData: true },
   })
 
+  // flatten the data
+  const { acc: adapterFlattenData, extractedPropertyKeys } = flattenData(
+    adapterData?.adapters,
+    [
+      'id',
+      'name',
+      'protocol',
+      'thing_id',
+      'handle_service',
+      'host',
+      'port',
+      'content_type',
+      'configuration',
+      'schema',
+    ],
+  )
+
   return (
     <ContentLayout title={t('cloud:custom_protocol.title')}>
       <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
@@ -39,17 +56,11 @@ export function CustomProtocolManage() {
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateAdapter />
-            {isSuccess ? (
-              <ComboBoxSelectAdapter
-                data={adapterData}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null}
+            {/* dummyInput */}
           </div>
         </div>
         <AdapterTable
-          data={filteredComboboxData}
+          data={adapterFlattenData}
           offset={offset}
           setOffset={setOffset}
           total={adapterData?.total ?? 0}

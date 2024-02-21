@@ -5,11 +5,11 @@ import { BaseTable } from '~/components/Table'
 import { type TransportConfigAttribute } from '../types'
 
 type AttrLwM2MTableProps = {
-  attribute_info: TransportConfigAttribute[]
+  attributeInfo: TransportConfigAttribute[]
 }
 
 export function AttrLwM2MTable({
-  attribute_info,
+  attributeInfo,
   ...props
 }: AttrLwM2MTableProps) {
   const { t } = useTranslation()
@@ -20,7 +20,7 @@ export function AttrLwM2MTable({
       setShowNoTemplateMessage(true)
     }, 500)
     return () => clearTimeout(timer)
-  }, [attribute_info])
+  }, [attributeInfo])
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({

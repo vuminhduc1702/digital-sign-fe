@@ -150,7 +150,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -200,7 +200,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [data],
+    [data, props.offset],
   )
 
   return (

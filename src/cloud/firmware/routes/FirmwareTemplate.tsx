@@ -3,7 +3,6 @@ import { useState } from 'react'
 import storage from '~/utils/storage'
 
 import {
-  ComboBoxSelectFirmWare,
   CreateFirmWare,
   FirmWareTable,
 } from '../components/Firmware'
@@ -11,6 +10,7 @@ import TitleBar from '~/components/Head/TitleBar'
 import { useTranslation } from 'react-i18next'
 import { useGetFirmwares } from '../api/firmwareAPI'
 import { type FirmWare } from '../types'
+import { flattenData } from '~/utils/misc'
 
 export function FirmwareTemplate() {
   const { t } = useTranslation()
@@ -27,7 +27,24 @@ export function FirmwareTemplate() {
   } = useGetFirmwares({
     projectId,
     config: { keepPreviousData: true },
+    offset
   })
+
+  const { acc: firmwareFlattenData, extractedPropertyKeys } = flattenData(
+    firmwareData?.data,
+    [
+      'id',
+      'name',
+      'template_name',
+      'version',
+      'created_time',
+      'tag',
+      'created_by',
+      'template_id',
+      'email',
+      'description',
+    ],
+  )
 
   return (
     <>
@@ -36,17 +53,11 @@ export function FirmwareTemplate() {
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateFirmWare />
-            {isSuccess ? (
-              <ComboBoxSelectFirmWare
-                data={firmwareData}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null}
+            {/* dummyInput */}
           </div>
         </div>
         <FirmWareTable
-          data={filteredComboboxData}
+          data={firmwareFlattenData}
           offset={offset}
           setOffset={setOffset}
           total={firmwareData?.total ?? 0}

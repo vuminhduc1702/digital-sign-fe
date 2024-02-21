@@ -26,6 +26,10 @@ import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
+import { useGetAttrs } from '../api/attrAPI'
+import { useAttrLog } from '../api/attrAPI/getAttrLog'
+import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
+import { flattenData } from '~/utils/misc'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -33,14 +37,55 @@ export function DeviceDetail() {
 
   const params = useParams()
   const deviceId = params.deviceId as string
+  const groupId = params.groupId as string
+  const projectId = params.projectId as string
+  const entityType = 'GROUP'
 
-  const [filteredAttrComboboxData, setFilteredAttrComboboxData] = useState<
-    Attribute[]
-  >([])
   const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
     useState<DeviceAttrLog[]>([])
   const [filteredMQTTLogComboboxData, setFilteredMQTTLogComboboxData] =
     useState<MQTTMessage[]>([])
+
+  const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
+
+  const { acc: attrFlattenData } = flattenData(
+    attrsData?.attributes,
+    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
+  )
+
+  const { data: deviceAttrData } = useAttrLog({
+    entityId: deviceId,
+    entityType: 'DEVICE',
+    config: {
+      suspense: false,
+    },
+  })
+
+  const { acc: attrLogFlattenData } = flattenData(
+    deviceAttrData?.logs,
+    ['ts', 'attribute_key', 'value'],
+  )
+
+  const { data: mqttLogData } = useMQTTLog({
+    device_id: deviceId,
+    project_id: projectId,
+    config: {
+      suspense: false,
+    },
+  })
+
+  const { acc: mqttMessageFlattenData, extractedPropertyKeys } = flattenData(
+    mqttLogData?.messages,
+    [
+      'project_id',
+      'created_by',
+      'owner',
+      'topic',
+      'device_id',
+      'payload_as_string',
+      'ts',
+    ],
+  )
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -60,13 +105,13 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = filteredAttrComboboxData.reduce((acc, curr, index) => {
+  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo = filteredAttrComboboxData.reduce((acc, curr, index) => {
+  const aoo = attrFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       const temp = {
         [t('table:no')]: (index + 1).toString(),
@@ -196,15 +241,11 @@ export function DeviceDetail() {
                     />
                   )}
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
-                  <ComboBoxSelectAttr
-                    entityId={deviceId}
-                    entityType="DEVICE"
-                    setFilteredComboboxData={setFilteredAttrComboboxData}
-                  />
+                  {/* dummyInput */}
                 </div>
               </div>
               <AttrTable
-                data={filteredAttrComboboxData}
+                data={attrFlattenData}
                 entityId={deviceId}
                 entityType="DEVICE"
                 rowSelection={rowSelection}
@@ -219,13 +260,11 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  <ComboBoxAttrLog
-                    setFilteredComboboxData={setFilteredAttrLogComboboxData}
-                  />
+                  {/* dummyInput */}
                 </div>
               </div>
               <AttrLogTable
-                data={filteredAttrLogComboboxData}
+                data={attrLogFlattenData}
                 entityId={deviceId}
                 entityType="DEVICE"
               />
@@ -238,13 +277,11 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  <ComboBoxMQTTLog
-                    setFilteredComboboxData={setFilteredMQTTLogComboboxData}
-                  />
+                  {/* dummyInput */}
                 </div>
               </div>
               <MQTTMessageLogTable
-                data={filteredMQTTLogComboboxData}
+                data={mqttMessageFlattenData}
                 entityId={deviceId}
                 entityType="DEVICE"
               />
