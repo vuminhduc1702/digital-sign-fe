@@ -23,19 +23,21 @@ export function SectionFooter() {
   return (
     <>
       <div
-        className="flex h-[357px] max-lg:h-auto  justify-center bg-no-repeat"
-        style={{ backgroundImage: `url(${BgFooter})`, backgroundSize:'cover' }}
+        className="flex h-[357px] md:h-auto sm:h-auto justify-center bg-no-repeat"
+        style={{ backgroundImage: `url(${BgFooter})`,
+        backgroundSize: 'cover',
+       }}
       >
-        <div className="flex max-lg:flex-col max-lg:items-center max-lg:h-auto max-md:item-center h-fit w-[1040px]">
-          <div className="ml-[40px] max-lg:ml-0 w-[250px] max-lg:w-[350px] pt-[60px] text-[48px] leading-[56.74px]  text-white">
+        <div className="flex h-fit xl:w-[1040px] lg:w-[800px] xl:flex-row lg:flex-row md:flex-col md:items-center md:w-[760px] sm:w-[570px] sm:flex-col sm:items-center">
+          <div className="ml-[40px] xl:w-[350px] md:w-[400px] pt-[60px] text-[48px] leading-[56.74px] text-white">
             {t('landingpage:footer.client_support')}
           </div>
-          <div className="w-[750px] xs2:w-[250px] pl-[150px] max-md:pl-0 max-md:items-center max-md:flex max-md:flex-col pt-[20px]">
-            <div className="flex max-md:flex-col py-2">
+          <div className="w-[750px] lg:w-[600px] pl-[150px] pt-[20px]">
+            <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] font-normal leading-[20.8px] text-white">
                 {t('landingpage:footer.full_name')}
               </div>
-              <div className=''>
+              <div>
                 <input
                   type="text"
                   maxLength={50}
@@ -43,7 +45,7 @@ export function SectionFooter() {
                 />
               </div>
             </div>
-            <div className="flex max-md:flex-col py-2">
+            <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
                 {t('landingpage:footer.email')}
               </div>
@@ -55,7 +57,7 @@ export function SectionFooter() {
                 />
               </div>
             </div>
-            <div className="flex max-md:flex-col py-2">
+            <div className="flex py-2">
               <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
                 {t('landingpage:footer.phone_number')}
               </div>
@@ -63,12 +65,12 @@ export function SectionFooter() {
                 <input
                   type="number"
                   maxLength={50}
-                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 xs2:mt-3 "
+                  className="h-[36px] w-[300px] rounded-md border-[0.5px] border-solid border-[#9F9F9F] bg-[#F9F9F9] opacity-60 "
                 />
               </div>
             </div>
-            <div className="flex max-md:flex-col pt-2">
-              <div className="h-[36px] w-1/3 text-[16px] max-md:mb-6 leading-[20.8px] text-white">
+            <div className="flex pt-2">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
                 {t('landingpage:footer.support_content')}
               </div>
               <div>
@@ -86,7 +88,7 @@ export function SectionFooter() {
                 </p>
               </div>
             </div>
-            <div className="flex max-md:w-[300px] max-lg:pb-[16px]">
+            <div className="flex">
               <div className="w-1/3"></div>
               <div className="flex w-[300px] justify-end">
                 <Button
@@ -100,19 +102,19 @@ export function SectionFooter() {
           </div>
         </div>
       </div>
-      <div className="flex h-[250px] max-lg:h-auto  justify-center bg-[#3A3A3A]">
-        <div className="w-[1040px] xs2:w-[360px] xs:w-[425px]">
-          <div className="flex max-lg:flex-col max-lg:h-auto h-[200px] max-sm:mx-2 border-b border-[#4D4D4D] pt-[60px]">
-            <div className="pr-[20px] pt-[5px] max-lg:my-5">
+      <div className="flex xl:flex-row h-[250px] justify-center bg-[#3A3A3A]">
+        <div className="w-[1040px]">
+          <div className="flex h-[200px] border-b border-[#4D4D4D] pt-[60px]">
+            <div className="pr-[20px] pt-[5px]">
               <img src={LogoViettel} alt="" />
             </div>
             <div>
-              <div className="w-[491px] max-sm:w-[320px] pb-[10px] text-[20px] leading-[23.64px] text-white">
+              <div className="w-[491px] pb-[10px] text-[20px] leading-[23.64px] text-white">
                 {t('landingpage:footer.company')}
               </div>
              
             </div>
-            <div className="pl-[20px] max-lg:pl-0">
+            <div className="pl-[20px]">
               <a
                 className="flex pb-[15px] pt-[10px]"
                 href="mailto:cskh@viettel.com.vn"
@@ -132,7 +134,7 @@ export function SectionFooter() {
           </div>
 
           <div className="relative flex h-[50px] items-center">
-            <div className="absolute right-0 max-sm:left-0 max-sm:mx-2 flex">
+            <div className="absolute right-0 flex">
               <div className="pt-[1.7px] text-[16px] leading-[20.8px] text-[#B1B1B1]">
                 {t('landingpage:footer.follow')}
               </div>
