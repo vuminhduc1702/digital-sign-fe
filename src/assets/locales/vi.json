@@ -954,7 +954,11 @@
     "no_payment_history": "Không có lịch sử thanh toán",
     "no_plan_used": "Không có gói cước đang sử dụng",
     "no_tenant": "Không có tenant. Vui lòng tạo.",
-    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo."
+    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo.", 
+    "result_limit": "Giới hạn số kết quả: ", 
+    "search": "Tìm kiếm...", 
+    "min": "Min", 
+    "max": "Max"
   },
   "btn": {
     "create": "Tạo mới",

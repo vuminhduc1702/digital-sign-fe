@@ -22,7 +22,7 @@ export function ComboBoxSelectModuleConfig({
   const { data: LwM2MDataById } = useTemplateById({ templateId })
   const { acc: templateLwM2MFlattenData, extractedPropertyKeys } = flattenData(
     LwM2MDataById?.transport_config?.info?.module_config || [],
-    ['numberOfAttributes', 'module_name', 'id', 'created_time'],
+    ['numberOfAttributes', 'module_name', 'id'],
   )
 
   const filteredData = filteredComboboxData(

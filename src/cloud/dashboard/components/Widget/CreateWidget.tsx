@@ -516,6 +516,40 @@ export function CreateWidget({
     return result
   }
 
+  const setDeviceOptionForMap = (attribute: string) => {
+    const result: Array<{
+      value: string
+      label: string
+    }> = []
+    console.log(deviceData)
+    console.log(attrChartData)
+    attrChartData?.entities?.map(item => {
+      item?.attr_keys?.map(attr => {
+        if (attr === attribute) {
+          // filter all item in deviceData that have id = item.entity_id
+          const devices = deviceData?.devices.filter(
+            device =>
+              device.id === item.entity_id &&
+              device.attributes.filter(
+                attr =>
+                  attr.attribute_key === attribute && attr.value_type === 'DBL',
+              ),
+          )
+          console.log(devices)
+          devices?.map(device => {
+            const deviceInfo = getDeviceInfo(device.id)
+            if (deviceInfo.includes('undefined')) return
+            result.push({
+              value: device.id,
+              label: deviceInfo,
+            })
+          })
+        }
+      })
+    })
+    return result
+  }
+
   useEffect(() => {
     append({
       attribute_key: '',
@@ -971,7 +1005,21 @@ export function CreateWidget({
                         )}
                         {!watch(`attributeConfig.${index}.attribute_key`) ||
                         widgetCategory === 'GAUGE' ||
-                        widgetCategory === 'CARD' ? null : (
+                        widgetCategory === 'CARD' ? null : widgetCategory ===
+                          'MAP' ? (
+                          <SelectDropdown
+                            name={`attributeConfig.${index}.label`}
+                            label={t('cloud:dashboard.config_chart.label')}
+                            error={
+                              formState?.errors?.attributeConfig?.[index]?.label
+                            }
+                            control={control}
+                            options={setDeviceOptionForMap(
+                              watch(`attributeConfig.${index}.attribute_key`),
+                            )}
+                            isLoading={attrChartIsLoading}
+                          />
+                        ) : (
                           <SelectDropdown
                             name={`attributeConfig.${index}.label`}
                             label={t('cloud:dashboard.config_chart.label')}

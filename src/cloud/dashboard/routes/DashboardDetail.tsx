@@ -502,6 +502,7 @@ export function DashboardDetail() {
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={getMapDeviceList(widgetInfo)}
                         />
+                        {/* dummyInput */}
                       </div>
                     ) : null}
                     {isEditMode ? (

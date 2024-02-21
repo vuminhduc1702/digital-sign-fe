@@ -126,7 +126,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -157,7 +157,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [data],
+    [data, props.offset],
   )
 
   return (

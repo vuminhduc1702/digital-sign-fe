@@ -3,36 +3,23 @@ import { useTranslation } from 'react-i18next'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import storage from '~/utils/storage'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-import {
-  ComboBoxSelectThing,
-  CreateThing,
-  ThingTable,
-} from '../components/Attributes'
+import { CreateThing, ThingTable } from '../components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { type EntityThing } from '~/cloud/customProtocol'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { Button } from '~/components/Button'
 import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
+import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import axios from 'axios'
 
 export function ThingTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    EntityThing[]
-  >([])
-  const [offset, setOffset] = useState(0)
-  const projectId = storage.getProject()?.id
-  const {
-    data: thingData,
-    isPreviousData,
-    isSuccess,
-  } = useGetEntityThings({
-    projectId,
-    type: 'thing',
-    config: { keepPreviousData: true },
-  })
+  const [searchQuery, setSearchQuery] = useState('')
+  const [data, setData] = useState<EntityThing[]>([])
 
   const {
     mutate: mutateDeleteMultipleThings,
@@ -51,7 +38,7 @@ export function ThingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
+  const aoo = data.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
       const temp = {
         [t('table:no')]: (index + 1).toString(),
@@ -117,21 +104,21 @@ export function ThingTemplate() {
               />
             )}
             <CreateThing thingType="thing" />
-            {isSuccess ? (
-              <ComboBoxSelectThing
-                data={thingData.data}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null}
+            {/* dummyInput */}
+            <InputField
+              type="text"
+              placeholder="Search"
+              onChange={e => {
+                const value = e.target.value
+                setSearchQuery(value)
+              }}
+            />
           </div>
         </div>
         <ThingTable
-          data={filteredComboboxData}
-          offset={offset}
-          setOffset={setOffset}
-          total={thingData?.data?.total ?? 0}
-          isPreviousData={isPreviousData}
+          data={data}
+          setData={setData}
+          searchQuery={searchQuery}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

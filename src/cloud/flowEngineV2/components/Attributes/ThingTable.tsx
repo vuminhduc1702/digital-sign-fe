@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -16,12 +16,15 @@ import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
-import { type EntityThing } from '~/cloud/customProtocol'
+import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
+
+import { flattenData } from '~/utils/misc'
 
 function ThingTableContextMenu({
   id,
@@ -114,18 +117,50 @@ function ThingTableContextMenu({
 
 type ThingTableProps = {
   data: EntityThing[]
+  setData: React.Dispatch<React.SetStateAction<EntityThing[]>>
+  searchQuery: any | undefined
   rowSelection: object
   setRowSelection: React.Dispatch<React.SetStateAction<object>>
-} & BaseTablePagination
-export function ThingTable({ data, ...props }: ThingTableProps) {
+}
+export function ThingTable({ data, setData, searchQuery, ...props }: ThingTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+
+  const [offset, setOffset] = useState(0)
+  const {
+    data: thingData,
+    isPreviousData,
+    isSuccess,
+  } = useGetEntityThings({
+    projectId,
+    type: 'thing',
+    offset,
+    config: { keepPreviousData: true },
+  })
+  const { acc: thingFlattenData, extractedPropertyKeys } = flattenData(
+    thingData?.data?.list,
+    [
+      'id',
+      'name',
+      'type',
+      'project_id',
+      'template_name',
+      'create_ts',
+      'description',
+      'total_service',
+    ],
+  )
+
+  useEffect(() => {
+    setData(thingFlattenData)
+  }, [])
+
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -176,13 +211,17 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [offset],
   )
 
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={data}
+      data={thingFlattenData}
+      offset={offset}
+      setOffset={setOffset}
+      total={thingData?.data?.total ?? 0}
+      isPreviousData={isPreviousData}
       columns={columns}
       onDataText={t('table:no_thing')}
       {...props}

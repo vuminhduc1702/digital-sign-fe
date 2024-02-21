@@ -241,8 +241,6 @@ export function UpdateWidget({
     }),
   )
 
-  console.log(widgetInfoMemo)
-
   const getDeviceInfo = (id: string) => {
     const device = deviceData?.devices.find(device => device.id === id) as {
       name: string

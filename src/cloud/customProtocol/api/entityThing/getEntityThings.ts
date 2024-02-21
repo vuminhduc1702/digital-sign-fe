@@ -5,10 +5,13 @@ import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
 import { type EntityThingType, type EntityThingList } from '../../types'
 import { type BaseAPIRes } from '~/types'
+import { limitPagination } from '~/utils/const'
 
 type GetEntityThings = {
   projectId: string
   type?: EntityThingType
+  offset?: number
+  limit?: number
 }
 
 export type GetEntityThingsRes = {
@@ -18,12 +21,16 @@ export type GetEntityThingsRes = {
 export const getEntityThings = ({
   projectId,
   type,
+  offset, 
+  limit,
 }: GetEntityThings): Promise<GetEntityThingsRes> => {
   return axios.get(`/api/fe/thing`, {
     params: {
       project_id: projectId,
       type,
       share: true,
+      offset,
+      limit,
     },
   })
 }
@@ -37,11 +44,13 @@ type UseEntityThingsOptions = {
 export const useGetEntityThings = ({
   projectId,
   type,
+  offset = 0, 
+  limit = limitPagination,
   config,
 }: UseEntityThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['entity-things', projectId, type],
-    queryFn: () => getEntityThings({ projectId, type }),
+    queryKey: ['entity-things', projectId, type, offset, limit],
+    queryFn: () => getEntityThings({ projectId, type, offset, limit}),
     ...config,
   })
 }

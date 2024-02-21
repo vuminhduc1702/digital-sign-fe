@@ -901,7 +901,11 @@
     "no_payment_history": "No payment history",
     "no_plan_used": "No used packages",
     "no_tenant": "No tenants. Please create.",
-    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo."
+    "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo.", 
+    "result_limit": "Results limit: ", 
+    "search": "Search...", 
+    "min": "Min", 
+    "max": "Max"
   },
   "btn": {
     "create": "Create New",

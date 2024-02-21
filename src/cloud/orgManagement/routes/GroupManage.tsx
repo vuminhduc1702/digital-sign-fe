@@ -16,6 +16,7 @@ import {
   GroupTable,
 } from '../components/Group'
 import { type Group } from '../types'
+import { flattenData } from '~/utils/misc'
 
 export function GroupManage() {
   const { t } = useTranslation()
@@ -58,7 +59,7 @@ export function GroupManage() {
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
-          [t('table:no')]: (index + 1).toString(),
+          [t('table:no')]: (index + 1 + offset).toString(),
           [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
           [t('cloud:org_manage.group_manage.table.entity_type')]:
             uppercaseTheFirstLetter(curr.entity_type),
@@ -71,6 +72,12 @@ export function GroupManage() {
       return acc
     },
     [],
+  )
+
+  // flatten the data
+  const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(
+    groupData?.groups,
+    ['id', 'name', 'entity_type', 'org_name', 'organization'],
   )
 
   return (
@@ -125,17 +132,17 @@ export function GroupManage() {
               />
             )}
             <CreateGroup />
-            {isSuccess ? (
+            {/* {isSuccess ? (
               <ComboBoxSelectGroup
                 data={groupData}
                 setFilteredComboboxData={setFilteredComboboxData}
                 offset={offset}
               />
-            ) : null}
+            ) : null} */}
           </div>
         </div>
         <GroupTable
-          data={filteredComboboxData}
+          data={groupFlattenData}
           offset={offset}
           setOffset={setOffset}
           total={groupData?.total ?? 0}
