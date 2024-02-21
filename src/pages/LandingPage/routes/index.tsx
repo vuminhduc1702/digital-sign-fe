@@ -30,6 +30,7 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import LPnavigation from './LPnavigation'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -95,7 +96,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className="px-4 py-4">
-            <div className=" flex h-20 w-full xl:px-48 max-lg:justify-between xs2:px-[0px] ">
+            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-48 ">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -282,7 +283,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               )}
             </div>
 
-            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xl:pt-[57px] xs2:pt-[24px]">
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
               <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
@@ -299,12 +300,12 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className=" text-center xl:text-7xl font-bold leading-[54px] xs2:text-[35px]  xs:px-[8px] lg:px-[170px]">
+              <h2 className=" text-center font-bold leading-[54px] xs2:text-[35px] xs:px-[8px]  lg:px-[170px] xl:text-7xl">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="mt-10 flex xl:w-1/2 items-center justify-center text-white md:w-[470px] xs2:w-[270px] xs:w-[270px]">
+              <div className="mt-10 flex items-center justify-center text-white xs2:w-[270px] xs:w-[270px] md:w-[470px] xl:w-1/2">
                 <p className="text-2xl ">
                   Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
                   ứng dụng.
@@ -369,7 +370,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
       <div>
         {showScrollButton && (
           <button
-            className="fixed bottom-[10px] right-[10px]"
+            className="fixed bottom-[10px] right-[10px] z-50 rounded-full bg-white "
             onClick={scrollToTop}
           >
             <GroupSlideTop width={49} height={49} viewBox="0 0 49 49" />
