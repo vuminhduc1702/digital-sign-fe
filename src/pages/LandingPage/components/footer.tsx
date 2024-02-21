@@ -23,8 +23,7 @@ export function SectionFooter() {
   return (
     <>
       <div className="flex h-[357px] justify-center bg-no-repeat xs2:h-auto xs:h-auto sm:h-auto md:h-auto"
-        style={{ backgroundImage: `url(${BgFooter})`, backgroundSize: 'cover' }}
-      >
+        style={{ backgroundImage: `url(${BgFooter})`, backgroundSize: 'cover' }}>
         <div className="flex h-fit  xs2:w-[200px] xs2:flex-col xs2:items-center xs:flex-col xs:items-center sm:w-[500px] sm:flex-col sm:items-center md:w-[760px] md:flex-col md:items-center lg:w-[800px] lg:flex-row xl:w-[1040px] xl:flex-row">
           <div className="ml-[40px] py-[60px] text-[48px] leading-[56.74px] text-white sm:w-[300px] md:w-[400px] lg:w-[250px] xl:w-[450px]">
             {t('landingpage:footer.client_support')}
