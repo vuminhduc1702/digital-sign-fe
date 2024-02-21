@@ -51,9 +51,9 @@ export function CustomerManageTemplate() {
                 name="key"
                 control={control}
                 options={[
-                  { label: 'Tên khách hàng', value: 'name' },
-                  { label: 'Mã khách hàng', value: 'customer_code' },
-                  { label: 'Số điện thoại', value: 'phone' },
+                  { label: t('schema:customer_name'), value: 'name' },
+                  { label: t('schema:customer_code'), value: 'customer_code' },
+                  { label: t('schema:customer_phone'), value: 'phone' },
                 ]}
                 // error={formState?.errors?.key}
               />
@@ -81,6 +81,7 @@ export function CustomerManageTemplate() {
           setOffset={setOffset}
           total={data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isHiddenCheckbox={true}
         />
       </div>
     </>

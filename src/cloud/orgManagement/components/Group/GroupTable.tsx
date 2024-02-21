@@ -217,8 +217,10 @@ function GroupTableContextMenu({
 
 type GroupTableProps = {
   data: Group[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function GroupTable({ data, ...props }: GroupTableProps) {

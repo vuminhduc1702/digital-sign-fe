@@ -49,7 +49,7 @@ export function BaseTable<T extends Record<string, any>>({
   callbackParent,
   rowSelection = {},
   setRowSelection,
-  isHiddenCheckbox
+  isHiddenCheckbox,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -66,8 +66,10 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText?: string
   refreshBtn?: boolean
   callbackParent?: () => void
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
   isHiddenCheckbox?: boolean
 }) {
   const { t } = useTranslation()
@@ -198,14 +200,19 @@ export function BaseTable<T extends Record<string, any>>({
                           <div
                             className={`text-table-header ${
                               header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
-                              }`}
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
                             onClick={header.column.getToggleSortingHandler()}
                           >
-                            <div className={cn('text-table-header relative flex items-center justify-center', {
-                              'px-3': headerGroup.headers.length > 8,
-                            })}>
+                            <div
+                              className={cn(
+                                'text-table-header relative flex items-center justify-center',
+                                {
+                                  'px-3': headerGroup.headers.length > 8,
+                                },
+                              )}
+                            >
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
@@ -425,7 +432,7 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="relative mt-4 flex items-center justify-between gap-2">
+      <div className="relative mt-4 flex h-12 items-center justify-between gap-2">
         <div
           className={cn('flex gap-3', {
             'absolute bottom-5': isAbsoluteBtn,
@@ -454,7 +461,7 @@ export function BaseTable<T extends Record<string, any>>({
                 limitPagination < totalAttrs &&
                 offset - limitPagination >= 0 &&
                 (pageIndex + 1) * pageSize <=
-                limitPagination * countLimitPaginationRef.current
+                  limitPagination * countLimitPaginationRef.current
               ) {
                 setOffset?.(offset => offset - limitPagination)
               }
@@ -477,7 +484,7 @@ export function BaseTable<T extends Record<string, any>>({
               if (
                 limitPagination < totalAttrs &&
                 (pageIndex + 1) * pageSize >
-                limitPagination * countLimitPaginationRef.current
+                  limitPagination * countLimitPaginationRef.current
               ) {
                 countLimitPaginationRef.current++
                 setOffset?.(offset => offset + limitPagination)

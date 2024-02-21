@@ -74,6 +74,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 type BillingTableProps = {
   data?: Billing[]
   handleField?: (field: string, value: any) => void
+  isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 export function BillingTable({

@@ -59,9 +59,6 @@ export const useGetDevices = ({
       get_attributes,
     ],
     queryFn: () => {
-      if (orgId)
-        return getDevices({ orgId, projectId, offset, limit, get_attributes })
-
       const res = {
         devices: [] as Device[],
         limit: 0,
@@ -82,8 +79,11 @@ export const useGetDevices = ({
           res.offset = orgDevice.offset
           res.total += orgDevice.total
         })
+
+        return res
       }
-      return res
+
+      return getDevices({ orgId, projectId, offset, limit, get_attributes })
     },
     ...config,
   })

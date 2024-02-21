@@ -79,9 +79,7 @@ export function Devkit() {
                 {t('device:guide_device')}
               </div>
               <div className="mb-4 rounded-md border border-solid bg-[#eceff1] p-5 text-body-sm shadow-lg">
-                Khu vực này bao gồm thông tin các bộ DevKit đi kèm code mẫu, tài
-                liệu hướng dẫn tích hợp và bộ SDK để kết nối thiết bị của bạn
-                với InnoWay.
+                {t('document:document_devkit')}
               </div>
             </div>
 

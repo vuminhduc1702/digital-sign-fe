@@ -13,6 +13,7 @@ import storage from '~/utils/storage'
 import { type Role } from '../role'
 
 import narrowLeft from '~/assets/icons/narrow-left.svg'
+import { ContentLayout } from '~/layout/ContentLayout'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -51,7 +52,7 @@ export default function DevRole() {
   }, [])
 
   return (
-    <>
+    <ContentLayout title="Dev Role">
       <div
         className="border-secondary-700 mb-4 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
         onClick={() => navigate(-1)}
@@ -92,6 +93,6 @@ export default function DevRole() {
           />
         )}
       </div>
-    </>
+    </ContentLayout>
   )
 }

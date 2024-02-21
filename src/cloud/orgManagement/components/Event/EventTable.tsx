@@ -221,8 +221,10 @@ export function EventTable({
   ...props
 }: {
   data: EventType[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id

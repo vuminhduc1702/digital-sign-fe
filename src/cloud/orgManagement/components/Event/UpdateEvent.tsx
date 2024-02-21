@@ -363,8 +363,7 @@ export function UpdateEvent({
               org_id: values.org_id,
               group_id: values.group_id,
               name: values.name,
-              onClick:
-                getValues('type') === 'event' ? values.onClick === true : false,
+              onClick: values.onClick,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: values.status === true,
@@ -467,10 +466,10 @@ export function UpdateEvent({
                         <Checkbox
                           {...field}
                           checked={value}
-                          onCheckedChange={onChange}
-                          onClick={() => {
-                            if (getValues('type') === 'event') {
-                              setValue('type', 'schedule')
+                          onCheckedChange={(e) => {
+                            onChange(e)
+                            if (e) {
+                              setValue('type', 'event')
                             }
                           }}
                         />

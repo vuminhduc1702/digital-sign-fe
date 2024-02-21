@@ -53,6 +53,7 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
 type CustomerTableProps = {
   data?: Customer[]
+  isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {

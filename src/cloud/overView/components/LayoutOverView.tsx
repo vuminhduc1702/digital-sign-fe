@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import i18n from '~/i18n'
 
 import { useNavigate } from 'react-router-dom'
 import AssetManagement from '~/assets/images/SolutionMaketplace/AssetManagement.png'
@@ -54,31 +55,27 @@ export function LayoutOverView() {
 
   const sampleDivices = [
     {
-      title: 'Giải pháp Fleet Management',
+      title: i18n.t('title:fleet_management'),
       img: SmartTracking,
-      content:
-        'Giải pháp quản lý đội xe giúp bạn quản lý hoạt động của đội xe, dẫn đến giảm chi phí, cải thiện hiệu quả và nâng cao tính tuân thủ. Giải pháp quản lý đội xe phù hợp có thể là công cụ trong việc điều phối các hoạt động quản lý đội xe của bạn.',
-      content2: 'Chức năng chính:',
-      content3: '- Cảnh báo vùng an toàn qua SMS hoặc App Notification',
-      content4: '- Cảnh báo pin yếu qua SMS hoặc App Notification',
-      content5: '- Định vị được vị trí qua bản tin thiết bị bắn lên',
+      content: i18n.t('document:fleet_management.content'),
+      content2: i18n.t('document:fleet_management.content2'),
+      content3: i18n.t('document:fleet_management.content3'),
+      content4: i18n.t('document:fleet_management.content4'),
+      content5: i18n.t('document:fleet_management.content5'),
       jsonData: fleetManagementData,
     },
     {
-      title: 'Giải pháp Asset Management',
+      title: i18n.t('title:asset_management'),
       img: AssetManagement,
-      content:
-        'Giải pháp quản lý tài sản giúp bạn theo dõi tài sản thông qua việc sử dụng các thẻ RFID được gắn vào chúng. Các thẻ được đọc bằng máy quét cố định được gắn ở vị trí cố đinh. Mỗi khi một thẻ được đọc, nó sẽ được lưu tổng hợp thành một chuỗi và bán tổng tất cả các RFID đã quét được lên hệ thống. Bên cạnh đó, giải pháp còn cảnh báo cho bạn những RFID bị thiếu hoặc RFID lạ để giúp bạn tránh bị thiếu sót tài sản.',
-      content2: 'Chức năng chính:',
-      content3:
-        '- Cảnh báo RFID bị thiếu, RFID lạ qua SMS hoặc App Notification',
-      content4:
-        '- Xử lý tập bản tin thiết bị gửi lên (gộp bản tin, kiểm tra trùng)',
-      content5: '- Đăng ký RFID mới theo danh sách hoặc chỉnh sửa số lượng nhỏ',
+      content: i18n.t('document:asset_management.content'),
+      content2: i18n.t('document:asset_management.content2'),
+      content3: i18n.t('document:asset_management.content3'),
+      content4: i18n.t('document:asset_management.content4'),
+      content5: i18n.t('document:asset_management.content5'),
       jsonData: assetManagementData,
     },
     {
-      title: 'Giải pháp Smart Water Meter',
+      title: i18n.t('title:smart_water_meter'),
       img: SmartMetering,
       content:
         'Giải pháp đồng hồ nước thông mình giúp bạn theo dõi lưu lượng sử dụng, cảnh bảo về các vấn đề liên quan đến đường dẫn nước trong nhà bạn, dẫn đến giảm chi phí, giải thiếu các rủi ro. Giải pháp đồng hồ nước thông minh cung cấp hệ thông đo lường từ xa và tổng hợp lại số lượng đã sử dụng mà không cần đội ngũ đến kiểm tra.',
@@ -89,7 +86,7 @@ export function LayoutOverView() {
       jsonData: smartWaterData,
     },
     {
-      title: 'Giải pháp Smart Farm',
+      title: i18n.t('title:smart_farm'),
       img: SmartFarming,
       content:
         'Giải pháp nông nghiệp thông minh giúp bạn theo dõi lưu lượng sử dụng, cảnh báo về các vấn đề liên quan độ ẩm cho vườn cây nhà bạn, giảm thiếu các rủi ro.',
@@ -100,7 +97,7 @@ export function LayoutOverView() {
       jsonData: smartFarmData,
     },
     {
-      title: 'Giải pháp Smarthome',
+      title: i18n.t('title:smart_home'),
       img: SmartHome,
       content:
         'Giải pháp hỗ trợ các ngữ cảnh thông minh được đặt theo giờ hoặc theo ngoại cảnh để người sử dụng có trải nghiệm và sức khỏe tinh thần tốt nhất trong căn nhà.',
@@ -277,11 +274,11 @@ export function LayoutOverView() {
       </div>
       <div>
         <Tab.Group>
-          <Tab.List className="flex justify-end gap-x-2 bg-secondary-500 px-10">
+          <Tab.List className="bg-secondary-500 flex justify-end gap-x-2 px-10">
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                   { 'text-primary-400': selected },
                 )
               }
@@ -293,7 +290,7 @@ export function LayoutOverView() {
             <Tab
               className={({ selected }) =>
                 clsx(
-                  'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
                   { 'text-primary-400': selected },
                 )
               }
@@ -306,7 +303,7 @@ export function LayoutOverView() {
           <Tab.Panels className="flex grow flex-col">
             <Tab.Panel
               className={clsx(
-                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
               )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
@@ -314,13 +311,13 @@ export function LayoutOverView() {
                   return (
                     <div
                       key={item.title}
-                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
                     >
                       <div className="alignItemCenter">
                         <img src={item.img} alt="" width="100%" height="300" />
                       </div>
                       <div className="text p-3">
-                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <h4 className="text-table-header mt-3">{item.title}</h4>
                         <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
@@ -359,7 +356,7 @@ export function LayoutOverView() {
                             <Button
                               type="button"
                               size="square"
-                              className="border-none bg-primary-400"
+                              className="bg-primary-400 border-none"
                             >
                               {t('btn:setup')}
                             </Button>
@@ -396,7 +393,7 @@ export function LayoutOverView() {
             </Tab.Panel>
             <Tab.Panel
               className={clsx(
-                'flex grow flex-col bg-secondary-500 px-9 py-3 shadow-lg',
+                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
               )}
             >
               <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
@@ -404,13 +401,13 @@ export function LayoutOverView() {
                   return (
                     <div
                       key={item.title}
-                      className="relative flex flex-col break-words rounded-md bg-secondary-500 shadow-sm"
+                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
                     >
                       <div className="alignItemCenter">
                         <img src={item.img} alt="" width="100%" height="300" />
                       </div>
                       <div className="text p-3">
-                        <h4 className="mt-3 text-table-header">{item.title}</h4>
+                        <h4 className="text-table-header mt-3">{item.title}</h4>
                         <p className="mb-2 mt-3 line-clamp-3">
                           {item.content}
                           {item.content2 && <br />}
@@ -449,7 +446,7 @@ export function LayoutOverView() {
                             <Button
                               type="button"
                               size="square"
-                              className="border-none bg-primary-400"
+                              className="bg-primary-400 border-none"
                             >
                               {t('btn:setup')}
                             </Button>
@@ -488,7 +485,7 @@ export function LayoutOverView() {
         </Tab.Group>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -508,7 +505,7 @@ export function LayoutOverView() {
                         setType(item)
                       }}
                       className={cn('px-4 py-2 text-slate-400', {
-                        'rounded-2xl bg-primary-400 text-white': type === item,
+                        'bg-primary-400 rounded-2xl text-white': type === item,
                       })}
                     >
                       {item}
@@ -522,7 +519,7 @@ export function LayoutOverView() {
                 onClick={() =>
                   navigate(`${PATHS.DASHBOARD}/${projectId}?openDrawer=true`)
                 }
-                className="ml-3 border-none bg-primary-400"
+                className="bg-primary-400 ml-3 border-none"
               >
                 {t('overView:add_dashboard')}
               </Button>
@@ -535,6 +532,7 @@ export function LayoutOverView() {
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
+              isHiddenCheckbox={true}
             />
           ) : (
             <DashboardTable
@@ -543,10 +541,11 @@ export function LayoutOverView() {
               setOffset={setOffset}
               total={0}
               isPreviousData={isPreviousData}
+              isHiddenCheckbox={true}
             />
           )}
         </div>
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>

@@ -68,9 +68,15 @@ export function SubcriptionTemplate() {
                   name="key"
                   control={control}
                   options={[
-                    { label: 'Mã đăng ký', value: 'subscription' },
-                    { label: 'Mã khách hàng', value: 'customer_code' },
-                    { label: 'Tên khách hàng', value: 'name' },
+                    {
+                      label: t('schema:registration_code'),
+                      value: 'subscription',
+                    },
+                    {
+                      label: t('schema:customer_code'),
+                      value: 'customer_code',
+                    },
+                    { label: t('schema:customer_name'), value: 'name' },
                   ]}
                   // error={formState?.errors?.key}
                 />
@@ -104,6 +110,7 @@ export function SubcriptionTemplate() {
           handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isHiddenCheckbox={true}
         />
       </div>
     </>

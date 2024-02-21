@@ -114,8 +114,10 @@ function ThingTableContextMenu({
 
 type ThingTableProps = {
   data: EntityThing[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()

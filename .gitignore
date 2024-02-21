@@ -16,6 +16,7 @@ dist-ssr
 data
 .env
 cspell.json
+package-lock.json
 
 # Editor directories and files
 .vscode/*

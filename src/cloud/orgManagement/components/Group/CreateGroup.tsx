@@ -34,7 +34,7 @@ export const entityTypeList = [
 const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  // org_id: z.string().optional()
+  org_id: z.string().optional().or(z.array(z.string()))
 })
 
 export function CreateGroup() {
@@ -63,10 +63,6 @@ export function CreateGroup() {
   >({
     resolver: groupCreateSchema && zodResolver(groupCreateSchema),
   })
-
-  // function orgSelection(val: any) {
-  //   console.log(val)
-  // }
 
   return (
     <FormDrawer
@@ -104,7 +100,7 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: getValues('org_id').toString(),
+              org_id: values.org_id.toString(),
             },
           })
         })}
@@ -142,8 +138,9 @@ export function CreateGroup() {
           >
             <Controller
               control={control}
-              name={"org_id"}
+              name={'org_id'}
               render={({ field: { onChange, value, ...field } }) => {
+                const parseValue = getValues('org_id') ? orgSelectOptions?.find(org => org.value === getValues('org_id').toString())?.label : ''
                 return (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -158,7 +155,7 @@ export function CreateGroup() {
                       >
                         {value ? (
                           <span>
-                            {value}
+                            {parseValue ? parseValue : value}
                           </span>
                         ) : (
                           <span>

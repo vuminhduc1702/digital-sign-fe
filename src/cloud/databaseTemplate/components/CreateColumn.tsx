@@ -64,21 +64,14 @@ export default function CreateColumn({
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <TooltipProvider >
-          <Tooltip>
-            <TooltipTrigger className={cn('absolute right-[6px] top-[108px] rounded-md')}>
-              <Button
-                className='h-6 w-6 rounded-md'
-                variant="trans"
-                size="square"
-                startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-              />
-            </TooltipTrigger>
-            <TooltipContent side="left">
-                {t('cloud:db_template.add_db.add_column')}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Button
+          className="w-full justify-start rounded-md"
+          variant="trans"
+          size="square"
+          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
+        >
+          {t('cloud:db_template.add_db.add_column')}
+        </Button>
       }
       title={t('cloud:db_template.add_db.add_column')}
       submitButton={

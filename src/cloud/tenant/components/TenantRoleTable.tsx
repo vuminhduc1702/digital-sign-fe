@@ -18,6 +18,7 @@ import { UpdateCustomerRole } from './UpdateTenantRole'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
+  isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 function CustomerTableContextMenu({
@@ -134,19 +135,19 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
         id: 'stt',
         cell: info => {
           const orderId = parseInt(info.row.id) + 1
-          return <div className="text-left">{orderId}</div>
+          return <div className="text-center">{orderId}</div>
         },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('project_id', {
         header: () => <span>Project</span>,
-        cell: info => <div className="text-left">{info.getValue()}</div>,
+        cell: info => <div className="text-center">{info.getValue()}</div>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('role_id', {
         header: () => <span>Role</span>,
-        cell: info => <div className="text-left">{info.getValue()}</div>,
+        cell: info => <div className="text-center">{info.getValue()}</div>,
         footer: info => info.column.id,
       }),
       columnHelper.display({
