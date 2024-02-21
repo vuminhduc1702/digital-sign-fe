@@ -56,7 +56,7 @@ export function SectionFooter() {
               </div>
             </div>
             <div className="flex py-2 xs2:flex-col xs:flex-col sm:flex-row md:flex-row">
-              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xl:mb-0 lg:mb-0 md:mb-0 sm:mb-0 xs:mb-0 xs2:mb-[20px]">
                 {t('landingpage:footer.phone_number')}
               </div>
               <div>
@@ -68,7 +68,7 @@ export function SectionFooter() {
               </div>
             </div>
             <div className="flex pt-2 xs2:flex-col xs:flex-col sm:flex-row md:flex-row">
-              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xl:mb-0 lg:mb-0 md:mb-0 sm:mb-0 xs:mb-[20px] xs2:mb-[20px]">
                 {t('landingpage:footer.support_content')}
               </div>
               <div>
