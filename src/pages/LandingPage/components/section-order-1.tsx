@@ -16,11 +16,6 @@ export function SectionOrder1() {
             <div className="w-[320px] text-[35px] leading-[43px] text-black xs2:w-[240px] xs:w-[240px] lg:w-[500px]">
               {t('landingpage:order1.M2M_manage_solution')}
             </div>
-            {/* <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black">
-              Hệ thống quản lý thuê bao Innoway của Viettel cho phép doanh
-              nghiệp quản lý danh sách thuê bao, trình trạng cước, thanh toán,…
-              và nhiều tiện ích khác
-            </div> */}
             <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black xs2:w-[200px] xs:w-[200px] sm:w-[300px] lg:w-[500px]">
               Nền tảng tiên phong tại Việt Nam, cung cấp đồng thời 2 dịch vụ nền
               tảng quản lý kết nối (CMP) và quản lý ứng dụng (AEP). Hỗ trợ toàn
@@ -31,7 +26,7 @@ export function SectionOrder1() {
               danh sách thuê bao, trình trạng cước thanh toán, định vị thuê
               bao... và nhiều tiện ích khác
             </div>
-            <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row">
+            <div className="flex h-fit pt-[20px] xl:gap-10 lg:gap-10 xs2:flex-col xs:flex-col sm:flex-col lg:flex-row">
               <div className="h-fit w-fit">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
@@ -65,7 +60,7 @@ export function SectionOrder1() {
                 </div>
               </div>
               <div className="ml-[90px] h-fit w-fit xs2:ml-0 xs:ml-0 sm:ml-0">
-                <div className="mb-[-8px]">
+                <div className="mb-[-8px] md:pt-2 xl:pt-0 lg:pt-0 md:border-t md:border-[#E2E2E2] xl:border-0 lg:border-0">
                   <CheckboxCircleLine
                     width={25}
                     height={25}

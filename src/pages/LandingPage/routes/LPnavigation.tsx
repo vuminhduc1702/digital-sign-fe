@@ -172,7 +172,7 @@ function LPnavigation() {
         </DropdownMenu.Root>
       )}
 
-      <div className="flex w-full  lg:justify-center ">
+      <div className="flex w-full lg:justify-center ">
         <div className="flex w-full lg:justify-center ">
           <div className="flex justify-start max-lg:flex-col">
             <div
