@@ -188,7 +188,11 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={data}
+      data={thingFlattenData}
+      offset={offset}
+      setOffset={setOffset}
+      total={thingData?.data?.total ?? 0}
+      isPreviousData={isPreviousData}
       columns={columns}
       onDataText={t('table:no_thing')}
       {...props}
