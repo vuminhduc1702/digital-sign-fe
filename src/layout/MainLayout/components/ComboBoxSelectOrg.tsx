@@ -9,14 +9,15 @@ import {
 } from '~/components/ComboBox'
 import storage from '~/utils/storage'
 
-import { type Org } from '../types'
+import { type OrgMapType } from '~/layout/OrgManagementLayout/components/OrgManageSidebar'
 import { type FieldWrapperPassThroughProps } from '~/components/Form'
+
 import { SearchIcon } from '~/components/SVGIcons'
 
 type ComboBoxSelectOrgProps = {
-  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Org[]>>
+  setFilteredComboboxData?: React.Dispatch<React.SetStateAction<OrgMapType[]>>
 } & FieldWrapperPassThroughProps &
-  ComboBoxBasePassThroughProps<Org>
+  ComboBoxBasePassThroughProps<OrgMapType>
 
 export function ComboBoxSelectOrg({
   setFilteredComboboxData,
@@ -42,7 +43,7 @@ export function ComboBoxSelectOrg({
   }, [query, orgData])
 
   return (
-    <ComboBoxBase<Org>
+    <ComboBoxBase<OrgMapType>
       data={filteredData}
       extractedPropertyKeys={extractedPropertyKeys}
       query={query}
