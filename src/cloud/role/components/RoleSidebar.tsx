@@ -59,7 +59,7 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
+  const aoo = roleFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
       const temp = {
         [t('table:no')]: (index + 1).toString(),
