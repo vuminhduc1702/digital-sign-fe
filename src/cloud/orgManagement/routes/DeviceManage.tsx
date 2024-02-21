@@ -73,7 +73,6 @@ export function DeviceManage() {
     }
     return acc
   }, [])
-  console.log('deviceData', deviceData)
 
   return (
     <div ref={ref} className="flex grow flex-col">
