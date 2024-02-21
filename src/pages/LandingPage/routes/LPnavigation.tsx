@@ -22,6 +22,15 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import { SectionIntro } from '../components/section-introduction'
+import { SectionSolution } from '../components/section-solution'
+import { SectionProduct } from '../components/section-product'
+import { SectionOrder } from '../components/section-order'
+import { SectionOrder1 } from '../components/section-order-1'
+import { SectionClient } from '../components/section-client'
+import { QandA } from '../components/section-Q&A'
+import { SectionPackageData } from '../components/section-package-data'
+
 
 function LPnavigation() {
   const navigate = useNavigate()
@@ -172,7 +181,7 @@ function LPnavigation() {
         </DropdownMenu.Root>
       )}
 
-      <div className="flex w-full  lg:justify-center ">
+      <div className="flex w-full lg:justify-center ">
         <div className="flex w-full lg:justify-center ">
           <div className="flex justify-start max-lg:flex-col">
             <div
@@ -214,6 +223,30 @@ function LPnavigation() {
           </div>
         </div>
       </div>
+      {/* <div  ref={introRef}>
+        <SectionIntro solutionRef={solutionRef} />
+      </div>
+      <div ref={solutionRef}>
+        <SectionSolution />
+      </div>
+      <div  ref={PackOfDataRef}>
+        <SectionPackageData />
+      </div>
+      <div ref={ProductRef}>
+        <SectionProduct />
+      </div>
+      <div ref={OrderRef}>
+        <SectionOrder />
+      </div>
+      <div ref={Order1Ref}>
+        <SectionOrder1 />
+      </div>
+      <div>
+        <SectionClient />
+      </div>
+      <div ref={FAQRef}>
+        <QandA />
+      </div> */}
     </div>
   )
 }
