@@ -4,26 +4,23 @@ import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import {
-  ComboBoxSelectThingService,
   CreateThingService,
   ThingServiceTable,
 } from '../components/ThingService'
 
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { type ThingService } from '../types'
+import { flattenData } from '~/utils/misc'
 
 export function ThingServices() {
   const { t } = useTranslation()
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    ThingService[]
-  >([])
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
 
   const thingId = params.thingId as string
 
+  // no offset call
   const {
     data: thingData,
     isPreviousData,
@@ -32,6 +29,20 @@ export function ThingServices() {
     thingId,
     config: { keepPreviousData: true },
   })
+
+  const { acc: thingServiceFlattenData, extractedPropertyKeys } = flattenData(
+    thingData?.data,
+    [
+      'id',
+      'name',
+      'create_ts',
+      'description',
+      'input',
+      'output',
+      'fail_limit',
+      'lock_time',
+    ],
+  )
 
   return (
     <>
@@ -42,19 +53,13 @@ export function ThingServices() {
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateThingService thingServiceData={thingData?.data} />
-            {isSuccess ? (
-              <ComboBoxSelectThingService
-                data={thingData.data}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null}
+            {/* dummyInput */}
           </div>
         </div>
         <ThingServiceTable
-          data={filteredComboboxData}
+          data={thingServiceFlattenData}
           offset={offset}
-          setOffset={setOffset}
+          // setOffset={setOffset}
           total={0}
           isPreviousData={isPreviousData}
         />

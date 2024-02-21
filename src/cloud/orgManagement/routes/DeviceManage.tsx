@@ -16,6 +16,7 @@ import { type Device } from '../types'
 import { convertEpochToDate } from '~/utils/transformFunc'
 import { Button } from '~/components/Button'
 import { useDeleteMultipleDevices } from '../api/deviceAPI/deleteMultipleDevices'
+import { flattenData } from '~/utils/misc'
 
 export function DeviceManage() {
   const { t } = useTranslation()
@@ -23,7 +24,6 @@ export function DeviceManage() {
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
   const [offset, setOffset] = useState(0)
-
   const params = useParams()
 
   const orgId = params.orgId as string
@@ -60,12 +60,12 @@ export function DeviceManage() {
   const aoo = filteredComboboxData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
       const temp = {
-        [t('table:no')]: (index + 1).toString(),
+        [t('table:no')]: (index + 1 + offset).toString(),
         [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
         [t('cloud:org_manage.group_manage.title')]: curr.group_name,
         [t('billing:manage_bill.table.status')]: curr.status,
         [t('sidebar:cloud.device_template')]: curr.template_name,
-        Key: curr.key,
+        ['Key']: curr.key,
         [t('cloud:org_manage.device_manage.table.created_at')]:
           convertEpochToDate(curr.created_time),
       }
@@ -73,6 +73,28 @@ export function DeviceManage() {
     }
     return acc
   }, [])
+
+  // flatten the data
+  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
+    deviceData?.devices,
+    [
+      'id',
+      'name',
+      'group_name',
+      'template_name',
+      'created_time',
+      'org_name',
+      'key',
+      'org_id',
+      'status',
+      'attributes',
+      'created_by',
+      'group_id',
+      'template_id',
+      'token',
+      'additional_info',
+    ],
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -128,17 +150,18 @@ export function DeviceManage() {
               />
             )}
             <CreateDevice />
-            {isSuccess ? (
+            {/* {isSuccess ? (
               <ComboBoxSelectDevice
                 data={deviceData}
                 setFilteredComboboxData={setFilteredComboboxData}
                 offset={offset}
               />
-            ) : null}
+            ) : null} */}
+            {/* dummyInput */}
           </div>
         </div>
         <DeviceTable
-          data={filteredComboboxData}
+          data={deviceFlattenData}
           offset={offset}
           setOffset={setOffset}
           total={deviceData?.total ?? 0}

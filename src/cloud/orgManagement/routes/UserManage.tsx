@@ -6,11 +6,12 @@ import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { type UserInfo, useGetUsers } from '../api/userAPI'
-import { ComboBoxSelectUser, CreateUser, UserTable } from '../components/User'
+import { CreateUser, UserTable } from '../components/User'
 import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useDeleteMultipleUsers } from '../api/userAPI/deleteMultipleUsers'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
+import { flattenData } from '~/utils/misc'
 
 export function UserManage() {
   const { t } = useTranslation()
@@ -26,7 +27,7 @@ export function UserManage() {
   const orgId = params.orgId as string
   const projectId = storage.getProject()?.id
   const {
-    data: UserData,
+    data: userData,
     isPreviousData,
     isSuccess,
   } = useGetUsers({
@@ -70,6 +71,23 @@ export function UserManage() {
     }
     return acc
   }, [])
+
+  const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
+    userData?.users,
+    [
+      'user_id',
+      'name',
+      'email',
+      'role_name',
+      'activate',
+      'org_id',
+      'org_name',
+      'role_name',
+      'role_id',
+      'phone',
+      'profile',
+    ],
+  )
 
   return (
     <div ref={ref} className="uer-pnf flex grow flex-col">
@@ -123,20 +141,14 @@ export function UserManage() {
               />
             )}
             <CreateUser />
-            {isSuccess ? (
-              <ComboBoxSelectUser
-                data={UserData}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null}
+            {/* dummyInput */}
           </div>
         </div>
         <UserTable
-          data={filteredComboboxData}
+          data={userFlattenData}
           offset={offset}
           setOffset={setOffset}
-          total={UserData?.total ?? 0}
+          total={userData?.total ?? 0}
           isPreviousData={isPreviousData}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}

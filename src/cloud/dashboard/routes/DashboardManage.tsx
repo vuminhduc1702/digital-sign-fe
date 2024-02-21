@@ -4,8 +4,10 @@ import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
-import { ComboBoxSelectDashboard } from '../components/DashboardTable/ComboBoxSelectDashboard'
 import { type Dashboard, DashboardTable } from '../components/DashboardTable'
+import { limitPagination } from '~/utils/const'
+import { useGetDashboards } from '../api'
+import { flattenData } from '~/utils/misc'
 
 export function DashboardManage() {
   const { t } = useTranslation()
@@ -14,9 +16,16 @@ export function DashboardManage() {
 
   const projectId = storage.getProject()?.id
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Dashboard[]>(
-    [],
+  const [offset, setOffset] = useState(0)
+
+  const { data: dashboardData, isPreviousData, isSuccess } = useGetDashboards({ projectId, offset })
+
+  const { acc: dashboardFlattenData, extractedPropertyKeys } = flattenData(
+    dashboardData?.dashboard,
+    ['id', 'title', 'name', 'tenant_id', 'created_time', 'configuration'],
   )
+
+  console.log(dashboardData)
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -26,13 +35,17 @@ export function DashboardManage() {
           <ExportTable refComponent={ref} />
           <div className="flex items-center gap-x-3">
             <CreateDashboard projectId={projectId} />
-            <ComboBoxSelectDashboard
-              projectId={projectId}
-              setFilteredComboboxData={setFilteredComboboxData}
-            />
+            {/* dummyInput */}
           </div>
         </div>
-        <DashboardTable data={filteredComboboxData} projectId={projectId} />
+        <DashboardTable
+          data={dashboardFlattenData}
+          projectId={projectId}
+          offset={offset}
+          setOffset={setOffset}
+          total={dashboardData?.total || 0}
+          limitPagination={limitPagination}
+        />
       </div>
     </div>
   )

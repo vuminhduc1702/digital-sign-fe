@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import storage from '~/utils/storage'
 import { useGetRoles } from '../api'
-import { ComboBoxSelectRole } from './ComboBoxSelectRole'
 import { CreateRole } from './CreateRole'
 import TitleBar from '~/components/Head/TitleBar'
 import { RoleTable } from './RoleTable'
+import { flattenData } from '~/utils/misc'
 
 import { type Role } from '../types'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -35,9 +35,12 @@ export function RoleSidebar() {
 
   const projectId = storage.getProject()?.id
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Role[]>([])
+  const { data, isPreviousData } = useGetRoles({ projectId, offset })
 
-  const { data, isPreviousData } = useGetRoles({ projectId })
+  const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
+    data?.roles,
+    ['id', 'name', 'policies', 'role_type'],
+  )
 
   const ref = useRef(null)
   const {
@@ -56,7 +59,7 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
+  const aoo = roleFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(curr.id)) {
       const temp = {
         [t('table:no')]: (index + 1).toString(),
@@ -123,17 +126,15 @@ export function RoleSidebar() {
               />
             )}
             <CreateRole />
-            <ComboBoxSelectRole
-              data={data?.roles || []}
-              setFilteredComboboxData={setFilteredComboboxData}
-            />
+            {/* dummyInput */}
           </div>
         </div>
         <RoleTable
-          data={filteredComboboxData}
+          project_id={projectId}
+          data={roleFlattenData}
           offset={offset}
           setOffset={setOffset}
-          total={0}
+          total={data?.total || 0}
           isPreviousData={isPreviousData}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}

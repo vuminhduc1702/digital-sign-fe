@@ -24,6 +24,8 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { useGetAttrs } from '../../api/attrAPI/getAttrs'
+import { flattenData } from '~/utils/misc'
 
 export const STATUS = {
   true: 'Có',
@@ -134,12 +136,11 @@ function AttrTableContextMenu({
 }
 
 export function AttrTable({
-  data,
   entityId,
   entityType,
+  searchQuery,
   ...props
 }: {
-  data: Attribute[]
   entityId: string
   entityType: EntityType
   rowSelection: { [key: string]: boolean }
@@ -151,8 +152,15 @@ export function AttrTable({
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
 
+  const { data: attrsData } = useGetAttrs({ entityType, entityId })
+
+  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
+    attrsData?.attributes,
+    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
+  )
+
   const dataSorted =
-    data?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || data
+    attrFlattenData?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || attrFlattenData
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({

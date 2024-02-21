@@ -2,7 +2,11 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import {
+  type ColumnDef,
+  createColumnHelper,
+  filterFns,
+} from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -34,6 +38,7 @@ import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 import { UpdateMqttConfig } from './UpdateMqttConfig'
+import { useEffect } from 'react'
 
 function DeviceTableContextMenu({
   id,
@@ -280,11 +285,12 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     isdn: false,
   }
   const columnHelper = createColumnHelper<Device>()
+
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -605,7 +611,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

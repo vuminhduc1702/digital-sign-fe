@@ -1,5 +1,6 @@
 import { type FieldValues, type Control, type Path } from 'react-hook-form'
 import type * as z from 'zod'
+import { EntityThing } from '~/cloud/customProtocol'
 
 import { type BasePaginationSchema } from '~/utils/schemaValidation'
 
@@ -13,7 +14,7 @@ export type BasePagination = z.infer<typeof BasePaginationSchema>
 
 export type BaseTablePagination = {
   offset: number
-  setOffset: React.Dispatch<React.SetStateAction<number>>
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
   total: number
   isPreviousData: boolean
 }

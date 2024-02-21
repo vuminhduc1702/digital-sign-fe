@@ -5,9 +5,12 @@ import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 
 import { type BaseAPIRes } from '~/types'
 import { type ThingService } from '~/cloud/flowEngineV2'
+import { limitPagination } from '~/utils/const'
 
 type GetServiceThings = {
   thingId: string
+  offset?: number
+  limit?: number
 }
 
 type GetServiceThingsRes = {
@@ -17,7 +20,11 @@ type GetServiceThingsRes = {
 export const getServiceThings = ({
   thingId,
 }: GetServiceThings): Promise<GetServiceThingsRes> => {
-  return axios.get(`/api/fe/thing/${thingId}/service`)
+  return axios.get(`/api/fe/thing/${thingId}/service`, {
+    params: {
+      share: true,
+    },
+  })
 }
 
 type QueryFnType = typeof getServiceThings
@@ -32,7 +39,7 @@ export const useGetServiceThings = ({
 }: UseServiceThingsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
     queryKey: ['service-things', thingId],
-    queryFn: () => getServiceThings({ thingId }),
+    queryFn: () => getServiceThings({ thingId}),
     ...config,
   })
 }
