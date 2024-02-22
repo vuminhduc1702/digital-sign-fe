@@ -7,10 +7,14 @@ import LPnavigation from './LPnavigation'
 type MobileSidebarProps = {
   sidebarOpen: boolean
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
-  childToParent
+  childToParent: (childdata: string) => void
 }
 
-function MobileLP({ sidebarOpen, setSidebarOpen, childToParent }: MobileSidebarProps) {
+function MobileLP({
+  sidebarOpen,
+  setSidebarOpen,
+  childToParent,
+}: MobileSidebarProps) {
   return (
     <Transition.Root show={sidebarOpen} as={Fragment}>
       <Dialog
@@ -52,14 +56,11 @@ function MobileLP({ sidebarOpen, setSidebarOpen, childToParent }: MobileSidebarP
             >
               <div className="absolute right-0 top-0 -mr-12 pt-2 xs2:right-20 xs2:top-8 xs:right-20 xs:top-8">
                 <button
-                  className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                  className="ml-1 flex size-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <span className="sr-only">Close sidebar</span>
-                  <XMarkIcon
-                    className="h-6 w-6 text-white"
-                    aria-hidden="true"
-                  />
+                  <XMarkIcon className="size-6 text-white" aria-hidden="true" />
                 </button>
               </div>
             </Transition.Child>

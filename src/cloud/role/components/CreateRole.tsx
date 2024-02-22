@@ -87,7 +87,7 @@ export const roleSchema = z
       }),
     ]),
   )
-export function CreateRole({ project_id = '' }: { project_id: string }) {
+export function CreateRole({ project_id = '' }: { project_id?: string }) {
   const { t } = useTranslation()
   const [type, setType] = useState('Generic')
 
@@ -177,7 +177,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
       resetData={resetData}
       triggerButton={
         <Button
-          className="h-9 w-9 rounded-md"
+          className="size-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -192,7 +192,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -441,7 +441,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                   <img
                     src={btnDeleteIcon}
                     alt="Delete policy"
-                    className="h-10 w-10"
+                    className="size-10"
                   />
                 }
               />
