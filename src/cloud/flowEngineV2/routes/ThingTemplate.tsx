@@ -16,7 +16,7 @@ import { InputField } from '~/components/Form'
 export function ThingTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
-  
+
   const projectId = storage.getProject()?.id
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -63,19 +63,21 @@ export function ThingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = thingFlattenData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.id)) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:custom_protocol.thing.name')]: curr.name,
-        [t('cloud:custom_protocol.thing.template_name')]: curr.template_name,
-        [t('cloud:custom_protocol.thing.number_thing')]: curr.total_service,
-        [t('cloud:project_manager.add_project.description')]: curr.description,
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    thingFlattenData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:custom_protocol.thing.name')]: curr.name,
+          [t('cloud:custom_protocol.thing.template_name')]: curr.template_name,
+          [t('cloud:custom_protocol.thing.number_thing')]: curr.total_service,
+          [t('cloud:project_manager.add_project.description')]:
+            curr.description,
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">

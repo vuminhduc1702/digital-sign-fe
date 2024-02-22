@@ -55,19 +55,20 @@ export function EventManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.id)) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-        [t('cloud:org_manage.group_manage.title')]: curr.group_name,
-        onClick: curr.onClick,
-        [t('billing:manage_bill.table.status')]: curr.status,
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    filteredComboboxData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+          [t('cloud:org_manage.group_manage.title')]: curr.group_name,
+          onClick: curr.onClick,
+          [t('billing:manage_bill.table.status')]: curr.status,
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   // flatten the data
   const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(

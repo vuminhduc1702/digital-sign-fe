@@ -17,6 +17,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const dashboardSchema = z.object({
+  id: z.string(),
   title: nameSchema,
   configuration: z.object({
     description: z.string(),

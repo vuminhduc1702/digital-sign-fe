@@ -57,22 +57,23 @@ export function DeviceManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.id)) {
-      const temp = {
-        [t('table:no')]: (index + 1 + offset).toString(),
-        [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-        [t('cloud:org_manage.group_manage.title')]: curr.group_name,
-        [t('billing:manage_bill.table.status')]: curr.status,
-        [t('sidebar:cloud.device_template')]: curr.template_name,
-        ['Key']: curr.key,
-        [t('cloud:org_manage.device_manage.table.created_at')]:
-          convertEpochToDate(curr.created_time),
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    filteredComboboxData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1 + offset).toString(),
+          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+          [t('cloud:org_manage.group_manage.title')]: curr.group_name,
+          [t('billing:manage_bill.table.status')]: curr.status,
+          [t('sidebar:cloud.device_template')]: curr.template_name,
+          Key: curr.key,
+          [t('cloud:org_manage.device_manage.table.created_at')]:
+            convertEpochToDate(curr.created_time),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   // flatten the data
   const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(

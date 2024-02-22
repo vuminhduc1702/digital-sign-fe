@@ -74,7 +74,10 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 type BillingTableProps = {
   data?: Billing[]
   handleField?: (field: string, value: any) => void
-  isHiddenCheckbox: boolean
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function BillingTable({

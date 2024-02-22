@@ -142,6 +142,10 @@ function FireWareTableContextMenu({
 
 type FirmWareTableProps = {
   data: FirmWare[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function FirmWareTable({ data, ...props }: FirmWareTableProps) {

@@ -54,23 +54,24 @@ export function UserManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.user_id)) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-        Email: curr.email,
-        [t('cloud:org_manage.user_manage.table.role_name')]: curr.role_name
-          ? uppercaseTheFirstLetter(curr.role_name)
-          : '',
-        [t('cloud:org_manage.user_manage.table.activate')]: curr.activate
-          ? 'Có'
-          : 'Không',
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    filteredComboboxData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.user_id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+          Email: curr.email,
+          [t('cloud:org_manage.user_manage.table.role_name')]: curr.role_name
+            ? uppercaseTheFirstLetter(curr.role_name)
+            : '',
+          [t('cloud:org_manage.user_manage.table.activate')]: curr.activate
+            ? 'Có'
+            : 'Không',
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
     userData?.users,
