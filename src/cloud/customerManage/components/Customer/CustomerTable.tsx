@@ -53,7 +53,10 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
 type CustomerTableProps = {
   data?: Customer[]
-  isHiddenCheckbox: boolean
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {

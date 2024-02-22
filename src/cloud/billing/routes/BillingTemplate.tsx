@@ -1,24 +1,40 @@
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import storage from '~/utils/storage'
 
-import { useTranslation } from 'react-i18next'
-import { Button } from '~/components/Button'
-import { InputField, SelectDropdown, SelectField } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
-import { SearchIcon } from '~/components/SVGIcons'
-import { type SearchFilter, useGetBillings } from '../api/billingAPI'
-import { BillingTable } from '../components/Billing'
-import { Calendar as CalendarIcon } from 'lucide-react'
-import { cn } from '~/utils/misc'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { Calendar } from '~/components/Calendar'
-import { type DateRange } from 'react-day-picker'
-import { format } from 'date-fns'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { useForm } from 'react-hook-form'
-import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { Calendar as CalendarIcon } from 'lucide-react'
+import { type DateRange } from 'react-day-picker'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
+import { Button } from '~/components/Button'
+import { Calendar } from '~/components/Calendar'
+import { InputField, SelectDropdown } from '~/components/Form'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { SearchIcon } from '~/components/SVGIcons'
+import { cn } from '~/utils/misc'
+import { useGetBillings, type SearchFilter } from '../api/billingAPI'
+import { BillingTable } from '../components/Billing'
+import { ExportTable } from '~/components/Table/components/ExportTable'
+import { convertEpochToDate } from '~/utils/transformFunc'
+
+const transformStatus = stt => {
+  switch (stt) {
+    case 'Wait':
+      return 'Đang chờ thanh toán'
+    case 'Paid':
+      return 'Đã thanh toán'
+    case 'Expired':
+      return 'Hết hạn thanh toán'
+    case 'Init':
+      return 'Khởi tạo'
+    default:
+      return ''
+  }
+}
 
 export function BillingTemplate() {
   const { t } = useTranslation()
@@ -40,7 +56,7 @@ export function BillingTemplate() {
     end_time: endTime,
     config: { keepPreviousData: true, staleTime: 1000 },
   })
-
+  const ref = useRef(null)
   const handleField = (field: string, value: any) => {
     const newObj: SearchFilter = {}
     newObj[field] = value
@@ -51,6 +67,47 @@ export function BillingTemplate() {
     resolver: searchSubcriptionSchema && zodResolver(searchSubcriptionSchema),
     defaultValues: { value: '', key: '' },
   })
+
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('billing:manage_bill.table.id'),
+      t('billing:manage_bill.table.c_name'),
+      t('billing:manage_bill.table.plan_name'),
+      t('billing:manage_bill.table.cost'),
+      t('billing:manage_bill.table.date_request'),
+      t('billing:manage_bill.table.date_expiry'),
+      t('billing:manage_bill.table.date_payment'),
+      t('billing:manage_bill.table.status'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    data?.data?.data?.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('billing:manage_bill.table.id')]: curr.id,
+          [t('billing:manage_bill.table.c_name')]: curr.c_name,
+          [t('billing:manage_bill.table.plan_name')]: curr.plan_name,
+          [t('billing:manage_bill.table.cost')]: curr.cost,
+          [t('billing:manage_bill.table.date_request')]: convertEpochToDate(
+            curr.date_request,
+          ),
+          [t('billing:manage_bill.table.date_expiry')]: convertEpochToDate(
+            curr.date_expiry,
+          ),
+          [t('billing:manage_bill.table.date_payment')]: convertEpochToDate(
+            curr.date_payment,
+          ),
+          [t('billing:manage_bill.table.status')]: transformStatus(curr.status),
+        }
+        acc.push(temp)
+      }
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <>
@@ -70,6 +127,12 @@ export function BillingTemplate() {
               setSearchFilter(newObj)
             })}
           >
+            <ExportTable
+              refComponent={ref}
+              rowSelection={rowSelection}
+              aoo={aoo || []}
+              pdfHeader={pdfHeader}
+            />
             <div className="flex items-center gap-x-3">
               <SelectDropdown
                 isClearable={false}
@@ -157,7 +220,8 @@ export function BillingTemplate() {
           handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
-          isHiddenCheckbox={true}
+          rowSelection={rowSelection}
+          setRowSelection={setRowSelection}
         />
       </div>
     </>

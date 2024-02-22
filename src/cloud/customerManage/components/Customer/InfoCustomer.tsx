@@ -50,7 +50,7 @@ export function InfoCustomer() {
 
   return (
     <div className="relative h-full p-4">
-      <div className="flex mb-5">
+      <div className="mb-5 flex">
         <div className="">
           <Button
             className="rounded-md pr-5"
@@ -64,13 +64,13 @@ export function InfoCustomer() {
             <span>{t('btn:back')}</span>
           </Button>
         </div>
-        <div className="flex items-center justify-center ml-5">
+        <div className="ml-5 flex items-center justify-center">
           <p className="text-2xl font-semibold">
             {t('billing:subcription.popup.customer_info')}
           </p>
         </div>
       </div>
-      <div className="bg-gray-50 rounded-md p-5 shadow-lg mb-2">
+      <div className="mb-2 rounded-md bg-gray-50 p-5 shadow-lg">
         <div className="flex items-center gap-2">
           <div className="flex gap-3">
             <p className="text-xl font-semibold">

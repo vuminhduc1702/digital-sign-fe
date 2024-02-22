@@ -115,10 +115,10 @@ function DashboardTableContextMenu({
 export function DashboardTable({
   data,
   projectId,
-  offset, 
-  setOffset, 
+  offset,
+  setOffset,
   limitPagination,
-  total, 
+  total,
   ...props
 }: {
   data: DashboardRes[]
@@ -127,6 +127,10 @@ export function DashboardTable({
   setOffset: React.Dispatch<React.SetStateAction<number>>
   total: number
   limitPagination: number
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }) {
   const { t } = useTranslation()
 
@@ -202,7 +206,7 @@ export function DashboardTable({
       offset={offset}
       setOffset={setOffset}
       total={total}
-      limitPagination={limitPagination} 
+      limitPagination={limitPagination}
       {...props}
     />
   ) : (

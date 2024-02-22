@@ -634,7 +634,8 @@
         "delete_dashboard": "Xoá bảng ĐK",
         "delete_dashboard_full": "Xoá bảng điều khiển",
         "delete_dashboard_confirm": "Bạn có chắc chắn muốn xóa bảng điều khiển {{DBNAME}}?",
-        "delete_confirm": "Bạn có chắc chắn muốn xóa"
+        "delete_confirm": "Bạn có chắc chắn muốn xóa",
+        "delete_multiple_dashboard_confirm": "Bạn có chắc chắn muốn xóa các bảng điều khiển đã chọn?"
       },
       "add_dashboard": {
         "title": "Thêm mới bảng điều khiển",
@@ -725,7 +726,8 @@
         "create_time": "Ngày tạo",
         "created_by": "Người tạo",
         "delete_firmware": "Xoá Firmware",
-        "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?"
+        "delete_firmware_confirm": "Bạn có chắc chắn muốn xóa Fireware {{FIRMWARE_NAME}}?",
+        "delete_multiple_firmware_confirm": "Bạn có chắc chắn muốn xóa các Fireware đã chọn?"
       },
       "update_version": "Update Version Firmware",
       "add_firmware": {
@@ -1308,7 +1310,8 @@
     "empty_id": "Không có ID"
   },
   "dev_role": {
-    "list": "Danh sách dev role"
+    "list": "Danh sách dev role",
+    "title": "Dev Role"
   },
   "schema": {
     "name_long": "Tên quá dài",

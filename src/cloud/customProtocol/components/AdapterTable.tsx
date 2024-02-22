@@ -139,6 +139,10 @@ function AdapterTableContextMenu({
 
 type AdapterTableProps = {
   data: Adapter[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function AdapterTable({

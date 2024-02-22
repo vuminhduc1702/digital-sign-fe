@@ -58,24 +58,24 @@ export function GroupDetail() {
     }
     return acc
   }, [])
-  const aoo = attrFlattenData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(index.toString())) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-        [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-          curr.value_type,
-        ),
-        [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-        [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-        [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-          convertEpochToDate(curr.last_update_ts / 1000),
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    attrFlattenData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
-
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">

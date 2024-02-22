@@ -73,7 +73,7 @@ export function BaseTable<T extends Record<string, any>>({
   columns,
   offset = 0,
   setOffset,
-  total,
+  total = 1,
   isPreviousData,
   className,
   renderSubComponent,
@@ -86,7 +86,7 @@ export function BaseTable<T extends Record<string, any>>({
   callbackParent,
   rowSelection = {},
   setRowSelection,
-  isHiddenCheckbox,
+  isHiddenCheckbox = false,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -216,7 +216,7 @@ export function BaseTable<T extends Record<string, any>>({
                           >
                             <div
                               className={cn(
-                                'relative flex flex-col items-center justify-center text-table-header',
+                                'text-table-header relative flex flex-col items-center justify-center',
                                 {
                                   'px-3': headerGroup.headers.length > 8,
                                 },
@@ -289,7 +289,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                className="size-4 accent-primary-400 mr-1 rounded-sm border"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -340,7 +340,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                        className="size-4 accent-primary-400 mr-1 rounded-sm border"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />

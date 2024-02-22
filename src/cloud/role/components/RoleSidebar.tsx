@@ -59,22 +59,23 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = roleFlattenData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(curr.id)) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:role_manage.add_role.name')]: curr.name,
-        [t('cloud:role_manage.add_role.role_type')]: curr.role_type
-          ? curr.role_type
-          : 'Generic',
-        [t('cloud:role_manage.add_role.actions')]: convertENtoVN(
-          JSON.parse(curr.policies)[0].actions,
-        ).toString(),
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    roleFlattenData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:role_manage.add_role.name')]: curr.name,
+          [t('cloud:role_manage.add_role.role_type')]: curr.role_type
+            ? curr.role_type
+            : 'Generic',
+          [t('cloud:role_manage.add_role.actions')]: convertENtoVN(
+            JSON.parse(curr.policies)[0].actions,
+          ).toString(),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <>
