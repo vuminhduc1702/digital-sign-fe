@@ -26,7 +26,7 @@ export function SectionOrder1() {
               danh sách thuê bao, trình trạng cước thanh toán, định vị thuê
               bao... và nhiều tiện ích khác
             </div>
-            <div className="flex h-fit pt-[20px] xl:gap-10 lg:gap-10 xs2:flex-col xs:flex-col sm:flex-col lg:flex-row">
+            <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row lg:gap-10 xl:gap-10">
               <div className="h-fit w-fit">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
@@ -60,7 +60,7 @@ export function SectionOrder1() {
                 </div>
               </div>
               <div className="ml-[90px] h-fit w-fit xs2:ml-0 xs:ml-0 sm:ml-0">
-                <div className="mb-[-8px] md:pt-2 xl:pt-0 lg:pt-0 md:border-t md:border-[#E2E2E2] xl:border-0 lg:border-0">
+                <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
                     height={25}
@@ -105,12 +105,12 @@ export function SectionOrder1() {
             <img
               src={Group150}
               alt="150"
-              className="absolute right-0 top-0 h-fit w-fit xs2:right-[-37px] xs2:top-[-170px] xs:right-[-42px] xs:top-[-190px] sm:right-[-42px] sm:top-[-270px] md:right-[-45px] md:top-[-356px] lg:top-[-420px] lg:h-fit lg:w-fit"
+              className="absolute right-0 top-0 xl:h-fit xl:w-fit xs2:w-fit xs2:h-fit xs2:right-[-37px] xs2:top-[-150px] xs:right-[-42px] xs:top-[-190px] xs:h-fit xs:w-fit sm:right-[-42px] sm:top-[-270px] sm:h-fit sm:w-fit md:right-[-45px] md:top-[-356px] md:h-fit md:w-fit lg:top-[-420px] lg:h-fit lg:w-fit"
             />
             <img
               src={Group148}
               alt="150"
-              className="absolute bottom-0 left-0 h-fit w-fit md:bottom-[20px] lg:bottom-[20px] lg:h-fit lg:w-fit xl:bottom-[-20px]"
+              className="absolute bottom-0 left-0 xl:h-fit xl:w-fit md:bottom-[20px] lg:bottom-[20px] xs2:w-fit xs2:h-fit xs:h-fit xs:w-fit sm:h-fit sm:w-fit lg:h-fit md:h-fit md:w-fit lg:w-fit xl:bottom-[-20px]"
             />
           </div>
         </div>
