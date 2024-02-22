@@ -9,7 +9,7 @@ export function SectionOrder1() {
   const { t } = useTranslation()
   return (
     <>
-      <div className="h-[100px]"></div>
+      <div className="h-1 lg:h-[100px]"></div>
       <div className="flex h-[422px] justify-center xs2:mt-[500px] xs:mt-[460px] sm:mt-[460px] md:mt-[440px] lg:mt-[340px] xl:mt-[10px]">
         <div className="flex h-full w-[1040px] xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center">
           <div className="w-1/2 ">
@@ -23,7 +23,7 @@ export function SectionOrder1() {
               {t('landingpage_text:section_order_1.text_2')}
             </div>
             <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row lg:gap-10 xl:gap-10">
-              <div className="h-fit w-fit">
+              <div className="size-fit">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
                     width={25}
@@ -55,7 +55,7 @@ export function SectionOrder1() {
                   </p>
                 </div>
               </div>
-              <div className="ml-[90px] h-fit w-fit xs2:ml-0 xs:ml-0 sm:ml-0">
+              <div className="ml-[90px] size-fit xs2:ml-0 xs:ml-0 sm:ml-0">
                 <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
