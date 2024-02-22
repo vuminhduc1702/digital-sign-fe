@@ -10,18 +10,6 @@ import { useLocation } from 'react-router-dom'
 import { useDisclosure } from '~/utils/hooks'
 import { Drawer, type DrawerProps } from '../Drawer'
 import { Button } from '../Button'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetPortal,
-  SheetClose,
-  SheetFooter,
-} from '../Sheet'
-import { cn } from '~/utils/misc'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 
