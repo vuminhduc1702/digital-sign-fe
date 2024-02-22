@@ -17,67 +17,68 @@ import Pic6 from '~/assets/images/landingpage/Pict_11s.png'
 import Pic7 from '~/assets/images/landingpage/Pict_6s.png'
 
 export function SectionProduct() {
+  const { t } = useTranslation()
+
   const slides = [
     {
       src: Pic1,
       alt: '9',
-      title_h1: 'Đồng hồ thông minh',
-      title_h2: 'MyKID',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_1.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_1.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: 'https://viettel.vn/MyKID',
     },
     {
       src: Pic2,
       alt: '17',
-      title_h1: 'Quản lý tài sản',
-      title_h2: 'IoT V-Tracking: Ô tô',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_2.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_2.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: 'https://smartmotor.vn/',
     },
     {
       src: Pic3,
       alt: '12',
-      title_h1: 'Ô tô thông minh',
-      title_h2: 'vTag',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_3.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_3.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: 'https://viettel.vn/vcar',
     },
     {
       src: Pic4,
       alt: '13',
-      title_h1: 'Sức khỏe cá nhân',
-      title_h2: 'VHealth',
-      launching: 'Đang phát triển',
+      title_h1: t('landingpage:section_product.slide.slide_4.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_4.title_2'),
+      launching: t('landingpage:section_product.developing'),
       href: '#',
     },
     {
       src: Pic5,
       alt: '15',
-      title_h1: 'Office thông minh',
-      title_h2: 'Camera Al',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_5.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_5.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: '#',
     },
     {
       src: Pic6,
       alt: '14',
-      title_h1: 'Căn hộ thông minh',
-      title_h2: 'Home Camera',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_6.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_6.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: '#',
     },
     {
       src: Pic7,
       alt: '16',
-      title_h1: 'Định vị thông minh',
-      title_h2: 'vTag',
-      launching: 'Xem chi tiết',
+      title_h1: t('landingpage:section_product.slide.slide_7.title_1'),
+      title_h2: t('landingpage:section_product.slide.slide_7.title_2'),
+      launching: t('landingpage:section_product.lauching'),
       href: 'https://viettel.vn/vtag',
     },
   ]
 
-  const { t } = useTranslation()
-
+  
   return (
     <>
       <div className="mt-[80px]">

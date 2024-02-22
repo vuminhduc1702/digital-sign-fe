@@ -43,15 +43,15 @@ export function SectionPackageData() {
   })
 
   const categories = [
-    'Đo lưu lượng (Metering)',
-    'Giám sát hành trình',
-    'Máy thanh toán POS',
-    'Loa phường thông minh',
-    'Màn hình quảng cáo',
-    'Camera',
-    'Ô tô',
-    'Thiết bị bán hàng',
-    'Tất cả',
+    t('landingpage:pack_of_data_M2M.categories.categories_1'),
+    t('landingpage:pack_of_data_M2M.categories.categories_2'),
+    t('landingpage:pack_of_data_M2M.categories.categories_3'),
+    t('landingpage:pack_of_data_M2M.categories.categories_4'),
+    t('landingpage:pack_of_data_M2M.categories.categories_5'),
+    t('landingpage:pack_of_data_M2M.categories.categories_6'),
+    t('landingpage:pack_of_data_M2M.categories.categories_7'),
+    t('landingpage:pack_of_data_M2M.categories.categories_8'),
+    t('landingpage:pack_of_data_M2M.categories.categories_9'),
   ]
   const PackofDataRef = useRef(
     Array.isArray(PackofData?.data)
