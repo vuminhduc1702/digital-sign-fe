@@ -11,6 +11,8 @@ import {
 } from '~/components/Accordion'
 
 export function QandA() {
+  const { t } = useTranslation()
+
   const accordionRef_1 = useRef<HTMLDivElement | null>(null)
   const accordionRef_2 = useRef<HTMLDivElement | null>(null)
   const [isAccordionChange, setIsAccordionChange] = useState(false)
@@ -19,32 +21,33 @@ export function QandA() {
     {
       value: 'item-1',
       triggerText:
-        'Làm sao để có thể Quản lý thông tin liên quan tới thuê bao mà doanh nghiệp đã đăng ký?',
-      contentText:
-        '- Để quản lý được thông tin liên quan tới thuê bao của doanh nghiệp một cách dễ dàng, anh/chị cần đăng ký tài khoản ở trên nền tảng IoT Innoway, đăng nhập và bổ sung thông tin GPKD của doanh nghiệp - Để nhận được sự hỗ trợ chi tiết, vui lòng gọi số ...',
+      t('landingpage_text:q_a.item_1.trigger'),
+    contentText:
+      t('landingpage_text:q_a.item_1.content'),
     },
     {
       value: 'item-2',
       triggerText:
-        'Khách hàng có thể quản lý những thông tin gì của thuê bao thuộc doanh nghiệp ?',
+        t('landingpage_text:q_a.item_2.trigger'),
       contentText:
-        'Hệ thống Telco của Viettel hỗ trợ doanh nghiệp các nghiệp vụ sau: - Xem thông tin thuê bao, hợp đồng , hóa đơn, đơn hàng của doanh nghiệp - Thực hiện đăng ký đơn mua hàng mua thuê bao mới một cách thuận tiện - Thực hiện đầu nối trực tuyến mộ cách đơn giản, thuận tiện - Thực hiện nạp tiền, thanh toán hóa đơn, đăng ký các gói dịch vụ giá trị gia tăng - Thực hiện chặn, mở thuê bao một các chủ động',
+        t('landingpage_text:q_a.item_2.content'),
     },
     {
       value: 'item-3',
       triggerText:
-        'Khách hàng có thể quản lý hệ thống thuê bao của mình trên hệ thống Telco không ?',
-      contentText:
-        'Hệ thống Telco của Viettel hỗ trợ doanh nghiệp quản lý các thuê bao doanh nghiệp, không hỗ trợ với khách hàng cá nhân',
+      t('landingpage_text:q_a.item_3.trigger'),
+    contentText:
+      t('landingpage_text:q_a.item_3.content'),
     },
     {
       value: 'item-4',
-      triggerText: 'Dịch vụ data M2M là gì?',
-      contentText:
-        'Hệ thống Telco của Viettel hỗ trợ các doanh nghiệp đã đăng ký sử dụng thuê bao của Viettel quản lý thông tin thuê bao một cách miễn phí. Khách hàng chỉ cần tạo tài khoản và cung cấp thông tin GPKD để thực hiện quản lý.',
+      triggerText:
+      t('landingpage_text:q_a.item_4.trigger'),
+    contentText:
+      t('landingpage_text:q_a.item_4.content'),
     },
   ]
-  const { t } = useTranslation()
+  
   useEffect(() => {
     setIsReRender(!isReRender)
   }, [isAccordionChange])

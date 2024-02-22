@@ -17,14 +17,10 @@ export function SectionOrder1() {
               {t('landingpage:order1.M2M_manage_solution')}
             </div>
             <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black xs2:w-[200px] xs:w-[200px] sm:w-[300px] md:w-[460px] lg:w-[500px]">
-              Nền tảng tiên phong tại Việt Nam, cung cấp đồng thời 2 dịch vụ nền
-              tảng quản lý kết nối (CMP) và quản lý ứng dụng (AEP). Hỗ trợ toàn
-              trình cho các dịch vụ IoT dùng công nghệ cellular (2G/4G/Nb-IoT).
+              {t('landingpage_text:section_order_1.text_1')}
             </div>
             <div className="w-[443px] pt-5 text-[16px] leading-[20.8px] text-black xs2:w-[200px] xs:w-[200px] sm:w-[300px] md:w-[460px] lg:w-[500px]">
-              Nền tảng quản lý kết nối của Viettel cho phép doanh nghiệp quản lý
-              danh sách thuê bao, trình trạng cước thanh toán, định vị thuê
-              bao... và nhiều tiện ích khác
+              {t('landingpage_text:section_order_1.text_2')}
             </div>
             <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row lg:gap-10 xl:gap-10">
               <div className="h-fit w-fit">

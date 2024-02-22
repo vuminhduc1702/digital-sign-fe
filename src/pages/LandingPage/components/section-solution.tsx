@@ -8,29 +8,31 @@ import {
 } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
 export function SectionSolution() {
+  const { t } = useTranslation()
+
   const slides = [
     {
-      title_1: 'Tiết kiệm',
-      title_2: 'Giảm chi phí vận hành',
+      title_1: t('landingpage_text:slides.slide_1.text_1'),
+      title_2: t('landingpage_text:slides.slide_1.text_2'),
       icon: <Money1 width={65} height={65} viewBox="0 0 65 65"></Money1>,
     },
     {
-      title_1: 'Chính xác',
-      title_2: 'Cung cấp thông tin chính xác, kịp thời',
+      title_1: t('landingpage_text:slides.slide_2.text_1'),
+      title_2: t('landingpage_text:slides.slide_2.text_2'),
       icon: <Time1 width={65} height={65} viewBox="0 0 65 65"></Time1>,
     },
     {
-      title_1: 'Trải nghiệm',
-      title_2: 'Nâng cao trải nghiệm khách hàng',
+      title_1: t('landingpage_text:slides.slide_3.text_1'),
+      title_2: t('landingpage_text:slides.slide_3.text_2'),
       icon: <Review1 width={65} height={65} viewBox="0 0 65 65"></Review1>,
     },
     {
-      title_1: 'An toàn',
-      title_2: 'Cải thiện độ an toàn',
+      title_1: t('landingpage_text:slides.slide_4.text_1'),
+      title_2: t('landingpage_text:slides.slide_4.text_2'),
       icon: <World1 width={65} height={65} viewBox="0 0 65 65"></World1>,
     },
   ]
-  const { t } = useTranslation()
+  
   return (
     <>
       <div className="mb-20 flex justify-center">

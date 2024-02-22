@@ -317,8 +317,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             <div className="flex max-w-full items-center justify-center">
               <div className="mt-10 flex items-center justify-center text-white xs2:w-[270px] xs:w-[270px] md:w-[470px] xl:w-1/2">
                 <p className="text-2xl ">
-                  Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
-                  ứng dụng.
+                  {t('landingpage_text:index')}
                 </p>
               </div>
             </div>
