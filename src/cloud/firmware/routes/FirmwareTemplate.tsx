@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useGetFirmwares } from '../api/firmwareAPI'
 import { type FirmWare } from '../types'
 import { flattenData } from '~/utils/misc'
-import { convertEpochToDate } from '~/utils/transformFundc'
+import { convertEpochToDate } from '~/utils/transformFunc'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -129,7 +129,7 @@ export function FirmwareTemplate() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />

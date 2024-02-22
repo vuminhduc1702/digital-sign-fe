@@ -1,8 +1,7 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -16,15 +15,12 @@ import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 
 import { type BaseTablePagination } from '~/types'
-import { type EntityThing, type EntityThingList } from '~/cloud/customProtocol'
+import { type EntityThing } from '~/cloud/customProtocol'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
-
-import { flattenData } from '~/utils/misc'
 
 function ThingTableContextMenu({
   id,
@@ -53,11 +49,11 @@ function ThingTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit device" className="size-5" />
               }
               onClick={open}
             >
@@ -72,14 +68,14 @@ function ThingTableContextMenu({
               ).replace('{{THINGNAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete thing"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -94,7 +90,7 @@ function ThingTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -188,11 +184,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={thingFlattenData}
-      offset={offset}
-      setOffset={setOffset}
-      total={thingData?.data?.total ?? 0}
-      isPreviousData={isPreviousData}
+      data={data}
       columns={columns}
       onDataText={t('table:no_thing')}
       {...props}

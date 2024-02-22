@@ -9,7 +9,7 @@ export function SectionOrder1() {
   const { t } = useTranslation()
   return (
     <>
-      <div className="h-[100px]"></div>
+      <div className="h-0 lg:h-[100px]"></div>
       <div className="flex h-[422px] justify-center xs2:mt-[500px] xs:mt-[460px] sm:mt-[460px] md:mt-[540px] lg:mt-[340px] xl:mt-[10px]">
         <div className="flex h-full w-[1040px] xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center">
           <div className="w-1/2 ">
@@ -27,7 +27,7 @@ export function SectionOrder1() {
               bao... và nhiều tiện ích khác
             </div>
             <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row lg:gap-10 xl:gap-10">
-              <div className="h-fit w-fit">
+              <div className="size-fit">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
                     width={25}
@@ -59,7 +59,7 @@ export function SectionOrder1() {
                   </p>
                 </div>
               </div>
-              <div className="ml-[90px] h-fit w-fit xs2:ml-0 xs:ml-0 sm:ml-0">
+              <div className="ml-[90px] size-fit xs2:ml-0 xs:ml-0 sm:ml-0">
                 <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
@@ -105,12 +105,12 @@ export function SectionOrder1() {
             <img
               src={Group150}
               alt="150"
-              className="absolute right-0 top-0 xl:h-fit xl:w-fit xs2:w-fit xs2:h-fit xs2:right-[-37px] xs2:top-[-150px] xs:right-[-42px] xs:top-[-190px] xs:h-fit xs:w-fit sm:right-[-42px] sm:top-[-270px] sm:h-fit sm:w-fit md:right-[-45px] md:top-[-356px] md:h-fit md:w-fit lg:top-[-420px] lg:h-fit lg:w-fit"
+              className="absolute right-0 top-0 xs2:right-[-37px] xs2:top-[-150px] xs2:size-fit xs:right-[-42px] xs:top-[-190px] xs:size-fit sm:right-[-42px] sm:top-[-270px] sm:size-fit md:right-[-45px] md:top-[-356px] md:size-fit lg:top-[-420px] lg:size-fit xl:size-fit"
             />
             <img
               src={Group148}
               alt="150"
-              className="absolute bottom-0 left-0 xl:h-fit xl:w-fit md:bottom-[20px] lg:bottom-[20px] xs2:w-fit xs2:h-fit xs:h-fit xs:w-fit sm:h-fit sm:w-fit lg:h-fit md:h-fit md:w-fit lg:w-fit xl:bottom-[-20px]"
+              className="absolute bottom-0 left-0 xs2:size-fit xs:size-fit sm:size-fit md:bottom-[20px] md:size-fit lg:bottom-[20px] lg:size-fit xl:bottom-[-20px] xl:size-fit"
             />
           </div>
         </div>
