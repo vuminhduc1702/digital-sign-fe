@@ -3,14 +3,14 @@ import { XMarkIcon } from '@heroicons/react/20/solid'
 import { Fragment } from 'react'
 
 import LPnavigation from './LPnavigation'
-import logo from '~/assets/images/logo.svg'
 
 type MobileSidebarProps = {
   sidebarOpen: boolean
   setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>
+  childToParent
 }
 
-function MobileLP({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
+function MobileLP({ sidebarOpen, setSidebarOpen, childToParent }: MobileSidebarProps) {
   return (
     <Transition.Root show={sidebarOpen} as={Fragment}>
       <Dialog
@@ -50,7 +50,7 @@ function MobileLP({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="absolute right-0 top-0 -mr-12 pt-2 xs2:right-20 xs:top-8 xs2:top-8 xs:right-20">
+              <div className="absolute right-0 top-0 -mr-12 pt-2 xs2:right-20 xs2:top-8 xs:right-20 xs:top-8">
                 <button
                   className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                   onClick={() => setSidebarOpen(false)}
@@ -65,7 +65,7 @@ function MobileLP({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
             </Transition.Child>
             <div className="mt-5 h-0 flex-1 overflow-y-auto">
               <nav className="space-y-1 px-2">
-                <LPnavigation />
+                <LPnavigation childToParent={childToParent} />
               </nav>
             </div>
           </div>

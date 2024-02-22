@@ -45,6 +45,18 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   })
   const logout = useLogout()
 
+  const childToParent = (childdata) => {
+    //setData(childdata);
+    console.log('childdata-main', childdata)
+    setSidebarOpen1(false)
+    if (childdata === 'introRef') scrollToIntro(introRef);
+    if (childdata === 'PackOfDataRef') scrollToIntro(PackOfDataRef);
+    if (childdata === 'ProductRef') scrollToIntro(ProductRef);
+    if (childdata === 'OrderRef') scrollToIntro(OrderRef);
+    if (childdata === 'Order1Ref') scrollToIntro(Order1Ref);
+    if (childdata === 'FAQRef') scrollToIntro(FAQRef);
+  }
+
   const [showScrollButton, setShowScrollButton] = useState(false)
   const introRef: RefObject<HTMLDivElement> = useRef(null)
   const PackOfDataRef: RefObject<HTMLDivElement> = useRef(null)
@@ -116,6 +128,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   <MobileLP
                     sidebarOpen={sidebarOpen1}
                     setSidebarOpen={setSidebarOpen1}
+                    childToParent={childToParent}
                   />
                 </>
               ) : null}
@@ -370,7 +383,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
       <div>
         {showScrollButton && (
           <button
-            className="fixed bottom-[10px] right-[10px] z-50 rounded-full bg-white "
+            className=" fixed bottom-[10px] right-[10px] z-50 rounded-full bg-white "
             onClick={scrollToTop}
           >
             <GroupSlideTop width={49} height={49} viewBox="0 0 49 49" />

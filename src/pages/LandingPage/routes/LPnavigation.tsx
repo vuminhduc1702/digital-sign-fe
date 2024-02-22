@@ -22,17 +22,9 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-import { SectionIntro } from '../components/section-introduction'
-import { SectionSolution } from '../components/section-solution'
-import { SectionProduct } from '../components/section-product'
-import { SectionOrder } from '../components/section-order'
-import { SectionOrder1 } from '../components/section-order-1'
-import { SectionClient } from '../components/section-client'
-import { QandA } from '../components/section-Q&A'
-import { SectionPackageData } from '../components/section-package-data'
 
 
-function LPnavigation() {
+function LPnavigation({ childToParent }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -46,13 +38,27 @@ function LPnavigation() {
     setValue(routerLink[1])
   }, [routerLink[1]])
 
-  const introRef: RefObject<HTMLDivElement> = useRef(null)
-  const PackOfDataRef: RefObject<HTMLDivElement> = useRef(null)
-  const solutionRef: RefObject<HTMLDivElement> = useRef(null)
-  const ProductRef: RefObject<HTMLDivElement> = useRef(null)
-  const OrderRef: RefObject<HTMLDivElement> = useRef(null)
-  const FAQRef: RefObject<HTMLDivElement> = useRef(null)
-  const Order1Ref: RefObject<HTMLDivElement> = useRef(null)
+  const [showScrollButton, setShowScrollButton] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 100) {
+        setShowScrollButton(true)
+      } else {
+        setShowScrollButton(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
+  const request_scrollToIntro = (destination) => {
+    childToParent(destination)
+  }
 
   const { data: userDataFromStorage } = useUser()
   const { data: userInfoData, isLoading: userInfoIsLoading } = useUserInfo({
@@ -186,67 +192,43 @@ function LPnavigation() {
           <div className="flex justify-start max-lg:flex-col">
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
-              onClick={() => scrollToIntro(introRef)}
+              onClick={() => request_scrollToIntro('introRef')}
             >
               <button>{t('landingpage:introduction')}</button>
             </div>
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white  "
-              onClick={() => scrollToIntro(PackOfDataRef)}
+              onClick={() => request_scrollToIntro('PackOfDataRef')}
             >
               <button>{t('landingpage:pack_of_data')}</button>
             </div>
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
-              onClick={() => scrollToIntro(ProductRef)}
+              onClick={() => request_scrollToIntro('ProductRef')}
             >
               <button>{t('landingpage:product')}</button>
             </div>
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
-              onClick={() => scrollToIntro(OrderRef)}
+              onClick={() => request_scrollToIntro('OrderRef')}
             >
               <button>{t('landingpage:Platform_IoT')}</button>
             </div>
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
-              onClick={() => scrollToIntro(Order1Ref)}
+              onClick={() => request_scrollToIntro('Order1Ref')}
             >
               <button>{t('landingpage:CMP_system')}</button>
             </div>
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
-              onClick={() => scrollToIntro(FAQRef)}
+              onClick={() => request_scrollToIntro('FAQRef')}
             >
               <button>{t('landingpage:FAQ')}</button>
             </div>
           </div>
         </div>
       </div>
-      {/* <div  ref={introRef}>
-        <SectionIntro solutionRef={solutionRef} />
-      </div>
-      <div ref={solutionRef}>
-        <SectionSolution />
-      </div>
-      <div  ref={PackOfDataRef}>
-        <SectionPackageData />
-      </div>
-      <div ref={ProductRef}>
-        <SectionProduct />
-      </div>
-      <div ref={OrderRef}>
-        <SectionOrder />
-      </div>
-      <div ref={Order1Ref}>
-        <SectionOrder1 />
-      </div>
-      <div>
-        <SectionClient />
-      </div>
-      <div ref={FAQRef}>
-        <QandA />
-      </div> */}
     </div>
   )
 }
