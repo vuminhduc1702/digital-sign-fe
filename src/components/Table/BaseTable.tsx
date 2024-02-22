@@ -9,41 +9,25 @@ import {
   type Row,
   getExpandedRowModel,
   type VisibilityState,
-  SortingFn,
-  sortingFns,
   type FilterFn,
   getFilteredRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
-  Column,
-  RowData,
 } from '@tanstack/react-table'
-import {
-  Fragment,
-  type HTMLProps,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import { Fragment, type HTMLProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
-import Pagination from './components/Pagination/Pagination'
 import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
-import refreshIcon from '~/assets/icons/table-refresh.svg'
-
 import PaginationRender from './components/Pagination/PaginationRender'
-
-import { rankItem } from '@tanstack/match-sorter-utils'
-
 import Filter from './components/Pagination/Filter'
+
+import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -198,7 +182,7 @@ export function BaseTable<T extends Record<string, any>>({
   return (
     <div
       className={cn(
-        'mt-2 flex max-h-[500px] grow flex-col justify-between overflow-x-auto',
+        'mt-2 flex grow flex-col justify-between overflow-x-auto',
         className,
       )}
     >

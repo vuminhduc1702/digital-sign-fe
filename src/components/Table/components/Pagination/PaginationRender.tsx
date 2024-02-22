@@ -36,33 +36,31 @@ export default function PaginationRender({
   const { pageSize } = table.getState().pagination
 
   const [pageIndex, setPageIndex] = useState(0)
-  
+
   return (
-    <div className="relative mt-4 flex items-center justify-between gap-2">
+    <div className="relative mt-3 flex items-center justify-between gap-2">
       <div
-        className={cn('flex gap-3', {
-          'absolute bottom-5': isAbsoluteBtn,
+        className={cn('flex flex-col', {
+          'absolute bottom-4': isAbsoluteBtn,
         })}
       >
-        <span className="text-body-light flex items-center gap-1">
-          {t('table:show_in')
-            .replace(
-              '{{PAGE}}',
-              pageSize * (pageIndex + 1) < totalAttrs
-                ? (pageSize * (pageIndex + 1))?.toString()
-                : totalAttrs?.toString(),
-            )
-            .replace('{{TOTAL}}', totalAttrs?.toString())}
-        </span>
-      </div>
-      <div>
-        <PageSizeLimit 
-          setPageSize={setPageSize}
-        />
+        <div>
+          <span className="flex items-center gap-1 text-body-light">
+            {t('table:show_in')
+              .replace(
+                '{{PAGE}}',
+                pageSize * (pageIndex + 1) < totalAttrs
+                  ? (pageSize * (pageIndex + 1))?.toString()
+                  : totalAttrs?.toString(),
+              )
+              .replace('{{TOTAL}}', totalAttrs?.toString())}
+          </span>
+        </div>
+        <PageSizeLimit setPageSize={setPageSize} />
       </div>
       <div
         className={cn('flex gap-x-2', {
-          'absolute bottom-5 right-6': isAbsoluteBtn,
+          'absolute bottom-4 right-0': isAbsoluteBtn,
         })}
       >
         <Button
@@ -87,7 +85,7 @@ export default function PaginationRender({
           disabled={pageIndex === 0 || isPreviousData}
           variant="secondaryLight"
         >
-          <ChevronLeftIcon className="h-4 w-4" />
+          <ChevronLeftIcon className="size-4" />
         </Button>
         <Pagination
           currentPage={pageIndex}
@@ -111,7 +109,7 @@ export default function PaginationRender({
           disabled={(pageIndex + 1) * pageSize >= totalAttrs || isPreviousData}
           variant="secondaryLight"
         >
-          <ChevronRightIcon className="h-4 w-4" />
+          <ChevronRightIcon className="size-4" />
         </Button>
       </div>
     </div>
