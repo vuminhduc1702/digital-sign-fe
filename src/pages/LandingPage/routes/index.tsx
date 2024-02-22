@@ -30,6 +30,11 @@ import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
+import English from '~/assets/images/landingpage/11315882511626933879-128.png'
+import VietNam from '~/assets/images/landingpage/12478762711626933882-128.png'
+
+import i18n from '~/i18n'
+
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -94,6 +99,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
   const [sidebarOpen1, setSidebarOpen1] = useState(false)
 
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
+
+  const languages = [
+    { code: 'vi', name: `Tiếng Việt`, icon: VietNam },
+    { code: 'en', name: `English`, icon: English },
+  ]
+
   return (
     <ContentLayout title={t('landingpage:title')}>
       <div className="h-[500px] xs2:h-[720px] xs:h-[670p]">
@@ -105,7 +119,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className="p-4">
-            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-48 ">
+            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-40">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -130,7 +144,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 </>
               ) : null}
 
-              <div className="flex w-full max-lg:hidden lg:justify-center ">
+              <div className="flex w-full  max-lg:hidden lg:justify-center ">
                 <div className="flex justify-start max-lg:flex-col">
                   <div
                     className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
@@ -176,6 +190,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </div>
                 </div>
               </div>
+
               {showSpinner && userInfoData != null ? (
                 <div className="flex items-center justify-center">
                   <Spinner
@@ -291,6 +306,55 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
               )}
+              <div className=" flex ">
+                <DropdownMenu.Root>
+                  <DropdownMenu.Trigger asChild className="flex items-center">
+                    <div className="cursor-pointer space-x-2">
+                      <img
+                        src={
+                          languages.find(
+                            language => i18n.language === language.code,
+                          )?.icon ?? t('nav:choose_lang')
+                        }
+                        alt="flag"
+                        className="h-auto w-8"
+                      />
+                      <p className="font-bold text-white">
+                        {languages.find(
+                          language => i18n.language === language.code,
+                        )?.name ?? t('nav:choose_lang')}
+                      </p>
+                      <SidebarDropDownIcon
+                        width={50}
+                        height={7}
+                        viewBox="0 0 12 7"
+                        className=" text-white"
+                      />
+                    </div>
+                  </DropdownMenu.Trigger>
+                  <DropdownMenu.Portal>
+                    <DropdownMenu.Content
+                      className="flex max-h-[360px]  min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                      sideOffset={-15}
+                    >
+                      {languages.map(language => (
+                        <DropdownMenu.Item
+                          key={language.code}
+                          className="group relative flex flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                          onClick={() => changeLanguage(language.code)}
+                        >
+                          <img
+                            src={language.icon}
+                            alt=""
+                            className="h-auto w-8"
+                          />
+                          <div>{language.name}</div>
+                        </DropdownMenu.Item>
+                      ))}
+                    </DropdownMenu.Content>
+                  </DropdownMenu.Portal>
+                </DropdownMenu.Root>
+              </div>
             </div>
 
             <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
@@ -316,9 +380,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             </div>
             <div className="flex max-w-full items-center justify-center">
               <div className="mt-10 flex items-center justify-center text-white xs2:w-[270px] xs:w-[270px] md:w-[470px] xl:w-1/2">
-                <p className="text-2xl ">
-                  {t('landingpage_text:index')}
-                </p>
+                <p className="text-2xl ">{t('landingpage_text:index')}</p>
               </div>
             </div>
             <div className="my-10 flex  max-w-full items-center justify-center gap-4">
@@ -346,6 +408,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           </div>
         </div>
       </div>
+
       <div className="relative top-[-74px] z-40" ref={introRef}>
         <SectionIntro solutionRef={solutionRef} />
       </div>
