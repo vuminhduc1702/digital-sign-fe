@@ -25,6 +25,9 @@ import defaultProjectImage from '~/assets/images/default-project.png'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Languages } from 'lucide-react'
 
+import English from '~/assets/images/landingpage/11315882511626933879-128.png'
+import VietNam from '~/assets/images/landingpage/12478762711626933882-128.png'
+
 function Navbar() {
   const { t } = useTranslation()
   const { data: projectsData } = useProjects()
@@ -52,13 +55,13 @@ function Navbar() {
   }
 
   const languages = [
-    { code: 'vi', name: 'Tiếng Việt' },
-    { code: 'en', name: 'English' },
+    { code: 'vi', name: `Tiếng Việt`, icon: VietNam },
+    { code: 'en', name: `English`, icon: English },
   ]
 
   return (
     <div className="flex w-full">
-      <nav className="bg-secondary-900 flex h-20 w-full justify-end gap-x-5 pr-5 lg:gap-x-10">
+      <nav className="flex h-20 w-full justify-end gap-x-5 bg-secondary-900 pr-5 lg:gap-x-10">
         <a
           className="flex cursor-pointer items-center gap-x-2"
           target="_blank"
@@ -98,7 +101,7 @@ function Navbar() {
           </div>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+              className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={20}
             >
               {projectsData?.projects.map((project: Project) => {
@@ -165,6 +168,14 @@ function Navbar() {
                 {languages.find(language => i18n.language === language.code)
                   ?.name ?? t('nav:choose_lang')}
               </p>
+              <img
+                src={
+                  languages.find(language => i18n.language === language.code)
+                    ?.icon ?? t('nav:choose_lang')
+                }
+                alt=""
+                className="h-auto w-8"
+              />
               <SidebarDropDownIcon
                 width={12}
                 height={7}
@@ -175,16 +186,17 @@ function Navbar() {
           </DropdownMenu.Trigger>
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+              className="flex max-h-[360px] min-w-[160px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={-15}
             >
               {languages.map(language => (
                 <DropdownMenu.Item
                   key={language.code}
-                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-6 leading-none outline-none"
+                  className="group relative flex flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
                   onClick={() => changeLanguage(language.code)}
                 >
-                  {language.name}
+                  <img src={language.icon} alt="" className="h-auto w-8"/>
+                  <div>{language.name}</div>
                 </DropdownMenu.Item>
               ))}
             </DropdownMenu.Content>
@@ -224,10 +236,10 @@ function Navbar() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Portal>
               <DropdownMenu.Content
-                className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                 sideOffset={-15}
               >
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   {userData ? (
                     <p
                       className="cursor-pointer"
@@ -239,7 +251,7 @@ function Navbar() {
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild
-                  className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
                   <Link to={PATHS.USER_INFO}>
                     {t('cloud:custom_protocol.adapter.username')}
@@ -247,25 +259,25 @@ function Navbar() {
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild
-                  className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
                   <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild
-                  className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
                   <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild
-                  className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
                   <Link to={PATHS.CHANGEPASSWORD}>
                     {t('user:change_password')}
                   </Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                   <p
                     className="cursor-pointer"
                     onClick={() => logout.mutate({})}
