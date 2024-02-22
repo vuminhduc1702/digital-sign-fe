@@ -13,7 +13,6 @@ import { SectionOrder } from '../components/section-order'
 import { SectionOrder1 } from '../components/section-order-1'
 import { SectionClient } from '../components/section-client'
 import { QandA } from '../components/section-Q&A'
-import { SectionNews } from '../components/section-news'
 import { SectionFooter } from '../components/footer'
 import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
@@ -30,7 +29,6 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-import LPnavigation from './LPnavigation'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -45,16 +43,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   })
   const logout = useLogout()
 
-  const childToParent = (childdata) => {
+  const childToParent = (childdata: string) => {
     //setData(childdata);
-    console.log('childdata-main', childdata)
     setSidebarOpen1(false)
-    if (childdata === 'introRef') scrollToIntro(introRef);
-    if (childdata === 'PackOfDataRef') scrollToIntro(PackOfDataRef);
-    if (childdata === 'ProductRef') scrollToIntro(ProductRef);
-    if (childdata === 'OrderRef') scrollToIntro(OrderRef);
-    if (childdata === 'Order1Ref') scrollToIntro(Order1Ref);
-    if (childdata === 'FAQRef') scrollToIntro(FAQRef);
+    if (childdata === 'introRef') scrollToIntro(introRef)
+    if (childdata === 'PackOfDataRef') scrollToIntro(PackOfDataRef)
+    if (childdata === 'ProductRef') scrollToIntro(ProductRef)
+    if (childdata === 'OrderRef') scrollToIntro(OrderRef)
+    if (childdata === 'Order1Ref') scrollToIntro(Order1Ref)
+    if (childdata === 'FAQRef') scrollToIntro(FAQRef)
   }
 
   const [showScrollButton, setShowScrollButton] = useState(false)
@@ -107,7 +104,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             backgroundSize: 'cover',
           }}
         >
-          <div className="px-4 py-4">
+          <div className="p-4">
             <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-48 ">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
@@ -120,7 +117,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+                  <Bars3Icon className="size-6" aria-hidden="true" />
                 </button>
               ) : null}
               {hasSideBar ? (
@@ -374,9 +371,6 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
       <div ref={FAQRef}>
         <QandA />
       </div>
-      {/* <div>
-          <SectionNews></SectionNews>
-        </div> */}
       <div>
         <SectionFooter />
       </div>

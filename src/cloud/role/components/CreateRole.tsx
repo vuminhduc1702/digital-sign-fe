@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useRef, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import i18n from '~/i18n'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
@@ -20,21 +21,21 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
 export const resourcesList = [
-  { value: 'users', label: 'Người dùng' },
-  { value: 'groups', label: 'Nhóm' },
-  { value: 'templates', label: 'Mẫu thiết bị' },
-  { value: 'events', label: 'Sự kiện' },
-  { value: 'organizations', label: 'Tổ chức' },
-  { value: 'roles', label: 'Vai trò' },
-  { value: 'projects', label: 'Dự án' },
-  { value: 'devices', label: 'Thiết bị' },
+  { value: 'users', label: i18n.t('schema:users') },
+  { value: 'groups', label: i18n.t('schema:groups') },
+  { value: 'templates', label: i18n.t('schema:templates') },
+  { value: 'events', label: i18n.t('schema:events') },
+  { value: 'organizations', label: i18n.t('schema:organizations') },
+  { value: 'roles', label: i18n.t('schema:roles') },
+  { value: 'projects', label: i18n.t('schema:projects') },
+  { value: 'devices', label: i18n.t('schema:devices') },
 ] as const
 
 export const actionsList = [
-  { value: 'read', label: 'Xem' },
-  { value: 'create', label: 'Tạo mới' },
-  { value: 'modify', label: 'Chỉnh sửa' },
-  { value: 'delete', label: 'Xoá' },
+  { value: 'read', label: i18n.t('schema:read') },
+  { value: 'create', label: i18n.t('schema:create') },
+  { value: 'modify', label: i18n.t('schema:modify') },
+  { value: 'delete', label: i18n.t('schema:delete') },
 ] as const
 
 export const roleSchema = z
@@ -50,10 +51,10 @@ export const roleSchema = z
             policy_name: nameSchema,
             resources: z
               .array(z.string())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 tài nguyên' }),
+              .nonempty({ message: i18n.t('schema:select_resource') }),
             actions: z
               .array(z.string())
-              .nonempty({ message: 'Vui lòng chọn ít nhất 1 hành động' }),
+              .nonempty({ message: i18n.t('schema:select_action') }),
           }),
         ),
       }),
@@ -86,7 +87,7 @@ export const roleSchema = z
       }),
     ]),
   )
-export function CreateRole({ project_id = '' }: { project_id: string }) {
+export function CreateRole({ project_id = '' }: { project_id?: string }) {
   const { t } = useTranslation()
   const [type, setType] = useState('Generic')
 
@@ -176,7 +177,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
       resetData={resetData}
       triggerButton={
         <Button
-          className="h-9 w-9 rounded-md"
+          className="size-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -191,7 +192,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -269,7 +270,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                     setType(item)
                   }}
                   className={cn('px-4 py-2 text-slate-400', {
-                    'bg-primary-400 rounded-2xl text-white': type === item,
+                    'rounded-2xl bg-primary-400 text-white': type === item,
                   })}
                 >
                   {item}
@@ -285,7 +286,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"
@@ -440,7 +441,7 @@ export function CreateRole({ project_id = '' }: { project_id: string }) {
                   <img
                     src={btnDeleteIcon}
                     alt="Delete policy"
-                    className="h-10 w-10"
+                    className="size-10"
                   />
                 }
               />

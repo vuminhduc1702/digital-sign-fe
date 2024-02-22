@@ -6,13 +6,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
-import { ComboBoxSelectPackage } from './ComboBoxSelectPackage'
 
 import { type PlanFilter } from '../types'
 
 import listIcon from '~/assets/icons/list.svg'
 import dollarIcon from '~/assets/icons/currency-dollar1.svg'
 import { CreatePackage } from './CreatePackage'
+import { useGetPlans } from '../api'
+import { flattenData } from '~/utils/misc'
 
 export function PackageSidebar() {
   const { t } = useTranslation()
@@ -22,9 +23,12 @@ export function PackageSidebar() {
 
   const projectId = storage.getProject()?.id
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-    PlanFilter[]
-  >([])
+  const { data } = useGetPlans({ projectId })
+
+  const { acc: planFlattenData, extractedPropertyKeys } = flattenData(
+    data?.data,
+    ['id', 'name', 'description'],
+  )
 
   return (
     <>
@@ -38,22 +42,20 @@ export function PackageSidebar() {
           {/* <p>{t('billing:package_manage.list_package')}</p> */}
         </div>
         <CreatePackage />
-        <div className="w-full">
-          <ComboBoxSelectPackage
-            setFilteredComboboxData={setFilteredComboboxData}
-          />
-        </div>
+        {/* <div className="w-full">
+          dummyInput
+        </div> */}
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">
-        {filteredComboboxData?.length > 0 ? (
+        {planFlattenData?.length > 0 ? (
           <div className="space-y-3">
-            {filteredComboboxData?.map((plan: PlanFilter) => (
-              <div className="w-full h-full cursor-pointer" key={plan.id}>
+            {planFlattenData?.map((plan: PlanFilter) => (
+              <div className="size-full cursor-pointer" key={plan.id}>
                 <div
                   className={clsx(
-                    'flex items-center w-full rounded-md border',
+                    'flex w-full items-center rounded-md border',
                     {
-                      'text-white bg-primary-400 ': packageId === plan.id,
+                      'bg-primary-400 text-white ': packageId === plan.id,
                     },
                   )}
                   key={plan.id}
@@ -61,7 +63,7 @@ export function PackageSidebar() {
                     navigate(`${PATHS.BILLING_PACKAGE}/${projectId}/${plan.id}`)
                   }
                 >
-                  <div className="icon-container w-10 h-10 flex items-center justify-center bg-gray-200 rounded-md ml-2">
+                  <div className="icon-container ml-2 flex size-10 items-center justify-center rounded-md bg-gray-200">
                     <img
                       src={dollarIcon}
                       alt="full_screen"
@@ -71,7 +73,7 @@ export function PackageSidebar() {
                   <div className="ml-3 p-2">
                     <p
                       className={clsx('my-auto text-base', {
-                        'text-white bg-primary-400': packageId === plan.id,
+                        'bg-primary-400 text-white': packageId === plan.id,
                       })}
                     >
                       {plan.name}

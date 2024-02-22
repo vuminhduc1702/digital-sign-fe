@@ -5,7 +5,6 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   CreateAttr,
   AttrTable,
-  ComboBoxSelectAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -20,6 +19,7 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
+import { InputField } from '~/components/Form'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
@@ -29,6 +29,10 @@ export function OrgManage() {
 
   const params = useParams()
   const orgId = params.orgId as string
+  const entityType = 'ORGANIZATION'
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [data, setData] = useState<Attribute[]>([])
   const { data: orgByIdData } = useOrgById({ orgId })
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
@@ -58,23 +62,24 @@ export function OrgManage() {
     }
     return acc
   }, [])
-  const aoo = filteredComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(index.toString())) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-        [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-          curr.value_type,
-        ),
-        [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-        [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-        [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-          convertEpochToDate(curr.last_update_ts / 1000),
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    filteredComboboxData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <>
@@ -166,15 +171,23 @@ export function OrgManage() {
                     />
                   )}
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                  <ComboBoxSelectAttr
+                  {/* <ComboBoxSelectAttr
                     entityId={orgId}
                     entityType="ORGANIZATION"
                     setFilteredComboboxData={setFilteredComboboxData}
+                  /> */}
+                  {/* dummyInput */}
+                  <InputField
+                    type="text"
+                    placeholder="Search"
+                    onChange={e => {
+                      const value = e.target.value
+                      setSearchQuery(value)
+                    }}
                   />
                 </div>
               </div>
               <AttrTable
-                data={filteredComboboxData}
                 entityId={orgId}
                 entityType="ORGANIZATION"
                 rowSelection={rowSelection}

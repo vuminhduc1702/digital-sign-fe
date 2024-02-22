@@ -13,12 +13,14 @@ const Pagination = <T extends Record<string, any>>({
   siblingCount = 1,
   currentPage,
   pageSize,
+  setCurrentPage,
 }: {
   table: Table<T>
   totalCount: number
   siblingCount?: number
   currentPage: number
   pageSize: number
+  setCurrentPage?: React.Dispatch<React.SetStateAction<number>>
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -47,7 +49,10 @@ const Pagination = <T extends Record<string, any>>({
               className={cn('', {
                 'text-primary-400': pageNumber === currentPage + 1,
               })}
-              onClick={() => table.setPageIndex(pageNumber - 1)}
+              onClick={() => {
+                setCurrentPage?.(pageNumber - 1)
+                table.setPageIndex(pageNumber - 1)
+              }}
             >
               {pageNumber}
             </PaginationItem>

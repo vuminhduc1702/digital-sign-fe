@@ -19,18 +19,21 @@ const createExportHeaders = (arr: string[]) => {
   return result
 }
 const convertEpochToDate = (timestamp: number) => {
-  const date = new Date(timestamp * 1000)
-  const formattedDate =
-    ('0' + date.getHours()).slice(-2) +
-    ':' +
-    ('0' + date.getMinutes()).slice(-2) +
-    ' ' +
-    ('0' + date.getDate()).slice(-2) +
-    '/' +
-    ('0' + (date.getMonth() + 1)).slice(-2) +
-    '/' +
-    date.getFullYear()
-  return formattedDate
+  if (timestamp) {
+    const date = new Date(timestamp * 1000)
+    const formattedDate =
+      ('0' + date.getHours()).slice(-2) +
+      ':' +
+      ('0' + date.getMinutes()).slice(-2) +
+      ' ' +
+      ('0' + date.getDate()).slice(-2) +
+      '/' +
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      '/' +
+      date.getFullYear()
+    return formattedDate
+  }
+  return ''
 }
 
 const convertType = (str: string) => {

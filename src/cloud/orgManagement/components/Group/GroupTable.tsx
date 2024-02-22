@@ -83,11 +83,11 @@ function GroupTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
+                <img src={btnDetailIcon} alt="View group" className="size-5" />
               }
               onClick={() =>
                 navigate(
@@ -102,11 +102,7 @@ function GroupTableContextMenu({
             {props.entity_type === 'DEVICE' && (
               <MenuItem
                 icon={
-                  <img
-                    src={btnEditIcon}
-                    alt="Assign user"
-                    className="h-5 w-5"
-                  />
+                  <img src={btnEditIcon} alt="Assign user" className="size-5" />
                 }
                 onClick={openAssignUser}
               >
@@ -116,11 +112,7 @@ function GroupTableContextMenu({
             {props.entity_type === 'USER' && (
               <MenuItem
                 icon={
-                  <img
-                    src={btnEditIcon}
-                    alt="Assign user"
-                    className="h-5 w-5"
-                  />
+                  <img src={btnEditIcon} alt="Assign user" className="size-5" />
                 }
                 onClick={openAssignGroupRole}
               >
@@ -129,7 +121,7 @@ function GroupTableContextMenu({
             )}
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit group" className="size-5" />
               }
               onClick={open}
             >
@@ -140,7 +132,7 @@ function GroupTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy group's ID"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -156,14 +148,14 @@ function GroupTableContextMenu({
               ).replace('{{GROUPNAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete group"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -178,7 +170,7 @@ function GroupTableContextMenu({
                   className="bg-primary-400"
                   onClick={async () => await mutateAsync({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -217,8 +209,10 @@ function GroupTableContextMenu({
 
 type GroupTableProps = {
   data: Group[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function GroupTable({ data, ...props }: GroupTableProps) {
@@ -228,7 +222,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -268,7 +262,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

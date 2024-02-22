@@ -56,7 +56,7 @@ export function SectionFooter() {
               </div>
             </div>
             <div className="flex py-2 xs2:flex-col xs:flex-col sm:flex-row md:flex-row">
-              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xl:mb-0 lg:mb-0 md:mb-0 sm:mb-0 xs:mb-0 xs2:mb-[20px]">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xs2:mb-[20px] xs:mb-0 sm:mb-0 md:mb-0 lg:mb-0 xl:mb-0">
                 {t('landingpage:footer.phone_number')}
               </div>
               <div>
@@ -68,7 +68,7 @@ export function SectionFooter() {
               </div>
             </div>
             <div className="flex pt-2 xs2:flex-col xs:flex-col sm:flex-row md:flex-row">
-              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xl:mb-0 lg:mb-0 md:mb-0 sm:mb-0 xs:mb-[20px] xs2:mb-[20px]">
+              <div className="h-[36px] w-1/3 text-[16px] leading-[20.8px] text-white xs2:mb-[20px] xs:mb-[20px] sm:mb-0 md:mb-0 lg:mb-0 xl:mb-0">
                 {t('landingpage:footer.support_content')}
               </div>
               <div>
@@ -102,7 +102,7 @@ export function SectionFooter() {
       </div>
       <div className="flex justify-center bg-[#3A3A3A] xl:h-[250px] xl:flex-row">
         <div className="xs2:w-[360px] xs:w-[370px] sm:w-[570px] md:w-[700px] lg:w-[1040px] xl:w-[1040px]">
-          <div className="flex border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row">
+          <div className="flex items-center border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row">
             <div className="pb-[15px] pr-[20px]  pt-[5px]">
               <img src={LogoViettel} alt="" />
             </div>

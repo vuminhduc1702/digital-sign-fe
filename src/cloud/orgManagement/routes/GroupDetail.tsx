@@ -16,15 +16,24 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useTranslation } from 'react-i18next'
+import { useGetAttrs } from '../api/attrAPI'
+import { flattenData } from '~/utils/misc'
 
 export function GroupDetail() {
   const params = useParams()
   const groupId = params.groupId as string
   const ref = useRef(null)
   const { t } = useTranslation()
-  const [filteredAttrComboboxData, setFilteredAttrComboboxData] = useState<
-    Attribute[]
-  >([])
+
+  const entityType = 'GROUP'
+
+  const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
+
+  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
+    attrsData?.attributes,
+    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
+  )
+
   const {
     mutate: mutateDeleteMultipleAttrs,
     isLoading,
@@ -43,29 +52,30 @@ export function GroupDetail() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = filteredAttrComboboxData.reduce((acc, curr, index) => {
+  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo = filteredAttrComboboxData.reduce((acc, curr, index) => {
-    if (rowSelectionKey.includes(index.toString())) {
-      const temp = {
-        [t('table:no')]: (index + 1).toString(),
-        [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-        [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-          curr.value_type,
-        ),
-        [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-        [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-        [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-          convertEpochToDate(curr.last_update_ts / 1000),
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    attrFlattenData.reduce((acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
+        }
+        acc.push(temp)
       }
-      acc.push(temp)
-    }
-    return acc
-  }, [])
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -123,17 +133,13 @@ export function GroupDetail() {
               />
             )}
             <CreateAttr entityId={groupId} entityType="GROUP" />
-            <ComboBoxSelectAttr
-              entityId={groupId}
-              entityType="GROUP"
-              setFilteredComboboxData={setFilteredAttrComboboxData}
-            />
+            {/* dummyInput */}
           </div>
         </div>
         <AttrTable
-          data={filteredAttrComboboxData}
+          data={attrFlattenData}
           entityId={groupId}
-          entityType="GROUP"
+          entityType={entityType}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

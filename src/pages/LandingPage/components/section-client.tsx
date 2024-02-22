@@ -60,7 +60,7 @@ export function SectionClient() {
     <>
       <div className="h-[100px]"></div>
       <div>
-        <div className="pb-[50px] text-center text-[35px] leading-[43px] lg:mt-[180px]">
+        <div className="pb-[50px] text-center text-[35px] leading-[43px]">
           {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center ">

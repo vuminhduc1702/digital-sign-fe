@@ -274,7 +274,6 @@ export const cmdSchema = z.object({
 export const eventTypeSchema = z.discriminatedUnion('type', [
   z.object({
     type: z.literal('event'),
-    condition: eventConditionSchema,
     interval: eventIntervalSchema,
   }),
   z.object({
@@ -298,6 +297,18 @@ export const createEventSchema = z
     cmd: cmdSchema.optional(),
   })
   .and(eventTypeSchema)
+  .and(
+    z.discriminatedUnion('onClick', [
+      z.object({
+        onClick: z.literal(true),
+        condition: z.tuple([]),
+      }),
+      z.object({
+        onClick: z.literal(false),
+        condition: eventConditionSchema,
+      }),
+    ]),
+  )
 
 export interface IntervalData {
   [key: string]: boolean
@@ -323,7 +334,7 @@ export function CreateEvent() {
       onClick: false,
       status: true,
       action: [{}],
-      condition: [{}],
+      condition: [],
       retry: 0,
     },
   })
@@ -427,6 +438,14 @@ export function CreateEvent() {
     setActionType('sms')
   }
 
+  useEffect(() => {
+   if(!watch('onClick') && watch('type') === 'event') {
+    conditionAppend([{}])
+   } else {
+    setValue('condition', [])
+   }
+  }, [watch('onClick'), watch('type')])
+
   const todoClicked = (e: any) => {
     setTodos(
       todos.map(todo =>
@@ -527,8 +546,7 @@ export function CreateEvent() {
               org_id: values.org_id,
               group_id: values.group_id,
               name: values.name,
-              onClick:
-                getValues('type') === 'event' ? values.onClick === true : false,
+              onClick: values.onClick,
               condition: values.onClick === false ? conditionArr : [],
               action: actionArr,
               status: values.status === true,
@@ -629,10 +647,10 @@ export function CreateEvent() {
                       <Checkbox
                         {...field}
                         checked={value}
-                        onCheckedChange={onChange}
-                        onClick={() => {
-                          if (getValues('type') === 'event') {
-                            setValue('type', 'schedule')
+                        onCheckedChange={(e) => {
+                          onChange(e)
+                          if (e) {
+                            setValue('type', 'event')
                           }
                         }}
                       />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { flattenData } from '~/utils/misc'
 import { ComboBoxBase, filteredComboboxData } from '~/components/ComboBox'
@@ -10,10 +10,12 @@ import { type Dashboard } from '.'
 export function ComboBoxSelectDashboard({
   projectId,
   setFilteredComboboxData,
+  setOffset, 
   ...props
 }: {
   projectId: string
   setFilteredComboboxData?: React.Dispatch<React.SetStateAction<Dashboard[]>>
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
 }) {
   const [query, setQuery] = useState('')
 
@@ -32,9 +34,10 @@ export function ComboBoxSelectDashboard({
 
   useEffect(() => {
     setFilteredComboboxData?.(filteredData)
+    setOffset?.(dashboardData?.offset || 0)
   }, [query, dashboardData])
 
-  return (
+  return ( 
     <ComboBoxBase
       data={filteredData}
       extractedPropertyKeys={extractedPropertyKeys}

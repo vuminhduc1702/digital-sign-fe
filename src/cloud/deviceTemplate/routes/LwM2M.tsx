@@ -9,95 +9,103 @@ import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
 
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
-import { ComboBoxSelectAttrLwM2M } from '../components/ComboBoxSelectAttrLwM2M'
-import { ComboBoxSelectModuleConfig } from '../components/ComboBoxSelectModuleConfig'
 import { LwM2MTable } from '../components/LwM2MTable'
-import { type ModuleConfig, type TransportConfigAttribute } from '../types'
-
+import { useTemplateById } from '../api/getTemplateById'
+import { flattenData } from '~/utils/misc'
 
 export function LwM2M() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<
-  ModuleConfig[]
-  >([])
-  const [filteredComboboxDataAttr, setFilteredComboboxDataAttr] = useState<
-  TransportConfigAttribute[]
-  >([])
-  const [offset] = useState(0)
   const params = useParams()
   const templateId = params.templateId as string
   const id = params.id as string
   const projectId = storage.getProject()?.id
+
+  // no offset call
+  const {
+    data: LwM2MDataById,
+    isPreviousData: isPreviousLwM2MData,
+    isSuccess,
+  } = useTemplateById({ templateId })
+  const { acc: templateLwM2MFlattenData } = flattenData(
+    LwM2MDataById?.transport_config?.info?.module_config || [],
+    ['numberOfAttributes', 'module_name', 'id'],
+  )
+
+  const selectedModuleId = id
+  const selectedModule =
+    LwM2MDataById?.transport_config?.info.module_config.find(
+      module => module.id === selectedModuleId,
+    )
+  const selectedAttributes = selectedModule?.attribute_info || []
+  const { acc: templateLwM2MFlattenDataAttr } = flattenData(
+    selectedAttributes,
+    ['action', 'name', 'id', 'kind', 'type'],
+  )
+
   return (
-      <div className="grid grow grid-cols-1 gap-x-4">
-        {projectId && templateId && !id ? (
-          <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-            <Suspense
-              fallback={
-                <div className="flex grow items-center justify-center md:col-span-2">
-                  <Spinner size="xl" />
-                </div>
-              }
-            >
-              <TemplateInfo />
-              <TitleBar
-                title={
-                  t('cloud:device_template.info.listattr') ??
-                  'Device template management'
-                }
-              />
-              <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-                <div className="flex justify-between">
-                  <ExportTable refComponent={ref} />
-                  <div className="flex items-center gap-x-3">
-                    <ComboBoxSelectModuleConfig
-                      setFilteredComboboxData={setFilteredComboboxData}
-                      offset={offset}
-                    />
-                  </div>
-                </div>
-                <LwM2MTable
-                  module_config={filteredComboboxData}
-                />
+    <div className="grid grow grid-cols-1 gap-x-4">
+      {projectId && templateId && !id ? (
+        <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
+          <Suspense
+            fallback={
+              <div className="flex grow items-center justify-center md:col-span-2">
+                <Spinner size="xl" />
               </div>
-            </Suspense>
-          </div>
-        ) : null}
-        {projectId && templateId && id ? (
-          <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-            <Suspense
-                fallback={
-                  <div className="flex grow items-center justify-center md:col-span-2">
-                    <Spinner size="xl" />
-                  </div>
-                 }
-                >
-                  <TemplateInfo />
-                  <TitleBar
-                    title={
-                      t('cloud:device_template.info.attr') ??
-                      'Device template management'
-                    }
-                  />
-                  <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-                  <div className="flex justify-between">
-                    <ExportTable refComponent={ref} />
-                    <div className="flex items-center gap-x-3">
-                      <ComboBoxSelectAttrLwM2M
-                      setFilteredComboboxDataAttr={setFilteredComboboxDataAttr}
-                      offset={offset}
-                    />
-                    </div>
-                  </div>
-                  <AttrLwM2MTable
-                    attribute_info={filteredComboboxDataAttr}
-                  />
-                  </div>
-            </Suspense>
-          </div> 
-        ) : null}
-      </div>
+            }
+          >
+            <TemplateInfo />
+            <TitleBar
+              title={
+                t('cloud:device_template.info.listattr') ??
+                'Device template management'
+              }
+            />
+            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+              <div className="flex justify-between">
+                <ExportTable refComponent={ref} />
+                <div className="flex items-center gap-x-3">
+                  {/* dummyInput */}
+                </div>
+              </div>
+              <LwM2MTable
+                moduleConfig={templateLwM2MFlattenData}
+              />
+            </div>
+          </Suspense>
+        </div>
+      ) : null}
+      {projectId && templateId && id ? (
+        <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
+          <Suspense
+            fallback={
+              <div className="flex grow items-center justify-center md:col-span-2">
+                <Spinner size="xl" />
+              </div>
+            }
+          >
+            <TemplateInfo />
+            <TitleBar
+              title={
+                t('cloud:device_template.info.attr') ??
+                'Device template management'
+              }
+            />
+            <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+              <div className="flex justify-between">
+                <ExportTable refComponent={ref} />
+                <div className="flex items-center gap-x-3">
+                  {/* dummyInput */}
+                </div>
+              </div>
+              <AttrLwM2MTable attributeInfo={templateLwM2MFlattenDataAttr} 
+
+              />
+            </div>
+          </Suspense>
+        </div>
+      ) : null}
+    </div>
   )
 }

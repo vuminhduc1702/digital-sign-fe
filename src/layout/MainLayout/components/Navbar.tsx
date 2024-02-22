@@ -255,7 +255,7 @@ function Navbar() {
                   asChild
                   className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
                 >
-                  <Link to={PATHS.DEV_ROLE}>Dev Role</Link>
+                  <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Item
                   asChild

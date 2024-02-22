@@ -115,10 +115,22 @@ function DashboardTableContextMenu({
 export function DashboardTable({
   data,
   projectId,
+  offset,
+  setOffset,
+  limitPagination,
+  total,
   ...props
 }: {
   data: DashboardRes[]
   projectId: string
+  offset: number
+  setOffset: React.Dispatch<React.SetStateAction<number>>
+  total: number
+  limitPagination: number
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }) {
   const { t } = useTranslation()
 
@@ -131,7 +143,7 @@ export function DashboardTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -183,7 +195,7 @@ export function DashboardTable({
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [offset],
   )
 
   return data != null && data?.length > 0 ? (
@@ -191,6 +203,10 @@ export function DashboardTable({
       popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}
       columns={columns}
+      offset={offset}
+      setOffset={setOffset}
+      total={total}
+      limitPagination={limitPagination}
       {...props}
     />
   ) : (

@@ -74,6 +74,10 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 type BillingTableProps = {
   data?: Billing[]
   handleField?: (field: string, value: any) => void
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function BillingTable({
@@ -120,7 +124,7 @@ export function BillingTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -314,7 +318,7 @@ export function BillingTable({
         footer: info => info.column.id,
       }),
     ],
-    [plan, status, data],
+    [plan, status, data, props.offset],
   )
 
   return (

@@ -2,7 +2,6 @@ import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -50,11 +49,11 @@ function ThingTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit device" className="size-5" />
               }
               onClick={open}
             >
@@ -69,14 +68,14 @@ function ThingTableContextMenu({
               ).replace('{{THINGNAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete thing"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -91,7 +90,7 @@ function ThingTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -114,18 +113,21 @@ function ThingTableContextMenu({
 
 type ThingTableProps = {
   data: EntityThing[]
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -176,7 +178,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

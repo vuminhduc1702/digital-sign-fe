@@ -11,7 +11,6 @@ import { PATHS } from '~/routes/PATHS'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'
 import { useDeleteDataBase } from '../api'
-import { ComboBoxSelectDataBase } from './ComboBoxSelectDataBase'
 import CreateDataBase from './CreateDataBase'
 
 import { type DataBase } from '../types'
@@ -20,6 +19,8 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import listIcon from '~/assets/icons/list.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { useGetDataBases } from '../api/getDataBases'
+import { flattenData } from '~/utils/misc'
 
 export function DataBaseSidebar() {
   const { t } = useTranslation()
@@ -33,10 +34,11 @@ export function DataBaseSidebar() {
 
   const { mutate, isLoading, isSuccess } = useDeleteDataBase()
 
-  const [selectedUpdateTemplate, setSelectedUpdateTemplate] =
-    useState<DataBase>()
-  const [filteredComboboxData, setFilteredComboboxData] = useState<DataBase[]>(
-    [],
+  const { data } = useGetDataBases({ projectId })
+
+  const { acc: templateFlattenData, extractedPropertyKeys } = flattenData(
+    data?.data,
+    ['id', 'table_name'],
   )
 
   useEffect(() => {
@@ -56,14 +58,12 @@ export function DataBaseSidebar() {
           <p>{t('cloud:db_template.sidebar.title')}</p>
         </div>
         <CreateDataBase />
-        <ComboBoxSelectDataBase
-          setFilteredComboboxData={setFilteredComboboxData}
-        />
+        {/* dummyInput */}
       </div>
       <div className="bg-secondary-500 h-[82vh] grow overflow-y-auto p-3">
-        {filteredComboboxData?.length > 0 ? (
+        {templateFlattenData?.length > 0 ? (
           <div className="space-y-3">
-            {filteredComboboxData?.map((table: DataBase) => (
+            {templateFlattenData?.map((table: DataBase) => (
               <div className="flex" key={table.table_name}>
                 <Button
                   className={clsx('gap-y-3 rounded-l-md border-none px-4 py-0')}

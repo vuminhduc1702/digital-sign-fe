@@ -9,34 +9,71 @@ import {
   type Row,
   getExpandedRowModel,
   type VisibilityState,
+  type FilterFn,
+  getFilteredRowModel,
+  getFacetedUniqueValues,
+  getFacetedMinMaxValues,
 } from '@tanstack/react-table'
-import {
-  Fragment,
-  type HTMLProps,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react'
+import { Fragment, type HTMLProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
-import Pagination from './components/Pagination'
 import { Button } from '../Button'
 import { limitPagination } from '~/utils/const'
 import { Spinner } from '../Spinner'
 import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import PaginationRender from './components/Pagination/PaginationRender'
+import Filter from './components/Pagination/Filter'
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info
+  addMeta({
+    itemRank,
+  })
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = '',
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = useRef<HTMLInputElement>(null!)
+
+  useEffect(() => {
+    if (typeof indeterminate === 'boolean' && ref.current) {
+      ref.current.indeterminate = !rest.checked && indeterminate
+    }
+  }, [ref, indeterminate])
+
+  return (
+    <input
+      style={{
+        accentColor: '#e74c3c',
+      }}
+      type="checkbox"
+      ref={ref}
+      className={className + ' cursor-pointer'}
+      {...rest}
+    />
+  )
+}
 
 export function BaseTable<T extends Record<string, any>>({
   data = [],
   columns,
   offset = 0,
   setOffset,
-  total,
+  total = 1,
   isPreviousData,
   className,
   renderSubComponent,
@@ -49,7 +86,7 @@ export function BaseTable<T extends Record<string, any>>({
   callbackParent,
   rowSelection = {},
   setRowSelection,
-  isHiddenCheckbox
+  isHiddenCheckbox = false,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -66,8 +103,10 @@ export function BaseTable<T extends Record<string, any>>({
   onDataText?: string
   refreshBtn?: boolean
   callbackParent?: () => void
-  rowSelection: object
-  setRowSelection: React.Dispatch<React.SetStateAction<object>>
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
   isHiddenCheckbox?: boolean
 }) {
   const { t } = useTranslation()
@@ -76,33 +115,7 @@ export function BaseTable<T extends Record<string, any>>({
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
 
-  function IndeterminateCheckbox({
-    indeterminate,
-    className = '',
-    ...rest
-  }: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
-    const ref = useRef<HTMLInputElement>(null!)
-
-    useEffect(() => {
-      if (typeof indeterminate === 'boolean' && ref.current) {
-        ref.current.indeterminate = !rest.checked && indeterminate
-      }
-    }, [ref, indeterminate])
-
-    return (
-      <input
-        style={{
-          accentColor: '#e74c3c',
-        }}
-        type="checkbox"
-        ref={ref}
-        className={className + ' cursor-pointer'}
-        {...rest}
-      />
-    )
-  }
-
-  if (!isHiddenCheckbox) {
+  if (!isHiddenCheckbox && !columns.some(column => column.id === 'select')) {
     columns.unshift({
       id: 'select',
       header: info => (
@@ -148,23 +161,22 @@ export function BaseTable<T extends Record<string, any>>({
     enableRowSelection: true, //enable row selection for all rows
     onRowSelectionChange: setRowSelection,
     getRowId: row => (row.id ? row.id : row.user_id),
+    filterFns: {
+      fuzzy: fuzzyFilter,
+    },
+    globalFilterFn: fuzzyFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    getFacetedMinMaxValues: getFacetedMinMaxValues(),
   })
-
   const totalAttrs = total || data?.length
-  const { pageSize, pageIndex } = table.getState().pagination
-
-  useLayoutEffect(() => {
-    table.setPageSize(10)
-  }, [])
-
-  const countLimitPaginationRef = useRef(1)
 
   function refresh() {
     setIsRefresh(true)
     callbackParent?.()
     setTimeout(() => {
       setIsRefresh(false)
-    }, 1000)
+    }, 500)
   }
 
   return (
@@ -184,7 +196,7 @@ export function BaseTable<T extends Record<string, any>>({
             className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
             id="table-ref"
           >
-            <thead className="border-b-2 bg-gray-200 text-center">
+            <thead className="overflow-y-auto border-b-2 bg-gray-200 text-center">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
@@ -198,18 +210,28 @@ export function BaseTable<T extends Record<string, any>>({
                           <div
                             className={`text-table-header ${
                               header.column.getCanSort()
-                              ? 'cursor-pointer select-none'
-                              : ''
-                              }`}
-                            onClick={header.column.getToggleSortingHandler()}
+                                ? 'cursor-pointer select-none'
+                                : ''
+                            }`}
                           >
-                            <div className={cn('text-table-header relative flex items-center justify-center', {
-                              'px-3': headerGroup.headers.length > 8,
-                            })}>
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
+                            <div
+                              className={cn(
+                                'text-table-header relative flex flex-col items-center justify-center',
+                                {
+                                  'px-3': headerGroup.headers.length > 8,
+                                },
                               )}
+                            >
+                              <div
+                                onClick={() => {
+                                  header.column.getToggleSortingHandler()
+                                }}
+                              >
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                              </div>
                               <div className="absolute right-1 w-2 text-xl text-black">
                                 {{
                                   asc: '↑',
@@ -217,6 +239,14 @@ export function BaseTable<T extends Record<string, any>>({
                                 }[header.column.getIsSorted() as string] ??
                                   null}
                               </div>
+                              {header.column.getCanFilter() ? (
+                                <div>
+                                  <Filter
+                                    column={header.column}
+                                    table={table}
+                                  />
+                                </div>
+                              ) : null}
                             </div>
                           </div>
                         )}
@@ -259,7 +289,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="size-4 accent-primary-400 mr-1 rounded-sm border"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -310,7 +340,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="size-4 accent-primary-400 mr-1 rounded-sm border"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
@@ -425,74 +455,16 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <div className="relative mt-4 flex items-center justify-between gap-2">
-        <div
-          className={cn('flex gap-3', {
-            'absolute bottom-5': isAbsoluteBtn,
-          })}
-        >
-          <span className="text-body-light flex items-center gap-1">
-            {t('table:show_in')
-              .replace(
-                '{{PAGE}}',
-                pageSize < totalAttrs
-                  ? pageSize?.toString()
-                  : totalAttrs?.toString(),
-              )
-              .replace('{{TOTAL}}', totalAttrs?.toString())}
-          </span>
-        </div>
-        <div
-          className={cn('flex gap-x-2', {
-            'absolute bottom-5 right-6': isAbsoluteBtn,
-          })}
-        >
-          <Button
-            className="rounded-l-md border-none"
-            onClick={() => {
-              if (
-                limitPagination < totalAttrs &&
-                offset - limitPagination >= 0 &&
-                (pageIndex + 1) * pageSize <=
-                limitPagination * countLimitPaginationRef.current
-              ) {
-                setOffset?.(offset => offset - limitPagination)
-              }
-              table.previousPage()
-            }}
-            disabled={pageIndex === 0 || isPreviousData}
-            variant="secondaryLight"
-          >
-            <ChevronLeftIcon className="h-4 w-4" />
-          </Button>
-          <Pagination
-            currentPage={pageIndex}
-            totalCount={totalAttrs}
-            pageSize={pageSize}
-            table={table}
-          />
-          <Button
-            className="rounded-r-md border-none"
-            onClick={() => {
-              if (
-                limitPagination < totalAttrs &&
-                (pageIndex + 1) * pageSize >
-                limitPagination * countLimitPaginationRef.current
-              ) {
-                countLimitPaginationRef.current++
-                setOffset?.(offset => offset + limitPagination)
-              }
-              table.nextPage()
-            }}
-            disabled={
-              (pageIndex + 1) * pageSize >= totalAttrs || isPreviousData
-            }
-            variant="secondaryLight"
-          >
-            <ChevronRightIcon className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+      <PaginationRender
+        totalAttrs={totalAttrs}
+        limitPagination={limitPagination}
+        offset={offset}
+        setOffset={setOffset}
+        isPreviousData={isPreviousData}
+        table={table}
+        isAbsoluteBtn={isAbsoluteBtn}
+        setPageSize={table.setPageSize}
+      />
     </div>
   )
 }

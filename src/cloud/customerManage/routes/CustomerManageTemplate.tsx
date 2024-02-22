@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import storage from '~/utils/storage'
 
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
 import { Button } from '~/components/Button'
-import { InputField, SelectDropdown, SelectField } from '~/components/Form'
-import TitleBar from '~/components/Head/TitleBar'
+import { InputField, SelectDropdown } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
+import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useGetCustomers, type SearchFilter } from '../api/customerManageAPI'
 import { CustomerTable } from '../components/Customer'
-import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 export function CustomerManageTemplate() {
   const { t } = useTranslation()
@@ -24,11 +24,45 @@ export function CustomerManageTemplate() {
     search_str: searchFilter.search_str,
     config: { keepPreviousData: true, staleTime: 1000 },
   })
-
+  const ref = useRef(null)
   const { register, formState, control, handleSubmit } = useForm({
     resolver: searchSubcriptionSchema && zodResolver(searchSubcriptionSchema),
     defaultValues: { value: '', key: '' },
   })
+
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('billing:customer_manage.table.customer_code'),
+      t('billing:customer_manage.table.customer_name'),
+      t('billing:customer_manage.table.phone'),
+      t('billing:customer_manage.table.email'),
+      t('billing:customer_manage.table.role'),
+      t('billing:customer_manage.table.parent'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const aoo: Array<{ [key: string]: string }> | undefined = data?.users.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.user_id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('billing:customer_manage.table.customer_code')]:
+            curr.customer_code,
+          [t('billing:customer_manage.table.customer_name')]: curr.name,
+          [t('billing:customer_manage.table.phone')]: curr.phone,
+          [t('billing:customer_manage.table.email')]: curr.email,
+          [t('billing:customer_manage.table.role')]: curr.role_name ?? '',
+          [t('billing:customer_manage.table.parent')]: curr.org_name ?? '',
+        }
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <>
@@ -44,6 +78,12 @@ export function CustomerManageTemplate() {
             })
           })}
         >
+          <ExportTable
+            refComponent={ref}
+            rowSelection={rowSelection}
+            aoo={aoo || []}
+            pdfHeader={pdfHeader}
+          />
           <div className="flex items-center gap-x-3">
             <div className="w-96">
               <SelectDropdown
@@ -51,9 +91,9 @@ export function CustomerManageTemplate() {
                 name="key"
                 control={control}
                 options={[
-                  { label: 'Tên khách hàng', value: 'name' },
-                  { label: 'Mã khách hàng', value: 'customer_code' },
-                  { label: 'Số điện thoại', value: 'phone' },
+                  { label: t('schema:customer_name'), value: 'name' },
+                  { label: t('schema:customer_code'), value: 'customer_code' },
+                  { label: t('schema:customer_phone'), value: 'phone' },
                 ]}
                 // error={formState?.errors?.key}
               />
@@ -81,6 +121,8 @@ export function CustomerManageTemplate() {
           setOffset={setOffset}
           total={data?.total ?? 0}
           isPreviousData={isPreviousData}
+          rowSelection={rowSelection}
+          setRowSelection={setRowSelection}
         />
       </div>
     </>

@@ -142,6 +142,10 @@ function FireWareTableContextMenu({
 
 type FirmWareTableProps = {
   data: FirmWare[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
@@ -152,7 +156,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -213,7 +217,7 @@ export function FirmWareTable({ data, ...props }: FirmWareTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

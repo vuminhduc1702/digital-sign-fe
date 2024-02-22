@@ -4,19 +4,21 @@ import { useParams } from 'react-router-dom'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { Spinner } from '~/components/Spinner'
-import { ExportTable } from '~/components/Table/components/ExportTable'
 import { ContentLayout } from '~/layout/ContentLayout'
 import storage from '~/utils/storage'
 import { DataBaseSidebar, DataBaseTable } from '../components'
 
-import { DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
+import { type DataSearchTable, useSelectDataBase } from '../api/selectDataBase'
 import CreateColumn from '../components/CreateColumn'
 import CreateRows from '../components/CreateRows'
-import { FieldsRows } from '../types'
-import { InputField, SelectDropdown, SelectOption } from '~/components/Form'
+import { type FieldsRows } from '../types'
+import {
+  InputField,
+  SelectDropdown,
+  type SelectOption,
+} from '~/components/Form'
 import { Button } from '~/components/Button'
 import { SearchIcon } from '~/components/SVGIcons'
-import { searchSubcriptionSchema } from '~/cloud/subcription/routes/SubcriptionTemplate'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Switch } from '~/components/Switch'
@@ -132,28 +134,42 @@ export function DataBaseTemplateManage() {
             >
               <TitleBar title={t('sidebar:cloud.db_template')} />
               <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
-                <div className="flex justify-between">
-                  <ExportTable refComponent={ref} />
+                <div className="flex justify-end">
                   <div className="flex items-center gap-x-3">
-                    <div className='flex items-center gap-x-2'>
+                    <div className="flex items-center gap-x-2">
                       <CreateRows
                         onClose={refetchData}
                         columnsProp={data?.data?.columns || []}
                       />
                     </div>
-                    <div className='flex items-center gap-x-2'>
+                    {data?.data?.columns && (
+                      <div className="flex items-center gap-x-2">
+                        <CreateColumn
+                          isSearch={isShow}
+                          isValidate={textValidate}
+                          onClose={refetchData}
+                        />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-x-2">
                       <Button
                         className="w-full justify-start rounded-md "
                         variant="trans"
                         size="square"
                         onClick={refetchData}
-                        startIcon={<ReloadIcon className='mt-0.5' width={16} height={16} viewBox="0 0 16 16" />}
+                        startIcon={
+                          <ReloadIcon
+                            className="mt-0.5"
+                            width={16}
+                            height={16}
+                            viewBox="0 0 16 16"
+                          />
+                        }
                       >
                         {t('cloud:db_template.add_db.reload')}
                       </Button>
                     </div>
                   </div>
-
                 </div>
                 <div className="mt-2 flex justify-end">
                   <form
@@ -174,9 +190,7 @@ export function DataBaseTemplateManage() {
                           const checkData = dataExact?.map(
                             (item, index) => item[keySearch[index]],
                           )
-                          const checkDataValue = checkData?.filter(
-                            item => item,
-                          )
+                          const checkDataValue = checkData?.filter(item => item)
                           if (checkDataValue?.length < 2) {
                             setTextValidate(
                               '* Vui lòng nhập ít nhất 2 trường tìm kiếm với phương thức AND hoặc OR',
@@ -219,9 +233,7 @@ export function DataBaseTemplateManage() {
                           const checkData = dataExact?.map(
                             (item, index) => item[keySearch[index]],
                           )
-                          const checkDataValue = checkData?.filter(
-                            item => item,
-                          )
+                          const checkDataValue = checkData?.filter(item => item)
                           if (checkDataValue?.length === 1) {
                             setTextValidate('')
                             mutate({
@@ -275,7 +287,8 @@ export function DataBaseTemplateManage() {
                         className="h-[37px]"
                         error={formState.errors['limit']}
                         registration={register('limit')}
-                        type='number'
+                        type="number"
+                        min={1}
                         placeholder={t('cloud:db_template.add_db.limit')}
                       />
                       {/* <Switch
@@ -288,7 +301,9 @@ export function DataBaseTemplateManage() {
                         onCheckedChange={checked => setSearchExact(checked)}
                         checked={searchExact}
                       />
-                      <span className='relative w-3/4'>{t('cloud:db_template.add_db.search_exact')}</span>
+                      <span className="relative w-3/4">
+                        {t('cloud:db_template.add_db.search_exact')}
+                      </span>
                       <Button
                         className="rounded-md"
                         variant="trans"
@@ -316,13 +331,6 @@ export function DataBaseTemplateManage() {
                     data={filteredComboboxData}
                     onClose={refetchData}
                     onSearch={onSearch}
-                  />
-                )}
-                {data?.data?.columns && (
-                  <CreateColumn
-                    isSearch={isShow}
-                    isValidate={textValidate}
-                    onClose={refetchData}
                   />
                 )}
               </div>

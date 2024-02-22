@@ -1,17 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import {
-  useState,
-  useRef,
-  type ReactNode,
-  useEffect,
-  type RefObject,
-} from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useLogout, useUser } from '~/lib/auth'
-import storage from '~/utils/storage'
-import { scrollToIntro } from '~/utils/misc'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
-import { ChevronDown } from 'lucide-react'
 import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '~/components/Spinner'
 import { Button } from '~/components/Button'
@@ -23,40 +13,15 @@ import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
-
-function LPnavigation({ childToParent }) {
+function LPnavigation({
+  childToParent,
+}: {
+  childToParent: (childdata: string) => void
+}) {
   const navigate = useNavigate()
   const { t } = useTranslation()
 
-  const location = useLocation()
-  const routerLink = location.pathname?.split('/')
-  const projectId = storage.getProject()?.id
-
-  const [value, setValue] = useState('cloud')
-
-  useEffect(() => {
-    setValue(routerLink[1])
-  }, [routerLink[1]])
-
-  const [showScrollButton, setShowScrollButton] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setShowScrollButton(true)
-      } else {
-        setShowScrollButton(false)
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [])
-
-  const request_scrollToIntro = (destination) => {
+  const request_scrollToIntro = (destination: string) => {
     childToParent(destination)
   }
 

@@ -53,6 +53,10 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
 type CustomerTableProps = {
   data?: Customer[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function CustomerTable({ data, ...props }: CustomerTableProps) {
@@ -63,7 +67,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -113,7 +117,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

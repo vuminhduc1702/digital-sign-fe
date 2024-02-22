@@ -34,7 +34,7 @@ export const entityTypeList = [
 const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  // org_id: z.string().optional()
+  org_id: z.string().optional().or(z.array(z.string())),
 })
 
 export function CreateGroup() {
@@ -58,15 +58,10 @@ export function CreateGroup() {
   }))
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit, reset, getValues } = useForm<
-    CreateGroupDTO['data']
-  >({
-    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
-  })
-
-  // function orgSelection(val: any) {
-  //   console.log(val)
-  // }
+  const { register, formState, control, handleSubmit, reset, getValues } =
+    useForm<CreateGroupDTO['data']>({
+      resolver: groupCreateSchema && zodResolver(groupCreateSchema),
+    })
 
   return (
     <FormDrawer
@@ -89,7 +84,7 @@ export function CreateGroup() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -97,14 +92,13 @@ export function CreateGroup() {
       <form
         id="create-group"
         className="w-full space-y-6"
-        onSubmit={
-          handleSubmit(values => {
+        onSubmit={handleSubmit(values => {
           mutate({
             data: {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: getValues('org_id').toString(),
+              org_id: values.org_id?.toString(),
             },
           })
         })}
@@ -142,8 +136,13 @@ export function CreateGroup() {
           >
             <Controller
               control={control}
-              name={"org_id"}
+              name={'org_id'}
               render={({ field: { onChange, value, ...field } }) => {
+                const parseValue = getValues('org_id')
+                  ? orgSelectOptions?.find(
+                      org => org.value === getValues('org_id').toString(),
+                    )?.label
+                  : ''
                 return (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -152,23 +151,28 @@ export function CreateGroup() {
                         variant="trans"
                         size="square"
                         className={cn(
-                          'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 px-3',
+                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                           !value && 'text-secondary-700',
                         )}
                       >
                         {value ? (
-                          <span>
-                            {value}
-                          </span>
+                          <span>{parseValue ? parseValue : value}</span>
                         ) : (
                           <span>
-                           {t('cloud:org_manage.org_manage.add_org.choose_org')}
+                            {t(
+                              'cloud:org_manage.org_manage.add_org.choose_org',
+                            )}
                           </span>
                         )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-2" align="start">
-                      <ComplexTree items={orgData?.organizations} selectOrg={onChange} currentValue={value} {...field}></ComplexTree>
+                      <ComplexTree
+                        items={orgData?.organizations}
+                        selectOrg={onChange}
+                        currentValue={value}
+                        {...field}
+                      ></ComplexTree>
                     </PopoverContent>
                   </Popover>
                 )

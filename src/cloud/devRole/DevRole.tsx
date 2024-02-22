@@ -5,14 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import { SelectField } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { RoleTable } from '../role/components/RoleTable'
-import { ComboBoxSelectRole, CreateRole } from '../role/components'
+import { CreateRole } from '../role/components'
 import { useGetRoles } from '../role/api'
 import { useProjects } from '../project/api'
 import storage from '~/utils/storage'
+import { flattenData } from '~/utils/misc'
 
 import { type Role } from '../role'
 
 import narrowLeft from '~/assets/icons/narrow-left.svg'
+import { ContentLayout } from '~/layout/ContentLayout'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -33,8 +35,6 @@ export default function DevRole() {
     return rs
   }
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Role[]>([])
-
   const { data, isPreviousData } = useGetRoles({
     projectId,
     isHasApplicableTo: true,
@@ -42,7 +42,15 @@ export default function DevRole() {
       keepPreviousData: true,
       suspense: false,
     },
+    offset, 
   })
+
+  const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(data?.roles, [
+    'id',
+    'name',
+    'policies',
+    'role_type',
+  ])
 
   useEffect(() => {
     if (storage.getProject() != null) {
@@ -51,7 +59,7 @@ export default function DevRole() {
   }, [])
 
   return (
-    <>
+    <ContentLayout title={t('dev_role:title')}>
       <div
         className="border-secondary-700 mb-4 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
         onClick={() => navigate(-1)}
@@ -74,17 +82,14 @@ export default function DevRole() {
           {projectId && (
             <div className="flex items-center gap-x-3">
               <CreateRole project_id={projectId} />
-              <ComboBoxSelectRole
-                data={data?.roles || []}
-                setFilteredComboboxData={setFilteredComboboxData}
-              />
+              {/* dummyInput */}
             </div>
           )}
         </div>
         {projectId && (
           <RoleTable
             project_id={projectId}
-            data={filteredComboboxData}
+            data={roleFlattenData}
             offset={offset}
             setOffset={setOffset}
             total={data?.total ?? 0}
@@ -92,6 +97,6 @@ export default function DevRole() {
           />
         )}
       </div>
-    </>
+    </ContentLayout>
   )
 }

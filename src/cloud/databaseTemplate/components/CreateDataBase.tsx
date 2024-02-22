@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import i18n from '~/i18n'
 import * as z from 'zod'
 
 import { Button } from '~/components/Button'
@@ -20,7 +21,7 @@ export const dataBaseAttrSchema = z.object({
   fields: z.array(
     z.object({
       name: z.string(),
-      type: z.string().min(1, { message: 'Vui lòng chọn loại giá trị' }),
+      type: z.string().min(1, { message: i18n.t('schema:value_type') }),
     }),
   ),
 })
@@ -30,11 +31,7 @@ export default function CreateDataBase() {
 
   const projectId = storage.getProject()?.id
 
-  const {
-    mutate,
-    isLoading,
-    isSuccess,
-  } = useCreateDataBase()
+  const { mutate, isLoading, isSuccess } = useCreateDataBase()
 
   const { register, formState, watch, handleSubmit, control, reset } = useForm<
     CreateDataBaseDTO['data']

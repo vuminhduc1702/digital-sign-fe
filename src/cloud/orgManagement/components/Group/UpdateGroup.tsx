@@ -5,7 +5,12 @@ import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectDropdown, SelectField } from '~/components/Form'
+import {
+  FieldWrapper,
+  InputField,
+  SelectDropdown,
+  SelectField,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
 import { cn, flattenData } from '~/utils/misc'
@@ -24,7 +29,7 @@ import { ComplexTree } from '~/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
-  org_id: z.string(),
+  org_id: z.string().optional().or(z.array(z.string())),
 })
 
 type UpdateGroupProps = {
@@ -87,7 +92,7 @@ export function UpdateGroup({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -97,7 +102,7 @@ export function UpdateGroup({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -115,14 +120,14 @@ export function UpdateGroup({
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id: values.org_id,
+                org_id: values.org_id?.toString(),
               },
             })
           }
           mutate({
             data: {
               name: values.name,
-              org_id: values.org_id.toString(),
+              org_id: values.org_id?.toString(),
             },
             groupId,
           })
@@ -177,7 +182,9 @@ export function UpdateGroup({
               control={control}
               name="org_id"
               render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = orgSelectOptions?.find(org => org.value === getValues('org_id'))?.label
+                const parseValue = orgSelectOptions?.find(
+                  org => org.value === getValues('org_id').toString(),
+                )?.label
                 return (
                   <Popover>
                     <PopoverTrigger asChild>
@@ -186,23 +193,27 @@ export function UpdateGroup({
                         variant="trans"
                         size="square"
                         className={cn(
-                          'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 px-3',
+                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                           !value && 'text-secondary-700',
                         )}
                       >
                         {value ? (
-                          <span>
-                            { parseValue }
-                          </span>
+                          <span>{parseValue ? parseValue : value}</span>
                         ) : (
                           <span>
-                           {t('cloud:org_manage.org_manage.add_org.choose_org')}
+                            {t(
+                              'cloud:org_manage.org_manage.add_org.choose_org',
+                            )}
                           </span>
                         )}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-2" align="start">
-                      <ComplexTree items={orgData?.organizations} selectOrg={onChange} currentValue={value}></ComplexTree>
+                      <ComplexTree
+                        items={orgData?.organizations}
+                        selectOrg={onChange}
+                        currentValue={value}
+                      ></ComplexTree>
                     </PopoverContent>
                   </Popover>
                 )
