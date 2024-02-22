@@ -16,7 +16,7 @@ import {
 interface ButtonProps {
   refComponent: MutableRefObject<HTMLElement> | MutableRefObject<null>
   rowSelection: { [key: string]: boolean }
-  aoo: Array<{ [key: string]: string }>
+  aoo?: Array<{ [key: string]: string }>
   pdfHeader: string[]
 }
 
@@ -84,7 +84,7 @@ export function ExportTable({
                 )
               })}
             </View>
-            {aoo.map((item: any, idx: any) => {
+            {aoo?.map((item: any, idx: any) => {
               return (
                 <View style={styles.row} key={`r-${idx}`}>
                   {Object.values(item).map((ele: any) => {

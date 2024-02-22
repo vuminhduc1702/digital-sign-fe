@@ -10,25 +10,15 @@ import storage from '~/utils/storage'
 import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useGetGroups } from '../api/groupAPI'
 import { useDeleteMultipleGroup } from '../api/groupAPI/deleteMultipleGroups'
-import {
-  CreateGroup,
-  GroupTable,
-} from '../components/Group'
-import { type Group } from '../types'
-import { flattenData } from '~/utils/misc'
+import { CreateGroup, GroupTable } from '../components/Group'
 
 export function GroupManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Group[]>([])
   const [offset, setOffset] = useState(0)
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
-  const {
-    data: groupData,
-    isPreviousData,
-    isSuccess,
-  } = useGetGroups({
+  const { data: groupData, isPreviousData } = useGetGroups({
     orgId,
     projectId,
     offset,
@@ -54,8 +44,8 @@ export function GroupManage() {
 
   const rowSelectionKey = Object.keys(rowSelection)
 
-  const aoo: Array<{ [key: string]: string }> = filteredComboboxData.reduce(
-    (acc, curr, index) => {
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    groupData?.groups.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
@@ -69,15 +59,7 @@ export function GroupManage() {
         acc.push(temp)
       }
       return acc
-    },
-    [],
-  )
-
-  // flatten the data
-  const { acc: groupFlattenData, extractedPropertyKeys } = flattenData(
-    groupData?.groups,
-    ['id', 'name', 'entity_type', 'org_name', 'organization'],
-  )
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -123,7 +105,7 @@ export function GroupManage() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -135,7 +117,7 @@ export function GroupManage() {
           </div>
         </div>
         <GroupTable
-          data={groupFlattenData}
+          data={groupData?.groups ?? []}
           offset={offset}
           setOffset={setOffset}
           total={groupData?.total ?? 0}

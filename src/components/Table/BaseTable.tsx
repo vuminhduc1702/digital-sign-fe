@@ -11,7 +11,7 @@ import {
   type VisibilityState,
   SortingFn,
   sortingFns,
-  FilterFn,
+  type FilterFn,
   getFilteredRowModel,
   getFacetedUniqueValues,
   getFacetedMinMaxValues,
@@ -41,9 +41,7 @@ import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 import PaginationRender from './components/Pagination/PaginationRender'
 
-import {
-  rankItem,
-} from '@tanstack/match-sorter-utils'
+import { rankItem } from '@tanstack/match-sorter-utils'
 
 import Filter from './components/Pagination/Filter'
 
@@ -189,10 +187,6 @@ export function BaseTable<T extends Record<string, any>>({
   })
   const totalAttrs = total || data?.length
 
-  // useLayoutEffect(() => {
-  //   table.setPageSize(10)
-  // }, [])
-
   function refresh() {
     setIsRefresh(true)
     callbackParent?.()
@@ -204,7 +198,7 @@ export function BaseTable<T extends Record<string, any>>({
   return (
     <div
       className={cn(
-        'mt-2 flex grow flex-col justify-between overflow-x-auto max-h-[500px]',
+        'mt-2 flex max-h-[500px] grow flex-col justify-between overflow-x-auto',
         className,
       )}
     >
@@ -218,7 +212,7 @@ export function BaseTable<T extends Record<string, any>>({
             className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
             id="table-ref"
           >
-            <thead className="border-b-2 bg-gray-200 text-center overflow-y-auto">
+            <thead className="overflow-y-auto border-b-2 bg-gray-200 text-center">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
@@ -238,7 +232,7 @@ export function BaseTable<T extends Record<string, any>>({
                           >
                             <div
                               className={cn(
-                                'text-table-header relative flex items-center justify-center flex flex-col',
+                                'relative flex flex-col items-center justify-center text-table-header',
                                 {
                                   'px-3': headerGroup.headers.length > 8,
                                 },
@@ -311,7 +305,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                className="mr-1 size-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -362,7 +356,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="accent-primary-400 mr-1 h-4 w-4 rounded-sm border"
+                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />
