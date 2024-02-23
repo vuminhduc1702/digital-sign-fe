@@ -18,22 +18,21 @@ import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import { scrollToIntro } from '~/utils/misc'
+import { cn, scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
+import MobileLP from './MobileLP'
+import i18n from '~/i18n'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
-import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-
-import English from '~/assets/images/landingpage/11315882511626933879-128.png'
-import VietNam from '~/assets/images/landingpage/12478762711626933882-128.png'
-
-import i18n from '~/i18n'
+import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
+import English from '~/assets/images/landingpage/uk-flag.png'
+import { Languages } from 'lucide-react'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -121,9 +120,9 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <div className=" p-4">
             <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-20">
               <div className="flex items-center max-lg:hidden">
-                <a href="/" className=" text-white lg:w-[180px]">
-                  <img src={LogoViettel} alt="" />
-                </a>
+                <Link to={PATHS.HOME} className=" text-white lg:w-[180px]">
+                  <img src={LogoViettel} alt="logo" />
+                </Link>
               </div>
               {hasSideBar ? (
                 <button
@@ -306,19 +305,29 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
               )}
-              <div className=" flex ">
+              <div className="flex">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild className="flex items-center">
-                    <div className="ml-24 cursor-pointer space-x-2">
-                      <img
-                        src={
-                          languages.find(
-                            language => i18n.language === language.code,
-                          )?.icon ?? t('nav:choose_lang')
-                        }
-                        alt="flag"
-                        className="h-auto w-8"
-                      />
+                    <div
+                      className={cn('ml-24 cursor-pointer space-x-2', {
+                        'ml-0': userDataFromStorage,
+                      })}
+                    >
+                      {languages.find(
+                        language => i18n.language === language.code,
+                      )?.icon != null ? (
+                        <img
+                          src={
+                            languages.find(
+                              language => i18n.language === language.code,
+                            )?.icon
+                          }
+                          alt="flag"
+                          className="h-auto w-8"
+                        />
+                      ) : (
+                        <Languages className="text-white" />
+                      )}
                       <p className="font-bold text-white">
                         {languages.find(
                           language => i18n.language === language.code,
@@ -340,7 +349,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       {languages.map(language => (
                         <DropdownMenu.Item
                           key={language.code}
-                          className="group relative flex flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                          className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
                           onClick={() => changeLanguage(language.code)}
                         >
                           <img
