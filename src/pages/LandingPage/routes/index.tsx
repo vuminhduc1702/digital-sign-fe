@@ -23,16 +23,16 @@ import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
 import MobileLP from './MobileLP'
-import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
+import i18n from '~/i18n'
 
+import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-import VietNam from '~/assets/images/landingpage/uk-flag.png'
-import English from '~/assets/images/landingpage/vietnam-flag.png'
-
-import i18n from '~/i18n'
+import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
+import English from '~/assets/images/landingpage/uk-flag.png'
+import { Languages } from 'lucide-react'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -309,15 +309,21 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild className="flex items-center">
                     <div className="cursor-pointer space-x-2">
-                      <img
-                        src={
-                          languages.find(
-                            language => i18n.language === language.code,
-                          )?.icon ?? t('nav:choose_lang')
-                        }
-                        alt="flag"
-                        className="h-auto w-8"
-                      />
+                      {languages.find(
+                        language => i18n.language === language.code,
+                      )?.icon != null ? (
+                        <img
+                          src={
+                            languages.find(
+                              language => i18n.language === language.code,
+                            )?.icon
+                          }
+                          alt="flag"
+                          className="h-auto w-8"
+                        />
+                      ) : (
+                        <Languages className="text-white" />
+                      )}
                       <p className="font-bold text-white">
                         {languages.find(
                           language => i18n.language === language.code,
