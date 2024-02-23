@@ -17,18 +17,22 @@ import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import { scrollToIntro } from '~/utils/misc'
+import { cn, scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
+import MobileLP from './MobileLP'
+import i18n from '~/i18n'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
-import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
+import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
+import English from '~/assets/images/landingpage/uk-flag.png'
+import { Languages } from 'lucide-react'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -94,6 +98,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
   const [sidebarOpen1, setSidebarOpen1] = useState(false)
 
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
+
+  const languages = [
+    { code: 'vi', name: `Tiếng Việt`, icon: VietNam },
+    { code: 'en', name: `English`, icon: English },
+  ]
+
   return (
     <ContentLayout title={t('landingpage:title')}>
       <div className="h-[500px] xs2:h-[720px] xs:h-[670p]">
@@ -104,8 +117,8 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             backgroundSize: 'cover',
           }}
         >
-          <div className="p-4">
-            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-48 ">
+          <div className=" p-4">
+            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-20">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -130,7 +143,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 </>
               ) : null}
 
-              <div className="flex w-full max-lg:hidden lg:justify-center ">
+              <div className="flex w-full  max-lg:hidden lg:justify-center ">
                 <div className="flex justify-start max-lg:flex-col">
                   <div
                     className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
@@ -176,6 +189,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </div>
                 </div>
               </div>
+
               {showSpinner && userInfoData != null ? (
                 <div className="flex items-center justify-center">
                   <Spinner
@@ -283,6 +297,63 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
+              <div className="flex">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="flex items-center">
+                    <div
+                      className={cn('ml-24 cursor-pointer space-x-2', {
+                        'ml-0': userDataFromStorage,
+                      })}
+                    >
+                      {languages.find(
+                        language => i18n.language === language.code,
+                      )?.icon != null ? (
+                        <img
+                          src={
+                            languages.find(
+                              language => i18n.language === language.code,
+                            )?.icon
+                          }
+                          alt="flag"
+                          className="h-auto w-8"
+                        />
+                      ) : (
+                        <Languages className="text-white" />
+                      )}
+                      <p className="font-bold text-white">
+                        {languages.find(
+                          language => i18n.language === language.code,
+                        )?.name ?? t('nav:choose_lang')}
+                      </p>
+                      <SidebarDropDownIcon
+                        width={50}
+                        height={7}
+                        viewBox="0 0 12 7"
+                        className=" text-white"
+                      />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="flex max-h-[360px]  min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                    sideOffset={-15}
+                  >
+                    {languages.map(language => (
+                      <DropdownMenuItem
+                        key={language.code}
+                        className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                        onClick={() => changeLanguage(language.code)}
+                      >
+                        <img
+                          src={language.icon}
+                          alt=""
+                          className="h-auto w-8"
+                        />
+                        <div>{language.name}</div>
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
 
             <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
@@ -308,10 +379,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             </div>
             <div className="flex max-w-full items-center justify-center">
               <div className="mt-10 flex items-center justify-center text-white xs2:w-[270px] xs:w-[270px] md:w-[470px] xl:w-1/2">
-                <p className="text-2xl ">
-                  Nền tảng đa năng hỗ trợ đồng thời quản lý kết nối và quản lý
-                  ứng dụng.
-                </p>
+                <p className="text-2xl ">{t('landingpage_text:index')}</p>
               </div>
             </div>
             <div className="my-10 flex  max-w-full items-center justify-center gap-4">
@@ -339,6 +407,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           </div>
         </div>
       </div>
+
       <div className="relative top-[-74px] z-40" ref={introRef}>
         <SectionIntro solutionRef={solutionRef} />
       </div>

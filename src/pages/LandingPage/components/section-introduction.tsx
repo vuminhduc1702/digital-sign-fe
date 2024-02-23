@@ -35,8 +35,7 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
-                    M2M là công nghệ cho phép cho các thiết bị có thể trao đổi
-                    với các hệ thống thông qua kết nối mạng.
+                    {t("landingpage_text:introduction.introduction_1")}
                   </p>
                 </div>
                 <div className="mb-[-8px]">
@@ -46,8 +45,7 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
-                    Dịch vụ data M2M: Là dịch vụ trong đó sim data được sử dụng
-                    để truyền tải dữ liệu.
+                    {t("landingpage_text:introduction.introduction_2")}
                   </p>
                 </div>
                 <div>
@@ -57,13 +55,7 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px]  text-base/[21px]">
-                    M2M là công nghệ cho phép các thiết bị có thể trao đổi với
-                    các hệ thống thông qua kết nối mạng. Dịch vụ data M2M: Là
-                    dịch vụ trong đó sim data được sử dụng để truyền tải dữ
-                    liệu. Công nghệ IOT phát triển dựa trên nền tảng kết hợp
-                    công nghệ mạng Internet (mạng wifi, mạng viễn thông băng
-                    rộng 4G, 5G) và công nghệ vi cơ điện tử, giúp người dùng
-                    kiểm soát mọi vật tối ưu hơn chỉ bằng 1 thiết bị thông minh.
+                    {t("landingpage_text:introduction.introduction_3")}
                   </p>
                 </div>
               </div>
