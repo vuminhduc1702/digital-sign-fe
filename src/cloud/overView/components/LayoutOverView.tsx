@@ -1,45 +1,45 @@
 import { useTranslation } from 'react-i18next'
 import i18n from '~/i18n'
 
+import {
+  ArrowTopRightIcon,
+  AvatarIcon,
+  CheckCircledIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  RadiobuttonIcon,
+  TimerIcon,
+} from '@radix-ui/react-icons'
+import clsx from 'clsx'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
 import AssetManagement from '~/assets/images/SolutionMaketplace/AssetManagement.png'
 import SmartFarming from '~/assets/images/SolutionMaketplace/SmartFarming.png'
 import SmartHome from '~/assets/images/SolutionMaketplace/SmartHome.png'
 import SmartMetering from '~/assets/images/SolutionMaketplace/SmartMetering.png'
 import SmartTracking from '~/assets/images/SolutionMaketplace/SmartTracking.png'
-import { useEffect, useState } from 'react'
-import { cn } from '~/utils/misc'
+import { useGetDashboards, type DashboardRes } from '~/cloud/dashboard/api'
+import { useRestoreProject } from '~/cloud/project/api/restoreProject'
 import { Button } from '~/components/Button'
-import storage from '~/utils/storage'
-import { PATHS } from '~/routes/PATHS'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Link } from '~/components/Link'
-import { type DashboardRes, useGetDashboards } from '~/cloud/dashboard/api'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
+import { PATHS } from '~/routes/PATHS'
+import { cn } from '~/utils/misc'
+import storage from '~/utils/storage'
 import { useGetConnectedDevices } from '../api'
-import { useGetRegistedUser } from '../api/getRegistedUser'
 import { useGetConcurrentUser } from '../api/getConcurrentUser'
+import { useGetRegistedUser } from '../api/getRegistedUser'
 import { useRequestHandlingTime } from '../api/requestHandlingTime'
-import { DashboardTable } from './DashboardTable'
-import {
-  AvatarIcon,
-  RadiobuttonIcon,
-  TimerIcon,
-  CheckCircledIcon,
-  ChevronRightIcon,
-  ChevronLeftIcon,
-  ArrowTopRightIcon,
-} from '@radix-ui/react-icons'
 import { useSuccessRate } from '../api/successRate'
-import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
-import fleetManagementData from '../fleetManagement.json'
 import assetManagementData from '../assetManagement.json'
+import fleetManagementData from '../fleetManagement.json'
 import smartFarmData from '../smartFarm.json'
 import smartHomeData from '../smartHome.json'
 import smartWaterData from '../smartWater.json'
-import { useRestoreProject } from '~/cloud/project/api/restoreProject'
-import { Tab } from '@headlessui/react'
-import clsx from 'clsx'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { DashboardTable } from './DashboardTable'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -273,216 +273,196 @@ export function LayoutOverView() {
         </div>
       </div>
       <div>
-        <Tab.Group>
-          <Tab.List className="bg-secondary-500 flex justify-end gap-x-2 px-10">
-            <Tab
-              className={({ selected }) =>
-                clsx(
-                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
-                  { 'text-primary-400': selected },
-                )
-              }
-            >
+        <Tabs defaultValue="tab1">
+          <TabsList className="bg-secondary-500 flex justify-end gap-x-2 px-10">
+            <TabsTrigger value="tab1">
               <div className="flex items-center gap-x-2">
                 <ChevronLeftIcon className="size-5" />
               </div>
-            </Tab>
-            <Tab
-              className={({ selected }) =>
-                clsx(
-                  'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
-                  { 'text-primary-400': selected },
-                )
-              }
-            >
+            </TabsTrigger>
+            <TabsTrigger value="tab2">
               <div className="flex items-center gap-x-2">
                 <ChevronRightIcon className="size-5" />
               </div>
-            </Tab>
-          </Tab.List>
-          <Tab.Panels className="flex grow flex-col">
-            <Tab.Panel
-              className={clsx(
-                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
-              )}
-            >
-              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
-                {tab1?.map(item => {
-                  return (
-                    <div
-                      key={item.title}
-                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
-                    >
-                      <div className="alignItemCenter">
-                        <img src={item.img} alt="" width="100%" height="300" />
-                      </div>
-                      <div className="text p-3">
-                        <h4 className="text-table-header mt-3">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3">
-                          {item.content}
-                          {item.content2 && <br />}
-                          {item.content2}
-                          {item.content3 && <br />}
-                          {item.content3}
-                          {item.content4 && <br />}
-                          {item.content4}
-                          {item.content5 && <br />}
-                          {item.content5}
-                        </p>
-                        <ConfirmationDialog
-                          isDone={isSuccessProject}
-                          icon="danger"
-                          title={t('btn:setup')}
-                          body={
-                            <span>
-                              {t('overView:setup_confirm').replace(
-                                '{{TITLE}}',
-                                item.title,
-                              )}
-                              <p className="mb-2 mt-3">
-                                {item.content}
-                                {item.content2 && <br />}
-                                {item.content2}
-                                {item.content3 && <br />}
-                                {item.content3}
-                                {item.content4 && <br />}
-                                {item.content4}
-                                {item.content5 && <br />}
-                                {item.content5}
-                              </p>
-                            </span>
-                          }
-                          triggerButton={
-                            <Button
-                              type="button"
-                              size="square"
-                              className="bg-primary-400 border-none"
-                            >
-                              {t('btn:setup')}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoadingProject}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() =>
-                                mutateAsyncUploadProjectFile({
-                                  projectId,
-                                  backup: {
-                                    backup: item.jsonData,
-                                  },
-                                })
-                              }
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="size-5"
-                                />
-                              }
-                            />
-                          }
-                        />
-                      </div>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="tab1" className={clsx(
+            'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
+          )}>
+            <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
+              {tab1?.map(item => {
+                return (
+                  <div
+                    key={item.title}
+                    className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
+                  >
+                    <div className="alignItemCenter">
+                      <img src={item.img} alt="" width="100%" height="300" />
                     </div>
-                  )
-                })}
-              </div>
-            </Tab.Panel>
-            <Tab.Panel
-              className={clsx(
-                'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
-              )}
-            >
-              <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
-                {tab2?.map(item => {
-                  return (
-                    <div
-                      key={item.title}
-                      className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
-                    >
-                      <div className="alignItemCenter">
-                        <img src={item.img} alt="" width="100%" height="300" />
-                      </div>
-                      <div className="text p-3">
-                        <h4 className="text-table-header mt-3">{item.title}</h4>
-                        <p className="mb-2 mt-3 line-clamp-3">
-                          {item.content}
-                          {item.content2 && <br />}
-                          {item.content2}
-                          {item.content3 && <br />}
-                          {item.content3}
-                          {item.content4 && <br />}
-                          {item.content4}
-                          {item.content5 && <br />}
-                          {item.content5}
-                        </p>
-                        <ConfirmationDialog
-                          isDone={isSuccessProject}
-                          icon="danger"
-                          title={t('btn:setup')}
-                          body={
-                            <span>
-                              {t('overView:setup_confirm').replace(
-                                '{{TITLE}}',
-                                item.title,
-                              )}
-                              <p className="mb-2 mt-3">
-                                {item.content}
-                                {item.content2 && <br />}
-                                {item.content2}
-                                {item.content3 && <br />}
-                                {item.content3}
-                                {item.content4 && <br />}
-                                {item.content4}
-                                {item.content5 && <br />}
-                                {item.content5}
-                              </p>
-                            </span>
-                          }
-                          triggerButton={
-                            <Button
-                              type="button"
-                              size="square"
-                              className="bg-primary-400 border-none"
-                            >
-                              {t('btn:setup')}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoadingProject}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() =>
-                                mutateAsyncUploadProjectFile({
-                                  projectId,
-                                  backup: {
-                                    backup: item.jsonData,
-                                  },
-                                })
-                              }
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="size-5"
-                                />
-                              }
-                            />
-                          }
-                        />
-                      </div>
+                    <div className="text p-3">
+                      <h4 className="text-table-header mt-3">{item.title}</h4>
+                      <p className="mb-2 mt-3 line-clamp-3">
+                        {item.content}
+                        {item.content2 && <br />}
+                        {item.content2}
+                        {item.content3 && <br />}
+                        {item.content3}
+                        {item.content4 && <br />}
+                        {item.content4}
+                        {item.content5 && <br />}
+                        {item.content5}
+                      </p>
+                      <ConfirmationDialog
+                        isDone={isSuccessProject}
+                        icon="danger"
+                        title={t('btn:setup')}
+                        body={
+                          <span>
+                            {t('overView:setup_confirm').replace(
+                              '{{TITLE}}',
+                              item.title,
+                            )}
+                            <p className="mb-2 mt-3">
+                              {item.content}
+                              {item.content2 && <br />}
+                              {item.content2}
+                              {item.content3 && <br />}
+                              {item.content3}
+                              {item.content4 && <br />}
+                              {item.content4}
+                              {item.content5 && <br />}
+                              {item.content5}
+                            </p>
+                          </span>
+                        }
+                        triggerButton={
+                          <Button
+                            type="button"
+                            size="square"
+                            className="bg-primary-400 border-none"
+                          >
+                            {t('btn:setup')}
+                          </Button>
+                        }
+                        confirmButton={
+                          <Button
+                            isLoading={isLoadingProject}
+                            type="button"
+                            size="md"
+                            className="bg-primary-400"
+                            onClick={() =>
+                              mutateAsyncUploadProjectFile({
+                                projectId,
+                                backup: {
+                                  backup: item.jsonData,
+                                },
+                              })
+                            }
+                            startIcon={
+                              <img
+                                src={btnSubmitIcon}
+                                alt="Submit"
+                                className="size-5"
+                              />
+                            }
+                          />
+                        }
+                      />
                     </div>
-                  )
-                })}
-              </div>
-            </Tab.Panel>
-          </Tab.Panels>
-        </Tab.Group>
+                  </div>
+                )
+              })}
+            </div>
+          </TabsContent>
+          <TabsContent value="tab2" className={clsx(
+            'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
+          )}>
+            <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
+              {tab2?.map(item => {
+                return (
+                  <div
+                    key={item.title}
+                    className="bg-secondary-500 relative flex flex-col break-words rounded-md shadow-sm"
+                  >
+                    <div className="alignItemCenter">
+                      <img src={item.img} alt="" width="100%" height="300" />
+                    </div>
+                    <div className="text p-3">
+                      <h4 className="text-table-header mt-3">{item.title}</h4>
+                      <p className="mb-2 mt-3 line-clamp-3">
+                        {item.content}
+                        {item.content2 && <br />}
+                        {item.content2}
+                        {item.content3 && <br />}
+                        {item.content3}
+                        {item.content4 && <br />}
+                        {item.content4}
+                        {item.content5 && <br />}
+                        {item.content5}
+                      </p>
+                      <ConfirmationDialog
+                        isDone={isSuccessProject}
+                        icon="danger"
+                        title={t('btn:setup')}
+                        body={
+                          <span>
+                            {t('overView:setup_confirm').replace(
+                              '{{TITLE}}',
+                              item.title,
+                            )}
+                            <p className="mb-2 mt-3">
+                              {item.content}
+                              {item.content2 && <br />}
+                              {item.content2}
+                              {item.content3 && <br />}
+                              {item.content3}
+                              {item.content4 && <br />}
+                              {item.content4}
+                              {item.content5 && <br />}
+                              {item.content5}
+                            </p>
+                          </span>
+                        }
+                        triggerButton={
+                          <Button
+                            type="button"
+                            size="square"
+                            className="bg-primary-400 border-none"
+                          >
+                            {t('btn:setup')}
+                          </Button>
+                        }
+                        confirmButton={
+                          <Button
+                            isLoading={isLoadingProject}
+                            type="button"
+                            size="md"
+                            className="bg-primary-400"
+                            onClick={() =>
+                              mutateAsyncUploadProjectFile({
+                                projectId,
+                                backup: {
+                                  backup: item.jsonData,
+                                },
+                              })
+                            }
+                            startIcon={
+                              <img
+                                src={btnSubmitIcon}
+                                alt="Submit"
+                                className="size-5"
+                              />
+                            }
+                          />
+                        }
+                      />
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
         <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md p-2">

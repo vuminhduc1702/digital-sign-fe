@@ -2,7 +2,6 @@ import { useSpinDelay } from 'spin-delay'
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
 import { useLogout, useUser } from '~/lib/auth'
 import { useUserInfo } from '~/cloud/orgManagement/api/userAPI'
@@ -29,6 +28,7 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -208,19 +208,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </div>
                 </div>
               ) : (
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger
-                    asChild
-                    className="flex items-center gap-x-2"
-                  >
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
                     <div className="flex max-lg:hidden lg:ml-auto">
                       <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
-                          src={`${
-                            userInfoData?.profile?.profile_image !== ''
-                              ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
-                              : defaultUserIcon
-                          }`}
+                          src={`${userInfoData?.profile?.profile_image !== ''
+                            ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
+                            : defaultUserIcon
+                            }`}
                           alt="User's avatar"
                           className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300"
                           onError={e => {
@@ -235,7 +231,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                             {t('nav:hello')}{' '}
                             {userInfoData != null
                               ? userInfoData?.name ||
-                                userInfoData?.email?.split('@')[0]
+                              userInfoData?.email?.split('@')[0]
                               : t('nav:friend')}
                           </p>
                           <SidebarDropDownIcon
@@ -247,49 +243,45 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         </div>
                       </div>
                     </div>
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content
-                      className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-                      sideOffset={5}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                    sideOffset={-15}>
+                    <Link
+                      to="https://iot.viettel.vn/"
+                      target="_blank"
+                      className="cursor-pointer"
                     >
-                      <Link
-                        to="https://iot.viettel.vn/"
-                        target="_blank"
-                        className="cursor-pointer"
-                      >
-                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                          {t('user:cmp')}
-                        </DropdownMenu.Item>
-                      </Link>
-                      <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                        <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                          {t('user:user_info')}
-                        </DropdownMenu.Item>
-                      </Link>
-                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                        {userDataFromStorage ? (
-                          <p
-                            className="cursor-pointer"
-                            onClick={() => {
-                              navigate(PATHS.CHANGEPASSWORD)
-                            }}
-                          >
-                            {t('user:change_password')}
-                          </p>
-                        ) : null}
-                      </DropdownMenu.Item>
-                      <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        {t('user:cmp')}
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link to={PATHS.USER_INFO} className="cursor-pointer">
+                      <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                        {t('user:user_info')}
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      {userDataFromStorage ? (
                         <p
                           className="cursor-pointer"
-                          onClick={() => logout.mutate({})}
+                          onClick={() => {
+                            navigate(PATHS.CHANGEPASSWORD)
+                          }}
                         >
-                          {t('user:logout')}
+                          {t('user:change_password')}
                         </p>
-                      </DropdownMenu.Item>
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
+                      ) : null}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <p
+                        className="cursor-pointer"
+                        onClick={() => logout.mutate({})}
+                      >
+                        {t('user:logout')}
+                      </p>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               )}
             </div>
 
