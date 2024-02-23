@@ -340,7 +340,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     {languages.map(language => (
                       <DropdownMenuItem
                         key={language.code}
-                        className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                        className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 leading-none outline-none"
                         onClick={() => changeLanguage(language.code)}
                       >
                         <img
