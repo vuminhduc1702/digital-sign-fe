@@ -118,8 +118,8 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             backgroundSize: 'cover',
           }}
         >
-          <div className="p-4">
-            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-40">
+          <div className=" p-4">
+            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-20">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -309,7 +309,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               <div className=" flex ">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild className="flex items-center">
-                    <div className="cursor-pointer space-x-2">
+                    <div className="ml-24 cursor-pointer space-x-2">
                       <img
                         src={
                           languages.find(
