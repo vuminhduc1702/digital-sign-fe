@@ -9,11 +9,7 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { useGetEvents } from '../api/eventAPI'
 import { CreateEvent, EventTable } from '../components/Event'
-import storage from '~/utils/storage'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { type EventType } from '../types'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
-import { CreateEvent, EventTable } from '../components/Event'
 
 export function EventManage() {
   const { t } = useTranslation()
@@ -31,23 +27,6 @@ export function EventManage() {
     projectId,
     config: { keepPreviousData: true },
   })
-
-  // flatten the data
-  const { acc: eventFlattenData } = flattenData(eventData?.events, [
-    'id',
-    'name',
-    'group_name',
-    'onClick',
-    'status',
-    'interval',
-    'retry',
-    'schedule',
-    'action',
-    'condition',
-    'org_id',
-    'group_id',
-    'cmd',
-  ])
 
   const {
     mutate: mutateDeleteMultipleEvents,
