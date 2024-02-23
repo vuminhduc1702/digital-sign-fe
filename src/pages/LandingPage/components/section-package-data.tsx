@@ -46,7 +46,6 @@ export function SectionPackageData() {
     t('landingpage:pack_of_data_M2M.categories.categories_1'),
     t('landingpage:pack_of_data_M2M.categories.categories_2'),
     t('landingpage:pack_of_data_M2M.categories.categories_3'),
-    t('landingpage:pack_of_data_M2M.categories.categories_4'),
     t('landingpage:pack_of_data_M2M.categories.categories_5'),
     t('landingpage:pack_of_data_M2M.categories.categories_6'),
     t('landingpage:pack_of_data_M2M.categories.categories_7'),
@@ -92,7 +91,7 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center lg:gap-6 max-md:items-center max-md:py-8 xs:gap-6 xs2:gap-6 sm:gap-6 md:gap-6">
+              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center max-md:items-center max-md:py-8 xs2:gap-6 xs:gap-6 sm:gap-6 md:gap-6 lg:gap-6">
                 <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}

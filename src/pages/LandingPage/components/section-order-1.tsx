@@ -24,7 +24,7 @@ export function SectionOrder1() {
             </div>
 
             <div className="flex h-fit pt-[20px] xs2:flex-col xs:flex-col sm:flex-col lg:flex-row lg:gap-10 xl:gap-10">
-              <div className="h-fit w-fit">
+              <div className="size-fit">
                 <div className="mb-[-8px]">
                   <CheckboxCircleLine
                     width={25}
@@ -56,7 +56,7 @@ export function SectionOrder1() {
                   </p>
                 </div>
               </div>
-              <div className="ml-[90px] h-fit w-fit xs2:ml-0 xs:ml-0 sm:ml-0">
+              <div className="ml-[90px] size-fit xs2:ml-0 xs:ml-0 sm:ml-0">
                 <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
