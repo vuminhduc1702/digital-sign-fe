@@ -25,7 +25,7 @@ import { cn } from '~/utils/misc'
 import { SettingIcon } from '~/components/SVGIcons'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import PaginationRender from './components/Pagination/PaginationRender'
-import Filter from './components/Pagination/Filter'
+import Filter from './components/FilterTable/Filter'
 
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
@@ -73,7 +73,7 @@ export function BaseTable<T extends Record<string, any>>({
   columns,
   offset = 0,
   setOffset,
-  total = 1,
+  total,
   isPreviousData,
   className,
   renderSubComponent,

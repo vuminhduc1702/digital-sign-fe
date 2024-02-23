@@ -6,7 +6,6 @@ import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useGetEvents } from '../api/eventAPI'
 import {
-  ComboBoxSelectEvent,
   CreateEvent,
   EventTable,
 } from '../components/Event'
@@ -21,9 +20,6 @@ export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<EventType[]>(
-    [],
-  )
   const params = useParams()
 
   const orgId = params.orgId as string
@@ -37,6 +33,23 @@ export function EventManage() {
     projectId,
     config: { keepPreviousData: true },
   })
+
+  // flatten the data
+  const { acc: eventFlattenData } = flattenData(eventData?.events, [
+    'id',
+    'name',
+    'group_name',
+    'onClick',
+    'status',
+    'interval',
+    'retry',
+    'schedule',
+    'action',
+    'condition',
+    'org_id',
+    'group_id',
+    'cmd',
+  ])
 
   const {
     mutate: mutateDeleteMultipleEvents,
@@ -56,7 +69,7 @@ export function EventManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    eventFlattenData.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -69,26 +82,6 @@ export function EventManage() {
       }
       return acc
     }, [] as Array<{ [key: string]: string }>)
-
-  // flatten the data
-  const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
-    eventData?.events,
-    [
-      'id',
-      'name',
-      'group_name',
-      'onClick',
-      'status',
-      'interval',
-      'retry',
-      'schedule',
-      'action',
-      'condition',
-      'org_id',
-      'group_id',
-      'cmd',
-    ],
-  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -142,12 +135,7 @@ export function EventManage() {
               />
             )}
             <CreateEvent />
-            {/* {isSuccess ? (
-              <ComboBoxSelectEvent
-                data={eventData}
-                setFilteredComboboxData={setFilteredComboboxData}
-              />
-            ) : null} */}
+            {/* dummyInput */}
           </div>
         </div>
         <EventTable

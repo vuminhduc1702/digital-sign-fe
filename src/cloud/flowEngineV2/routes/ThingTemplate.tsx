@@ -19,6 +19,7 @@ export function ThingTemplate() {
 
   const projectId = storage.getProject()?.id
 
+  // search query for api call
   const [searchQuery, setSearchQuery] = useState('')
 
   const [offset, setOffset] = useState(0)
@@ -134,11 +135,12 @@ export function ThingTemplate() {
             {/* dummyInput */}
             <InputField
               type="text"
-              placeholder="Search"
+              placeholder={t('table:search')}
               onChange={e => {
                 const value = e.target.value
                 setSearchQuery(value)
               }}
+              
             />
           </div>
         </div>

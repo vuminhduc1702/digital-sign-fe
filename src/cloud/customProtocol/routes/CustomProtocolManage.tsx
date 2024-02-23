@@ -17,9 +17,6 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 export function CustomProtocolManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Adapter[]>(
-    [],
-  )
   const [offset, setOffset] = useState(0)
 
   const projectId = storage.getProject()?.id
@@ -69,7 +66,7 @@ export function CustomProtocolManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData?.reduce((acc, curr, index) => {
+    adapterFlattenData?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),

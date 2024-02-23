@@ -121,7 +121,8 @@
           "delete_attr": "Delete Attribute",
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
-          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?"
+          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?", 
+          "search": "Search..."
         },
         "add_org": {
           "title": "Create New Organization",
