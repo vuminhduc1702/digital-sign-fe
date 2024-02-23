@@ -1187,7 +1187,6 @@
         "categories_1":"Đo lưu lượng (Metering)",
         "categories_2":"Giám sát hành trình",
         "categories_3":"Máy thanh toán POS",
-        "categories_4":"Loa phường thông minh",
         "categories_5":"Màn hình quảng cáo",
         "categories_6":"Camera",
         "categories_7":"Ô tô",
@@ -1251,11 +1250,11 @@
         },
         "slide_3":{
           "title_1":"Ô tô thông minh",
-          "title_2":"vTag"
+          "title_2":"Smart car"
         },
         "slide_4":{
           "title_1":"Sức khỏe cá nhân",
-          "title_2":"VHealth"
+          "title_2":"Ourhealth"
         },
         "slide_5":{
           "title_1":"Office thông minh",
