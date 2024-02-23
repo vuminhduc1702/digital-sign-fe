@@ -8,22 +8,18 @@ import TitleBar from '~/components/Head/TitleBar'
 import { DeviceBreadcrumbs } from '../components/Device'
 import { AttrTable, CreateAttr } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { AttrTable, CreateAttr } from '../components/Attributes'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
-import { DeviceBreadcrumbs } from '../components/Device'
 
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
-import { type MQTTMessage } from '../api/attrAPI/getMQTTLog'
 import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
-import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
-import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
+import { flattenData } from '~/utils/misc'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -43,14 +39,6 @@ export function DeviceDetail() {
     entityType: entityTypeAttr,
     entityId: deviceId,
   })
-
-  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
-    'last_update_ts',
-    'attribute_key',
-    'logged',
-    'value_type',
-    'value',
-  ])
 
   // Attr Log
   const [deviceAttrOffset, setDeviceAttrOffset] = useState(0)
