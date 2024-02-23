@@ -159,53 +159,6 @@ function Navbar() {
           <p className="text-white">{t('nav:support')}</p>
         </div> */}
 
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
-            <div className="cursor-pointer">
-              {languages.find(language => i18n.language === language.code)
-                ?.icon != null ? (
-                <img
-                  src={
-                    languages.find(language => i18n.language === language.code)
-                      ?.icon
-                  }
-                  alt="flag"
-                  className="h-auto w-8"
-                />
-              ) : (
-                <Languages className="text-white" />
-              )}
-              <p className="text-white">
-                {languages.find(language => i18n.language === language.code)
-                  ?.name ?? t('nav:choose_lang')}
-              </p>
-              <SidebarDropDownIcon
-                width={12}
-                height={7}
-                viewBox="0 0 12 7"
-                className="text-white"
-              />
-            </div>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="flex max-h-[360px] min-w-[160px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={-15}
-            >
-              {languages.map(language => (
-                <DropdownMenu.Item
-                  key={language.code}
-                  className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
-                  onClick={() => changeLanguage(language.code)}
-                >
-                  <img src={language.icon} alt="" className="h-auto w-8" />
-                  <div>{language.name}</div>
-                </DropdownMenu.Item>
-              ))}
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-
         {userInfoIsLoading ? (
           <div className="flex items-center justify-center">
             <Spinner
@@ -292,6 +245,53 @@ function Navbar() {
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
         )}
+
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2">
+            <div className="cursor-pointer">
+              {languages.find(language => i18n.language === language.code)
+                ?.icon != null ? (
+                <img
+                  src={
+                    languages.find(language => i18n.language === language.code)
+                      ?.icon
+                  }
+                  alt="flag"
+                  className="h-auto w-8"
+                />
+              ) : (
+                <Languages className="text-white" />
+              )}
+              <p className="text-white">
+                {languages.find(language => i18n.language === language.code)
+                  ?.name ?? t('nav:choose_lang')}
+              </p>
+              <SidebarDropDownIcon
+                width={12}
+                height={7}
+                viewBox="0 0 12 7"
+                className="text-white"
+              />
+            </div>
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Portal>
+            <DropdownMenu.Content
+              className="flex max-h-[360px] min-w-[160px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+              sideOffset={-15}
+            >
+              {languages.map(language => (
+                <DropdownMenu.Item
+                  key={language.code}
+                  className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                  onClick={() => changeLanguage(language.code)}
+                >
+                  <img src={language.icon} alt="" className="h-auto w-8" />
+                  <div>{language.name}</div>
+                </DropdownMenu.Item>
+              ))}
+            </DropdownMenu.Content>
+          </DropdownMenu.Portal>
+        </DropdownMenu.Root>
       </nav>
     </div>
   )

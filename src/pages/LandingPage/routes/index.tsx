@@ -18,7 +18,7 @@ import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import { scrollToIntro } from '~/utils/misc'
+import { cn, scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
@@ -117,8 +117,8 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
             backgroundSize: 'cover',
           }}
         >
-          <div className="p-4">
-            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-40">
+          <div className=" p-4">
+            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-20">
               <div className="flex items-center max-lg:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -305,10 +305,14 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenu.Portal>
                 </DropdownMenu.Root>
               )}
-              <div className=" flex ">
+              <div className="flex">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild className="flex items-center">
-                    <div className="cursor-pointer space-x-2">
+                    <div
+                      className={cn('ml-24 cursor-pointer space-x-2', {
+                        'ml-0': userDataFromStorage,
+                      })}
+                    >
                       {languages.find(
                         language => i18n.language === language.code,
                       )?.icon != null ? (
