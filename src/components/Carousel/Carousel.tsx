@@ -160,7 +160,7 @@ const CarouselContent = React.forwardRef<
         ref={ref}
         className={cn(
           'flex',
-          orientation === 'horizontal' ? '-ml-4' : '-mt-4 flex-col',
+          orientation === 'horizontal' ? 'ml-8' : '-mt-4 flex-col',
           className,
         )}
         {...props}
@@ -182,7 +182,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        'mx-[46px] max-w-[215px] shrink-0 grow-0',
+        ' mx-[46px] max-w-[215px] shrink-0 grow-0 gap-x-9',
         orientation === 'horizontal' ? 'px-2' : 'pt-4',
         className,
       )}

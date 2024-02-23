@@ -8,6 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '~/components/Carousel'
+import { Card, CardContent } from "~/components/Card"
 import Pic1 from '~/assets/images/landingpage/Pict_9s.png'
 import Pic2 from '~/assets/images/landingpage/Pict_7s.png'
 import Pic3 from '~/assets/images/landingpage/Pict_8s.png'
@@ -15,7 +16,8 @@ import Pic4 from '~/assets/images/landingpage/Pict_13s.png'
 import Pic5 from '~/assets/images/landingpage/Pict_15s.png'
 import Pic6 from '~/assets/images/landingpage/Pict_11s.png'
 import Pic7 from '~/assets/images/landingpage/Pict_6s.png'
-import { useEffect, useState } from 'react'
+import Autoplay from 'embla-carousel-autoplay'
+import { useState } from 'react'
 
 export function SectionProduct() {
   const { t } = useTranslation()
@@ -79,22 +81,7 @@ export function SectionProduct() {
     },
   ]
 
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
+  const [activeIndex, setActiveIndex] = useState(1)
 
   return (
     <>
@@ -111,9 +98,20 @@ export function SectionProduct() {
         </div>
         <div className="flex w-full justify-center ">
           <div className="pt-[50px] xs2:w-[290px] xs:w-[300px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
-            <Carousel setApi={setApi} className="xs2:w-[320px] sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] ">
+            <Carousel
+              opts={{
+                align: 'start',
+                loop: true,
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 2000,
+                }),
+              ]}
+              className="xs2:w-[320px] sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] "
+            >
               <CarouselContent className="">
-                {slides.map((item,index) => (
+                {slides.map((item, index) => (
                   <CarouselItem key={index} className=" basis-1/4 ">
                     <div className="rounded-lg shadow-md">
                       <div className="h-fit w-[200px]">
@@ -142,12 +140,23 @@ export function SectionProduct() {
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
+              <div>
+                <div className="mt-4 flex justify-center lg:hidden xl:hidden">
+                  {slides.map((_, index) => (
+                    <span
+                      key={index}
+                      onClick={() => setActiveIndex(index)}
+                      className={`mx-2 h-4 w-4 cursor-pointer rounded-full `.concat(
+                        index === activeIndex ? 'bg-indigo-500' : 'bg-gray-400'
+                      )}
+                    ></span>
+                  ))}
+                </div>
+              </div>
             </Carousel>
-            {/* <div>Slide {current} of {count}</div> */}
           </div>
         </div>
       </div>
-      
     </>
   )
 }

@@ -18,6 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '~/components/Carousel'
+import Autoplay from 'embla-carousel-autoplay'
 
 import { CheckboxCircleLine } from '~/components/SVGIcons'
 
@@ -156,7 +157,20 @@ export function SectionPackageData() {
 
               <div className="flex w-full justify-center">
                 <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
-                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]">
+                  <Carousel
+                    opts={{
+                      align: 'start',
+                      // loopで最後のスライドまで行ったら最初のスライドに戻るようになる。
+                      loop: true,
+                    }}
+                    plugins={[
+                      // Autoplayで自動的にスライドを切り替えることができる。
+                      Autoplay({
+                        delay: 2000,
+                      }),
+                    ]}
+                    className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]"
+                  >
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
