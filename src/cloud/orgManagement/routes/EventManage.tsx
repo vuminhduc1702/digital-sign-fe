@@ -1,27 +1,25 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import storage from '~/utils/storage'
 import { useGetEvents } from '../api/eventAPI'
-import {
-  CreateEvent,
-  EventTable,
-} from '../components/Event'
+import { CreateEvent, EventTable } from '../components/Event'
 import storage from '~/utils/storage'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { type EventType } from '../types'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
-import { Button } from '~/components/Button'
-import { flattenData } from '~/utils/misc'
+import { CreateEvent, EventTable } from '../components/Event'
 
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
   const params = useParams()
-
   const orgId = params.orgId as string
   const projectId = storage.getProject()?.id
   const {
@@ -69,7 +67,7 @@ export function EventManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    eventFlattenData.reduce((acc, curr, index) => {
+    eventData?.events.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -127,7 +125,7 @@ export function EventManage() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -139,7 +137,7 @@ export function EventManage() {
           </div>
         </div>
         <EventTable
-          data={eventFlattenData}
+          data={eventData?.events || []}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

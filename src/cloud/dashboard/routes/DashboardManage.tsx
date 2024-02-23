@@ -6,7 +6,6 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { limitPagination } from '~/utils/const'
-import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { convertEpochToDate } from '~/utils/transformFunc'
 import { useGetDashboards } from '../api'
@@ -29,10 +28,6 @@ export function DashboardManage() {
     isSuccess,
   } = useGetDashboards({ projectId, offset })
 
-  const { acc: dashboardFlattenData, extractedPropertyKeys } = flattenData(
-    dashboardData?.dashboard,
-    ['id', 'title', 'name', 'tenant_id', 'created_time', 'configuration'],
-  )
   const {
     mutate: mutateDeleteMultipleDashboards,
     isLoading,
@@ -122,7 +117,7 @@ export function DashboardManage() {
           </div>
         </div>
         <DashboardTable
-          data={dashboardFlattenData}
+          data={dashboardData?.dashboard || []}
           projectId={projectId}
           offset={offset}
           setOffset={setOffset}

@@ -2,24 +2,20 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '~/components/Button'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
-import { type UserInfo, useGetUsers } from '../api/userAPI'
-import { CreateUser, UserTable } from '../components/User'
 import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
+import { useGetUsers } from '../api/userAPI'
 import { useDeleteMultipleUsers } from '../api/userAPI/deleteMultipleUsers'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Button } from '~/components/Button'
-import { flattenData } from '~/utils/misc'
+import { CreateUser, UserTable } from '../components/User'
 
 export function UserManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<UserInfo[]>(
-    [],
-  )
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
@@ -55,7 +51,7 @@ export function UserManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    userData?.users.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -72,23 +68,6 @@ export function UserManage() {
       }
       return acc
     }, [] as Array<{ [key: string]: string }>)
-
-  const { acc: userFlattenData, extractedPropertyKeys } = flattenData(
-    userData?.users,
-    [
-      'user_id',
-      'name',
-      'email',
-      'role_name',
-      'activate',
-      'org_id',
-      'org_name',
-      'role_name',
-      'role_id',
-      'phone',
-      'profile',
-    ],
-  )
 
   return (
     <div ref={ref} className="uer-pnf flex grow flex-col">
@@ -146,7 +125,7 @@ export function UserManage() {
           </div>
         </div>
         <UserTable
-          data={userFlattenData}
+          data={userData?.users || []}
           offset={offset}
           setOffset={setOffset}
           total={userData?.total ?? 0}
