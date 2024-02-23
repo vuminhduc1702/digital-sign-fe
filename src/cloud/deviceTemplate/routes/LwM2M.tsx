@@ -44,6 +44,8 @@ export function LwM2M() {
     ['action', 'name', 'id', 'kind', 'type'],
   )
 
+  console.log(templateLwM2MFlattenDataAttr)
+
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && !id ? (
@@ -69,9 +71,7 @@ export function LwM2M() {
                   {/* dummyInput */}
                 </div>
               </div>
-              <LwM2MTable
-                moduleConfig={templateLwM2MFlattenData}
-              />
+              <LwM2MTable moduleConfig={templateLwM2MFlattenData} />
             </div>
           </Suspense>
         </div>
@@ -99,9 +99,7 @@ export function LwM2M() {
                   {/* dummyInput */}
                 </div>
               </div>
-              <AttrLwM2MTable attributeInfo={templateLwM2MFlattenDataAttr} 
-
-              />
+              <AttrLwM2MTable attributeInfo={templateLwM2MFlattenDataAttr} />
             </div>
           </Suspense>
         </div>

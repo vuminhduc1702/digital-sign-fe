@@ -138,7 +138,6 @@ function AttrTableContextMenu({
 export function AttrTable({
   entityId,
   entityType,
-  searchQuery,
   ...props
 }: {
   entityId: string
@@ -160,7 +159,9 @@ export function AttrTable({
   )
 
   const dataSorted =
-    attrFlattenData?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || attrFlattenData
+    attrFlattenData?.sort((a, b) =>
+      b.attribute_key < a.attribute_key ? 1 : -1,
+    ) || attrFlattenData
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({

@@ -7,7 +7,6 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import {
   CreateDevice,
   DeviceTable,
-  ComboBoxSelectDevice,
 } from '../components/Device'
 import { useGetDevices } from '../api/deviceAPI'
 import storage from '~/utils/storage'
@@ -76,7 +75,7 @@ export function DeviceManage() {
     }, [] as Array<{ [key: string]: string }>)
 
   // flatten the data
-  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
+  const { acc: deviceFlattenData } = flattenData(
     deviceData?.devices,
     [
       'id',
@@ -151,13 +150,6 @@ export function DeviceManage() {
               />
             )}
             <CreateDevice />
-            {/* {isSuccess ? (
-              <ComboBoxSelectDevice
-                data={deviceData}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null} */}
             {/* dummyInput */}
           </div>
         </div>

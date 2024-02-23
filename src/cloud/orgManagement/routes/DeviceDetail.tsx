@@ -9,8 +9,6 @@ import { DeviceBreadcrumbs } from '../components/Device'
 import {
   AttrTable,
   CreateAttr,
-  ComboBoxAttrLog,
-  ComboBoxSelectAttr,
 } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { type DeviceAttrLog } from '../api/attrAPI'
@@ -19,7 +17,6 @@ import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { type Attribute } from '~/types'
 
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
-import { ComboBoxMQTTLog } from '../components/Attributes/ComboBoxSelectMQTTLog'
 import { type MQTTMessage } from '../api/attrAPI/getMQTTLog'
 import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
@@ -39,14 +36,16 @@ export function DeviceDetail() {
   const deviceId = params.deviceId as string
   const groupId = params.groupId as string
   const projectId = params.projectId as string
-  const entityType = 'GROUP'
+  const entityTypeAttr = 'DEVICE'
 
-  const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
-    useState<DeviceAttrLog[]>([])
-  const [filteredMQTTLogComboboxData, setFilteredMQTTLogComboboxData] =
-    useState<MQTTMessage[]>([])
-
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
+  const {
+    data: attrsData,
+    isPreviousData: isPreviousAttrsData,
+    isSuccess: isSuccessAttrsData,
+  } = useGetAttrs({
+    entityType: entityTypeAttr,
+    entityId: deviceId,
+  })
 
   const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
     'last_update_ts',
@@ -56,9 +55,16 @@ export function DeviceDetail() {
     'value',
   ])
 
-  const { data: deviceAttrData } = useAttrLog({
+  // Attr Log
+  const [deviceAttrOffset, setDeviceAttrOffset] = useState(0)
+  const {
+    data: deviceAttrData,
+    isPreviousData: isPreviousDeviceAttrData,
+    isSuccess: isSuccessDeviceAttrData,
+  } = useAttrLog({
     entityId: deviceId,
     entityType: 'DEVICE',
+    offset: deviceAttrOffset,
     config: {
       suspense: false,
     },
@@ -70,7 +76,12 @@ export function DeviceDetail() {
     'value',
   ])
 
-  const { data: mqttLogData } = useMQTTLog({
+  // MQTT Log
+  const {
+    data: mqttLogData,
+    isPreviousData: isPreviousMQTTLogData,
+    isSuccess: isSuccessDeviceLogData,
+  } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
     config: {
@@ -78,18 +89,15 @@ export function DeviceDetail() {
     },
   })
 
-  const { acc: mqttMessageFlattenData, extractedPropertyKeys } = flattenData(
-    mqttLogData?.messages,
-    [
-      'project_id',
-      'created_by',
-      'owner',
-      'topic',
-      'device_id',
-      'payload_as_string',
-      'ts',
-    ],
-  )
+  const { acc: mqttMessageFlattenData } = flattenData(mqttLogData?.messages, [
+    'project_id',
+    'created_by',
+    'owner',
+    'topic',
+    'device_id',
+    'payload_as_string',
+    'ts',
+  ])
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -270,6 +278,10 @@ export function DeviceDetail() {
               </div>
               <AttrLogTable
                 data={attrLogFlattenData}
+                offset={deviceAttrOffset}
+                setOffset={setDeviceAttrOffset}
+                total={deviceAttrData?.total ?? 0}
+                isPreviousData={isPreviousDeviceAttrData}
                 entityId={deviceId}
                 entityType="DEVICE"
               />

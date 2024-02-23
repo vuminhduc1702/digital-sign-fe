@@ -6,7 +6,6 @@ import { GroupBreadcrumbs } from '../components/Group/GroupBreadcrumbs'
 import {
   AttrTable,
   CreateAttr,
-  ComboBoxSelectAttr,
 } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 

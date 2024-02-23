@@ -171,11 +171,6 @@ export function OrgManage() {
                     />
                   )}
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                  {/* <ComboBoxSelectAttr
-                    entityId={orgId}
-                    entityType="ORGANIZATION"
-                    setFilteredComboboxData={setFilteredComboboxData}
-                  /> */}
                   {/* dummyInput */}
                   <InputField
                     type="text"
