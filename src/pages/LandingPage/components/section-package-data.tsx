@@ -18,6 +18,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '~/components/Carousel'
+import Autoplay from 'embla-carousel-autoplay'
 
 import { CheckboxCircleLine } from '~/components/SVGIcons'
 
@@ -46,7 +47,6 @@ export function SectionPackageData() {
     t('landingpage:pack_of_data_M2M.categories.categories_1'),
     t('landingpage:pack_of_data_M2M.categories.categories_2'),
     t('landingpage:pack_of_data_M2M.categories.categories_3'),
-    t('landingpage:pack_of_data_M2M.categories.categories_4'),
     t('landingpage:pack_of_data_M2M.categories.categories_5'),
     t('landingpage:pack_of_data_M2M.categories.categories_6'),
     t('landingpage:pack_of_data_M2M.categories.categories_7'),
@@ -92,7 +92,7 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center lg:gap-6 max-md:items-center max-md:py-8 xs:gap-6 xs2:gap-6 sm:gap-6 md:gap-6">
+              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center max-md:items-center max-md:py-8 xs2:gap-6 xs:gap-6 sm:gap-6 md:gap-6 lg:gap-6">
                 <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}
@@ -157,7 +157,20 @@ export function SectionPackageData() {
 
               <div className="flex w-full justify-center">
                 <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
-                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]">
+                  <Carousel
+                    opts={{
+                      align: 'start',
+                      // loopで最後のスライドまで行ったら最初のスライドに戻るようになる。
+                      loop: true,
+                    }}
+                    plugins={[
+                      // Autoplayで自動的にスライドを切り替えることができる。
+                      Autoplay({
+                        delay: 2000,
+                      }),
+                    ]}
+                    className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]"
+                  >
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
