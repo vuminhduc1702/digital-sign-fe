@@ -14,7 +14,7 @@ export function SectionOrder1() {
     <>
       <div className="h-[100px]"></div>
       <div className="flex h-[422px] justify-center xs2:mt-[500px] xs:mt-[460px] sm:mt-[460px] md:mt-[440px] lg:mb-[100px] lg:mt-[340px]  xl:mt-[10px]">
-        <div className="flex xl:gap-20 h-full w-[1040px] xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center">
+        <div className=" flex h-full w-[1040px]  xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center xl:gap-20">
           <div
             className={cn(
               'relative w-1/2',
