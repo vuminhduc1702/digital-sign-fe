@@ -68,7 +68,7 @@ export function SectionOrder() {
                 <Link to="https://innoway.gitbook.io/innoway/" target="_blank">
                   <Button
                     type="button"
-                    className="ml-7 rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:ml-0"
+                    className="ml-7 xs2:px-12 rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:ml-0"
                     variant="primary"
                     endIcon={
                       <ArrowRightUpLine

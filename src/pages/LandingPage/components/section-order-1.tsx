@@ -4,9 +4,15 @@ import { ArrowRightUpLine, CheckboxCircleLine } from '~/components/SVGIcons'
 import { Button } from '~/components/Button'
 import { useTranslation } from 'react-i18next'
 import { Link } from '~/components/Link'
+import i18n from '~/i18n'
+import {cn} from '~/utils/misc'
 
 export function SectionOrder1() {
   const { t } = useTranslation()
+  const languages = [
+    { code: 'vi', name: `Tiếng Việt` },
+    { code: 'en', name: `English`  },
+  ]
   return (
     <>
       <div className="h-[100px]"></div>

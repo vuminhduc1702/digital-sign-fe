@@ -71,11 +71,9 @@ export function SectionClient() {
           <Carousel
             opts={{
               align: 'start',
-              // loopで最後のスライドまで行ったら最初のスライドに戻るようになる。
               loop: true,
             }}
             plugins={[
-              // Autoplayで自動的にスライドを切り替えることができる。
               Autoplay({
                 delay: 2000,
               }),
@@ -95,7 +93,7 @@ export function SectionClient() {
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
-            <div>
+            {/* <div>
                 <div className="mt-4 flex justify-center lg:hidden xl:hidden">
                   {slides.map((_, index) => (
                     <span
@@ -107,7 +105,7 @@ export function SectionClient() {
                     ></span>
                   ))}
                 </div>
-              </div>
+              </div> */}
           </Carousel>
         </div>
       </div>
