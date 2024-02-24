@@ -77,7 +77,7 @@ export function SectionClient() {
                 delay: 2000,
               }),
             ]}
-            className=" xs2:w-[280px] xs:w-[280px] md:w-[620px] lg:w-[870px] xl:w-[1200px]"
+            className="xs2:w-[280px] xs:w-[280px] md:w-[620px] lg:w-[870px] xl:w-[1200px]"
           >
             <CarouselContent>
               {slides.map(item => (

@@ -43,6 +43,7 @@ export function SectionPackageData() {
     delay: 150,
     minDuration: 300,
   })
+  console.log('PackofData', PackofData)
 
   const categories = [
     t('landingpage:pack_of_data_M2M.categories.categories_1'),
@@ -157,7 +158,7 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="w-[1200px] pt-[50px] xs2:w-[310px] xs:w-[310px] sm:w-[300px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
+                <div className="w-[1200px] pt-[50px] xs2:w-[280px] xs:w-[300px] sm:w-[320px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
                   <Carousel
                     opts={{
                       align: 'start',
@@ -168,7 +169,6 @@ export function SectionPackageData() {
                         delay: 5000,
                       }),
                     ]}
-                    className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]"
                   >
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
