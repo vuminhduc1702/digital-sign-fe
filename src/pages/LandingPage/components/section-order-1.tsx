@@ -5,20 +5,31 @@ import { Button } from '~/components/Button'
 import { useTranslation } from 'react-i18next'
 import { Link } from '~/components/Link'
 import i18n from '~/i18n'
-import {cn} from '~/utils/misc'
+import { cn } from '~/utils/misc'
 
 export function SectionOrder1() {
   const { t } = useTranslation()
-  const languages = [
-    { code: 'vi', name: `Tiếng Việt` },
-    { code: 'en', name: `English`  },
-  ]
+  const languages = [{ vi: 'vi' }, { en: 'en' }]
   return (
     <>
       <div className="h-[100px]"></div>
-      <div className="flex h-[422px] justify-center xs2:mt-[500px] xs:mt-[460px] sm:mt-[460px] md:mt-[440px] lg:mt-[340px]  xl:mt-[10px]">
-        <div className="flex h-full w-[1040px] xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center">
-          <div className="w-1/2 ">
+      <div className="flex h-[422px] justify-center xs2:mt-[500px] xs:mt-[460px] sm:mt-[460px] md:mt-[440px] lg:mb-[100px] lg:mt-[340px]  xl:mt-[10px]">
+        <div className="flex xl:gap-20 h-full w-[1040px] xs2:flex-col-reverse xs2:items-center xs:flex-col-reverse xs:items-center sm:flex-col-reverse sm:items-center md:flex-col-reverse md:items-center lg:flex-col-reverse lg:items-center xl:flex-row xl:items-center">
+          <div
+            className={cn(
+              'relative w-1/2',
+              {
+                'xs2:top-[-140px] xs:top-[-97px]': languages.find(
+                  language => i18n.language === language.vi,
+                ),
+              },
+              {
+                'xs2:top-[100px] xl:top-[-70px]': languages.find(
+                  language => i18n.language === language.en,
+                ),
+              },
+            )}
+          >
             <div className="w-[320px] text-[35px] leading-[43px] text-black xs2:w-[240px] xs2:pt-10 xs:w-[240px] md:w-[460px] lg:w-[500px]">
               {t('landingpage:order1.M2M_manage_solution')}
             </div>
@@ -63,7 +74,7 @@ export function SectionOrder1() {
                 </div>
               </div>
               <div className="ml-[90px] size-fit xs2:ml-0 xs:ml-0 sm:ml-0">
-                <div className="mb-[-8px] sm:pt-2 xs:pt-2 md:pt-2 xs2:pt-2 sm:border-t xs2:border-t xs:border-t md:border-t md:border-[#E2E2E2] md:pt-2  lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
+                <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
                     height={25}
@@ -104,16 +115,29 @@ export function SectionOrder1() {
               </Link>
             </div>
           </div>
-          <div className="relative w-1/2 xs2:top-24 xs2:w-[320px] xs:w-[375px] sm:w-[420px] md:w-[520px] lg:top-[42px] lg:w-[620px]  xl:top-[192px]">
+          <div
+            className={cn(
+              'relative w-1/2',
+              {
+                'xs2:top-[-127px] xs:top-[-60px] md:top-[7px] xl:top-[136px]':
+                  languages.find(language => i18n.language === language.vi),
+              },
+              {
+                'xs2:top-[127px]': languages.find(
+                  language => i18n.language === language.en,
+                ),
+              },
+            )}
+          >
             <img
               src={Group150}
               alt="150"
-              className=" absolute right-0 top-0 xs2:right-[50px] xs2:top-[-180px] xs2:h-auto xs2:w-[188px] xs:right-[47px] xs:top-[-230px] xs:h-auto xs:w-[240px] sm:right-[18.5px] sm:top-[-320px] sm:h-auto sm:w-[320px] md:right-[35px] md:top-[-400px] md:h-auto md:w-[370px] lg:right-[49.5px] lg:top-[-470px] lg:h-auto lg:w-[427px] xl:right-[-47.5px] xl:top-[-420px] xl:h-auto xl:w-[460px]"
+              className="absolute right-0 top-0 xs2:right-[-20px] xs2:top-[-180px] xs2:h-auto xs2:w-[188px] xs:right-[-17px] xs:top-[-230px] xs:h-auto xs:w-[240px] sm:right-[-18.5px] sm:top-[-320px] sm:h-auto sm:w-[320px] md:right-[-35px] md:top-[-400px] md:h-auto md:w-[370px] lg:right-[-6.5px] lg:top-[-470px] lg:h-auto lg:w-[427px] xl:right-[-47.5px] xl:top-[-420px] xl:h-auto xl:w-[460px]"
             />
             <img
               src={Group148}
               alt="150"
-              className="absolute bottom-0 left-0 xs2:left-[50px] xs2:top-[-150px] xs2:h-auto xs2:w-[188px] xs:left-[47px] xs:top-[-190px] xs:h-auto xs:w-[240px] sm:left-[18.5px] sm:top-[-270px] sm:h-auto sm:w-[320px] md:left-[35px] md:top-[-356px] md:h-auto md:w-[370px] lg:left-[49.5px] lg:top-[-420px] lg:h-auto lg:w-[427px] xl:right-[10px] xl:top-[-370px] xl:h-auto xl:w-[460px]"
+              className="absolute bottom-0 left-0 xs2:left-[-20px] xs2:top-[-150px] xs2:h-auto xs2:w-[188px] xs:left-[-17px] xs:top-[-190px] xs:h-auto xs:w-[240px] sm:left-[-18.5px] sm:top-[-280px] sm:h-auto sm:w-[320px] md:left-[-35px] md:top-[-356px] md:h-auto md:w-[370px] lg:left-[-6.5px] lg:top-[-420px] lg:h-auto lg:w-[427px] xl:right-[10px] xl:top-[-370px] xl:h-auto xl:w-[460px]"
             />
           </div>
         </div>

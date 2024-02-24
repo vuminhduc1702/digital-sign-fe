@@ -35,16 +35,16 @@ export function SectionOrder() {
               <div className="w-[373px] text-[35px] leading-[43px] text-white xs2:w-[346px] xs2:text-[20px] sm:my-4 sm:w-[500px] sm:text-[40px]">
                 {t('landingpage:order.manage_platform')}
               </div>
-              <div className="pt-5 text-[16px] leading-[16.8px] text-white xl:w-[450px]">
+              <div className="pt-5 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_1')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[450px]">
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_2')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[450px]">
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_3')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[450px]">
+              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_4')}
               </div>
               <div className="flex pt-8 max-sm:flex-col max-sm:items-center">
