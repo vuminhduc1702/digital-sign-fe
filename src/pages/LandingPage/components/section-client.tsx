@@ -93,19 +93,6 @@ export function SectionClient() {
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
-            {/* <div>
-                <div className="mt-4 flex justify-center lg:hidden xl:hidden">
-                  {slides.map((_, index) => (
-                    <span
-                      key={index}
-                      onClick={() => setActiveIndex(index)}
-                      className={`mx-2 h-4 w-4 cursor-pointer rounded-full `.concat(
-                        index === activeIndex ? 'bg-indigo-500' : 'bg-gray-400'
-                      )}
-                    ></span>
-                  ))}
-                </div>
-              </div> */}
           </Carousel>
         </div>
       </div>

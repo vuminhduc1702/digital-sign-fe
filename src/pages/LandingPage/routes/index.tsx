@@ -30,8 +30,8 @@ import { Bars3Icon } from '@heroicons/react/20/solid'
 import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
-import English from '~/assets/images/landingpage/11315882511626933879-128.png'
-import VietNam from '~/assets/images/landingpage/12478762711626933882-128.png'
+import English from '~/assets/images/landingpage/uk-flag.png'
+import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
 
 import i18n from '~/i18n'
 
@@ -207,6 +207,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       className="w-full border-none bg-transparent px-1 font-bold text-white"
                       variant="primary"
                       onClick={() => navigate(PATHS.LOGIN)}
+                      style={{width:'100px'}}
                     >
                       {t('user:login')}
                     </Button>
@@ -319,7 +320,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         alt="flag"
                         className="h-auto w-8"
                       />
-                      <p className="w-24 font-bold text-white">
+                      <p className="w-24 font-bold text-white max-xl:w-8">
                         {languages.find(
                           language => i18n.language === language.code,
                         )?.name ?? t('nav:choose_lang')}
