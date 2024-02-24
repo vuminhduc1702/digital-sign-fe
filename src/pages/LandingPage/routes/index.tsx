@@ -22,18 +22,18 @@ import { scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
+import MobileLP from './MobileLP'
+import i18n from '~/i18n'
 
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
-import MobileLP from './MobileLP'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 
-import English from '~/assets/images/landingpage/uk-flag.png'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
-
-import i18n from '~/i18n'
+import English from '~/assets/images/landingpage/uk-flag.png'
+import { Languages } from 'lucide-react'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -309,18 +309,25 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               )}
               <div className=" flex ">
                 <DropdownMenu.Root>
-                  <DropdownMenu.Trigger asChild className="flex items-center">
-                    <div className=" cursor-pointer space-x-2">
-                      <img
-                        src={
-                          languages.find(
-                            language => i18n.language === language.code,
-                          )?.icon ?? t('nav:choose_lang')
-                        }
-                        alt="flag"
-                        className="h-auto w-8"
-                      />
-                      <p className="w-24 font-bold text-white max-xl:w-8">
+
+                <DropdownMenu.Trigger asChild className="flex items-center">
+                    <div className="cursor-pointer space-x-2">
+                      {languages.find(
+                        language => i18n.language === language.code,
+                      )?.icon != null ? (
+                        <img
+                          src={
+                            languages.find(
+                              language => i18n.language === language.code,
+                            )?.icon
+                          }
+                          alt="flag"
+                          className="h-auto w-8"
+                        />
+                      ) : (
+                        <Languages className="text-white" />
+                      )}
+                      <p className="font-bold text-white">
                         {languages.find(
                           language => i18n.language === language.code,
                         )?.name ?? t('nav:choose_lang')}
@@ -341,7 +348,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       {languages.map(language => (
                         <DropdownMenu.Item
                           key={language.code}
-                          className="group relative flex flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                          className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
                           onClick={() => changeLanguage(language.code)}
                         >
                           <img

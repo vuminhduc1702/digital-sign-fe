@@ -14,6 +14,7 @@ import { Spinner } from '~/components/Spinner'
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -164,7 +165,7 @@ export function SectionPackageData() {
                     }}
                     plugins={[
                       Autoplay({
-                        delay: 2000,
+                        delay: 5000,
                       }),
                     ]}
                     className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]"
@@ -261,6 +262,7 @@ export function SectionPackageData() {
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />
+                    <CarouselDot />
                   </Carousel>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import { Button } from '~/components/Button'
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -15,7 +16,6 @@ import Pic5 from '~/assets/images/landingpage/Pict_15s.png'
 import Pic6 from '~/assets/images/landingpage/Pict_11s.png'
 import Pic7 from '~/assets/images/landingpage/Pict_6s.png'
 import Autoplay from 'embla-carousel-autoplay'
-import { useState } from 'react'
 
 export function SectionProduct() {
   const { t } = useTranslation()
@@ -101,7 +101,7 @@ export function SectionProduct() {
               }}
               plugins={[
                 Autoplay({
-                  delay: 2000,
+                  delay: 5000,
                 }),
               ]}
               className="xs2:w-[320px]  sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] "
@@ -137,6 +137,7 @@ export function SectionProduct() {
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
+              <CarouselDot />
             </Carousel>
           </div>
         </div>

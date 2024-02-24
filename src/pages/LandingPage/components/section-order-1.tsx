@@ -63,7 +63,7 @@ export function SectionOrder1() {
                 </div>
               </div>
               <div className="ml-[90px] size-fit xs2:ml-0 xs:ml-0 sm:ml-0">
-                <div className="mb-[-8px] md:border-t md:border-[#E2E2E2] md:pt-2 lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
+                <div className="mb-[-8px] sm:pt-2 xs:pt-2 md:pt-2 xs2:pt-2 sm:border-t xs2:border-t xs:border-t md:border-t md:border-[#E2E2E2] md:pt-2  lg:border-0 lg:pt-0 xl:border-0 xl:pt-0">
                   <CheckboxCircleLine
                     width={25}
                     height={25}
