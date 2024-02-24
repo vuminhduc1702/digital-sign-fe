@@ -1,28 +1,21 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import {
-  CreateDevice,
-  DeviceTable,
-  ComboBoxSelectDevice,
-} from '../components/Device'
+import { CreateDevice, DeviceTable } from '../components/Device'
 import { useGetDevices } from '../api/deviceAPI'
 import storage from '~/utils/storage'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { type Device } from '../types'
 import { convertEpochToDate } from '~/utils/transformFunc'
-import { Button } from '~/components/Button'
 import { useDeleteMultipleDevices } from '../api/deviceAPI/deleteMultipleDevices'
-import { flattenData } from '~/utils/misc'
 
 export function DeviceManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Device[]>([])
   const [offset, setOffset] = useState(0)
   const params = useParams()
 
@@ -38,6 +31,7 @@ export function DeviceManage() {
     offset,
     config: { keepPreviousData: true },
   })
+
   const {
     mutate: mutateDeleteMultipleDevices,
     isLoading,
@@ -58,7 +52,7 @@ export function DeviceManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    deviceData?.devices.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
@@ -74,28 +68,6 @@ export function DeviceManage() {
       }
       return acc
     }, [] as Array<{ [key: string]: string }>)
-
-  // flatten the data
-  const { acc: deviceFlattenData, extractedPropertyKeys } = flattenData(
-    deviceData?.devices,
-    [
-      'id',
-      'name',
-      'group_name',
-      'template_name',
-      'created_time',
-      'org_name',
-      'key',
-      'org_id',
-      'status',
-      'attributes',
-      'created_by',
-      'group_id',
-      'template_id',
-      'token',
-      'additional_info',
-    ],
-  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -151,18 +123,11 @@ export function DeviceManage() {
               />
             )}
             <CreateDevice />
-            {/* {isSuccess ? (
-              <ComboBoxSelectDevice
-                data={deviceData}
-                setFilteredComboboxData={setFilteredComboboxData}
-                offset={offset}
-              />
-            ) : null} */}
             {/* dummyInput */}
           </div>
         </div>
         <DeviceTable
-          data={deviceFlattenData}
+          data={deviceData?.devices || []}
           offset={offset}
           setOffset={setOffset}
           total={deviceData?.total ?? 0}

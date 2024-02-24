@@ -18,7 +18,7 @@ export function SectionOrder() {
       <div className="h-[100px]"></div>
       <div className="mb-[100px] h-[559px] bg-[#EA0033] max-xl:h-auto">
         <div
-          className="flex h-full w-full items-center justify-center bg-no-repeat p-20 opacity-100 lg:h-auto lg:gap-10"
+          className="flex size-full items-center justify-center bg-no-repeat p-20 opacity-100 lg:h-auto lg:gap-10"
           style={{
             backgroundImage: `url(${SectionOrderBG})`,
             backgroundSize: 'cover',

@@ -121,7 +121,8 @@
           "delete_attr": "Xoá TT",
           "delete_attr_full": "Xoá thuộc tính",
           "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?",
-          "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?"
+          "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?", 
+          "search": "Tìm kiếm..."
         },
         "add_org": {
           "title": "Tạo mới tổ chức",

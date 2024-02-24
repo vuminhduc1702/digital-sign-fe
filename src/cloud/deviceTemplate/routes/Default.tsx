@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   AttrTable,
-  ComboBoxSelectAttr,
   CreateAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
@@ -18,15 +17,21 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
+import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
+import { flattenData } from '~/utils/misc'
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
-    [],
-  )
   const { templateId } = useParams()
+  const entityType = 'TEMPLATE'
+  const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
+
+  const { acc: attrFlattenData } = flattenData(
+    attrsData?.attributes,
+    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
+  )
 
   const projectId = storage.getProject()?.id
   const {
@@ -47,14 +52,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = filteredComboboxData.reduce((acc, curr, index) => {
+  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    attrFlattenData.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -145,15 +150,11 @@ export function Default() {
                     />
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  <ComboBoxSelectAttr
-                    entityId={templateId}
-                    entityType="TEMPLATE"
-                    setFilteredComboboxData={setFilteredComboboxData}
-                  />
+                  {/* dummyInput */}
                 </div>
               </div>
               <AttrTable
-                data={filteredComboboxData}
+                data={attrFlattenData}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}

@@ -86,10 +86,10 @@ export function AttrLwM2MTable({
     ],
     [],
   )
-  return attribute_info != null && attribute_info?.length !== 0 ? (
+  return attributeInfo != null && attributeInfo?.length !== 0 ? (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={attribute_info}
+      data={attributeInfo}
       columns={columns}
       {...props}
     />
