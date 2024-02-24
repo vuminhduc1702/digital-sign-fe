@@ -119,7 +119,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className=" p-4">
-            <div className=" flex h-20 w-full max-xl:justify-between max-lg:justify-between xs2:px-[0px] xl:px-20">
+            <div className="flex h-20 w-full max-xl:justify-between max-lg:justify-between xs2:px-0 2xl:px-20">
               <div className="flex items-center max-xl:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
@@ -200,14 +200,14 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="mr-24 flex max-xl:hidden max-lg:px-3">
+                <div className="mr-16 flex max-xl:hidden max-lg:px-3">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
                       className="w-full border-none bg-transparent px-1 font-bold text-white"
                       variant="primary"
                       onClick={() => navigate(PATHS.LOGIN)}
-                      style={{width:'100px'}}
+                      style={{ width: '100px' }}
                     >
                       {t('user:login')}
                     </Button>
@@ -309,8 +309,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               )}
               <div className=" flex ">
                 <DropdownMenu.Root>
-
-                <DropdownMenu.Trigger asChild className="flex items-center">
+                  <DropdownMenu.Trigger asChild className="flex items-center">
                     <div className="cursor-pointer space-x-2">
                       {languages.find(
                         language => i18n.language === language.code,
