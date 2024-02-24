@@ -13,7 +13,7 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
-  return enArr.map(item => {
+  return enArr?.map(item => {
     if (item === 'read') {
       return 'Xem'
     } else if (item === 'modify') {
@@ -52,7 +52,7 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined = data?.roles.reduce(
+  const aoo: Array<{ [key: string]: string }> | undefined = data?.roles?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
@@ -114,7 +114,7 @@ export function RoleSidebar() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />

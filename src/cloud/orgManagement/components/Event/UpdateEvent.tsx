@@ -105,10 +105,10 @@ export function UpdateEvent({
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
 
-  const actionTypeProp: ActionType = JSON.parse(data.action)[0].action_type
-  const thingIdOptionProp = JSON.parse(data.cmd).thing_id
-  const serviceOptionProp = JSON.parse(data.cmd).service_name
-  const inputDataProp = JSON.parse(data.cmd).input
+  const actionTypeProp: ActionType = data.action[0].action_type
+  const thingIdOptionProp = data.cmd.thing_id
+  const serviceOptionProp = data.cmd.service_name
+  const inputDataProp = data.cmd.input
 
   const [actionType, setActionType] = useState<ActionType>(actionTypeProp)
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
@@ -466,7 +466,7 @@ export function UpdateEvent({
                         <Checkbox
                           {...field}
                           checked={value}
-                          onCheckedChange={(e) => {
+                          onCheckedChange={e => {
                             onChange(e)
                             if (e) {
                               setValue('type', 'event')

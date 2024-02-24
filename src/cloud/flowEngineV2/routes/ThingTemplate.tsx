@@ -50,7 +50,7 @@ export function ThingTemplate() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    thingData?.data?.list.reduce((acc, curr, index) => {
+    thingData?.data?.list?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -109,7 +109,7 @@ export function ThingTemplate() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -125,7 +125,6 @@ export function ThingTemplate() {
                 const value = e.target.value
                 setSearchQuery(value)
               }}
-              
             />
           </div>
         </div>

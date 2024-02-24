@@ -53,11 +53,11 @@ function RoleTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit role" className="size-5" />
               }
               onClick={() => {
                 open()
@@ -71,7 +71,7 @@ function RoleTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy role's ID"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -88,14 +88,14 @@ function RoleTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete role"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -110,7 +110,7 @@ function RoleTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id: id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -172,7 +172,7 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
         cell: info => {
           const actions = convertActionsENtoVN(
             info.row.original.policies[0].actions,
-          ).toString()
+          )?.toString()
           return actions
         },
         footer: info => info.column.id,

@@ -109,7 +109,7 @@ export function DeviceDetail() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrsData?.attributes.reduce((acc, curr, index) => {
+    attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),

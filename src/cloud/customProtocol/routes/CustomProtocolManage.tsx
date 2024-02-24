@@ -49,7 +49,7 @@ export function CustomProtocolManage() {
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
     adapterData?.adapters
-      ? adapterData?.adapters.reduce((acc, curr, index) => {
+      ? adapterData?.adapters?.reduce((acc, curr, index) => {
           if (rowSelectionKey.includes(curr.id)) {
             const temp = {
               [t('table:no')]: (index + 1).toString(),

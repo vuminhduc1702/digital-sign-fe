@@ -28,10 +28,13 @@ export function Default() {
   const entityType = 'TEMPLATE'
   const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
 
-  const { acc: attrFlattenData } = flattenData(
-    attrsData?.attributes,
-    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
-  )
+  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
+    'last_update_ts',
+    'attribute_key',
+    'logged',
+    'value_type',
+    'value',
+  ])
 
   const projectId = storage.getProject()?.id
   const {
@@ -59,7 +62,7 @@ export function Default() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrFlattenData.reduce((acc, curr, index) => {
+    attrFlattenData?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -142,7 +145,7 @@ export function Default() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="h-5 w-5"
+                              className="size-5"
                             />
                           }
                         />

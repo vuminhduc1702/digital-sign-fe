@@ -102,7 +102,7 @@ export function SectionFooter() {
       </div>
       <div className="flex justify-center bg-[#3A3A3A] xl:h-[250px] xl:flex-row">
         <div className="xs2:w-[360px] xs:w-[370px] sm:w-[570px] md:w-[700px] lg:w-[1040px] xl:w-[1040px]">
-          <div className="flex xL:items-center border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row">
+          <div className="flex border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row xl:items-center">
             <div className="pb-[15px] pr-[20px]  pt-[5px]">
               <img src={LogoViettel} alt="" />
             </div>
@@ -111,7 +111,7 @@ export function SectionFooter() {
                 {t('landingpage:footer.company')}
               </div>
             </div>
-            <div className="xl:pl-[20px] xs2:pl-0 xs:pl-0 sm:pl-0 md:pl-0">
+            <div className="xs2:pl-0 xs:pl-0 sm:pl-0 md:pl-0 xl:pl-[20px]">
               <a
                 className="flex pb-[15px] pt-[10px]"
                 href="mailto:innoway@viettel.com.vn"

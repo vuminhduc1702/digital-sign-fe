@@ -45,8 +45,7 @@ export function UpdateMqttConfig({
 }: UpdateMqttConfigProps) {
   const { mutate, isLoading, isSuccess } = useUpdateMqttConfig()
 
-  const additionalInfo = JSON.parse(additional_info)
-  const MqttConfig = additionalInfo.mqtt_config || {}
+  const MqttConfig = additional_info.mqtt_config || {}
   const {
     register,
     formState,
@@ -93,7 +92,7 @@ export function UpdateMqttConfig({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -103,7 +102,7 @@ export function UpdateMqttConfig({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />

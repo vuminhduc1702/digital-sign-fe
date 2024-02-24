@@ -3,8 +3,8 @@ export function VersionPage() {
     Name: 'IoT Platform',
     Organization:
       'Viettel High Technology Industries Corporation - Viettel Group',
-    Version: '0.2.4',
-    'Build Date': '20/02/2024',
+    Version: '0.2.5',
+    'Build Date': '24/02/2024',
   }
   const versionJson = JSON.stringify(version, null, 2)
   return <div>{versionJson}</div>

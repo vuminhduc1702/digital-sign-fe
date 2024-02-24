@@ -45,7 +45,7 @@ export function GroupManage() {
   const rowSelectionKey = Object.keys(rowSelection)
 
   const aoo: Array<{ [key: string]: string }> | undefined =
-    groupData?.groups.reduce((acc, curr, index) => {
+    groupData?.groups?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),

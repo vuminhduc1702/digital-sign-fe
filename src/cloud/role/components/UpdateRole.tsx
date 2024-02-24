@@ -24,7 +24,7 @@ type UpdateRoleProps = {
   name: string
   close: () => void
   isOpen: boolean
-  policy: string
+  policy: Policies[]
   role_type: string
   project_id: string
 }
@@ -83,8 +83,9 @@ export function UpdateRole({
     }
   }, [isSuccess, close])
 
+  const policyParsed = typeof policy === 'string' ? JSON.parse(policy) : policy
   const policiesCurrent: Policies[] =
-    JSON.parse(policy).map((policy: Policies) => {
+    policyParsed.map((policy: Policies) => {
       if (role_type) {
         const groups = policy?.group_resources?.groups
         const deviceArr = groupDataDeviceOptions
@@ -159,7 +160,7 @@ export function UpdateRole({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -170,7 +171,7 @@ export function UpdateRole({
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           />
         </>
@@ -219,10 +220,10 @@ export function UpdateRole({
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
-              className="text-secondary-700 rounded-md"
+              className="rounded-md text-secondary-700"
               variant="trans"
               size="square"
               startIcon={
@@ -375,7 +376,7 @@ export function UpdateRole({
                   <img
                     src={btnDeleteIcon}
                     alt="Delete policy"
-                    className="h-10 w-10"
+                    className="size-10"
                   />
                 }
               />

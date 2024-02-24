@@ -216,7 +216,7 @@ export function BaseTable<T extends Record<string, any>>({
                           >
                             <div
                               className={cn(
-                                'text-table-header relative flex flex-col items-center justify-center',
+                                'relative flex flex-col items-center justify-center text-table-header',
                                 {
                                   'px-3': headerGroup.headers.length > 8,
                                 },
@@ -289,7 +289,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="size-4 accent-primary-400 mr-1 rounded-sm border"
+                                className="mr-1 size-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -316,16 +316,16 @@ export function BaseTable<T extends Record<string, any>>({
                                 ) {
                                   const headerResult = column.columnDef.header()
                                   if (
-                                    typeof headerResult.props?.children ===
+                                    typeof headerResult?.props?.children ===
                                     'string'
                                   ) {
-                                    title_column = headerResult.props?.children
+                                    title_column = headerResult?.props?.children
                                   } else if (
-                                    typeof headerResult.props?.children ===
+                                    typeof headerResult?.props?.children ===
                                     'object'
                                   ) {
                                     title_column =
-                                      headerResult.props?.children[0].props
+                                      headerResult?.props?.children[0].props
                                         ?.children
                                   } else {
                                     title_column = ''
@@ -340,7 +340,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="size-4 accent-primary-400 mr-1 rounded-sm border"
+                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />

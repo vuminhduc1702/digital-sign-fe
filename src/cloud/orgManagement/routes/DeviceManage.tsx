@@ -52,7 +52,7 @@ export function DeviceManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    deviceData?.devices.reduce((acc, curr, index) => {
+    deviceData?.devices?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
