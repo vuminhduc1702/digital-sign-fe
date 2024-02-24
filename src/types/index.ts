@@ -1,6 +1,5 @@
 import { type FieldValues, type Control, type Path } from 'react-hook-form'
 import type * as z from 'zod'
-import { EntityThing } from '~/cloud/customProtocol'
 
 import { type BasePaginationSchema } from '~/utils/schemaValidation'
 

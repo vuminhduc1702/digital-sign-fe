@@ -2,22 +2,16 @@ import { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
-import { GroupBreadcrumbs } from '../components/Group/GroupBreadcrumbs'
-import {
-  AttrTable,
-  CreateAttr,
-  ComboBoxSelectAttr,
-} from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import { AttrTable, CreateAttr } from '../components/Attributes'
+import { GroupBreadcrumbs } from '../components/Group/GroupBreadcrumbs'
 
-import { type Attribute } from '~/types'
-import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
+import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { useTranslation } from 'react-i18next'
+import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
-import { flattenData } from '~/utils/misc'
+import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 
 export function GroupDetail() {
   const params = useParams()
@@ -28,11 +22,6 @@ export function GroupDetail() {
   const entityType = 'GROUP'
 
   const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
-
-  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
-    attrsData?.attributes,
-    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
-  )
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -52,14 +41,14 @@ export function GroupDetail() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrFlattenData.reduce((acc, curr, index) => {
+    attrsData?.attributes.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -125,7 +114,7 @@ export function GroupDetail() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -137,7 +126,7 @@ export function GroupDetail() {
           </div>
         </div>
         <AttrTable
-          data={attrFlattenData}
+          data={attrsData?.attributes || []}
           entityId={groupId}
           entityType={entityType}
           rowSelection={rowSelection}

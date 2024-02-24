@@ -3,8 +3,7 @@ import { Column, Table } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import DebouncedInput from './DebouncedInput'
-
+import DebouncedInput from '../Pagination/DebouncedInput'
 
 export default function Filter({
   column,

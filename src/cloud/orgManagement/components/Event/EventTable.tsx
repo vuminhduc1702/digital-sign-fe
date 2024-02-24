@@ -91,7 +91,7 @@ function EventTableContextMenu({
       setConditionData(JSON.parse(dataRow?.condition))
     const scheduleParse =
       typeof dataRow?.schedule === 'string' && JSON.parse(dataRow?.schedule)
-    const myArray = scheduleParse.repeat.split(',')
+    const myArray = scheduleParse.repeat?.split(',')
     if (myArray?.length > 0 && myArray[0]) {
       setTypeEvent('schedule')
       const newArr = todos.map(item => {

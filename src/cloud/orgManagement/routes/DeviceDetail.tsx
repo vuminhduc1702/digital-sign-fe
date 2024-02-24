@@ -1,31 +1,21 @@
-import { useMemo, useRef, useState } from 'react'
 import { Tab } from '@headlessui/react'
 import clsx from 'clsx'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
 import { DeviceBreadcrumbs } from '../components/Device'
-import {
-  AttrTable,
-  CreateAttr,
-  ComboBoxAttrLog,
-  ComboBoxSelectAttr,
-} from '../components/Attributes'
+import { AttrTable, CreateAttr } from '../components/Attributes'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { type DeviceAttrLog } from '../api/attrAPI'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 
-import { type Attribute } from '~/types'
-
+import { Button } from '~/components/Button'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
-import { ComboBoxMQTTLog } from '../components/Attributes/ComboBoxSelectMQTTLog'
-import { type MQTTMessage } from '../api/attrAPI/getMQTTLog'
 import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Button } from '~/components/Button'
 import { useGetAttrs } from '../api/attrAPI'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
@@ -39,26 +29,27 @@ export function DeviceDetail() {
   const deviceId = params.deviceId as string
   const groupId = params.groupId as string
   const projectId = params.projectId as string
-  const entityType = 'GROUP'
+  const entityTypeAttr = 'DEVICE'
 
-  const [filteredAttrLogComboboxData, setFilteredAttrLogComboboxData] =
-    useState<DeviceAttrLog[]>([])
-  const [filteredMQTTLogComboboxData, setFilteredMQTTLogComboboxData] =
-    useState<MQTTMessage[]>([])
+  const {
+    data: attrsData,
+    isPreviousData: isPreviousAttrsData,
+    isSuccess: isSuccessAttrsData,
+  } = useGetAttrs({
+    entityType: entityTypeAttr,
+    entityId: deviceId,
+  })
 
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: groupId })
-
-  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
-    'last_update_ts',
-    'attribute_key',
-    'logged',
-    'value_type',
-    'value',
-  ])
-
-  const { data: deviceAttrData } = useAttrLog({
+  // Attr Log
+  const [deviceAttrOffset, setDeviceAttrOffset] = useState(0)
+  const {
+    data: deviceAttrData,
+    isPreviousData: isPreviousDeviceAttrData,
+    isSuccess: isSuccessDeviceAttrData,
+  } = useAttrLog({
     entityId: deviceId,
     entityType: 'DEVICE',
+    offset: deviceAttrOffset,
     config: {
       suspense: false,
     },
@@ -70,7 +61,12 @@ export function DeviceDetail() {
     'value',
   ])
 
-  const { data: mqttLogData } = useMQTTLog({
+  // MQTT Log
+  const {
+    data: mqttLogData,
+    isPreviousData: isPreviousMQTTLogData,
+    isSuccess: isSuccessDeviceLogData,
+  } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
     config: {
@@ -78,18 +74,15 @@ export function DeviceDetail() {
     },
   })
 
-  const { acc: mqttMessageFlattenData, extractedPropertyKeys } = flattenData(
-    mqttLogData?.messages,
-    [
-      'project_id',
-      'created_by',
-      'owner',
-      'topic',
-      'device_id',
-      'payload_as_string',
-      'ts',
-    ],
-  )
+  const { acc: mqttMessageFlattenData } = flattenData(mqttLogData?.messages, [
+    'project_id',
+    'created_by',
+    'owner',
+    'topic',
+    'device_id',
+    'payload_as_string',
+    'ts',
+  ])
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -109,14 +102,14 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrFlattenData.reduce((acc, curr, index) => {
+    attrsData?.attributes.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -138,11 +131,11 @@ export function DeviceDetail() {
     <div ref={ref} className="flex grow flex-col">
       <TitleBar className="normal-case" title={<DeviceBreadcrumbs />} />
       <Tab.Group>
-        <Tab.List className="bg-secondary-500 mt-2 flex gap-x-10 px-10">
+        <Tab.List className="mt-2 flex gap-x-10 bg-secondary-500 px-10">
           <Tab
             className={({ selected }) =>
               clsx(
-                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
+                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -157,7 +150,7 @@ export function DeviceDetail() {
           <Tab
             className={({ selected }) =>
               clsx(
-                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
+                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -172,7 +165,7 @@ export function DeviceDetail() {
           <Tab
             className={({ selected }) =>
               clsx(
-                'text-body-sm hover:text-primary-400 py-2.5 focus:outline-none',
+                'py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                 { 'text-primary-400': selected },
               )
             }
@@ -238,7 +231,7 @@ export function DeviceDetail() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="h-5 w-5"
+                              className="size-5"
                             />
                           }
                         />
@@ -250,7 +243,7 @@ export function DeviceDetail() {
                 </div>
               </div>
               <AttrTable
-                data={attrFlattenData}
+                data={attrsData?.attributes || []}
                 entityId={deviceId}
                 entityType="DEVICE"
                 rowSelection={rowSelection}
@@ -270,6 +263,10 @@ export function DeviceDetail() {
               </div>
               <AttrLogTable
                 data={attrLogFlattenData}
+                offset={deviceAttrOffset}
+                setOffset={setDeviceAttrOffset}
+                total={deviceAttrData?.total ?? 0}
+                isPreviousData={isPreviousDeviceAttrData}
                 entityId={deviceId}
                 entityType="DEVICE"
               />

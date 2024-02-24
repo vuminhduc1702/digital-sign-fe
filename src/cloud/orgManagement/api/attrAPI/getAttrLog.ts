@@ -24,14 +24,16 @@ export type DeviceAttrLogList = {
 export const getAttrLog = ({
   entityId,
   entityType,
+  offset, 
   limit = limitPagination,
 }: {
   entityId: string
   entityType: EntityType
+  offset?: number
   limit?: number
 }): Promise<DeviceAttrLogList> => {
   return axios.get(`/api/attributes/logged/${entityType}/${entityId}/values`, {
-    params: { limit },
+    params: { offset, limit },
   })
 }
 
@@ -40,17 +42,21 @@ type QueryFnType = typeof getAttrLog
 type UseAttrLogOptions = {
   entityId: string
   entityType: EntityType
+  offset?: number
+  limit?: number
   config?: QueryConfig<QueryFnType>
 }
 
 export const useAttrLog = ({
   entityId,
   entityType,
+  offset = 0,
+  limit,  
   config,
 }: UseAttrLogOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['attrLog', entityId, entityType],
-    queryFn: () => getAttrLog({ entityId, entityType }),
+    queryKey: ['attrLog', entityId, entityType, offset, limit],
+    queryFn: () => getAttrLog({ entityId, entityType, offset, limit }),
     ...config,
   })
 }

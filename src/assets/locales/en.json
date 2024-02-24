@@ -121,7 +121,8 @@
           "delete_attr": "Delete Attribute",
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
-          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?"
+          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?", 
+          "search": "Search..."
         },
         "add_org": {
           "title": "Create New Organization",
@@ -1163,7 +1164,7 @@
     "CMP_system": "CMP System",
     "FAQ": "FAQ",
     "register_now": "Register Now",
-    "service_transmit_data": "Sim Data Data Transmission Service",
+    "service_transmit_data": "Innoway IoT Platform",
     "viettel_M2M": "Viettel M2M IoT ",
     "experience_now": "Experience Now",
     "user_manual": "User Manual",
@@ -1198,8 +1199,8 @@
       "phone_number": "Phone Number:",
       "support_content": "Support Content*:",
       "send": "Send",
-      "company": "Viettel High-Tech Industry Corporation (Viettel Telecom)",
-      "responsible_person": "Content Manager: Mr.Lê Ngọc Quý",
+      "company": "Viettel High-Tech Industry Corporation",
+      "responsible_person": "Content Manager: Mr.Le Ngoc Quy",
       "cskh": "quyln3@viettel.com.vn",
       "follow": "Follow us:",
       "phone_used": "0869 9999 904",
