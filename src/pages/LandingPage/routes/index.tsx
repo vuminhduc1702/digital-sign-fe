@@ -119,15 +119,15 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className=" p-4">
-            <div className=" flex h-20 w-full max-lg:justify-between xs2:px-[0px] xl:px-20">
-              <div className="flex items-center max-lg:hidden">
+            <div className=" flex h-20 w-full max-xl:justify-between max-lg:justify-between xs2:px-[0px] xl:px-20">
+              <div className="flex items-center max-xl:hidden">
                 <a href="/" className=" text-white lg:w-[180px]">
                   <img src={LogoViettel} alt="" />
                 </a>
               </div>
               {hasSideBar ? (
                 <button
-                  className=" ml-[5px] px-4 text-white xs2:w-[300px] xs2:px-0 lg:hidden"
+                  className=" ml-[5px] px-4 text-white xs2:w-[300px] xs2:px-0 xl:hidden"
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
@@ -144,7 +144,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 </>
               ) : null}
 
-              <div className="flex w-full  max-lg:hidden lg:justify-center ">
+              <div className="flex w-full  max-xl:hidden lg:justify-center ">
                 <div className="flex justify-start max-lg:flex-col">
                   <div
                     className="flex min-w-fit px-3 text-base font-bold text-white max-lg:py-5 lg:items-center lg:justify-center"
@@ -200,7 +200,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="mr-24 flex max-lg:hidden max-lg:px-3">
+                <div className="mr-24 flex max-xl:hidden max-lg:px-3">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
@@ -228,7 +228,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     asChild
                     className="flex items-center gap-x-2"
                   >
-                    <div className="flex max-lg:hidden lg:ml-auto">
+                    <div className="flex max-xl:hidden lg:ml-auto">
                       <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
                           src={`${
@@ -388,7 +388,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                 <Button
                   onClick={() => scrollToIntro(ProductRef)}
                   type="button"
-                  className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-8 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
+                  className="w-full rounded-r-lg rounded-tl-lg bg-red-950 bg-opacity-50 px-10 text-left  font-bold text-white hover:bg-white  hover:text-slate-950"
                   variant="primary"
                 >
                   {t('landingpage:product')}

@@ -51,7 +51,7 @@ export function SectionSolution() {
             {slides.map((item, idx) => (
               <div
                 key={idx}
-                className="max-max-sm:w-[420px] max-xs:w-[320px] h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px] max-sm:h-[120px]"
+                className="max-sm:w-[420px] max-xs:w-[320px] h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px] max-sm:h-[120px]"
                 style={{
                   backgroundImage:
                     'linear-gradient(132.92deg, #EE0033 0%, rgba(238, 0, 51, 0) 52.48%, rgba(238, 0, 51, 0.8) 101.78%)',
