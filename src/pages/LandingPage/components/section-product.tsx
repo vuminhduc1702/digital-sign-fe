@@ -104,7 +104,6 @@ export function SectionProduct() {
                   delay: 5000,
                 }),
               ]}
-              className="xs2:w-[320px]  sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] "
             >
               <CarouselContent className="">
                 {slides.map((item, index) => (
