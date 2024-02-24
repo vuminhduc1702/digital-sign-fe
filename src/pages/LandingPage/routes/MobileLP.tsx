@@ -20,7 +20,7 @@ function MobileLP({
       <Dialog
         as="div"
         static
-        className="fixed inset-0 z-40 flex lg:hidden"
+        className="fixed inset-0 z-40 flex xl:hidden"
         open={sidebarOpen}
         onClose={setSidebarOpen}
       >
