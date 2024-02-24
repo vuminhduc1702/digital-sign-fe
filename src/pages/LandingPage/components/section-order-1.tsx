@@ -108,7 +108,7 @@ export function SectionOrder1() {
             <img
               src={Group150}
               alt="150"
-              className="absolute right-0 top-0 xs2:right-[50px] xs2:top-[-180px] xs2:h-auto xs2:w-[188px] xs:right-[47px] xs:top-[-230px] xs:h-auto xs:w-[240px] sm:right-[18.5px] sm:top-[-320px] sm:h-auto sm:w-[320px] md:right-[35px] md:top-[-400px] md:h-auto md:w-[370px] lg:right-[49.5px] lg:top-[-470px] lg:h-auto lg:w-[427px] xl:right-[-47.5px] xl:top-[-420px] xl:h-auto xl:w-[460px]"
+              className=" absolute right-0 top-0 xs2:right-[50px] xs2:top-[-180px] xs2:h-auto xs2:w-[188px] xs:right-[47px] xs:top-[-230px] xs:h-auto xs:w-[240px] sm:right-[18.5px] sm:top-[-320px] sm:h-auto sm:w-[320px] md:right-[35px] md:top-[-400px] md:h-auto md:w-[370px] lg:right-[49.5px] lg:top-[-470px] lg:h-auto lg:w-[427px] xl:right-[-47.5px] xl:top-[-420px] xl:h-auto xl:w-[460px]"
             />
             <img
               src={Group148}
