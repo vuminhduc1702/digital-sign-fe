@@ -200,7 +200,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="flex max-lg:hidden max-lg:px-3">
+                <div className="mr-24 flex max-lg:hidden max-lg:px-3">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
@@ -214,7 +214,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   <div className="mx-1 flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
-                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-5 text-left font-bold text-white"
+                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-6 text-left font-bold text-white"
                       variant="primary"
                       onClick={() => navigate(PATHS.REGISTER)}
                     >
@@ -309,7 +309,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               <div className=" flex ">
                 <DropdownMenu.Root>
                   <DropdownMenu.Trigger asChild className="flex items-center">
-                    <div className="ml-24 cursor-pointer space-x-2">
+                    <div className=" cursor-pointer space-x-2">
                       <img
                         src={
                           languages.find(
@@ -319,7 +319,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         alt="flag"
                         className="h-auto w-8"
                       />
-                      <p className="font-bold text-white">
+                      <p className="w-24 font-bold text-white">
                         {languages.find(
                           language => i18n.language === language.code,
                         )?.name ?? t('nav:choose_lang')}

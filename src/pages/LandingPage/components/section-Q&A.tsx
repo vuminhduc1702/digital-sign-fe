@@ -91,35 +91,6 @@ export function QandA() {
                 ))}
               </Accordion>
             </div>
-            {/* <div className="w-1/2 pl-[30px] xs2:w-3/4 xs2:pl-0">
-              <Accordion type="single" collapsible ref={accordionRef_2}>
-                {items.map((item, idx) => (
-                  <AccordionItem value={item.value} key={idx}>
-                    <AccordionTrigger
-                      onClick={() => {
-                        setIsAccordionChange(prevState => !prevState)
-                      }}
-                      className="flex justify-start"
-                    >
-                      {accordionRef_2.current?.childNodes.item(idx).dataset
-                        .state === 'closed' ? (
-                        <>
-                          <img src={PlusIconGroup5412} alt="" />
-                        </>
-                      ) : (
-                        <>
-                          <img src={MinusIconGroup5411} alt="" />
-                        </>
-                      )}
-                      <div className="pl-[10px] pt-[10px] text-left text-body-sm font-medium">
-                        {item.triggerText}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>{item.contentText}</AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div> */}
           </div>
         </div>
       </div>

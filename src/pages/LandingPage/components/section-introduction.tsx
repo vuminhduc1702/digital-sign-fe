@@ -22,7 +22,7 @@ export function SectionIntro({
               </p>
             </div>
             <div className="  xs2:mx-[40px]">
-              <div className="pl-[40px] pt-[13px] text-3xl leading-tight text-black max-xs:pl-0">
+              <div className=" pt-[13px] text-3xl xs:text-[27px] xs2:text-[27px] leading-tight text-black max-xs:pl-0">
                 {t(
                   'landingpage:introduction_section.service_transmit_data_accurate',
                 )}
