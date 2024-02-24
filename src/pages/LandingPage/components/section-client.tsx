@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -16,7 +17,6 @@ import Parther7 from '~/assets/images/landingpage/partner_7.svg'
 import Parther8 from '~/assets/images/landingpage/partner_8.svg'
 import Parther9 from '~/assets/images/landingpage/partner_9.svg'
 import Autoplay from 'embla-carousel-autoplay'
-import {useState} from 'react'
 
 export function SectionClient() {
   const slides = [
@@ -59,7 +59,6 @@ export function SectionClient() {
   ]
   const { t } = useTranslation()
 
-  const [activeIndex, setActiveIndex] = useState(1)
   return (
     <>
       <div className="h-[100px]"></div>
@@ -93,25 +92,11 @@ export function SectionClient() {
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
-            {/* <div>
-                <div className="mt-4 flex justify-center lg:hidden xl:hidden">
-                  {slides.map((_, index) => (
-                    <span
-                      key={index}
-                      onClick={() => setActiveIndex(index)}
-                      className={`mx-2 h-4 w-4 cursor-pointer rounded-full `.concat(
-                        index === activeIndex ? 'bg-indigo-500' : 'bg-gray-400'
-                      )}
-                    ></span>
-                  ))}
-                </div>
-              </div> */}
+            <CarouselDot />
           </Carousel>
         </div>
       </div>
-      <div className="h-[100px]">
-
-      </div>
+      <div className="h-[100px]"></div>
     </>
   )
 }

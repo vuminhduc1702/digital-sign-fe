@@ -1,0 +1,45 @@
+.embla__dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 5px;
+}
+
+.embla__dot {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: hsla(180, 2%, 92%, 1);
+  touch-action: manipulation;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  width: 2rem;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.embla__dot:after {
+  width: 2rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  content: '';
+}
+
+@media (max-width: 767.98px) {
+  .embla__dot {
+    width: 1rem;
+  }
+}
+
+.embla__dot--selected:after {
+  background-color: hsla(355, 85%, 52%, 0.8);
+}
