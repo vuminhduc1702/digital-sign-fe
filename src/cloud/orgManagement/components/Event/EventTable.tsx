@@ -256,12 +256,9 @@ export function EventTable({
           const { id } = info.row.original
           return (
             <span
-              className={`${
-                (info.row.original.onClick as unknown as string) === 'true' &&
-                'cursor-pointer'
-              }`}
+              className={`${info.row.original.onClick && 'cursor-pointer'}`}
               onClick={() =>
-                (info.row.original.onClick as unknown as string) === 'true' &&
+                info.row.original.onClick &&
                 mutate({
                   data: {
                     event_id: id,
@@ -270,7 +267,7 @@ export function EventTable({
                 })
               }
             >
-              {(info.row.original.onClick as unknown as string) === 'true' && (
+              {info.row.original.onClick && (
                 <Button
                   className="w-30 justify-start rounded-md border-none"
                   variant="secondaryLight"
@@ -288,7 +285,7 @@ export function EventTable({
         header: () => (
           <span>{t('cloud:org_manage.event_manage.table.status')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => info.getValue().toString(),
         footer: info => info.column.id,
       }),
       columnHelper.display({

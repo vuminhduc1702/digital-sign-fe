@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from '~/components/Tooltip'
 
-import { type Device } from '../../types'
+import { type DeviceAdditionalInfo, type Device } from '../../types'
 import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
@@ -58,7 +58,7 @@ function DeviceTableContextMenu({
   template_id: string
   token: string
   status: string
-  additional_info: string
+  additional_info: DeviceAdditionalInfo
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -88,15 +88,11 @@ function DeviceTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img
-                  src={btnDetailIcon}
-                  alt="View device"
-                  className="h-5 w-5"
-                />
+                <img src={btnDetailIcon} alt="View device" className="size-5" />
               }
               onClick={() =>
                 navigate(
@@ -110,7 +106,7 @@ function DeviceTableContextMenu({
             </MenuItem>
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit device" className="size-5" />
               }
               onClick={() => {
                 open()
@@ -124,7 +120,7 @@ function DeviceTableContextMenu({
                 <img
                   src={btnEditIcon}
                   alt="Edit mqtt config"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => {
@@ -136,7 +132,7 @@ function DeviceTableContextMenu({
             </MenuItem>
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+                <img src={btnEditIcon} alt="Edit device" className="size-5" />
               }
               onClick={() => {
                 let type = 'active'
@@ -151,7 +147,7 @@ function DeviceTableContextMenu({
                 : t('device:active')}
             </MenuItem>
             <MenuItem
-              icon={<UpdateIcon className="h-5 w-5" />}
+              icon={<UpdateIcon className="size-5" />}
               onClick={() => {
                 if (status !== 'blocked') {
                   open()
@@ -170,7 +166,7 @@ function DeviceTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy device's ID"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -178,7 +174,7 @@ function DeviceTableContextMenu({
               {t('table:copy_id')}
             </MenuItem>
             <MenuItem
-              icon={<CopyIcon className="h-5 w-5" />}
+              icon={<CopyIcon className="size-5" />}
               onClick={() => handleCopyId(token, 'token')}
             >
               {t('table:copy_token')}
@@ -194,14 +190,14 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete device"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -216,7 +212,7 @@ function DeviceTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -319,10 +315,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'isdn',
         cell: info => {
-          const additionalInfo = JSON.parse(
-            info.row.original.additional_info as unknown as string,
-          )
-          const isdn = additionalInfo.isdn
+          const isdn = info.row.original.additional_info.isdn
           const isdnTrigger =
             isdn?.length > 10 ? isdn.slice(0, 10) + '...' : isdn
           return (
@@ -353,9 +346,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
         ),
         cell: info => {
-          const additionalInfo = JSON.parse(
-            info.row.original.additional_info as unknown as string,
-          )
+          const additionalInfo = info.row.original.additional_info
           return additionalInfo?.heartbeat_interval != null ? (
             <TooltipProvider>
               <Tooltip>
@@ -366,8 +357,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
                   <p>
                     {'Last heartbeat: ' +
                       getVNDateFormat({
-                        date:
-                          parseInt(additionalInfo?.last_heartbeat || 0) * 1000,
+                        date: (additionalInfo?.last_heartbeat || 0) * 1000,
                       })}
                   </p>
                   <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
@@ -492,13 +482,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
 
-      // columnHelper.accessor('template_id', {
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
-      //   ),
-      //   cell: info => info.getValue(),
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.accessor('template_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
@@ -536,14 +519,6 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      // columnHelper.display({
-      //   id: 'orgName',
-      //   header: () => (
-      //     <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
-      //   ),
-      //   cell: info => info.row.original.org_name || t('table:no_in_org'),
-      //   footer: info => info.column.id,
-      // }),
       columnHelper.accessor('key', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.key')}</span>
@@ -602,8 +577,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             token,
             status,
             group_id,
-            additional_info: info.row.original
-              .additional_info as unknown as string,
+            additional_info: info.row.original.additional_info,
           })
         },
         header: () => null,

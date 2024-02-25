@@ -125,7 +125,7 @@ function RoleTableContextMenu({
           isOpen={isOpen}
           roleId={selectedUpdateRole.id}
           name={selectedUpdateRole.name}
-          policy={selectedUpdateRole.policies as unknown as string}
+          policy={selectedUpdateRole.policies}
           role_type={selectedUpdateRole.role_type}
         />
       ) : null}

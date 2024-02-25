@@ -132,11 +132,11 @@ export function UpdateEvent({
   } = useForm<UpdateEventDTO['data']>({
     resolver: updateEventSchema && zodResolver(updateEventSchema),
     defaultValues: {
-      onClick: (data.onClick as unknown as string) === 'true',
+      onClick: data.onClick,
       name,
       action: dataAction,
       retry: data.retry,
-      status: (data.status as unknown as string) === 'true',
+      status: data.status,
       condition: conditionData,
       interval: renderInterval(),
       type,

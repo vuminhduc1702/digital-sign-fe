@@ -3,6 +3,18 @@ import { type EntityType } from '../api/attrAPI'
 
 // Device types
 
+export type DeviceAdditionalInfo = {
+  device_id?: string
+  imei?: string
+  device_manufacture?: string
+  protocol?: string
+  heartbeat_interval: number
+  last_heartbeat: number
+  timeout_lifecycle: number
+  device_model?: string
+  isdn: string
+}
+
 export type Device = {
   key: string
   token: string
@@ -14,16 +26,7 @@ export type Device = {
   org_name: string
   template_name: string
   status: 'offline' | 'online' | 'block'
-  additional_info: {
-    device_id?: string
-    imei?: string
-    device_manufacture?: string
-    protocol?: string
-    heartbeat_interval: number
-    last_heartbeat: number
-    timeout_lifecycle: number
-    device_model?: string
-  }
+  additional_info: DeviceAdditionalInfo
   attributes: Attribute[]
 } & BaseEntity
 

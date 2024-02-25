@@ -1,4 +1,5 @@
 import { t } from 'i18next'
+import { useEffect } from 'react'
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -12,7 +13,8 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '~/components/Checkbox'
-import { useEffect } from 'react'
+
+import { type DeviceAdditionalInfo } from '../../types'
 
 export const mqttConfigSchema = z.object({
   clean_session: z.boolean(),
@@ -34,7 +36,7 @@ type UpdateMqttConfigProps = {
   deviceId: string
   close: () => void
   isOpen: boolean
-  additional_info: string
+  additional_info: DeviceAdditionalInfo
 }
 
 export function UpdateMqttConfig({
