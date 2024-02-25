@@ -121,7 +121,7 @@ export function SectionFooter() {
                   {t('landingpage:footer.cskh')}
                 </div>
               </a>
-              <a className="flex pb-[15px]" href="tel:0123456789">
+              <a className="flex pb-[15px]" href="tel:08699999904">
                 <PhoneFill width={33} height={33} viewBox="0 0 33 33" />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   {t('landingpage:footer.phone_used')}

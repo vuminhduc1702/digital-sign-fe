@@ -125,9 +125,8 @@ export function UpdateAdapter({
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
   function renderFields() {
-    const schemaParse = typeof schema === 'string' ? JSON.parse(schema) : null
     const result =
-      schemaParse?.fields.map((item: FieldsType) => ({
+      schema?.fields?.map((item: FieldsType) => ({
         name: item.name,
         start_byte: item.start_byte,
         length_byte: item.end_byte - item.start_byte,

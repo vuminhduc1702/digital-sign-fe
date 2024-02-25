@@ -388,6 +388,7 @@ export function UpdateTemplateLwM2M({
     config: { suspense: false },
   })
   const transport_Config = selectedUpdateTemplate?.transport_config
+  console.log('transport_config', transport_Config)
   const transportConfigdata = JSON.parse(transport_Config)
   const idArray = transportConfigdata?.info?.module_config?.map(
     (attribute_info: []) => attribute_info.id,
@@ -455,7 +456,7 @@ export function UpdateTemplateLwM2M({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -465,7 +466,7 @@ export function UpdateTemplateLwM2M({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -588,7 +589,7 @@ export function UpdateTemplateLwM2M({
                     className="border-b border-gray-300"
                   >
                     <AccordionTrigger className="ml-3 justify-start hover:no-underline">
-                      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                      <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
                       <p className="ml-2">
                         {lw2m2.LWM2M.Object.Name} #{lw2m2.LWM2M.Object.ObjectID}
                       </p>
@@ -602,7 +603,7 @@ export function UpdateTemplateLwM2M({
                           <div className="ml-auto">
                             <Checkbox
                               customClassName="w-5 h-5"
-                              className="mb-1 ml-5 flex h-5 w-5"
+                              className="mb-1 ml-5 flex size-5"
                               checked={
                                 selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                               }
@@ -644,7 +645,7 @@ export function UpdateTemplateLwM2M({
                                       }) => {
                                         return (
                                           <Checkbox
-                                            className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                            className="ml-auto mr-3 mt-2 flex size-5"
                                             {...field}
                                             checked={checkboxStates[itemId]}
                                             onCheckedChange={e => {

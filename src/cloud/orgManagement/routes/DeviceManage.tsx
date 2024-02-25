@@ -93,7 +93,7 @@ export function DeviceManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }

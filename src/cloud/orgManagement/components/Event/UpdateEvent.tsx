@@ -63,11 +63,11 @@ type UpdateEventProps = {
   isOpen: boolean
   data: EventType
   dataAction: Action[]
-  conditionData: Condition[]
+  conditionData: Condition[] | null
   dateArr: any[]
   type: string
-  startTimeProps: string
-  endTimeProps: string
+  startTimeProps?: string
+  endTimeProps?: string
 }
 
 const updateCmdSchema = cmdSchema
@@ -252,7 +252,7 @@ export function UpdateEvent({
         `cmd.input.${idx}.type`,
         element.type === 'string' ? 'str' : element.type,
       )
-      setValue(`cmd.input.${idx}.value`, inputDataProp[element.name])
+      setValue(`cmd.input.${idx}.value`, inputDataProp?.[element.name])
     })
   }, [watch('cmd.handle_service')])
 
@@ -881,7 +881,7 @@ export function UpdateEvent({
                                   </FieldWrapper>
                                 ) : (
                                   <InputField
-                                    defaultValue={inputDataProp[element.name]}
+                                    defaultValue={inputDataProp?.[element.name]}
                                     label={t(
                                       'cloud:custom_protocol.service.service_input.value',
                                     )}

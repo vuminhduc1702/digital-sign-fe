@@ -83,9 +83,8 @@ export function UpdateRole({
     }
   }, [isSuccess, close])
 
-  const policyParsed = typeof policy === 'string' ? JSON.parse(policy) : policy
-  const policiesCurrent: Policies[] =
-    policyParsed.map((policy: Policies) => {
+  const policiesCurrent =
+    policy?.map((policy: Policies) => {
       if (role_type) {
         const groups = policy?.group_resources?.groups
         const deviceArr = groupDataDeviceOptions

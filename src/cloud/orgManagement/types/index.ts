@@ -115,6 +115,14 @@ export type EventType = {
   created_by: string
   metadata: null
   retry: number
+  cmd: {
+    thing_id: string
+    service_name: string
+    project_id: string
+    input: {
+      [key: string]: number | string | boolean
+    }
+  }
 } & (
   | {
       onClick: false

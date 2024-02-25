@@ -41,6 +41,7 @@ export function UpdateAttr({
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
+  console.log('value', value)
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
@@ -52,7 +53,7 @@ export function UpdateAttr({
     defaultValues: {
       attribute_key: attributeKey,
       logged: String(logged) === 'true',
-      value: value !== 'null' && value !== '' ? JSON.parse(JSON.stringify(value)) : '',
+      value,
       value_t: value_type,
     },
   })
@@ -87,7 +88,7 @@ export function UpdateAttr({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -97,7 +98,7 @@ export function UpdateAttr({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
