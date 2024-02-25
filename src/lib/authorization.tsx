@@ -6,21 +6,21 @@ import storage from '~/utils/storage'
 
 import { type User } from '~/features/auth'
 
-export enum ROLES {
-  TENANT = 'TENANT',
-  TENANT_DEV = 'TENANT_DEV',
-  SYSTEM_ADMIN = 'SYSTEM_ADMIN',
-  NORMAL_USER = 'NORMAL_USER',
-}
+export const ROLES = [
+  'TENANT',
+  'TENANT_DEV',
+  'SYSTEM_ADMIN',
+  'NORMAL_USER',
+] as const
 
-export type RoleTypes = keyof typeof ROLES
+export type RoleTypes = (typeof ROLES)[number]
 
 function isTenant(user: User): boolean {
-  return user.system_role === ROLES.TENANT
+  return user.system_role === ROLES[0]
 }
 
 function isTenantDev(user: User): boolean {
-  return user.system_role === ROLES.TENANT_DEV
+  return user.system_role === ROLES[1]
 }
 
 export const useAuthorization = () => {
