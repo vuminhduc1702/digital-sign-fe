@@ -13,7 +13,7 @@ export function SectionIntro({
   const { t } = useTranslation()
   return (
     <>
-      <div className="flex h-[620px] justify-center  xs2:mt-[2px] xs2:h-auto xs:mt-[47px] sm:mt-[-42px] sm:h-auto lg:mt-[-127px] xl:mt-[-147px]">
+      <div className="flex h-[620px] justify-center xs2:mt-[-35px]  xs2:h-auto xs:mt-[-87px] sm:mt-[-57] sm:h-auto md:mt-[-90px] lg:mt-[-127px] xl:mt-[-147px]">
         <div className="flex w-[1040px] flex-row rounded-2xl bg-white shadow-md  max-lg:flex-col-reverse xs2:h-auto xs2:w-[340px] xs:h-auto xs:w-[340px] sm:h-auto sm:w-[510px] md:w-[700px] lg:w-[900px] xl:w-[1024px]">
           <div className="basis-1/2 px-4">
             <div className="pl-[40px] pt-[50px] xs2:mx-[40px] xs2:pl-0">
@@ -22,7 +22,7 @@ export function SectionIntro({
               </p>
             </div>
             <div className="  xs2:mx-[40px]">
-              <div className="pl-[40px] pt-[13px] text-3xl leading-tight text-black max-xs:pl-0">
+              <div className=" pt-[13px] text-3xl leading-tight text-black max-xs:pl-0 xs2:text-[27px] xs:text-[27px]">
                 {t(
                   'landingpage:introduction_section.service_transmit_data_accurate',
                 )}
@@ -35,7 +35,7 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
-                    {t("landingpage_text:introduction.introduction_1")}
+                    {t('landingpage_text:introduction.introduction_1')}
                   </p>
                 </div>
                 <div className="mb-[-8px]">
@@ -45,7 +45,7 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px] text-base/[21px]">
-                    {t("landingpage_text:introduction.introduction_2")}
+                    {t('landingpage_text:introduction.introduction_2')}
                   </p>
                 </div>
                 <div>
@@ -55,14 +55,14 @@ export function SectionIntro({
                     viewBox="0 0 24 25"
                   ></CheckboxCircleLine>
                   <p className="relative top-[-25px] pl-[30px]  text-base/[21px]">
-                    {t("landingpage_text:introduction.introduction_3")}
+                    {t('landingpage_text:introduction.introduction_3')}
                   </p>
                 </div>
               </div>
-              <div className="pl-[40px] pt-[15px] xs2:pb-[37px] xs2:pl-0">
+              <div className="pl-[40px] pt-[15px] xs2:pb-[37px] xs2:pl-0 ">
                 <Button
                   type="button"
-                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  className="rounded-r-lg rounded-tl-lg border-none  bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
                   variant="primary"
                   endIcon={
                     <ArrowRightUpLine

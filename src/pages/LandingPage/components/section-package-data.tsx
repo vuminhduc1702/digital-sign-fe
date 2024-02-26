@@ -14,10 +14,12 @@ import { Spinner } from '~/components/Spinner'
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
 } from '~/components/Carousel'
+import Autoplay from 'embla-carousel-autoplay'
 
 import { CheckboxCircleLine } from '~/components/SVGIcons'
 
@@ -41,12 +43,12 @@ export function SectionPackageData() {
     delay: 150,
     minDuration: 300,
   })
+  console.log('PackofData', PackofData)
 
   const categories = [
     t('landingpage:pack_of_data_M2M.categories.categories_1'),
     t('landingpage:pack_of_data_M2M.categories.categories_2'),
     t('landingpage:pack_of_data_M2M.categories.categories_3'),
-    t('landingpage:pack_of_data_M2M.categories.categories_4'),
     t('landingpage:pack_of_data_M2M.categories.categories_5'),
     t('landingpage:pack_of_data_M2M.categories.categories_6'),
     t('landingpage:pack_of_data_M2M.categories.categories_7'),
@@ -92,7 +94,7 @@ export function SectionPackageData() {
             </div>
           ) : (
             <div className="flex flex-col">
-              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center lg:gap-6 max-md:items-center max-md:py-8 xs:gap-6 xs2:gap-6 sm:gap-6 md:gap-6">
+              <div className="flex justify-center pt-5 max-lg:flex-col max-lg:items-center max-md:items-center max-md:py-8 xs2:gap-6 xs2:py-4 xs:gap-6 sm:gap-6 md:gap-6 lg:gap-6">
                 <div className="flex items-center px-10 max-lg:px-2 ">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.plan')}
@@ -109,7 +111,7 @@ export function SectionPackageData() {
                     {t('landingpage:pack_of_data_M2M.NB_IoT')}
                   </p>
                 </div>
-                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5">
+                <div className="flex items-center px-10 max-lg:px-2 max-md:py-5 xs2:py-0">
                   <p className="text-lg font-medium">
                     {t('landingpage:pack_of_data_M2M.subscription')}
                   </p>
@@ -128,7 +130,7 @@ export function SectionPackageData() {
                 <div>
                   <Button
                     type="button"
-                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5"
+                    className="rounded-r-lg rounded-tl-lg border border-primary-400 bg-white text-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-md:mt-5 xs2:mt-0"
                     variant="primary"
                     onClick={open}
                   >
@@ -156,8 +158,18 @@ export function SectionPackageData() {
               </div>
 
               <div className="flex w-full justify-center">
-                <div className="w-[1200px] pt-[50px] xs2:w-[300px] xs:w-[300px] sm:w-[300px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
-                  <Carousel className=" xs2:w-[340px] sm:w-[320px] md:w-[600px] lg:w-[890px] xl:w-[1200px]">
+                <div className="w-[1200px] pt-[50px] xs2:w-[280px] xs:w-[300px] sm:w-[320px] md:w-[600px] lg:w-[900px] xl:w-[1200px]">
+                  <Carousel
+                    opts={{
+                      align: 'start',
+                      loop: true,
+                    }}
+                    plugins={[
+                      Autoplay({
+                        delay: 5000,
+                      }),
+                    ]}
+                  >
                     <CarouselContent>
                       {Array.isArray(PackofData?.data) &&
                         PackofData?.data
@@ -250,6 +262,7 @@ export function SectionPackageData() {
                     </CarouselContent>
                     <CarouselPrevious />
                     <CarouselNext />
+                    <CarouselDot />
                   </Carousel>
                 </div>
               </div>

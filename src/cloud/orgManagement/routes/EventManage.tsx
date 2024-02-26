@@ -1,31 +1,21 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { useGetEvents } from '../api/eventAPI'
-import {
-  ComboBoxSelectEvent,
-  CreateEvent,
-  EventTable,
-} from '../components/Event'
 import storage from '~/utils/storage'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { type EventType } from '../types'
+import { useGetEvents } from '../api/eventAPI'
+import { CreateEvent, EventTable } from '../components/Event'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
-import { Button } from '~/components/Button'
-import { flattenData } from '~/utils/misc'
 
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<EventType[]>(
-    [],
-  )
   const params = useParams()
-
   const orgId = params.orgId as string
   const projectId = storage.getProject()?.id
   const {
@@ -56,7 +46,7 @@ export function EventManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    eventData?.events?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -69,26 +59,6 @@ export function EventManage() {
       }
       return acc
     }, [] as Array<{ [key: string]: string }>)
-
-  // flatten the data
-  const { acc: eventFlattenData, extractedPropertyKeys } = flattenData(
-    eventData?.events,
-    [
-      'id',
-      'name',
-      'group_name',
-      'onClick',
-      'status',
-      'interval',
-      'retry',
-      'schedule',
-      'action',
-      'condition',
-      'org_id',
-      'group_id',
-      'cmd',
-    ],
-  )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -112,7 +82,7 @@ export function EventManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -134,7 +104,7 @@ export function EventManage() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -142,16 +112,11 @@ export function EventManage() {
               />
             )}
             <CreateEvent />
-            {/* {isSuccess ? (
-              <ComboBoxSelectEvent
-                data={eventData}
-                setFilteredComboboxData={setFilteredComboboxData}
-              />
-            ) : null} */}
+            {/* dummyInput */}
           </div>
         </div>
         <EventTable
-          data={eventFlattenData}
+          data={eventData?.events ?? []}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

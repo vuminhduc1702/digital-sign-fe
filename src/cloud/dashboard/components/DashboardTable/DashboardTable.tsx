@@ -162,11 +162,7 @@ export function DashboardTable({
         id: 'description',
         cell: info => {
           const { configuration } = info.row.original
-          return (
-            <span>
-              {JSON.parse(configuration as unknown as string).description}
-            </span>
-          )
+          return <span>{configuration.description}</span>
         },
         header: () => (
           <span>{t('cloud:dashboard.table.configuration.description')}</span>
@@ -186,8 +182,7 @@ export function DashboardTable({
           return DashboardTableContextMenu({
             id,
             title,
-            description: JSON.parse(configuration as unknown as string)
-              .description,
+            description: configuration.description,
           })
         },
         header: () => null,

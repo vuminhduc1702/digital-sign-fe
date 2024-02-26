@@ -207,11 +207,11 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <XMarkIcon className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -313,6 +313,7 @@ export function UpdateThingService({
                   />
                 ) : null}
               </div>
+<<<<<<< HEAD
               <Tabs defaultValue="info">
                 <TabsList className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
                   <TabsTrigger value="info">
@@ -525,6 +526,55 @@ export function UpdateThingService({
                           <div className="mt-1.5 flex flex-col gap-y-3">
                             <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
                               <div className="flex gap-3 ">
+=======
+              <Tab.Group>
+                <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
+                  <Tab
+                    className={({ selected }) =>
+                      clsx(
+                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                        { 'text-primary-400': selected },
+                      )
+                    }
+                  >
+                    <div className="flex items-center gap-x-2">
+                      <p>{t('cloud:custom_protocol.service.info')}</p>
+                    </div>
+                  </Tab>
+                  <Tab
+                    className={({ selected }) =>
+                      clsx(
+                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
+                        { 'text-primary-400': selected },
+                      )
+                    }
+                  >
+                    <div className="flex items-center gap-x-2">
+                      <p>{t('cloud:custom_protocol.service.tab_2')}</p>
+                    </div>
+                  </Tab>
+                </Tab.List>
+                <Tab.Panels className="mt-2 flex grow flex-col">
+                  <Tab.Panel
+                    className={clsx(
+                      'flex grow flex-col bg-white focus:outline-none',
+                    )}
+                  >
+                    {thingServiceLoading ? (
+                      <div className="flex items-center justify-center">
+                        <Spinner size="xl" />
+                      </div>
+                    ) : (
+                      <div>
+                        <div
+                          className={cn(
+                            'grid grid-cols-1 gap-x-4 md:grid-cols-4',
+                          )}
+                        >
+                          <div className="relative flex flex-col gap-2 md:col-span-1">
+                            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                              <div className="flex gap-3">
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
                                 <p className="text-table-header">
                                   {t(
                                     'cloud:custom_protocol.service.list_service',
@@ -538,6 +588,7 @@ export function UpdateThingService({
                                 'max-h-96': fullScreen,
                               })}
                             >
+<<<<<<< HEAD
                               {thingServiceDataProps?.map(item => {
                                 const typeOutput = outputList.filter(
                                   data => data.value === item.output,
@@ -573,6 +624,237 @@ export function UpdateThingService({
                                                           item =>
                                                             item.value ===
                                                             data.type,
+=======
+                              {fields.map((field, index) => (
+                                <div
+                                  key={field.id}
+                                  className={cn(
+                                    'flex items-center border-0 border-b border-solid border-inherit py-3 first:pt-0',
+                                    {
+                                      'justify-between': fullScreen,
+                                    },
+                                  )}
+                                >
+                                  <div
+                                    className={cn(
+                                      'grid w-full grid-cols-1 gap-x-4 gap-y-2 pr-2',
+                                    )}
+                                  >
+                                    <div className="flex gap-x-2">
+                                      <InputField
+                                        label={t(
+                                          'cloud:custom_protocol.service.service_input.name',
+                                        )}
+                                        require={true}
+                                        error={
+                                          formState.errors[`input`]?.[index]
+                                            ?.name
+                                        }
+                                        registration={register(
+                                          `input.${index}.name` as const,
+                                        )}
+                                      />
+                                      <SelectField
+                                        label={t(
+                                          'cloud:custom_protocol.service.service_input.type',
+                                        )}
+                                        require={true}
+                                        error={
+                                          formState.errors[`input`]?.[index]
+                                            ?.type
+                                        }
+                                        registration={register(
+                                          `input.${index}.type` as const,
+                                        )}
+                                        options={outputList}
+                                        className="h-9 px-2"
+                                        onChange={e => {
+                                          setInputTypeValue(e.target.value)
+                                          fields[index].type = e.target.value
+                                        }}
+                                      />
+                                    </div>
+                                    {fields[index].type === 'bool' ? (
+                                      <FieldWrapper
+                                        label={t(
+                                          'cloud:custom_protocol.service.service_input.value',
+                                        )}
+                                        error={
+                                          formState.errors[`input`]?.[index]
+                                            ?.value
+                                        }
+                                        className="w-fit"
+                                        classchild="flex items-center gap-x-3"
+                                      >
+                                        <Controller
+                                          control={control}
+                                          name={`input.${index}.value`}
+                                          render={({
+                                            field: {
+                                              onChange,
+                                              value,
+                                              ...field
+                                            },
+                                          }) => {
+                                            return (
+                                              <Checkbox
+                                                {...field}
+                                                checked={value as boolean}
+                                                onCheckedChange={onChange}
+                                                defaultChecked={false}
+                                              />
+                                            )
+                                          }}
+                                        />
+                                        <span>True</span>
+                                      </FieldWrapper>
+                                    ) : (
+                                      <InputField
+                                        label={t(
+                                          'cloud:custom_protocol.service.service_input.value',
+                                        )}
+                                        error={
+                                          formState.errors[`input`]?.[index]
+                                            ?.value
+                                        }
+                                        registration={register(
+                                          `input.${index}.value` as const,
+                                        )}
+                                        step={0.01}
+                                        type={
+                                          numberServiceInput.includes(
+                                            fields[index].type as string,
+                                          )
+                                            ? 'number'
+                                            : 'text'
+                                        }
+                                      />
+                                    )}
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    size="square"
+                                    variant="none"
+                                    className={cn(
+                                      'h-9 hover:bg-secondary-500',
+                                      {
+                                        '!justify-center': fullScreen,
+                                      },
+                                    )}
+                                    onClick={() => remove(index)}
+                                    startIcon={
+                                      <img
+                                        src={btnDeleteIcon}
+                                        alt="Delete input"
+                                        className={cn('size-10')}
+                                      />
+                                    }
+                                  />
+                                </div>
+                              ))}
+                            </div>
+                            <div
+                              className="flex w-fit items-center"
+                              onClick={() => {
+                                append({
+                                  name: '',
+                                  type: 'json',
+                                  value: '',
+                                })
+                                setInputTypeValue('')
+                              }}
+                            >
+                              <img
+                                src={btnAddIcon}
+                                alt="add-icon"
+                                className="size-5 cursor-pointer"
+                              />
+                              <label className="ml-2 cursor-pointer">
+                                {t('cloud:custom_protocol.service.add_other')}
+                              </label>
+                            </div>
+                            <div className="flex flex-col gap-y-1">
+                              <div className="mb-2">
+                                <TextAreaField
+                                  label={t(
+                                    'cloud:custom_protocol.service.note',
+                                  )}
+                                  error={formState.errors['description']}
+                                  registration={register('description')}
+                                />
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Switch
+                                  onCheckedChange={checked =>
+                                    setDebugMode(checked)
+                                  }
+                                  defaultChecked
+                                />
+                                <p>
+                                  {t('cloud:custom_protocol.service.debug')}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="mt-1.5 flex flex-col gap-y-3">
+                              <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                                <div className="flex gap-3 ">
+                                  <p className="text-table-header">
+                                    {t(
+                                      'cloud:custom_protocol.service.list_service',
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                              <div
+                                className={cn('mt-0 overflow-auto', {
+                                  'max-h-52': !fullScreen,
+                                  'max-h-96': fullScreen,
+                                })}
+                              >
+                                {thingServiceDataProps?.map(item => {
+                                  const typeOutput = outputList.filter(
+                                    data => data.value === item.output,
+                                  )
+
+                                  return (
+                                    <div className="mt-1.5">
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                          <TooltipTrigger className="w-full cursor-pointer rounded border border-solid border-cyan-400 bg-cyan-50 py-1.5 text-center first:!mt-0">
+                                            <div>{item.name}</div>
+                                          </TooltipTrigger>
+                                          <TooltipContent side="right">
+                                            <div>
+                                              <div className="mb-4 text-table-header">
+                                                {item.name}
+                                              </div>
+                                              <div>
+                                                <div>
+                                                  <div>
+                                                    {t(
+                                                      'cloud:custom_protocol.service.input',
+                                                    )}
+                                                    :
+                                                  </div>
+                                                  <ul>
+                                                    {item?.input?.map(
+                                                      (data: InputService) => {
+                                                        const type =
+                                                          outputList.filter(
+                                                            item =>
+                                                              item.value ===
+                                                              data.type,
+                                                          )
+                                                        return (
+                                                          <li className="mt-1.5 pl-2">
+                                                            <span className="text-primary-400">
+                                                              {data.name}
+                                                            </span>
+                                                            <span>
+                                                              : {type[0]?.label}
+                                                            </span>
+                                                          </li>
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
                                                         )
                                                       return (
                                                         <li className="mt-1.5 pl-2">
@@ -624,6 +906,7 @@ export function UpdateThingService({
                             )}
                             ref={codeEditorRef}
                           >
+<<<<<<< HEAD
                             <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
@@ -683,6 +966,48 @@ export function UpdateThingService({
                                         )}
                                       </div>
                                       {isShowConsole ? (
+=======
+                            <ResizablePanel
+                              defaultSize={50}
+                              minSize={fullScreen ? 13 : 20.5}
+                              className={cn(
+                                'flex w-[100%] flex-col gap-2 md:col-span-1',
+                              )}
+                              ref={codeEditorRef}
+                            >
+                              <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                <div className="flex gap-3">
+                                  <p className="text-table-header">
+                                    {t('cloud:custom_protocol.service.code')}
+                                  </p>
+                                </div>
+                                <div className="flex gap-3">
+                                  <Dropdown
+                                    icon={
+                                      <img
+                                        height={20}
+                                        width={20}
+                                        src={btnChevronDownIcon}
+                                        className="text-secondary-700 hover:text-primary-400"
+                                      />
+                                    }
+                                  >
+                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                      <div className="p-2">
+                                        <div
+                                          className="hover:background py-1 hover:cursor-pointer"
+                                          onClick={() =>
+                                            resizePanel(
+                                              codeEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
+                                        >
+                                          {t(
+                                            'cloud:custom_protocol.service.maximize_result',
+                                          )}
+                                        </div>
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
                                         <div
                                           className="py-1 hover:cursor-pointer"
                                           onClick={() => {
@@ -799,6 +1124,7 @@ export function UpdateThingService({
                                         )}
                                       </div>
                                     </div>
+<<<<<<< HEAD
                                   </div>
                                 </Dropdown>
                               </div>
@@ -810,6 +1136,120 @@ export function UpdateThingService({
                               isFullScreen={fullScreen}
                               isUpdate={true}
                               showRunButton={false}
+=======
+                                  </Dropdown>
+                                  <button
+                                    form="create-serviceThing"
+                                    type="submit"
+                                  >
+                                    <img
+                                      onClick={() => setTypeInput('Run')}
+                                      src={btnRunCode}
+                                      alt="Submit"
+                                      className="size-5 cursor-pointer"
+                                    />
+                                  </button>
+                                </div>
+                              </div>
+                              <CodeSandboxEditor
+                                isShowLog={isShowConsole}
+                                defaultValue={thingServiceData?.data.code}
+                                value={codeInput}
+                                className="!block"
+                                setCodeInput={setCodeInput}
+                                isFullScreen={fullScreen}
+                                isUpdate={true}
+                              />
+                            </ResizablePanel>
+                            <ResizableHandle className="w-2" withHandle />
+                            <ResizablePanel
+                              defaultSize={50}
+                              minSize={fullScreen ? 10.5 : 16.5}
+                              className={cn(
+                                'flex w-[100%] flex-col gap-2 md:col-span-1',
+                              )}
+                              ref={resultEditorRef}
+                            >
+                              <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                                <div className="flex gap-3">
+                                  <p className="text-table-header">
+                                    {t('cloud:custom_protocol.service.output')}
+                                  </p>
+                                </div>
+                                <div className="flex gap-3">
+                                  <Dropdown
+                                    icon={
+                                      <img
+                                        height={20}
+                                        width={20}
+                                        src={btnChevronDownIcon}
+                                        className="text-secondary-700 hover:text-primary-400"
+                                      />
+                                    }
+                                  >
+                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                      <div className="p-2">
+                                        <div
+                                          className="py-1 hover:cursor-pointer"
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MAX,
+                                            )
+                                          }
+                                        >
+                                          {t(
+                                            'cloud:custom_protocol.service.maximize_result',
+                                          )}
+                                        </div>
+                                        <div
+                                          className="py-1 hover:cursor-pointer"
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.MIN,
+                                            )
+                                          }
+                                        >
+                                          {t(
+                                            'cloud:custom_protocol.service.minimize_result',
+                                          )}
+                                        </div>
+                                        <div
+                                          className="py-1 hover:cursor-pointer"
+                                          onClick={() =>
+                                            resizePanel(
+                                              resultEditorRef,
+                                              PANEL_SIZE.DEFAULT,
+                                            )
+                                          }
+                                        >
+                                          {t(
+                                            'cloud:custom_protocol.service.default_result',
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Dropdown>
+                                </div>
+                              </div>
+                              <CodeSandboxEditor
+                                value={codeOutput}
+                                readOnly={true}
+                                setCodeInput={setCodeOutput}
+                                isFullScreen={fullScreen}
+                                isUpdate={true}
+                                showRunButton={false}
+                              />
+                            </ResizablePanel>
+                          </ResizablePanelGroup>
+                          <div className="absolute bottom-6 right-6 flex gap-3">
+                            <img
+                              onClick={handleFullScreen}
+                              src={btnFullScreen}
+                              alt="fullscreen-update-service"
+                              className="size-5 cursor-pointer"
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
                             />
                           </ResizablePanel>
                         </ResizablePanelGroup>
@@ -838,10 +1278,10 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
             }
             ref={cancelButtonRef}
           />
@@ -854,7 +1294,7 @@ export function UpdateThingService({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           ></Button>
         </div>

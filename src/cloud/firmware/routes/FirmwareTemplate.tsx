@@ -2,24 +2,19 @@ import { useMemo, useRef, useState } from 'react'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import storage from '~/utils/storage'
 
-import { CreateFirmWare, FirmWareTable } from '../components/Firmware'
-import TitleBar from '~/components/Head/TitleBar'
 import { useTranslation } from 'react-i18next'
-import { useGetFirmwares } from '../api/firmwareAPI'
-import { type FirmWare } from '../types'
-import { flattenData } from '~/utils/misc'
-import { convertEpochToDate } from '~/utils/transformFunc'
-import { ExportTable } from '~/components/Table/components/ExportTable'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import TitleBar from '~/components/Head/TitleBar'
+import { ExportTable } from '~/components/Table/components/ExportTable'
+import { convertEpochToDate } from '~/utils/transformFunc'
+import { useGetFirmwares } from '../api/firmwareAPI'
 import { useDeleteMultipleFirmware } from '../api/firmwareAPI/deleteMultipleFirmwares'
+import { CreateFirmWare, FirmWareTable } from '../components/Firmware'
 
 export function FirmwareTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
-  const [filteredComboboxData, setFilteredComboboxData] = useState<FirmWare[]>(
-    [],
-  )
   const [offset, setOffset] = useState(0)
   const projectId = storage.getProject()?.id
   const {
@@ -32,21 +27,6 @@ export function FirmwareTemplate() {
     offset,
   })
 
-  const { acc: firmwareFlattenData, extractedPropertyKeys } = flattenData(
-    firmwareData?.data,
-    [
-      'id',
-      'name',
-      'template_name',
-      'version',
-      'created_time',
-      'tag',
-      'created_by',
-      'template_id',
-      'email',
-      'description',
-    ],
-  )
   const {
     mutate: mutateDeleteMultipleFirmware,
     isLoading,
@@ -67,7 +47,7 @@ export function FirmwareTemplate() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData?.reduce((acc, curr, index) => {
+    firmwareData?.data?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -107,7 +87,7 @@ export function FirmwareTemplate() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -141,7 +121,7 @@ export function FirmwareTemplate() {
           </div>
         </div>
         <FirmWareTable
-          data={firmwareFlattenData}
+          data={firmwareData?.data ?? []}
           offset={offset}
           setOffset={setOffset}
           total={firmwareData?.total ?? 0}

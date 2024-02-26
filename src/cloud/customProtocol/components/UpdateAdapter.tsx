@@ -92,8 +92,7 @@ export function UpdateAdapter({
         content_type,
         host,
         port,
-        configuration:
-          configuration !== 'null' ? JSON.parse(configuration) : null,
+        configuration: configuration !== 'null' ? configuration : null,
         schema: { fields: renderFields() },
       },
     })
@@ -126,15 +125,12 @@ export function UpdateAdapter({
   const { mutate: mutatePingMQTT, isLoading: isLoadingPingMQTT } = usePingMQTT()
 
   function renderFields() {
-    const schemaParse = typeof schema === 'string' ? JSON.parse(schema) : null
     const result =
-      (schemaParse.fields &&
-        schemaParse.fields.map((item: FieldsType) => ({
-          name: item.name,
-          start_byte: item.start_byte,
-          length_byte: item.end_byte - item.start_byte,
-        }))) ||
-      []
+      schema?.fields?.map((item: FieldsType) => ({
+        name: item.name,
+        start_byte: item.start_byte,
+        length_byte: item.end_byte - item.start_byte,
+      })) || []
     return result
   }
 
@@ -156,7 +152,7 @@ export function UpdateAdapter({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="cancel" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="cancel" className="size-5" />
             }
           />
           <Button
@@ -167,7 +163,7 @@ export function UpdateAdapter({
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           />
         </>
@@ -349,9 +345,9 @@ export function UpdateAdapter({
                     onClick={() => setIsShow(!isShow)}
                   >
                     {isShow ? (
-                      <ChevronDownIcon className="h-5 w-5" />
+                      <ChevronDownIcon className="size-5" />
                     ) : (
-                      <ChevronRightIcon className="h-5 w-5" />
+                      <ChevronRightIcon className="size-5" />
                     )}
                   </div>
                   <Button
@@ -430,7 +426,7 @@ export function UpdateAdapter({
                         <img
                           src={btnDeleteIcon}
                           alt="Delete schema"
-                          className="h-9 w-9"
+                          className="size-9"
                         />
                       }
                     />
@@ -503,7 +499,7 @@ export function UpdateAdapter({
                         <img
                           src={btnDeleteIcon}
                           alt="Delete topic"
-                          className="h-10 w-10"
+                          className="size-10"
                         />
                       }
                     />

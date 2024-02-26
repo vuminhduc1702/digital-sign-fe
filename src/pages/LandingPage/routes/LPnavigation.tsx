@@ -41,7 +41,7 @@ function LPnavigation({
   const logout = useLogout()
 
   return (
-    <div className="px-8 py-7">
+    <div className="px-8 py-7 ">
       <div className="mb-[20px] w-[140px]">
         <a href="/" className=" text-white ">
           <img src={LogoViettel} alt="" />
@@ -150,9 +150,9 @@ function LPnavigation({
         </DropdownMenu>
       )}
 
-      <div className="flex w-full lg:justify-center ">
-        <div className="flex w-full lg:justify-center ">
-          <div className="flex justify-start max-lg:flex-col">
+      <div className="flex w-full lg:justify-center">
+        <div className="flex w-full">
+          <div className="flex justify-start max-xl:flex-col">
             <div
               className="flex min-w-fit px-3 py-5 text-base font-bold text-white "
               onClick={() => request_scrollToIntro('introRef')}

@@ -42,9 +42,9 @@ export function PackageSidebar() {
           {/* <p>{t('billing:package_manage.list_package')}</p> */}
         </div>
         <CreatePackage />
-        {/* <div className="w-full">
-          dummyInput
-        </div> */}
+        <div className="w-full">
+          {/* dummyInput */}
+        </div>
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">
         {planFlattenData?.length > 0 ? (

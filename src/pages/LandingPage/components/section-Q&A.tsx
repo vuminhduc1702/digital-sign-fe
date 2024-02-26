@@ -61,8 +61,8 @@ export function QandA() {
           <div className="pb-[40px] pt-[60px] text-center text-[36px] leading-[18.91px] text-primary-400 max-sm:text-[24px] max-xs:text-[24px]">
             {t('landingpage:Q_A.question')}
           </div>
-          <div className="flex max-lg:flex-col max-lg:items-center w-full">
-            <div className="w-1/2 pr-[30px] xs2:w-3/4">
+          <div className="flex justify-center max-lg:flex-col max-lg:items-center">
+            <div className="xs2:w-3/4">
               <Accordion type="single" collapsible ref={accordionRef_1}>
                 {items.map((item, idx) => (
                   <AccordionItem value={item.value} key={idx}>
@@ -82,36 +82,7 @@ export function QandA() {
                           <img src={MinusIconGroup5411} alt="" />
                         </>
                       )}
-                      <div className="pl-[10px] pt-[10px] text-left text-body-sm font-medium">
-                        {item.triggerText}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>{item.contentText}</AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-            <div className="w-1/2 pl-[30px] xs2:w-3/4 xs2:pl-0">
-              <Accordion type="single" collapsible ref={accordionRef_2}>
-                {items.map((item, idx) => (
-                  <AccordionItem value={item.value} key={idx}>
-                    <AccordionTrigger
-                      onClick={() => {
-                        setIsAccordionChange(prevState => !prevState)
-                      }}
-                      className="flex justify-start"
-                    >
-                      {accordionRef_2.current?.childNodes.item(idx).dataset
-                        .state === 'closed' ? (
-                        <>
-                          <img src={PlusIconGroup5412} alt="" />
-                        </>
-                      ) : (
-                        <>
-                          <img src={MinusIconGroup5411} alt="" />
-                        </>
-                      )}
-                      <div className="pl-[10px] pt-[10px] text-left text-body-sm font-medium">
+                      <div className="px-[10px] pt-[10px] text-left text-body-sm font-medium">
                         {item.triggerText}
                       </div>
                     </AccordionTrigger>

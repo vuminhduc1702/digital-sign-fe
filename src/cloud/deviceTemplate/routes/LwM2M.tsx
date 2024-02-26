@@ -11,7 +11,6 @@ import { TemplateInfo } from '../components'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
-import { flattenData } from '~/utils/misc'
 
 export function LwM2M() {
   const { t } = useTranslation()
@@ -19,7 +18,7 @@ export function LwM2M() {
 
   const params = useParams()
   const templateId = params.templateId as string
-  const id = params.id as string
+  const selectedModuleId = params.id as string
   const projectId = storage.getProject()?.id
 
   // no offset call
@@ -28,25 +27,15 @@ export function LwM2M() {
     isPreviousData: isPreviousLwM2MData,
     isSuccess,
   } = useTemplateById({ templateId })
-  const { acc: templateLwM2MFlattenData } = flattenData(
-    LwM2MDataById?.transport_config?.info?.module_config || [],
-    ['numberOfAttributes', 'module_name', 'id'],
-  )
 
-  const selectedModuleId = id
   const selectedModule =
     LwM2MDataById?.transport_config?.info.module_config.find(
       module => module.id === selectedModuleId,
     )
-  const selectedAttributes = selectedModule?.attribute_info || []
-  const { acc: templateLwM2MFlattenDataAttr } = flattenData(
-    selectedAttributes,
-    ['action', 'name', 'id', 'kind', 'type'],
-  )
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
-      {projectId && templateId && !id ? (
+      {projectId && templateId && !selectedModuleId ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
           <Suspense
             fallback={
@@ -70,13 +59,15 @@ export function LwM2M() {
                 </div>
               </div>
               <LwM2MTable
-                moduleConfig={templateLwM2MFlattenData}
+                moduleConfig={
+                  LwM2MDataById?.transport_config?.info?.module_config ?? []
+                }
               />
             </div>
           </Suspense>
         </div>
       ) : null}
-      {projectId && templateId && id ? (
+      {projectId && templateId && selectedModuleId ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
           <Suspense
             fallback={
@@ -99,8 +90,8 @@ export function LwM2M() {
                   {/* dummyInput */}
                 </div>
               </div>
-              <AttrLwM2MTable attributeInfo={templateLwM2MFlattenDataAttr} 
-
+              <AttrLwM2MTable
+                attributeInfo={selectedModule?.attribute_info ?? []}
               />
             </div>
           </Suspense>

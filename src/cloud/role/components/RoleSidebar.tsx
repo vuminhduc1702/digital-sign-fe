@@ -1,21 +1,19 @@
 import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import TitleBar from '~/components/Head/TitleBar'
 import storage from '~/utils/storage'
 import { useGetRoles } from '../api'
 import { CreateRole } from './CreateRole'
-import TitleBar from '~/components/Head/TitleBar'
 import { RoleTable } from './RoleTable'
-import { flattenData } from '~/utils/misc'
 
-import { type Role } from '../types'
-import { ExportTable } from '~/components/Table/components/ExportTable'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
 
-const convertENtoVN = (enArr: string[]) => {
-  return enArr.map(item => {
+export const convertActionsENtoVN = (enArr: string[]) => {
+  return enArr?.map(item => {
     if (item === 'read') {
       return 'Xem'
     } else if (item === 'modify') {
@@ -37,11 +35,6 @@ export function RoleSidebar() {
 
   const { data, isPreviousData } = useGetRoles({ projectId, offset })
 
-  const { acc: roleFlattenData, extractedPropertyKeys } = flattenData(
-    data?.roles,
-    ['id', 'name', 'policies', 'role_type'],
-  )
-
   const ref = useRef(null)
   const {
     mutate: mutateDeleteMultipleRoles,
@@ -59,8 +52,8 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    roleFlattenData.reduce((acc, curr, index) => {
+  const aoo: Array<{ [key: string]: string }> | undefined = data?.roles?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -68,14 +61,16 @@ export function RoleSidebar() {
           [t('cloud:role_manage.add_role.role_type')]: curr.role_type
             ? curr.role_type
             : 'Generic',
-          [t('cloud:role_manage.add_role.actions')]: convertENtoVN(
-            JSON.parse(curr.policies)[0].actions,
+          [t('cloud:role_manage.add_role.actions')]: convertActionsENtoVN(
+            curr.policies[0].actions,
           ).toString(),
         }
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <>
@@ -97,7 +92,7 @@ export function RoleSidebar() {
                 body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -119,7 +114,7 @@ export function RoleSidebar() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -132,7 +127,7 @@ export function RoleSidebar() {
         </div>
         <RoleTable
           project_id={projectId}
-          data={roleFlattenData}
+          data={data?.roles ?? []}
           offset={offset}
           setOffset={setOffset}
           total={data?.total || 0}

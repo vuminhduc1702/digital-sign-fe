@@ -147,7 +147,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -191,7 +191,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -287,7 +287,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -439,7 +439,7 @@ export function SubcriptionTable({
 
   return (
     <BaseTable
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_subscription')}
       {...props}

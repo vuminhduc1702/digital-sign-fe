@@ -33,6 +33,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
+<<<<<<< HEAD
       <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -47,11 +48,28 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
         <DropdownMenuContent>
           <DropdownMenuItem>
             <div className='flex gap-x-2 hover:text-primary-300'
+=======
+      <Dropdown
+        icon={
+          <BtnContextMenuIcon
+            height={20}
+            width={10}
+            viewBox="0 0 1 20"
+            className="text-secondary-700 hover:text-primary-400"
+          />
+        }
+      >
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="p-1">
+            <MenuItem
+              icon={<EyeOpenIcon className="size-5" />}
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
               onClick={() => {
                 open()
               }}>
               <EyeOpenIcon className="h-5 w-5" />
               {t('billing:manage_bill.preview_bill')}
+<<<<<<< HEAD
             </div>
           </DropdownMenuItem>
           <DropdownMenuItem className=" hover:cursor-pointer" asChild>
@@ -68,6 +86,24 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
       </DropdownMenu>
       {isOpen ? <ViewBilling id={id} close={close} isOpen={true} /> : null
       }
+=======
+            </MenuItem>
+            <PDFDownloadLink
+              document={<BillingPDF dataPdf={data?.data} />}
+              fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
+            >
+              <MenuItem
+                icon={<DownloadIcon className="size-5" />}
+                onClick={() => {}}
+              >
+                {t('billing:manage_bill.export_PDF')}
+              </MenuItem>
+            </PDFDownloadLink>
+          </div>
+        </Menu.Items>
+      </Dropdown>
+      {isOpen ? <ViewBilling id={id} close={close} isOpen={true} /> : null}
+>>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
     </>
   )
 }
@@ -150,7 +186,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -227,7 +263,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -325,7 +361,7 @@ export function BillingTable({
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-2 block"
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_bill')}
       {...props}

@@ -18,7 +18,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useDeleteRole } from '../api'
 import { type Role } from '../types'
-import { actionsList } from './CreateRole'
+import { convertActionsENtoVN } from './RoleSidebar'
 import { UpdateRole } from './UpdateRole'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
@@ -94,7 +94,7 @@ function RoleTableContextMenu({
                     <img
                       src={btnDeleteIcon}
                       alt="Delete role"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -109,7 +109,7 @@ function RoleTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id: id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -124,7 +124,7 @@ function RoleTableContextMenu({
           isOpen={isOpen}
           roleId={selectedUpdateRole.id}
           name={selectedUpdateRole.name}
-          policy={selectedUpdateRole.policies as unknown as string}
+          policy={selectedUpdateRole.policies}
           role_type={selectedUpdateRole.role_type}
         />
       ) : null}
@@ -169,17 +169,10 @@ export function RoleTable({ data, ...props }: RoleTableProps) {
       columnHelper.accessor('policies', {
         header: () => <span>{t('cloud:role_manage.add_role.actions')}</span>,
         cell: info => {
-          const origin = JSON.parse(JSON.stringify(info.row.original))
-          const policiesData = JSON.parse(origin.policies)
-          const actionsParsed = policiesData[0].actions
-            .filter(action => actionsList.some(item => item.value === action))
-            .map((policy: string) => {
-              const filterVal = actionsList.find(
-                action => action.value === policy,
-              )
-              return ' ' + filterVal?.label
-            })
-          return String(actionsParsed)
+          const actions = convertActionsENtoVN(
+            info.row.original.policies[0].actions,
+          )?.toString()
+          return actions
         },
         footer: info => info.column.id,
       }),

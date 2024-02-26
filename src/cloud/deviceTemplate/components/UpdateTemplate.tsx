@@ -22,7 +22,6 @@ import {
   type SelectOption,
 } from '~/components/Form'
 import { Spinner } from '~/components/Spinner'
-import { flattenData } from '~/utils/misc.ts'
 import storage from '~/utils/storage'
 import { useUpdateTemplate, type UpdateTemplateDTO } from '../api'
 import { useGetRulechains } from '../api/getRulechains'
@@ -64,13 +63,10 @@ export function UpdateTemplate({
     label: valueType.name,
     value: valueType.type,
   }))
-  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
-    'id',
-    'name',
-  ])
-  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
+
+  const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
     label: ruchains?.name,
-    value: JSON.parse(ruchains?.id)?.id,
+    value: ruchains?.id?.id,
   }))
 
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
@@ -99,7 +95,6 @@ export function UpdateTemplate({
   } = useForm<UpdateTemplateDTO['data']>({
     resolver: templateAttrSchema && zodResolver(templateAttrSchema),
   })
-  console.log('watch', watch('thing_id'))
 
   const [serviceData, setServiceData] = useState(null)
   const [isLoadingService, setIsLoadingService] = useState(false)
@@ -170,7 +165,7 @@ export function UpdateTemplate({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -181,7 +176,7 @@ export function UpdateTemplate({
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           />
         </>

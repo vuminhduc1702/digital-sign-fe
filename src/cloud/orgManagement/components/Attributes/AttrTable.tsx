@@ -1,6 +1,6 @@
+import { Menu } from '@headlessui/react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu } from '@headlessui/react'
 import { useDebouncedCallback } from 'use-debounce'
 
 import {
@@ -8,24 +8,23 @@ import {
   type EntityType,
 } from '~/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
-import { useDisclosure } from '~/utils/hooks'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
-import { BaseTable } from '~/components/Table'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Switch } from '~/components/Switch'
+import { BaseTable } from '~/components/Table'
+import { useDisclosure } from '~/utils/hooks'
 import { getVNDateFormat } from '~/utils/misc'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
 
-import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { type Attribute } from '~/types'
 
-import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
+import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetAttrs } from '../../api/attrAPI/getAttrs'
-import { flattenData } from '~/utils/misc'
 
 export const STATUS = {
   true: 'Có',
@@ -62,14 +61,14 @@ function AttrTableContextMenu({
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
                 <img
                   src={btnEditIcon}
                   alt="Edit attribute"
-                  className="h-5 w-5"
+                  className="size-5"
                 />
               }
               onClick={open}
@@ -85,14 +84,14 @@ function AttrTableContextMenu({
               ).replace('{{ATTRNAME}}', attribute_key)}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete attribute"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -113,7 +112,7 @@ function AttrTableContextMenu({
                     })
                   }
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -136,11 +135,12 @@ function AttrTableContextMenu({
 }
 
 export function AttrTable({
+  data,
   entityId,
   entityType,
-  searchQuery,
   ...props
 }: {
+  data?: Attribute[]
   entityId: string
   entityType: EntityType
   rowSelection: { [key: string]: boolean }
@@ -154,13 +154,10 @@ export function AttrTable({
 
   const { data: attrsData } = useGetAttrs({ entityType, entityId })
 
-  const { acc: attrFlattenData, extractedPropertyKeys } = flattenData(
-    attrsData?.attributes,
-    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
-  )
-
   const dataSorted =
-    attrFlattenData?.sort((a, b) => (b.attribute_key < a.attribute_key ? 1 : -1)) || attrFlattenData
+    attrsData?.attributes.sort((a, b) =>
+      b.attribute_key < a.attribute_key ? 1 : -1,
+    ) || attrsData?.attributes
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({
@@ -268,7 +265,7 @@ export function AttrTable({
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={dataSorted}
+      data={dataSorted ?? []}
       columns={columns}
       onDataText={t('table:no_attr')}
       isAbsoluteBtn={false}

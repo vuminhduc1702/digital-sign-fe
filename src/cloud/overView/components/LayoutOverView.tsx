@@ -465,7 +465,7 @@ export function LayoutOverView() {
         </Tabs>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md p-2">
+        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -485,7 +485,7 @@ export function LayoutOverView() {
                         setType(item)
                       }}
                       className={cn('px-4 py-2 text-slate-400', {
-                        'bg-primary-400 rounded-2xl text-white': type === item,
+                        'rounded-2xl bg-primary-400 text-white': type === item,
                       })}
                     >
                       {item}
@@ -499,7 +499,7 @@ export function LayoutOverView() {
                 onClick={() =>
                   navigate(`${PATHS.DASHBOARD}/${projectId}?openDrawer=true`)
                 }
-                className="bg-primary-400 ml-3 border-none"
+                className="ml-3 border-none bg-primary-400"
               >
                 {t('overView:add_dashboard')}
               </Button>
@@ -507,7 +507,7 @@ export function LayoutOverView() {
           </div>
           {type === 'Last viewed' ? (
             <DashboardTable
-              data={lastView || []}
+              data={lastView ?? []}
               offset={offset}
               setOffset={setOffset}
               total={0}
@@ -516,7 +516,7 @@ export function LayoutOverView() {
             />
           ) : (
             <DashboardTable
-              data={starred || []}
+              data={starred ?? []}
               offset={offset}
               setOffset={setOffset}
               total={0}
@@ -525,7 +525,7 @@ export function LayoutOverView() {
             />
           )}
         </div>
-        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md px-2 py-4">
+        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>

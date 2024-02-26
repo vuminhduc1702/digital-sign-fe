@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
 import {
-  type CarouselApi,
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -15,6 +15,7 @@ import Pic4 from '~/assets/images/landingpage/Pict_13s.png'
 import Pic5 from '~/assets/images/landingpage/Pict_15s.png'
 import Pic6 from '~/assets/images/landingpage/Pict_11s.png'
 import Pic7 from '~/assets/images/landingpage/Pict_6s.png'
+import Autoplay from 'embla-carousel-autoplay'
 
 export function SectionProduct() {
   const { t } = useTranslation()
@@ -78,7 +79,6 @@ export function SectionProduct() {
     },
   ]
 
-  
   return (
     <>
       <div className="mt-[80px]">
@@ -93,11 +93,21 @@ export function SectionProduct() {
           </div>
         </div>
         <div className="flex w-full justify-center ">
-          <div className="pt-[50px] xs2:w-[290px] xs:w-[300px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
-            <Carousel className="xs2:w-[320px] sm:w-[320px] md:w-[570px] lg:w-[870px] xl:w-[1200px] ">
+          <div className="pt-[50px] xs2:w-[270px] xs:w-[267px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
+            <Carousel
+              opts={{
+                align: 'start',
+                loop: true,
+              }}
+              plugins={[
+                Autoplay({
+                  delay: 5000,
+                }),
+              ]}
+            >
               <CarouselContent className="">
-                {slides.map(item => (
-                  <CarouselItem className=" basis-1/4 ">
+                {slides.map((item, index) => (
+                  <CarouselItem key={index} className=" basis-1/4 ">
                     <div className="rounded-lg shadow-md">
                       <div className="h-fit w-[200px]">
                         <img src={item.src} alt={item.alt} />
@@ -120,11 +130,13 @@ export function SectionProduct() {
                         </a>
                       </div>
                     </div>
+                    <div></div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
+              <CarouselDot />
             </Carousel>
           </div>
         </div>

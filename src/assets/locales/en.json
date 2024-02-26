@@ -121,7 +121,8 @@
           "delete_attr": "Delete Attribute",
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
-          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?"
+          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?",
+          "search": "Search..."
         },
         "add_org": {
           "title": "Create New Organization",
@@ -1181,10 +1182,9 @@
       "prepaid": "Prepaid",
       "postpaid": "Postpaid",
       "categories": {
-        "categories_1": "Flow Measurement (Metering)",
-        "categories_2": "Journey monitoring",
+        "categories_1": "Smart Metering",
+        "categories_2": "Vehicle tracking/ Dashcam",
         "categories_3": "POS payment machine",
-        "categories_4": "Smart Ward Speaker",
         "categories_5": "Advertising screens",
         "categories_6": "Camera",
         "categories_7": "Cars",
@@ -1200,8 +1200,8 @@
       "support_content": "Support Content*:",
       "send": "Send",
       "company": "Viettel High-Tech Industry Corporation",
-      "responsible_person": "Content Manager: Mr. Le Ngoc Quy",
-      "cskh": "quyln3@viettel.com.vn",
+      "responsible_person": "Content Manager: Mr.Le Ngoc Quy",
+      "cskh": "innoway@viettel.com.vn",
       "follow": "Follow us:",
       "phone_used": "0869 9999 904",
       "cre": "Copyright Viettel High Tech"
@@ -1219,7 +1219,7 @@
       "news_": "News"
     },
     "order1": {
-      "M2M_manage_solution": "M2M Connection Management Solution",
+      "M2M_manage_solution": "M2M Connectivity Management Solution",
       "subscription_management": "Subscription Management",
       "contract_management": "Contract Management",
       "order_management": "Order Management",
@@ -1227,7 +1227,7 @@
       "subscription_locating": "Locating subscribers"
     },
     "order": {
-      "manage_platform": "Platform for Management, Automation, and Data Collection",
+      "manage_platform": "Viettel IoT Platform",
       "manage_device": "Device Status Management",
       "business_model": "Implementing No Code - Low Code Business Model",
       "data_security": "User Data Security",
@@ -1249,11 +1249,11 @@
         },
         "slide_3": {
           "title_1": "Smart Car",
-          "title_2": "vTag"
+          "title_2": "Smart car"
         },
         "slide_4": {
           "title_1": "Personal Health",
-          "title_2": "VHealth"
+          "title_2": "Ourhealth"
         },
         "slide_5": {
           "title_1": "Smart Office",
@@ -1419,39 +1419,39 @@
     "smart_home": "Smarthome Solution"
   },
   "landingpage_text": {
-    "index": "The versatile platform supports simultaneous connection management and application management.",
+    "index": "The versatile platform supports Connectivity management and Application management simultaneously.",
     "introduction": {
       "introduction_1": "M2M is a technology that allows devices to communicate with systems through a network connection.",
       "introduction_2": "M2M data service: A service in which sim data is used to transmit data.",
-      "introduction_3": "M2M is a technology that allows devices to communicate with systems through a network connection. M2M data service: A service in which sim data is used to transmit data. IOT technology is developed based on a combination of Internet technology (wifi network, 4G, 5G broadband telecommunications network) and microelectromechanical technology, helping users control everything more optimally with just one device. be smart."
+      "introduction_3": "IOT technology is developed based on a combination of Internet technology (wifi network, 4G, 5G) and microelectromechanical technology, helping users control everything more optimally with just one smart device."
     },
     "slides": {
       "slide_1": {
-        "text_1": "Savings",
+        "text_1": "Cost-saving",
         "text_2": "Reduce operating costs"
       },
       "slide_2": {
-        "text_1": "Exactly",
+        "text_1": "Accurate",
         "text_2": "Provide accurate and timely information"
       },
       "slide_3": {
         "text_1": "Experience",
-        "text_2": "Improving customer experience"
+        "text_2": "Improve customer experience"
       },
       "slide_4": {
         "text_1": "Safe",
-        "text_2": "Improved safety"
+        "text_2": "Improve safety "
       }
     },
     "section_order": {
-      "text_1": "Our platform has helped shorten the development time of Viettel's IoT solutions by up to 70%. Save operating costs by up to 80%.",
-      "text_2": "If you have an idea to provide excellent IoT services, you want to test it quickly? We will help you for free (under 100 devices)",
-      "text_3": "What if your service is using imported devices and foreign software, with absolutely no control over customer data? Our platform will support the integration of all devices, with any format and ensure data is absolutely controlled as required.",
-      "text_4": "If you are implementing a public investment project, but foreign platform providers cannot meet the requirements? Our platform is completely developed by the Viettel team, supported Unlimited customization, we will accompany you throughout the product life cycle."
+      "text_1": "Our platform helps to shorten the development time of IoT solutions by up to 70% and save operating costs by up to 80%.",
+      "text_2": "If you have an idea of potential IoT services and want to test it quickly? We will help you for free with under 100 first device.",
+      "text_3": "If your solution is based on oversea devices and platform with absolutely no control over customer data? Our platform will support the integration of all devices with any format and ensure data is absolutely controlled as required",
+      "text_4": "If you are implementing a public investment project, but foreign platforms cannot meet the requirements? Our platform is completely developed by the Viettel team, supporting unlimited customization, we will accompany you throughout the product life cycle."
     },
     "section_order_1": {
-      "text_1": "Pioneer platform in Vietnam, providing two services: connection management platform (CMP) and application management platform (AEP) at the same time. Full support for IoT services using technology cellular (2G/4G/Nb-IoT).",
-      "text_2": "Viettel's connection management platform allows businesses to manage subscriber lists, payment status, subscriber location... and many other utilities"
+      "text_1": "The pioneer platform in Vietnam, providing both services: connection management platform (CMP) and application management platform (AEP).The platform supports the whole process of IoT services using Cellular(2G/4G/Nb-IoT).",
+      "text_2": "Viettel's Connectivity Management platform allows businesses to manage subscriber lists, payment status, subscribers location... and many other utilities."
     },
     "q_a": {
       "item_1": {

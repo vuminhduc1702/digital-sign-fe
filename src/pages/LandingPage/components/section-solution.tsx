@@ -32,7 +32,7 @@ export function SectionSolution() {
       icon: <World1 width={65} height={65} viewBox="0 0 65 65"></World1>,
     },
   ]
-  
+
   return (
     <>
       <div className="mb-20 flex justify-center">
@@ -42,16 +42,16 @@ export function SectionSolution() {
               {t('landingpage:solution.value')}
             </p>
             <div className="flex justify-center">
-              <h3 className="  w-[588px] px-5 text-center text-[35px] leading-[43px] xs2:w-[380px] xs2:text-[45px] hidden">
+              <h3 className="  hidden w-[588px] px-5 text-center text-[35px] leading-[43px] xs2:w-[380px] xs2:text-[45px]">
                 {t('landingpage:solution.accuracy')}
               </h3>
             </div>
           </div>
-          <div className="max-xs:gap-w grid grid-cols-4 gap-4 pt-8 max-lg:flex max-lg:flex-wrap max-lg:items-center max-lg:justify-center max-sm:gap-2 ">
+          <div className="max-xs:gap-w  flex gap-4 pt-8 max-xl:flex max-xl:flex-wrap max-xl:justify-center max-lg:items-center max-lg:justify-center max-sm:gap-2 ">
             {slides.map((item, idx) => (
               <div
                 key={idx}
-                className="max-max-sm:w-[420px] max-xs:w-[320px] h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px] max-sm:h-[120px]"
+                className="h-[240px] w-[250px] rounded-lg py-[1px] pl-[1px] pr-[1.5px] max-sm:h-[120px] max-sm:w-[320px]  max-xs:w-[320px]"
                 style={{
                   backgroundImage:
                     'linear-gradient(132.92deg, #EE0033 0%, rgba(238, 0, 51, 0) 52.48%, rgba(238, 0, 51, 0.8) 101.78%)',
@@ -80,7 +80,7 @@ export function SectionSolution() {
               </div>
             ))}
           </div>
-          <div className="grid justify-items-end pt-[40px] max-lg:flex max-lg:justify-center max-md:flex max-md:justify-center max-sm:flex max-sm:justify-center">
+          <div className="flex justify-items-end pt-[40px] lg:justify-center  max-lg:flex max-lg:justify-center max-md:flex max-md:justify-center max-sm:flex max-sm:justify-center">
             <div className="h-fit w-fit ">
               <a
                 href="https://cmp.innoway.vn/telco/dashboard/e10f83be-f40b-4506-bad4-a8e16afbcc70"
@@ -89,7 +89,7 @@ export function SectionSolution() {
               >
                 <Button
                   type="button"
-                  className="bg-primary-400 rounded-r-lg rounded-tl-lg border-none hover:-translate-y-px hover:opacity-100 hover:shadow-xl"
+                  className="rounded-r-lg rounded-tl-lg border-none bg-primary-400 hover:-translate-y-px hover:opacity-100 hover:shadow-xl lg:mx-32"
                   variant="primary"
                   endIcon={
                     <ArrowRightUpLine

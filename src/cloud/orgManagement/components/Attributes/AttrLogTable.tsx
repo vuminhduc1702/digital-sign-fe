@@ -6,17 +6,20 @@ import { BaseTable } from '~/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type DeviceAttrLog, type EntityType } from '../../api/attrAPI'
+import { BaseTablePagination } from '~/types'
+
+type AttrLogTableProps = {
+  data: DeviceAttrLog[]
+  entityId: string
+  entityType: EntityType
+} & BaseTablePagination
 
 export function AttrLogTable({
   data,
   entityId,
   entityType,
   ...props
-}: {
-  data: DeviceAttrLog[]
-  entityId: string
-  entityType: EntityType
-}) {
+}: AttrLogTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<DeviceAttrLog>()
@@ -27,7 +30,7 @@ export function AttrLogTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -53,7 +56,7 @@ export function AttrLogTable({
         footer: info => info.column.id,
       }),
     ],
-    [entityId, entityType],
+    [entityId, entityType, props.offset],
   )
 
   return (

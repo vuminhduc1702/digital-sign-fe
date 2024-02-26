@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
@@ -15,6 +16,7 @@ import Parther6 from '~/assets/images/landingpage/partner_6.svg'
 import Parther7 from '~/assets/images/landingpage/partner_7.svg'
 import Parther8 from '~/assets/images/landingpage/partner_8.svg'
 import Parther9 from '~/assets/images/landingpage/partner_9.svg'
+import Autoplay from 'embla-carousel-autoplay'
 
 export function SectionClient() {
   const slides = [
@@ -56,6 +58,7 @@ export function SectionClient() {
     },
   ]
   const { t } = useTranslation()
+
   return (
     <>
       <div className="h-[100px]"></div>
@@ -64,7 +67,18 @@ export function SectionClient() {
           {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center ">
-          <Carousel className=" xs2:w-[280px] xs:w-[280px] md:w-[620px] lg:w-[870px] xl:w-[1200px]">
+          <Carousel
+            opts={{
+              align: 'start',
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 2000,
+              }),
+            ]}
+            className="xs2:w-[280px] xs:w-[280px] md:w-[620px] lg:w-[870px] xl:w-[1200px]"
+          >
             <CarouselContent>
               {slides.map(item => (
                 <CarouselItem>
@@ -78,6 +92,9 @@ export function SectionClient() {
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
+
+            <CarouselDot />
+
           </Carousel>
         </div>
       </div>

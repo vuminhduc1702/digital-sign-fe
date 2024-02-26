@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
   AttrTable,
-  ComboBoxSelectAttr,
   CreateAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
@@ -13,20 +12,19 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
 
-import { type Attribute } from '~/types'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
+import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
-    [],
-  )
   const { templateId } = useParams()
+  const entityType = 'TEMPLATE'
+  const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
 
   const projectId = storage.getProject()?.id
   const {
@@ -47,14 +45,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = filteredComboboxData.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes?.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -111,7 +109,7 @@ export function Default() {
                       )}
                       triggerButton={
                         <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>Xoá:</div>
+                          <div>{t('btn:delete')}:</div>
                           <div>{Object.keys(rowSelection).length}</div>
                         </div>
                       }
@@ -137,7 +135,7 @@ export function Default() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="h-5 w-5"
+                              className="size-5"
                             />
                           }
                         />
@@ -145,15 +143,11 @@ export function Default() {
                     />
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  <ComboBoxSelectAttr
-                    entityId={templateId}
-                    entityType="TEMPLATE"
-                    setFilteredComboboxData={setFilteredComboboxData}
-                  />
+                  {/* dummyInput */}
                 </div>
               </div>
               <AttrTable
-                data={filteredComboboxData}
+                data={attrsData?.attributes ?? []}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}
