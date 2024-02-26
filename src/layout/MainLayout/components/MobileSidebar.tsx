@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/20/solid'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { Fragment } from 'react'
 
 import SideNavigation from './SideNavigation'
@@ -53,12 +53,12 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
             >
               <div className="absolute right-0 top-0 -mr-12 pt-2">
                 <button
-                  className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                  className="ml-1 flex size-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <span className="sr-only">Close sidebar</span>
-                  <XMarkIcon
-                    className="h-6 w-6 text-white"
+                  <HiOutlineXMark
+                    className="size-6 text-white"
                     aria-hidden="true"
                   />
                 </button>

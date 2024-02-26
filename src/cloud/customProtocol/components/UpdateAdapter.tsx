@@ -38,7 +38,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import { PlusIcon } from '~/components/SVGIcons'
-import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 
 type UpdateDeviceProps = {
   close: () => void
@@ -345,9 +345,9 @@ export function UpdateAdapter({
                     onClick={() => setIsShow(!isShow)}
                   >
                     {isShow ? (
-                      <ChevronDownIcon className="size-5" />
+                      <LuChevronDown className="size-5" />
                     ) : (
-                      <ChevronRightIcon className="size-5" />
+                      <LuChevronRight className="size-5" />
                     )}
                   </div>
                   <Button

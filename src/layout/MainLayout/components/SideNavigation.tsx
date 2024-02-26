@@ -13,7 +13,7 @@ import {
   AccordionTrigger,
 } from '~/components/Accordion'
 
-import { ChevronDown } from 'lucide-react'
+import { LuChevronDown } from 'react-icons/lu'
 import tongquanIcon from '~/assets/icons/sb-tongquan.svg'
 import dammayIcon from '~/assets/icons/sb-dammay.svg'
 import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
@@ -67,7 +67,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:device.title')}</div>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.DEVKIT}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -89,7 +89,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:cloud.title')}</div>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.ORG}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -146,7 +146,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:application.title')}</div>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.APPSDK}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -168,7 +168,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:payment.title')}</div>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.BILLING_PACKAGE}/${projectId}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
@@ -200,7 +200,7 @@ function SideNavigation() {
               className="aspect-square w-5"
             />
             <div>{t('sidebar:integration.title')}</div>
-            <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.AI}`}>
             <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">

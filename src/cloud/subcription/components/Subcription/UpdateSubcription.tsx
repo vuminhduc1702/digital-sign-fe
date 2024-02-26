@@ -12,7 +12,7 @@ import {
   type UpdateSubcriptionDTO,
 } from '../../api/subcriptionAPI'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import * as z from 'zod'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
@@ -153,11 +153,11 @@ export function UpdateSubcription({
             </DialogTitle>
             <div className="flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -213,7 +213,7 @@ export function UpdateSubcription({
                               <img
                                 src={btnSubmitIcon}
                                 alt="Submit"
-                                className="h-5 w-5"
+                                className="size-5"
                               />
                             }
                           />
@@ -329,7 +329,7 @@ export function UpdateSubcription({
                 <Button
                   onClick={() => setIsUpdate(true)}
                   size="md"
-                  className="bg-primary-400 w-[100px] rounded-md"
+                  className="w-[100px] rounded-md bg-primary-400"
                 >
                   {t('btn:update')}
                 </Button>

@@ -22,7 +22,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ComplexTree } from '~/components/ComplexTree'
 import { format } from 'date-fns'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
+import { LuChevronDown } from 'react-icons/lu'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },

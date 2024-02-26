@@ -1,4 +1,4 @@
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import 'intersection-observer'
 
 import {
@@ -49,30 +49,24 @@ export const Drawer = ({
         }}
       >
         <SheetContentArea>
-          <div className={cn('w-screen', sizes[size])}>    
+          <div className={cn('w-screen', sizes[size])}>
             <SheetBody>
               <SheetScroll>
                 <SheetHeader>
-                  <SheetTitle>
-                    {title}
-                  </SheetTitle>
+                  <SheetTitle>{title}</SheetTitle>
                   <SheetClose>
-                      <button
-                        className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
-                        onClick={onClose}
-                      >
-                        <span className="sr-only">Close panel</span>
-                        <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
+                    <button
+                      className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                      onClick={onClose}
+                    >
+                      <span className="sr-only">Close panel</span>
+                      <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
+                    </button>
                   </SheetClose>
-                </SheetHeader>  
-                <SheetData>
-                  {children}
-                </SheetData>
+                </SheetHeader>
+                <SheetData>{children}</SheetData>
               </SheetScroll>
-              <SheetFooter>
-                  {renderFooter()}
-              </SheetFooter>
+              <SheetFooter>{renderFooter()}</SheetFooter>
             </SheetBody>
           </div>
         </SheetContentArea>

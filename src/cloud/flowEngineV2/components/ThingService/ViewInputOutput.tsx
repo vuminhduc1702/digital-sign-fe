@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { useEffect, useState } from 'react'
 import { CodeEditor } from '~/cloud/customProtocol/components'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -50,7 +50,7 @@ export function ViewInputOutput({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>

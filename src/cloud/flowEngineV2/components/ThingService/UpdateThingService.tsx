@@ -5,7 +5,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Tab } from '@headlessui/react'
 import { useParams } from 'react-router-dom'
-import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
@@ -48,8 +47,8 @@ import { outputList } from '~/cloud/customProtocol/components/CreateService'
 import { type InputService, type ThingService } from '../../types'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { LuChevronDown } from 'react-icons/lu'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
@@ -211,7 +210,7 @@ export function UpdateThingService({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>

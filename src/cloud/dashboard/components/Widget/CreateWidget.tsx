@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import ColorPicker from 'react-pick-color'
@@ -33,8 +33,8 @@ import { type SelectInstance } from 'react-select'
 import { nameSchema } from '~/utils/schemaValidation'
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
-import { Calendar as CalendarIcon } from 'lucide-react'
+import { HiOutlineXMark } from 'react-icons/hi2'
+import { LuCalendar } from 'react-icons/lu'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -626,11 +626,11 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -820,7 +820,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -926,7 +926,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="bg-secondary-700 w-full rounded-md pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -1144,7 +1144,7 @@ export function CreateWidget({
                             <img
                               src={btnDeleteIcon}
                               alt="Delete widget attribute"
-                              className="h-10 w-10"
+                              className="size-10"
                             />
                           }
                         />
@@ -1156,7 +1156,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="bg-secondary-700 w-full rounded-md pl-3"
+                        className="w-full rounded-md bg-secondary-700 pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -1296,11 +1296,11 @@ export function CreateWidget({
                                             variant="trans"
                                             size="square"
                                             className={cn(
-                                              'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
+                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                                               !value && 'text-secondary-700',
                                             )}
                                           >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            <LuCalendar className="mr-2 size-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1397,7 +1397,7 @@ export function CreateWidget({
                                               ) === 'REALTIME'
                                             }
                                           >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
+                                            <LuCalendar className="mr-2 size-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1495,7 +1495,7 @@ export function CreateWidget({
               variant="secondary"
               onClick={close}
               startIcon={
-                <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+                <img src={btnCancelIcon} alt="Cancel" className="size-5" />
               }
               ref={cancelButtonRef}
             />
@@ -1505,7 +1505,7 @@ export function CreateWidget({
               variant="primary"
               size="md"
               startIcon={
-                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                <img src={btnSubmitIcon} alt="Submit" className="size-5" />
               }
               // disabled={!formState.isValid}
             />

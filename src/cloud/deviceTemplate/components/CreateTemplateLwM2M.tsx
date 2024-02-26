@@ -29,7 +29,7 @@ import {
 } from '../types'
 import { LWM2MData } from '../types/lwm2mXML'
 
-import { ChevronDown } from 'lucide-react'
+import { LuChevronDown } from 'react-icons/lu'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 
@@ -376,7 +376,7 @@ export default function CreateTemplateLwM2M() {
       isDone={isLoadingCreateTemplatelwm2m}
       triggerButton={
         <Button
-          className="h-9 w-9 rounded-md"
+          className="size-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -391,7 +391,7 @@ export default function CreateTemplateLwM2M() {
           size="lg"
           isLoading={isSuccessCreateTemplatelwm2m}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -496,7 +496,7 @@ export default function CreateTemplateLwM2M() {
                   className="border-b border-gray-300"
                 >
                   <AccordionTrigger className="ml-3 justify-start hover:no-underline">
-                    <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
+                    <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
                     <p className="ml-2">
                       {lw2m2.LWM2M.Object.Name} #{lw2m2.LWM2M.Object.ObjectID}
                     </p>
@@ -510,7 +510,7 @@ export default function CreateTemplateLwM2M() {
                         <div className="ml-auto">
                           <Checkbox
                             customClassName="w-5 h-5"
-                            className="mb-1 ml-5 flex h-5 w-5"
+                            className="mb-1 ml-5 flex size-5"
                             checked={
                               selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                             }
@@ -552,7 +552,7 @@ export default function CreateTemplateLwM2M() {
                                     }) => {
                                       return (
                                         <Checkbox
-                                          className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                          className="ml-auto mr-3 mt-2 flex size-5"
                                           {...field}
                                           checked={checkboxStates[itemId]}
                                           onCheckedChange={e => {

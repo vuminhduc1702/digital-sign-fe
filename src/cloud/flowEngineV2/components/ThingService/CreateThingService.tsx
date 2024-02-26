@@ -40,7 +40,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
+import { LuChevronDown } from 'react-icons/lu'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import {
   ResizableHandle,
@@ -595,12 +595,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div className="flex gap-3">
                       <Dropdown
                         icon={
-                          <img
-                            height={20}
-                            width={20}
-                            src={btnChevronDownIcon}
-                            className="text-secondary-700 hover:text-primary-400"
-                          />
+                          <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                         }
                       >
                         <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -691,12 +686,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                     <div className="flex gap-3">
                       <Dropdown
                         icon={
-                          <img
-                            height={20}
-                            width={20}
-                            src={btnChevronDownIcon}
-                            className="text-secondary-700 hover:text-primary-400"
-                          />
+                          <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                         }
                       >
                         <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">

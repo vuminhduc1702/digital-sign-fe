@@ -2,10 +2,10 @@ import { useMemo, useRef, useState } from 'react'
 
 import storage from '~/utils/storage'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { Calendar as CalendarIcon } from 'lucide-react'
+import { LuCalendar } from 'react-icons/lu'
 import { type DateRange } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -160,7 +160,7 @@ export function BillingTemplate() {
                         !date && 'text-muted-foreground',
                       )}
                     >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      <LuCalendar className="mr-2 size-4" />
                       {date?.from ? (
                         date.to ? (
                           <>
@@ -176,14 +176,14 @@ export function BillingTemplate() {
                         </span>
                       )}
                       {date?.from && (
-                        <XMarkIcon
+                        <HiOutlineXMark
                           onClick={() =>
                             setDate({
                               from: undefined,
                               to: undefined,
                             })
                           }
-                          className="absolute right-3 top-2.5 h-4 w-4 "
+                          className="absolute right-3 top-2.5 size-4 "
                         />
                       )}
                     </Button>

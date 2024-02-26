@@ -27,6 +27,8 @@ import {
   useUpdateHeartBeat,
 } from '../../api/deviceAPI/heartbeatDevice'
 
+import { type DeviceAdditionalInfo } from '../../types'
+
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
@@ -39,7 +41,7 @@ type UpdateDeviceProps = {
   close: () => void
   isOpen: boolean
   template_id: string
-  additional_info: string
+  additional_info: DeviceAdditionalInfo
 }
 
 const updateDeviceSchema = deviceSchema.required({ group_id: true })

@@ -27,7 +27,7 @@ import { Checkbox } from '~/components/Checkbox'
 import { widgetCategorySchema } from '../../types'
 import { type WidgetCategoryType } from './CreateWidget'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -175,11 +175,11 @@ export function CreateControllerButton({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -225,7 +225,7 @@ export function CreateControllerButton({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <div className="grid grid-cols-3 gap-x-2 px-2">
                     <InputField
@@ -282,7 +282,7 @@ export function CreateControllerButton({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.controller.input_list',
                       )}
-                      className="bg-secondary-700 w-full rounded-md pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <Button
                       className="rounded-md"

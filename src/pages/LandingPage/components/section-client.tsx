@@ -17,6 +17,8 @@ import Parther7 from '~/assets/images/landingpage/partner_7.svg'
 import Parther8 from '~/assets/images/landingpage/partner_8.svg'
 import Parther9 from '~/assets/images/landingpage/partner_9.svg'
 import Autoplay from 'embla-carousel-autoplay'
+import i18n from '~/i18n'
+import { cn } from '~/utils/misc'
 
 export function SectionClient() {
   const slides = [
@@ -57,13 +59,18 @@ export function SectionClient() {
       alt: '13',
     },
   ]
+
   const { t } = useTranslation()
 
   return (
     <>
-      <div className="h-[100px]"></div>
+      <div
+        className={cn({
+          'h-[270px]': i18n.language === 'en',
+        })}
+      ></div>
       <div>
-        <div className="pb-[50px] text-center text-[35px] leading-[43px]">
+        <div className="pb-[50px] text-center text-[35px] leading-[43px] xs2:mt-12 xl:mt-0">
           {t('landingpage:client.partner')}
         </div>
         <div className="flex justify-center ">
@@ -94,7 +101,6 @@ export function SectionClient() {
             <CarouselNext />
 
             <CarouselDot />
-
           </Carousel>
         </div>
       </div>

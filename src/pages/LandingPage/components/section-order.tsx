@@ -1,18 +1,16 @@
-import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SectionOrderBG from '~/assets/images/landingpage/BG_sectionorder.png'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
-import {
-  ArrowRightUpLine,
-  CheckboxCircleLineWhite,
-} from '~/components/SVGIcons'
+import { ArrowRightUpLine } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
-import storage from '~/utils/storage'
+import i18n from '~/i18n'
+import { cn } from '~/utils/misc'
 
 export function SectionOrder() {
   const navigate = useNavigate()
   const { t } = useTranslation()
+
   return (
     <>
       <div className="h-[100px]"></div>
@@ -35,22 +33,30 @@ export function SectionOrder() {
               <div className="w-[373px] text-[35px] leading-[43px] text-white xs2:w-[346px] xs2:text-[20px] sm:my-4 sm:w-[500px] sm:text-[40px]">
                 {t('landingpage:order.manage_platform')}
               </div>
-              <div className="pt-5 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
+              <div className="pt-5 text-justify text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_1')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
+              <div className="pt-4 text-justify text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_2')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
+              <div className="pt-4 text-justify text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_3')}
               </div>
-              <div className="pt-4 text-[16px] leading-[16.8px] text-white xl:w-[460px]">
+              <div className="pt-4 text-justify text-[16px] leading-[16.8px] text-white xl:w-[460px]">
                 {t('landingpage_text:section_order.text_4')}
               </div>
               <div className="flex pt-8 max-sm:flex-col max-sm:items-center">
                 <Button
                   type="button"
-                  className="rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:mb-[14px] max-sm:w-[220px] xl:px-5"
+                  className={cn(
+                    'rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:mb-[14px] xl:px-5',
+                    {
+                      'max-sm:w-[215px]': i18n.language === 'en',
+                    },
+                    {
+                      'xs2:w-[270px]': i18n.language === 'vi',
+                    },
+                  )}
                   variant="primary"
                   onClick={() => {
                     navigate(PATHS.PROJECT_MANAGE)

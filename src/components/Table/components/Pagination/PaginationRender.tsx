@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 
 import { useState } from 'react'
 
-import { ChevronLeftIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 
 import PageSizeLimit from './DropdownPageLimit'
 
@@ -85,7 +85,7 @@ export default function PaginationRender({
           disabled={pageIndex === 0 || isPreviousData}
           variant="secondaryLight"
         >
-          <ChevronLeftIcon className="size-4" />
+          <LuChevronLeft className="size-4" />
         </Button>
         <Pagination
           currentPage={pageIndex}
@@ -109,7 +109,7 @@ export default function PaginationRender({
           disabled={(pageIndex + 1) * pageSize >= totalAttrs || isPreviousData}
           variant="secondaryLight"
         >
-          <ChevronRightIcon className="size-4" />
+          <LuChevronRight className="size-4" />
         </Button>
       </div>
     </div>
