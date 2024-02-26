@@ -5,7 +5,6 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Tab } from '@headlessui/react'
 import { useParams } from 'react-router-dom'
-import * as z from 'zod'
 
 import { Button } from '~/components/Button'
 import {
@@ -48,8 +47,8 @@ import { outputList } from '~/cloud/customProtocol/components/CreateService'
 import { type InputService, type ThingService } from '../../types'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { LuChevronDown } from 'react-icons/lu'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import btnAddIcon from '~/assets/icons/btn-add.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnFullScreen from '~/assets/icons/btn-fullscreen.svg'
@@ -210,7 +209,7 @@ export function UpdateThingService({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -649,12 +648,7 @@ export function UpdateThingService({
                                 <div className="flex gap-3">
                                   <Dropdown
                                     icon={
-                                      <img
-                                        height={20}
-                                        width={20}
-                                        src={btnChevronDownIcon}
-                                        className="text-secondary-700 hover:text-primary-400"
-                                      />
+                                      <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                                     }
                                   >
                                     <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
@@ -765,12 +759,7 @@ export function UpdateThingService({
                                 <div className="flex gap-3">
                                   <Dropdown
                                     icon={
-                                      <img
-                                        height={20}
-                                        width={20}
-                                        src={btnChevronDownIcon}
-                                        className="text-secondary-700 hover:text-primary-400"
-                                      />
+                                      <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                                     }
                                   >
                                     <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">

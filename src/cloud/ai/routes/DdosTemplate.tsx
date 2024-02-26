@@ -1,7 +1,7 @@
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import btnChevronDownIcon from '~/assets/icons/btn-chevron-down.svg'
+import { LuChevronDown } from 'react-icons/lu'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import { Dialog, DialogTitle } from '~/components/Dialog'
@@ -107,7 +107,7 @@ export default function DdosTemplate() {
             { 'md:col-span-1': viewMode === 'minimize_code' },
           )}
         >
-          <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.code')}
@@ -116,15 +116,10 @@ export default function DdosTemplate() {
             <div className="flex gap-3">
               <Dropdown
                 icon={
-                  <img
-                    height={20}
-                    width={20}
-                    src={btnChevronDownIcon}
-                    className="text-secondary-700 hover:text-primary-400"
-                  />
+                  <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                 }
               >
-                <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="p-2">
                     <div
                       className="hover:background py-1 hover:cursor-pointer"
@@ -157,14 +152,14 @@ export default function DdosTemplate() {
                 width={20}
                 height={20}
                 viewBox="0 0 50 50"
-                className="hover:text-primary-400 cursor-pointer"
+                className="cursor-pointer hover:text-primary-400"
                 onClick={() => setIsOpen(true)}
               />
               <button onClick={() => callApiDdos()}>
                 <img
                   src={btnRunCode}
                   alt="Submit"
-                  className="h-5 w-5 cursor-pointer"
+                  className="size-5 cursor-pointer"
                 />
               </button>
             </div>
@@ -193,7 +188,7 @@ export default function DdosTemplate() {
             },
           )}
         >
-          <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.output')}
@@ -202,15 +197,10 @@ export default function DdosTemplate() {
             <div className="flex gap-3">
               <Dropdown
                 icon={
-                  <img
-                    height={20}
-                    width={20}
-                    src={btnChevronDownIcon}
-                    className="text-secondary-700 hover:text-primary-400"
-                  />
+                  <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
                 }
               >
-                <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div className="p-2">
                     <div
                       className="py-1 hover:cursor-pointer"
@@ -262,11 +252,11 @@ export default function DdosTemplate() {
               </DialogTitle>
               <div className="ml-3 flex h-7 items-center">
                 <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="sr-only">Close panel</span>
-                  <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                  <HiOutlineXMark className="size-6" aria-hidden="true" />
                 </button>
               </div>
             </div>

@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { XMarkIcon } from '@heroicons/react/20/solid'
+import { HiOutlineXMark } from 'react-icons/hi2'
 
-import { Form, InputField, TextAreaField } from '~/components/Form'
+import { InputField, TextAreaField } from '~/components/Form'
 import { type UpdateProjectDTO, useUpdateProject } from '../api/updateProject'
 import {
   CreateProjectSchema,
@@ -108,11 +108,11 @@ export function UpdateProject({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -241,7 +241,7 @@ export function UpdateProject({
                 >
                   {t('cloud:project_manager.add_project.upload_ava_default')}
                 </Button>
-                <div className="text-body-xs mb-3">
+                <div className="mb-3 text-body-xs">
                   {t('cloud:project_manager.add_project.upload_instruction')}
                 </div>
                 <div className="mb-3 space-y-1">
@@ -276,7 +276,7 @@ export function UpdateProject({
                       }
                     }}
                   />
-                  <div className="text-body-sm flex items-center">
+                  <div className="flex items-center text-body-sm">
                     {restoreProjectFileName}
                     {restoreProjectFileName ? (
                       <div className="pl-4">
@@ -284,7 +284,7 @@ export function UpdateProject({
                           height={12}
                           width={12}
                           src={btnRemoveIcon}
-                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
                           onClick={() => handleResetRestoreProject}
                           alt="restore project"
                         />
@@ -303,10 +303,10 @@ export function UpdateProject({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
             }
             ref={cancelButtonRef}
           />
@@ -317,7 +317,7 @@ export function UpdateProject({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           />
         </div>

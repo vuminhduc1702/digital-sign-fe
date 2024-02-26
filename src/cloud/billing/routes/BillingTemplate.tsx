@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 
 import storage from '~/utils/storage'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
 import { LuCalendar } from 'react-icons/lu'
@@ -176,7 +176,7 @@ export function BillingTemplate() {
                         </span>
                       )}
                       {date?.from && (
-                        <XMarkIcon
+                        <HiOutlineXMark
                           onClick={() =>
                             setDate({
                               from: undefined,

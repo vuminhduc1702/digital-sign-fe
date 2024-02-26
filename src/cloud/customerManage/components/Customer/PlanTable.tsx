@@ -10,7 +10,7 @@ import { BaseTable } from '~/components/Table'
 
 import { type BaseTablePagination } from '~/types'
 
-import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 import { type Subcription } from '~/cloud/subcription'
 import { InputField } from '~/components/Form'
 import { getVNDateFormat } from '~/utils/misc'
@@ -100,9 +100,9 @@ export function PlanTable({ data, ...props }: CustomerTableProps) {
               }}
             >
               {row.getIsExpanded() ? (
-                <ChevronDownIcon className="h-5 w-5" />
+                <LuChevronDown className="size-5" />
               ) : (
-                <ChevronRightIcon className="h-5 w-5" />
+                <LuChevronRight className="size-5" />
               )}
             </button>
           )

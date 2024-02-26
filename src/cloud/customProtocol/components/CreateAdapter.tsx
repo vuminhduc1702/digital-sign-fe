@@ -32,7 +32,7 @@ import { nameSchema, nameSchemaRegex } from '~/utils/schemaValidation'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { ChevronDownIcon, ChevronRightIcon } from '@radix-ui/react-icons'
+import { LuChevronDown, LuChevronRight } from 'react-icons/lu'
 
 export const protocolList = [
   {
@@ -255,7 +255,7 @@ export function CreateAdapter() {
           size="lg"
           isLoading={isLoadingAdapter}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -427,9 +427,9 @@ export function CreateAdapter() {
                     onClick={() => setIsShow(!isShow)}
                   >
                     {isShow ? (
-                      <ChevronDownIcon className="h-5 w-5" />
+                      <LuChevronDown className="size-5" />
                     ) : (
-                      <ChevronRightIcon className="h-5 w-5" />
+                      <LuChevronRight className="size-5" />
                     )}
                   </div>
                   <Button
@@ -508,7 +508,7 @@ export function CreateAdapter() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete schema"
-                          className="h-9 w-9"
+                          className="size-9"
                         />
                       }
                     />
@@ -581,7 +581,7 @@ export function CreateAdapter() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete topic"
-                          className="h-10 w-10"
+                          className="size-10"
                         />
                       }
                     />

@@ -5,10 +5,7 @@ import {
   useRef,
   type ReactNode,
 } from 'react'
-import {
-  ExclamationCircleIcon,
-  InformationCircleIcon,
-} from '@heroicons/react/24/outline'
+import { HiExclamationCircle, HiInformationCircle } from 'react-icons/hi2'
 
 import { useDisclosure } from '~/utils/hooks'
 import { Dialog, DialogTitle } from '../Dialog'
@@ -54,18 +51,18 @@ export const ConfirmationDialog = ({
         <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
           <div className="sm:flex sm:items-start">
             {icon === 'danger' && (
-              <div className="bg-primary-300 mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                <ExclamationCircleIcon
-                  className="text-primary-400 h-6 w-6"
+              <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-primary-300 sm:mx-0 sm:size-10">
+                <HiExclamationCircle
+                  className="size-6 text-primary-400"
                   aria-hidden="true"
                 />
               </div>
             )}
 
             {icon === 'info' && (
-              <div className="bg-secondary-400 mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                <InformationCircleIcon
-                  className="text-secondary-600 h-6 w-6"
+              <div className="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full bg-secondary-400 sm:mx-0 sm:size-10">
+                <HiInformationCircle
+                  className="size-6 text-secondary-600"
                   aria-hidden="true"
                 />
               </div>
@@ -86,11 +83,11 @@ export const ConfirmationDialog = ({
             <Button
               type="button"
               variant="secondary"
-              className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+              className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
               onClick={close}
               ref={cancelButtonRef}
               startIcon={
-                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+                <img src={btnCancelIcon} alt="Submit" className="size-5" />
               }
             />
           </div>

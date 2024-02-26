@@ -16,7 +16,7 @@ import {
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 
 type UpdateCustomerRoleProps = {
   customerId: string
@@ -109,7 +109,7 @@ export function UpdateCustomerRole({
       onClose={() => null}
       initialFocus={cancelButtonRef}
     >
-      <div className="inline-block h-auto w-auto transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
+      <div className="inline-block size-auto transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-h1 text-secondary-900">
@@ -117,11 +117,11 @@ export function UpdateCustomerRole({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={closeRole}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -178,10 +178,10 @@ export function UpdateCustomerRole({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={closeRole}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
             }
             ref={cancelButtonRef}
           />
@@ -192,7 +192,7 @@ export function UpdateCustomerRole({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           />
         </div>

@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/20/solid'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { Fragment } from 'react'
 
 import LPnavigation from './LPnavigation'
@@ -60,7 +60,10 @@ function MobileLP({
                   onClick={() => setSidebarOpen(false)}
                 >
                   <span className="sr-only">Close sidebar</span>
-                  <XMarkIcon className="size-6 text-white" aria-hidden="true" />
+                  <HiOutlineXMark
+                    className="size-6 text-white"
+                    aria-hidden="true"
+                  />
                 </button>
               </div>
             </Transition.Child>

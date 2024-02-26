@@ -28,7 +28,7 @@ import i18n from '~/i18n'
 import bannerLandingPage from '~/assets/images/landingpage/banner-landingpage.png'
 import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import { Bars3Icon } from '@heroicons/react/20/solid'
+import { HiOutlineBars3 } from 'react-icons/hi2'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
 import English from '~/assets/images/landingpage/uk-flag.png'
@@ -130,7 +130,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
-                  <Bars3Icon className="size-6" aria-hidden="true" />
+                  <HiOutlineBars3 className="size-6" aria-hidden="true" />
                 </button>
               ) : null}
               {hasSideBar ? (
@@ -331,7 +331,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                           className="h-auto w-8"
                         />
                       ) : (
-                        <Languages className="text-white" />
+                        <LuLanguages className="text-white" />
                       )}
                       <p className="font-bold text-white xl:hidden">
                         {languages.find(

@@ -1,6 +1,6 @@
 import { Outlet, useNavigate } from 'react-router-dom'
 import { Suspense, useState } from 'react'
-import { Bars3Icon } from '@heroicons/react/20/solid'
+import { HiOutlineBars3 } from 'react-icons/hi2'
 
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
@@ -30,11 +30,11 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
         <div className="flex">
           {hasSideBar ? (
             <button
-              className="bg-secondary-900 focus:ring-secondary-700 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset lg:hidden"
+              className="bg-secondary-900 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary-700 lg:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <HiOutlineBars3 className="size-6" aria-hidden="true" />
             </button>
           ) : null}
 
@@ -51,8 +51,6 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <Navbar />
         </div>
 
-
-        
         <Suspense
           fallback={
             <div className="flex grow items-center justify-center">

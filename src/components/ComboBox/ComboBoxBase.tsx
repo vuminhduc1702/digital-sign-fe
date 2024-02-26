@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react'
 import { Combobox, Transition } from '@headlessui/react'
-import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { HiOutlineCheck, HiOutlineXMark } from 'react-icons/hi2'
 import { useTranslation } from 'react-i18next'
 
 import { FieldWrapper, type FieldWrapperPassThroughProps } from '../Form'
@@ -91,8 +91,8 @@ export function ComboBoxBase<T extends Record<string, any>>({
                 {endIcon}
               </Combobox.Button>
             ) : null}
-            <XMarkIcon
-              className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+            <HiOutlineXMark
+              className="absolute right-0 top-1/2 mr-1 size-5 -translate-y-1/2 transform cursor-pointer opacity-50"
               onClick={() => setQuery('')}
             />
           </div>
@@ -137,8 +137,8 @@ export function ComboBoxBase<T extends Record<string, any>>({
                               active ? 'text-white' : 'text-primary-400'
                             }`}
                           >
-                            <CheckIcon
-                              className="h-5 w-5 text-primary-400"
+                            <HiOutlineCheck
+                              className="size-5 text-primary-400"
                               aria-hidden="true"
                             />
                           </span>

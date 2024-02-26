@@ -33,7 +33,7 @@ import { type SelectInstance } from 'react-select'
 import { nameSchema } from '~/utils/schemaValidation'
 import { aggSchema, widgetCategorySchema, type WidgetType } from '../../types'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import { LuCalendar } from 'react-icons/lu'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -630,7 +630,7 @@ export function CreateWidget({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>

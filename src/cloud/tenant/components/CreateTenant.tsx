@@ -22,7 +22,7 @@ import {
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { HiOutlineXMark } from 'react-icons/hi2'
 import 'react-day-picker/dist/style.css'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
@@ -167,7 +167,7 @@ export function CreateCustomer() {
                       </span>
                     )}
                     {date && (
-                      <XMarkIcon
+                      <HiOutlineXMark
                         onClick={() => setDate(null)}
                         className="absolute right-3 top-2.5 size-4 "
                       />

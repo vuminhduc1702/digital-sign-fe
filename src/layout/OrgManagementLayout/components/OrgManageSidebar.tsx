@@ -13,7 +13,7 @@ import { CreateOrg } from './CreateOrg'
 import { UpdateOrg } from './UpdateOrg'
 
 import { Combobox, Transition } from '@headlessui/react'
-import { CheckIcon, XMarkIcon } from '@heroicons/react/20/solid'
+import { HiOutlineCheck, HiOutlineXMark } from 'react-icons/hi2'
 import listIcon from '~/assets/icons/list.svg'
 import { SearchIcon } from '~/components/SVGIcons'
 import TreeView from './Tree'
@@ -115,8 +115,8 @@ function OrgManageSidebar() {
                 if (data[i].level === '1') {
                   break
                 }
-              // } else {
-              //   data[i].isShow = false
+                // } else {
+                //   data[i].isShow = false
               }
             }
           }
@@ -196,8 +196,8 @@ function OrgManageSidebar() {
               <Combobox.Button className="absolute inset-y-0 left-0 flex cursor-pointer items-center pl-2">
                 <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
               </Combobox.Button>
-              <XMarkIcon
-                className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+              <HiOutlineXMark
+                className="absolute right-0 top-1/2 mr-1 size-5 -translate-y-1/2 transform cursor-pointer opacity-50"
                 onClick={() => setSelected('')}
               />
             </div>
@@ -239,8 +239,8 @@ function OrgManageSidebar() {
                                 active ? 'text-white' : 'text-teal-600'
                               }`}
                             >
-                              <CheckIcon
-                                className="h-5 w-5"
+                              <HiOutlineCheck
+                                className="size-5"
                                 aria-hidden="true"
                               />
                             </span>
