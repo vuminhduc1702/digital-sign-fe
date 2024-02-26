@@ -43,7 +43,6 @@ function DataBaseTableContextMenu({
 
   return (
     <>
-<<<<<<< HEAD
       <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
@@ -64,26 +63,6 @@ function DataBaseTableContextMenu({
                 alt="Edit DataBase"
                 className="h-5 w-5"
               />
-=======
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit DataBase" className="size-5" />
-              }
-              onClick={open}
-            >
->>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
               {t('cloud:db_template.add_db.update_row')}
             </div>
           </DropdownMenuItem>
@@ -95,11 +74,7 @@ function DataBaseTableContextMenu({
               body={t('cloud:db_template.add_db.delete_row_confirm')}
               triggerButton={
                 <Button
-<<<<<<< HEAD
                   className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-=======
-                  className="w-full justify-start border-none hover:text-primary-400"
->>>>>>> 5278f50b9b607578eae103be06d9fc2a6fc7ba5f
                   variant="trans"
                   size="square"
                   startIcon={
