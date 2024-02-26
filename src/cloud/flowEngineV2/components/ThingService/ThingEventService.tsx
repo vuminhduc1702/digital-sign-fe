@@ -79,7 +79,7 @@ export function ThingEventServices({ serviceName }: ThingServicesTab2Props) {
           </div>
         </div>
         <EventServiceTable
-          data={eventServiceData?.data || []}
+          data={eventServiceData?.data ?? []}
           offset={offset}
           setOffset={setOffset}
           total={0}

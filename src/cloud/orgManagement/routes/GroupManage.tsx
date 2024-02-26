@@ -45,7 +45,7 @@ export function GroupManage() {
   const rowSelectionKey = Object.keys(rowSelection)
 
   const aoo: Array<{ [key: string]: string }> | undefined =
-    groupData?.groups.reduce((acc, curr, index) => {
+    groupData?.groups?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
@@ -83,7 +83,7 @@ export function GroupManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }

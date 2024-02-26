@@ -59,7 +59,7 @@ const MainTenant = () => {
     <ContentLayout title="Tenant">
       <div className="flex grow flex-col px-9 py-3 shadow-lg">
         <div
-          className="border-secondary-700 mb-6 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
+          className="mb-6 mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
           onClick={() => navigate(-1)}
         >
           <img src={narrowLeft} alt="left" className="aspect-square w-[20px]" />
@@ -102,7 +102,7 @@ const MainTenant = () => {
         </div>
 
         <BillingCustomerTable
-          data={formatData(customerData?.tenant || [])}
+          data={formatData(customerData?.tenant ?? [])}
           offset={offset}
           setOffset={setOffset}
           total={customerData?.total}

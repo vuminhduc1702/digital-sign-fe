@@ -63,11 +63,11 @@ type UpdateEventProps = {
   isOpen: boolean
   data: EventType
   dataAction: Action[]
-  conditionData: Condition[]
+  conditionData: Condition[] | null
   dateArr: any[]
   type: string
-  startTimeProps: string
-  endTimeProps: string
+  startTimeProps?: string
+  endTimeProps?: string
 }
 
 const updateCmdSchema = cmdSchema
@@ -105,10 +105,10 @@ export function UpdateEvent({
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
 
-  const actionTypeProp: ActionType = JSON.parse(data.action)[0].action_type
-  const thingIdOptionProp = JSON.parse(data.cmd).thing_id
-  const serviceOptionProp = JSON.parse(data.cmd).service_name
-  const inputDataProp = JSON.parse(data.cmd).input
+  const actionTypeProp: ActionType = data.action[0].action_type
+  const thingIdOptionProp = data.cmd.thing_id
+  const serviceOptionProp = data.cmd.service_name
+  const inputDataProp = data.cmd.input
 
   const [actionType, setActionType] = useState<ActionType>(actionTypeProp)
   const { data: thingData, isLoading: isLoadingThing } = useGetEntityThings({
@@ -132,11 +132,11 @@ export function UpdateEvent({
   } = useForm<UpdateEventDTO['data']>({
     resolver: updateEventSchema && zodResolver(updateEventSchema),
     defaultValues: {
-      onClick: (data.onClick as unknown as string) === 'true',
+      onClick: data.onClick,
       name,
       action: dataAction,
       retry: data.retry,
-      status: (data.status as unknown as string) === 'true',
+      status: data.status,
       condition: conditionData,
       interval: renderInterval(),
       type,
@@ -252,7 +252,7 @@ export function UpdateEvent({
         `cmd.input.${idx}.type`,
         element.type === 'string' ? 'str' : element.type,
       )
-      setValue(`cmd.input.${idx}.value`, inputDataProp[element.name])
+      setValue(`cmd.input.${idx}.value`, inputDataProp?.[element.name])
     })
   }, [watch('cmd.handle_service')])
 
@@ -466,7 +466,7 @@ export function UpdateEvent({
                         <Checkbox
                           {...field}
                           checked={value}
-                          onCheckedChange={(e) => {
+                          onCheckedChange={e => {
                             onChange(e)
                             if (e) {
                               setValue('type', 'event')
@@ -881,7 +881,7 @@ export function UpdateEvent({
                                   </FieldWrapper>
                                 ) : (
                                   <InputField
-                                    defaultValue={inputDataProp[element.name]}
+                                    defaultValue={inputDataProp?.[element.name]}
                                     label={t(
                                       'cloud:custom_protocol.service.service_input.value',
                                     )}

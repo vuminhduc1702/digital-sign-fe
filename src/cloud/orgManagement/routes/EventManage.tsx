@@ -46,7 +46,7 @@ export function EventManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    eventData?.events.reduce((acc, curr, index) => {
+    eventData?.events?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -82,7 +82,7 @@ export function EventManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -116,7 +116,7 @@ export function EventManage() {
           </div>
         </div>
         <EventTable
-          data={eventData?.events || []}
+          data={eventData?.events ?? []}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

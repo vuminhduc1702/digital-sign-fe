@@ -68,8 +68,6 @@ export function UpdateUser({
 
   const { mutate, isLoading, isSuccess } = useUpdateUser()
 
-  const dataProfile = JSON.parse(profile)
-
   useEffect(() => {
     if (isSuccess) {
       close()
@@ -85,7 +83,7 @@ export function UpdateUser({
         phone,
         org_id,
         role_id,
-        profile: dataProfile,
+        profile,
       },
     })
 
@@ -151,7 +149,7 @@ export function UpdateUser({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -161,7 +159,7 @@ export function UpdateUser({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />

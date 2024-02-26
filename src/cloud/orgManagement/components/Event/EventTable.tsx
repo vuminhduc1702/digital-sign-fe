@@ -14,7 +14,7 @@ import { useTriggerEvent } from '../../api/eventAPI/triggerEvent'
 import { UpdateEvent } from './UpdateEvent'
 import i18n from '~/i18n'
 
-import { type EventType } from '../../types'
+import { type Action, type Condition, type EventType } from '../../types'
 
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
@@ -77,42 +77,36 @@ function EventTableContextMenu({
   dataRow: EventType
 }) {
   const { t } = useTranslation()
-  const [dataAction, setDataAction] = useState([])
-  const [conditionData, setConditionData] = useState([])
-  const [startTime, setStartTime] = useState('')
-  const [endTime, setEndTime] = useState('')
-  const [typeEvent, setTypeEvent] = useState('')
+  const [dataAction, setDataAction] = useState<Action[]>([])
+  const [conditionData, setConditionData] = useState<Condition[] | null>([])
+  const [startTime, setStartTime] = useState<string>()
+  const [endTime, setEndTime] = useState<string>()
+  const [typeEvent, setTypeEvent] = useState<string>('')
   const [todos, setTodos] = useState(initialTodos)
 
   useEffect(() => {
-    typeof dataRow?.action === 'string' &&
-      setDataAction(JSON.parse(dataRow?.action))
-    typeof dataRow?.condition === 'string' &&
-      setConditionData(JSON.parse(dataRow?.condition))
-    const scheduleParse =
-      typeof dataRow?.schedule === 'string' && JSON.parse(dataRow?.schedule)
-    const myArray = scheduleParse.repeat?.split(',')
-    if (myArray?.length > 0 && myArray[0]) {
+    setDataAction(dataRow?.action)
+    setConditionData(dataRow?.condition)
+    const myArray = dataRow?.schedule?.repeat?.split(',')
+    if (Array.isArray(myArray)) {
       setTypeEvent('schedule')
       const newArr = todos.map(item => {
-        if (myArray.includes(item.value)) {
+        if (myArray?.includes(item.value)) {
           return { ...item, selected: true }
         } else return { ...item, selected: false }
       })
       setTodos(newArr)
-      setStartTime(scheduleParse?.time)
+      setStartTime(dataRow?.schedule?.time)
     } else {
       setTypeEvent('event')
-      const intervalObj =
-        typeof dataRow?.interval === 'string' && JSON.parse(dataRow?.interval)
       const newInterval = todos.map(item => {
-        if (intervalObj[item.value]) {
+        if (dataRow?.interval?.[item.value]) {
           return { ...item, selected: true }
         } else return { ...item, selected: false }
       })
       setTodos(newInterval)
-      setStartTime(intervalObj?.start_time)
-      setEndTime(intervalObj?.end_time)
+      setStartTime(dataRow?.interval?.start_time)
+      setEndTime(dataRow?.interval?.end_time)
     }
   }, [id, dataRow])
 
@@ -262,12 +256,9 @@ export function EventTable({
           const { id } = info.row.original
           return (
             <span
-              className={`${
-                (info.row.original.onClick as unknown as string) === 'true' &&
-                'cursor-pointer'
-              }`}
+              className={`${info.row.original.onClick && 'cursor-pointer'}`}
               onClick={() =>
-                (info.row.original.onClick as unknown as string) === 'true' &&
+                info.row.original.onClick &&
                 mutate({
                   data: {
                     event_id: id,
@@ -276,7 +267,7 @@ export function EventTable({
                 })
               }
             >
-              {(info.row.original.onClick as unknown as string) === 'true' && (
+              {info.row.original.onClick && (
                 <Button
                   className="w-30 justify-start rounded-md border-none"
                   variant="secondaryLight"
@@ -294,7 +285,7 @@ export function EventTable({
         header: () => (
           <span>{t('cloud:org_manage.event_manage.table.status')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => info.getValue().toString(),
         footer: info => info.column.id,
       }),
       columnHelper.display({

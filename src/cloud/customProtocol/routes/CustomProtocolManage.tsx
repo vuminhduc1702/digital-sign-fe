@@ -49,7 +49,7 @@ export function CustomProtocolManage() {
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
     adapterData?.adapters
-      ? adapterData?.adapters.reduce((acc, curr, index) => {
+      ? adapterData?.adapters?.reduce((acc, curr, index) => {
           if (rowSelectionKey.includes(curr.id)) {
             const temp = {
               [t('table:no')]: (index + 1).toString(),
@@ -91,7 +91,7 @@ export function CustomProtocolManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -125,7 +125,7 @@ export function CustomProtocolManage() {
           </div>
         </div>
         <AdapterTable
-          data={adapterData?.adapters || []}
+          data={adapterData?.adapters ?? []}
           offset={offset}
           setOffset={setOffset}
           total={adapterData?.total ?? 0}

@@ -58,7 +58,7 @@ export function InfoCustomer() {
             size="square"
             onClick={() => navigate(-1)}
             startIcon={
-              <img src={narrowLeft} alt="Delete thing" className="h-5 w-5" />
+              <img src={narrowLeft} alt="Delete thing" className="size-5" />
             }
           >
             <span>{t('btn:back')}</span>
@@ -145,7 +145,7 @@ export function InfoCustomer() {
           }}
           className="mb-2 flex items-center hover:text-blue-300"
         >
-          <div className="mr-2 h-1.5 w-1.5 rounded-md bg-blue-500"></div>
+          <div className="mr-2 size-1.5 rounded-md bg-blue-500"></div>
           {t('billing:customer_manage.payment_history')}
         </div>
         <div
@@ -155,7 +155,7 @@ export function InfoCustomer() {
           }}
           className="flex items-center hover:text-blue-300"
         >
-          <div className="mr-2 h-1.5 w-1.5 rounded-md bg-blue-500"></div>
+          <div className="mr-2 size-1.5 rounded-md bg-blue-500"></div>
           {t('billing:customer_manage.sign_history')}
         </div>
       </div>

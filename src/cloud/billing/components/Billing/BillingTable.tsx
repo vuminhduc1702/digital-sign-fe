@@ -42,10 +42,10 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
-              icon={<EyeOpenIcon className="h-5 w-5" />}
+              icon={<EyeOpenIcon className="size-5" />}
               onClick={() => {
                 open()
               }}
@@ -57,7 +57,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
               fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
             >
               <MenuItem
-                icon={<DownloadIcon className="h-5 w-5" />}
+                icon={<DownloadIcon className="size-5" />}
                 onClick={() => {}}
               >
                 {t('billing:manage_bill.export_PDF')}
@@ -149,7 +149,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -226,7 +226,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
+                    <img src={btnFilterIcon} alt="" className="size-5" />
                   }
                 />
               </PopoverTrigger>
@@ -324,7 +324,7 @@ export function BillingTable({
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-2 block"
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_bill')}
       {...props}

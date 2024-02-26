@@ -206,11 +206,11 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                <XMarkIcon className="size-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -313,11 +313,11 @@ export function UpdateThingService({
                 ) : null}
               </div>
               <Tab.Group>
-                <Tab.List className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
+                <Tab.List className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
                   <Tab
                     className={({ selected }) =>
                       clsx(
-                        'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
+                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                         { 'text-primary-400': selected },
                       )
                     }
@@ -329,7 +329,7 @@ export function UpdateThingService({
                   <Tab
                     className={({ selected }) =>
                       clsx(
-                        'text-body-sm hover:text-primary-400 flex cursor-pointer gap-2 py-2.5 focus:outline-none',
+                        'flex cursor-pointer gap-2 py-2.5 text-body-sm hover:text-primary-400 focus:outline-none',
                         { 'text-primary-400': selected },
                       )
                     }
@@ -357,7 +357,7 @@ export function UpdateThingService({
                           )}
                         >
                           <div className="relative flex flex-col gap-2 md:col-span-1">
-                            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+                            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.input')}
@@ -481,7 +481,7 @@ export function UpdateThingService({
                                     size="square"
                                     variant="none"
                                     className={cn(
-                                      'hover:bg-secondary-500 h-9',
+                                      'h-9 hover:bg-secondary-500',
                                       {
                                         '!justify-center': fullScreen,
                                       },
@@ -491,7 +491,7 @@ export function UpdateThingService({
                                       <img
                                         src={btnDeleteIcon}
                                         alt="Delete input"
-                                        className={cn('h-10 w-10')}
+                                        className={cn('size-10')}
                                       />
                                     }
                                   />
@@ -512,7 +512,7 @@ export function UpdateThingService({
                               <img
                                 src={btnAddIcon}
                                 alt="add-icon"
-                                className="h-5 w-5 cursor-pointer"
+                                className="size-5 cursor-pointer"
                               />
                               <label className="ml-2 cursor-pointer">
                                 {t('cloud:custom_protocol.service.add_other')}
@@ -541,7 +541,7 @@ export function UpdateThingService({
                               </div>
                             </div>
                             <div className="mt-1.5 flex flex-col gap-y-3">
-                              <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
+                              <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
                                 <div className="flex gap-3 ">
                                   <p className="text-table-header">
                                     {t(
@@ -560,9 +560,7 @@ export function UpdateThingService({
                                   const typeOutput = outputList.filter(
                                     data => data.value === item.output,
                                   )
-                                  const inputData =
-                                    typeof item.input === 'string' &&
-                                    JSON.parse(item.input)
+
                                   return (
                                     <div className="mt-1.5">
                                       <TooltipProvider>
@@ -572,7 +570,7 @@ export function UpdateThingService({
                                           </TooltipTrigger>
                                           <TooltipContent side="right">
                                             <div>
-                                              <div className="text-table-header mb-4">
+                                              <div className="mb-4 text-table-header">
                                                 {item.name}
                                               </div>
                                               <div>
@@ -584,7 +582,7 @@ export function UpdateThingService({
                                                     :
                                                   </div>
                                                   <ul>
-                                                    {inputData?.map(
+                                                    {item?.input?.map(
                                                       (data: InputService) => {
                                                         const type =
                                                           outputList.filter(
@@ -642,7 +640,7 @@ export function UpdateThingService({
                               )}
                               ref={codeEditorRef}
                             >
-                              <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+                              <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                 <div className="flex gap-3">
                                   <p className="text-table-header">
                                     {t('cloud:custom_protocol.service.code')}
@@ -659,7 +657,7 @@ export function UpdateThingService({
                                       />
                                     }
                                   >
-                                    <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                       <div className="p-2">
                                         <div
                                           className="hover:background py-1 hover:cursor-pointer"
@@ -734,7 +732,7 @@ export function UpdateThingService({
                                       onClick={() => setTypeInput('Run')}
                                       src={btnRunCode}
                                       alt="Submit"
-                                      className="h-5 w-5 cursor-pointer"
+                                      className="size-5 cursor-pointer"
                                     />
                                   </button>
                                 </div>
@@ -758,7 +756,7 @@ export function UpdateThingService({
                               )}
                               ref={resultEditorRef}
                             >
-                              <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+                              <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
                                 <div className="flex gap-3">
                                   <p className="text-table-header">
                                     {t('cloud:custom_protocol.service.output')}
@@ -775,7 +773,7 @@ export function UpdateThingService({
                                       />
                                     }
                                   >
-                                    <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                    <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                       <div className="p-2">
                                         <div
                                           className="py-1 hover:cursor-pointer"
@@ -836,7 +834,7 @@ export function UpdateThingService({
                               onClick={handleFullScreen}
                               src={btnFullScreen}
                               alt="fullscreen-update-service"
-                              className="h-5 w-5 cursor-pointer"
+                              className="size-5 cursor-pointer"
                             />
                           </div>
                         </div>
@@ -861,10 +859,10 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
+            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
             }
             ref={cancelButtonRef}
           />
@@ -877,7 +875,7 @@ export function UpdateThingService({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
           ></Button>
         </div>

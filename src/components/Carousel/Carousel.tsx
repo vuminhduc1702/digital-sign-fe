@@ -189,7 +189,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        ' mx-[46px] max-w-[215px] shrink-0 grow-0 gap-x-9',
+        'mx-[46px] max-w-[215px] shrink-0 grow-0 gap-x-9',
         orientation === 'horizontal' ? 'px-2' : 'pt-4',
         className,
       )}
@@ -211,7 +211,7 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'absolute size-8 rounded-full ',
+        'absolute size-8 rounded-full hover:bg-primary-400 hover:text-white',
         orientation === 'horizontal'
           ? '-left-10 top-1/2 -translate-y-1/2'
           : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -240,7 +240,8 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'absolute size-8 rounded-full ',
+        'absolute size-8 rounded-full hover:bg-primary-400 hover:text-white',
+
         orientation === 'horizontal'
           ? 'top-1/2 -translate-y-1/2 xs2:-right-0 xs:-right-2 md:-right-10 xl:-right-10'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -302,7 +303,7 @@ const CarouselDot = React.forwardRef<
   const { selectedIndex, scrollSnaps, onDotButtonClick } = useDotButton(api)
 
   return (
-    <div className={cn(styles.embla__dots, className)}>
+    <div className={cn(styles.embla__dots)}>
       {scrollSnaps.map((_, index) => (
         <button
           ref={ref}
@@ -315,6 +316,7 @@ const CarouselDot = React.forwardRef<
                 ? ` ${styles['embla__dot--selected']}`
                 : '',
             ),
+            className,
           )}
           {...props}
         />

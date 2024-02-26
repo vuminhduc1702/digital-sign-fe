@@ -121,7 +121,7 @@
           "delete_attr": "Delete Attribute",
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
-          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?", 
+          "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?",
           "search": "Search..."
         },
         "add_org": {
@@ -1201,7 +1201,7 @@
       "send": "Send",
       "company": "Viettel High-Tech Industry Corporation",
       "responsible_person": "Content Manager: Mr.Le Ngoc Quy",
-      "cskh": "quyln3@viettel.com.vn",
+      "cskh": "innoway@viettel.com.vn",
       "follow": "Follow us:",
       "phone_used": "0869 9999 904",
       "cre": "Copyright Viettel High Tech"

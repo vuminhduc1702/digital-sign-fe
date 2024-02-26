@@ -27,7 +27,7 @@ export function SectionFooter() {
         style={{ backgroundImage: `url(${BgFooter})`, backgroundSize: 'cover' }}
       >
         <div className="flex h-fit  xs2:w-[200px] xs2:flex-col xs2:items-center xs:flex-col xs:items-center sm:w-[500px] sm:flex-col sm:items-center md:w-[760px] md:flex-col md:items-center lg:w-[800px] lg:flex-row xl:w-[1040px] xl:flex-row">
-          <div className="ml-[40px] xl:py-[60px] font-semibold leading-[56.74px] text-white xs2:ml-0 xs2:w-[300px] xs2:pt-8 xs2:text-center xs2:text-[30px] sm:w-[300px] md:w-[400px] lg:w-[250px] xl:w-[450px] xl:text-[48px]">
+          <div className="ml-[40px] font-semibold leading-[56.74px] text-white xs2:ml-0 xs2:w-[300px] xs2:pt-8 xs2:text-center xs2:text-[30px] sm:w-[300px] md:w-[400px] lg:w-[250px] xl:w-[450px] xl:py-[60px] xl:text-[48px]">
             {t('landingpage:footer.client_support')}
           </div>
           <div className="flex pl-[150px] pt-[20px] xs2:mb-[40px] xs2:w-[300px] xs2:flex-col xs2:pl-[5px] xs:mb-[40px] xs:w-[370px] xs:flex-col xs:pl-[37px] sm:w-[460px] sm:flex-col sm:pl-[20px] md:mb-[40px] lg:w-[650px] xl:w-[750px] xl:justify-center">
@@ -102,7 +102,7 @@ export function SectionFooter() {
       </div>
       <div className="flex justify-center bg-[#3A3A3A] xl:h-[250px] xl:flex-row">
         <div className="xs2:w-[360px] xs:w-[370px] sm:w-[570px] md:w-[700px] lg:w-[1040px] xl:w-[1040px]">
-          <div className="flex xL:items-center border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row">
+          <div className="flex border-b border-[#4D4D4D] pt-[60px] xs2:mx-[40px] xs2:flex-col xs:mx-[40px] xs:flex-col sm:mx-[40px] sm:flex-col md:mx-[40px] md:h-[270px] md:flex-col lg:mx-[27px] lg:h-[200px] lg:flex-row xl:mx-0 xl:h-[200px] xl:flex-row xl:items-center">
             <div className="pb-[15px] pr-[20px]  pt-[5px]">
               <img src={LogoViettel} alt="" />
             </div>
@@ -111,17 +111,17 @@ export function SectionFooter() {
                 {t('landingpage:footer.company')}
               </div>
             </div>
-            <div className="xl:pl-[20px] xs2:pl-0 xs:pl-0 sm:pl-0 md:pl-0">
+            <div className="xs2:pl-0 xs:pl-0 sm:pl-0 md:pl-0 xl:pl-[20px]">
               <a
                 className="flex pb-[15px] pt-[10px]"
-                href="mailto:cskh@viettel.com.vn"
+                href="mailto:innoway@viettel.com.vn"
               >
                 <MailSendFill width={33} height={33} viewBox="0 0 33 33" />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   {t('landingpage:footer.cskh')}
                 </div>
               </a>
-              <a className="flex pb-[15px]" href="tel:0123456789">
+              <a className="flex pb-[15px]" href="tel:08699999904">
                 <PhoneFill width={33} height={33} viewBox="0 0 33 33" />
                 <div className="pl-[10px] text-[20px] leading-[26px] text-white">
                   {t('landingpage:footer.phone_used')}

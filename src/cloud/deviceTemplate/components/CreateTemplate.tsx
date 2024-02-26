@@ -19,7 +19,6 @@ import {
   SelectField,
   type SelectOption,
 } from '~/components/Form'
-import { flattenData } from '~/utils/misc.ts'
 import storage from '~/utils/storage'
 import {
   useCreateTemplate,
@@ -94,14 +93,10 @@ export default function CreateTemplate() {
     name: 'attributes',
     control,
   })
-  const { acc: RuleFlattenData } = flattenData(ruchainsData?.data, [
-    'id',
-    'name',
-  ])
 
-  const RuleSelectOptions = RuleFlattenData?.map(ruchains => ({
+  const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
     label: ruchains?.name,
-    value: JSON.parse(ruchains?.id)?.id,
+    value: ruchains?.id?.id,
   }))
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
@@ -128,7 +123,7 @@ export default function CreateTemplate() {
       resetData={() => reset()}
       triggerButton={
         <Button
-          className="h-9 w-9 rounded-md"
+          className="size-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -143,7 +138,7 @@ export default function CreateTemplate() {
           size="lg"
           isLoading={isLoadingCreateTemplate}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -176,7 +171,7 @@ export default function CreateTemplate() {
       >
         <>
           <Button
-            className="h-9 w-9 rounded-md"
+            className="size-9 rounded-md"
             variant="trans"
             size="square"
             startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -333,7 +328,7 @@ export default function CreateTemplate() {
                   <img
                     src={btnDeleteIcon}
                     alt="Delete device template"
-                    className="h-8 w-8"
+                    className="size-8"
                   />
                 }
               />

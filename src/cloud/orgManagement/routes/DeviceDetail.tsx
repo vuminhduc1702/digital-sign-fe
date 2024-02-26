@@ -19,7 +19,6 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
-import { flattenData } from '~/utils/misc'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -27,7 +26,6 @@ export function DeviceDetail() {
 
   const params = useParams()
   const deviceId = params.deviceId as string
-  const groupId = params.groupId as string
   const projectId = params.projectId as string
   const entityTypeAttr = 'DEVICE'
 
@@ -55,12 +53,6 @@ export function DeviceDetail() {
     },
   })
 
-  const { acc: attrLogFlattenData } = flattenData(deviceAttrData?.logs, [
-    'ts',
-    'attribute_key',
-    'value',
-  ])
-
   // MQTT Log
   const {
     data: mqttLogData,
@@ -73,16 +65,6 @@ export function DeviceDetail() {
       suspense: false,
     },
   })
-
-  const { acc: mqttMessageFlattenData } = flattenData(mqttLogData?.messages, [
-    'project_id',
-    'created_by',
-    'owner',
-    'topic',
-    'device_id',
-    'payload_as_string',
-    'ts',
-  ])
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -109,7 +91,7 @@ export function DeviceDetail() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrsData?.attributes.reduce((acc, curr, index) => {
+    attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -205,7 +187,7 @@ export function DeviceDetail() {
                       )}
                       triggerButton={
                         <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>Xoá:</div>
+                          <div>{t('btn:delete')}:</div>
                           <div>{Object.keys(rowSelection).length}</div>
                         </div>
                       }
@@ -243,7 +225,7 @@ export function DeviceDetail() {
                 </div>
               </div>
               <AttrTable
-                data={attrsData?.attributes || []}
+                data={attrsData?.attributes ?? []}
                 entityId={deviceId}
                 entityType="DEVICE"
                 rowSelection={rowSelection}
@@ -262,7 +244,7 @@ export function DeviceDetail() {
                 </div>
               </div>
               <AttrLogTable
-                data={attrLogFlattenData}
+                data={deviceAttrData?.logs ?? []}
                 offset={deviceAttrOffset}
                 setOffset={setDeviceAttrOffset}
                 total={deviceAttrData?.total ?? 0}
@@ -283,7 +265,7 @@ export function DeviceDetail() {
                 </div>
               </div>
               <MQTTMessageLogTable
-                data={mqttMessageFlattenData}
+                data={mqttLogData?.messages ?? []}
                 entityId={deviceId}
                 entityType="DEVICE"
               />

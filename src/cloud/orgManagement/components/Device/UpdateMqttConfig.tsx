@@ -1,4 +1,5 @@
 import { t } from 'i18next'
+import { useEffect } from 'react'
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -12,7 +13,8 @@ import {
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '~/components/Checkbox'
-import { useEffect } from 'react'
+
+import { type DeviceAdditionalInfo } from '../../types'
 
 export const mqttConfigSchema = z.object({
   clean_session: z.boolean(),
@@ -34,7 +36,7 @@ type UpdateMqttConfigProps = {
   deviceId: string
   close: () => void
   isOpen: boolean
-  additional_info: string
+  additional_info: DeviceAdditionalInfo
 }
 
 export function UpdateMqttConfig({
@@ -45,8 +47,7 @@ export function UpdateMqttConfig({
 }: UpdateMqttConfigProps) {
   const { mutate, isLoading, isSuccess } = useUpdateMqttConfig()
 
-  const additionalInfo = JSON.parse(additional_info)
-  const MqttConfig = additionalInfo.mqtt_config || {}
+  const MqttConfig = additional_info.mqtt_config || {}
   const {
     register,
     formState,
@@ -93,7 +94,7 @@ export function UpdateMqttConfig({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -103,7 +104,7 @@ export function UpdateMqttConfig({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />

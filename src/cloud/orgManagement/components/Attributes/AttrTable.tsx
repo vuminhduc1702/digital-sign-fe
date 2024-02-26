@@ -140,7 +140,7 @@ export function AttrTable({
   entityType,
   ...props
 }: {
-  data: Attribute[]
+  data?: Attribute[]
   entityId: string
   entityType: EntityType
   rowSelection: { [key: string]: boolean }
@@ -265,7 +265,7 @@ export function AttrTable({
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"
-      data={dataSorted}
+      data={dataSorted ?? []}
       columns={columns}
       onDataText={t('table:no_attr')}
       isAbsoluteBtn={false}

@@ -7,9 +7,7 @@ import {
   CreateThingService,
   ThingServiceTable,
 } from '../components/ThingService'
-
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
-import { flattenData } from '~/utils/misc'
 
 export function ThingServices() {
   const { t } = useTranslation()
@@ -30,20 +28,6 @@ export function ThingServices() {
     config: { keepPreviousData: true },
   })
 
-  const { acc: thingServiceFlattenData, extractedPropertyKeys } = flattenData(
-    thingData?.data,
-    [
-      'id',
-      'name',
-      'create_ts',
-      'description',
-      'input',
-      'output',
-      'fail_limit',
-      'lock_time',
-    ],
-  )
-
   return (
     <>
       <TitleBar
@@ -57,7 +41,7 @@ export function ThingServices() {
           </div>
         </div>
         <ThingServiceTable
-          data={thingServiceFlattenData}
+          data={thingData?.data ?? []}
           offset={offset}
           // setOffset={setOffset}
           total={0}

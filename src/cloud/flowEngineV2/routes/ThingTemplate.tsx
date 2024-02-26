@@ -50,7 +50,7 @@ export function ThingTemplate() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    thingData?.data?.list.reduce((acc, curr, index) => {
+    thingData?.data?.list?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -87,7 +87,7 @@ export function ThingTemplate() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -109,7 +109,7 @@ export function ThingTemplate() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -125,12 +125,11 @@ export function ThingTemplate() {
                 const value = e.target.value
                 setSearchQuery(value)
               }}
-              
             />
           </div>
         </div>
         <ThingTable
-          data={thingData?.data?.list || []}
+          data={thingData?.data?.list ?? []}
           offset={offset}
           setOffset={setOffset}
           total={thingData?.data?.total ?? 0}

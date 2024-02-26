@@ -63,7 +63,7 @@ export function OrgManage() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData.reduce((acc, curr, index) => {
+    filteredComboboxData?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -137,7 +137,7 @@ export function OrgManage() {
                       )}
                       triggerButton={
                         <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>Xoá:</div>
+                          <div>{t('btn:delete')}:</div>
                           <div>{Object.keys(rowSelection).length}</div>
                         </div>
                       }
@@ -163,7 +163,7 @@ export function OrgManage() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="h-5 w-5"
+                              className="size-5"
                             />
                           }
                         />
@@ -174,7 +174,7 @@ export function OrgManage() {
                   {/* dummyInput */}
                   <InputField
                     type="text"
-                    placeholder="Search"
+                    placeholder={t('search:title')}
                     onChange={e => {
                       const value = e.target.value
                       setSearchQuery(value)

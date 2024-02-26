@@ -13,7 +13,7 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
-  return enArr.map(item => {
+  return enArr?.map(item => {
     if (item === 'read') {
       return 'Xem'
     } else if (item === 'modify') {
@@ -52,7 +52,7 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined = data?.roles.reduce(
+  const aoo: Array<{ [key: string]: string }> | undefined = data?.roles?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
@@ -92,7 +92,7 @@ export function RoleSidebar() {
                 body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -114,7 +114,7 @@ export function RoleSidebar() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -127,7 +127,7 @@ export function RoleSidebar() {
         </div>
         <RoleTable
           project_id={projectId}
-          data={data?.roles || []}
+          data={data?.roles ?? []}
           offset={offset}
           setOffset={setOffset}
           total={data?.total || 0}

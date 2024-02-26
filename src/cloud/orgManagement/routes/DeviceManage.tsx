@@ -52,7 +52,7 @@ export function DeviceManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    deviceData?.devices.reduce((acc, curr, index) => {
+    deviceData?.devices?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
@@ -93,7 +93,7 @@ export function DeviceManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -127,7 +127,7 @@ export function DeviceManage() {
           </div>
         </div>
         <DeviceTable
-          data={deviceData?.devices || []}
+          data={deviceData?.devices ?? []}
           offset={offset}
           setOffset={setOffset}
           total={deviceData?.total ?? 0}

@@ -51,7 +51,7 @@ export function UserManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    userData?.users.reduce((acc, curr, index) => {
+    userData?.users?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -91,7 +91,7 @@ export function UserManage() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -113,7 +113,7 @@ export function UserManage() {
                       <img
                         src={btnSubmitIcon}
                         alt="Submit"
-                        className="h-5 w-5"
+                        className="size-5"
                       />
                     }
                   />
@@ -125,7 +125,7 @@ export function UserManage() {
           </div>
         </div>
         <UserTable
-          data={userData?.users || []}
+          data={userData?.users ?? []}
           offset={offset}
           setOffset={setOffset}
           total={userData?.total ?? 0}

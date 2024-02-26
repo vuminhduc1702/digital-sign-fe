@@ -47,7 +47,7 @@ export function FirmwareTemplate() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    firmwareData?.data.reduce((acc, curr, index) => {
+    firmwareData?.data?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -87,7 +87,7 @@ export function FirmwareTemplate() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -121,7 +121,7 @@ export function FirmwareTemplate() {
           </div>
         </div>
         <FirmWareTable
-          data={firmwareData?.data || []}
+          data={firmwareData?.data ?? []}
           offset={offset}
           setOffset={setOffset}
           total={firmwareData?.total ?? 0}

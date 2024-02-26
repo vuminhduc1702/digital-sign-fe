@@ -48,7 +48,7 @@ export function GroupDetail() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrsData?.attributes.reduce((acc, curr, index) => {
+    attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -88,7 +88,7 @@ export function GroupDetail() {
                 )}
                 triggerButton={
                   <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>Xoá:</div>
+                    <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 }
@@ -126,7 +126,7 @@ export function GroupDetail() {
           </div>
         </div>
         <AttrTable
-          data={attrsData?.attributes || []}
+          data={attrsData?.attributes ?? []}
           entityId={groupId}
           entityType={entityType}
           rowSelection={rowSelection}

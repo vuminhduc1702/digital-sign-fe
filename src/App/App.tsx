@@ -93,7 +93,7 @@ function App() {
 
   if (import.meta.env.PROD) {
     console.log = () => {}
-    // console.error = () => {}
+    console.error = () => {}
     console.debug = () => {}
   }
 
