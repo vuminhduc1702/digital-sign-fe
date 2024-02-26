@@ -220,10 +220,10 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       {t('user:login')}
                     </Button>
                   </div>
-                  <div className="mx-1 flex min-w-fit items-center justify-center text-white">
+                  <div className="mr-1 flex min-w-fit  items-center justify-center text-white">
                     <Button
                       type="button"
-                      className="w-full rounded-r-lg rounded-tl-lg bg-red-950 px-6 text-left font-bold text-white"
+                      className=" w-full rounded-r-lg rounded-tl-lg  bg-red-950 px-6 text-left text-white"
                       variant="primary"
                       onClick={() => navigate(PATHS.REGISTER)}
                     >
@@ -237,7 +237,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     asChild
                     className="flex items-center gap-x-2"
                   >
-                    <div className="flex max-xl:hidden lg:ml-auto">
+                    <div className="flex max-[1366px]:mx-0 max-xl:hidden lg:ml-auto">
                       <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
                           src={`${
@@ -334,7 +334,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       ) : (
                         <Languages className="text-white" />
                       )}
-                      <p className="font-bold text-white">
+                      <p className="font-bold text-white max-[1366px]:hidden">
                         {languages.find(
                           language => i18n.language === language.code,
                         )?.name ?? t('nav:choose_lang')}
@@ -349,7 +349,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </DropdownMenu.Trigger>
                   <DropdownMenu.Portal>
                     <DropdownMenu.Content
-                      className="flex max-h-[360px]  min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+                      className="flex max-h-[360px] min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                       sideOffset={-15}
                     >
                       {languages.map(language => (

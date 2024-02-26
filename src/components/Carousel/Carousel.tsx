@@ -243,7 +243,7 @@ const CarouselNext = React.forwardRef<
         'absolute size-8 rounded-full hover:bg-primary-400 hover:text-white',
 
         orientation === 'horizontal'
-          ? '-right-10 top-1/2 -translate-y-1/2'
+          ? 'top-1/2 -translate-y-1/2 xs2:-right-0 xs:-right-2 md:-right-10 xl:-right-10'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
         className,
       )}
