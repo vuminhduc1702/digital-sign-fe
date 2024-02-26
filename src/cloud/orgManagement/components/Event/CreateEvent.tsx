@@ -248,25 +248,25 @@ export const eventActionSchema = z
 export const cmdSchema = z.object({
   thing_id: z
     .string()
-    .min(1, {
-      message: i18n
-        .t('placeholder:input_text_value')
-        .replace(
-          '{{VALUE}}',
-          i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
-        ),
-    })
+    // .min(1, {
+    //   message: i18n
+    //     .t('placeholder:input_text_value')
+    //     .replace(
+    //       '{{VALUE}}',
+    //       i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+    //     ),
+    // })
     .optional(),
   handle_service: z
     .string()
-    .min(1, {
-      message: i18n
-        .t('placeholder:input_text_value')
-        .replace(
-          '{{VALUE}}',
-          i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
-        ),
-    })
+    // .min(1, {
+    //   message: i18n
+    //     .t('placeholder:input_text_value')
+    //     .replace(
+    //       '{{VALUE}}',
+    //       i18n.t('cloud:org_manage.event_manage.add_event.action.message'),
+    //     ),
+    // })
     .optional(),
   input: inputListSchema.optional(),
 })
@@ -418,10 +418,12 @@ export function CreateEvent() {
 
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
-      thingId: watch('cmd.thing_id'),
+      thingId: watch('cmd.thing_id') ?? '',
       config: {
         suspense: false,
-        enabled: !!watch('cmd.thing_id'),
+        enabled:
+          !!watch('cmd.thing_id') &&
+          parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({
@@ -439,11 +441,11 @@ export function CreateEvent() {
   }
 
   useEffect(() => {
-   if(!watch('onClick') && watch('type') === 'event') {
-    conditionAppend([{}])
-   } else {
-    setValue('condition', [])
-   }
+    if (!watch('onClick') && watch('type') === 'event') {
+      conditionAppend([{}])
+    } else {
+      setValue('condition', [])
+    }
   }, [watch('onClick'), watch('type')])
 
   const todoClicked = (e: any) => {
@@ -647,7 +649,7 @@ export function CreateEvent() {
                       <Checkbox
                         {...field}
                         checked={value}
-                        onCheckedChange={(e) => {
+                        onCheckedChange={e => {
                           onChange(e)
                           if (e) {
                             setValue('type', 'event')
