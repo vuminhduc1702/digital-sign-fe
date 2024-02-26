@@ -29,11 +29,8 @@ import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { HiOutlineBars3 } from 'react-icons/hi2'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-<<<<<<< HEAD
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
 
-=======
->>>>>>> 0afc106b0449f16c5224088acae95be06754c172
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
 import English from '~/assets/images/landingpage/uk-flag.png'
 import { LuLanguages } from 'react-icons/lu'
@@ -235,18 +232,9 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   </div>
                 </div>
               ) : (
-<<<<<<< HEAD
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
-                    <div className="flex max-lg:hidden lg:ml-auto">
-=======
-                <DropdownMenu.Root>
-                  <DropdownMenu.Trigger
-                    asChild
-                    className="flex items-center gap-x-2"
-                  >
                     <div className="flex max-[1366px]:mx-0 max-xl:hidden lg:ml-auto">
->>>>>>> 0afc106b0449f16c5224088acae95be06754c172
                       <div className="flex w-max max-lg:px-3 max-lg:py-5">
                         <img
                           src={`${userInfoData?.profile?.profile_image !== ''
@@ -352,7 +340,6 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         className=" text-white"
                       />
                     </div>
-<<<<<<< HEAD
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     className="flex max-h-[360px]  min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
@@ -374,31 +361,6 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
-=======
-                  </DropdownMenu.Trigger>
-                  <DropdownMenu.Portal>
-                    <DropdownMenu.Content
-                      className="flex max-h-[360px] min-w-[120px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-                      sideOffset={-15}
-                    >
-                      {languages.map(language => (
-                        <DropdownMenu.Item
-                          key={language.code}
-                          className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 leading-none outline-none"
-                          onClick={() => changeLanguage(language.code)}
-                        >
-                          <img
-                            src={language.icon}
-                            alt=""
-                            className="h-auto w-8"
-                          />
-                          <div>{language.name}</div>
-                        </DropdownMenu.Item>
-                      ))}
-                    </DropdownMenu.Content>
-                  </DropdownMenu.Portal>
-                </DropdownMenu.Root>
->>>>>>> 0afc106b0449f16c5224088acae95be06754c172
               </div>
             </div>
 

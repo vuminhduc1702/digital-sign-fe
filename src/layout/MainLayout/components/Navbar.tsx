@@ -6,30 +6,24 @@ import { useProjects } from '~/cloud/project/api'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
 import { API_URL } from '~/config'
+import i18n from '~/i18n'
 import { useLogout, useUser } from '~/lib/auth'
 import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
 import { useCopyId } from '~/utils/hooks'
 import storage from '~/utils/storage'
-import i18n from '~/i18n'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
+import { LuLanguages } from 'react-icons/lu'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
-import caidatIcon from '~/assets/icons/nav-caidat.svg'
-import hotroIcon from '~/assets/icons/nav-hotro.svg'
 import manualIcon from '~/assets/icons/nav-manual.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
-import { SidebarDropDownIcon } from '~/components/SVGIcons'
-<<<<<<< HEAD
-import { Languages } from 'lucide-react'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
-=======
-import { LuLanguages } from 'react-icons/lu'
->>>>>>> 0afc106b0449f16c5224088acae95be06754c172
 import English from '~/assets/images/landingpage/uk-flag.png'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { SidebarDropDownIcon } from '~/components/SVGIcons'
 
 function Navbar() {
   const { t } = useTranslation()
@@ -236,7 +230,6 @@ function Navbar() {
               className="flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
               sideOffset={-15}
             >
-<<<<<<< HEAD
               <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                 {userData ? (
                   <p
@@ -279,13 +272,6 @@ function Navbar() {
                 <p
                   className="cursor-pointer"
                   onClick={() => logout.mutate({})}
-=======
-              {languages.map(language => (
-                <DropdownMenu.Item
-                  key={language.code}
-                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 leading-none outline-none"
-                  onClick={() => changeLanguage(language.code)}
->>>>>>> 0afc106b0449f16c5224088acae95be06754c172
                 >
                   {t('user:logout')}
                 </p>
