@@ -60,6 +60,7 @@ import {
 } from '~/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 type UpdateThingProps = {
   name: string
@@ -630,83 +631,56 @@ export function UpdateThingService({
                                 </p>
                               </div>
                               <div className="flex gap-3">
-                                <Dropdown
-                                  icon={
-                                    <img
-                                      height={20}
-                                      width={20}
-                                      src={btnChevronDownIcon}
-                                      className="text-secondary-700 hover:text-primary-400"
-                                    />
-                                  }
-                                >
-                                  <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <div className="p-2">
-                                      <div
-                                        className="hover:background py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            codeEditorRef,
-                                            PANEL_SIZE.MAX,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.maximize_result',
-                                        )}
-                                      </div>
-                                      <div
-                                        className="py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            codeEditorRef,
-                                            PANEL_SIZE.MAX,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.minimize_result',
-                                        )}
-                                      </div>
-                                      <div
-                                        className="py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            codeEditorRef,
-                                            PANEL_SIZE.DEFAULT,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.default_result',
-                                        )}
-                                      </div>
-                                      {isShowConsole ? (
-                                        <div
-                                          className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setIsShowConsole(false)
-                                          }}
-                                        >
-                                          {t(
-                                            'cloud:custom_protocol.service.hide_console',
-                                          )}
-                                        </div>
-                                      ) : (
-                                        <div
-                                          className="py-1 hover:cursor-pointer"
-                                          onClick={() => {
-                                            setIsShowConsole(true)
-                                          }}
-                                        >
-                                          {t(
-                                            'cloud:custom_protocol.service.view_console',
-                                          )}
-                                        </div>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger className="flex items-center gap-x-2">
+                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent className="flex flex-col overflow-y-auto z-[9999] rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(codeEditorRef, PANEL_SIZE.MAX)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.maximize_result',
                                       )}
-                                    </div>
-                                  </div>
-                                </Dropdown>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(codeEditorRef, PANEL_SIZE.MIN)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.minimize_result',
+                                      )}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.default_result',
+                                      )}
+                                    </DropdownMenuItem>
+                                    {isShowConsole ? (
+                                      <DropdownMenuItem
+                                        className="py-1 hover:cursor-pointer"
+                                        onClick={() => setIsShowConsole(false)}
+                                      >
+                                        {t(
+                                          'cloud:custom_protocol.service.hide_console',
+                                        )}
+                                      </DropdownMenuItem>
+                                    ) : (
+                                      <DropdownMenuItem
+                                        className="py-1 hover:cursor-pointer"
+                                        onClick={() => setIsShowConsole(true)}
+                                      >
+                                        {t(
+                                          'cloud:custom_protocol.service.view_console',
+                                        )}
+                                      </DropdownMenuItem>
+                                    )}
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                                 <button
                                   form="create-serviceThing"
                                   type="submit"
@@ -746,60 +720,37 @@ export function UpdateThingService({
                                 </p>
                               </div>
                               <div className="flex gap-3">
-                                <Dropdown
-                                  icon={
-                                    <img
-                                      height={20}
-                                      width={20}
-                                      src={btnChevronDownIcon}
-                                      className="text-secondary-700 hover:text-primary-400"
-                                    />
-                                  }
-                                >
-                                  <div className="divide-secondary-400 absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                    <div className="p-2">
-                                      <div
-                                        className="py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            resultEditorRef,
-                                            PANEL_SIZE.MAX,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.maximize_result',
-                                        )}
-                                      </div>
-                                      <div
-                                        className="py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            resultEditorRef,
-                                            PANEL_SIZE.MIN,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.minimize_result',
-                                        )}
-                                      </div>
-                                      <div
-                                        className="py-1 hover:cursor-pointer"
-                                        onClick={() =>
-                                          resizePanel(
-                                            resultEditorRef,
-                                            PANEL_SIZE.DEFAULT,
-                                          )
-                                        }
-                                      >
-                                        {t(
-                                          'cloud:custom_protocol.service.default_result',
-                                        )}
-                                      </div>
-                                    </div>
-                                  </div>
-                                </Dropdown>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger className="flex items-center gap-x-2">
+                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent className="flex flex-col overflow-y-auto z-[9999] rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(resultEditorRef, PANEL_SIZE.MAX)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.maximize_result',
+                                      )}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(resultEditorRef, PANEL_SIZE.MIN)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.minimize_result',
+                                      )}
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="py-1"
+                                      onClick={() => {
+                                        resizePanel(resultEditorRef, PANEL_SIZE.DEFAULT)
+                                      }}>
+                                      {t(
+                                        'cloud:custom_protocol.service.default_result',
+                                      )}
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
                               </div>
                             </div>
                             <CodeSandboxEditor
