@@ -95,28 +95,24 @@ export function ListProjectItem({
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    <div className='flex gap-x-2 hover:text-primary-300'
-                      onClick={() => {
-                        open()
-                        setSelectedUpdateProject(project)
-                      }}>
-                      <img
-                        src={btnEditIcon}
-                        alt="Edit project"
-                        className="h-5 w-5"
-                      />
-                      {t('cloud:project_manager.add_project.edit')}
-                    </div>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      open()
+                      setSelectedUpdateProject(project)
+                    }}>
+                    <img
+                      src={btnEditIcon}
+                      alt="Edit project"
+                      className="h-5 w-5"
+                    />
+                    {t('cloud:project_manager.add_project.edit')}
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <div className='flex gap-x-2 hover:text-primary-300'
-                      onClick={() => {
-                        handleBackupProject(project)
-                      }}>
-                      <DownloadIcon className="h-5 w-5" />
-                      {t('cloud:project_manager.backup')}
-                    </div>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      handleBackupProject(project)
+                    }}>
+                    <DownloadIcon className="h-5 w-5" />
+                    {t('cloud:project_manager.backup')}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <ConfirmationDialog

@@ -55,16 +55,14 @@ function DataBaseTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={open}>
-              <img
-                src={btnEditIcon}
-                alt="Edit DataBase"
-                className="h-5 w-5"
-              />
-              {t('cloud:db_template.add_db.update_row')}
-            </div>
+          <DropdownMenuItem
+            onClick={open}>
+            <img
+              src={btnEditIcon}
+              alt="Edit DataBase"
+              className="h-5 w-5"
+            />
+            {t('cloud:db_template.add_db.update_row')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

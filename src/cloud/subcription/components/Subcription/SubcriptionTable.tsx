@@ -39,16 +39,14 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={open}>
-              <img
-                src={btnEditIcon}
-                alt="Edit DataBase"
-                className="h-5 w-5"
-              />
-              {t('billing:subcription.title')}
-            </div>
+          <DropdownMenuItem
+            onClick={open}>
+            <img
+              src={btnEditIcon}
+              alt="Edit DataBase"
+              className="h-5 w-5"
+            />
+            {t('billing:subcription.title')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

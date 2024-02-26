@@ -76,7 +76,7 @@ function LPnavigation({
         </div>
       ) : (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
+          <DropdownMenuTrigger className="flex items-center gap-x-2">
             <div className="flex lg:ml-auto">
               <div className="flex w-max py-5 max-lg:px-3">
                 <img
@@ -110,7 +110,7 @@ function LPnavigation({
               </div>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+          <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade  data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] z-[9999]"
             sideOffset={-15}>
             <Link
               to="https://iot.viettel.vn/"

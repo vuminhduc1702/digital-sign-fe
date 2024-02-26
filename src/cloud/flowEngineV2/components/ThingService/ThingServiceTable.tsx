@@ -53,14 +53,12 @@ function ThingServiceTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                open()
-              }}>
-              <img src={btnEditIcon} alt="Edit device" className="size-5" />
-              {t('cloud:custom_protocol.service.edit')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+            }}>
+            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            {t('cloud:custom_protocol.service.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

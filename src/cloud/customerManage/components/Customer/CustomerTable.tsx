@@ -37,14 +37,12 @@ function CustomerTableContextMenu({ id }: { id: string }) {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
-              }}>
-              <EyeOpenIcon className="h-5 w-5" />
-              {t('billing:customer_manage.info')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+            }}>
+            <EyeOpenIcon className="h-5 w-5" />
+            {t('billing:customer_manage.info')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

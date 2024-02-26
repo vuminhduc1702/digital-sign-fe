@@ -48,14 +48,12 @@ function DashboardTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                open()
-              }}>
-              <img src={btnEditIcon} alt="Edit Dashboard" className="size-5" />
-              {t('cloud:dashboard.add_dashboard.edit')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+            }}>
+            <img src={btnEditIcon} alt="Edit Dashboard" className="size-5" />
+            {t('cloud:dashboard.add_dashboard.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

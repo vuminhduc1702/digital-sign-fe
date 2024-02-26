@@ -54,12 +54,10 @@ function CustomerTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={open}>
-              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              {t('form:tenant.edit')}
-            </div>
+          <DropdownMenuItem
+            onClick={open}>
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+            {t('form:tenant.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

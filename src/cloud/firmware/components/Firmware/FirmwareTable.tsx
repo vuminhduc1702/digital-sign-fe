@@ -61,25 +61,21 @@ function FireWareTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                open()
-                setType('create-firmware')
-              }}>
-              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              {t('cloud:firmware.add_firmware.edit_firmware')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setType('create-firmware')
+            }}>
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+            {t('cloud:firmware.add_firmware.edit_firmware')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                open()
-                setType('upload-firmware')
-              }}>
-              <UploadIcon className="h-5 w-5" />
-              {t('cloud:firmware.add_firmware.upload_firmware')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setType('upload-firmware')
+            }}>
+            <UploadIcon className="h-5 w-5" />
+            {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

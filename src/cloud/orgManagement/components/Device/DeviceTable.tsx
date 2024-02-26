@@ -38,6 +38,7 @@ import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 import { UpdateMqttConfig } from './UpdateMqttConfig'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 function DeviceTableContextMenu({
   id,
@@ -78,107 +79,97 @@ function DeviceTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnDetailIcon} alt="View device" className="size-5" />
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() =>
+              navigate(
+                `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                }`,
+              )
+            }
+          >
+            <img src={btnDetailIcon} alt="View device" className="size-5" />
+            {t('table:view_detail')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setType('update-device')
+            }}
+          >
+            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            {t('cloud:org_manage.device_manage.add_device.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setType('update-mqtt')
+            }}
+          >
+            <img
+              src={btnEditIcon}
+              alt="Edit mqtt config"
+              className="size-5"
+            />
+            {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              let type = 'active'
+              if (status === 'online' || status === 'offline') {
+                type = 'block'
               }
-              onClick={() =>
-                navigate(
-                  `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : ` /${id}`
-                  }`,
-                )
-              }
-            >
-              {t('table:view_detail')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="size-5" />
-              }
-              onClick={() => {
+              mutateBlockAndActive({ type, deviceId: id })
+            }}
+          >
+            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            {status === 'online' || status === 'offline'
+              ? t('device:block')
+              : t('device:active')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              if (status !== 'blocked') {
                 open()
-                setType('update-device')
-              }}
-            >
-              {t('cloud:org_manage.device_manage.add_device.edit')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit mqtt config"
-                  className="size-5"
-                />
+                setType('update-version')
               }
-              onClick={() => {
-                open()
-                setType('update-mqtt')
-              }}
-            >
-              {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="size-5" />
-              }
-              onClick={() => {
-                let type = 'active'
-                if (status === 'online' || status === 'offline') {
-                  type = 'block'
-                }
-                mutateBlockAndActive({ type, deviceId: id })
-              }}
-            >
-              {status === 'online' || status === 'offline'
-                ? t('device:block')
-                : t('device:active')}
-            </MenuItem>
-            <MenuItem
-              icon={<UpdateIcon className="size-5" />}
-              onClick={() => {
-                if (status !== 'blocked') {
-                  open()
-                  setType('update-version')
-                }
-              }}
-              style={{
-                color: status === 'blocked' ? 'gray' : '',
-                cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
-              }}
-            >
-              {t('cloud:firmware.fota')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img
-                  src={btnCopyIdIcon}
-                  alt="Copy device's ID"
-                  className="size-5"
-                />
-              }
-              onClick={() => handleCopyId(id)}
-            >
-              {t('table:copy_id')}
-            </MenuItem>
-            <MenuItem
-              icon={<CopyIcon className="size-5" />}
-              onClick={() => handleCopyId(token, 'token')}
-            >
-              {t('table:copy_token')}
-            </MenuItem>
+            }}
+            style={{
+              color: status === 'blocked' ? 'gray' : '',
+              cursor: status === 'blocked' ? 'not-allowed' : 'pointer',
+            }}
+          >
+            <UpdateIcon className="size-5" />
+            {t('cloud:firmware.fota')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(id)}
+          >
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy device's ID"
+              className="size-5"
+            />
+            {t('table:copy_id')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(token, 'token')}
+          >
+            <CopyIcon className="size-5" />
+            {t('table:copy_token')}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -190,7 +181,7 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -217,9 +208,9 @@ function DeviceTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen && type === 'update-device' ? (
         <UpdateDevice
           deviceId={id}

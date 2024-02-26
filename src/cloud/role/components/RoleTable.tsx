@@ -55,26 +55,22 @@ function RoleTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => {
-                open()
-                setSelectedUpdateRole(role)
-              }}>
-              <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
-              {t('cloud:role_manage.sidebar.edit')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setSelectedUpdateRole(role)
+            }}>
+            <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
+            {t('cloud:role_manage.sidebar.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={() => handleCopyId(id)}>
-              <img
-                src={btnCopyIdIcon}
-                alt="Copy role's ID"
-                className="h-5 w-5"
-              />
-              {t('table:copy_id')}
-            </div>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(id)}>
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy role's ID"
+              className="h-5 w-5"
+            />
+            {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

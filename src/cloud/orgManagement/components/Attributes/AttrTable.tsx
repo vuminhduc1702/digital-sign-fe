@@ -65,16 +65,14 @@ function AttrTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
-              onClick={open}>
-              <img
-                src={btnEditIcon}
-                alt="Edit attribute"
-                className="size-5"
-              />
-              {t('cloud:org_manage.org_manage.add_attr.edit')}
-            </div>
+          <DropdownMenuItem
+            onClick={open}>
+            <img
+              src={btnEditIcon}
+              alt="Edit attribute"
+              className="size-5"
+            />
+            {t('cloud:org_manage.org_manage.add_attr.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
             <ConfirmationDialog

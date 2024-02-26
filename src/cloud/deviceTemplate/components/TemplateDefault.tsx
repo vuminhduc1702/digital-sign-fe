@@ -87,30 +87,26 @@ export function TemplateDefault() {
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
-                      <DropdownMenuItem>
-                        <div className='flex gap-x-2 hover:text-primary-300'
-                          onClick={() => {
-                            open()
-                            setSelectedUpdateTemplate(template)
-                          }}>
-                          <img
-                            src={btnEditIcon}
-                            alt="Edit template"
-                            className="h-5 w-5"
-                          />
-                          {t('cloud:device_template.sidebar.edit')}
-                        </div>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          open()
+                          setSelectedUpdateTemplate(template)
+                        }}>
+                        <img
+                          src={btnEditIcon}
+                          alt="Edit template"
+                          className="h-5 w-5"
+                        />
+                        {t('cloud:device_template.sidebar.edit')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <div className='flex gap-x-2 hover:text-primary-300'
-                          onClick={() => handleCopyId(template.id)}>
-                          <img
-                            src={btnCopyIdIcon}
-                            alt="Copy template's ID"
-                            className="h-5 w-5"
-                          />
-                          {t('table:copy_id')}
-                        </div>
+                      <DropdownMenuItem
+                        onClick={() => handleCopyId(template.id)}>
+                        <img
+                          src={btnCopyIdIcon}
+                          alt="Copy template's ID"
+                          className="h-5 w-5"
+                        />
+                        {t('table:copy_id')}
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <ConfirmationDialog

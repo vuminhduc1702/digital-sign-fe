@@ -45,20 +45,17 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>
-            <div className='flex gap-x-2 hover:text-primary-300'
+          <DropdownMenuItem
               onClick={() => {
                 open()
               }}>
               <EyeOpenIcon className="h-5 w-5" />
               {t('billing:manage_bill.preview_bill')}
-            </div>
           </DropdownMenuItem>
-          <DropdownMenuItem className=" hover:cursor-pointer" asChild>
+          <DropdownMenuItem asChild>
           <PDFDownloadLink
             document={<BillingPDF dataPdf={data?.data} />}
             fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
-            className='flex gap-x-2 hover:text-primary-300'
           >
             <DownloadIcon className="h-5 w-5" />
             {t('billing:manage_bill.export_PDF')}

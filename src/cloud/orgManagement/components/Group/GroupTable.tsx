@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
@@ -27,6 +25,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
 import AssignGroupRole from './AssignGroupRole'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 export type GroupType = {
   id: string
@@ -73,72 +72,62 @@ function GroupTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnDetailIcon} alt="View group" className="size-5" />
-              }
-              onClick={() =>
-                navigate(
-                  `${PATHS.GROUP_MANAGE}/${projectId}/${
-                    orgId != null ? `${orgId}/${id}` : ` /${id}`
-                  }`,
-                )
-              }
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() =>
+              navigate(
+                `${PATHS.GROUP_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                }`,
+              )
+            }
+          >
+            <img src={btnDetailIcon} alt="View group" className="size-5" />
+            {t('table:view_detail')}
+          </DropdownMenuItem>
+          {props.entity_type === 'DEVICE' && (
+            <DropdownMenuItem
+              onClick={openAssignUser}
             >
-              {t('table:view_detail')}
-            </MenuItem>
-            {props.entity_type === 'DEVICE' && (
-              <MenuItem
-                icon={
-                  <img src={btnEditIcon} alt="Assign user" className="size-5" />
-                }
-                onClick={openAssignUser}
-              >
-                {t('cloud:org_manage.user_manage.add_user.assign')}
-              </MenuItem>
-            )}
-            {props.entity_type === 'USER' && (
-              <MenuItem
-                icon={
-                  <img src={btnEditIcon} alt="Assign user" className="size-5" />
-                }
-                onClick={openAssignGroupRole}
-              >
-                {t('cloud:org_manage.user_manage.add_user.assign_role')}
-              </MenuItem>
-            )}
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit group" className="size-5" />
-              }
-              onClick={open}
+              <img src={btnEditIcon} alt="Assign user" className="size-5" />
+              {t('cloud:org_manage.user_manage.add_user.assign')}
+            </DropdownMenuItem>
+          )}
+          {props.entity_type === 'USER' && (
+            <DropdownMenuItem
+              onClick={openAssignGroupRole}
             >
-              {t('cloud:org_manage.group_manage.add_group.edit')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img
-                  src={btnCopyIdIcon}
-                  alt="Copy group's ID"
-                  className="size-5"
-                />
-              }
-              onClick={() => handleCopyId(id)}
-            >
-              {t('table:copy_id')}
-            </MenuItem>
+              <img src={btnEditIcon} alt="Assign user" className="size-5" />
+              {t('cloud:org_manage.user_manage.add_user.assign_role')}
+            </DropdownMenuItem>
+          )}
+          <DropdownMenuItem
+            onClick={open}
+          >
+            <img src={btnEditIcon} alt="Edit group" className="size-5" />
+            {t('cloud:org_manage.group_manage.add_group.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(id)}
+          >
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy group's ID"
+              className="size-5"
+            />
+            {t('table:copy_id')}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -148,7 +137,7 @@ function GroupTableContextMenu({
               ).replace('{{GROUPNAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="w-full justify-start p-0 shadow-none border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -175,9 +164,9 @@ function GroupTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateGroup
           groupId={id}

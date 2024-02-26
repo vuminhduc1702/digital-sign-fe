@@ -21,6 +21,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 export const initialTodos = [
   {
@@ -120,38 +121,33 @@ function EventTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit event" className="size-5" />
-              }
-              onClick={open}
-            >
-              {t('cloud:org_manage.event_manage.add_event.edit')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img
-                  src={btnCopyIdIcon}
-                  alt="Copy event's ID"
-                  className="size-5"
-                />
-              }
-              onClick={() => handleCopyId(id)}
-            >
-              {t('table:copy_id')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={open}>
+            <img src={btnEditIcon} alt="Edit event" className="size-5" />
+            {t('cloud:org_manage.event_manage.add_event.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(id)}>
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy adapter's ID"
+              className="h-5 w-5"
+            />
+            {t('table:copy_id')}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -161,7 +157,7 @@ function EventTableContextMenu({
               ).replace('{{EVENTNAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="w-full justify-start p-0 shadow-none border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -188,9 +184,9 @@ function EventTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateEvent
           data={dataRow}
