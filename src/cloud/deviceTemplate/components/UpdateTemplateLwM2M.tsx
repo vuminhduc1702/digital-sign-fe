@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronDown } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -40,6 +39,8 @@ import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
 import { CreateThing } from '~/cloud/flowEngineV2/components/Attributes'
 import { CreateService } from '~/cloud/customProtocol/components/CreateService'
+
+import { LuChevronDown } from 'react-icons/lu'
 
 type AccordionStates = {
   [key: number]: ModuleConfig[]
@@ -589,7 +590,7 @@ export function UpdateTemplateLwM2M({
                     className="border-b border-gray-300"
                   >
                     <AccordionTrigger className="ml-3 justify-start hover:no-underline">
-                      <ChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+                      <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
                       <p className="ml-2">
                         {lw2m2.LWM2M.Object.Name} #{lw2m2.LWM2M.Object.ObjectID}
                       </p>

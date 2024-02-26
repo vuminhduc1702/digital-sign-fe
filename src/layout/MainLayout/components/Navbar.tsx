@@ -23,7 +23,7 @@ import manualIcon from '~/assets/icons/nav-manual.svg'
 import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
-import { Languages } from 'lucide-react'
+import { LuLanguages } from 'react-icons/lu'
 import English from '~/assets/images/landingpage/uk-flag.png'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
 
@@ -260,7 +260,7 @@ function Navbar() {
                   className="h-auto w-8"
                 />
               ) : (
-                <Languages className="text-white" />
+                <LuLanguages className="text-white" />
               )}
               <p className="text-white">
                 {languages.find(language => i18n.language === language.code)
@@ -282,7 +282,7 @@ function Navbar() {
               {languages.map(language => (
                 <DropdownMenu.Item
                   key={language.code}
-                  className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                  className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 leading-none outline-none"
                   onClick={() => changeLanguage(language.code)}
                 >
                   <img src={language.icon} alt="" className="h-auto w-8" />

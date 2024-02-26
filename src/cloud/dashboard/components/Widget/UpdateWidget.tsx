@@ -36,7 +36,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { EditBtnIcon, PlusIcon } from '~/components/SVGIcons'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
-import { Calendar as CalendarIcon } from 'lucide-react'
+import { LuCalendar } from 'react-icons/lu'
 import { format } from 'date-fns'
 import { Calendar, TimePicker } from '~/components/Calendar'
 import { useParams } from 'react-router-dom'
@@ -557,7 +557,7 @@ export function UpdateWidget({
               <>
                 <TitleBar
                   title={t('cloud:dashboard.config_chart.show')}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                   <InputField
@@ -663,7 +663,7 @@ export function UpdateWidget({
                     title={t(
                       'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                     )}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   {!(
                     widgetInfoMemo?.description === 'GAUGE' ||
@@ -901,7 +901,7 @@ export function UpdateWidget({
                           <img
                             src={btnDeleteIcon}
                             alt="Delete widget attribute"
-                            className="h-10 w-10"
+                            className="size-10"
                           />
                         }
                       />
@@ -913,7 +913,7 @@ export function UpdateWidget({
                   <>
                     <TitleBar
                       title={t('cloud:dashboard.config_chart.widget_config')}
-                      className="bg-secondary-700 w-full rounded-md pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                       <SelectField
@@ -1043,11 +1043,11 @@ export function UpdateWidget({
                                           variant="trans"
                                           size="square"
                                           className={cn(
-                                            'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
+                                            'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                                             !value && 'text-secondary-700',
                                           )}
                                         >
-                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          <LuCalendar className="mr-2 size-4" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1141,7 +1141,7 @@ export function UpdateWidget({
                                             ) === 'REALTIME'
                                           }
                                         >
-                                          <CalendarIcon className="mr-2 h-4 w-4" />
+                                          <LuCalendar className="mr-2 size-4" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1232,7 +1232,7 @@ export function UpdateWidget({
       }
       triggerButton={
         <Button
-          className="hover:text-primary-400 h-5 w-5"
+          className="size-5 hover:text-primary-400"
           variant="none"
           size="square"
           startIcon={<EditBtnIcon width={20} height={17} viewBox="0 0 20 17" />}
@@ -1246,9 +1246,9 @@ export function UpdateWidget({
           form="update-widget"
           type="submit"
           size="md"
-          className="bg-primary-400 rounded-md border"
+          className="rounded-md border bg-primary-400"
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }

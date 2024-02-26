@@ -30,10 +30,9 @@ import { GroupSlideTop, SidebarDropDownIcon } from '~/components/SVGIcons'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { Bars3Icon } from '@heroicons/react/20/solid'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
 import English from '~/assets/images/landingpage/uk-flag.png'
-import { Languages } from 'lucide-react'
+import { LuLanguages } from 'react-icons/lu'
 
 export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
   const navigate = useNavigate()
@@ -355,7 +354,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       {languages.map(language => (
                         <DropdownMenu.Item
                           key={language.code}
-                          className="group relative flex cursor-pointer select-none items-center justify-between gap-x-3 px-1 leading-none outline-none"
+                          className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 leading-none outline-none"
                           onClick={() => changeLanguage(language.code)}
                         >
                           <img

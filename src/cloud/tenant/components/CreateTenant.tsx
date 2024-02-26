@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 import { format } from 'date-fns'
-import { Calendar as CalendarIcon } from 'lucide-react'
+import { LuCalendar } from 'react-icons/lu'
 import { Button } from '~/components/Button'
 import { Calendar } from '~/components/Calendar'
 import { InputField, SelectField } from '~/components/Form'
@@ -154,7 +154,7 @@ export function CreateCustomer() {
                       !date && 'text-muted-foreground',
                     )}
                   >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    <LuCalendar className="mr-2 size-4" />
                     {date ? (
                       date ? (
                         <>{format(date, 'dd/MM/y')}</>
@@ -169,7 +169,7 @@ export function CreateCustomer() {
                     {date && (
                       <XMarkIcon
                         onClick={() => setDate(null)}
-                        className="absolute right-3 top-2.5 h-4 w-4 "
+                        className="absolute right-3 top-2.5 size-4 "
                       />
                     )}
                   </Button>
@@ -297,7 +297,7 @@ export function CreateCustomer() {
           size="md"
           className="bg-primary-400"
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
