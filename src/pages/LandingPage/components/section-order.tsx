@@ -1,21 +1,16 @@
-import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import SectionOrderBG from '~/assets/images/landingpage/BG_sectionorder.png'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
-import {
-  ArrowRightUpLine,
-  CheckboxCircleLineWhite,
-} from '~/components/SVGIcons'
+import { ArrowRightUpLine } from '~/components/SVGIcons'
 import { useTranslation } from 'react-i18next'
-import storage from '~/utils/storage'
 import i18n from '~/i18n'
 import { cn } from '~/utils/misc'
 
 export function SectionOrder() {
   const navigate = useNavigate()
-  const languages = [{ vi: 'vi' }, { en: 'en' }]
   const { t } = useTranslation()
+
   return (
     <>
       <div className="h-[100px]"></div>
@@ -56,14 +51,10 @@ export function SectionOrder() {
                   className={cn(
                     'rounded-r-lg rounded-tl-lg border-none bg-white text-[#EA0033] hover:-translate-y-px hover:opacity-100 hover:shadow-xl max-sm:mb-[14px] xl:px-5',
                     {
-                      'max-sm:w-[215px]': languages.find(
-                        language => i18n.language === language.en,
-                      ),
+                      'max-sm:w-[215px]': i18n.language === 'en',
                     },
                     {
-                      'xs2:w-[270px]': languages.find(
-                        language => i18n.language === language.vi,
-                      ),
+                      'xs2:w-[270px]': i18n.language === 'vi',
                     },
                   )}
                   variant="primary"

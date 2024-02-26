@@ -59,20 +59,15 @@ export function SectionClient() {
       alt: '13',
     },
   ]
+
   const { t } = useTranslation()
-  const languages = [{ vi: 'vi' }, { en: 'en' }]
 
   return (
     <>
       <div
-        className={cn(
-          {
-            'h-[270px]': languages.find(
-              language => i18n.language === language.en,
-            ),
-          },
-          {},
-        )}
+        className={cn({
+          'h-[270px]': i18n.language === 'en',
+        })}
       ></div>
       <div>
         <div className="pb-[50px] text-center text-[35px] leading-[43px] xs2:mt-12 xl:mt-0">

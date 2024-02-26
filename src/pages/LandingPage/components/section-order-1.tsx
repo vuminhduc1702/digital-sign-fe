@@ -9,7 +9,7 @@ import { cn } from '~/utils/misc'
 
 export function SectionOrder1() {
   const { t } = useTranslation()
-  const languages = [{ vi: 'vi' }, { en: 'en' }]
+
   return (
     <>
       <div className="h-[100px]"></div>
@@ -19,18 +19,14 @@ export function SectionOrder1() {
             className={cn(
               'relative w-1/2 md:w-[437px]',
               {
-                'xs2:top-[-140px] xs:top-[-97px]': languages.find(
-                  language => i18n.language === language.vi,
-                ),
+                'xs2:top-[-140px] xs:top-[-97px]': i18n.language === 'vi',
               },
               {
-                'xs2:top-[100px] xl:top-[-70px]': languages.find(
-                  language => i18n.language === language.en,
-                ),
+                'xs2:top-[100px] xl:top-[-70px]': i18n.language === 'en',
               },
             )}
           >
-            <div className="w-[320px] font-semibold leading-[43px] text-black xs2:w-[240px] xs2:pt-10 xs2:text-[28px] xs:w-[240px] sm:w-[300px] sm:text-[28px] md:text-[34px] md:w-[460px] lg:w-[500px] xl:text-[35px]">
+            <div className="w-[320px] font-semibold leading-[43px] text-black xs2:w-[240px] xs2:pt-10 xs2:text-[28px] xs:w-[240px] sm:w-[300px] sm:text-[28px] md:w-[460px] md:text-[34px] lg:w-[500px] xl:text-[35px]">
               {t('landingpage:order1.M2M_manage_solution')}
             </div>
             <div className="w-[443px] pt-5 text-justify text-[16px] leading-[20.8px] text-black xs2:w-[200px] xs:w-[200px] sm:w-[300px] md:w-[460px] lg:w-[500px]">
@@ -62,7 +58,7 @@ export function SectionOrder1() {
                     {t('landingpage:order1.contract_management')}
                   </p>
                 </div>
-                <div className="mb-[-8px] border-t xs2:border-[#E2E2E2] pt-2">
+                <div className="mb-[-8px] border-t pt-2 xs2:border-[#E2E2E2]">
                   <CheckboxCircleLine
                     width={24}
                     height={25}
@@ -120,12 +116,10 @@ export function SectionOrder1() {
               'relative w-1/2',
               {
                 'xs2:top-[-127px] xs:top-[-60px] md:top-[7px] xl:top-[136px]':
-                  languages.find(language => i18n.language === language.vi),
+                  i18n.language === 'vi',
               },
               {
-                'xs2:top-[127px]': languages.find(
-                  language => i18n.language === language.en,
-                ),
+                'xs2:top-[127px]': i18n.language === 'en',
               },
             )}
           >
