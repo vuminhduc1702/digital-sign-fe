@@ -334,7 +334,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       ) : (
                         <Languages className="text-white" />
                       )}
-                      <p className="font-bold text-white max-[1366px]:hidden">
+                      <p className="font-bold text-white xl:hidden">
                         {languages.find(
                           language => i18n.language === language.code,
                         )?.name ?? t('nav:choose_lang')}
