@@ -200,7 +200,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="mr-24 flex max-[1366px]:mx-24  max-xl:hidden max-lg:px-3">
+                <div className="flex  max-[1366px]:mx-24 max-xl:hidden max-lg:px-3 xl:mr-24">
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
