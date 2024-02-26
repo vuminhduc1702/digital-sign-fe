@@ -15,6 +15,7 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
 import { UpdateCustomerRole } from './UpdateTenantRole'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
@@ -45,33 +46,26 @@ function CustomerTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <Button
-              className="hover:text-primary-400 w-full justify-start border-none"
-              variant="trans"
-              size="square"
-              startIcon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit customer role"
-                  className="h-5 w-5"
-                />
-              }
-              onClick={openEdit}
-            >
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className='z-[9999]'>
+          <DropdownMenuItem>
+            <div className='flex gap-x-2 hover:text-primary-300'
+              onClick={openEdit}>
+              <img src={btnEditIcon} alt="Edit customer role" className="h-5 w-5" />
               {t('form:role.edit')}
-            </Button>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -79,7 +73,7 @@ function CustomerTableContextMenu({
               body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -106,9 +100,9 @@ function CustomerTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpenEdit ? (
         <UpdateCustomerRole
           project_id={project_id}

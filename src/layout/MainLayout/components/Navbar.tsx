@@ -87,14 +87,14 @@ function Navbar() {
                 {t('nav:qlda')}
               </Link>
             </p>
-            <DropdownMenuTrigger><div className="cursor-pointer">
+            <DropdownMenuTrigger>
               <SidebarDropDownIcon
                 width={12}
                 height={7}
                 viewBox="0 0 12 7"
                 className="text-white"
               />
-            </div></DropdownMenuTrigger>
+            </DropdownMenuTrigger>
           </div>
           <DropdownMenuContent
             className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
@@ -106,7 +106,11 @@ function Navbar() {
                   to={`${PATHS.ORG_MANAGE}/${project.id}`}
                   key={project.id}
                 >
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-3 leading-none outline-none"
+                    onClick={() => {
+                      storage.setProject(project)
+                      setProjectId(project.id)
+                    }}>
                     <img
                       src={`${project?.image !== ''
                         ? `${API_URL}/file/${project?.image}`

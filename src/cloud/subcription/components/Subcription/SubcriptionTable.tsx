@@ -17,6 +17,7 @@ import { UpdateSubcription } from './UpdateSubcription'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Button } from '~/components/Button'
 import btnFilterIcon from '~/assets/icons/btn-filter.svg'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -26,32 +27,31 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              }
-              onClick={() => {
-                open()
-                setType('create-firmware')
-              }}
-            >
-              {t('billing:subcription.title')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <div className='flex gap-x-2 hover:text-primary-300'
+              onClick={open}>
+              <img
+                src={btnEditIcon}
+                alt="Edit DataBase"
+                className="h-5 w-5"
+              />
+              {t('billing:subcription.title')}
+            </div>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateSubcription id={id} close={close} isOpen={true} />
       ) : null}

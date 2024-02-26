@@ -15,6 +15,7 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -41,26 +42,26 @@ function CustomerTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              }
-              onClick={open}
-            >
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <div className='flex gap-x-2 hover:text-primary-300'
+              onClick={open}>
+              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
               {t('form:tenant.edit')}
-            </MenuItem>
+            </div>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -68,7 +69,7 @@ function CustomerTableContextMenu({
               body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -95,9 +96,9 @@ function CustomerTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateCustomer
           customerId={id}

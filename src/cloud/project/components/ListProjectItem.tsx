@@ -26,6 +26,7 @@ import { API_URL } from '~/config'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { backupProject } from '../api/backupProject'
 import { useNavigate } from 'react-router-dom'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 export function ListProjectItem({
   listProjectData,
@@ -77,46 +78,47 @@ export function ListProjectItem({
             }}
           >
             <div
-              className="absolute right-2 top-2 h-7 w-7 rounded-full bg-secondary-600 bg-opacity-80 hover:bg-primary-400"
+              className="absolute flex justify-center right-2 top-2 h-7 w-7 rounded-full bg-secondary-600 bg-opacity-80 hover:bg-primary-400"
               onClick={e => {
                 e.stopPropagation()
               }}
             >
-              <Dropdown
-                icon={
-                  <BtnContextMenuIcon
-                    height={20}
-                    width={10}
-                    viewBox="0 0 1 20"
-                    className="pt-[3px] text-white"
-                  />
-                }
-              >
-                <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-1">
-                    <MenuItem
-                      icon={
-                        <img
-                          src={btnEditIcon}
-                          alt="Edit project"
-                          className="h-5 w-5"
-                        />
-                      }
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <BtnContextMenuIcon
+                      height={20}
+                      width={10}
+                      viewBox="0 0 1 20"
+                      className="pt-[3px] text-white"
+                    />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <div className='flex gap-x-2 hover:text-primary-300'
                       onClick={() => {
                         open()
                         setSelectedUpdateProject(project)
-                      }}
-                    >
+                      }}>
+                      <img
+                        src={btnEditIcon}
+                        alt="Edit project"
+                        className="h-5 w-5"
+                      />
                       {t('cloud:project_manager.add_project.edit')}
-                    </MenuItem>
-                    <MenuItem
-                      icon={<DownloadIcon className="h-5 w-5" />}
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <div className='flex gap-x-2 hover:text-primary-300'
                       onClick={() => {
                         handleBackupProject(project)
-                      }}
-                    >
+                      }}>
+                      <DownloadIcon className="h-5 w-5" />
                       {t('cloud:project_manager.backup')}
-                    </MenuItem>
+                    </div>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
                     <ConfirmationDialog
                       isDone={isSuccess}
                       icon="danger"
@@ -128,7 +130,7 @@ export function ListProjectItem({
                       ).replace('{{PROJECT}}', project.name)}
                       triggerButton={
                         <Button
-                          className="w-full justify-start border-none hover:text-primary-400"
+                          className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
                           variant="trans"
                           size="square"
                           startIcon={
@@ -165,9 +167,9 @@ export function ListProjectItem({
                         />
                       }
                     />
-                  </div>
-                </Menu.Items>
-              </Dropdown>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu >
               {isOpen && selectedUpdateProject?.id === project.id ? (
                 <UpdateProject
                   close={close}
@@ -188,11 +190,10 @@ export function ListProjectItem({
               }}
             >
               <img
-                src={`${
-                  project?.image !== ''
-                    ? `${API_URL}/file/${project?.image}`
-                    : defaultProjectImage
-                }`}
+                src={`${project?.image !== ''
+                  ? `${API_URL}/file/${project?.image}`
+                  : defaultProjectImage
+                  }`}
                 alt="Project"
                 className="aspect-square h-[45px] w-[45px] rounded-full"
                 onError={e => {
