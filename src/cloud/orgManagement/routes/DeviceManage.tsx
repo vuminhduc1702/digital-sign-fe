@@ -127,7 +127,7 @@ export function DeviceManage() {
           </div>
         </div>
         <DeviceTable
-          data={deviceData?.devices || []}
+          data={deviceData?.devices ?? []}
           offset={offset}
           setOffset={setOffset}
           total={deviceData?.total ?? 0}

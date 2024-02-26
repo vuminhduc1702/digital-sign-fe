@@ -117,7 +117,7 @@ export function DashboardManage() {
           </div>
         </div>
         <DashboardTable
-          data={dashboardData?.dashboard || []}
+          data={dashboardData?.dashboard ?? []}
           projectId={projectId}
           offset={offset}
           setOffset={setOffset}

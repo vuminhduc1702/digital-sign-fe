@@ -18,7 +18,7 @@ import { SectionPackageData } from '../components/section-package-data'
 import { PATHS } from '~/routes/PATHS'
 import { Button } from '~/components/Button'
 import { API_URL } from '~/config'
-import { scrollToIntro } from '~/utils/misc'
+import { cn, scrollToIntro } from '~/utils/misc'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { Link } from '~/components/Link'
 import { Spinner } from '~/components/Spinner'
@@ -200,14 +200,22 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                   />
                 </div>
               ) : userInfoData == null && userDataFromStorage == null ? (
-                <div className="mr-16 flex max-xl:hidden max-lg:px-3">
+                <div
+                  className={cn('mr-12 flex max-xl:hidden max-lg:px-3', {
+                    'mr-16': i18n.language === 'vi',
+                  })}
+                >
                   <div className="flex min-w-fit items-center justify-center text-white">
                     <Button
                       type="button"
-                      className="w-full border-none bg-transparent px-1 font-bold text-white"
                       variant="primary"
                       onClick={() => navigate(PATHS.LOGIN)}
-                      style={{ width: '100px' }}
+                      className={cn(
+                        'w-20 border-none bg-transparent px-1 font-bold text-white',
+                        {
+                          'w-24': i18n.language === 'vi',
+                        },
+                      )}
                     >
                       {t('user:login')}
                     </Button>

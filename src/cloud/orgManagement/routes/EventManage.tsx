@@ -116,7 +116,7 @@ export function EventManage() {
           </div>
         </div>
         <EventTable
-          data={eventData?.events || []}
+          data={eventData?.events ?? []}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
         />

@@ -125,7 +125,7 @@ export function CustomProtocolManage() {
           </div>
         </div>
         <AdapterTable
-          data={adapterData?.adapters || []}
+          data={adapterData?.adapters ?? []}
           offset={offset}
           setOffset={setOffset}
           total={adapterData?.total ?? 0}

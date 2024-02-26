@@ -129,7 +129,7 @@ export function ThingTemplate() {
           </div>
         </div>
         <ThingTable
-          data={thingData?.data?.list || []}
+          data={thingData?.data?.list ?? []}
           offset={offset}
           setOffset={setOffset}
           total={thingData?.data?.total ?? 0}

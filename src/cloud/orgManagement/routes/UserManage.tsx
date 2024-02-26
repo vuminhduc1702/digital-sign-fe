@@ -125,7 +125,7 @@ export function UserManage() {
           </div>
         </div>
         <UserTable
-          data={userData?.users || []}
+          data={userData?.users ?? []}
           offset={offset}
           setOffset={setOffset}
           total={userData?.total ?? 0}

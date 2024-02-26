@@ -18,7 +18,14 @@ import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
 import { InputField } from '~/components/Form'
 
-function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows, onClose: () => void }) {
+function DataBaseTableContextMenu({
+  row,
+  onClose,
+  ...props
+}: {
+  row: FieldsRows
+  onClose: () => void
+}) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
@@ -45,15 +52,11 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
           />
         }
       >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
             <MenuItem
               icon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit DataBase"
-                  className="h-5 w-5"
-                />
+                <img src={btnEditIcon} alt="Edit DataBase" className="size-5" />
               }
               onClick={open}
             >
@@ -66,14 +69,14 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
               body={t('cloud:db_template.add_db.delete_row_confirm')}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
+                  className="w-full justify-start border-none hover:text-primary-400"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete DataBase"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -96,14 +99,13 @@ function DataBaseTableContextMenu({ row, onClose, ...props }: { row: FieldsRows,
                       project_id: projectId,
                       data: {
                         filter: {
-                          "$and": dataFilter
+                          $and: dataFilter,
                         },
                       },
                     })
-                  }
-                  }
+                  }}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -163,17 +165,25 @@ export function DataBaseTable({
       }),
       ...columnsProp?.map(item =>
         columnHelper.accessor(item, {
-          header: () =>
+          header: () => (
             <div>
-              <span className='text-table-header'>{item}</span>
-              {isShow &&
+              <span className="text-table-header">{item}</span>
+              {isShow && (
                 <InputField
                   onClick={e => e.stopPropagation()}
                   onChange={e => handleSearch(item, e.target.value)}
                 />
-              }
-            </div>,
-          cell: info => (info.getValue() !== 'null' ? (typeof (info.getValue()) === 'boolean' ? info.getValue() ? 'true' : 'false' : info.getValue()) : ''),
+              )}
+            </div>
+          ),
+          cell: info =>
+            info.getValue() !== 'null'
+              ? typeof info.getValue() === 'boolean'
+                ? info.getValue()
+                  ? 'true'
+                  : 'false'
+                : info.getValue()
+              : '',
           footer: info => info.column.id,
         }),
       ),
@@ -182,7 +192,7 @@ export function DataBaseTable({
         cell: info => {
           return DataBaseTableContextMenu({
             row: info.row.original,
-            onClose
+            onClose,
           })
         },
         header: () => null,
@@ -194,8 +204,8 @@ export function DataBaseTable({
 
   return (
     <BaseTable
+      data={data ?? []}
       popoverClassName="absolute right-0 top-1 block"
-      data={data || []}
       columns={columns}
       isHiddenCheckbox={true}
       {...props}

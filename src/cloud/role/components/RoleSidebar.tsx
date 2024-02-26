@@ -127,7 +127,7 @@ export function RoleSidebar() {
         </div>
         <RoleTable
           project_id={projectId}
-          data={data?.roles || []}
+          data={data?.roles ?? []}
           offset={offset}
           setOffset={setOffset}
           total={data?.total || 0}

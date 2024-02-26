@@ -121,7 +121,7 @@ export function FirmwareTemplate() {
           </div>
         </div>
         <FirmWareTable
-          data={firmwareData?.data || []}
+          data={firmwareData?.data ?? []}
           offset={offset}
           setOffset={setOffset}
           total={firmwareData?.total ?? 0}
