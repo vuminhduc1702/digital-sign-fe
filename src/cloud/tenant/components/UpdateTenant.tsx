@@ -15,7 +15,7 @@ import {
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 import { UpdateCustomerRole } from './UpdateTenantRole'
-import { CustomerRoleTable } from './TenantRoleTable'
+import { TenantRoleTable } from './TenantRoleTable'
 import { useDisclosure } from '~/utils/hooks'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
@@ -74,8 +74,6 @@ export function UpdateCustomer({
       close()
     }
   }, [isSuccess, close])
-
-  console.log(permissions, 'permissions in update customer')
 
   return (
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
@@ -184,9 +182,9 @@ export function UpdateCustomer({
           />
         ) : null}
         <div className="mt-4 px-14">
-          <CustomerRoleTable
+          <TenantRoleTable
             data={permissions}
-            otherData={{ customerId: customerId }}
+            customerId={customerId}
             isHiddenCheckbox={true}
           />
         </div>

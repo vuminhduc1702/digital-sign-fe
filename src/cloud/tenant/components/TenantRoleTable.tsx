@@ -15,23 +15,21 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
 import { UpdateCustomerRole } from './UpdateTenantRole'
+import { type PermissionEntity, type PermissionEntityTable } from '../types'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
+  customerId: string
   isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 function CustomerTableContextMenu({
   project_id,
-  name,
   role_id: roleIdProps,
   customerId: sub_tenant_id,
 }: {
-  project_id: string
-  role_id: string
-  name: string
   customerId: string
-}) {
+} & PermissionEntity) {
   const { t } = useTranslation()
 
   const {
@@ -112,7 +110,7 @@ function CustomerTableContextMenu({
         <UpdateCustomerRole
           project_id={project_id}
           roleIdProps={roleIdProps}
-          modalTitle="Sửa quyền"
+          modalTitle={t('table:edit_role')}
           isOpenRole={true}
           customerId={sub_tenant_id}
           closeRole={closeEdit}
@@ -122,13 +120,12 @@ function CustomerTableContextMenu({
   )
 }
 
-export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
+export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
   const { t } = useTranslation()
-  const { customerId } = props.otherData
+  const customerId = props.customerId
 
-  console.log(data, customerId, 'check data permission')
-  const columnHelper = createColumnHelper<CustomerRoleEntity>()
-  const columns = useMemo<ColumnDef<CustomerRoleEntity, any>[]>(
+  const columnHelper = createColumnHelper<PermissionEntityTable>()
+  const columns = useMemo<ColumnDef<PermissionEntityTable, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
@@ -140,12 +137,12 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
         footer: info => info.column.id,
       }),
       columnHelper.accessor('project_id', {
-        header: () => <span>Project</span>,
+        header: () => <span>{t('table:project')}</span>,
         cell: info => <div className="text-center">{info.getValue()}</div>,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('role_id', {
-        header: () => <span>Role</span>,
+        header: () => <span>{t('table:role')}</span>,
         cell: info => <div className="text-center">{info.getValue()}</div>,
         footer: info => info.column.id,
       }),
@@ -168,7 +165,7 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
 
   return (
     <BaseTable
-      data={data}
+      data={data || []}
       columns={columns}
       onDataText={t('table:no_tenant_role')}
       {...props}
