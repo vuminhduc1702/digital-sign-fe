@@ -38,19 +38,22 @@ export function UserManage() {
     config: { keepPreviousData: true },
   })
 
-  const { acc: userFlattenData } = flattenData(userData?.users, [
-    'user_id',
-    'name',
-    'email',
-    'role_name',
-    'activate',
-    'org_id',
-    'org_name',
-    'role_name',
-    'role_id',
-    'phone',
-    'profile',
-  ])
+  const { acc: userFlattenData } = flattenData(
+    userData?.users,
+    [
+      'user_id',
+      'name',
+      'email',
+      'role_name',
+      'activate',
+      'org_id',
+      'org_name',
+      'role_name',
+      'role_id',
+      'phone',
+      'profile',
+    ],
+  )
 
   const {
     mutate: mutateDeleteMultipleUsers,
