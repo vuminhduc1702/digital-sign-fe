@@ -15,7 +15,12 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { nameSchema } from '~/utils/schemaValidation'
 import { useEffect } from 'react'
 import { cn } from '~/utils/misc'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/Tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
 
 export const createColumnSchema = z.object({
   fields: z.array(
@@ -82,7 +87,7 @@ export default function CreateColumn({
           isLoading={isLoading}
           size="lg"
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -102,7 +107,7 @@ export default function CreateColumn({
       >
         <>
           <Button
-            className="h-9 w-9 rounded-md"
+            className="size-9 rounded-md"
             variant="trans"
             size="square"
             startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -134,7 +139,7 @@ export default function CreateColumn({
                   <img
                     src={btnDeleteIcon}
                     alt="Delete device template"
-                    className="h-8 w-8"
+                    className="size-8"
                   />
                 }
               />
