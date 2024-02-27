@@ -11,6 +11,10 @@ import { TemplateInfo } from '../components'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
+import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export function LwM2M() {
   const { t } = useTranslation()
@@ -20,6 +24,9 @@ export function LwM2M() {
   const templateId = params.templateId as string
   const selectedModuleId = params.id as string
   const projectId = storage.getProject()?.id
+
+  const [searchQueryData, setSearchQueryData] = useState('')
+  const [searchQueryDataAttr, setSearchQueryDataAttr] = useState('')
 
   // no offset call
   const {
@@ -56,6 +63,31 @@ export function LwM2M() {
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   {/* dummyInput */}
+                  <InputField
+                    type="text"
+                    placeholder={t('table:search')}
+                    value={searchQueryData}
+                    onChange={e => {
+                      const value = e.target.value
+                      setSearchQueryData(value)
+                    }}
+                    endIcon={
+                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                        {searchQueryData.length > 0 && (
+                          <XMarkIcon
+                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                            onClick={() => setSearchQueryData('')}
+                          />
+                        )}
+                        <SearchIcon
+                          className="cursor-pointer flex justify-between align-center"
+                          width={16}
+                          height={16}
+                          viewBox="0 0 16 16"
+                        />
+                      </div>
+                    }
+                  />
                 </div>
               </div>
               <LwM2MTable
@@ -88,6 +120,31 @@ export function LwM2M() {
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   {/* dummyInput */}
+                  <InputField
+                    type="text"
+                    placeholder={t('table:search')}
+                    value={searchQueryDataAttr}
+                    onChange={e => {
+                      const value = e.target.value
+                      setSearchQueryDataAttr(value)
+                    }}
+                    endIcon={
+                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                        {searchQueryDataAttr.length > 0 && (
+                          <XMarkIcon
+                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                            onClick={() => setSearchQueryDataAttr('')}
+                          />
+                        )}
+                        <SearchIcon
+                          className="cursor-pointer flex justify-between align-center"
+                          width={16}
+                          height={16}
+                          viewBox="0 0 16 16"
+                        />
+                      </div>
+                    }
+                  />
                 </div>
               </div>
               <AttrLwM2MTable

@@ -76,6 +76,9 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -108,6 +111,7 @@ export function DashboardDetail() {
   const [isStar, setIsStar] = useState(false)
   const [layoutDashboard, setLayoutDashboard] = useState<RGL.Layout[]>([])
   const [refetchDataState, setRefetchDataState] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { mutate: mutateUpdateDashboard, isLoading: updateDashboardIsLoading } =
     useUpdateDashboard()
@@ -368,6 +372,7 @@ export function DashboardDetail() {
                 widgetInfo?.attribute_config?.map(item => {
                   item.deviceName = getDeviceInfo(item.label)?.name
                 })
+                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(
@@ -500,7 +505,6 @@ export function DashboardDetail() {
                           setFilteredComboboxData={setFilteredComboboxDataMap}
                           data={getMapDeviceList(widgetInfo)}
                         />
-                        {/* dummyInput */}
                       </div>
                     ) : null}
                     {isEditMode ? (

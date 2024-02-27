@@ -10,10 +10,15 @@ import storage from '~/utils/storage'
 import { useGetEvents } from '../api/eventAPI'
 import { CreateEvent, EventTable } from '../components/Event'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
+import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const params = useParams()
   const orgId = params.orgId as string
@@ -27,6 +32,23 @@ export function EventManage() {
     projectId,
     config: { keepPreviousData: true },
   })
+
+  // flatten the data
+  const { acc: eventFlattenData } = flattenData(eventData?.events, [
+    'id',
+    'name',
+    'group_name',
+    'onClick',
+    'status',
+    'interval',
+    'retry',
+    'schedule',
+    'action',
+    'condition',
+    'org_id',
+    'group_id',
+    // 'cmd',
+  ])
 
   const {
     mutate: mutateDeleteMultipleEvents,
@@ -113,6 +135,31 @@ export function EventManage() {
             )}
             <CreateEvent />
             {/* dummyInput */}
+            <InputField
+              type="text"
+              placeholder={t('table:search')}
+              value={searchQuery}
+              onChange={e => {
+                const value = e.target.value
+                setSearchQuery(value)
+              }}
+              endIcon={
+                <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                  {searchQuery.length > 0 && (
+                    <XMarkIcon
+                      className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                      onClick={() => setSearchQuery('')}
+                    />
+                  )}
+                  <SearchIcon
+                    className="cursor-pointer flex justify-between align-center"
+                    width={16}
+                    height={16}
+                    viewBox="0 0 16 16"
+                  />
+                </div>
+              }
+            />
           </div>
         </div>
         <EventTable

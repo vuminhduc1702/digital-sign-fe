@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -12,19 +12,56 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
 
+import { type Attribute } from '~/types'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
+import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
+import { EntityType } from '~/cloud/orgManagement/api/attrAPI'
+
+function HandleRequest({
+  entityId,
+  entityType,
+  setData,
+}: {
+  entityId: string
+  entityType: EntityType
+  setData?: React.Dispatch<React.SetStateAction<Attribute[]>>
+}) {
+  const { data: attrsData } = useGetAttrs({
+    entityType,
+    entityId,
+  })
+
+  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
+    'last_update_ts',
+    'attribute_key',
+    'logged',
+    'value_type',
+    'value',
+  ])
+
+  useEffect(() => {
+    setData?.(attrFlattenData)
+  }, [attrsData])
+
+  return null
+}
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
+
+  const [attrsData, setAttrsData] = useState<Attribute[]>([])
 
   const projectId = storage.getProject()?.id
   const {
@@ -45,14 +82,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrsData?.attributes?.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    attrsData?.attributes?.reduce((acc, curr, index) => {
+  const aoo: Array<{ [key: string]: string }> | undefined = attrsData?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -68,12 +105,21 @@ export function Default() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
-      {projectId && templateId ? (
+      {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
+          {
+            <HandleRequest
+              entityId={templateId}
+              entityType={entityType}
+              setData={setAttrsData}
+            />
+          }
           <Suspense
             fallback={
               <div className="flex grow items-center justify-center md:col-span-2">
@@ -109,7 +155,7 @@ export function Default() {
                       )}
                       triggerButton={
                         <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>{t('btn:delete')}:</div>
+                          <div>Xoá:</div>
                           <div>{Object.keys(rowSelection).length}</div>
                         </div>
                       }
@@ -135,7 +181,7 @@ export function Default() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="size-5"
+                              className="h-5 w-5"
                             />
                           }
                         />
@@ -144,10 +190,35 @@ export function Default() {
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
                   {/* dummyInput */}
+                  <InputField
+                    type="text"
+                    placeholder={t('table:search')}
+                    value={searchQuery}
+                    onChange={e => {
+                      const value = e.target.value
+                      setSearchQuery(value)
+                    }}
+                    endIcon={
+                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                        {searchQuery.length > 0 && (
+                          <XMarkIcon
+                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                            onClick={() => setSearchQuery('')}
+                          />
+                        )}
+                        <SearchIcon
+                          className="cursor-pointer flex justify-between align-center"
+                          width={16}
+                          height={16}
+                          viewBox="0 0 16 16"
+                        />
+                      </div>
+                    }
+                  />
                 </div>
               </div>
               <AttrTable
-                data={attrsData?.attributes ?? []}
+                data={attrsData}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}

@@ -939,6 +939,8 @@
     "next_page": "Trang sau",
     "prev_page": "Trang trước",
     "no": "STT",
+    "tenant": "Tenant",
+    "email": "Email", 
     "last_updated": "Cập nhật",
     "starred": "Yêu thích",
     "excel": "Excel",

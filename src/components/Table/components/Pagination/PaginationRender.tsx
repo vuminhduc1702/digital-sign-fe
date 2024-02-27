@@ -3,7 +3,7 @@ import { Button } from '../../../Button'
 import { cn } from '~/utils/misc'
 import { useTranslation } from 'react-i18next'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu'
 
@@ -35,13 +35,19 @@ export default function PaginationRender({
 
   const { pageSize } = table.getState().pagination
 
-  const [pageIndex, setPageIndex] = useState(0)
+  const [pageIndex, setPageIndex] = useState<number>(0)
+
+  useEffect(() => {
+    if (offset == 0) {
+      setPageIndex(0)
+    }
+  }, [totalAttrs])
 
   return (
-    <div className="relative mt-3 flex items-center justify-between gap-2">
+    <div className="flex items-center justify-between gap-2 h-[60px]">
       <div
         className={cn('flex flex-col', {
-          'absolute bottom-4': isAbsoluteBtn,
+          'absolute bottom-8': isAbsoluteBtn,
         })}
       >
         <div>
@@ -60,7 +66,7 @@ export default function PaginationRender({
       </div>
       <div
         className={cn('flex gap-x-2', {
-          'absolute bottom-4 right-0': isAbsoluteBtn,
+          'absolute bottom-8 right-[36px]': isAbsoluteBtn,
         })}
       >
         <Button
@@ -69,17 +75,16 @@ export default function PaginationRender({
             if (
               limitPagination < totalAttrs &&
               offset / limitPagination > 0 &&
-              offset / limitPagination <= pageIndex &&
-              (pageIndex - 1) * pageSize <= limitPagination
+              offset / limitPagination <= pageIndex
             ) {
               setOffset?.(offset => offset - limitPagination)
-              setPageIndex(prev => prev - 1)
               setTimeout(() => {
                 table.setPageIndex(pageIndex - offset / limitPagination - 1)
               }, 1)
-            } else {
               setPageIndex(prev => prev - 1)
+            } else {
               table.setPageIndex(pageIndex - 1)
+              setPageIndex(prev => prev - 1)
             }
           }}
           disabled={pageIndex === 0 || isPreviousData}
@@ -93,6 +98,7 @@ export default function PaginationRender({
           pageSize={pageSize}
           table={table}
           setCurrentPage={setPageIndex}
+          setOffset={setOffset}
         />
         <Button
           className="rounded-r-md border-none"
@@ -103,8 +109,8 @@ export default function PaginationRender({
             ) {
               setOffset?.(offset => offset + limitPagination)
             }
+            table.setPageIndex(pageIndex + 1 - offset/limitPagination)
             setPageIndex(prev => prev + 1)
-            table.setPageIndex(pageIndex + 1)
           }}
           disabled={(pageIndex + 1) * pageSize >= totalAttrs || isPreviousData}
           variant="secondaryLight"

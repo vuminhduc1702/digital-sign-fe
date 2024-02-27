@@ -11,11 +11,16 @@ import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useGetUsers } from '../api/userAPI'
 import { useDeleteMultipleUsers } from '../api/userAPI/deleteMultipleUsers'
 import { CreateUser, UserTable } from '../components/User'
+import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export function UserManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
+  const [searchQuery, setSearchQuery] = useState('')
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
@@ -32,6 +37,20 @@ export function UserManage() {
     offset,
     config: { keepPreviousData: true },
   })
+
+  const { acc: userFlattenData } = flattenData(userData?.users, [
+    'user_id',
+    'name',
+    'email',
+    'role_name',
+    'activate',
+    'org_id',
+    'org_name',
+    'role_name',
+    'role_id',
+    'phone',
+    'profile',
+  ])
 
   const {
     mutate: mutateDeleteMultipleUsers,
@@ -51,7 +70,7 @@ export function UserManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    userData?.users?.reduce((acc, curr, index) => {
+    userFlattenData.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -122,6 +141,31 @@ export function UserManage() {
             )}
             <CreateUser />
             {/* dummyInput */}
+            <InputField
+              type="text"
+              placeholder={t('table:search')}
+              value={searchQuery}
+              onChange={e => {
+                const value = e.target.value
+                setSearchQuery(value)
+              }}
+              endIcon={
+                <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                  {searchQuery.length > 0 && (
+                    <XMarkIcon
+                      className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                      onClick={() => setSearchQuery('')}
+                    />
+                  )}
+                  <SearchIcon
+                    className="cursor-pointer flex justify-between align-center"
+                    width={16}
+                    height={16}
+                    viewBox="0 0 16 16"
+                  />
+                </div>
+              }
+            />
           </div>
         </div>
         <UserTable
