@@ -65,7 +65,6 @@ export function LwM2M() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQueryData}
                     setSearchQuery={setSearchQueryData}
@@ -101,7 +100,6 @@ export function LwM2M() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQueryDataAttr}
                     setSearchQuery={setSearchQueryDataAttr}

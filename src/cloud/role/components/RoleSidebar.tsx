@@ -124,7 +124,6 @@ export function RoleSidebar() {
               />
             )}
             <CreateRole />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

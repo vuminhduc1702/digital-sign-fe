@@ -123,7 +123,6 @@ export function CustomProtocolManage() {
               />
             )}
             <CreateAdapter />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

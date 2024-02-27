@@ -60,7 +60,6 @@ export function DataBaseSidebar() {
           <p>{t('cloud:db_template.sidebar.title')}</p>
         </div>
         <CreateDataBase />
-        {/* dummyInput */}
         <SearchField
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

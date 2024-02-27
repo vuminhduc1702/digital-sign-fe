@@ -115,7 +115,6 @@ export function GroupManage() {
               />
             )}
             <CreateGroup />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

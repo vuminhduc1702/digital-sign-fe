@@ -125,7 +125,6 @@ export function DeviceManage() {
               />
             )}
             <CreateDevice />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

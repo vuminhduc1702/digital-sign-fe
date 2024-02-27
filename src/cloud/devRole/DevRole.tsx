@@ -74,7 +74,6 @@ export default function DevRole() {
           {projectId && (
             <div className="flex items-center gap-x-3">
               <CreateRole project_id={projectId} />
-              {/* dummyInput */}
               <SearchField
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}

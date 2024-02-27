@@ -124,7 +124,6 @@ export function GroupDetail() {
               />
             )}
             <CreateAttr entityId={groupId} entityType="GROUP" />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

@@ -115,7 +115,6 @@ export function DashboardManage() {
               />
             )}
             <CreateDashboard projectId={projectId} />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

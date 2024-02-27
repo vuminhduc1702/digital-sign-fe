@@ -153,7 +153,7 @@ export function Default() {
                       )}
                       triggerButton={
                         <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>Xoá:</div>
+                          <div>{t('btn:delete')}:</div>
                           <div>{Object.keys(rowSelection).length}</div>
                         </div>
                       }
@@ -179,7 +179,7 @@ export function Default() {
                             <img
                               src={btnSubmitIcon}
                               alt="Submit"
-                              className="h-5 w-5"
+                              className="size-5"
                             />
                           }
                         />
@@ -187,7 +187,6 @@ export function Default() {
                     />
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}

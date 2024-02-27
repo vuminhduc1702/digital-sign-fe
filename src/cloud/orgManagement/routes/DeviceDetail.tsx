@@ -225,7 +225,6 @@ export function DeviceDetail() {
                     />
                   )}
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQueryAttrs}
                     setSearchQuery={setSearchQueryAttrs}
@@ -248,7 +247,6 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQueryAttrsLog}
                     setSearchQuery={setSearchQueryAttrsLog}
@@ -273,7 +271,6 @@ export function DeviceDetail() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQueryMQTTLog}
                     setSearchQuery={setSearchQueryMQTTLog}

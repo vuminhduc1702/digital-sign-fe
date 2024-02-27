@@ -45,7 +45,6 @@ export function PackageSidebar() {
         </div>
         <CreatePackage />
         <div className="w-full">
-          {/* dummyInput */}
           <SearchField
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}

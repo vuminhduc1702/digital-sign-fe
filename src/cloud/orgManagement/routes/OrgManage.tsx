@@ -171,7 +171,6 @@ export function OrgManage() {
                     />
                   )}
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                  {/* dummyInput */}
                   <SearchField
                     searchQuery={searchQuery}
                     setSearchQuery={setSearchQuery}

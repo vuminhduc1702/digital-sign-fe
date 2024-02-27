@@ -132,7 +132,6 @@ export function EventManage() {
               />
             )}
             <CreateEvent />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

@@ -141,7 +141,6 @@ export function UserManage() {
               />
             )}
             <CreateUser />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

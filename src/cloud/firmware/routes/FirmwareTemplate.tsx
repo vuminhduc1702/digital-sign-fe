@@ -119,7 +119,6 @@ export function FirmwareTemplate() {
               />
             )}
             <CreateFirmWare />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

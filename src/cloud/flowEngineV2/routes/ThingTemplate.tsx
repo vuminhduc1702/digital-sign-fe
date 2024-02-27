@@ -117,7 +117,6 @@ export function ThingTemplate() {
               />
             )}
             <CreateThing thingType="thing" />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

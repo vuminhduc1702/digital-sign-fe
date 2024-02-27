@@ -39,7 +39,6 @@ export function ThingServices() {
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateThingService thingServiceData={thingData?.data} />
-            {/* dummyInput */}
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
