@@ -76,9 +76,6 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
-import { InputField } from '~/components/Form'
-import { SearchIcon } from '~/components/SVGIcons'
-import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -327,7 +324,7 @@ export function DashboardDetail() {
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
       <StarFilledIcon
-        className={cn('absolute left-2 top-2 h-5 w-5 cursor-pointer', {
+        className={cn('absolute left-2 top-2 size-5 cursor-pointer', {
           'text-amber-400': isStar,
           'text-white': !isStar,
           'cursor-not-allowed': !isEditMode,
@@ -338,11 +335,11 @@ export function DashboardDetail() {
           }
         }}
       />
-      <div className="bg-secondary-500 flex grow flex-col justify-between shadow-lg">
+      <div className="flex grow flex-col justify-between bg-secondary-500 shadow-lg">
         {Object.keys(widgetDetailDB).length === 0 &&
         Object.keys(widgetList).length === 0 &&
         connectionStatus === 'Open' ? (
-          <div className="text-h1 grid grow place-content-center">
+          <div className="grid grow place-content-center text-h1">
             {t('cloud:dashboard.add_dashboard.note')}
           </div>
         ) : null}
@@ -426,7 +423,7 @@ export function DashboardDetail() {
                             h: widgetInfo?.description === 'CARD' ? 1 : 3,
                           }
                     }
-                    className={cn('bg-secondary-500 relative')}
+                    className={cn('relative bg-secondary-500')}
                     data-iseditmode={isEditMode}
                   >
                     <p
@@ -517,7 +514,7 @@ export function DashboardDetail() {
                           width={20}
                           height={20}
                           viewBox="0 0 20 20"
-                          className="drag-handle text-secondary-700 hover:text-primary-400 cursor-grab active:cursor-grabbing"
+                          className="drag-handle cursor-grab text-secondary-700 hover:text-primary-400 active:cursor-grabbing"
                         />
                         {widgetInfo?.description === 'CONTROLLER' ? (
                           <UpdateControllerButton
@@ -535,7 +532,7 @@ export function DashboardDetail() {
                         <DeleteIcon
                           width={20}
                           height={20}
-                          className="text-secondary-700 hover:text-primary-400 cursor-pointer"
+                          className="cursor-pointer text-secondary-700 hover:text-primary-400"
                           viewBox="0 0 20 20"
                           onClick={() => {
                             if (widgetList?.hasOwnProperty(widgetId)) {
@@ -572,7 +569,7 @@ export function DashboardDetail() {
                 triggerRerenderLayout()
               }}
               startIcon={
-                <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
+                <img src={btnCancelIcon} alt="Cancel" className="size-5" />
               }
             >
               {t('btn:back')}
@@ -607,7 +604,7 @@ export function DashboardDetail() {
                 }
               }}
               startIcon={
-                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                <img src={btnSubmitIcon} alt="Submit" className="size-5" />
               }
             >
               {t('btn:confirm')}
@@ -661,7 +658,7 @@ export function DashboardDetail() {
                         <img
                           src={btnCancelIcon}
                           alt="Submit"
-                          className="h-5 w-5"
+                          className="size-5"
                         />
                       }
                     />
@@ -676,7 +673,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -713,7 +710,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -751,7 +748,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -788,7 +785,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -823,7 +820,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -860,7 +857,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 active:bg-primary-300 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -897,7 +894,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4"
                             variant="secondaryLight"
                             onClick={() => {
                               close()
@@ -934,7 +931,7 @@ export function DashboardDetail() {
                           <Button
                             type="button"
                             size="square"
-                            className="bg-secondary-400 active:bg-primary-300 flex w-[245px] justify-between border-none px-4"
+                            className="flex w-[245px] justify-between border-none bg-secondary-400 px-4 active:bg-primary-300"
                             variant="secondaryLight"
                             onClick={() => {
                               close()

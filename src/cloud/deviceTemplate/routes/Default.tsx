@@ -18,8 +18,7 @@ import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
-import { flattenData } from '~/utils/misc'
-import { EntityType } from '~/cloud/orgManagement/api/attrAPI'
+import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { SearchField } from '~/components/Input'
 
 function HandleRequest({
