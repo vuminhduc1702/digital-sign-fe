@@ -19,10 +19,7 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
-import { flattenData } from '~/utils/misc'
-import { InputField } from '~/components/Form'
-import { SearchIcon } from '~/components/SVGIcons'
-import { XMarkIcon } from '@heroicons/react/20/solid'
+import { SearchField } from '~/components/Input'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -229,30 +226,9 @@ export function DeviceDetail() {
                   )}
                   <CreateAttr entityId={deviceId} entityType="DEVICE" />
                   {/* dummyInput */}
-                  <InputField
-                    type="text"
-                    placeholder={t('table:search')}
-                    value={searchQueryAttrs}
-                    onChange={e => {
-                      const value = e.target.value
-                      setSearchQueryAttrs(value)
-                    }}
-                    endIcon={
-                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
-                        {searchQueryAttrs.length > 0 && (
-                          <XMarkIcon
-                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
-                            onClick={() => setSearchQueryAttrs('')}
-                          />
-                        )}
-                        <SearchIcon
-                          className="cursor-pointer flex justify-between align-center"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 16 16"
-                        />
-                      </div>
-                    }
+                  <SearchField
+                    searchQuery={searchQueryAttrs}
+                    setSearchQuery={setSearchQueryAttrs}
                   />
                 </div>
               </div>
@@ -273,30 +249,9 @@ export function DeviceDetail() {
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   {/* dummyInput */}
-                  <InputField
-                    type="text"
-                    placeholder={t('table:search')}
-                    value={searchQueryAttrsLog}
-                    onChange={e => {
-                      const value = e.target.value
-                      setSearchQueryAttrsLog(value)
-                    }}
-                    endIcon={
-                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
-                        {searchQueryAttrsLog.length > 0 && (
-                          <XMarkIcon
-                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
-                            onClick={() => setSearchQueryAttrsLog('')}
-                          />
-                        )}
-                        <SearchIcon
-                          className="cursor-pointer flex justify-between align-center"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 16 16"
-                        />
-                      </div>
-                    }
+                  <SearchField
+                    searchQuery={searchQueryAttrsLog}
+                    setSearchQuery={setSearchQueryAttrsLog}
                   />
                 </div>
               </div>
@@ -319,30 +274,9 @@ export function DeviceDetail() {
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
                   {/* dummyInput */}
-                  <InputField
-                    type="text"
-                    placeholder={t('table:search')}
-                    value={searchQueryMQTTLog}
-                    onChange={e => {
-                      const value = e.target.value
-                      setSearchQueryMQTTLog(value)
-                    }}
-                    endIcon={
-                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
-                        {searchQueryMQTTLog.length > 0 && (
-                          <XMarkIcon
-                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
-                            onClick={() => setSearchQueryMQTTLog('')}
-                          />
-                        )}
-                        <SearchIcon
-                          className="cursor-pointer flex justify-between align-center"
-                          width={16}
-                          height={16}
-                          viewBox="0 0 16 16"
-                        />
-                      </div>
-                    }
+                  <SearchField
+                    searchQuery={searchQueryMQTTLog}
+                    setSearchQuery={setSearchQueryMQTTLog}
                   />
                 </div>
               </div>

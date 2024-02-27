@@ -11,9 +11,7 @@ import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
-import { InputField } from '~/components/Form'
-import { SearchIcon } from '~/components/SVGIcons'
-import { XMarkIcon } from '@heroicons/react/20/solid'
+import { SearchField } from '~/components/Input'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
   return enArr?.map(item => {
@@ -127,30 +125,9 @@ export function RoleSidebar() {
             )}
             <CreateRole />
             {/* dummyInput */}
-            <InputField
-              type="text"
-              placeholder={t('table:search')}
-              value={searchQuery}
-              onChange={e => {
-                const value = e.target.value
-                setSearchQuery(value)
-              }}
-              endIcon={
-                <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
-                  {searchQuery.length > 0 && (
-                    <XMarkIcon
-                      className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
-                      onClick={() => setSearchQuery('')}
-                    />
-                  )}
-                  <SearchIcon
-                    className="cursor-pointer flex justify-between align-center"
-                    width={16}
-                    height={16}
-                    viewBox="0 0 16 16"
-                  />
-                </div>
-              }
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
             />
           </div>
         </div>
