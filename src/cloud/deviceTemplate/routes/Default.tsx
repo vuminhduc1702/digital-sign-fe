@@ -22,18 +22,20 @@ import { flattenData } from '~/utils/misc'
 import { InputField } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import { EntityType } from '~/cloud/orgManagement/api/attrAPI'
 
-export function Default() {
-  const { t } = useTranslation()
-  const ref = useRef(null)
-  const [searchQuery, setSearchQuery] = useState('')
-
-  const { templateId } = useParams()
-  const entityType = 'TEMPLATE'
-
+function HandleRequest({
+  entityId,
+  entityType,
+  setData,
+}: {
+  entityId: string
+  entityType: EntityType
+  setData?: React.Dispatch<React.SetStateAction<Attribute[]>>
+}) {
   const { data: attrsData } = useGetAttrs({
     entityType,
-    entityId: templateId,
+    entityId,
   })
 
   const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
@@ -43,6 +45,23 @@ export function Default() {
     'value_type',
     'value',
   ])
+
+  useEffect(() => {
+    setData?.(attrFlattenData)
+  }, [attrsData])
+
+  return null
+}
+
+export function Default() {
+  const { t } = useTranslation()
+  const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  const { templateId } = useParams()
+  const entityType = 'TEMPLATE'
+
+  const [attrsData, setAttrsData] = useState<Attribute[]>([])
 
   const projectId = storage.getProject()?.id
   const {
@@ -63,14 +82,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrFlattenData.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    attrFlattenData.reduce((acc, curr, index) => {
+  const aoo: Array<{ [key: string]: string }> | undefined = attrsData?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -86,12 +105,21 @@ export function Default() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
-      {projectId && templateId ? (
+      {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
+          {
+            <HandleRequest
+              entityId={templateId}
+              entityType={entityType}
+              setData={setAttrsData}
+            />
+          }
           <Suspense
             fallback={
               <div className="flex grow items-center justify-center md:col-span-2">
@@ -190,7 +218,7 @@ export function Default() {
                 </div>
               </div>
               <AttrTable
-                data={attrFlattenData}
+                data={attrsData}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}
