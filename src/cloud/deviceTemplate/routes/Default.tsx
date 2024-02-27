@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -19,19 +19,30 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
 import { flattenData } from '~/utils/misc'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
 
-  const { acc: attrFlattenData } = flattenData(
-    attrsData?.attributes,
-    ['last_update_ts', 'attribute_key', 'logged', 'value_type', 'value'],
-  )
+  const { data: attrsData } = useGetAttrs({
+    entityType,
+    entityId: templateId,
+  })
+
+  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
+    'last_update_ts',
+    'attribute_key',
+    'logged',
+    'value_type',
+    'value',
+  ])
 
   const projectId = storage.getProject()?.id
   const {
@@ -151,6 +162,31 @@ export function Default() {
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
                   {/* dummyInput */}
+                  <InputField
+                    type="text"
+                    placeholder={t('table:search')}
+                    value={searchQuery}
+                    onChange={e => {
+                      const value = e.target.value
+                      setSearchQuery(value)
+                    }}
+                    endIcon={
+                      <div className="absolute top-1/2 right-2 -translate-y-1/2 transform flex justify-center">
+                        {searchQuery.length > 0 && (
+                          <XMarkIcon
+                            className="h-[16px] w-[16px] mr-[5px] transform cursor-pointer opacity-50 flex align-center justify-center cursor-pointer"
+                            onClick={() => setSearchQuery('')}
+                          />
+                        )}
+                        <SearchIcon
+                          className="cursor-pointer flex justify-between align-center"
+                          width={16}
+                          height={16}
+                          viewBox="0 0 16 16"
+                        />
+                      </div>
+                    }
+                  />
                 </div>
               </div>
               <AttrTable

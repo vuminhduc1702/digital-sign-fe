@@ -129,7 +129,7 @@ export function BillingCustomerTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('name', {
-        header: () => <span>Tenant</span>,
+        header: () => <span>{t('table:tenant')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
@@ -141,7 +141,7 @@ export function BillingCustomerTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('email', {
-        header: () => <span>Email</span>,
+        header: () => <span>{t('table:email')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

@@ -4,6 +4,7 @@ import { type Table } from '@tanstack/react-table'
 import { cn } from '~/utils/misc'
 
 import { DotsHorizontalIcon } from '@radix-ui/react-icons'
+import { limitPagination } from '~/utils/const'
 
 const DOTS = '...'
 
@@ -14,6 +15,8 @@ const Pagination = <T extends Record<string, any>>({
   currentPage,
   pageSize,
   setCurrentPage,
+  setOffset,
+  limit = limitPagination,
 }: {
   table: Table<T>
   totalCount: number
@@ -21,6 +24,8 @@ const Pagination = <T extends Record<string, any>>({
   currentPage: number
   pageSize: number
   setCurrentPage?: React.Dispatch<React.SetStateAction<number>>
+  setOffset: React.Dispatch<React.SetStateAction<number>>
+  limit?: number
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -50,6 +55,9 @@ const Pagination = <T extends Record<string, any>>({
                 'text-primary-400': pageNumber === currentPage + 1,
               })}
               onClick={() => {
+                if (pageNumber * pageSize >= limit) {
+                  setOffset(pageNumber * pageSize - limit)
+                }
                 setCurrentPage?.(pageNumber - 1)
                 table.setPageIndex(pageNumber - 1)
               }}

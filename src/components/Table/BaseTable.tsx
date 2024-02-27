@@ -196,7 +196,7 @@ export function BaseTable<T extends Record<string, any>>({
             className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
             id="table-ref"
           >
-            <thead className="overflow-y-auto border-b-2 bg-gray-200 text-center">
+            <thead className="border-b-2 bg-gray-200 text-center">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {
@@ -239,7 +239,9 @@ export function BaseTable<T extends Record<string, any>>({
                                 }[header.column.getIsSorted() as string] ??
                                   null}
                               </div>
-                              {header.column.getCanFilter() ? (
+                              {header.column.id !== 'select' &&
+                              header.column.id !== 'contextMenu' && 
+                              header.column.id !== 'stt' ? (
                                 <div>
                                   <Filter
                                     column={header.column}
@@ -447,7 +449,7 @@ export function BaseTable<T extends Record<string, any>>({
                   )
                 })
               ) : (
-                <td colSpan={999} className="py-[200px] text-center">
+                <td colSpan={999} className="py-[150px] text-center">
                   {onDataText || t('error:no_data')}
                 </td>
               )}
@@ -455,16 +457,18 @@ export function BaseTable<T extends Record<string, any>>({
           </table>
         </>
       )}
-      <PaginationRender
-        totalAttrs={totalAttrs}
-        limitPagination={limitPagination}
-        offset={offset}
-        setOffset={setOffset}
-        isPreviousData={isPreviousData}
-        table={table}
-        isAbsoluteBtn={isAbsoluteBtn}
-        setPageSize={table.setPageSize}
-      />
+      {totalAttrs > 0 && (
+        <PaginationRender
+          totalAttrs={totalAttrs}
+          limitPagination={limitPagination}
+          offset={offset}
+          setOffset={setOffset}
+          isPreviousData={isPreviousData}
+          table={table}
+          isAbsoluteBtn={isAbsoluteBtn}
+          setPageSize={table.setPageSize}
+        />
+      )}
     </div>
   )
 }

@@ -12,14 +12,13 @@ export default function PageSizeLimit({
   function handlePageLimitSelection(
     event: React.ChangeEvent<HTMLSelectElement>,
   ) {
-    console.log(event.target.value)
     setPageSize(Number(event?.target.value))
   }
 
   return (
     <div className="text-body-light">
       <span>{t('table:result_limit')}</span>
-      <select name="pageLimit" id="" onChange={handlePageLimitSelection}
+      <select name="pageLimit" onChange={handlePageLimitSelection}
         className="outline-none"
       >
         {PAGE_SIZE_LIMIT.map((item, index) => {

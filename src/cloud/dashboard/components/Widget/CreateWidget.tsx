@@ -521,8 +521,6 @@ export function CreateWidget({
       value: string
       label: string
     }> = []
-    console.log(deviceData)
-    console.log(attrChartData)
     attrChartData?.entities?.map(item => {
       item?.attr_keys?.map(attr => {
         if (attr === attribute) {
@@ -535,7 +533,6 @@ export function CreateWidget({
                   attr.attribute_key === attribute && attr.value_type === 'DBL',
               ),
           )
-          console.log(devices)
           devices?.map(device => {
             const deviceInfo = getDeviceInfo(device.id)
             if (deviceInfo.includes('undefined')) return

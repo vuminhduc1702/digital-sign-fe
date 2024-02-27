@@ -202,6 +202,8 @@ export function UpdateWidget({
       },
     },
   })
+  console.log(formState.errors)
+  console.log(widgetInfoMemo)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
