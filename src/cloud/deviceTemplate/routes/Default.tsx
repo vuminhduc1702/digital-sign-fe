@@ -36,16 +36,8 @@ function HandleRequest({
     entityId,
   })
 
-  const { acc: attrFlattenData } = flattenData(attrsData?.attributes, [
-    'last_update_ts',
-    'attribute_key',
-    'logged',
-    'value_type',
-    'value',
-  ])
-
   useEffect(() => {
-    setData?.(attrFlattenData)
+    setData?.(attrsData?.attributes || [])
   }, [attrsData])
 
   return null

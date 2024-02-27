@@ -11,7 +11,6 @@ import { TemplateInfo } from '../components'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
-import { flattenData } from '~/utils/misc'
 import { SearchField } from '~/components/Input'
 
 export function LwM2M() {
@@ -38,10 +37,6 @@ export function LwM2M() {
       module => module.id === selectedModuleId,
     )
   const selectedAttributes = selectedModule?.attribute_info || []
-  const { acc: templateLwM2MFlattenDataAttr } = flattenData(
-    selectedAttributes,
-    ['action', 'name', 'id', 'kind', 'type'],
-  )
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">

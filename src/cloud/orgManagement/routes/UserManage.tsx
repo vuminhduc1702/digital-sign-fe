@@ -11,7 +11,6 @@ import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useGetUsers } from '../api/userAPI'
 import { useDeleteMultipleUsers } from '../api/userAPI/deleteMultipleUsers'
 import { CreateUser, UserTable } from '../components/User'
-import { flattenData } from '~/utils/misc'
 import { SearchField } from '~/components/Input'
 
 export function UserManage() {
@@ -36,23 +35,6 @@ export function UserManage() {
     config: { keepPreviousData: true },
   })
 
-  const { acc: userFlattenData } = flattenData(
-    userData?.users,
-    [
-      'user_id',
-      'name',
-      'email',
-      'role_name',
-      'activate',
-      'org_id',
-      'org_name',
-      'role_name',
-      'role_id',
-      'phone',
-      'profile',
-    ],
-  )
-
   const {
     mutate: mutateDeleteMultipleUsers,
     isLoading,
@@ -71,7 +53,7 @@ export function UserManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    userFlattenData.reduce((acc, curr, index) => {
+    userData?.users?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),

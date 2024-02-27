@@ -167,12 +167,11 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
   )
 
   return (
-    // <BaseTable
-    //   data={data}
-    //   columns={columns}
-    //   onDataText={t('table:no_tenant_role')}
-    //   {...props}
-    // />
-    <div></div>
+    <BaseTable
+      data={data}
+      columns={columns}
+      onDataText={t('table:no_tenant_role')}
+      {...props}
+    />
   )
 }
