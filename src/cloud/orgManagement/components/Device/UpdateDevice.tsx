@@ -31,6 +31,7 @@ import { type DeviceAdditionalInfo } from '../../types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { ComplexTree } from '~/components/ComplexTree'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -113,7 +114,7 @@ export function UpdateDevice({
 
   const defaultComboboxGroupData = useDefaultCombobox('group')
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',
@@ -166,7 +167,7 @@ export function UpdateDevice({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -176,7 +177,7 @@ export function UpdateDevice({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -209,28 +210,13 @@ export function UpdateDevice({
               error={formState.errors['name']}
               registration={register('name')}
             />
-
-            <SelectDropdown
-              label={t('cloud:org_manage.device_manage.add_device.parent')}
+            <ComplexTree
               name="org_id"
-              control={control}
-              options={orgSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:org') ||
-                option.label === t('table:no_in_org')
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              loadingMessage={() => t('loading:org')}
-              isLoading={orgIsLoading}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions?.find(org => org.value === org_id)}
-              handleClearSelectDropdown={() =>
-                selectDropdownGroupId.current?.clearValue()
-              }
-              handleChangeSelect={() =>
-                selectDropdownGroupId.current?.clearValue()
-              }
+              label={t('cloud:org_manage.device_manage.add_device.parent')}
               error={formState?.errors?.org_id}
+              control={control}
+              options={orgData?.organizations}
+              customOnChange={() => selectDropdownGroupId.current?.clearValue()}
             />
 
             <SelectDropdown
@@ -323,7 +309,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -332,7 +318,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}

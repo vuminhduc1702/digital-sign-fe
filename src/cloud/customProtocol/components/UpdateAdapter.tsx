@@ -152,7 +152,7 @@ export function UpdateAdapter({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="cancel" className="h-5 w-5" />
             }
           />
           <Button
@@ -163,7 +163,7 @@ export function UpdateAdapter({
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </>
@@ -345,9 +345,9 @@ export function UpdateAdapter({
                     onClick={() => setIsShow(!isShow)}
                   >
                     {isShow ? (
-                      <LuChevronDown className="size-5" />
+                      <LuChevronDown className="h-5 w-5" />
                     ) : (
-                      <LuChevronRight className="size-5" />
+                      <LuChevronRight className="h-5 w-5" />
                     )}
                   </div>
                   <Button
@@ -426,7 +426,7 @@ export function UpdateAdapter({
                         <img
                           src={btnDeleteIcon}
                           alt="Delete schema"
-                          className="size-9"
+                          className="h-9 w-9"
                         />
                       }
                     />
@@ -459,7 +459,7 @@ export function UpdateAdapter({
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <Button
                     className="rounded-md"
@@ -499,7 +499,7 @@ export function UpdateAdapter({
                         <img
                           src={btnDeleteIcon}
                           alt="Delete topic"
-                          className="size-10"
+                          className="h-10 w-10"
                         />
                       }
                     />

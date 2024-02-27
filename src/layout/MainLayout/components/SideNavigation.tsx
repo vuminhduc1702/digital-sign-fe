@@ -39,7 +39,7 @@ function SideNavigation() {
       <NavLink to={`${PATHS.OVER_VIEW}/${projectId}`}>
         <div
           className={clsx(
-            'mb-3 flex cursor-pointer items-center gap-x-3 hover:text-primary-400',
+            'hover:text-primary-400 mb-3 flex cursor-pointer items-center gap-x-3',
             {
               'text-primary-400': value === 'overview',
             },
@@ -60,150 +60,150 @@ function SideNavigation() {
         onValueChange={setValue}
       >
         <AccordionItem value="device" className="border-none">
-          <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
+          <AccordionTrigger className="hover:text-primary-400 data-[state=open]:text-primary-400 my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:no-underline">
             <img
               src={thietbiIcon}
               alt="Overview"
               className="aspect-square w-5"
             />
             <div>{t('sidebar:device.title')}</div>
-            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.DEVKIT}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:device.devkit')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.MODULE}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:device.module')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>
 
         <AccordionItem value="cloud" className="border-none">
-          <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
+          <AccordionTrigger className="hover:text-primary-400 data-[state=open]:text-primary-400 my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:no-underline">
             <img
               src={dammayIcon}
               alt="Overview"
               className="aspect-square w-5"
             />
             <div>{t('sidebar:cloud.title')}</div>
-            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.ORG}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.org_management')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.THING_TEMPLATE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.flow_engine_v2')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.FIRM_WARE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.firm_ware')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DEVICE_TEMPLATE}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.device_template')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.FLOW_ENGINE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.flow_engine')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DASHBOARD}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.dashboard')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.ROLE_MANAGE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.role_manage')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.CUSTOM_PROTOCOL}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.custom_protocol')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.DB_TEMPLATE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:cloud.db_template')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>
 
         <AccordionItem value="application" className="border-none">
-          <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
+          <AccordionTrigger className="hover:text-primary-400 data-[state=open]:text-primary-400 my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:no-underline">
             <img
               src={ungdungIcon}
               alt="Application"
               className="aspect-square w-5"
             />
             <div>{t('sidebar:application.title')}</div>
-            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.APPSDK}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:application.appsdk')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.APPDEBUG}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:application.vsmart_debug')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>
 
         <AccordionItem value="payment" className="border-none">
-          <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
+          <AccordionTrigger className="hover:text-primary-400 data-[state=open]:text-primary-400 my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:no-underline">
             <img
               src={thanhtoanIcon}
               alt="Payment"
               className="aspect-square w-5"
             />
             <div>{t('sidebar:payment.title')}</div>
-            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.BILLING_PACKAGE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:payment.plgc')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.CUSTOMER_MANAGE}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:payment.plkh')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.BILLING_SUBSCRIPTION}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:payment.pldk')}
             </AccordionContent>
           </NavLink>
           <NavLink to={`${PATHS.BILLING}/${projectId}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:payment.plhd')}
             </AccordionContent>
           </NavLink>
         </AccordionItem>
 
         <AccordionItem value="integration" className="border-none">
-          <AccordionTrigger className="my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:text-primary-400 hover:no-underline data-[state=open]:text-primary-400">
+          <AccordionTrigger className="hover:text-primary-400 data-[state=open]:text-primary-400 my-3 cursor-pointer justify-start gap-x-3 p-0 leading-none outline-none hover:no-underline">
             <img
               src={tichhopIcon}
               alt="integration"
               className="aspect-square w-5"
             />
             <div>{t('sidebar:integration.title')}</div>
-            <LuChevronDown className="size-4 shrink-0 transition-transform duration-200" />
+            <LuChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200" />
           </AccordionTrigger>
           <NavLink to={`${PATHS.AI}`}>
-            <AccordionContent className="mb-1 overflow-hidden rounded-md pl-8 hover:bg-primary-300 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-primary-300 group-[.active]:bg-opacity-25">
+            <AccordionContent className="hover:bg-primary-300 group-[.active]:bg-primary-300 mb-1 overflow-hidden rounded-md pl-8 hover:bg-opacity-25 group-last-of-type:mb-0 group-[.active]:bg-opacity-25">
               {t('sidebar:integration.ai.title')}
             </AccordionContent>
           </NavLink>

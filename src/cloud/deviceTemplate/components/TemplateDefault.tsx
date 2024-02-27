@@ -6,7 +6,6 @@ import { Menu } from '@headlessui/react'
 
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
@@ -22,12 +21,26 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [name, setName] = useState('')
+  const [id, setId] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { templateId } = useParams()
 
@@ -53,15 +66,21 @@ export function TemplateDefault() {
     return () => clearTimeout(timer)
   }, [filteredComboboxData])
 
+  useEffect(() => {
+    if (isSuccess) {
+      closeDelete()
+    }
+  }, [isSuccess])
+
   return (
     <>
-      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
+      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
         <CreateTemplate />
         <ComboBoxSelectTemplate
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="bg-secondary-500 h-[70vh] grow overflow-y-auto p-3">
         {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (
@@ -84,96 +103,57 @@ export function TemplateDefault() {
                     {template?.name}
                   </p>
                 </Button>
-                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
-                  <Dropdown
-                    menuClass="h-10 w-6"
-                    icon={
-                      <BtnContextMenuIcon
-                        height={20}
-                        width={3}
-                        viewBox="0 0 3 20"
-                      />
-                    }
-                  >
-                    <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="p-1">
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnEditIcon}
-                              alt="Edit template"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => {
-                            open()
-                            setSelectedUpdateTemplate(template)
-                          }}
-                        >
-                          {t('cloud:device_template.sidebar.edit')}
-                        </MenuItem>
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnCopyIdIcon}
-                              alt="Copy template's ID"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => handleCopyId(template.id)}
-                        >
-                          {t('table:copy_id')}
-                        </MenuItem>
-                        <ConfirmationDialog
-                          isDone={isSuccess}
-                          icon="danger"
-                          title={t(
-                            'cloud:device_template.sidebar.delete_template_full',
-                          )}
-                          body={
-                            t(
-                              'cloud:device_template.sidebar.delete_template_confirm',
-                            ).replace('{{TEMPLATENAME}}', template.name) ??
-                            'Confirm delete?'
-                          }
-                          triggerButton={
-                            <Button
-                              className="w-full justify-start border-none hover:text-primary-400"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete template"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            >
-                              {t(
-                                'cloud:device_template.sidebar.delete_template',
-                              )}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoading}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() => mutate({ id: template.id })}
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            />
-                          }
+                <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <BtnContextMenuIcon
+                          height={20}
+                          width={3}
+                          viewBox="0 0 3 20"
                         />
                       </div>
-                    </Menu.Items>
-                  </Dropdown>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          open()
+                          setSelectedUpdateTemplate(template)
+                        }}
+                      >
+                        <img
+                          src={btnEditIcon}
+                          alt="Edit template"
+                          className="h-5 w-5"
+                        />
+                        {t('cloud:device_template.sidebar.edit')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleCopyId(template.id)}
+                      >
+                        <img
+                          src={btnCopyIdIcon}
+                          alt="Copy template's ID"
+                          className="h-5 w-5"
+                        />
+                        {t('table:copy_id')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          openDelete()
+                          setId(template.id)
+                          setName(template.name)
+                        }}
+                      >
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete template"
+                          className="h-5 w-5"
+                        />
+                        {t('cloud:device_template.sidebar.delete_template')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             ))}
@@ -192,6 +172,22 @@ export function TemplateDefault() {
           />
         ) : null}
       </div>
+      {isOpenDelete && id ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:device_template.sidebar.delete_template_full')}
+          body={
+            t('cloud:device_template.sidebar.delete_template_confirm').replace(
+              '{{TEMPLATENAME}}',
+              name,
+            ) ?? 'Confirm delete?'
+          }
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

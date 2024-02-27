@@ -9,7 +9,7 @@ import {
 } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -25,7 +25,7 @@ import {
   TooltipTrigger,
 } from '~/components/Tooltip'
 
-import { type DeviceAdditionalInfo, type Device } from '../../types'
+import { type Device } from '../../types'
 import { type BaseTablePagination } from '~/types'
 
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
@@ -59,12 +59,10 @@ function DeviceTableContextMenu({
   template_id: string
   token: string
   status: string
-  additional_info: DeviceAdditionalInfo
+  additional_info: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
-
-  const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -90,7 +88,11 @@ function DeviceTableContextMenu({
           <div className="p-1">
             {/* <MenuItem
               icon={
-                <img src={btnDetailIcon} alt="View device" className="size-5" />
+                <img
+                  src={btnDetailIcon}
+                  alt="View device"
+                  className="h-5 w-5"
+                />
               }
               onClick={() =>
                 navigate(
@@ -104,7 +106,7 @@ function DeviceTableContextMenu({
             </MenuItem> */}
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="size-5" />
+                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
               }
               onClick={() => {
                 open()
@@ -118,7 +120,7 @@ function DeviceTableContextMenu({
                 <img
                   src={btnEditIcon}
                   alt="Edit mqtt config"
-                  className="size-5"
+                  className="h-5 w-5"
                 />
               }
               onClick={() => {
@@ -130,7 +132,7 @@ function DeviceTableContextMenu({
             </MenuItem>
             <MenuItem
               icon={
-                <img src={btnEditIcon} alt="Edit device" className="size-5" />
+                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
               }
               onClick={() => {
                 let type = 'active'
@@ -145,7 +147,7 @@ function DeviceTableContextMenu({
                 : t('device:active')}
             </MenuItem>
             <MenuItem
-              icon={<UpdateIcon className="size-5" />}
+              icon={<UpdateIcon className="h-5 w-5" />}
               onClick={() => {
                 if (status !== 'blocked') {
                   open()
@@ -164,7 +166,7 @@ function DeviceTableContextMenu({
                 <img
                   src={btnCopyIdIcon}
                   alt="Copy device's ID"
-                  className="size-5"
+                  className="h-5 w-5"
                 />
               }
               onClick={() => handleCopyId(id)}
@@ -172,7 +174,7 @@ function DeviceTableContextMenu({
               {t('table:copy_id')}
             </MenuItem>
             <MenuItem
-              icon={<CopyIcon className="size-5" />}
+              icon={<CopyIcon className="h-5 w-5" />}
               onClick={() => handleCopyId(token, 'token')}
             >
               {t('table:copy_token')}
@@ -188,14 +190,14 @@ function DeviceTableContextMenu({
               ).replace('{{DEVICENAME}}', name)}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start border-none"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete device"
-                      className="size-5"
+                      className="h-5 w-5"
                     />
                   }
                 >
@@ -210,7 +212,7 @@ function DeviceTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
                   }
                 />
               }
@@ -231,15 +233,33 @@ function DeviceTableContextMenu({
           additional_info={additional_info}
         />
       ) : null}
-      {isOpen && type === 'update-version' ? (
-        <UpdateVersionFirmWare deviceId={id} close={close} isOpen={isOpen} />
+      {isOpenUpdateVersion ? (
+        <UpdateVersionFirmWare
+          deviceId={id}
+          close={closeUpdateVersion}
+          isOpen={isOpenUpdateVersion}
+        />
       ) : null}
-      {isOpen && additional_info != null && type === 'update-mqtt' ? (
+      {isOpenUpdateMqtt && additional_info != null ? (
         <UpdateMqttConfig
           additional_info={additional_info}
           deviceId={id}
-          close={close}
-          isOpen={isOpen}
+          close={closeUpdateMqtt}
+          isOpen={isOpenUpdateMqtt}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.device_manage.table.delete_device_full')}
+          body={t(
+            'cloud:org_manage.device_manage.table.delete_device_confirm',
+          ).replace('{{DEVICENAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>
@@ -331,7 +351,10 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columnHelper.display({
         id: 'isdn',
         cell: info => {
-          const isdn = info.row.original.additional_info.isdn
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
+          )
+          const isdn = additionalInfo.isdn
           const isdnTrigger =
             isdn?.length > 10 ? isdn.slice(0, 10) + '...' : isdn
           return (
@@ -362,7 +385,9 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
           <span>{t('cloud:org_manage.device_manage.table.heartbeat')}</span>
         ),
         cell: info => {
-          const additionalInfo = info.row.original.additional_info
+          const additionalInfo = JSON.parse(
+            info.row.original.additional_info as unknown as string,
+          )
           return additionalInfo?.heartbeat_interval != null ? (
             <TooltipProvider>
               <Tooltip>
@@ -373,7 +398,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
                   <p>
                     {'Last heartbeat: ' +
                       getVNDateFormat({
-                        date: (additionalInfo?.last_heartbeat || 0) * 1000,
+                        date:
+                          parseInt(additionalInfo?.last_heartbeat || 0) * 1000,
                       })}
                   </p>
                   <p>{'Interval: ' + additionalInfo.heartbeat_interval}</p>
@@ -498,6 +524,13 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         footer: info => info.column.id,
       }),
 
+      // columnHelper.accessor('template_id', {
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
+      //   ),
+      //   cell: info => info.getValue(),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('template_id', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.template_id')}</span>
@@ -535,6 +568,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
+      // columnHelper.display({
+      //   id: 'orgName',
+      //   header: () => (
+      //     <span>{t('cloud:org_manage.device_manage.table.org_name')}</span>
+      //   ),
+      //   cell: info => info.row.original.org_name || t('table:no_in_org'),
+      //   footer: info => info.column.id,
+      // }),
       columnHelper.accessor('key', {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.key')}</span>
@@ -593,7 +634,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
             token,
             status,
             group_id,
-            additional_info: info.row.original.additional_info,
+            additional_info: info.row.original
+              .additional_info as unknown as string,
           })
         },
         header: () => null,

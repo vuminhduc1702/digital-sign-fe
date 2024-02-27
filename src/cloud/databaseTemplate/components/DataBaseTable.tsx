@@ -7,7 +7,6 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
@@ -17,6 +16,13 @@ import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
 import { InputField } from '~/components/Form'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DataBaseTableContextMenu({
   row,
@@ -29,6 +35,12 @@ function DataBaseTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
   const { tableName } = useParams()
   const projectId = storage.getProject()?.id
 
@@ -42,77 +54,32 @@ function DataBaseTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit DataBase" className="size-5" />
-              }
-              onClick={open}
-            >
-              {t('cloud:db_template.add_db.update_row')}
-            </MenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:db_template.add_db.delete_row')}
-              body={t('cloud:db_template.add_db.delete_row_confirm')}
-              triggerButton={
-                <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete DataBase"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:db_template.add_db.delete_row')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => {
-                    let keys = Object.keys(row)
-                    const dataFilter = keys.map(item => ({
-                      [item]: row[item],
-                    }))
-                    mutate({
-                      table: tableName || '',
-                      project_id: projectId,
-                      data: {
-                        filter: {
-                          $and: dataFilter,
-                        },
-                      },
-                    })
-                  }}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
             />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
+            {t('cloud:db_template.add_db.update_row')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete DataBase"
+              className="h-5 w-5"
+            />
+            {t('cloud:db_template.add_db.delete_row')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateRow
           close={close}
@@ -120,6 +87,32 @@ function DataBaseTableContextMenu({
           isOpen={isOpen}
           row={row}
           {...props}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:db_template.add_db.delete_row')}
+          body={t('cloud:db_template.add_db.delete_row_confirm')}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => {
+            let keys = Object.keys(row)
+            const dataFilter = keys.map(item => ({
+              [item]: row[item],
+            }))
+            mutate({
+              table: tableName || '',
+              project_id: projectId,
+              data: {
+                filter: {
+                  $and: dataFilter,
+                },
+              },
+            })
+          }}
+          isLoading={isLoading}
         />
       ) : null}
     </>

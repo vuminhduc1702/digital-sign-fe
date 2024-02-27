@@ -17,43 +17,40 @@ import { UpdateSubcription } from './UpdateSubcription'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Button } from '~/components/Button'
 import btnFilterIcon from '~/assets/icons/btn-filter.svg'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
-  const [type, setType] = useState('')
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="size-5" />
-              }
-              onClick={() => {
-                open()
-                setType('create-firmware')
-              }}
-            >
-              {t('billing:subcription.title')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
+            {t('billing:subcription.title')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
-        <UpdateSubcription id={id} close={close} isOpen={true} />
+        <UpdateSubcription id={id} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )
@@ -147,7 +144,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -191,7 +188,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -287,7 +284,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>

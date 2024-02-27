@@ -83,7 +83,8 @@
         "success_add": "Tạo mới dự án thành công",
         "success_update": "Sửa dự án thành công",
         "success_delete": "Xóa dự án thành công",
-        "success_restore": "Cài đặt mẫu thiết bị thành công"
+        "success_restore": "Cài đặt mẫu thiết bị thành công",
+        "choose_project": "Vui lòng chọn dự án"
       }
     },
     "org_manage": {
@@ -122,7 +123,8 @@
           "delete_attr_full": "Xoá thuộc tính",
           "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?",
           "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?",
-          "search": "Tìm kiếm..."
+          "search": "Tìm kiếm...",
+          "org_not_found": "Không tìm thấy tổ chức"
         },
         "add_org": {
           "title": "Tạo mới tổ chức",
@@ -996,6 +998,7 @@
     "no_plan_used": "Không có gói cước đang sử dụng",
     "no_tenant": "Không có tenant. Vui lòng tạo.",
     "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo.",
+    "no_project": "Không có dự án. Vui lòng tạo.",
     "result_limit": "Giới hạn số kết quả: ",
     "search": "Tìm kiếm...",
     "min": "Min",
@@ -1052,6 +1055,7 @@
     "entity_thing": "Đang tải danh sách Entity thing...",
     "service_thing": "Vui lòng chọn Entity thing trước",
     "input": "Vui lòng chọn nghiệp vụ trước",
+    "project": "Đang tải danh sách dự án",
     "loading": "Xin vui lòng chờ..."
   },
   "placeholder": {
@@ -1338,7 +1342,7 @@
     "detail_address": "Địa chỉ chi tiết",
     "account_info": "Thông tin tài khoản",
     "confirm_password": "Xác nhận mật khẩu",
-    "choose_project": "---Chọn project---",
+    "choose_project": "Chọn project",
     "user": {
       "success_update": "Cập nhật tài khoản thành công",
       "fuel": "Cập nhật fuel thành công",
@@ -1347,6 +1351,7 @@
       "list": "Danh sách người dùng"
     },
     "tenant": {
+      "title": "Tenant ID",
       "success_delete": "Xoá Tenant thành công",
       "success_update": "Cập nhật Tenant thành công",
       "success_update_role": "Cập nhật quyền Tenant thành công",
@@ -1358,7 +1363,7 @@
       "edit": "Sửa quyền",
       "delete": "Xoá quyền",
       "add": "Thêm quyền",
-      "choose": "---Chọn quyền---"
+      "choose": "Chọn quyền"
     },
     "email": "Email",
     "back": "Trở lại"

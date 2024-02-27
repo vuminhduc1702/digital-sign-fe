@@ -122,7 +122,8 @@
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
           "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?",
-          "search": "Search..."
+          "search": "Search...",
+          "org_not_found": "Organization not found"
         },
         "add_org": {
           "title": "Create New Organization",
@@ -1336,7 +1337,7 @@
     "detail_address": "Detailed Address",
     "account_info": "Account Information",
     "confirm_password": "Confirm Password",
-    "choose_project": "---Choose project---",
+    "choose_project": "Choose project",
     "user": {
       "success_update": "Account updated successfully",
       "fuel": "Fuel updated successfully",
@@ -1356,7 +1357,7 @@
       "edit": "Edit Role",
       "delete": "Delete Role",
       "add": "Add Role",
-      "choose": "---Choose role---"
+      "choose": "Choose role"
     },
     "email": "Email",
     "back": "Back"

@@ -1,10 +1,10 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import storage from '~/utils/storage'
 
 import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { convertEpochToDate } from '~/utils/transformFunc'
@@ -12,6 +12,8 @@ import { useGetFirmwares } from '../api/firmwareAPI'
 import { useDeleteMultipleFirmware } from '../api/firmwareAPI/deleteMultipleFirmwares'
 import { CreateFirmWare, FirmWareTable } from '../components/Firmware'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function FirmwareTemplate() {
   const { t } = useTranslation()
@@ -29,11 +31,20 @@ export function FirmwareTemplate() {
     offset,
   })
 
+  const { close, open, isOpen } = useDisclosure()
+
   const {
     mutate: mutateDeleteMultipleFirmware,
     isLoading,
     isSuccess: isSuccessDeleteMultipleFirmware,
   } = useDeleteMultipleFirmware()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleFirmware) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleFirmware])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -80,43 +91,10 @@ export function FirmwareTemplate() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleFirmware}
-                icon="danger"
-                title={t('cloud:firmware.table.delete_firmware')}
-                body={t(
-                  'cloud:firmware.table.delete_multiple_firmware_confirm',
-                )}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleFirmware(
-                        {
-                          data: { ids: rowSelectionKey },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateFirmWare />
             <SearchField
@@ -135,6 +113,24 @@ export function FirmwareTemplate() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:firmware.table.delete_firmware')}
+          body={t(
+            'cloud:firmware.table.delete_multiple_firmware_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleFirmware(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

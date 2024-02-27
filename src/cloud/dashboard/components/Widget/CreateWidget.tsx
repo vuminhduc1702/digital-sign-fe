@@ -39,6 +39,7 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export const WS_REALTIME_PERIOD = [
   {
@@ -580,16 +581,21 @@ export function CreateWidget({
     }))
   }
 
-  // remove field when devices change
-  // function removeField(deviceList: string[]) {
-  //   for (let i = fields.length - 1; i >= 0; i--) {
-  //     if (
-  //       !deviceList.includes(fields[i].label.split(' - ')[1] || fields[i].label)
-  //     ) {
-  //       remove(i)
-  //     }
-  //   }
-  // }
+  function handleModifyOrg() {
+    selectDropdownDeviceRef.current?.clearValue()
+    resetField('attributeConfig', {
+      defaultValue: [
+        {
+          attribute_key: '',
+          label: '',
+          color: '',
+          max: 100,
+          min: 0,
+          unit: '',
+        },
+      ],
+    })
+  }
 
   useEffect(() => {
     const defaultOption =
@@ -623,11 +629,11 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -688,7 +694,10 @@ export function CreateWidget({
 
               const tsCmd = {
                 keys: values.attributeConfig.map(item => item.attribute_key),
-                interval: values.widgetSetting?.interval,
+                interval:
+                  values.widgetSetting?.agg !== 'NONE'
+                    ? values.widgetSetting?.interval
+                    : undefined,
                 offset: 0,
                 agg: values.widgetSetting?.agg,
               }
@@ -711,7 +720,9 @@ export function CreateWidget({
                           tsCmd: {
                             ...tsCmd,
                             startTs:
-                              Date.now() - values.widgetSetting?.time_period,
+                              values.widgetSetting?.dataType === 'REALTIME'
+                                ? Date.now() - values.widgetSetting?.time_period
+                                : undefined,
                           },
                           id: widgetId,
                         },
@@ -720,13 +731,22 @@ export function CreateWidget({
 
               const historyCmd = {
                 keys: values.attributeConfig.map(item => item.attribute_key),
-                startTs: Date.parse(
-                  values.widgetSetting?.startDate?.toISOString(),
-                ),
-                endTs: Date.parse(
-                  values.widgetSetting?.endDate?.toISOString() as string,
-                ),
-                interval: values.widgetSetting?.interval,
+                startTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.startDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                endTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.endDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                interval:
+                  values.widgetSetting?.agg !== 'NONE'
+                    ? values.widgetSetting?.interval
+                    : undefined,
                 limit: 5000,
                 offset: 0,
                 agg: values.widgetSetting?.agg,
@@ -786,18 +806,31 @@ export function CreateWidget({
                     ? {
                         aggregation: values.widgetSetting?.agg,
                         timewindow: {
-                          interval: values.widgetSetting?.interval,
+                          interval:
+                            values.widgetSetting?.agg !== 'NONE'
+                              ? values.widgetSetting?.interval
+                              : undefined,
                         },
                         chartsetting: {
                           start_date: new Date(
-                            values.widgetSetting?.startDate,
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.startDate?.toISOString()
+                              : 0,
                           ).getTime(),
                           end_date: new Date(
-                            values.widgetSetting?.endDate,
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.endDate?.toISOString()
+                              : 0,
                           ).getTime(),
                           data_type: values.widgetSetting?.dataType,
-                          data_point: values.widgetSetting?.data_point,
-                          time_period: values.widgetSetting?.time_period,
+                          data_point:
+                            values.widgetSetting?.agg === 'NONE'
+                              ? values.widgetSetting?.data_point
+                              : undefined,
+                          time_period:
+                            values.widgetSetting?.dataType === 'REALTIME'
+                              ? Date.now() - values.widgetSetting?.time_period
+                              : undefined,
                         },
                       }
                     : null,
@@ -817,7 +850,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -825,37 +858,15 @@ export function CreateWidget({
                       error={formState.errors['title']}
                       registration={register('title')}
                     />
-                    <SelectDropdown
+                    <ComplexTree
+                      name="org_id"
                       label={t(
                         'cloud:org_manage.device_manage.add_device.parent',
                       )}
                       error={formState.errors['org_id']}
-                      name="org_id"
                       control={control}
-                      options={orgSelectOptions}
-                      isOptionDisabled={option =>
-                        option.label === t('loading:org') ||
-                        option.label === t('table:no_org')
-                      }
-                      noOptionsMessage={() => t('table:no_org')}
-                      loadingMessage={() => t('loading:org')}
-                      isLoading={orgIsLoading}
-                      handleClearSelectDropdown={() => {
-                        selectDropdownDeviceRef.current?.clearValue()
-                        resetField('attributeConfig', {
-                          defaultValue: [
-                            {
-                              attribute_key: '',
-                              label: '',
-                              color: '',
-                              max: 100,
-                              min: 0,
-                              unit: '',
-                            },
-                          ],
-                        })
-                      }}
-                      handleChangeSelect={() => {
+                      options={orgData?.organizations}
+                      customOnChange={() => {
                         selectDropdownDeviceRef.current?.clearValue()
                         resetField('attributeConfig', {
                           defaultValue: [
@@ -923,7 +934,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -1061,7 +1072,7 @@ export function CreateWidget({
                                             style={{
                                               backgroundColor: `${value}`,
                                             }}
-                                          ></div>
+                                          />
                                           {value}
                                         </Button>
                                       </PopoverTrigger>
@@ -1141,7 +1152,7 @@ export function CreateWidget({
                             <img
                               src={btnDeleteIcon}
                               alt="Delete widget attribute"
-                              className="size-10"
+                              className="h-10 w-10"
                             />
                           }
                         />
@@ -1153,7 +1164,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="w-full rounded-md bg-secondary-700 pl-3"
+                        className="bg-secondary-700 w-full rounded-md pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -1169,19 +1180,6 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          // onChange={e => {
-                          //   if (e.target.value === 'REALTIME') {
-                          //     setValue('widgetSetting.agg', 'AVG')
-                          //     setValue('widgetSetting.time_period', 0)
-                          //     setValue('widgetSetting.interval', 0)
-                          //     setValue('widgetSetting.data_point', 0)
-                          //   } else {
-                          //     setValue('widgetSetting.agg', 'AVG')
-                          //     setValue('widgetSetting.time_period', 0)
-                          //     // setValue('widgetSetting.interval', 0)
-                          //     // setValue('widgetSetting.data_point', 0)
-                          //   }
-                          // }}
                         />
 
                         <SelectField
@@ -1226,6 +1224,7 @@ export function CreateWidget({
                           <InputField
                             type="number"
                             label={t('ws:filter.data_point')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.data_point}
                             registration={register(
                               `widgetSetting.data_point` as const,
@@ -1237,6 +1236,7 @@ export function CreateWidget({
                         ) : watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <SelectField
                             label={t('ws:filter.group_interval')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.interval}
                             registration={register(
                               `widgetSetting.interval` as const,
@@ -1253,6 +1253,7 @@ export function CreateWidget({
                           <SelectField
                             label={t('ws:filter.time_period')}
                             error={
+                              // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                               formState?.errors?.widgetSetting?.time_period
                             }
                             registration={register(
@@ -1276,6 +1277,7 @@ export function CreateWidget({
                                   'cloud:dashboard.config_chart.startDate',
                                 )}
                                 error={
+                                  // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                                   formState?.errors?.widgetSetting?.startDate
                                 }
                               >
@@ -1293,11 +1295,11 @@ export function CreateWidget({
                                             variant="trans"
                                             size="square"
                                             className={cn(
-                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                              'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                               !value && 'text-secondary-700',
                                             )}
                                           >
-                                            <LuCalendar className="mr-2 size-4" />
+                                            <LuCalendar className="mr-2 h-4 w-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1394,7 +1396,7 @@ export function CreateWidget({
                                               ) === 'REALTIME'
                                             }
                                           >
-                                            <LuCalendar className="mr-2 size-4" />
+                                            <LuCalendar className="mr-2 h-4 w-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1463,6 +1465,7 @@ export function CreateWidget({
                         ) : (
                           <SelectField
                             label={t('ws:filter.group_interval')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.interval}
                             registration={register(
                               `widgetSetting.interval` as const,
@@ -1492,7 +1495,7 @@ export function CreateWidget({
               variant="secondary"
               onClick={close}
               startIcon={
-                <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+                <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
               }
               ref={cancelButtonRef}
             />
@@ -1502,7 +1505,7 @@ export function CreateWidget({
               variant="primary"
               size="md"
               startIcon={
-                <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
               // disabled={!formState.isValid}
             />

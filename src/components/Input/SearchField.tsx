@@ -25,7 +25,7 @@ export function SearchField({
         <div className="absolute right-2 top-1/2 flex -translate-y-1/2 transform justify-center">
           {searchQuery.length > 0 && (
             <HiOutlineXMark
-              className="align-center mr-[5px] flex size-[16px] transform cursor-pointer justify-center opacity-50"
+              className="align-center mr-[5px] flex h-4 w-4 transform cursor-pointer justify-center opacity-50"
               onClick={() => setSearchQuery('')}
             />
           )}

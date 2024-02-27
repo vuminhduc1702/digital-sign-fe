@@ -10,6 +10,12 @@ import { cn } from '~/utils/misc'
 import { useFuel } from '../api/fuel/callFuelApi'
 import { useMutationFuelAi } from '../api/fuel/updateFuelApi'
 import { InfoIcon } from '~/components/SVGIcons'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 export default function FuelTemplate() {
   const [fullScreen, setFullScreen] = useState(false)
@@ -81,59 +87,56 @@ export default function FuelTemplate() {
             { 'md:col-span-1': viewMode === 'minimize_code' },
           )}
         >
-          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+          <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.code')}
               </p>
             </div>
             <div className="flex gap-3">
-              <Dropdown
-                icon={
-                  <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
-                }
-              >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-2">
-                    <div
-                      className="hover:background py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('maximize_code')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.maximize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('minimize_code')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.minimize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('default')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.default_result')}
-                    </div>
-                  </div>
-                </div>
-              </Dropdown>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center gap-x-2">
+                  <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('maximize_code')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.maximize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('minimize_code')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.minimize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('default')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.default_result')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <InfoIcon
                 width={20}
                 height={20}
                 viewBox="0 0 50 50"
-                className="cursor-pointer hover:text-primary-400"
+                className="hover:text-primary-400 cursor-pointer"
                 onClick={() => setIsOpen(true)}
               />
               <button onClick={callApiFuel}>
                 <img
                   src={btnRunCode}
                   alt="Submit"
-                  className="size-5 cursor-pointer"
+                  className="h-5 w-5 cursor-pointer"
                 />
               </button>
             </div>
@@ -162,47 +165,44 @@ export default function FuelTemplate() {
             },
           )}
         >
-          <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+          <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.output')}
               </p>
             </div>
             <div className="flex gap-3">
-              <Dropdown
-                icon={
-                  <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
-                }
-              >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-2">
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('maximize_result')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.maximize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('minimize_result')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.minimize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('default')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.default_result')}
-                    </div>
-                  </div>
-                </div>
-              </Dropdown>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex cursor-pointer items-center gap-x-2">
+                  <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('maximize_result')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.maximize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('minimize_result')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.minimize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="py-1"
+                    onClick={() => {
+                      setViewMode('default')
+                    }}
+                  >
+                    {t('cloud:custom_protocol.service.default_result')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <CodeSandboxEditor
@@ -226,11 +226,11 @@ export default function FuelTemplate() {
               </DialogTitle>
               <div className="ml-3 flex h-7 items-center">
                 <button
-                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="sr-only">Close panel</span>
-                  <HiOutlineXMark className="size-6" aria-hidden="true" />
+                  <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
                 </button>
               </div>
             </div>

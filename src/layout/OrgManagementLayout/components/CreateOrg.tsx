@@ -2,10 +2,11 @@ import { useRef } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -20,7 +21,7 @@ import {
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { flattenData } from '~/utils/misc.ts'
+import { cn, flattenData } from '~/utils/misc.ts'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
@@ -31,6 +32,8 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export const orgSchema = z.object({
   name: nameSchema,
@@ -70,6 +73,7 @@ export function CreateOrg() {
     label: org?.name,
     value: org?.id,
   }))
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
 
@@ -130,7 +134,7 @@ export function CreateOrg() {
           const dataCreateOrg = await mutateAsyncCreateOrg({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               description: values.description,
             },
@@ -160,21 +164,12 @@ export function CreateOrg() {
             error={formState.errors['name']}
             registration={register('name')}
           />
-
-          <SelectDropdown
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
+          <ComplexTree
             name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
+            control={control}
+            options={orgData?.organizations}
           />
 
           <TextAreaField

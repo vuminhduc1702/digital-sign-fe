@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
@@ -8,11 +8,13 @@ import { GroupBreadcrumbs } from '../components/Group/GroupBreadcrumbs'
 
 import { useTranslation } from 'react-i18next'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function GroupDetail() {
   const params = useParams()
@@ -20,6 +22,7 @@ export function GroupDetail() {
   const ref = useRef(null)
   const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
+  const { close, open, isOpen } = useDisclosure()
 
   const entityType = 'GROUP'
 
@@ -30,6 +33,13 @@ export function GroupDetail() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleAttrs,
   } = useDeleteMultipleAttrs()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleAttrs) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleAttrs])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -81,47 +91,10 @@ export function GroupDetail() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleAttrs}
-                icon="danger"
-                title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-                body={t(
-                  'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-                )}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleAttrs(
-                        {
-                          data: {
-                            keys: attrKeys,
-                            entity_type: 'GROUP',
-                            entity_id: groupId,
-                          },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateAttr entityId={groupId} entityType="GROUP" />
             <SearchField
@@ -138,6 +111,28 @@ export function GroupDetail() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'GROUP',
+                entity_id: groupId,
+              },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </div>
   )
 }

@@ -27,6 +27,7 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { EyeHide, EyeShow, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export const userInfoSchema = z.object({
   name: nameSchema,
@@ -66,7 +67,8 @@ export function CreateUser() {
   >({
     resolver: userSchema && zodResolver(userSchema),
   })
-  console.log('formState.errors', formState.errors)
+  // console.log('formState.errors', formState.errors)
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateUser()
 
@@ -152,7 +154,7 @@ export function CreateUser() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               email: values.email,
               password: values.password,
@@ -238,21 +240,12 @@ export function CreateUser() {
               )
             }
           />
-
-          <SelectDropdown
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
+          <ComplexTree
             name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
+            control={control}
+            options={orgData?.organizations}
           />
 
           <SelectDropdown

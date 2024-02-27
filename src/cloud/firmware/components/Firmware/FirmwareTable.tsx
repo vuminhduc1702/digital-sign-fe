@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
@@ -21,6 +21,13 @@ import { getVNDateFormat } from '~/utils/misc'
 import { type FirmWare } from '../../types'
 import { UpdateFirmWare } from './UpdateFirmware'
 import { UploadFileFirmWare } from './UploadFileFirmware'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function FireWareTableContextMenu({
   id,
@@ -42,85 +49,53 @@ function FireWareTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
-  const [type, setType] = useState('')
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
+
+  const {
+    close: closeUpload,
+    open: openUpload,
+    isOpen: isOpenUpload,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteFirmWare()
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              }
-              onClick={() => {
-                open()
-                setType('create-firmware')
-              }}
-            >
-              {t('cloud:firmware.add_firmware.edit_firmware')}
-            </MenuItem>
-            <MenuItem
-              icon={<UploadIcon className="h-5 w-5" />}
-              onClick={() => {
-                open()
-                setType('upload-firmware')
-              }}
-            >
-              {t('cloud:firmware.add_firmware.upload_firmware')}
-            </MenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:firmware.table.delete_firmware')}
-              body={t('cloud:firmware.table.delete_firmware_confirm').replace(
-                '{{FIRMWARE_NAME}}',
-                name,
-              )}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete thing"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:firmware.table.delete_firmware')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
             />
           </div>
-        </Menu.Items>
-      </Dropdown>
-      {isOpen && type === 'create-firmware' ? (
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+            {t('cloud:firmware.add_firmware.edit_firmware')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={openUpload}>
+            <UploadIcon className="h-5 w-5" />
+            {t('cloud:firmware.add_firmware.upload_firmware')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete firmware"
+              className="h-5 w-5"
+            />
+            {t('cloud:firmware.table.delete_firmware')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {isOpen ? (
         <UpdateFirmWare
           firmwareId={id}
           name={name}
@@ -128,13 +103,32 @@ function FireWareTableContextMenu({
           tag={tag}
           version={version}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
           template_name={template_name}
           template_id={template_id}
         />
       ) : null}
-      {isOpen && type === 'upload-firmware' ? (
-        <UploadFileFirmWare firmwareId={id} close={close} isOpen={true} />
+      {isOpenUpload ? (
+        <UploadFileFirmWare
+          firmwareId={id}
+          close={closeUpload}
+          isOpen={isOpenUpload}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:firmware.table.delete_firmware')}
+          body={t('cloud:firmware.table.delete_firmware_confirm').replace(
+            '{{FIRMWARE_NAME}}',
+            name,
+          )}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
+        />
       ) : null}
     </>
   )

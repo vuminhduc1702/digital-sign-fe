@@ -4,8 +4,6 @@ import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -57,6 +55,12 @@ function GroupTableContextMenu({
     close: closeAssignUser,
     open: openAssignUser,
     isOpen: isOpenAssignUser,
+  } = useDisclosure()
+
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
   } = useDisclosure()
 
   const {
@@ -204,6 +208,20 @@ function GroupTableContextMenu({
           groupId={id}
         />
       )}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.group_manage.table.delete_group')}
+          body={t(
+            'cloud:org_manage.group_manage.table.delete_group_confirm',
+          ).replace('{{GROUPNAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutateAsync({ id })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

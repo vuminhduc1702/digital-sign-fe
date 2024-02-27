@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown } from '~/components/Dropdown'
 import { PATHS } from '~/routes/PATHS'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -21,14 +20,26 @@ import listIcon from '~/assets/icons/list.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetDataBases } from '../api/getDataBases'
 import { flattenData } from '~/utils/misc'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { SearchField } from '~/components/Input'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function DataBaseSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
+  const [name, setName] = useState('')
 
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { tableName } = useParams()
 
@@ -44,8 +55,10 @@ export function DataBaseSidebar() {
   )
 
   useEffect(() => {
-    if (isSuccess)
+    if (isSuccess) {
       navigate(`${PATHS.DB_TEMPLATE}/${projectId}`)
+      closeDelete()
+    }
   }, [isSuccess])
 
   return (
@@ -89,69 +102,32 @@ export function DataBaseSidebar() {
                   </p>
                 </Button>
                 <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
-                  <Dropdown
-                    menuClass="h-10 w-6"
-                    icon={
-                      <BtnContextMenuIcon
-                        height={20}
-                        width={3}
-                        viewBox="0 0 3 20"
-                      />
-                    }
-                  >
-                    <Menu.Items className="divide-secondary-400 absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="p-1">
-                        <ConfirmationDialog
-                          isDone={isSuccess}
-                          icon="danger"
-                          title={t('cloud:db_template.sidebar.delete_db')}
-                          body={
-                            t(
-                              'cloud:db_template.sidebar.delete_db_confirm',
-                            ).replace('{{DBNAME}}', table.table_name) ??
-                            'Confirm delete?'
-                          }
-                          triggerButton={
-                            <Button
-                              className="hover:text-primary-400 w-full justify-start border-none"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete template"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            >
-                              {t('cloud:db_template.sidebar.delete_db')}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoading}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() =>
-                                mutate({
-                                  table: table.table_name,
-                                  project_id: projectId,
-                                })
-                              }
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            />
-                          }
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild className="cursor-pointer">
+                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <BtnContextMenuIcon
+                          height={20}
+                          width={3}
+                          viewBox="0 0 3 20"
                         />
                       </div>
-                    </Menu.Items>
-                  </Dropdown>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          openDelete()
+                          setName(table?.table_name)
+                        }}
+                      >
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete db"
+                          className="h-5 w-5"
+                        />
+                        {t('cloud:db_template.sidebar.delete_db')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             ))}
@@ -162,6 +138,27 @@ export function DataBaseSidebar() {
           </div>
         )}
       </div>
+      {isOpenDelete && name ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:db_template.sidebar.delete_db')}
+          body={
+            t('cloud:db_template.sidebar.delete_db_confirm').replace(
+              '{{DBNAME}}',
+              name,
+            ) ?? 'Confirm delete?'
+          }
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() =>
+            mutate({
+              table: name,
+              project_id: projectId,
+            })
+          }
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

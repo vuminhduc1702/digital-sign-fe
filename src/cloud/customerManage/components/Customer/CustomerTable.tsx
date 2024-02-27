@@ -14,6 +14,7 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { type Customer } from '../../types'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -24,29 +25,27 @@ function CustomerTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={<EyeOpenIcon className="h-5 w-5" />}
-              onClick={() => {
-                navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
-              }}
-            >
-              {t('billing:customer_manage.info')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
+            }}>
+            <EyeOpenIcon className="h-5 w-5" />
+            {t('billing:customer_manage.info')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   )
 }

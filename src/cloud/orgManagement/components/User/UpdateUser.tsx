@@ -20,6 +20,7 @@ import { userInfoSchema } from './CreateUser'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { EyeHide, EyeShow } from '~/components/SVGIcons'
+import { ComplexTree } from '~/components/ComplexTree'
 
 type UpdateUserProps = {
   userId: string
@@ -98,6 +99,7 @@ export function UpdateUser({
     label: org?.name,
     value: org?.id,
   }))
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
     projectId,
@@ -149,7 +151,7 @@ export function UpdateUser({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -159,7 +161,7 @@ export function UpdateUser({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -176,7 +178,7 @@ export function UpdateUser({
               phone: values.phone,
               password: values.password,
               email: values.email,
-              org_id: values.org_id,
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               role_id: values.role_id,
               profile:
                 values.profile != null
@@ -259,24 +261,12 @@ export function UpdateUser({
               )
             }
           />
-
-          <SelectDropdown
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
+          <ComplexTree
             name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            defaultValue={orgSelectOptions.find(
-              item => item.value === getValues('org_id'),
-            )}
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
+            control={control}
+            options={orgData?.organizations}
           />
 
           <SelectDropdown

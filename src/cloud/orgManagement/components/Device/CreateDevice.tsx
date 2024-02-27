@@ -1,17 +1,18 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
+  FieldWrapper,
   FormDrawer,
   InputField,
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { flattenData } from '~/utils/misc'
+import { cn, flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
@@ -23,6 +24,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export const deviceSchema = z.object({
   name: nameSchema,
@@ -54,6 +56,7 @@ export function CreateDevice() {
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const orgSelectOptions = orgFlattenData?.map(org => ({
     label: org?.name,
     value: org?.id,
@@ -118,7 +121,7 @@ export function CreateDevice() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               key: values.key,
               group_id: values.group_id,
@@ -134,23 +137,13 @@ export function CreateDevice() {
             registration={register('name')}
           />
 
-          <SelectDropdown
-            error={formState?.errors?.org_id}
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
+          <ComplexTree
             name="org_id"
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            error={formState?.errors?.org_id}
             control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            handleClearSelectDropdown={() => {
-              selectDropdownGroupId.current?.clearValue()
-            }}
+            options={orgData?.organizations}
+            customOnChange={() => selectDropdownGroupId.current?.clearValue()}
           />
 
           <SelectDropdown

@@ -29,7 +29,7 @@ import { ComplexTree } from '~/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
-  org_id: z.string().optional().or(z.array(z.string())),
+  org_id: z.string().optional(),
 })
 
 type UpdateGroupProps = {
@@ -58,6 +58,7 @@ export function UpdateGroup({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const orgSelectOptions = orgFlattenData?.map(org => ({
     label: org?.name,
     value: org?.id,
@@ -92,7 +93,7 @@ export function UpdateGroup({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -102,7 +103,7 @@ export function UpdateGroup({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -120,14 +121,14 @@ export function UpdateGroup({
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id: values.org_id?.toString(),
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
               },
             })
           }
           mutate({
             data: {
               name: values.name,
-              org_id: values.org_id?.toString(),
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
             },
             groupId,
           })
@@ -154,72 +155,13 @@ export function UpdateGroup({
               value: entityType.type,
             }))}
           />
-
-          {/* <SelectDropdown
-            isClearable={false}
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
+          <ComplexTree
             name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            defaultValue={orgSelectOptions.find(
-              org => org.value === getValues('org_id'),
-            )}
-            error={formState?.errors?.org_id}
-          /> */}
-          <FieldWrapper
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
-          >
-            <Controller
-              control={control}
-              name="org_id"
-              render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = orgSelectOptions?.find(
-                  org => org.value === getValues('org_id').toString(),
-                )?.label
-                return (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="org_id"
-                        variant="trans"
-                        size="square"
-                        className={cn(
-                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                          !value && 'text-secondary-700',
-                        )}
-                      >
-                        {value ? (
-                          <span>{parseValue ? parseValue : value}</span>
-                        ) : (
-                          <span>
-                            {t(
-                              'cloud:org_manage.org_manage.add_org.choose_org',
-                            )}
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2" align="start">
-                      <ComplexTree
-                        items={orgData?.organizations}
-                        selectOrg={onChange}
-                        currentValue={value}
-                      ></ComplexTree>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }}
-            />
-          </FieldWrapper>
+            control={control}
+            options={orgData?.organizations}
+          />
         </>
       </form>
     </Drawer>

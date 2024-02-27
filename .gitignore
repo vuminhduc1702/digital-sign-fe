@@ -28,3 +28,9 @@ package-lock.json
 *.njsproj
 *.sln
 *.sw?
+
+# Cache Files
+.eslintjscache
+.eslintmdcache
+.stylelintcache
+.prettiercache

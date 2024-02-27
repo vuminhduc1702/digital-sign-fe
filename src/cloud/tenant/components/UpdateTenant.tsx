@@ -85,11 +85,11 @@ export function UpdateCustomer({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -109,8 +109,8 @@ export function UpdateCustomer({
             })}
           >
             <div className="grid grid-cols-6 gap-4">
-              <div className="self-center text-right">ID</div>
-              <InputField registration={register('customerId')} disabled />
+              <div className="self-center text-right">Name</div>
+              <InputField registration={register('name')} disabled />
               <div className="col-start-4 self-center text-right">Email</div>
               <InputField
                 error={formState.errors['email']}
@@ -145,7 +145,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="muted"
-            className="inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={openRole}
           >
             {t('form:role.add')}
@@ -153,10 +153,10 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -167,7 +167,7 @@ export function UpdateCustomer({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>
@@ -175,9 +175,7 @@ export function UpdateCustomer({
           <UpdateCustomerRole
             modalTitle={t('form:role.add')}
             customerId={customerId}
-            project_id={''}
-            roleIdProps={''}
-            isOpenRole={true}
+            isOpenRole={isOpenRole}
             closeRole={closeRole}
           />
         ) : null}

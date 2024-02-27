@@ -20,6 +20,12 @@ import { useBillingById } from '../../api/billingAPI'
 import { type Billing } from '../../types'
 import { BillingPDF } from './BillingPDF'
 import { ViewBilling } from './ViewBilling'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -32,41 +38,38 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={<EyeOpenIcon className="size-5" />}
-              onClick={() => {
-                open()
-              }}
-            >
-              {t('billing:manage_bill.preview_bill')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+            }}
+          >
+            <EyeOpenIcon className="h-5 w-5" />
+            {t('billing:manage_bill.preview_bill')}
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
             <PDFDownloadLink
               document={<BillingPDF dataPdf={data?.data} />}
               fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
             >
-              <MenuItem
-                icon={<DownloadIcon className="size-5" />}
-                onClick={() => {}}
-              >
-                {t('billing:manage_bill.export_PDF')}
-              </MenuItem>
+              <DownloadIcon className="h-5 w-5" />
+              {t('billing:manage_bill.export_PDF')}
             </PDFDownloadLink>
-          </div>
-        </Menu.Items>
-      </Dropdown>
-      {isOpen ? <ViewBilling id={id} close={close} isOpen={true} /> : null}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {isOpen ? <ViewBilling id={id} close={close} isOpen={isOpen} /> : null}
     </>
   )
 }
@@ -149,7 +152,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -226,7 +229,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>

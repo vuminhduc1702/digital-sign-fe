@@ -1,12 +1,12 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
@@ -15,6 +15,13 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -36,68 +43,42 @@ function CustomerTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteCustomer()
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="divide-secondary-400 absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-              }
-              onClick={open}
-            >
-              {t('form:tenant.edit')}
-            </MenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('form:tenant.delete')}
-              body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start border-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete customer"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('form:tenant.delete')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
             />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+            {t('form:tenant.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete customer"
+              className="h-5 w-5"
+            />
+            {t('form:tenant.delete')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateCustomer
           customerId={id}
@@ -105,18 +86,27 @@ function CustomerTableContextMenu({
           email={email}
           phone={phone}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
           permissions={permissions}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('form:tenant.delete')}
+          body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>
   )
 }
 
-export function TenantTable({
-  data,
-  ...props
-}: BillingCustomerTableProps) {
+export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<BillingCustomerEntity>()
@@ -134,9 +124,7 @@ export function TenantTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('phone', {
-        header: () => (
-          <span>{t('table:phone')}</span>
-        ),
+        header: () => <span>{t('table:phone')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

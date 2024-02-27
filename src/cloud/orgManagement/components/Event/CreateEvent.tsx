@@ -37,6 +37,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 import { type ActionType } from '../../types'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export const logicalOperatorOption = [
   {
@@ -287,7 +288,7 @@ export const eventTypeSchema = z.discriminatedUnion('type', [
 export const createEventSchema = z
   .object({
     project_id: z.string().optional(),
-    org_id: z.string().optional(),
+    org_id: z.string().optional().or(z.array(z.string())),
     group_id: z.string().optional(),
     name: nameSchema,
     action: eventActionSchema,
@@ -338,7 +339,8 @@ export function CreateEvent() {
       retry: 0,
     },
   })
-  console.log('formState.errors', formState.errors)
+  // console.log('formState.errors', formState.errors)
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const {
     append: conditionAppend,
@@ -373,7 +375,7 @@ export function CreateEvent() {
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -384,7 +386,7 @@ export function CreateEvent() {
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     config: { suspense: false },
   })
@@ -491,7 +493,7 @@ export function CreateEvent() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -545,7 +547,7 @@ export function CreateEvent() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               group_id: values.group_id,
               name: values.name,
               onClick: values.onClick,
@@ -576,7 +578,7 @@ export function CreateEvent() {
           <div className="space-y-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               <InputField
@@ -584,20 +586,12 @@ export function CreateEvent() {
                 error={formState.errors['name']}
                 registration={register('name')}
               />
-
-              <SelectDropdown
-                label={t('cloud:org_manage.device_manage.add_device.parent')}
+              <ComplexTree
                 name="org_id"
-                control={control}
-                options={orgSelectOptions}
-                isOptionDisabled={option =>
-                  option.label === t('loading:org') ||
-                  option.label === t('table:no_org')
-                }
-                noOptionsMessage={() => t('table:no_org')}
-                loadingMessage={() => t('loading:org')}
-                isLoading={orgIsLoading}
+                label={t('cloud:org_manage.device_manage.add_device.parent')}
                 error={formState?.errors?.org_id}
+                control={control}
+                options={orgData?.organizations}
               />
 
               <SelectDropdown
@@ -681,7 +675,7 @@ export function CreateEvent() {
               title={t(
                 'cloud:org_manage.event_manage.add_event.test_condition_time',
               )}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               {todos.map(todo => (
@@ -744,7 +738,7 @@ export function CreateEvent() {
                 title={t(
                   'cloud:org_manage.event_manage.add_event.condition.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <Button
                 className="rounded-md"
@@ -861,7 +855,7 @@ export function CreateEvent() {
                             <img
                               src={btnDeleteIcon}
                               alt="Delete condition"
-                              className="size-10"
+                              className="h-10 w-10"
                             />
                           }
                         />
@@ -875,7 +869,7 @@ export function CreateEvent() {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             {actionType !== 'report' && (
               <Button
@@ -1090,7 +1084,7 @@ export function CreateEvent() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete condition"
-                          className="size-10"
+                          className="h-10 w-10"
                         />
                       }
                     />

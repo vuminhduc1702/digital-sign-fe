@@ -1,38 +1,73 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ControlledTreeEnvironment, InteractionMode, StaticTreeDataProvider, Tree, TreeEnvironmentRef, TreeItem, TreeItemIndex, TreeRef, UncontrolledTreeEnvironment } from "react-complex-tree"
+import { type Ref, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  ControlledTreeEnvironment,
+  InteractionMode,
+  StaticTreeDataProvider,
+  Tree,
+  type TreeEnvironmentRef,
+  type TreeItem,
+  type TreeItemIndex,
+  type TreeRef,
+} from 'react-complex-tree'
 import 'react-complex-tree/lib/style-modern.css'
-import { type Org } from "~/layout/MainLayout/types";
-import { InputField } from "../Form";
-import { SearchIcon } from "../SVGIcons";
-import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
+import { type Org } from '~/layout/MainLayout/types'
+import {
+  FieldWrapper,
+  type FieldWrapperPassThroughProps,
+  InputField,
+} from '../Form'
+import { SearchIcon } from '../SVGIcons'
+import { useTranslation } from 'react-i18next'
+import {
+  Controller,
+  type FieldValues,
+  type UseFormRegisterReturn,
+} from 'react-hook-form'
+import { cn } from '~/utils/misc'
+import { type ControllerPassThroughProps } from '~/types'
+import { Popover, PopoverContent, PopoverTrigger } from '../Popover'
+import { Button } from '../Button'
 
-type TreeItemChildren = {
-  [key: string]: {
-    index: string,
-    data: { detailData: string, name: string },
-    parent: string,
-    isFolder: boolean,
-    children?: string[]
-  },
-}
-type ComplexTreeProps = {
-  items?: Org[],
-  selectOrg: (item: Org) => void,
-  currentValue: string
-}
-const ComplexTree = ({
-  items,
-  selectOrg,
-  currentValue
-}: ComplexTreeProps) => {
-  const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
+type ComplexTreeProps<TFormValues extends FieldValues> = {
+  options?: Org[]
+  className?: string
+  registration?: Partial<UseFormRegisterReturn>
+  classnamefieldwrapper?: string
+  classlabel?: string
+  classchild?: string
+  placeholder?: string
+  refTree?: Ref<TreeEnvironmentRef<any>>
+  customOnChange?: (e?: any) => void
+} & FieldWrapperPassThroughProps &
+  ControllerPassThroughProps<TFormValues>
+
+export function ComplexTree<TFormValues extends FieldValues>({
+  name,
+  label,
+  control,
+  options,
+  error,
+  className,
+  placeholder,
+  classnamefieldwrapper,
+  classlabel,
+  classchild,
+  customOnChange,
+  ...props
+}: ComplexTreeProps<TFormValues>) {
+  const { t } = useTranslation()
+  const [focusedItem, setFocusedItem] = useState<TreeItemIndex>()
   const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([])
   const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([])
-  const [dataItem, setDataItem] = useState<Record<TreeItemIndex, TreeItem<any>>>({})
+  const [dataItem, setDataItem] = useState<
+    Record<TreeItemIndex, TreeItem<any>>
+  >({})
+  const [findOrgMsg, setFindOrgMsg] = useState('')
   let treeData = {}
 
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
   const tree = useRef<TreeRef<any>>(null)
+  const no_org = t('cloud:org_manage.org_manage.add_org.no_org')
 
   function parseData(data: Org[]) {
     if (data) {
@@ -40,9 +75,18 @@ const ComplexTree = ({
         root: {
           index: 'root',
           isFolder: true,
-          children: data.map((item: Org) => item.id),
+          children: data
+            .map((item: Org) => item.id)
+            .concat(no_org)
+            .toReversed(),
           data: { detailData: 'root', name: 'root' },
-        }
+        },
+        [no_org]: {
+          index: no_org,
+          isFolder: false,
+          parent: '',
+          data: { detailData: no_org, name: no_org },
+        },
       }
       treeData = { ...treeData, ...rootItem }
       data.forEach((item: Org) => {
@@ -82,14 +126,20 @@ const ComplexTree = ({
     }
     return treeData
   }
-  
-  const dataProvider = new StaticTreeDataProvider(dataItem, (item, data) => ({...item,data,}))
-  
+
+  const dataProvider = new StaticTreeDataProvider(dataItem, (item, data) => ({
+    ...item,
+    data,
+  }))
+
   const findItemPath = useCallback(
-    async (search: string, searchRoot: TreeItemIndex | string = 'root'): Promise<any> => {
+    async (
+      search: string,
+      searchRoot: TreeItemIndex | string = 'root',
+    ): Promise<any> => {
       const item = await dataProvider.getTreeItem(searchRoot)
       if (item.data.name.toLowerCase().includes(search.toLowerCase())) {
-        return [item.index];
+        return [item.index]
       }
       const searchedItems = await Promise.all(
         (item.children &&
@@ -98,36 +148,39 @@ const ComplexTree = ({
       )
       const result = searchedItems.find(item => item !== null)
       if (!result) {
+        setFindOrgMsg(t('cloud:org_manage.org_manage.table.org_not_found'))
         return null
+      } else {
+        setFindOrgMsg('')
       }
       return [item.index, ...result]
     },
-    [dataItem]
-  );
+    [dataItem],
+  )
 
   const find = useCallback(
     (e: any) => {
-      e.preventDefault();
+      e.preventDefault()
       if (search) {
         findItemPath(search).then((path: TreeItemIndex[]) => {
           if (path && tree.current) {
             tree.current
               .expandSubsequently(path.slice(0, path.length - 1))
               .then(() => {
-                tree.current?.selectItems([path[path.length - 1]]);
-                tree.current?.focusItem(path[path.length - 1]);
-              });
+                tree.current?.selectItems([path[path.length - 1]])
+                tree.current?.focusItem(path[path.length - 1])
+              })
           }
         })
       }
     },
-    [findItemPath, search]
+    [findItemPath, search],
   )
 
   let parentArr: TreeItemIndex[] = []
 
-  function getParent(item: TreeItemIndex) {
-    if (item && dataItem[item]) {
+  function getParent(item: TreeItemIndex | TreeItemIndex[]) {
+    if (item && dataItem[item] && dataItem[item].parent) {
       const newItem = dataItem[dataItem[item].data.detailData].parent
       parentArr = parentArr.concat(dataItem[item].parent)
       if (newItem && newItem !== '') {
@@ -140,68 +193,116 @@ const ComplexTree = ({
   }
 
   useEffect(() => {
-    if (currentValue) {
-      const expanded = getParent(currentValue)
+    if (selectedItems) {
+      const expanded = getParent(selectedItems)
       setExpandedItems([...expandedItems, ...expanded])
     }
-  }, [dataItem, currentValue])
+  }, [dataItem, selectedItems])
 
   useEffect(() => {
-    if (items) {
-      parseData(items)
+    if (options) {
+      parseData(options)
     }
-  }, [items])
+  }, [options])
 
   return (
-    <>
-      <div className="flex">
-        <InputField
-          className="flex"
-          type="text" 
-          value={search}
-          onChange={e => {
-            setSearch(e.target.value)
-          }}
-          placeholder="Search..."
-        />
-        <div onClick={find} className="items-center flex cursor-pointer" style={{width: '36px', height: '36px', padding: '10px'}}>
-          <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-        </div>
-      </div>
-      <ControlledTreeEnvironment
-        viewState={{
-          'complex-tree': {
-            focusedItem: focusedItem,
-            selectedItems: currentValue
-              ? [currentValue.toString()]
-              : [selectedItems.toString()],
-            expandedItems,
-          },
-        }}
-        getItemTitle={item => item.data.name}
-        items={dataItem}
-        onFocusItem={item => setFocusedItem(item.index)}
-        onExpandItem={item => setExpandedItems([...expandedItems, item.index])}
-        onCollapseItem={item =>
-          setExpandedItems(
-            expandedItems.filter(
-              expandedItemIndex => expandedItemIndex !== item.index,
-            ),
+    <FieldWrapper
+      classlabel={classlabel}
+      classchild={classchild}
+      className={cn('', classnamefieldwrapper)}
+      label={label}
+    >
+      <Controller
+        name={name}
+        control={control}
+        render={({ field: { onChange, value, ...field } }) => {
+          const parseValue =
+            value && dataItem[value] ? dataItem[value].data.name : ''
+          return (
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="org_id"
+                  variant="trans"
+                  size="square"
+                  className={cn(
+                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
+                    !value && 'text-secondary-700',
+                  )}
+                >
+                  {value ? (
+                    <span>{parseValue ? parseValue : value}</span>
+                  ) : (
+                    <span>
+                      {t('cloud:org_manage.org_manage.add_org.choose_org')}
+                    </span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="popover-content w-auto p-2"
+                align="start"
+              >
+                <div className="flex">
+                  <InputField
+                    className="flex"
+                    type="text"
+                    value={search}
+                    onChange={e => {
+                      setSearch(e.target.value)
+                      setFindOrgMsg('')
+                    }}
+                  />
+                  <div
+                    onClick={find}
+                    className="flex h-9 w-9 cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                  >
+                    <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
+                  </div>
+                </div>
+                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
+                <ControlledTreeEnvironment
+                  {...field}
+                  viewState={{
+                    'complex-tree': {
+                      focusedItem: focusedItem,
+                      selectedItems: value
+                        ? [value.toString()]
+                        : [selectedItems.toString()],
+                      expandedItems,
+                    },
+                  }}
+                  getItemTitle={item => item.data.name}
+                  items={dataItem}
+                  onFocusItem={item => setFocusedItem(item.index)}
+                  onExpandItem={item =>
+                    setExpandedItems([...expandedItems, item.index])
+                  }
+                  onCollapseItem={item =>
+                    setExpandedItems(
+                      expandedItems.filter(
+                        expandedItemIndex => expandedItemIndex !== item.index,
+                      ),
+                    )
+                  }
+                  onSelectItems={(items: any) => {
+                    setSelectedItems(items)
+                    onChange(items.toString())
+                    customOnChange?.(items)
+                  }}
+                  defaultInteractionMode={
+                    InteractionMode.DoubleClickItemToExpand
+                  }
+                  canSearchByStartingTyping={true}
+                  {...props}
+                >
+                  <Tree treeId={'complex-tree'} rootItem={'root'} ref={tree} />
+                </ControlledTreeEnvironment>
+              </PopoverContent>
+            </Popover>
           )
-        }
-        onSelectItems={(items: any) => {
-          setSelectedItems(items)
-          selectOrg(items)
         }}
-        defaultInteractionMode={InteractionMode.DoubleClickItemToExpand}
-        canSearchByStartingTyping={true}
-      >
-        <Tree treeId={'complex-tree'} rootItem={'root'} ref={tree}></Tree>
-      </ControlledTreeEnvironment>
-    </>
+      />
+    </FieldWrapper>
   )
 }
-
-// new StaticTreeDataProvider(dataItem, (item, data) => ({ ...item, data }))
-
-export { ComplexTree }

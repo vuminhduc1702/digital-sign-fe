@@ -9,7 +9,7 @@ import {
 } from '~/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Switch } from '~/components/Switch'
 import { BaseTable } from '~/components/Table'
@@ -25,6 +25,13 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetAttrs } from '../../api/attrAPI/getAttrs'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export const STATUS = {
   true: 'Có',
@@ -46,80 +53,42 @@ function AttrTableContextMenu({
 }) {
   const { t } = useTranslation()
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img
-                  src={btnEditIcon}
-                  alt="Edit attribute"
-                  className="size-5"
-                />
-              }
-              onClick={open}
-            >
-              {t('cloud:org_manage.org_manage.add_attr.edit')}
-            </MenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-              body={t(
-                'cloud:org_manage.org_manage.table.delete_attr_confirm',
-              ).replace('{{ATTRNAME}}', attribute_key)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete attribute"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.org_manage.table.delete_attr')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() =>
-                    mutate({
-                      entityId,
-                      entityType,
-                      attrKey: attribute_key,
-                    })
-                  }
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
             />
           </div>
-        </Menu.Items>
-      </Dropdown>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit attribute" className="h-5 w-5" />
+            {t('cloud:org_manage.org_manage.add_attr.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete attribute"
+              className="h-5 w-5"
+            />
+            {t('cloud:org_manage.org_manage.table.delete_attr')}
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateAttr
           entityId={entityId}
@@ -128,6 +97,26 @@ function AttrTableContextMenu({
           close={close}
           isOpen={isOpen}
           {...props}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_attr_confirm',
+          ).replace('{{ATTRNAME}}', attribute_key)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() =>
+            mutate({
+              entityId,
+              entityType,
+              attrKey: attribute_key,
+            })
+          }
+          isLoading={isLoading}
         />
       ) : null}
     </>
