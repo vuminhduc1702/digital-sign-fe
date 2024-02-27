@@ -21,10 +21,12 @@ import listIcon from '~/assets/icons/list.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetDataBases } from '../api/getDataBases'
 import { flattenData } from '~/utils/misc'
+import { SearchField } from '~/components/Input'
 
 export function DataBaseSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -58,7 +60,10 @@ export function DataBaseSidebar() {
           <p>{t('cloud:db_template.sidebar.title')}</p>
         </div>
         <CreateDataBase />
-        {/* dummyInput */}
+        <SearchField
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
       </div>
       <div className="bg-secondary-500 h-[82vh] grow overflow-y-auto p-3">
         {templateFlattenData?.length > 0 ? (

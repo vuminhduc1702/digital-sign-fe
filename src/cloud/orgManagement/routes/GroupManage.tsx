@@ -11,11 +11,13 @@ import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useGetGroups } from '../api/groupAPI'
 import { useDeleteMultipleGroup } from '../api/groupAPI/deleteMultipleGroups'
 import { CreateGroup, GroupTable } from '../components/Group'
+import { SearchField } from '~/components/Input'
 
 export function GroupManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
   const { data: groupData, isPreviousData } = useGetGroups({
@@ -113,7 +115,10 @@ export function GroupManage() {
               />
             )}
             <CreateGroup />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <GroupTable

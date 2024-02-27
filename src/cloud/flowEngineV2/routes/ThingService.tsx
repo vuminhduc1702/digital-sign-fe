@@ -8,11 +8,13 @@ import {
   ThingServiceTable,
 } from '../components/ThingService'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
+import { SearchField } from '~/components/Input'
 
 export function ThingServices() {
   const { t } = useTranslation()
 
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const params = useParams()
 
@@ -37,7 +39,10 @@ export function ThingServices() {
         <div className="flex justify-end">
           <div className="flex items-center gap-x-3">
             <CreateThingService thingServiceData={thingData?.data} />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <ThingServiceTable

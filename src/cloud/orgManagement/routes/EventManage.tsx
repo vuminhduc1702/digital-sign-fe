@@ -10,10 +10,12 @@ import storage from '~/utils/storage'
 import { useGetEvents } from '../api/eventAPI'
 import { CreateEvent, EventTable } from '../components/Event'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
+import { SearchField } from '~/components/Input'
 
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const params = useParams()
   const orgId = params.orgId as string
@@ -112,7 +114,10 @@ export function EventManage() {
               />
             )}
             <CreateEvent />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <EventTable

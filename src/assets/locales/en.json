@@ -937,6 +937,8 @@
     "next_page": "Next Page",
     "prev_page": "Previous Page",
     "no": "No.",
+    "tenant": "Tenant",
+    "email": "Email", 
     "last_updated": "Last Updated",
     "starred": "Starred",
     "excel": "Excel",

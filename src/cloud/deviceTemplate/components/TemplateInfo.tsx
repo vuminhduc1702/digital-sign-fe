@@ -6,9 +6,6 @@ import TitleBar from '~/components/Head/TitleBar'
 import { getVNDateFormat } from '~/utils/misc'
 import { useTemplateById } from '../api/getTemplateById'
 
-
-
-
 export function TemplateInfo() {
   const { t } = useTranslation()
 

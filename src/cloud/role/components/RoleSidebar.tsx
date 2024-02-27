@@ -11,6 +11,7 @@ import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
+import { SearchField } from '~/components/Input'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
   return enArr?.map(item => {
@@ -30,6 +31,7 @@ export function RoleSidebar() {
   const { t } = useTranslation()
 
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const projectId = storage.getProject()?.id
 
@@ -122,7 +124,10 @@ export function RoleSidebar() {
               />
             )}
             <CreateRole />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <RoleTable

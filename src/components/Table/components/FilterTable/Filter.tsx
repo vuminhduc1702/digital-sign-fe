@@ -19,13 +19,13 @@ export default function Filter({
     .flatRows[0]?.getValue(column.id)
 
   const columnFilterValue = column.getFilterValue()
-  const sortedUniqueValues = useMemo(
-    () =>
-      typeof firstValue === 'number'
-        ? []
-        : Array.from(column.getFacetedUniqueValues().keys()).sort(),
-    [column.getFacetedUniqueValues()],
-  )
+  // const sortedUniqueValues = useMemo(
+  //   () =>
+  //     typeof firstValue === 'number'
+  //       ? []
+  //       : Array.from(column.getFacetedUniqueValues().keys()).sort(),
+  //   [column.getFacetedUniqueValues()],
+  // )
 
   return typeof firstValue === 'number' ? (
     <>

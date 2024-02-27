@@ -41,7 +41,6 @@ function CustomerTableContextMenu({
   } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteCustomerRole()
-  console.log(project_id, 'check projectID')
 
   return (
     <>
@@ -154,7 +153,6 @@ export function CustomerRoleTable({ data, ...props }: CustomerRoleTableProps) {
         id: 'contextMenu',
         cell: info => {
           const { project_id, role_id } = info.row.original
-          console.log(info.row.original, 'check propsss')
           return CustomerTableContextMenu({
             project_id,
             customerId,
