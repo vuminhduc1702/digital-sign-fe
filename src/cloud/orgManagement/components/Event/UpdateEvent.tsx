@@ -84,7 +84,7 @@ export const updateEventSchema = z
     status: z.boolean().optional(),
     retry: z.number().optional(),
     onClick: z.boolean(),
-    cmd: updateCmdSchema,
+    cmd: updateCmdSchema.optional(),
   })
   .and(eventTypeSchema)
 
@@ -119,6 +119,10 @@ export function UpdateEvent({
     value: thing.id,
     label: thing.name,
   }))
+  console.log(
+    'first',
+    thingSelectData?.find(ele => ele.value === thingIdOptionProp),
+  )
 
   const {
     register,
@@ -144,8 +148,8 @@ export function UpdateEvent({
       group_id: data.group_id,
       cmd: {
         thing_id: thingIdOptionProp,
-        handle_service: serviceOptionProp,
-        input: inputDataProp,
+        handle_service: serviceOptionProp ?? '',
+        input: inputDataProp ?? {},
       },
     },
   })
@@ -221,10 +225,12 @@ export function UpdateEvent({
 
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
-      thingId: watch('cmd.thing_id'),
+      thingId: watch('cmd.thing_id') ?? '',
       config: {
         suspense: false,
-        enabled: !!watch('cmd.thing_id'),
+        enabled:
+          !!watch('cmd.thing_id') &&
+          parseInt(watch('cmd.thing_id') as unknown as string) !== 0,
       },
     })
   const serviceSelectData = serviceData?.data?.map(service => ({

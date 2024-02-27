@@ -1,7 +1,7 @@
 {
   "name": "iot-react",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.2.5",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,7 +9,8 @@
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx ./src --ignore-path .gitignore",
     "format": "prettier --write .",
-    "type-check": "tsc"
+    "type-check": "tsc --pretty",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.7.1",
@@ -118,7 +119,9 @@
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-tailwindcss": "^3.11.0",
+    "husky": "^9.0.11",
     "jsdom": "^21.1.1",
+    "lint-staged": "^15.2.2",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
     "prettier-plugin-tailwindcss": "^0.2.5",

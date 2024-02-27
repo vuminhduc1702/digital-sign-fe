@@ -27,7 +27,7 @@ module.exports = {
   },
   settings: {
     tailwindcss: {
-      callees: ['classnames', 'clsx', 'ctl', 'cn'],
+      callees: ['clsx', 'cn'],
     },
   },
 }
