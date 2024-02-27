@@ -8,7 +8,6 @@ import {
   FieldWrapper,
   FormDrawer,
   InputField,
-  SelectDropdown,
   SelectField,
 } from '~/components/Form'
 import storage from '~/utils/storage'
@@ -20,9 +19,7 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ComplexTree } from '~/components/ComplexTree'
-import { format } from 'date-fns'
 import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
-import { LuChevronDown } from 'react-icons/lu'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
