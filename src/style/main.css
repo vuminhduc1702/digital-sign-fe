@@ -128,3 +128,10 @@
 .rdp-dropdown_year .text-table-header > svg {
   align-self: center;
 }
+
+/* Popover CSS */
+.popover-content {
+  width: var(--radix-popover-trigger-width);
+  max-height: 500px;
+  overflow: auto;
+}

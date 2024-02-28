@@ -1,23 +1,14 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ControlledTreeEnvironment, InteractionMode, StaticTreeDataProvider, Tree, TreeEnvironmentRef, TreeItem, TreeItemIndex, TreeRef, UncontrolledTreeEnvironment } from "react-complex-tree"
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ControlledTreeEnvironment, InteractionMode, StaticTreeDataProvider, Tree, TreeItem, TreeItemIndex, TreeRef } from "react-complex-tree"
 import 'react-complex-tree/lib/style-modern.css'
 import { type Org } from "~/layout/MainLayout/types";
 import { InputField } from "../Form";
 import { SearchIcon } from "../SVGIcons";
-import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
+import { useTranslation } from "react-i18next";
 
-type TreeItemChildren = {
-  [key: string]: {
-    index: string,
-    data: { detailData: string, name: string },
-    parent: string,
-    isFolder: boolean,
-    children?: string[]
-  },
-}
 type ComplexTreeProps = {
   items?: Org[],
-  selectOrg: (item: Org) => void,
+  selectOrg: (item?: Org) => void,
   currentValue: string
 }
 const ComplexTree = ({
@@ -25,14 +16,17 @@ const ComplexTree = ({
   selectOrg,
   currentValue
 }: ComplexTreeProps) => {
+  const { t } = useTranslation()
   const [focusedItem, setFocusedItem] = useState<TreeItemIndex>();
   const [selectedItems, setSelectedItems] = useState<Array<TreeItemIndex>>([])
   const [expandedItems, setExpandedItems] = useState<Array<TreeItemIndex>>([])
   const [dataItem, setDataItem] = useState<Record<TreeItemIndex, TreeItem<any>>>({})
+  const [findOrgMsg, setFindOrgMsg] = useState('')
   let treeData = {}
 
   const [search, setSearch] = useState('');
   const tree = useRef<TreeRef<any>>(null)
+  const no_org = t('cloud:org_manage.org_manage.add_org.no_org')
 
   function parseData(data: Org[]) {
     if (data) {
@@ -40,8 +34,14 @@ const ComplexTree = ({
         root: {
           index: 'root',
           isFolder: true,
-          children: data.map((item: Org) => item.id),
+          children: data.map((item: Org) => item.id).concat(no_org).toReversed(),
           data: { detailData: 'root', name: 'root' },
+        },
+        [no_org]: {
+          index: no_org,
+          isFolder: false,
+          parent: "",
+          data: { detailData: no_org, name: no_org },
         }
       }
       treeData = { ...treeData, ...rootItem }
@@ -98,7 +98,10 @@ const ComplexTree = ({
       )
       const result = searchedItems.find(item => item !== null)
       if (!result) {
+        setFindOrgMsg(t('cloud:org_manage.org_manage.table.org_not_found'))
         return null
+      } else {
+        setFindOrgMsg('')
       }
       return [item.index, ...result]
     },
@@ -127,7 +130,7 @@ const ComplexTree = ({
   let parentArr: TreeItemIndex[] = []
 
   function getParent(item: TreeItemIndex) {
-    if (item && dataItem[item]) {
+    if (item && dataItem[item] && dataItem[item].parent) {
       const newItem = dataItem[dataItem[item].data.detailData].parent
       parentArr = parentArr.concat(dataItem[item].parent)
       if (newItem && newItem !== '') {
@@ -157,17 +160,37 @@ const ComplexTree = ({
       <div className="flex">
         <InputField
           className="flex"
-          type="text" 
+          type="text"
           value={search}
           onChange={e => {
             setSearch(e.target.value)
+            setFindOrgMsg('')
           }}
-          placeholder="Search..."
         />
-        <div onClick={find} className="items-center flex cursor-pointer" style={{width: '36px', height: '36px', padding: '10px'}}>
+        <div
+          onClick={find}
+          className="flex h-[36px] w-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+        >
           <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
         </div>
       </div>
+      {/* <ul className="rct-tree-item-container pl-[16px]">
+        <li className="rct-tree-item-li">
+          <div className="rct-tree-item-title-container">
+            <div className="rct-tree-item-arrow"></div>
+            <button
+              type="button"
+              className="rct-tree-item-button"
+              onClick={() => {
+                selectOrg()
+              }}
+            >
+              {t('cloud:org_manage.org_manage.add_org.no_org')}
+            </button>
+          </div>
+        </li>
+      </ul> */}
+      <div className="mt-1 text-primary-400">{findOrgMsg}</div>
       <ControlledTreeEnvironment
         viewState={{
           'complex-tree': {
