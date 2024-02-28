@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 import { z } from 'zod'
@@ -9,11 +9,12 @@ import { type SelectInstance } from 'react-select'
 import { Button } from '~/components/Button'
 import { Drawer } from '~/components/Drawer'
 import {
+  FieldWrapper,
   InputField,
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { flattenData } from '~/utils/misc'
+import { cn, flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -31,6 +32,8 @@ import { type DeviceAdditionalInfo } from '../../types'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { ComplexTree } from '~/components/ComplexTree'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -113,7 +116,7 @@ export function UpdateDevice({
 
   const defaultComboboxGroupData = useDefaultCombobox('group')
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',
@@ -210,28 +213,61 @@ export function UpdateDevice({
               registration={register('name')}
             />
 
-            <SelectDropdown
+            <FieldWrapper
               label={t('cloud:org_manage.device_manage.add_device.parent')}
-              name="org_id"
-              control={control}
-              options={orgSelectOptions}
-              isOptionDisabled={option =>
-                option.label === t('loading:org') ||
-                option.label === t('table:no_in_org')
-              }
-              noOptionsMessage={() => t('table:no_in_org')}
-              loadingMessage={() => t('loading:org')}
-              isLoading={orgIsLoading}
-              placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-              defaultValue={orgSelectOptions?.find(org => org.value === org_id)}
-              handleClearSelectDropdown={() =>
-                selectDropdownGroupId.current?.clearValue()
-              }
-              handleChangeSelect={() =>
-                selectDropdownGroupId.current?.clearValue()
-              }
               error={formState?.errors?.org_id}
-            />
+            >
+              <Controller
+                control={control}
+                name="org_id"
+                render={({ field: { onChange, value, ...field } }) => {
+                  const parseValue = value
+                    ? orgSelectOptions?.find(
+                        org => org.value === value.toString(),
+                      )?.label
+                    : ''
+                  return (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          id="org_id"
+                          variant="trans"
+                          size="square"
+                          className={cn(
+                            'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                            !value && 'text-secondary-700',
+                          )}
+                        >
+                          {value ? (
+                            <span>{parseValue ? parseValue : value}</span>
+                          ) : (
+                            <span>
+                              {t(
+                                'cloud:org_manage.org_manage.add_org.choose_org',
+                              )}
+                            </span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="popover-content w-auto p-2"
+                        align="start"
+                      >
+                        <ComplexTree
+                          items={orgData?.organizations}
+                          selectOrg={e => {
+                            selectDropdownGroupId.current?.clearValue()
+                            onChange(e)
+                          }}
+                          currentValue={value}
+                          {...field}
+                        ></ComplexTree>
+                      </PopoverContent>
+                    </Popover>
+                  )
+                }}
+              />
+            </FieldWrapper>
 
             <SelectDropdown
               refSelect={selectDropdownGroupId}

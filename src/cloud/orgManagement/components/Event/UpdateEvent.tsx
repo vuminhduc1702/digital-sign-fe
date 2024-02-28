@@ -55,6 +55,8 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
+import { ComplexTree } from '~/components/ComplexTree'
 
 type UpdateEventProps = {
   eventId: string
@@ -77,7 +79,7 @@ const updateCmdSchema = cmdSchema
 export const updateEventSchema = z
   .object({
     project_id: z.string().optional(),
-    org_id: z.string().optional(),
+    org_id: z.string().optional().or(z.array(z.string())),
     group_id: z.string().optional(),
     name: nameSchema,
     action: eventActionSchema,
@@ -104,6 +106,7 @@ export function UpdateEvent({
   const { t } = useTranslation()
   const { orgId } = useParams()
   const projectId = storage.getProject()?.id
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const actionTypeProp: ActionType = data.action[0].action_type
   const thingIdOptionProp = data.cmd.thing_id
@@ -153,7 +156,7 @@ export function UpdateEvent({
       },
     },
   })
-  console.log('formState.errors', formState.errors)
+  // console.log('formState.errors', formState.errors)
 
   const {
     append: conditionAppend,
@@ -191,7 +194,7 @@ export function UpdateEvent({
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -202,7 +205,7 @@ export function UpdateEvent({
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id') || orgId,
+    orgId: watch('org_id')?.toString() || orgId,
     projectId,
     config: { suspense: false },
   })
@@ -366,7 +369,7 @@ export function UpdateEvent({
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id,
+              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
               group_id: values.group_id,
               name: values.name,
               onClick: values.onClick,
@@ -402,23 +405,58 @@ export function UpdateEvent({
                   registration={register('name')}
                 />
 
-                <SelectDropdown
+                <FieldWrapper
                   label={t('cloud:org_manage.device_manage.add_device.parent')}
-                  name="org_id"
-                  control={control}
-                  options={orgSelectOptions}
-                  isOptionDisabled={option =>
-                    option.label === t('loading:org') ||
-                    option.label === t('table:no_org')
-                  }
-                  noOptionsMessage={() => t('table:no_org')}
-                  loadingMessage={() => t('loading:org')}
-                  isLoading={orgIsLoading}
-                  defaultValue={orgSelectOptions.find(
-                    item => item.value === getValues('org_id'),
-                  )}
                   error={formState?.errors?.org_id}
-                />
+                >
+                  <Controller
+                    control={control}
+                    name="org_id"
+                    render={({ field: { onChange, value, ...field } }) => {
+                      const parseValue = value
+                        ? orgSelectOptions?.find(
+                            org => org.value === value.toString(),
+                          )?.label
+                        : ''
+                      return (
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <Button
+                              id="org_id"
+                              variant="trans"
+                              size="square"
+                              className={cn(
+                                'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                !value && 'text-secondary-700',
+                              )}
+                            >
+                              {value ? (
+                                <span>{parseValue ? parseValue : value}</span>
+                              ) : (
+                                <span>
+                                  {t(
+                                    'cloud:org_manage.org_manage.add_org.choose_org',
+                                  )}
+                                </span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="popover-content w-auto p-2"
+                            align="start"
+                          >
+                            <ComplexTree
+                              items={orgData?.organizations}
+                              selectOrg={onChange}
+                              currentValue={value}
+                              {...field}
+                            ></ComplexTree>
+                          </PopoverContent>
+                        </Popover>
+                      )
+                    }}
+                  />
+                </FieldWrapper>
 
                 <SelectDropdown
                   label={t('cloud:org_manage.event_manage.add_event.group')}
