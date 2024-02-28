@@ -120,9 +120,9 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           <div className=" p-4">
             <div className="flex h-20 w-full max-xl:justify-between max-lg:justify-between xs2:px-0 2xl:px-20">
               <div className="flex items-center max-xl:hidden">
-                <a href="/" className=" text-white lg:w-[180px]">
-                  <img src={LogoViettel} alt="" />
-                </a>
+                <Link to={PATHS.HOME} className=" text-white lg:w-[180px]">
+                  <img src={LogoViettel} alt="Logo" />
+                </Link>
               </div>
               {hasSideBar ? (
                 <button
