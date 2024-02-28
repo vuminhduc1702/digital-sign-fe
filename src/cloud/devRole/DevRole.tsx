@@ -12,6 +12,7 @@ import storage from '~/utils/storage'
 
 import narrowLeft from '~/assets/icons/narrow-left.svg'
 import { ContentLayout } from '~/layout/ContentLayout'
+import { SearchField } from '~/components/Input'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -19,6 +20,7 @@ export default function DevRole() {
 
   const [offset, setOffset] = useState(0)
   const [projectId, setProjectId] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { data: projectsData } = useProjects()
 
@@ -72,7 +74,10 @@ export default function DevRole() {
           {projectId && (
             <div className="flex items-center gap-x-3">
               <CreateRole project_id={projectId} />
-              {/* dummyInput */}
+              <SearchField
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+              />
             </div>
           )}
         </div>

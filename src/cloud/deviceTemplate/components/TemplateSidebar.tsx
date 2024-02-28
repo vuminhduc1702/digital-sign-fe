@@ -13,13 +13,17 @@ export function TemplateSidebar() {
         <div className="w-fit rounded-2xl bg-slate-200">
           {DeviceType.map(item => (
             <NavLink
-              to={item === 'Default' ? PATHS.TEMPLATE_DEFAULT : PATHS.TEMPLATE_LWM2M}
+              to={
+                item === 'Default'
+                  ? PATHS.TEMPLATE_DEFAULT
+                  : PATHS.TEMPLATE_LWM2M
+              }
               key={item}
             >
               <button
                 type="button"
                 onClick={() => {
-                  setType(item);
+                  setType(item)
                 }}
                 className={cn('px-4 py-2 text-slate-400', {
                   'bg-primary-400 rounded-2xl text-white': type === item,
@@ -32,13 +36,7 @@ export function TemplateSidebar() {
         </div>
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-500 p-3">
-      {type === 'Default' ? (
-            <TemplateDefault
-            />
-          ) : (
-            <TemplateLwM2M
-            />
-          )}
+        {type === 'Default' ? <TemplateDefault /> : <TemplateLwM2M />}
       </div>
     </>
   )

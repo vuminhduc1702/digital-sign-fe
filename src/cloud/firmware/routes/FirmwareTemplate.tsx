@@ -11,11 +11,13 @@ import { convertEpochToDate } from '~/utils/transformFunc'
 import { useGetFirmwares } from '../api/firmwareAPI'
 import { useDeleteMultipleFirmware } from '../api/firmwareAPI/deleteMultipleFirmwares'
 import { CreateFirmWare, FirmWareTable } from '../components/Firmware'
+import { SearchField } from '~/components/Input'
 
 export function FirmwareTemplate() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
   const projectId = storage.getProject()?.id
   const {
     data: firmwareData,
@@ -117,7 +119,10 @@ export function FirmwareTemplate() {
               />
             )}
             <CreateFirmWare />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <FirmWareTable

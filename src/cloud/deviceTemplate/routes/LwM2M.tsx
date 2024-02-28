@@ -11,6 +11,7 @@ import { TemplateInfo } from '../components'
 import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
+import { SearchField } from '~/components/Input'
 
 export function LwM2M() {
   const { t } = useTranslation()
@@ -21,17 +22,26 @@ export function LwM2M() {
   const selectedModuleId = params.id as string
   const projectId = storage.getProject()?.id
 
+  const [searchQueryData, setSearchQueryData] = useState('')
+  const [searchQueryDataAttr, setSearchQueryDataAttr] = useState('')
+
   // no offset call
   const {
     data: LwM2MDataById,
     isPreviousData: isPreviousLwM2MData,
     isSuccess,
-  } = useTemplateById({ templateId })
+  } = useTemplateById({
+    templateId,
+    config: {
+      suspense: false,
+    },
+  })
 
   const selectedModule =
     LwM2MDataById?.transport_config?.info.module_config.find(
       module => module.id === selectedModuleId,
     )
+  const selectedAttributes = selectedModule?.attribute_info || []
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
@@ -55,7 +65,10 @@ export function LwM2M() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
+                  <SearchField
+                    searchQuery={searchQueryData}
+                    setSearchQuery={setSearchQueryData}
+                  />
                 </div>
               </div>
               <LwM2MTable
@@ -87,7 +100,10 @@ export function LwM2M() {
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
                 <div className="flex items-center gap-x-3">
-                  {/* dummyInput */}
+                  <SearchField
+                    searchQuery={searchQueryDataAttr}
+                    setSearchQuery={setSearchQueryDataAttr}
+                  />
                 </div>
               </div>
               <AttrLwM2MTable

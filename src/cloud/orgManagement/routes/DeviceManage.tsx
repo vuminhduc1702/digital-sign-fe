@@ -11,12 +11,14 @@ import { useGetDevices } from '../api/deviceAPI'
 import storage from '~/utils/storage'
 import { convertEpochToDate } from '~/utils/transformFunc'
 import { useDeleteMultipleDevices } from '../api/deviceAPI/deleteMultipleDevices'
+import { SearchField } from '~/components/Input'
 
 export function DeviceManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
   const params = useParams()
 
   const orgId = params.orgId as string
@@ -123,7 +125,10 @@ export function DeviceManage() {
               />
             )}
             <CreateDevice />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <DeviceTable

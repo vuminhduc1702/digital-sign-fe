@@ -12,6 +12,7 @@ import { useGetDashboards } from '../api'
 import { useDeleteMultipleDashboards } from '../api/deleteMultipleDashboards'
 import { DashboardTable } from '../components/DashboardTable'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
+import { SearchField } from '~/components/Input'
 
 export function DashboardManage() {
   const { t } = useTranslation()
@@ -21,6 +22,7 @@ export function DashboardManage() {
   const projectId = storage.getProject()?.id
 
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const {
     data: dashboardData,
@@ -113,7 +115,10 @@ export function DashboardManage() {
               />
             )}
             <CreateDashboard projectId={projectId} />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <DashboardTable

@@ -22,8 +22,9 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 import { useAttrLog } from '../api/attrAPI/getAttrLog'
-import { useMQTTLog, type MQTTMessage } from '../api/attrAPI/getMQTTLog'
 import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
+import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
+import { SearchField } from '~/components/Input'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -33,6 +34,9 @@ export function DeviceDetail() {
   const deviceId = params.deviceId as string
   const projectId = params.projectId as string
   const entityTypeAttr = 'DEVICE'
+  const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
+  const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
+  const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
 
   const {
     data: attrsData,
@@ -202,7 +206,10 @@ export function DeviceDetail() {
                   />
                 )}
                 <CreateAttr entityId={deviceId} entityType="DEVICE" />
-
+                <SearchField
+                  searchQuery={searchQueryAttrs}
+                  setSearchQuery={setSearchQueryAttrs}
+                />
               </div>
             </div>
             <AttrTable
@@ -219,7 +226,10 @@ export function DeviceDetail() {
             <div className="flex justify-between">
               <ExportTable refComponent={ref} />
               <div className="flex items-center gap-x-3">
-
+                <SearchField
+                  searchQuery={searchQueryMQTTLog}
+                  setSearchQuery={setSearchQueryMQTTLog}
+                />
               </div>
             </div>
             <AttrLogTable

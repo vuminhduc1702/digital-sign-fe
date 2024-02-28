@@ -12,12 +12,14 @@ import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
+import { SearchField } from '~/components/Input'
 
 export function GroupDetail() {
   const params = useParams()
   const groupId = params.groupId as string
   const ref = useRef(null)
   const { t } = useTranslation()
+  const [searchQuery, setSearchQuery] = useState('')
 
   const entityType = 'GROUP'
 
@@ -122,7 +124,10 @@ export function GroupDetail() {
               />
             )}
             <CreateAttr entityId={groupId} entityType="GROUP" />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <AttrTable

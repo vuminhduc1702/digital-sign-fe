@@ -19,7 +19,7 @@ import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
-import { InputField } from '~/components/Form'
+import { SearchField } from '~/components/Input'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
@@ -171,14 +171,9 @@ export function OrgManage() {
                     />
                   )}
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
-                  {/* dummyInput */}
-                  <InputField
-                    type="text"
-                    placeholder={t('search:title')}
-                    onChange={e => {
-                      const value = e.target.value
-                      setSearchQuery(value)
-                    }}
+                  <SearchField
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
                   />
                 </div>
               </div>

@@ -11,11 +11,13 @@ import { uppercaseTheFirstLetter } from '~/utils/transformFunc'
 import { useGetUsers } from '../api/userAPI'
 import { useDeleteMultipleUsers } from '../api/userAPI/deleteMultipleUsers'
 import { CreateUser, UserTable } from '../components/User'
+import { SearchField } from '~/components/Input'
 
 export function UserManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
 
+  const [searchQuery, setSearchQuery] = useState('')
   const [offset, setOffset] = useState(0)
 
   const params = useParams()
@@ -121,7 +123,10 @@ export function UserManage() {
               />
             )}
             <CreateUser />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <UserTable

@@ -14,6 +14,7 @@ import dollarIcon from '~/assets/icons/currency-dollar1.svg'
 import { CreatePackage } from './CreatePackage'
 import { useGetPlans } from '../api'
 import { flattenData } from '~/utils/misc'
+import { SearchField } from '~/components/Input'
 
 export function PackageSidebar() {
   const { t } = useTranslation()
@@ -23,6 +24,7 @@ export function PackageSidebar() {
 
   const projectId = storage.getProject()?.id
 
+  const [searchQuery, setSearchQuery] = useState('')
   const { data } = useGetPlans({ projectId })
 
   const { acc: planFlattenData, extractedPropertyKeys } = flattenData(
@@ -43,7 +45,10 @@ export function PackageSidebar() {
         </div>
         <CreatePackage />
         <div className="w-full">
-          {/* dummyInput */}
+          <SearchField
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
         </div>
       </div>
       <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">

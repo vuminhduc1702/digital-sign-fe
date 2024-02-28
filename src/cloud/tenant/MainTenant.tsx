@@ -4,11 +4,12 @@ import { Button } from '~/components/Button'
 import { InputField, SelectField } from '~/components/Form'
 import { SearchIcon } from '~/components/SVGIcons'
 import { useCustomerList } from './api/getTenantListApi'
-import { BillingCustomerTable } from './components/TenantTable'
+import { TenantTable } from './components/TenantTable'
 import { CreateCustomer } from './components/CreateTenant'
 import { useNavigate } from 'react-router-dom'
 import narrowLeft from '~/assets/icons/narrow-left.svg'
 import { ContentLayout } from '~/layout/ContentLayout'
+import { limitPagination } from '~/utils/const'
 
 const MainTenant = () => {
   const { t } = useTranslation()
@@ -30,7 +31,7 @@ const MainTenant = () => {
 
   const { data: customerData, isPreviousData } = useCustomerList({
     data: {
-      limit: 10,
+      limit: limitPagination,
       offset: offset || 0,
       search_field: searchFilter.search_field,
       search_str: searchFilter.search_str,
@@ -45,7 +46,6 @@ const MainTenant = () => {
       return {
         name: item.name,
         phone: item.phone,
-
         email: item.email,
         system_role: item.system_role,
         company: item.profile.company,
@@ -101,7 +101,7 @@ const MainTenant = () => {
           <CreateCustomer />
         </div>
 
-        <BillingCustomerTable
+        <TenantTable
           data={formatData(customerData?.tenant ?? [])}
           offset={offset}
           setOffset={setOffset}

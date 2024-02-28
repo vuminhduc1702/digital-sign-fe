@@ -11,11 +11,13 @@ import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleAdapters } from '../api/adapter/deleteMultipleAdapter'
+import { SearchField } from '~/components/Input'
 
 export function CustomProtocolManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const projectId = storage.getProject()?.id
   const {
@@ -121,7 +123,10 @@ export function CustomProtocolManage() {
               />
             )}
             <CreateAdapter />
-            {/* dummyInput */}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
           </div>
         </div>
         <AdapterTable

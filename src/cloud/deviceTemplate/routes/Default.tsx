@@ -1,4 +1,4 @@
-import { Suspense, useMemo, useRef, useState } from 'react'
+import { Suspense, useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -12,19 +12,29 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { TemplateInfo } from '../components'
 
+import { type Attribute } from '~/types'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
+import { SearchField } from '~/components/Input'
 
 export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
-  const { data: attrsData } = useGetAttrs({ entityType, entityId: templateId })
+
+  const { data: attrsData } = useGetAttrs({
+    entityType,
+    entityId: templateId,
+    config: {
+      suspense: false,
+    },
+  })
 
   const projectId = storage.getProject()?.id
   const {
@@ -45,14 +55,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrsData?.attributes?.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
   const aoo: Array<{ [key: string]: string }> | undefined =
-    attrsData?.attributes?.reduce((acc, curr, index) => {
+    attrsData?.attributes.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -72,7 +82,7 @@ export function Default() {
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
-      {projectId && templateId ? (
+      {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
           <Suspense
             fallback={
@@ -143,11 +153,14 @@ export function Default() {
                     />
                   )}
                   <CreateAttr entityId={templateId} entityType="TEMPLATE" />
-                  {/* dummyInput */}
+                  <SearchField
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                  />
                 </div>
               </div>
               <AttrTable
-                data={attrsData?.attributes ?? []}
+                data={attrsData}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}

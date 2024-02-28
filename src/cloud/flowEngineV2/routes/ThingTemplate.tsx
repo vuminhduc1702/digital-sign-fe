@@ -4,12 +4,12 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { Button } from '~/components/Button'
 import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { InputField } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
 import { useDeleteMultipleThings } from '../api/thingAPI/deleteMultipleThings'
 import { CreateThing, ThingTable } from '../components/Attributes'
+import { SearchField } from '~/components/Input'
 
 export function ThingTemplate() {
   const { t } = useTranslation()
@@ -117,14 +117,9 @@ export function ThingTemplate() {
               />
             )}
             <CreateThing thingType="thing" />
-            {/* dummyInput */}
-            <InputField
-              type="text"
-              placeholder={t('table:search')}
-              onChange={e => {
-                const value = e.target.value
-                setSearchQuery(value)
-              }}
+            <SearchField
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
             />
           </div>
         </div>

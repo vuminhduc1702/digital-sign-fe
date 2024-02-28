@@ -6,11 +6,28 @@ export type BillingCustomerEntity = {
   system_role: string
   company: string
   id: string
-  permissions: Array<{}>
+  permissions: Array<PermissionEntity>
 }
 
 export type CustomerRoleEntity = {
-  permissions: Array<{}>
+  permissions: Array<PermissionEntity>
+}
+
+export type PermissionEntity = {
   project_id: string
   role_id: string
+}
+
+export type PermissionEntityTable = {
+  stt: number
+  project_id: string
+  role_id: string
+  contextMenu: any
+}
+
+export type TenantList = {
+  limit: number
+  offset: number
+  tenant: Array<BillingCustomerEntity>
+  total: number 
 }

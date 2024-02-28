@@ -1,4 +1,6 @@
 {
+  "start_url": "./",
+  "scope": ".",
   "name": "innoway-favicon",
   "icons": [
     {
