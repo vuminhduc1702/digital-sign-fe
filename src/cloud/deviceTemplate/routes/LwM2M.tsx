@@ -30,7 +30,12 @@ export function LwM2M() {
     data: LwM2MDataById,
     isPreviousData: isPreviousLwM2MData,
     isSuccess,
-  } = useTemplateById({ templateId })
+  } = useTemplateById({
+    templateId,
+    config: {
+      suspense: false,
+    },
+  })
 
   const selectedModule =
     LwM2MDataById?.transport_config?.info.module_config.find(

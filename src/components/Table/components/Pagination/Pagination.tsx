@@ -51,6 +51,7 @@ const Pagination = <T extends Record<string, any>>({
           // Render our Page Pills
           return typeof pageNumber === 'number' ? (
             <PaginationItem
+              key={index}
               className={cn('', {
                 'text-primary-400': pageNumber === currentPage + 1,
               })}

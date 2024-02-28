@@ -45,8 +45,14 @@ export function TemplateLwM2M() {
     const timer = setTimeout(() => {
       setShowNoTemplateMessage(true)
     }, 500)
+    if (filteredComboboxData?.[0]?.id) {
+      navigate(
+        `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${filteredComboboxData[0].id}`,
+      )
+    }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])
+
   return (
     <>
       <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
@@ -174,7 +180,8 @@ export function TemplateLwM2M() {
           </div>
         ) : (
           <div className="flex h-full items-center justify-center">
-            {showNoTemplateMessage && t('cloud:device_template.sidebar.no_template')}
+            {showNoTemplateMessage &&
+              t('cloud:device_template.sidebar.no_template')}
           </div>
         )}
         {isOpen && selectedUpdateTemplate ? (
@@ -182,7 +189,6 @@ export function TemplateLwM2M() {
             close={close}
             isOpen={isOpen}
             selectedUpdateTemplate={selectedUpdateTemplate}
-            
           />
         ) : null}
       </div>

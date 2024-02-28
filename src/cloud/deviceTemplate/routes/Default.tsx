@@ -18,29 +18,7 @@ import { Button } from '~/components/Button'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useDeleteMultipleAttrs } from '~/cloud/orgManagement/api/attrAPI/deleteMultipleAttrs'
 import { useGetAttrs } from '~/cloud/orgManagement/api/attrAPI/getAttrs'
-import { type EntityType } from '~/cloud/orgManagement/api/attrAPI'
 import { SearchField } from '~/components/Input'
-
-function HandleRequest({
-  entityId,
-  entityType,
-  setData,
-}: {
-  entityId: string
-  entityType: EntityType
-  setData?: React.Dispatch<React.SetStateAction<Attribute[]>>
-}) {
-  const { data: attrsData } = useGetAttrs({
-    entityType,
-    entityId,
-  })
-
-  useEffect(() => {
-    setData?.(attrsData?.attributes || [])
-  }, [attrsData])
-
-  return null
-}
 
 export function Default() {
   const { t } = useTranslation()
@@ -50,7 +28,13 @@ export function Default() {
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
 
-  const [attrsData, setAttrsData] = useState<Attribute[]>([])
+  const { data: attrsData } = useGetAttrs({
+    entityType,
+    entityId: templateId,
+    config: {
+      suspense: false,
+    },
+  })
 
   const projectId = storage.getProject()?.id
   const {
@@ -71,14 +55,14 @@ export function Default() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = attrsData?.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined = attrsData?.reduce(
-    (acc, curr, index) => {
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    attrsData?.attributes.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -94,21 +78,12 @@ export function Default() {
         acc.push(temp)
       }
       return acc
-    },
-    [] as Array<{ [key: string]: string }>,
-  )
+    }, [] as Array<{ [key: string]: string }>)
 
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && attrsData ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
-          {
-            <HandleRequest
-              entityId={templateId}
-              entityType={entityType}
-              setData={setAttrsData}
-            />
-          }
           <Suspense
             fallback={
               <div className="flex grow items-center justify-center md:col-span-2">
