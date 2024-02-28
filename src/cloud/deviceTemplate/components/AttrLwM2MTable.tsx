@@ -21,6 +21,7 @@ export function AttrLwM2MTable({
     }, 500)
     return () => clearTimeout(timer)
   }, [attributeInfo])
+
   const columns = useMemo<ColumnDef<TransportConfigAttribute, any>[]>(
     () => [
       columnHelper.display({

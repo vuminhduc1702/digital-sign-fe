@@ -846,7 +846,12 @@
         "sub_code": "Subscription Code",
         "start_date": "Subscription Start Date",
         "cycle_now": "Current Billing Cycle",
-        "status": "Subscription Status"
+        "status": "Subscription Status",
+        "customer_code": "Customer Code",
+        "customer_name": "Customer Name",
+        "package": "Package",
+        "period": "Billing Cycle",
+        "price_method": "Pricing Method"
       }
     },
     "manage_bill": {

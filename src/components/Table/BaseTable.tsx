@@ -28,6 +28,7 @@ import PaginationRender from './components/Pagination/PaginationRender'
 import Filter from './components/FilterTable/Filter'
 
 import refreshIcon from '~/assets/icons/table-refresh.svg'
+import btnFilterIcon from '~/assets/icons/btn-filter.svg'
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -87,6 +88,7 @@ export function BaseTable<T extends Record<string, any>>({
   rowSelection = {},
   setRowSelection,
   isHiddenCheckbox = false,
+  filterBtnClassName = 'absolute top-10 right-0',
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -108,12 +110,14 @@ export function BaseTable<T extends Record<string, any>>({
     React.SetStateAction<{ [key: string]: boolean }>
   >
   isHiddenCheckbox?: boolean
+  filterBtnClassName?: string
 }) {
   const { t } = useTranslation()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
   const [isRefresh, setIsRefresh] = useState(false)
+  const tableIndex = useRef(0)
 
   if (!isHiddenCheckbox && !columns.some(column => column.id === 'select')) {
     columns.unshift({
@@ -170,6 +174,26 @@ export function BaseTable<T extends Record<string, any>>({
     getFacetedMinMaxValues: getFacetedMinMaxValues(),
   })
   const totalAttrs = total || data?.length
+  const [columnFilter, setColumnFilter] = useState(
+    table
+      .getAllLeafColumns()
+      .filter(col => {
+        if (
+          col.id !== 'stt' &&
+          col.id !== 'contextMenu' &&
+          col.id !== 'select' &&
+          col.id !== 'created_time'
+        ) {
+          return col
+        }
+      })
+      .map(col => {
+        return {
+          id: col.id,
+          isVisible: false,
+        }
+      }),
+  )
 
   function refresh() {
     setIsRefresh(true)
@@ -179,6 +203,14 @@ export function BaseTable<T extends Record<string, any>>({
     }, 500)
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      table.setPageIndex(
+        tableIndex.current - offset / table.getState().pagination.pageSize,
+      )
+    }, 1)
+  }, [data])
+
   return (
     <div
       className={cn(
@@ -186,278 +218,386 @@ export function BaseTable<T extends Record<string, any>>({
         className,
       )}
     >
-      {isPreviousData ? (
+      {/* {isPreviousData ? (
         <div className="flex grow items-center justify-center">
           <Spinner showSpinner size="xl" />
         </div>
-      ) : (
-        <>
-          <table
-            className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
-            id="table-ref"
-          >
-            <thead className="border-b-2 bg-gray-200 text-center">
-              {table.getHeaderGroups().map(headerGroup => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map(header => {
-                    return (
-                      <th
-                        className="h-9 text-center"
-                        key={header.id}
-                        colSpan={header.colSpan}
-                      >
-                        {header.isPlaceholder ? null : (
+      ) : ( */}
+      <>
+        <table
+          className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
+          id="table-ref"
+        >
+          <thead className="border-b-2 bg-gray-200 text-center">
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  return (
+                    <th
+                      className="h-9 text-center"
+                      key={header.id}
+                      colSpan={header.colSpan}
+                    >
+                      {header.isPlaceholder ? null : (
+                        <div
+                          className={`text-table-header ${
+                            header.column.getCanSort()
+                              ? 'cursor-pointer select-none'
+                              : ''
+                          }`}
+                        >
                           <div
-                            className={`text-table-header ${
-                              header.column.getCanSort()
-                                ? 'cursor-pointer select-none'
-                                : ''
-                            }`}
+                            className={cn(
+                              'relative flex flex-col items-center justify-center text-table-header',
+                              {
+                                'px-3': headerGroup.headers.length > 8,
+                              },
+                            )}
                           >
                             <div
-                              className={cn(
-                                'relative flex flex-col items-center justify-center text-table-header',
-                                {
-                                  'px-3': headerGroup.headers.length > 8,
-                                },
-                              )}
+                              onClick={() => {
+                                header.column.getToggleSortingHandler()
+                              }}
                             >
-                              <div
-                                onClick={() => {
-                                  header.column.getToggleSortingHandler()
-                                }}
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext(),
-                                )}
-                              </div>
-                              <div className="absolute right-1 w-2 text-xl text-black">
-                                {{
-                                  asc: '↑',
-                                  desc: '↓',
-                                }[header.column.getIsSorted() as string] ??
-                                  null}
-                              </div>
-                              {header.column.id !== 'select' &&
-                              header.column.id !== 'contextMenu' &&
-                              header.column.id !== 'stt' &&
-                              header.column.id !== 'created_time' ? (
-                                <div>
-                                  <Filter
-                                    column={header.column}
-                                    table={table}
-                                  />
-                                </div>
-                              ) : null}
-                            </div>
-                          </div>
-                        )}
-                      </th>
-                    )
-                  })}
-                  {refreshBtn ? (
-                    <th className="flex h-9 cursor-pointer items-center justify-center">
-                      <img src={refreshIcon} onClick={refresh} />
-                    </th>
-                  ) : null}
-                  {popoverClassName !== '' ? (
-                    <>
-                      <Popover>
-                        <PopoverTrigger
-                          onClick={e => e.stopPropagation()}
-                          className={popoverClassName}
-                          asChild
-                        >
-                          <Button
-                            className="border-none shadow-none"
-                            variant="trans"
-                            size="square"
-                            startIcon={
-                              <SettingIcon
-                                className="h-9"
-                                height={24}
-                                width={24}
-                                viewBox="0 0 48 48"
-                              />
-                            }
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="h-72 w-40 overflow-auto"
-                          align="start"
-                        >
-                          <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
-                            <label htmlFor="checkAll">
-                              <input
-                                type="checkbox"
-                                id="checkAll"
-                                className="size-4 mr-1 rounded-sm border accent-primary-400"
-                                checked={table.getIsAllColumnsVisible()}
-                                onChange={table.getToggleAllColumnsVisibilityHandler()}
-                              />
-                              {t(
-                                'cloud:org_manage.device_manage.table.select_all',
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext(),
                               )}
-                            </label>
+                            </div>
+                            <div className="absolute right-1 w-2 text-xl text-black">
+                              {{
+                                asc: '↑',
+                                desc: '↓',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                            {columnFilter.find(
+                              item =>
+                                item.id === header.column.id && item.isVisible,
+                            ) ? (
+                              <div>
+                                <Filter column={header.column} table={table} />
+                              </div>
+                            ) : null}
                           </div>
+                        </div>
+                      )}
+                    </th>
+                  )
+                })}
+                {refreshBtn ? (
+                  <th className="flex h-9 cursor-pointer items-center justify-center">
+                    <img src={refreshIcon} onClick={refresh} />
+                  </th>
+                ) : null}
+                {filterBtnClassName && (
+                  <>
+                    <Popover>
+                      <PopoverTrigger
+                        onClick={e => e.stopPropagation()}
+                        className="absolute right-0 top-12"
+                        asChild
+                      >
+                        <Button
+                          className="border-none shadow-none"
+                          variant="trans"
+                          size="square"
+                          startIcon={
+                            <img
+                              src={btnFilterIcon}
+                              alt=""
+                              className="size-5"
+                            />
+                          }
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="h-72 w-40 overflow-auto"
+                        align="start"
+                      >
+                        <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
+                          <label htmlFor="checkAll">
+                            <input
+                              type="checkbox"
+                              id="checkAll"
+                              className="size-4 mr-1 rounded-sm border accent-primary-400"
+                              checked={table.getIsAllColumnsVisible()}
+                              onChange={table.getToggleAllColumnsVisibilityHandler()}
+                            />
+                            {t(
+                              'cloud:org_manage.device_manage.table.select_all',
+                            )}
+                          </label>
+                        </div>
 
-                          <div className="mt-4">
-                            {table
-                              .getAllLeafColumns()
-                              .filter(
-                                column =>
-                                  column.id !== 'contextMenu' &&
-                                  column.id !== 'stt',
-                              )
-                              .map(column => {
-                                let title_column
+                        <div className="mt-4">
+                          {table
+                            .getAllLeafColumns()
+                            .filter(
+                              column =>
+                                column.id !== 'contextMenu' &&
+                                column.id !== 'stt' &&
+                                column.id !== 'select',
+                            )
+                            .map(column => {
+                              let title_column
 
+                              if (
+                                column.columnDef &&
+                                typeof column.columnDef.header === 'function'
+                              ) {
+                                const headerResult = column.columnDef.header()
                                 if (
-                                  column.columnDef &&
-                                  typeof column.columnDef.header === 'function'
+                                  typeof headerResult?.props?.children ===
+                                  'string'
                                 ) {
-                                  const headerResult = column.columnDef.header()
-                                  if (
-                                    typeof headerResult?.props?.children ===
-                                    'string'
-                                  ) {
-                                    title_column = headerResult?.props?.children
-                                  } else if (
-                                    typeof headerResult?.props?.children ===
-                                    'object'
-                                  ) {
-                                    title_column =
-                                      headerResult?.props?.children[0].props
-                                        ?.children
-                                  } else {
-                                    title_column = ''
-                                  }
+                                  title_column = headerResult?.props?.children
+                                } else if (
+                                  typeof headerResult?.props?.children ===
+                                  'object'
+                                ) {
+                                  title_column =
+                                    headerResult?.props?.children[0].props
+                                      ?.children
                                 } else {
                                   title_column = ''
                                 }
+                              } else {
+                                title_column = ''
+                              }
 
-                                return (
-                                  <div key={column.id} className="p-1">
-                                    <label htmlFor={column.id}>
-                                      <input
-                                        type="checkbox"
-                                        id={column.id}
-                                        className="size-4 mr-1 rounded-sm border accent-primary-400"
-                                        checked={column.getIsVisible()}
-                                        onChange={column.getToggleVisibilityHandler()}
-                                      />
-                                      {title_column}
-                                    </label>
-                                  </div>
-                                )
-                              })}
-                          </div>
-                        </PopoverContent>
-                      </Popover>
-                    </>
-                  ) : null}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {isRefresh ? (
-                <td colSpan={999} rowSpan={0}>
-                  <div className="flex h-full items-center justify-center">
-                    <Spinner size="lg" />
-                  </div>
-                </td>
-              ) : totalAttrs > 0 ? (
-                table.getRowModel().rows.map(row => {
-                  return (
-                    <Fragment key={row.id}>
-                      <tr
-                        className="border-secondary-70 border-t-2 text-center"
-                        key={row.id}
+                              return (
+                                <div key={column.id} className="p-1">
+                                  <label htmlFor={column.id}>
+                                    <input
+                                      type="checkbox"
+                                      id={column.id}
+                                      className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                      checked={
+                                        columnFilter.find(
+                                          item => item.id === column.id,
+                                        )?.isVisible
+                                      }
+                                      onChange={() => {
+                                        setColumnFilter(
+                                          columnFilter.map(item => {
+                                            if (item.id === column.id) {
+                                              return {
+                                                ...item,
+                                                isVisible: !item.isVisible,
+                                              }
+                                            }
+                                            return item
+                                          }),
+                                        )
+                                      }}
+                                    />
+                                    {title_column}
+                                  </label>
+                                </div>
+                              )
+                            })}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </>
+                )}
+                {popoverClassName !== '' ? (
+                  <>
+                    <Popover>
+                      <PopoverTrigger
+                        onClick={e => e.stopPropagation()}
+                        className={popoverClassName}
+                        asChild
                       >
-                        {row.getVisibleCells().map((cell, index) => {
-                          if (index === row.getVisibleCells().length - 1) {
-                            return (
-                              <Fragment key={cell.id}>
-                                <td className="h-9" key={cell.id}>
-                                  {flexRender(
-                                    cell.column.columnDef.cell,
-                                    cell.getContext(),
-                                  )}
-                                </td>
-                              </Fragment>
+                        <Button
+                          className="border-none shadow-none"
+                          variant="trans"
+                          size="square"
+                          startIcon={
+                            <SettingIcon
+                              className="h-9"
+                              height={24}
+                              width={24}
+                              viewBox="0 0 48 48"
+                            />
+                          }
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent
+                        className="h-72 w-40 overflow-auto"
+                        align="start"
+                      >
+                        <div className="absolute top-0 border-b border-black bg-white px-1 pt-2">
+                          <label htmlFor="checkAll">
+                            <input
+                              type="checkbox"
+                              id="checkAll"
+                              className="size-4 mr-1 rounded-sm border accent-primary-400"
+                              checked={table.getIsAllColumnsVisible()}
+                              onChange={table.getToggleAllColumnsVisibilityHandler()}
+                            />
+                            {t(
+                              'cloud:org_manage.device_manage.table.select_all',
+                            )}
+                          </label>
+                        </div>
+
+                        <div className="mt-4">
+                          {table
+                            .getAllLeafColumns()
+                            .filter(
+                              column =>
+                                column.id !== 'contextMenu' &&
+                                column.id !== 'stt',
                             )
-                          } else {
-                            return (
+                            .map(column => {
+                              let title_column
+
+                              if (
+                                column.columnDef &&
+                                typeof column.columnDef.header === 'function'
+                              ) {
+                                const headerResult = column.columnDef.header()
+                                if (
+                                  typeof headerResult?.props?.children ===
+                                  'string'
+                                ) {
+                                  title_column = headerResult?.props?.children
+                                } else if (
+                                  typeof headerResult?.props?.children ===
+                                  'object'
+                                ) {
+                                  title_column =
+                                    headerResult?.props?.children[0].props
+                                      ?.children
+                                } else {
+                                  title_column = ''
+                                }
+                              } else {
+                                title_column = ''
+                              }
+
+                              return (
+                                <div key={column.id} className="p-1">
+                                  <label htmlFor={column.id}>
+                                    <input
+                                      type="checkbox"
+                                      id={column.id}
+                                      className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                      checked={column.getIsVisible()}
+                                      onChange={column.getToggleVisibilityHandler()}
+                                    />
+                                    {title_column}
+                                  </label>
+                                </div>
+                              )
+                            })}
+                        </div>
+                      </PopoverContent>
+                    </Popover>
+                  </>
+                ) : null}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {isRefresh ? (
+              <td colSpan={999} rowSpan={0}>
+                <div className="flex h-full items-center justify-center">
+                  <Spinner size="lg" />
+                </div>
+              </td>
+            ) : totalAttrs > 0 ? (
+              table.getRowModel().rows.map(row => {
+                return (
+                  <Fragment key={row.id}>
+                    <tr
+                      className="border-secondary-70 border-t-2 text-center"
+                      key={row.id}
+                    >
+                      {row.getVisibleCells().map((cell, index) => {
+                        if (index === row.getVisibleCells().length - 1) {
+                          return (
+                            <Fragment key={cell.id}>
                               <td className="h-9" key={cell.id}>
                                 {flexRender(
                                   cell.column.columnDef.cell,
                                   cell.getContext(),
                                 )}
                               </td>
-                            )
+                            </Fragment>
+                          )
+                        } else {
+                          return (
+                            <td className="h-9" key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )}
+                            </td>
+                          )
 
-                            // Tooltips all cell but some case can not
-                            // const cellStr = cell.getContext().getValue()
-                            // let cellStrTrigger
-                            // if (typeof cellStr == 'string') {
-                            //   cellStrTrigger =
-                            //     cellStr?.length > 10
-                            //       ? cellStr.slice(0, 10) + '...'
-                            //       : cellStr
-                            // }
-                            // return typeof cellStr == 'string' &&
-                            //   cellStr != 'true' &&
-                            //   cellStr != 'false' &&
-                            //   isNaN(parseInt(cellStr)) ? (
-                            //   <td className="h-9 cursor-default" key={cell.id}>
-                            //     <TooltipProvider>
-                            //       <Tooltip>
-                            //         <TooltipTrigger>
-                            //           {cellStrTrigger}
-                            //         </TooltipTrigger>
-                            //         <TooltipContent>
-                            //           <p>
-                            //             {flexRender(
-                            //               cell.column.columnDef.cell,
-                            //               cell.getContext(),
-                            //             )}
-                            //           </p>
-                            //         </TooltipContent>
-                            //       </Tooltip>
-                            //     </TooltipProvider>
-                            //   </td>
-                            // ) : (
-                            //   <td className="h-9" key={cell.id}>
-                            //     {flexRender(
-                            //       cell.column.columnDef.cell,
-                            //       cell.getContext(),
-                            //     )}
-                            //   </td>
-                            // )
-                          }
-                        })}
+                          // Tooltips all cell but some case can not
+                          // const cellStr = cell.getContext().getValue()
+                          // let cellStrTrigger
+                          // if (typeof cellStr == 'string') {
+                          //   cellStrTrigger =
+                          //     cellStr?.length > 10
+                          //       ? cellStr.slice(0, 10) + '...'
+                          //       : cellStr
+                          // }
+                          // return typeof cellStr == 'string' &&
+                          //   cellStr != 'true' &&
+                          //   cellStr != 'false' &&
+                          //   isNaN(parseInt(cellStr)) ? (
+                          //   <td className="h-9 cursor-default" key={cell.id}>
+                          //     <TooltipProvider>
+                          //       <Tooltip>
+                          //         <TooltipTrigger>
+                          //           {cellStrTrigger}
+                          //         </TooltipTrigger>
+                          //         <TooltipContent>
+                          //           <p>
+                          //             {flexRender(
+                          //               cell.column.columnDef.cell,
+                          //               cell.getContext(),
+                          //             )}
+                          //           </p>
+                          //         </TooltipContent>
+                          //       </Tooltip>
+                          //     </TooltipProvider>
+                          //   </td>
+                          // ) : (
+                          //   <td className="h-9" key={cell.id}>
+                          //     {flexRender(
+                          //       cell.column.columnDef.cell,
+                          //       cell.getContext(),
+                          //     )}
+                          //   </td>
+                          // )
+                        }
+                      })}
+                    </tr>
+                    {row.getIsExpanded() && (
+                      <tr>
+                        {/* 2nd row is a custom 1 cell row */}
+                        <td colSpan={row.getVisibleCells().length}>
+                          {renderSubComponent?.({ row })}
+                        </td>
                       </tr>
-                      {row.getIsExpanded() && (
-                        <tr>
-                          {/* 2nd row is a custom 1 cell row */}
-                          <td colSpan={row.getVisibleCells().length}>
-                            {renderSubComponent?.({ row })}
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  )
-                })
-              ) : (
-                <td colSpan={999} className="py-[150px] text-center">
-                  {onDataText || t('error:no_data')}
-                </td>
-              )}
-            </tbody>
-          </table>
-        </>
-      )}
+                    )}
+                  </Fragment>
+                )
+              })
+            ) : (
+              <td colSpan={999} className="py-[150px] text-center">
+                {onDataText || t('error:no_data')}
+              </td>
+            )}
+          </tbody>
+        </table>
+      </>
+      {/* )} */}
       {totalAttrs > 0 && (
         <PaginationRender
           totalAttrs={totalAttrs}
@@ -468,6 +608,7 @@ export function BaseTable<T extends Record<string, any>>({
           table={table}
           isAbsoluteBtn={isAbsoluteBtn}
           setPageSize={table.setPageSize}
+          tableIndex={tableIndex}
         />
       )}
     </div>

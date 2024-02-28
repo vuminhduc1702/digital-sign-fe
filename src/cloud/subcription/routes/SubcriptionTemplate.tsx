@@ -84,11 +84,11 @@ export function SubcriptionTemplate() {
   const pdfHeader = useMemo(
     () => [
       t('billing:subcription.table.sub_code'),
-      t('billing:subcription.popup.customer_code'),
-      t('billing:subcription.popup.customer_name'),
-      t('billing:subcription.popup.package'),
-      t('billing:subcription.popup.period'),
-      t('billing:subcription.popup.price_method'),
+      t('billing:subcription.table.customer_code'),
+      t('billing:subcription.table.customer_name'),
+      t('billing:subcription.table.package'),
+      t('billing:subcription.table.period'),
+      t('billing:subcription.table.price_method'),
       t('billing:subcription.table.start_date'),
       t('billing:subcription.table.cycle_now'),
       t('billing:subcription.table.status'),
@@ -101,12 +101,12 @@ export function SubcriptionTemplate() {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('billing:subcription.table.sub_code')]: curr.s_id,
-          [t('billing:subcription.popup.customer_code')]: curr.c_customer_code,
-          [t('billing:subcription.popup.customer_name')]: curr.c_name,
-          [t('billing:subcription.popup.package')]: curr.p_name,
-          [t('billing:subcription.popup.period')]:
+          [t('billing:subcription.table.customer_code')]: curr.c_customer_code,
+          [t('billing:subcription.table.customer_name')]: curr.c_name,
+          [t('billing:subcription.table.package')]: curr.p_name,
+          [t('billing:subcription.table.period')]:
             curr.p_period + ' ' + curr.p_cal_unit,
-          [t('billing:subcription.popup.price_method')]: valuePriceMethod(
+          [t('billing:subcription.table.price_method')]: valuePriceMethod(
             curr.p_estimate,
           ),
           [t('billing:subcription.table.start_date')]: convertEpochToDate(

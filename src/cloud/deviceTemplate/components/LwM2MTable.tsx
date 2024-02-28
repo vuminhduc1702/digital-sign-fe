@@ -12,7 +12,7 @@ import { BaseTablePagination } from '~/types'
 
 type LwM2MTableProps = {
   moduleConfig: ModuleConfig[]
-} 
+}
 export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
@@ -24,6 +24,7 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
     }, 500)
     return () => clearTimeout(timer)
   }, [moduleConfig])
+  console.log(moduleConfig)
   const templateId = params.templateId as string
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(

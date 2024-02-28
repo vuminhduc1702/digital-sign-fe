@@ -849,7 +849,12 @@
         "sub_code": "Mã đăng ký",
         "start_date": "Ngày bắt đầu đăng ký",
         "cycle_now": "Chu kỳ hiện tại",
-        "status": "Trạng thái đăng ký"
+        "status": "Trạng thái đăng ký",
+        "customer_code": "Mã khách hàng",
+        "customer_name": "Tên khách hàng",
+        "package": "Gói cước",
+        "period": "Chu kỳ tính tiền",
+        "price_method": "Cách định giá"
       }
     },
     "manage_bill": {
