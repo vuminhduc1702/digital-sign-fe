@@ -1,27 +1,23 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { BaseTable } from '~/components/Table'
-import { useDisclosure } from '~/utils/hooks'
-import { useDeleteThing } from '../../api/thingAPI'
 import { Link } from '~/components/Link'
-import { UpdateThing } from './UpdateThing'
+import { BaseTable } from '~/components/Table'
 import { PATHS } from '~/routes/PATHS'
+import { useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'
+import { useDeleteThing } from '../../api/thingAPI'
+import { UpdateThing } from './UpdateThing'
 
-import { type BaseTablePagination } from '~/types'
 import { type EntityThing } from '~/cloud/customProtocol'
+import { type BaseTablePagination } from '~/types'
 
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { BtnContextMenuIcon } from '~/components/SVGIcons'
 
 function ThingTableContextMenu({
   id,
@@ -35,6 +31,7 @@ function ThingTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const [type, setType] = useState('')
 
   const { mutate, isLoading, isSuccess } = useDeleteThing()
 
@@ -54,58 +51,43 @@ function ThingTableContextMenu({
         <DropdownMenuContent>
           <DropdownMenuItem
             onClick={() => {
+              setType('edit')
               open()
             }}>
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:custom_protocol.thing.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:custom_protocol.thing.delete')}
-              body={t(
-                'cloud:custom_protocol.thing.delete_thing_confirm',
-              ).replace('{{THINGNAME}}', name)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete thing"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:custom_protocol.thing.delete')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={() => {
+              setType('delete')
+              open()
+            }}>
+            <img src={btnDeleteIcon} alt="Delete thing" className="size-5" />
+            {t('cloud:custom_protocol.thing.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen ? (
+      {(isOpen && type === 'edit') ? (
         <UpdateThing
           thingId={id}
           name={name}
           description={description}
           close={close}
           isOpen={true}
+        />
+      ) : null}
+
+      {(isOpen && type === 'delete') ? (
+        <ConfirmDialog
+          title={t('cloud:custom_protocol.thing.delete')}
+          body={t(
+            'cloud:custom_protocol.thing.delete_thing_confirm',
+          ).replace('{{THINGNAME}}', name)}
+          icon="danger"
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>
