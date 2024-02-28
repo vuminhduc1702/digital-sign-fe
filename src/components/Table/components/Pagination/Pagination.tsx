@@ -17,6 +17,7 @@ const Pagination = <T extends Record<string, any>>({
   setCurrentPage,
   setOffset,
   limit = limitPagination,
+  offset,
 }: {
   table: Table<T>
   totalCount: number
@@ -26,6 +27,7 @@ const Pagination = <T extends Record<string, any>>({
   setCurrentPage?: React.Dispatch<React.SetStateAction<number>>
   setOffset: React.Dispatch<React.SetStateAction<number>>
   limit?: number
+  offset: number
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -51,15 +53,18 @@ const Pagination = <T extends Record<string, any>>({
           // Render our Page Pills
           return typeof pageNumber === 'number' ? (
             <PaginationItem
+              key={index}
               className={cn('', {
                 'text-primary-400': pageNumber === currentPage + 1,
               })}
               onClick={() => {
-                if (pageNumber * pageSize >= limit) {
-                  setOffset(pageNumber * pageSize - limit)
-                }
+                const offsetCalc =
+                  Math.floor(((pageNumber - 1) * pageSize) / limit) * limit
+                setOffset(offsetCalc)
                 setCurrentPage?.(pageNumber - 1)
-                table.setPageIndex(pageNumber - 1)
+                setTimeout(() => {
+                  table.setPageIndex(pageNumber - offsetCalc / pageSize - 1)
+                }, 1)
               }}
             >
               {pageNumber}

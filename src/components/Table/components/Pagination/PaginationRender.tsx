@@ -99,6 +99,7 @@ export default function PaginationRender({
           table={table}
           setCurrentPage={setPageIndex}
           setOffset={setOffset}
+          offset={offset}
         />
         <Button
           className="rounded-r-md border-none"

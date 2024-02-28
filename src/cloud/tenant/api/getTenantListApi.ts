@@ -12,7 +12,7 @@ export const getCustomerList = ({
   offset: number
   search_field: string
   search_str: string
-}) => {
+}): Promise<any> => {
   if (search_str) {
     return axios.get(
       `/api/tenant?limit=${limit}&offset=${offset}&${search_field}=${search_str}`,

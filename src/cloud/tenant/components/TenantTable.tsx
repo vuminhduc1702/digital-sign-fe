@@ -113,7 +113,7 @@ function CustomerTableContextMenu({
   )
 }
 
-export function BillingCustomerTable({
+export function TenantTable({
   data,
   ...props
 }: BillingCustomerTableProps) {
@@ -124,7 +124,7 @@ export function BillingCustomerTable({
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1,
+        cell: info => info.row.index + 1 + props.offset,
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -135,7 +135,7 @@ export function BillingCustomerTable({
       }),
       columnHelper.accessor('phone', {
         header: () => (
-          <span>{t('cloud:org_manage.user_manage.add_user.phone')}</span>
+          <span>{t('table:phone')}</span>
         ),
         cell: info => info.getValue(),
         footer: info => info.column.id,
@@ -161,7 +161,7 @@ export function BillingCustomerTable({
         footer: info => info.column.id,
       }),
     ],
-    [],
+    [props.offset],
   )
 
   return (

@@ -587,6 +587,8 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
     [props.offset],
   )
 
+  console.log(props.isPreviousData)
+
   return (
     <BaseTable
       popoverClassName="absolute right-0 top-1 block"

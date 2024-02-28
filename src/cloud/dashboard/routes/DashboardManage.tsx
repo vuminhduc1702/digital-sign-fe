@@ -12,7 +12,7 @@ import { useGetDashboards } from '../api'
 import { useDeleteMultipleDashboards } from '../api/deleteMultipleDashboards'
 import { DashboardTable } from '../components/DashboardTable'
 import { CreateDashboard } from '../components/DashboardTable/CreateDashboard'
-import { SearchField } from '../components/SearchField'
+import { SearchField } from '~/components/Input'
 
 export function DashboardManage() {
   const { t } = useTranslation()
