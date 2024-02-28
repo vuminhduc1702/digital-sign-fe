@@ -1,4 +1,4 @@
-import { Column, Table } from '@tanstack/react-table'
+import { type Column, type Table } from '@tanstack/react-table'
 
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -38,12 +38,8 @@ export default function Filter({
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
-          placeholder={`${t('table:min')} ${
-            column.getFacetedMinMaxValues()?.[0]
-              ? `(${column.getFacetedMinMaxValues()?.[0]})`
-              : ''
-          }`}
-          className="w-[50px] border shadow rounded outline-none px-[10px] py-[5px] my-[5px]"
+          placeholder={`${t('table:min')}`}
+          className="my-[5px] w-[70px] rounded border px-[10px] py-[5px] shadow outline-none"
         />
         <DebouncedInput
           type="number"
@@ -53,12 +49,8 @@ export default function Filter({
           onChange={value =>
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
-          placeholder={`${t('table:max')} ${
-            column.getFacetedMinMaxValues()?.[1]
-              ? `(${column.getFacetedMinMaxValues()?.[1]})`
-              : ''
-          }`}
-          className="w-[50px] border shadow rounded outline-none px-[10px] py-[5px] my-[5px]"
+          placeholder={`${t('table:max')}`}
+          className="my-[5px] w-[70px] rounded border px-[10px] py-[5px] shadow outline-none"
         />
       </div>
       <div className="h-1" />
@@ -77,7 +69,7 @@ export default function Filter({
           column.setFilterValue(value)
         }}
         placeholder={t('table:search')}
-        className="w-[90px] border shadow rounded outline-none px-[10px] py-[5px] mt-[5px]"
+        className="mt-[5px] w-[90px] rounded border px-[10px] py-[5px] shadow outline-none"
         list={column.id + 'list'}
       />
       <div className="h-1" />

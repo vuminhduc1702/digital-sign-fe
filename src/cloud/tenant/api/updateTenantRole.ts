@@ -4,12 +4,11 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { queryClient, type MutationConfig } from '~/lib/react-query'
 import { toast } from 'sonner'
+import { type updateEntityCustomerSchema } from '../components/UpdateTenantRole'
 
 export type UpdateEntityCustomerRoleDTO = {
   data: {
-    tenant_id: string
-    project_id: string
-    role_id: string
+    project_permission: Array<z.infer<typeof updateEntityCustomerSchema>>
   }
 }
 

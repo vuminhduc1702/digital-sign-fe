@@ -15,7 +15,12 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
 import { UpdateCustomerRole } from './UpdateTenantRole'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { type PermissionEntity, type PermissionEntityTable } from '../types'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
@@ -47,7 +52,7 @@ function CustomerTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -80,7 +85,7 @@ function CustomerTableContextMenu({
           project_id={project_id}
           roleIdProps={roleIdProps}
           modalTitle={t('table:edit_role')}
-          isOpenRole={true}
+          isOpenRole={isOpenEdit}
           customerId={sub_tenant_id}
           closeRole={closeEdit}
         />
@@ -146,7 +151,7 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
 
   return (
     <BaseTable
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_tenant_role')}
       {...props}

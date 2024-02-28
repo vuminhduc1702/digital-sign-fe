@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -8,11 +8,12 @@ import { useProjects } from '~/cloud/project/api'
 import { useGetRoles } from '~/cloud/role/api'
 import { Button } from '~/components/Button'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { InputField, SelectField } from '~/components/Form'
+import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import {
   useUpdateCustomerRole,
   type UpdateEntityCustomerRoleDTO,
 } from '../api/updateTenantRole'
+import i18n from '~/i18n'
 
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -21,16 +22,20 @@ import { HiOutlineXMark } from 'react-icons/hi2'
 type UpdateCustomerRoleProps = {
   customerId: string
   modalTitle: string
-  project_id: string
-  roleIdProps: string
+  project_id?: string
+  roleIdProps?: string
   isOpenRole: boolean
   closeRole: () => void
 }
 
 export const updateEntityCustomerSchema = z.object({
   tenant_id: z.string().optional(),
-  project_id: z.string().optional(),
-  role_id: z.string().optional(),
+  project_id: z.string().min(1, {
+    message: i18n.t('cloud:project_manager.add_project.choose_project'),
+  }),
+  role_id: z.string().min(1, {
+    message: i18n.t('cloud:role_manage.add_role.choose_role'),
+  }),
 })
 
 export function UpdateCustomerRole({
@@ -42,58 +47,37 @@ export function UpdateCustomerRole({
   isOpenRole,
 }: UpdateCustomerRoleProps) {
   const { t } = useTranslation()
-  const [projectId, setProjectId] = useState(project_id)
-  const [roleId, setRoleId] = useState()
   const cancelButtonRef = useRef(null)
 
-  const { register, formState, handleSubmit } = useForm<
-    UpdateEntityCustomerRoleDTO['data']
-  >({
-    resolver:
-      updateEntityCustomerSchema && zodResolver(updateEntityCustomerSchema),
-    defaultValues: {
-      customer_id: customerId,
-      project_list: project_id,
-      role_list: roleIdProps,
-    },
-  })
-
-  const { data: projectList } = useProjects({
-    config: {
-      suspense: false,
-      select: (data: any) => {
-        const transformArr = data?.projects.map((item: any) => {
-          return {
-            value: item.id,
-            label: item.name,
-          }
-        })
-        transformArr.push({ value: '', label: t('form:choose_project') })
-        return transformArr
+  const { register, formState, handleSubmit, watch, getValues, control } =
+    useForm<UpdateEntityCustomerRoleDTO['data']['project_permission'][0]>({
+      resolver:
+        updateEntityCustomerSchema && zodResolver(updateEntityCustomerSchema),
+      defaultValues: {
+        tenant_id: customerId,
+        project_id: project_id,
+        role_id: roleIdProps,
       },
-    },
-  })
+    })
+  console.log('formState.errors', formState.errors)
 
-  const { data: roleList } = useGetRoles({
-    projectId: projectId,
+  const { data: projectData, isLoading: projectIsLoading } = useProjects({})
+  const projectOptions = projectData?.projects?.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+
+  const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
+    projectId: watch('project_id'),
     config: {
-      suspense: false,
-      enabled: !!projectId,
-      select: (data: any) => {
-        if (data?.roles.length > 0) {
-          const transformArr = data?.roles.map((item: any) => {
-            return {
-              value: item.id,
-              label: item.name,
-            }
-          })
-          transformArr.push({ value: '', label: t('form:role.choose') })
-          return transformArr
-        }
-        return [{ value: '', label: t('form:role.choose') }]
-      },
+      enabled: !!watch('project_id'),
     },
   })
+  const roleOptions = roleData?.roles?.map(item => ({
+    label: item.name,
+    value: item.id,
+  }))
+  console.log('11111111', watch('project_id'))
 
   const { mutate, isLoading, isSuccess } = useUpdateCustomerRole()
 
@@ -109,7 +93,7 @@ export function UpdateCustomerRole({
       onClose={() => null}
       initialFocus={cancelButtonRef}
     >
-      <div className="inline-block size-auto transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5">
+      <div className="inline-block w-80 transform rounded-lg bg-white px-4 pb-4 pt-5">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-h1 text-secondary-900">
@@ -117,7 +101,7 @@ export function UpdateCustomerRole({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={closeRole}
               >
                 <span className="sr-only">Close panel</span>
@@ -131,46 +115,57 @@ export function UpdateCustomerRole({
             onSubmit={handleSubmit(values => {
               mutate({
                 data: {
-                  project_permission: [
-                    {
-                      tenant_id: customerId,
-                      project_id: projectId,
-                      role_id: roleId,
-                    },
-                  ],
+                  project_permission: [values],
                 },
               })
             })}
           >
-            <div className="grid grid-cols-2 gap-4">
-              <div>User ID</div>
-              <InputField disabled registration={register('customer_id')} />
+            <div className="flex flex-col gap-y-5">
+              <InputField
+                disabled
+                registration={register('tenant_id')}
+                label={t('form:tenant.title')}
+              />
 
-              <div>Project</div>
-              <div>
-                <SelectField
-                  error={formState.errors['project_list']}
-                  registration={register('project_list')}
-                  options={projectList}
-                  onChange={e => {
-                    setProjectId(e.target.value)
-                  }}
-                />
-              </div>
+              <SelectDropdown
+                label={t('cloud:project_manager.project')}
+                name="project_id"
+                control={control}
+                options={projectOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:project') ||
+                  option.label === t('table:no_project')
+                }
+                noOptionsMessage={() => t('table:no_project')}
+                loadingMessage={() => t('loading:project')}
+                isLoading={projectIsLoading}
+                placeholder={t(
+                  'cloud:project_manager.add_project.choose_project',
+                )}
+                defaultValue={projectOptions?.find(
+                  item => item.value === getValues('project_id'),
+                )}
+                error={formState?.errors?.project_id}
+              />
 
-              <div>Role</div>
-              <div>
-                <SelectField
-                  error={formState.errors['role_list']}
-                  registration={register('role_list')}
-                  options={
-                    roleList || [{ value: '', label: t('form:role.choose') }]
-                  }
-                  onChange={e => {
-                    setRoleId(e.target.value)
-                  }}
-                />
-              </div>
+              <SelectDropdown
+                label={t('cloud:org_manage.user_manage.add_user.role')}
+                name="role_id"
+                control={control}
+                options={roleOptions}
+                isOptionDisabled={option =>
+                  option.label === t('loading:role') ||
+                  option.label === t('table:no_role')
+                }
+                noOptionsMessage={() => t('table:no_role')}
+                loadingMessage={() => t('loading:role')}
+                isLoading={watch('project_id') != null ? roleIsLoading : false}
+                placeholder={t('cloud:role_manage.add_role.choose_role')}
+                defaultValue={roleOptions?.find(
+                  item => item.value === getValues('role_id'),
+                )}
+                error={formState?.errors?.role_id}
+              />
             </div>
           </form>
         </div>
@@ -178,7 +173,7 @@ export function UpdateCustomerRole({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={closeRole}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="size-5" />

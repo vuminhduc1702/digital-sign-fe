@@ -58,6 +58,7 @@ export function UpdateGroup({
     ['id', 'name', 'level', 'description', 'parent_name'],
     'sub_orgs',
   )
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const orgSelectOptions = orgFlattenData?.map(org => ({
     label: org?.name,
     value: org?.id,
@@ -120,14 +121,14 @@ export function UpdateGroup({
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id: values.org_id?.toString(),
+                org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
               },
             })
           }
           mutate({
             data: {
               name: values.name,
-              org_id: values.org_id?.toString(),
+              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
             },
             groupId,
           })
@@ -154,26 +155,6 @@ export function UpdateGroup({
               value: entityType.type,
             }))}
           />
-
-          {/* <SelectDropdown
-            isClearable={false}
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            defaultValue={orgSelectOptions.find(
-              org => org.value === getValues('org_id'),
-            )}
-            error={formState?.errors?.org_id}
-          /> */}
           <FieldWrapper
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
@@ -183,7 +164,7 @@ export function UpdateGroup({
               name="org_id"
               render={({ field: { onChange, value, ...field } }) => {
                 const parseValue = orgSelectOptions?.find(
-                  org => org.value === getValues('org_id').toString(),
+                  org => org.value === value.toString(),
                 )?.label
                 return (
                   <Popover>

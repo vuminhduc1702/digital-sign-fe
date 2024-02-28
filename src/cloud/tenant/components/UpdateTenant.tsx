@@ -85,7 +85,7 @@ export function UpdateCustomer({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -145,7 +145,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="muted"
-            className="inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border text-red-600 focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={openRole}
           >
             {t('form:role.add')}
@@ -153,7 +153,7 @@ export function UpdateCustomer({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="size-5" />
@@ -175,9 +175,7 @@ export function UpdateCustomer({
           <UpdateCustomerRole
             modalTitle={t('form:role.add')}
             customerId={customerId}
-            project_id={''}
-            roleIdProps={''}
-            isOpenRole={true}
+            isOpenRole={isOpenRole}
             closeRole={closeRole}
           />
         ) : null}

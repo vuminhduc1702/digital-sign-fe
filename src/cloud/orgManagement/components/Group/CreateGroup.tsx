@@ -53,9 +53,10 @@ export function CreateGroup() {
     label: org?.name,
     value: org?.id,
   }))
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit, reset, getValues } =
+  const { register, formState, control, handleSubmit, reset, getValues, setValue } =
     useForm<CreateGroupDTO['data']>({
       resolver: groupCreateSchema && zodResolver(groupCreateSchema),
     })
@@ -95,7 +96,7 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: values.org_id?.toString(),
+              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
             },
           })
         })}
@@ -112,32 +113,17 @@ export function CreateGroup() {
             registration={register('entity_type')}
             options={entityTypeOptions}
           />
-          {/* <SelectDropdown
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            name="org_id"
-            control={control}
-            options={orgSelectOptions}
-            isOptionDisabled={option =>
-              option.label === t('loading:org') ||
-              option.label === t('table:no_in_org')
-            }
-            noOptionsMessage={() => t('table:no_in_org')}
-            loadingMessage={() => t('loading:org')}
-            isLoading={orgIsLoading}
-            placeholder={t('cloud:org_manage.org_manage.add_org.choose_org')}
-            error={formState?.errors?.org_id}
-          /> */}
           <FieldWrapper
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
           >
             <Controller
               control={control}
-              name={'org_id'}
+              name="org_id"
               render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = getValues('org_id')
+                const parseValue = value
                   ? orgSelectOptions?.find(
-                      org => org.value === getValues('org_id').toString(),
+                      org => org.value === value.toString(),
                     )?.label
                   : ''
                 return (
@@ -163,7 +149,7 @@ export function CreateGroup() {
                         )}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2" align="start">
+                    <PopoverContent className="w-auto p-2 popover-content" align="start">
                       <ComplexTree
                         items={orgData?.organizations}
                         selectOrg={onChange}

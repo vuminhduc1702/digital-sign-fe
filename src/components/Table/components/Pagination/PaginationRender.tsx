@@ -19,6 +19,7 @@ type PaginationRenderProps = {
   table?: any
   isAbsoluteBtn?: boolean
   setPageSize?: React.Dispatch<React.SetStateAction<number>>
+  tableIndex: React.MutableRefObject<number>
 }
 
 export default function PaginationRender({
@@ -30,6 +31,7 @@ export default function PaginationRender({
   table,
   isAbsoluteBtn,
   setPageSize,
+  tableIndex,
 }: PaginationRenderProps) {
   const { t } = useTranslation()
 
@@ -38,13 +40,11 @@ export default function PaginationRender({
   const [pageIndex, setPageIndex] = useState<number>(0)
 
   useEffect(() => {
-    if (offset == 0) {
-      setPageIndex(0)
-    }
-  }, [totalAttrs])
+    tableIndex.current = pageIndex
+  }, [pageIndex])
 
   return (
-    <div className="flex items-center justify-between gap-2 h-[60px]">
+    <div className="flex h-[60px] items-center justify-between gap-2">
       <div
         className={cn('flex flex-col', {
           'absolute bottom-8': isAbsoluteBtn,
@@ -72,20 +72,14 @@ export default function PaginationRender({
         <Button
           className="rounded-l-md border-none"
           onClick={() => {
-            if (
-              limitPagination < totalAttrs &&
-              offset / limitPagination > 0 &&
-              offset / limitPagination <= pageIndex
-            ) {
-              setOffset?.(offset => offset - limitPagination)
-              setTimeout(() => {
-                table.setPageIndex(pageIndex - offset / limitPagination - 1)
-              }, 1)
-              setPageIndex(prev => prev - 1)
-            } else {
-              table.setPageIndex(pageIndex - 1)
-              setPageIndex(prev => prev - 1)
-            }
+            const offsetCalc =
+              Math.floor(((pageIndex - 1) * pageSize) / limitPagination) *
+              limitPagination
+            setOffset?.(offsetCalc)
+            setPageIndex(prev => prev - 1)
+            setTimeout(() => {
+              table.setPageIndex(pageIndex - offsetCalc / pageSize - 1)
+            }, 1)
           }}
           disabled={pageIndex === 0 || isPreviousData}
           variant="secondaryLight"
@@ -104,14 +98,14 @@ export default function PaginationRender({
         <Button
           className="rounded-r-md border-none"
           onClick={() => {
-            if (
-              limitPagination < totalAttrs &&
-              (pageIndex + 1) * pageSize >= limitPagination
-            ) {
-              setOffset?.(offset => offset + limitPagination)
+            const offsetCalc =
+              Math.floor(((pageIndex + 1) * pageSize) / limitPagination) *
+              limitPagination
+            if (limitPagination < totalAttrs && offsetCalc >= limitPagination) {
+              setOffset?.(offsetCalc)
             }
-            table.setPageIndex(pageIndex + 1 - offset/limitPagination)
             setPageIndex(prev => prev + 1)
+            table.setPageIndex(pageIndex + 1 - offsetCalc / pageSize)
           }}
           disabled={(pageIndex + 1) * pageSize >= totalAttrs || isPreviousData}
           variant="secondaryLight"

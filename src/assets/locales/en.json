@@ -122,7 +122,8 @@
           "delete_attr_full": "Delete Attribute",
           "delete_attr_confirm": "Are you sure you want to delete the attribute {{ATTRNAME}}",
           "delete_multiple_attr_confirm": "Are you sure you want to delete the selected properties?",
-          "search": "Search..."
+          "search": "Search...",
+          "org_not_found": "Organization not found"
         },
         "add_org": {
           "title": "Create New Organization",
@@ -846,7 +847,12 @@
         "sub_code": "Subscription Code",
         "start_date": "Subscription Start Date",
         "cycle_now": "Current Billing Cycle",
-        "status": "Subscription Status"
+        "status": "Subscription Status",
+        "customer_code": "Customer Code",
+        "customer_name": "Customer Name",
+        "package": "Package",
+        "period": "Billing Cycle",
+        "price_method": "Pricing Method"
       }
     },
     "manage_bill": {
@@ -938,13 +944,13 @@
     "prev_page": "Previous Page",
     "no": "No.",
     "tenant": "Tenant",
-    "email": "Email", 
+    "email": "Email",
     "id": "ID",
-    "name": "Name", 
-    "phone": "Phone Number", 
+    "name": "Name",
+    "phone": "Phone Number",
     "password": "Password",
-    "project": "Project", 
-    "role": "Role", 
+    "project": "Project",
+    "role": "Role",
     "edit_role": "Edit Role",
     "last_updated": "Last Updated",
     "starred": "Starred",
@@ -1331,7 +1337,7 @@
     "detail_address": "Detailed Address",
     "account_info": "Account Information",
     "confirm_password": "Confirm Password",
-    "choose_project": "---Choose project---",
+    "choose_project": "Choose project",
     "user": {
       "success_update": "Account updated successfully",
       "fuel": "Fuel updated successfully",
@@ -1351,7 +1357,7 @@
       "edit": "Edit Role",
       "delete": "Delete Role",
       "add": "Add Role",
-      "choose": "---Choose role---"
+      "choose": "Choose role"
     },
     "email": "Email",
     "back": "Back"

@@ -1,7 +1,7 @@
 {
   "start_url": "./",
   "scope": ".",
-  "name": "innoway-favicon",
+  "name": "innoway-platform",
   "icons": [
     {
       "src": "/android-icon-36x36.png",
