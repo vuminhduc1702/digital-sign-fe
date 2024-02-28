@@ -938,13 +938,13 @@
     "prev_page": "Previous Page",
     "no": "No.",
     "tenant": "Tenant",
-    "email": "Email", 
+    "email": "Email",
     "id": "ID",
-    "name": "Name", 
-    "phone": "Phone Number", 
+    "name": "Name",
+    "phone": "Phone Number",
     "password": "Password",
-    "project": "Project", 
-    "role": "Role", 
+    "project": "Project",
+    "role": "Role",
     "edit_role": "Edit Role",
     "last_updated": "Last Updated",
     "starred": "Starred",
@@ -1331,7 +1331,7 @@
     "detail_address": "Detailed Address",
     "account_info": "Account Information",
     "confirm_password": "Confirm Password",
-    "choose_project": "---Choose project---",
+    "choose_project": "Choose project",
     "user": {
       "success_update": "Account updated successfully",
       "fuel": "Fuel updated successfully",
@@ -1351,7 +1351,7 @@
       "edit": "Edit Role",
       "delete": "Delete Role",
       "add": "Add Role",
-      "choose": "---Choose role---"
+      "choose": "Choose role"
     },
     "email": "Email",
     "back": "Back"

@@ -15,7 +15,12 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomerRole } from '../api/deleteTenantRoleApi'
 import { type CustomerRoleEntity } from '../types'
 import { UpdateCustomerRole } from './UpdateTenantRole'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { type PermissionEntity, type PermissionEntityTable } from '../types'
 
 type CustomerRoleTableProps = {
@@ -45,7 +50,7 @@ function CustomerTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -54,10 +59,13 @@ function CustomerTableContextMenu({
             />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='z-[9999]'>
-          <DropdownMenuItem
-            onClick={openEdit}>
-            <img src={btnEditIcon} alt="Edit customer role" className="h-5 w-5" />
+        <DropdownMenuContent className="z-[9999]">
+          <DropdownMenuItem onClick={openEdit}>
+            <img
+              src={btnEditIcon}
+              alt="Edit customer role"
+              className="size-5"
+            />
             {t('form:role.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -65,17 +73,17 @@ function CustomerTableContextMenu({
               isDone={isSuccess}
               icon="danger"
               title={t('form:role.delete')}
-              body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
+              body={`${t('cloud:dashboard.table.delete_confirm')}`}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
+                  className="hover:text-primary-400 w-full justify-start border-none p-0 shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete customer role"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -90,7 +98,7 @@ function CustomerTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ project_id, sub_tenant_id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -103,7 +111,7 @@ function CustomerTableContextMenu({
           project_id={project_id}
           roleIdProps={roleIdProps}
           modalTitle={t('table:edit_role')}
-          isOpenRole={true}
+          isOpenRole={isOpenEdit}
           customerId={sub_tenant_id}
           closeRole={closeEdit}
         />
@@ -157,7 +165,7 @@ export function TenantRoleTable({ data, ...props }: CustomerRoleTableProps) {
 
   return (
     <BaseTable
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_tenant_role')}
       {...props}
