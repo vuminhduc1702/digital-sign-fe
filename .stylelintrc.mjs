@@ -27,5 +27,6 @@ export default {
     'media-feature-range-notation': 'prefix',
     // Adopts the import notation from `postcss-import`
     'import-notation': 'string',
+    'selector-class-pattern': null,
   },
 }
