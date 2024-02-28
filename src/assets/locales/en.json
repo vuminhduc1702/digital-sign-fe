@@ -846,7 +846,12 @@
         "sub_code": "Subscription Code",
         "start_date": "Subscription Start Date",
         "cycle_now": "Current Billing Cycle",
-        "status": "Subscription Status"
+        "status": "Subscription Status",
+        "customer_code": "Customer Code",
+        "customer_name": "Customer Name",
+        "package": "Package",
+        "period": "Billing Cycle",
+        "price_method": "Pricing Method"
       }
     },
     "manage_bill": {
@@ -938,13 +943,13 @@
     "prev_page": "Previous Page",
     "no": "No.",
     "tenant": "Tenant",
-    "email": "Email", 
+    "email": "Email",
     "id": "ID",
-    "name": "Name", 
-    "phone": "Phone Number", 
+    "name": "Name",
+    "phone": "Phone Number",
     "password": "Password",
-    "project": "Project", 
-    "role": "Role", 
+    "project": "Project",
+    "role": "Role",
     "edit_role": "Edit Role",
     "last_updated": "Last Updated",
     "starred": "Starred",
