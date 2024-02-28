@@ -20,6 +20,7 @@ import { useDeleteRole } from '../api'
 import { type Role } from '../types'
 import { convertActionsENtoVN } from './RoleSidebar'
 import { UpdateRole } from './UpdateRole'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 function RoleTableContextMenu({
   id,
@@ -42,42 +43,36 @@ function RoleTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        menuClass="h-10 w-6 ml-auto"
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit role" className="size-5" />
-              }
-              onClick={() => {
-                open()
-                setSelectedUpdateRole(role)
-              }}
-            >
-              {t('cloud:role_manage.sidebar.edit')}
-            </MenuItem>
-            <MenuItem
-              icon={
-                <img
-                  src={btnCopyIdIcon}
-                  alt="Copy role's ID"
-                  className="size-5"
-                />
-              }
-              onClick={() => handleCopyId(id)}
-            >
-              {t('table:copy_id')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={() => {
+              open()
+              setSelectedUpdateRole(role)
+            }}>
+            <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
+            {t('cloud:role_manage.sidebar.edit')}
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => handleCopyId(id)}>
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy role's ID"
+              className="h-5 w-5"
+            />
+            {t('table:copy_id')}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -88,7 +83,7 @@ function RoleTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -115,9 +110,9 @@ function RoleTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {selectedUpdateRole != null && isOpen ? (
         <UpdateRole
           project_id={project_id}

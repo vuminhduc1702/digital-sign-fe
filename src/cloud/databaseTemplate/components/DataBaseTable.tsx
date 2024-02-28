@@ -17,6 +17,7 @@ import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
 import { InputField } from '~/components/Form'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 function DataBaseTableContextMenu({
   row,
@@ -42,26 +43,28 @@ function DataBaseTableContextMenu({
 
   return (
     <>
-      <Dropdown
-        icon={
-          <BtnContextMenuIcon
-            height={20}
-            width={10}
-            viewBox="0 0 1 20"
-            className="text-secondary-700 hover:text-primary-400"
-          />
-        }
-      >
-        <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="p-1">
-            <MenuItem
-              icon={
-                <img src={btnEditIcon} alt="Edit DataBase" className="size-5" />
-              }
-              onClick={open}
-            >
-              {t('cloud:db_template.add_db.update_row')}
-            </MenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+            <BtnContextMenuIcon
+              height={20}
+              width={10}
+              viewBox="0 0 1 20"
+              className="text-secondary-700 hover:text-primary-400"
+            />
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem
+            onClick={open}>
+            <img
+              src={btnEditIcon}
+              alt="Edit DataBase"
+              className="h-5 w-5"
+            />
+            {t('cloud:db_template.add_db.update_row')}
+          </DropdownMenuItem>
+          <DropdownMenuItem>
             <ConfirmationDialog
               isDone={isSuccess}
               icon="danger"
@@ -69,7 +72,7 @@ function DataBaseTableContextMenu({
               body={t('cloud:db_template.add_db.delete_row_confirm')}
               triggerButton={
                 <Button
-                  className="w-full justify-start border-none hover:text-primary-400"
+                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
@@ -110,9 +113,9 @@ function DataBaseTableContextMenu({
                 />
               }
             />
-          </div>
-        </Menu.Items>
-      </Dropdown>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       {isOpen ? (
         <UpdateRow
           close={close}

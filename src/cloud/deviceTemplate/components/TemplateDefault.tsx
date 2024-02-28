@@ -22,6 +22,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
@@ -85,45 +86,35 @@ export function TemplateDefault() {
                   </p>
                 </Button>
                 <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
-                  <Dropdown
-                    menuClass="h-10 w-6"
-                    icon={
-                      <BtnContextMenuIcon
-                        height={20}
-                        width={3}
-                        viewBox="0 0 3 20"
-                      />
-                    }
-                  >
-                    <Menu.Items className="absolute left-0 z-10 mt-11 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <div className="p-1">
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnEditIcon}
-                              alt="Edit template"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => {
-                            open()
-                            setSelectedUpdateTemplate(template)
-                          }}
-                        >
-                          {t('cloud:device_template.sidebar.edit')}
-                        </MenuItem>
-                        <MenuItem
-                          icon={
-                            <img
-                              src={btnCopyIdIcon}
-                              alt="Copy template's ID"
-                              className="h-5 w-5"
-                            />
-                          }
-                          onClick={() => handleCopyId(template.id)}
-                        >
-                          {t('table:copy_id')}
-                        </MenuItem>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <div className="h-10 w-6 flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          open()
+                          setSelectedUpdateTemplate(template)
+                        }}>
+                        <img
+                          src={btnEditIcon}
+                          alt="Edit template"
+                          className="h-5 w-5"
+                        />
+                        {t('cloud:device_template.sidebar.edit')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleCopyId(template.id)}>
+                        <img
+                          src={btnCopyIdIcon}
+                          alt="Copy template's ID"
+                          className="h-5 w-5"
+                        />
+                        {t('table:copy_id')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
                         <ConfirmationDialog
                           isDone={isSuccess}
                           icon="danger"
@@ -138,7 +129,7 @@ export function TemplateDefault() {
                           }
                           triggerButton={
                             <Button
-                              className="w-full justify-start border-none hover:text-primary-400"
+                              className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
                               variant="trans"
                               size="square"
                               startIcon={
@@ -171,9 +162,9 @@ export function TemplateDefault() {
                             />
                           }
                         />
-                      </div>
-                    </Menu.Items>
-                  </Dropdown>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
             ))}

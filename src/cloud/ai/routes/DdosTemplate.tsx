@@ -10,6 +10,7 @@ import { cn } from '~/utils/misc'
 import { useDdos } from '../api/ddos/callDdosApi'
 import { useMutationDdosAi } from '../api/ddos/updateDdosApi'
 import { InfoIcon } from '~/components/SVGIcons'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 
 export default function DdosTemplate() {
   const [fullScreen, setFullScreen] = useState(false)
@@ -114,40 +115,31 @@ export default function DdosTemplate() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Dropdown
-                icon={
+              <DropdownMenu>
+                <DropdownMenuTrigger>
                   <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
-                }
-              >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-2">
-                    <div
-                      className="hover:background py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('maximize_code')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.maximize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('minimize_code')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.minimize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('default')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.default_result')}
-                    </div>
-                  </div>
-                </div>
-              </Dropdown>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('maximize_code')
+                    }}>
+                    {t('cloud:custom_protocol.service.maximize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('minimize_code')
+                    }}>
+                    {t('cloud:custom_protocol.service.minimize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('default')
+                    }}>
+                    {t('cloud:custom_protocol.service.default_result')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
               <InfoIcon
                 width={20}
                 height={20}
@@ -195,40 +187,31 @@ export default function DdosTemplate() {
               </p>
             </div>
             <div className="flex gap-3">
-              <Dropdown
-                icon={
+              <DropdownMenu>
+                <DropdownMenuTrigger>
                   <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
-                }
-              >
-                <div className="absolute right-0 z-10 mt-6 w-32 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <div className="p-2">
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('maximize_result')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.maximize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('minimize_result')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.minimize_result')}
-                    </div>
-                    <div
-                      className="py-1 hover:cursor-pointer"
-                      onClick={() => {
-                        setViewMode('default')
-                      }}
-                    >
-                      {t('cloud:custom_protocol.service.default_result')}
-                    </div>
-                  </div>
-                </div>
-              </Dropdown>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('maximize_result')
+                    }}>
+                    {t('cloud:custom_protocol.service.maximize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('minimize_result')
+                    }}>
+                    {t('cloud:custom_protocol.service.minimize_result')}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="py-1"
+                    onClick={() => {
+                      setViewMode('default')
+                    }}>
+                    {t('cloud:custom_protocol.service.default_result')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           <CodeSandboxEditor

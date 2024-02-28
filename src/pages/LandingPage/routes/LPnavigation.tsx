@@ -6,12 +6,12 @@ import { useSpinDelay } from 'spin-delay'
 import { Spinner } from '~/components/Spinner'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { API_URL } from '~/config'
 import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
 
 function LPnavigation({
   childToParent,
@@ -75,16 +75,15 @@ function LPnavigation({
           </div>
         </div>
       ) : (
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild className="flex items-center gap-x-2 ">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="flex items-center gap-x-2">
             <div className="flex lg:ml-auto">
               <div className="flex w-max py-5 max-lg:px-3">
                 <img
-                  src={`${
-                    userInfoData?.profile?.profile_image !== ''
-                      ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
-                      : defaultUserIcon
-                  }`}
+                  src={`${userInfoData?.profile?.profile_image !== ''
+                    ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
+                    : defaultUserIcon
+                    }`}
                   alt="User's avatar"
                   className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300"
                   onError={e => {
@@ -110,46 +109,45 @@ function LPnavigation({
                 </div>
               </div>
             </div>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content
-              className="z-50 flex max-h-[360px] w-[220px] flex-col gap-y-3 overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
-              sideOffset={5}
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade  data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] z-[9999]"
+            sideOffset={-15}>
+            <Link
+              to="https://iot.viettel.vn/"
+              target="_blank"
+              className="cursor-pointer"
             >
-              <Link
-                to="https://iot.viettel.vn/"
-                target="_blank"
-                className="cursor-pointer"
-              >
-                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                  {t('user:cmp')}
-                </DropdownMenu.Item>
-              </Link>
-              <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                  {t('user:user_info')}
-                </DropdownMenu.Item>
-              </Link>
-              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                {userDataFromStorage ? (
-                  <p
-                    className="cursor-pointer"
-                    onClick={() => {
-                      navigate(PATHS.CHANGEPASSWORD)
-                    }}
-                  >
-                    {t('user:change_password')}
-                  </p>
-                ) : null}
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
-                  {t('user:logout')}
+              <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                {t('user:cmp')}
+              </DropdownMenuItem>
+            </Link>
+            <Link to={PATHS.USER_INFO} className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                {t('user:user_info')}
+              </DropdownMenuItem>
+            </Link>
+            <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              {userDataFromStorage ? (
+                <p
+                  className="cursor-pointer"
+                  onClick={() => {
+                    navigate(PATHS.CHANGEPASSWORD)
+                  }}
+                >
+                  {t('user:change_password')}
                 </p>
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
+              ) : null}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+              <p
+                className="cursor-pointer"
+                onClick={() => logout.mutate({})}
+              >
+                {t('user:logout')}
+              </p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
 
       <div className="flex w-full lg:justify-center">
