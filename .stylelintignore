@@ -1,0 +1,8 @@
+# React files
+dist
+
+# Public Folder
+public
+
+# VS code
+.vscode
