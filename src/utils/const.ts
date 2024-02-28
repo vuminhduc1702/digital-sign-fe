@@ -1,1 +1,1 @@
-export const limitPagination = 20
+export const limitPagination = 100
