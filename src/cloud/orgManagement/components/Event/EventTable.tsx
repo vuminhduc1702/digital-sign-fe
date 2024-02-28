@@ -22,6 +22,7 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export const initialTodos = [
   {
@@ -112,6 +113,11 @@ function EventTableContextMenu({
   }, [id, dataRow])
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const projectId = storage.getProject()?.id
 
@@ -147,43 +153,10 @@ function EventTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:org_manage.event_manage.table.delete_event')}
-              body={t(
-                'cloud:org_manage.event_manage.table.delete_event_confirm',
-              ).replace('{{EVENTNAME}}', name)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start p-0 shadow-none border-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete event"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.event_manage.table.delete_event')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id, projectId })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete event" className="size-5" />
+            {t('cloud:org_manage.event_manage.table.delete_event')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -200,6 +173,20 @@ function EventTableContextMenu({
           isOpen={isOpen}
           startTimeProps={startTime}
           endTimeProps={endTime}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.event_manage.table.delete_event')}
+          body={t(
+            'cloud:org_manage.event_manage.table.delete_event_confirm',
+          ).replace('{{EVENTNAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id, projectId })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

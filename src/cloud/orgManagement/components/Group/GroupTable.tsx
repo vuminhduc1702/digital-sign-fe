@@ -26,6 +26,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
 import AssignGroupRole from './AssignGroupRole'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export type GroupType = {
   id: string
@@ -55,6 +56,12 @@ function GroupTableContextMenu({
     close: closeAssignUser,
     open: openAssignUser,
     isOpen: isOpenAssignUser,
+  } = useDisclosure()
+
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
   } = useDisclosure()
 
   const {
@@ -127,43 +134,10 @@ function GroupTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:org_manage.group_manage.table.delete_group')}
-              body={t(
-                'cloud:org_manage.group_manage.table.delete_group_confirm',
-              ).replace('{{GROUPNAME}}', name)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start p-0 shadow-none border-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete group"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.group_manage.table.delete_group')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={async () => await mutateAsync({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete group" className="size-5" />
+            {t('cloud:org_manage.group_manage.table.delete_group')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -192,6 +166,20 @@ function GroupTableContextMenu({
           groupId={id}
         />
       )}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.group_manage.table.delete_group')}
+          body={t(
+            'cloud:org_manage.group_manage.table.delete_group_confirm',
+          ).replace('{{GROUPNAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutateAsync({ id })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

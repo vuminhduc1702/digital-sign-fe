@@ -20,6 +20,7 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export type AdapterTableContextMenuProps = Omit<
   Adapter,
@@ -43,6 +44,11 @@ function AdapterTableContextMenu({
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAdapter()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const handleCopyId = useCopyId()
   return (
@@ -73,43 +79,10 @@ function AdapterTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
-              body={t(
-                'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
-              ).replace('{{ADAPTERNAME}}', name)}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete adapter"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:custom_protocol.adapter.table.delete_adapter')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete adapter" className="size-5" />
+            {t('cloud:custom_protocol.adapter.table.delete_adapter')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -127,6 +100,20 @@ function AdapterTableContextMenu({
           close={close}
           isOpen={isOpen}
           schema={schema}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:custom_protocol.adapter.table.delete_adapter')}
+          body={t(
+            'cloud:custom_protocol.adapter.table.delete_adapter_confirm',
+          ).replace('{{ADAPTERNAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

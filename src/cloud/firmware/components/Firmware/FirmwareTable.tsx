@@ -22,6 +22,7 @@ import { type FirmWare } from '../../types'
 import { UpdateFirmWare } from './UpdateFirmware'
 import { UploadFileFirmWare } from './UploadFileFirmware'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function FireWareTableContextMenu({
   id,
@@ -43,6 +44,11 @@ function FireWareTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
   const [type, setType] = useState('')
 
   const { mutate, isLoading, isSuccess } = useDeleteFirmWare()
@@ -77,44 +83,10 @@ function FireWareTableContextMenu({
             <UploadIcon className="h-5 w-5" />
             {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:firmware.table.delete_firmware')}
-              body={t('cloud:firmware.table.delete_firmware_confirm').replace(
-                '{{FIRMWARE_NAME}}',
-                name,
-              )}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete thing"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:firmware.table.delete_firmware')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete firmware" className="size-5" />
+            {t('cloud:firmware.table.delete_firmware')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -133,6 +105,21 @@ function FireWareTableContextMenu({
       ) : null}
       {isOpen && type === 'upload-firmware' ? (
         <UploadFileFirmWare firmwareId={id} close={close} isOpen={true} />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:firmware.table.delete_firmware')}
+          body={t('cloud:firmware.table.delete_firmware_confirm').replace(
+            '{{FIRMWARE_NAME}}',
+            name,
+          )}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
+        />
       ) : null}
     </>
   )

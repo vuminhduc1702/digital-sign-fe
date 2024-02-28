@@ -26,6 +26,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetAttrs } from '../../api/attrAPI/getAttrs'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 
 export const STATUS = {
@@ -48,6 +49,11 @@ function AttrTableContextMenu({
 }) {
   const { t } = useTranslation()
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteAttr()
 
@@ -74,49 +80,10 @@ function AttrTableContextMenu({
             />
             {t('cloud:org_manage.org_manage.add_attr.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
-              body={t(
-                'cloud:org_manage.org_manage.table.delete_attr_confirm',
-              ).replace('{{ATTRNAME}}', attribute_key)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete attribute"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.org_manage.table.delete_attr')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() =>
-                    mutate({
-                      entityId,
-                      entityType,
-                      attrKey: attribute_key,
-                    })
-                  }
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete attribute" className="size-5" />
+            {t('cloud:org_manage.org_manage.table.delete_attr')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -128,6 +95,24 @@ function AttrTableContextMenu({
           close={close}
           isOpen={isOpen}
           {...props}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_attr_confirm',
+          ).replace('{{ATTRNAME}}', attribute_key)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({
+            entityId,
+            entityType,
+            attrKey: attribute_key,
+          })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

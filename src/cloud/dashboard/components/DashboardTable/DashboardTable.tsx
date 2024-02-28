@@ -18,6 +18,7 @@ import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { type DashboardRes } from '../../api'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DashboardTableContextMenu({
   id,
@@ -31,6 +32,12 @@ function DashboardTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteDashboard()
 
@@ -55,44 +62,10 @@ function DashboardTableContextMenu({
             <img src={btnEditIcon} alt="Edit Dashboard" className="size-5" />
             {t('cloud:dashboard.add_dashboard.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:dashboard.table.delete_dashboard_full')}
-              body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
-                '{{DBNAME}}',
-                title,
-              )}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete Dashboard"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:dashboard.table.delete_dashboard')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete Dashboard" className="size-5" />
+            {t('cloud:dashboard.table.delete_dashboard')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -103,6 +76,21 @@ function DashboardTableContextMenu({
           isOpen={isOpen}
           title={title}
           {...props}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:dashboard.table.delete_dashboard_full')}
+          body={t('cloud:dashboard.table.delete_dashboard_confirm').replace(
+            '{{DBNAME}}',
+            title,
+          )}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

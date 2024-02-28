@@ -23,12 +23,20 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function TemplateDefault() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [name, setName] = useState('')
+  const [id, setId] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { templateId } = useParams()
 
@@ -53,6 +61,12 @@ export function TemplateDefault() {
     }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])
+
+  useEffect(() => {
+    if (isSuccess) {
+      closeDelete()
+    }
+  }, [isSuccess])
 
   return (
     <>
@@ -114,54 +128,16 @@ export function TemplateDefault() {
                         />
                         {t('table:copy_id')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <ConfirmationDialog
-                          isDone={isSuccess}
-                          icon="danger"
-                          title={t(
-                            'cloud:device_template.sidebar.delete_template_full',
-                          )}
-                          body={
-                            t(
-                              'cloud:device_template.sidebar.delete_template_confirm',
-                            ).replace('{{TEMPLATENAME}}', template.name) ??
-                            'Confirm delete?'
-                          }
-                          triggerButton={
-                            <Button
-                              className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                              variant="trans"
-                              size="square"
-                              startIcon={
-                                <img
-                                  src={btnDeleteIcon}
-                                  alt="Delete template"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            >
-                              {t(
-                                'cloud:device_template.sidebar.delete_template',
-                              )}
-                            </Button>
-                          }
-                          confirmButton={
-                            <Button
-                              isLoading={isLoading}
-                              type="button"
-                              size="md"
-                              className="bg-primary-400"
-                              onClick={() => mutate({ id: template.id })}
-                              startIcon={
-                                <img
-                                  src={btnSubmitIcon}
-                                  alt="Submit"
-                                  className="h-5 w-5"
-                                />
-                              }
-                            />
-                          }
-                        />
+                      <DropdownMenuItem
+                        onClick={() => {
+                          openDelete()
+                          setId(template.id)
+                          setName(template.name)
+                        }}>
+                        <img src={btnDeleteIcon} alt="Delete template" className="size-5" />
+                        {t(
+                          'cloud:device_template.sidebar.delete_template',
+                        )}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -183,6 +159,24 @@ export function TemplateDefault() {
           />
         ) : null}
       </div>
+      {isOpenDelete && id ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t(
+            'cloud:device_template.sidebar.delete_template_full',
+          )}
+          body={
+            t(
+              'cloud:device_template.sidebar.delete_template_confirm',
+            ).replace('{{TEMPLATENAME}}', name) ??
+            'Confirm delete?'
+          }
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

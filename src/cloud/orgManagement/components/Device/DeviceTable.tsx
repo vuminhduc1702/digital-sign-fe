@@ -39,6 +39,7 @@ import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 import { UpdateMqttConfig } from './UpdateMqttConfig'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DeviceTableContextMenu({
   id,
@@ -67,6 +68,11 @@ function DeviceTableContextMenu({
   const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const projectId = storage.getProject()?.id
   const { orgId } = useParams()
@@ -169,45 +175,10 @@ function DeviceTableContextMenu({
             <CopyIcon className="size-5" />
             {t('table:copy_token')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t(
-                'cloud:org_manage.device_manage.table.delete_device_full',
-              )}
-              body={t(
-                'cloud:org_manage.device_manage.table.delete_device_confirm',
-              ).replace('{{DEVICENAME}}', name)}
-              triggerButton={
-                <Button
-                  className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete device"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.device_manage.table.delete_device')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete device" className="size-5" />
+            {t('cloud:org_manage.device_manage.table.delete_device')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -233,6 +204,22 @@ function DeviceTableContextMenu({
           deviceId={id}
           close={close}
           isOpen={isOpen}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t(
+            'cloud:org_manage.device_manage.table.delete_device_full',
+          )}
+          body={t(
+            'cloud:org_manage.device_manage.table.delete_device_confirm',
+          ).replace('{{DEVICENAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>
