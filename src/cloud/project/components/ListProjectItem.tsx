@@ -26,7 +26,12 @@ import { API_URL } from '~/config'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { backupProject } from '../api/backupProject'
 import { useNavigate } from 'react-router-dom'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function ListProjectItem({
@@ -92,14 +97,14 @@ export function ListProjectItem({
             }}
           >
             <div
-              className="absolute flex justify-center right-2 top-2 h-7 w-7 rounded-full bg-secondary-600 bg-opacity-80 hover:bg-primary-400"
+              className="bg-secondary-600 hover:bg-primary-400 absolute right-2 top-2 flex h-7 w-7 justify-center rounded-full bg-opacity-80"
               onClick={e => {
                 e.stopPropagation()
               }}
             >
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                  <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                     <BtnContextMenuIcon
                       height={20}
                       width={10}
@@ -113,7 +118,8 @@ export function ListProjectItem({
                     onClick={() => {
                       open()
                       setSelectedUpdateProject(project)
-                    }}>
+                    }}
+                  >
                     <img
                       src={btnEditIcon}
                       alt="Edit project"
@@ -124,7 +130,8 @@ export function ListProjectItem({
                   <DropdownMenuItem
                     onClick={() => {
                       handleBackupProject(project)
-                    }}>
+                    }}
+                  >
                     <DownloadIcon className="h-5 w-5" />
                     {t('cloud:project_manager.backup')}
                   </DropdownMenuItem>
@@ -133,14 +140,17 @@ export function ListProjectItem({
                       openDelete()
                       setId(project.id)
                       setName(project.name)
-                    }}>
-                    <img src={btnDeleteIcon} alt="Delete project" className="size-5" />
-                    {t(
-                      'cloud:project_manager.add_project.delete_project',
-                    )}
+                    }}
+                  >
+                    <img
+                      src={btnDeleteIcon}
+                      alt="Delete project"
+                      className="size-5"
+                    />
+                    {t('cloud:project_manager.add_project.delete_project')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu >
+              </DropdownMenu>
               {isOpen && selectedUpdateProject?.id === project.id ? (
                 <UpdateProject
                   close={close}
@@ -161,10 +171,11 @@ export function ListProjectItem({
               }}
             >
               <img
-                src={`${project?.image !== ''
-                  ? `${API_URL}/file/${project?.image}`
-                  : defaultProjectImage
-                  }`}
+                src={`${
+                  project?.image !== ''
+                    ? `${API_URL}/file/${project?.image}`
+                    : defaultProjectImage
+                }`}
                 alt="Project"
                 className="aspect-square h-[45px] w-[45px] rounded-full"
                 onError={e => {
@@ -196,17 +207,18 @@ export function ListProjectItem({
       {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:project_manager.add_project.delete_project',
+          title={t('cloud:project_manager.add_project.delete_project')}
+          body={t('cloud:project_manager.add_project.confirm_delete').replace(
+            '{{PROJECT}}',
+            name,
           )}
-          body={t(
-            'cloud:project_manager.add_project.confirm_delete',
-          ).replace('{{PROJECT}}', name)}
           close={closeDelete}
           isOpen={isOpenDelete}
-          handleSubmit={() => mutate({
-            projectId: id,
-          })}
+          handleSubmit={() =>
+            mutate({
+              projectId: id,
+            })
+          }
           isLoading={isLoading}
         />
       ) : null}

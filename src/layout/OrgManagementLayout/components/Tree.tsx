@@ -19,7 +19,12 @@ import { useDeleteOrg } from '../api/deleteOrg'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import clsx from 'clsx'
 import { cn } from '~/utils/misc'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 interface TreeViewProps {
@@ -103,11 +108,8 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   return (
     <ul className="mt-4 pl-6">
       <li>
-        <div className="flex items-center" >
-          <div
-            className="h-5 w-5"
-            onClick={handleClick}
-          >
+        <div className="flex items-center">
+          <div className="h-5 w-5" onClick={handleClick}>
             {newdata.children.length ? (
               <img
                 src={showChildren ? btnCloseToggle : btnOpenToggle}
@@ -130,7 +132,9 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             onClick={() => {
               switch (entityTypeURL) {
                 case 'org':
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`)
+                  return navigate(
+                    `${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`,
+                  )
                 case 'event':
                   return navigate(
                     `${PATHS.EVENT_MANAGE}/${projectId}/${newdata.id}`,
@@ -148,7 +152,9 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                     `${PATHS.DEVICE_MANAGE}/${projectId}/${newdata.id}`,
                   )
                 default:
-                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`)
+                  return navigate(
+                    `${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`,
+                  )
               }
             }}
           >
@@ -160,18 +166,23 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
               {newdata.name}
             </p>
           </Button>
-          <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
+          <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="h-10 w-6 flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                  <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
+                <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                  <BtnContextMenuIcon
+                    height={20}
+                    width={3}
+                    viewBox="0 0 3 20"
+                  />
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className='z-10'>
+              <DropdownMenuContent className="z-10">
                 <DropdownMenuItem
                   onClick={() => {
                     handleEdit(newdata)
-                  }}>
+                  }}
+                >
                   <img
                     src={btnEditIcon}
                     alt="Edit organization"
@@ -179,8 +190,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                   />
                   {t('cloud:org_manage.org_map.edit')}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCopyId(newdata.id)}>
+                <DropdownMenuItem onClick={() => handleCopyId(newdata.id)}>
                   <img
                     src={btnCopyIdIcon}
                     alt="Copy organization's ID"
@@ -188,9 +198,12 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                   />
                   {t('table:copy_id')}
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={openDelete}>
-                  <img src={btnDeleteIcon} alt="Delete organization" className="size-5" />
+                <DropdownMenuItem onClick={openDelete}>
+                  <img
+                    src={btnDeleteIcon}
+                    alt="Delete organization"
+                    className="size-5"
+                  />
                   {t('cloud:org_manage.org_map.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -198,8 +211,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
           </div>
         </div>
       </li>
-      {
-        showChildren &&
+      {showChildren &&
         newdata.children &&
         dataSorted.map((child: OrgMapType) => {
           return (
@@ -210,23 +222,23 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
               handleEdit={(child: OrgMapType) => handleEdit(child)}
             />
           )
-        })
-      }
+        })}
 
       {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.org_map.delete')}
-          body={t(
-            'cloud:org_manage.org_map.delete_org_confirm',
-          ).replace('{{ORGNAME}}', newdata.name)}
+          body={t('cloud:org_manage.org_map.delete_org_confirm').replace(
+            '{{ORGNAME}}',
+            newdata.name,
+          )}
           close={closeDelete}
           isOpen={isOpenDelete}
           handleSubmit={() => mutate({ orgId: newdata.id })}
           isLoading={isLoading}
         />
       ) : null}
-    </ul >
+    </ul>
   )
 }
 

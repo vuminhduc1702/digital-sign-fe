@@ -21,7 +21,12 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export const initialTodos = [
@@ -129,7 +134,7 @@ function EventTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -139,13 +144,11 @@ function EventTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={open}>
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit event" className="size-5" />
             {t('cloud:org_manage.event_manage.add_event.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(id)}>
+          <DropdownMenuItem onClick={() => handleCopyId(id)}>
             <img
               src={btnCopyIdIcon}
               alt="Copy adapter's ID"
@@ -153,8 +156,7 @@ function EventTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete event" className="size-5" />
             {t('cloud:org_manage.event_manage.table.delete_event')}
           </DropdownMenuItem>

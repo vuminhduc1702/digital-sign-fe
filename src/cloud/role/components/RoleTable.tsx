@@ -20,7 +20,12 @@ import { useDeleteRole } from '../api'
 import { type Role } from '../types'
 import { convertActionsENtoVN } from './RoleSidebar'
 import { UpdateRole } from './UpdateRole'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function RoleTableContextMenu({
@@ -52,7 +57,7 @@ function RoleTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -66,27 +71,22 @@ function RoleTableContextMenu({
             onClick={() => {
               open()
               setSelectedUpdateRole(role)
-            }}>
+            }}
+          >
             <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
             {t('cloud:role_manage.sidebar.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(id)}>
-            <img
-              src={btnCopyIdIcon}
-              alt="Copy role's ID"
-              className="h-5 w-5"
-            />
+          <DropdownMenuItem onClick={() => handleCopyId(id)}>
+            <img src={btnCopyIdIcon} alt="Copy role's ID" className="h-5 w-5" />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete role" className="size-5" />
             {t('cloud:role_manage.sidebar.delete_role')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {(selectedUpdateRole != null && isOpen) ? (
+      {selectedUpdateRole != null && isOpen ? (
         <UpdateRole
           project_id={project_id}
           close={close}

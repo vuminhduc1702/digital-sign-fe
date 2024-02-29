@@ -25,7 +25,12 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
 import AssignGroupRole from './AssignGroupRole'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export type GroupType = {
@@ -81,7 +86,7 @@ function GroupTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -94,7 +99,8 @@ function GroupTableContextMenu({
           <DropdownMenuItem
             onClick={() =>
               navigate(
-                `${PATHS.GROUP_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                `${PATHS.GROUP_MANAGE}/${projectId}/${
+                  orgId != null ? `${orgId}/${id}` : ` /${id}`
                 }`,
               )
             }
@@ -103,39 +109,26 @@ function GroupTableContextMenu({
             {t('table:view_detail')}
           </DropdownMenuItem>
           {props.entity_type === 'DEVICE' && (
-            <DropdownMenuItem
-              onClick={openAssignUser}
-            >
+            <DropdownMenuItem onClick={openAssignUser}>
               <img src={btnEditIcon} alt="Assign user" className="size-5" />
               {t('cloud:org_manage.user_manage.add_user.assign')}
             </DropdownMenuItem>
           )}
           {props.entity_type === 'USER' && (
-            <DropdownMenuItem
-              onClick={openAssignGroupRole}
-            >
+            <DropdownMenuItem onClick={openAssignGroupRole}>
               <img src={btnEditIcon} alt="Assign user" className="size-5" />
               {t('cloud:org_manage.user_manage.add_user.assign_role')}
             </DropdownMenuItem>
           )}
-          <DropdownMenuItem
-            onClick={open}
-          >
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit group" className="size-5" />
             {t('cloud:org_manage.group_manage.add_group.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(id)}
-          >
-            <img
-              src={btnCopyIdIcon}
-              alt="Copy group's ID"
-              className="size-5"
-            />
+          <DropdownMenuItem onClick={() => handleCopyId(id)}>
+            <img src={btnCopyIdIcon} alt="Copy group's ID" className="size-5" />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete group" className="size-5" />
             {t('cloud:org_manage.group_manage.table.delete_group')}
           </DropdownMenuItem>

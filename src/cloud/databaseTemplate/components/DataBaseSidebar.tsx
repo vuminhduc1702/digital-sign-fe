@@ -20,7 +20,12 @@ import listIcon from '~/assets/icons/list.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { useGetDataBases } from '../api/getDataBases'
 import { flattenData } from '~/utils/misc'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { SearchField } from '~/components/Input'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
@@ -98,9 +103,13 @@ export function DataBaseSidebar() {
                 </Button>
                 <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild className='cursor-pointer'>
-                      <div className="h-10 w-6 flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                        <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
+                    <DropdownMenuTrigger asChild className="cursor-pointer">
+                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <BtnContextMenuIcon
+                          height={20}
+                          width={3}
+                          viewBox="0 0 3 20"
+                        />
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -108,8 +117,13 @@ export function DataBaseSidebar() {
                         onClick={() => {
                           openDelete()
                           setName(table?.table_name)
-                        }}>
-                        <img src={btnDeleteIcon} alt="Delete db" className="size-5" />
+                        }}
+                      >
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete db"
+                          className="size-5"
+                        />
                         {t('cloud:db_template.sidebar.delete_db')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -129,17 +143,19 @@ export function DataBaseSidebar() {
           icon="danger"
           title={t('cloud:db_template.sidebar.delete_db')}
           body={
-            t(
-              'cloud:db_template.sidebar.delete_db_confirm',
-            ).replace('{{DBNAME}}', name) ??
-            'Confirm delete?'
+            t('cloud:db_template.sidebar.delete_db_confirm').replace(
+              '{{DBNAME}}',
+              name,
+            ) ?? 'Confirm delete?'
           }
           close={closeDelete}
           isOpen={isOpenDelete}
-          handleSubmit={() => mutate({
-            table: name,
-            project_id: projectId,
-          })}
+          handleSubmit={() =>
+            mutate({
+              table: name,
+              project_id: projectId,
+            })
+          }
           isLoading={isLoading}
         />
       ) : null}

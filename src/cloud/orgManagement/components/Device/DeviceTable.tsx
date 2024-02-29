@@ -38,7 +38,12 @@ import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 import { UpdateMqttConfig } from './UpdateMqttConfig'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DeviceTableContextMenu({
@@ -87,7 +92,7 @@ function DeviceTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -100,7 +105,8 @@ function DeviceTableContextMenu({
           <DropdownMenuItem
             onClick={() =>
               navigate(
-                `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
+                `${PATHS.DEVICE_MANAGE}/${projectId}/${
+                  orgId != null ? `${orgId}/${id}` : ` /${id}`
                 }`,
               )
             }
@@ -123,11 +129,7 @@ function DeviceTableContextMenu({
               setType('update-mqtt')
             }}
           >
-            <img
-              src={btnEditIcon}
-              alt="Edit mqtt config"
-              className="size-5"
-            />
+            <img src={btnEditIcon} alt="Edit mqtt config" className="size-5" />
             {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -159,9 +161,7 @@ function DeviceTableContextMenu({
             <UpdateIcon className="size-5" />
             {t('cloud:firmware.fota')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(id)}
-          >
+          <DropdownMenuItem onClick={() => handleCopyId(id)}>
             <img
               src={btnCopyIdIcon}
               alt="Copy device's ID"
@@ -169,14 +169,11 @@ function DeviceTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(token, 'token')}
-          >
+          <DropdownMenuItem onClick={() => handleCopyId(token, 'token')}>
             <CopyIcon className="size-5" />
             {t('table:copy_token')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete device" className="size-5" />
             {t('cloud:org_manage.device_manage.table.delete_device')}
           </DropdownMenuItem>
@@ -210,9 +207,7 @@ function DeviceTableContextMenu({
       {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:org_manage.device_manage.table.delete_device_full',
-          )}
+          title={t('cloud:org_manage.device_manage.table.delete_device_full')}
           body={t(
             'cloud:org_manage.device_manage.table.delete_device_confirm',
           ).replace('{{DEVICENAME}}', name)}

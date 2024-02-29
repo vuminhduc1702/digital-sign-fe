@@ -18,7 +18,12 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export type AdapterTableContextMenuProps = Omit<
@@ -54,7 +59,7 @@ function AdapterTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -64,13 +69,11 @@ function AdapterTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={open}>
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit adapter" className="h-5 w-5" />
             {t('cloud:custom_protocol.adapter.table.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(id)}>
+          <DropdownMenuItem onClick={() => handleCopyId(id)}>
             <img
               src={btnCopyIdIcon}
               alt="Copy adapter's ID"
@@ -78,8 +81,7 @@ function AdapterTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete adapter" className="size-5" />
             {t('cloud:custom_protocol.adapter.table.delete_adapter')}
           </DropdownMenuItem>
