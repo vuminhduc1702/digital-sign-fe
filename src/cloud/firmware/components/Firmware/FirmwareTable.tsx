@@ -21,17 +21,13 @@ import { getVNDateFormat } from '~/utils/misc'
 import { type FirmWare } from '../../types'
 import { UpdateFirmWare } from './UpdateFirmware'
 import { UploadFileFirmWare } from './UploadFileFirmware'
-<<<<<<< HEAD
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-=======
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
->>>>>>> f123914e34d815dec5e440d152f4fd2a707363c9
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function FireWareTableContextMenu({
   id,
@@ -94,8 +90,7 @@ function FireWareTableContextMenu({
             <UploadIcon className="size-5" />
             {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete firmware" className="size-5" />
             {t('cloud:firmware.table.delete_firmware')}
           </DropdownMenuItem>

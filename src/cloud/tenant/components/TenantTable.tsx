@@ -15,17 +15,13 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
-<<<<<<< HEAD
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
-import { ConfirmDialog } from '~/components/ConfirmDialog'
-=======
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
->>>>>>> f123914e34d815dec5e440d152f4fd2a707363c9
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -69,7 +65,8 @@ function CustomerTableContextMenu({
             onClick={() => {
               setType('edit')
               open()
-            }}>
+            }}
+          >
             <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('form:tenant.edit')}
           </DropdownMenuItem>
@@ -77,13 +74,14 @@ function CustomerTableContextMenu({
             onClick={() => {
               setType('delete')
               open()
-            }}>
+            }}
+          >
             <img src={btnDeleteIcon} alt="Delete customer" className="size-5" />
             {t('form:tenant.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {(isOpen && type === 'edit') ? (
+      {isOpen && type === 'edit' ? (
         <UpdateCustomer
           customerId={id}
           name={name}
@@ -95,7 +93,7 @@ function CustomerTableContextMenu({
         />
       ) : null}
 
-      {(isOpen && type === 'delete') ? (
+      {isOpen && type === 'delete' ? (
         <ConfirmDialog
           icon="danger"
           title={t('form:tenant.delete')}
