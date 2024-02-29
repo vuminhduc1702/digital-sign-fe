@@ -21,7 +21,12 @@ import { getVNDateFormat } from '~/utils/misc'
 import { type FirmWare } from '../../types'
 import { UpdateFirmWare } from './UpdateFirmware'
 import { UploadFileFirmWare } from './UploadFileFirmware'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 function FireWareTableContextMenu({
   id,
@@ -51,7 +56,7 @@ function FireWareTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -65,16 +70,18 @@ function FireWareTableContextMenu({
             onClick={() => {
               open()
               setType('create-firmware')
-            }}>
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+            }}
+          >
+            <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:firmware.add_firmware.edit_firmware')}
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
               open()
               setType('upload-firmware')
-            }}>
-            <UploadIcon className="h-5 w-5" />
+            }}
+          >
+            <UploadIcon className="size-5" />
             {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -88,14 +95,14 @@ function FireWareTableContextMenu({
               )}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
+                  className="hover:text-primary-400 w-full justify-start border-none p-0 shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete thing"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -110,7 +117,7 @@ function FireWareTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -126,13 +133,13 @@ function FireWareTableContextMenu({
           tag={tag}
           version={version}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
           template_name={template_name}
           template_id={template_id}
         />
       ) : null}
       {isOpen && type === 'upload-firmware' ? (
-        <UploadFileFirmWare firmwareId={id} close={close} isOpen={true} />
+        <UploadFileFirmWare firmwareId={id} close={close} isOpen={isOpen} />
       ) : null}
     </>
   )

@@ -15,7 +15,12 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -44,7 +49,7 @@ function CustomerTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -54,9 +59,8 @@ function CustomerTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('form:tenant.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem>
@@ -67,14 +71,14 @@ function CustomerTableContextMenu({
               body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
               triggerButton={
                 <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
+                  className="hover:text-primary-400 w-full justify-start border-none p-0 shadow-none"
                   variant="trans"
                   size="square"
                   startIcon={
                     <img
                       src={btnDeleteIcon}
                       alt="Delete customer"
-                      className="h-5 w-5"
+                      className="size-5"
                     />
                   }
                 >
@@ -89,7 +93,7 @@ function CustomerTableContextMenu({
                   className="bg-primary-400"
                   onClick={() => mutate({ id })}
                   startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
                   }
                 />
               }
@@ -104,7 +108,7 @@ function CustomerTableContextMenu({
           email={email}
           phone={phone}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
           permissions={permissions}
         />
       ) : null}
@@ -112,10 +116,7 @@ function CustomerTableContextMenu({
   )
 }
 
-export function TenantTable({
-  data,
-  ...props
-}: BillingCustomerTableProps) {
+export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<BillingCustomerEntity>()
@@ -133,9 +134,7 @@ export function TenantTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('phone', {
-        header: () => (
-          <span>{t('table:phone')}</span>
-        ),
+        header: () => <span>{t('table:phone')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

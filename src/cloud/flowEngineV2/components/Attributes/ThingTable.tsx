@@ -16,7 +16,12 @@ import { type BaseTablePagination } from '~/types'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 
 function ThingTableContextMenu({
@@ -39,7 +44,7 @@ function ThingTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -53,7 +58,8 @@ function ThingTableContextMenu({
             onClick={() => {
               setType('edit')
               open()
-            }}>
+            }}
+          >
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:custom_protocol.thing.edit')}
           </DropdownMenuItem>
@@ -61,28 +67,30 @@ function ThingTableContextMenu({
             onClick={() => {
               setType('delete')
               open()
-            }}>
+            }}
+          >
             <img src={btnDeleteIcon} alt="Delete thing" className="size-5" />
             {t('cloud:custom_protocol.thing.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {(isOpen && type === 'edit') ? (
+      {isOpen && type === 'edit' ? (
         <UpdateThing
           thingId={id}
           name={name}
           description={description}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
         />
       ) : null}
 
-      {(isOpen && type === 'delete') ? (
+      {isOpen && type === 'delete' ? (
         <ConfirmDialog
           title={t('cloud:custom_protocol.thing.delete')}
-          body={t(
-            'cloud:custom_protocol.thing.delete_thing_confirm',
-          ).replace('{{THINGNAME}}', name)}
+          body={t('cloud:custom_protocol.thing.delete_thing_confirm').replace(
+            '{{THINGNAME}}',
+            name,
+          )}
           icon="danger"
           close={close}
           isOpen={isOpen}

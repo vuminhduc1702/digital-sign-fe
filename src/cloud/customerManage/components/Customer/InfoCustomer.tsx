@@ -145,7 +145,7 @@ export function InfoCustomer() {
           }}
           className="mb-2 flex items-center hover:text-blue-300"
         >
-          <div className="mr-2 size-1.5 rounded-md bg-blue-500"></div>
+          <div className="size-1.5 mr-2 rounded-md bg-blue-500"></div>
           {t('billing:customer_manage.payment_history')}
         </div>
         <div
@@ -155,7 +155,7 @@ export function InfoCustomer() {
           }}
           className="flex items-center hover:text-blue-300"
         >
-          <div className="mr-2 size-1.5 rounded-md bg-blue-500"></div>
+          <div className="size-1.5 mr-2 rounded-md bg-blue-500"></div>
           {t('billing:customer_manage.sign_history')}
         </div>
       </div>
@@ -167,7 +167,7 @@ export function InfoCustomer() {
           customerCode={userById?.customer_code}
           customerName={userById?.name}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
         />
       ) : null}
     </div>
