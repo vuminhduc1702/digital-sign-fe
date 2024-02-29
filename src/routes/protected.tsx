@@ -26,7 +26,7 @@ import { Default } from '~/cloud/deviceTemplate/routes/Default'
 import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate } from 'react-router-dom'
 import storage from '~/utils/storage'
-import PdfViewer from '~/pages/LandingPage/components/PdfViewer'
+
 const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
   () => import('~/cloud/deviceTemplate'),

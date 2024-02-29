@@ -15,8 +15,17 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteCustomer } from '../api/deleteTenantApi'
 import { type BillingCustomerEntity } from '../types'
 import { UpdateCustomer } from './UpdateTenant'
+<<<<<<< HEAD
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+=======
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
+>>>>>>> f123914e34d815dec5e440d152f4fd2a707363c9
 
 type BillingCustomerTableProps = {
   data: BillingCustomerEntity[]
@@ -46,7 +55,7 @@ function CustomerTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -81,7 +90,7 @@ function CustomerTableContextMenu({
           email={email}
           phone={phone}
           close={close}
-          isOpen={true}
+          isOpen={isOpen}
           permissions={permissions}
         />
       ) : null}
@@ -101,10 +110,7 @@ function CustomerTableContextMenu({
   )
 }
 
-export function TenantTable({
-  data,
-  ...props
-}: BillingCustomerTableProps) {
+export function TenantTable({ data, ...props }: BillingCustomerTableProps) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<BillingCustomerEntity>()
@@ -122,9 +128,7 @@ export function TenantTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('phone', {
-        header: () => (
-          <span>{t('table:phone')}</span>
-        ),
+        header: () => <span>{t('table:phone')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),

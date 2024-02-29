@@ -77,7 +77,6 @@ export function UpdateCustomerRole({
     label: item.name,
     value: item.id,
   }))
-  console.log('11111111', watch('project_id'))
 
   const { mutate, isLoading, isSuccess } = useUpdateCustomerRole()
 

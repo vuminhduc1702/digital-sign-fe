@@ -623,7 +623,7 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -688,7 +688,10 @@ export function CreateWidget({
 
               const tsCmd = {
                 keys: values.attributeConfig.map(item => item.attribute_key),
-                interval: values.widgetSetting?.interval,
+                interval:
+                  values.widgetSetting?.agg !== 'NONE'
+                    ? values.widgetSetting?.interval
+                    : undefined,
                 offset: 0,
                 agg: values.widgetSetting?.agg,
               }
@@ -711,7 +714,9 @@ export function CreateWidget({
                           tsCmd: {
                             ...tsCmd,
                             startTs:
-                              Date.now() - values.widgetSetting?.time_period,
+                              values.widgetSetting?.dataType === 'REALTIME'
+                                ? Date.now() - values.widgetSetting?.time_period
+                                : undefined,
                           },
                           id: widgetId,
                         },
@@ -720,13 +725,22 @@ export function CreateWidget({
 
               const historyCmd = {
                 keys: values.attributeConfig.map(item => item.attribute_key),
-                startTs: Date.parse(
-                  values.widgetSetting?.startDate?.toISOString(),
-                ),
-                endTs: Date.parse(
-                  values.widgetSetting?.endDate?.toISOString() as string,
-                ),
-                interval: values.widgetSetting?.interval,
+                startTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.startDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                endTs:
+                  Date.parse(
+                    values.widgetSetting?.dataType === 'HISTORY'
+                      ? values.widgetSetting?.endDate?.toISOString()
+                      : '',
+                  ) || undefined,
+                interval:
+                  values.widgetSetting?.agg !== 'NONE'
+                    ? values.widgetSetting?.interval
+                    : undefined,
                 limit: 5000,
                 offset: 0,
                 agg: values.widgetSetting?.agg,
@@ -786,18 +800,31 @@ export function CreateWidget({
                     ? {
                         aggregation: values.widgetSetting?.agg,
                         timewindow: {
-                          interval: values.widgetSetting?.interval,
+                          interval:
+                            values.widgetSetting?.agg !== 'NONE'
+                              ? values.widgetSetting?.interval
+                              : undefined,
                         },
                         chartsetting: {
                           start_date: new Date(
-                            values.widgetSetting?.startDate,
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.startDate?.toISOString()
+                              : 0,
                           ).getTime(),
                           end_date: new Date(
-                            values.widgetSetting?.endDate,
+                            values.widgetSetting?.dataType === 'HISTORY'
+                              ? values.widgetSetting?.endDate?.toISOString()
+                              : 0,
                           ).getTime(),
                           data_type: values.widgetSetting?.dataType,
-                          data_point: values.widgetSetting?.data_point,
-                          time_period: values.widgetSetting?.time_period,
+                          data_point:
+                            values.widgetSetting?.agg === 'NONE'
+                              ? values.widgetSetting?.data_point
+                              : undefined,
+                          time_period:
+                            values.widgetSetting?.dataType === 'REALTIME'
+                              ? Date.now() - values.widgetSetting?.time_period
+                              : undefined,
                         },
                       }
                     : null,
@@ -817,7 +844,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -923,7 +950,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -1153,7 +1180,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="w-full rounded-md bg-secondary-700 pl-3"
+                        className="bg-secondary-700 w-full rounded-md pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -1169,19 +1196,6 @@ export function CreateWidget({
                             label: dataType.label,
                             value: dataType.value,
                           }))}
-                          // onChange={e => {
-                          //   if (e.target.value === 'REALTIME') {
-                          //     setValue('widgetSetting.agg', 'AVG')
-                          //     setValue('widgetSetting.time_period', 0)
-                          //     setValue('widgetSetting.interval', 0)
-                          //     setValue('widgetSetting.data_point', 0)
-                          //   } else {
-                          //     setValue('widgetSetting.agg', 'AVG')
-                          //     setValue('widgetSetting.time_period', 0)
-                          //     // setValue('widgetSetting.interval', 0)
-                          //     // setValue('widgetSetting.data_point', 0)
-                          //   }
-                          // }}
                         />
 
                         <SelectField
@@ -1226,6 +1240,7 @@ export function CreateWidget({
                           <InputField
                             type="number"
                             label={t('ws:filter.data_point')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.data_point}
                             registration={register(
                               `widgetSetting.data_point` as const,
@@ -1237,6 +1252,7 @@ export function CreateWidget({
                         ) : watch('widgetSetting.dataType') === 'HISTORY' ? (
                           <SelectField
                             label={t('ws:filter.group_interval')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.interval}
                             registration={register(
                               `widgetSetting.interval` as const,
@@ -1253,6 +1269,7 @@ export function CreateWidget({
                           <SelectField
                             label={t('ws:filter.time_period')}
                             error={
+                              // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                               formState?.errors?.widgetSetting?.time_period
                             }
                             registration={register(
@@ -1276,6 +1293,7 @@ export function CreateWidget({
                                   'cloud:dashboard.config_chart.startDate',
                                 )}
                                 error={
+                                  // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                                   formState?.errors?.widgetSetting?.startDate
                                 }
                               >
@@ -1293,11 +1311,11 @@ export function CreateWidget({
                                             variant="trans"
                                             size="square"
                                             className={cn(
-                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                              'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                               !value && 'text-secondary-700',
                                             )}
                                           >
-                                            <LuCalendar className="mr-2 size-4" />
+                                            <LuCalendar className="size-4 mr-2" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1367,7 +1385,8 @@ export function CreateWidget({
                                   getValues('widgetSetting.dataType') ===
                                   'REALTIME'
                                     ? ''
-                                    : formState?.errors?.widgetSetting
+                                    : // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
+                                      formState?.errors?.widgetSetting
                                         ?.startDate
                                 }
                               >
@@ -1394,7 +1413,7 @@ export function CreateWidget({
                                               ) === 'REALTIME'
                                             }
                                           >
-                                            <LuCalendar className="mr-2 size-4" />
+                                            <LuCalendar className="size-4 mr-2" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1463,6 +1482,7 @@ export function CreateWidget({
                         ) : (
                           <SelectField
                             label={t('ws:filter.group_interval')}
+                            // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                             error={formState?.errors?.widgetSetting?.interval}
                             registration={register(
                               `widgetSetting.interval` as const,
