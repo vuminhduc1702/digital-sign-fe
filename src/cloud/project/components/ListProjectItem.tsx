@@ -21,12 +21,13 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { useTranslation } from 'react-i18next'
 import { useDeleteProject } from '../api/deleteProject'
 import { UpdateProject } from './UpdateProject'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { API_URL } from '~/config'
 import { DownloadIcon } from '@radix-ui/react-icons'
 import { backupProject } from '../api/backupProject'
 import { useNavigate } from 'react-router-dom'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function ListProjectItem({
   listProjectData,
@@ -34,10 +35,17 @@ export function ListProjectItem({
   listProjectData: Project[]
 }) {
   const { t } = useTranslation()
+  const [name, setName] = useState('')
+  const [id, setId] = useState('')
 
   const navigate = useNavigate()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteProject()
 
@@ -56,6 +64,12 @@ export function ListProjectItem({
     link.click()
     document.body.removeChild(link)
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+      closeDelete()
+    }
+  }, [isSuccess])
 
   return (
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -114,55 +128,16 @@ export function ListProjectItem({
                     <DownloadIcon className="h-5 w-5" />
                     {t('cloud:project_manager.backup')}
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <ConfirmationDialog
-                      isDone={isSuccess}
-                      icon="danger"
-                      title={t(
-                        'cloud:project_manager.add_project.delete_project',
-                      )}
-                      body={t(
-                        'cloud:project_manager.add_project.confirm_delete',
-                      ).replace('{{PROJECT}}', project.name)}
-                      triggerButton={
-                        <Button
-                          className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                          variant="trans"
-                          size="square"
-                          startIcon={
-                            <img
-                              src={btnDeleteIcon}
-                              alt="Delete project"
-                              className="h-5 w-5"
-                            />
-                          }
-                        >
-                          {t(
-                            'cloud:project_manager.add_project.delete_project',
-                          )}
-                        </Button>
-                      }
-                      confirmButton={
-                        <Button
-                          isLoading={isLoading}
-                          type="button"
-                          size="md"
-                          className="rounded-md border bg-primary-400"
-                          onClick={() =>
-                            mutate({
-                              projectId: project.id,
-                            })
-                          }
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="h-5 w-5"
-                            />
-                          }
-                        />
-                      }
-                    />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      openDelete()
+                      setId(project.id)
+                      setName(project.name)
+                    }}>
+                    <img src={btnDeleteIcon} alt="Delete project" className="size-5" />
+                    {t(
+                      'cloud:project_manager.add_project.delete_project',
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu >
@@ -217,6 +192,24 @@ export function ListProjectItem({
           </div>
         )
       })}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t(
+            'cloud:project_manager.add_project.delete_project',
+          )}
+          body={t(
+            'cloud:project_manager.add_project.confirm_delete',
+          ).replace('{{PROJECT}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({
+            projectId: id,
+          })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </div>
   )
 }

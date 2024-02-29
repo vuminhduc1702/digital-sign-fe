@@ -16,10 +16,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { useDeleteOrg } from '../api/deleteOrg'
-import { useCopyId } from '~/utils/hooks'
+import { useCopyId, useDisclosure } from '~/utils/hooks'
 import clsx from 'clsx'
 import { cn } from '~/utils/misc'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 interface TreeViewProps {
   data: OrgMapType[]
@@ -59,6 +60,18 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
   //console.log('orgId', orgId)
+
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
+
+  useEffect(() => {
+    if (isSuccess) {
+      closeDelete()
+    }
+  }, [isSuccess])
 
   const handleClick = () => {
     // const newshowChildren = !showChildren
@@ -175,47 +188,10 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                   />
                   {t('table:copy_id')}
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <ConfirmationDialog
-                    isDone={isSuccess}
-                    icon="danger"
-                    title={t('cloud:org_manage.org_map.delete')}
-                    body={t(
-                      'cloud:org_manage.org_map.delete_org_confirm',
-                    ).replace('{{ORGNAME}}', newdata.name)}
-                    triggerButton={
-                      <Button
-                        className="w-full justify-start p-0 border-none shadow-none hover:text-primary-400"
-                        variant="trans"
-                        size="square"
-                        startIcon={
-                          <img
-                            src={btnDeleteIcon}
-                            alt="Delete organization"
-                            className="h-5 w-5"
-                          />
-                        }
-                      >
-                        {t('cloud:org_manage.org_map.delete')}
-                      </Button>
-                    }
-                    confirmButton={
-                      <Button
-                        isLoading={isLoading}
-                        type="button"
-                        size="md"
-                        className="bg-primary-400"
-                        onClick={() => mutate({ orgId: newdata.id })}
-                        startIcon={
-                          <img
-                            src={btnSubmitIcon}
-                            alt="Submit"
-                            className="h-5 w-5"
-                          />
-                        }
-                      />
-                    }
-                  />
+                <DropdownMenuItem
+                  onClick={openDelete}>
+                  <img src={btnDeleteIcon} alt="Delete organization" className="size-5" />
+                  {t('cloud:org_manage.org_map.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -236,6 +212,20 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
           )
         })
       }
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.org_map.delete')}
+          body={t(
+            'cloud:org_manage.org_map.delete_org_confirm',
+          ).replace('{{ORGNAME}}', newdata.name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ orgId: newdata.id })}
+          isLoading={isLoading}
+        />
+      ) : null}
     </ul >
   )
 }

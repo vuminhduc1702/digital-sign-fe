@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
@@ -20,6 +20,7 @@ import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function UserTableContextMenu({
   user_id,
@@ -47,6 +48,7 @@ function UserTableContextMenu({
   const { close, open, isOpen } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteUser()
+  const [type, setType] = useState('')
 
   const handleCopyId = useCopyId()
 
@@ -65,7 +67,10 @@ function UserTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={open}>
+            onClick={() => {
+              open()
+              setType('edit')
+            }}>
             <img src={btnEditIcon} alt="Edit user" className="h-5 w-5" />
             {t('cloud:org_manage.user_manage.table.edit')}
           </DropdownMenuItem>
@@ -78,43 +83,13 @@ function UserTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:org_manage.user_manage.table.delete_user_full')}
-              body={t(
-                'cloud:org_manage.user_manage.table.delete_user_confirm',
-              ).replace('{{USERNAME}}', name)}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 shadow-none border-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete user"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:org_manage.user_manage.table.delete_user')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ user_id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={() => {
+              setType('delete')
+              open()
+            }}>
+            <img src={btnDeleteIcon} alt="Delete user" className="size-5" />
+            {t('cloud:org_manage.user_manage.table.delete_user')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -131,6 +106,20 @@ function UserTableContextMenu({
           close={close}
           isOpen={isOpen}
           profile={profile}
+        />
+      ) : null}
+
+      {(isOpen && type === 'delete') ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.user_manage.table.delete_user_full')}
+          body={t(
+            'cloud:org_manage.user_manage.table.delete_user_confirm',
+          ).replace('{{USERNAME}}', name)}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutate({ user_id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

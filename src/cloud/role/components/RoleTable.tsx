@@ -21,6 +21,7 @@ import { type Role } from '../types'
 import { convertActionsENtoVN } from './RoleSidebar'
 import { UpdateRole } from './UpdateRole'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function RoleTableContextMenu({
   id,
@@ -35,6 +36,7 @@ function RoleTableContextMenu({
 }) {
   const { t } = useTranslation()
   const [selectedUpdateRole, setSelectedUpdateRole] = useState<Role>()
+  const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
 
@@ -59,6 +61,7 @@ function RoleTableContextMenu({
             onClick={() => {
               open()
               setSelectedUpdateRole(role)
+              setType('edit')
             }}>
             <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
             {t('cloud:role_manage.sidebar.edit')}
@@ -72,48 +75,17 @@ function RoleTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:role_manage.sidebar.delete_role')}
-              body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
-                '{{ROLENAME}}',
-                name,
-              )}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete role"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('cloud:role_manage.sidebar.delete_role')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ id: id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={() => {
+              setType('delete')
+              open()
+            }}>
+            <img src={btnDeleteIcon} alt="Delete role" className="size-5" />
+            {t('cloud:role_manage.sidebar.delete_role')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {selectedUpdateRole != null && isOpen ? (
+      {(selectedUpdateRole != null && isOpen && type === 'edit') ? (
         <UpdateRole
           project_id={project_id}
           close={close}
@@ -122,6 +94,21 @@ function RoleTableContextMenu({
           name={selectedUpdateRole.name}
           policy={selectedUpdateRole.policies}
           role_type={selectedUpdateRole.role_type}
+        />
+      ) : null}
+
+      {(isOpen && type === 'delete') ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:role_manage.sidebar.delete_role')}
+          body={t('cloud:role_manage.sidebar.delete_role_confirm').replace(
+            '{{ROLENAME}}',
+            name,
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutate({ id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

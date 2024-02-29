@@ -1,6 +1,6 @@
 import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { type PermissionEntity, type PermissionEntityTable } from '../types'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 type CustomerRoleTableProps = {
   data: CustomerRoleEntity[]
@@ -37,6 +38,7 @@ function CustomerTableContextMenu({
   customerId: string
 } & PermissionEntity) {
   const { t } = useTranslation()
+  const [type, setType] = useState('')
 
   const {
     close: closeEdit,
@@ -59,54 +61,26 @@ function CustomerTableContextMenu({
             />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="z-[9999]">
-          <DropdownMenuItem onClick={openEdit}>
-            <img
-              src={btnEditIcon}
-              alt="Edit customer role"
-              className="size-5"
-            />
+        <DropdownMenuContent className='z-[9999]'>
+          <DropdownMenuItem
+            onClick={() => {
+              setType('edit')
+              openEdit()
+            }}>
+            <img src={btnEditIcon} alt="Edit customer role" className="h-5 w-5" />
             {t('form:role.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('form:role.delete')}
-              body={`${t('cloud:dashboard.table.delete_confirm')}`}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start border-none p-0 shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete customer role"
-                      className="size-5"
-                    />
-                  }
-                >
-                  {t('form:role.delete')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ project_id, sub_tenant_id })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="size-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={() => {
+              setType('delete')
+              openEdit()
+            }}>
+            <img src={btnDeleteIcon} alt="Delete customer role" className="size-5" />
+            {t('form:tenant.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpenEdit ? (
+      {(isOpenEdit && type === 'edit') ? (
         <UpdateCustomerRole
           project_id={project_id}
           roleIdProps={roleIdProps}
@@ -114,6 +88,18 @@ function CustomerTableContextMenu({
           isOpenRole={isOpenEdit}
           customerId={sub_tenant_id}
           closeRole={closeEdit}
+        />
+      ) : null}
+
+      {(isOpenEdit && type === 'delete') ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('form:tenant.delete')}
+          body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
+          close={closeEdit}
+          isOpen={isOpenEdit}
+          handleSubmit={() => mutate({ project_id, sub_tenant_id })}
+          isLoading={isLoading}
         />
       ) : null}
     </>

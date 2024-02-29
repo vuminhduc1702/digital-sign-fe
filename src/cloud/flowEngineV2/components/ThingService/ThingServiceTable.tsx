@@ -20,6 +20,7 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { UpdateThingService } from './UpdateThingService'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function ThingServiceTableContextMenu({
   thingId,
@@ -36,6 +37,11 @@ function ThingServiceTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteThingService()
 
@@ -60,43 +66,10 @@ function ThingServiceTableContextMenu({
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:custom_protocol.service.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ConfirmationDialog
-              isDone={isSuccess}
-              icon="danger"
-              title={t('cloud:custom_protocol.service.delete')}
-              body={t(
-                'cloud:custom_protocol.service.delete_service_confirm',
-              ).replace('{{SERVICENAME}}', name)}
-              triggerButton={
-                <Button
-                  className="hover:text-primary-400 w-full justify-start p-0 border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img
-                      src={btnDeleteIcon}
-                      alt="Delete service"
-                      className="h-5 w-5"
-                    />
-                  }
-                >
-                  {t('cloud:custom_protocol.service.delete')}
-                </Button>
-              }
-              confirmButton={
-                <Button
-                  isLoading={isLoading}
-                  type="button"
-                  size="md"
-                  className="bg-primary-400"
-                  onClick={() => mutate({ thingId, name })}
-                  startIcon={
-                    <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
-                  }
-                />
-              }
-            />
+          <DropdownMenuItem
+            onClick={openDelete}>
+            <img src={btnDeleteIcon} alt="Delete service" className="size-5" />
+            {t('cloud:custom_protocol.service.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -107,6 +80,20 @@ function ThingServiceTableContextMenu({
           isOpen={isOpen}
           thingServiceDataProps={data}
           {...props}
+        />
+      ) : null}
+
+      {isOpenDelete ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:custom_protocol.service.delete')}
+          body={t(
+            'cloud:custom_protocol.service.delete_service_confirm',
+          ).replace('{{SERVICENAME}}', name)}
+          close={closeDelete}
+          isOpen={isOpenDelete}
+          handleSubmit={() => mutate({ thingId, name })}
+          isLoading={isLoading}
         />
       ) : null}
     </>
