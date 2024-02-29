@@ -197,8 +197,10 @@ export function UpdateWidget({
         time_period: widgetInfoMemo?.config?.chartsetting?.time_period || 0,
         interval: widgetInfoMemo?.config?.timewindow?.interval || 0,
         data_point: widgetInfoMemo?.config?.chartsetting?.data_point,
-        startDate: new Date(widgetInfoMemo?.config?.chartsetting?.start_date),
-        endDate: new Date(widgetInfoMemo?.config?.chartsetting?.end_date),
+        startDate: new Date(
+          widgetInfoMemo?.config?.chartsetting?.start_date ?? 0,
+        ),
+        endDate: new Date(widgetInfoMemo?.config?.chartsetting?.end_date ?? 0),
       },
     },
   })
@@ -332,15 +334,6 @@ export function UpdateWidget({
     }))
   }
 
-  // // remove field when devices change
-  // function removeField(deviceList: string[]) {
-  //   for (let i = fields.length - 1; i >= 0; i--) {
-  //     if (!deviceList.includes(fields[i].label)) {
-  //       remove(i)
-  //     }
-  //   }
-  // }
-
   useEffect(() => {
     const defaultOption =
       intervalOptionHandler(watch('widgetSetting.time_period')) || []
@@ -426,7 +419,10 @@ export function UpdateWidget({
 
             const tsCmd = {
               keys: values.attributeConfig.map(item => item.attribute_key),
-              interval: values.widgetSetting?.interval,
+              interval:
+                values.widgetSetting?.agg !== 'NONE'
+                  ? values.widgetSetting?.interval
+                  : undefined,
               offset: 0,
               agg: values.widgetSetting?.agg,
             }
@@ -449,7 +445,9 @@ export function UpdateWidget({
                         tsCmd: {
                           ...tsCmd,
                           startTs:
-                            Date.now() - values.widgetSetting?.time_period,
+                            values.widgetSetting?.dataType === 'REALTIME'
+                              ? Date.now() - values.widgetSetting?.time_period
+                              : undefined,
                         },
                         id: widgetId,
                       },
@@ -458,13 +456,22 @@ export function UpdateWidget({
 
             const historyCmd = {
               keys: values.attributeConfig.map(item => item.attribute_key),
-              startTs: Date.parse(
-                values.widgetSetting?.startDate?.toISOString(),
-              ),
-              endTs: Date.parse(
-                values.widgetSetting?.endDate?.toISOString() as string,
-              ),
-              interval: values.widgetSetting?.interval || 0,
+              startTs:
+                Date.parse(
+                  values.widgetSetting?.dataType === 'HISTORY'
+                    ? values.widgetSetting?.startDate?.toISOString()
+                    : '',
+                ) || undefined,
+              endTs:
+                Date.parse(
+                  values.widgetSetting?.dataType === 'HISTORY'
+                    ? values.widgetSetting?.endDate?.toISOString()
+                    : '',
+                ) || undefined,
+              interval:
+                values.widgetSetting?.agg !== 'NONE'
+                  ? values.widgetSetting?.interval
+                  : undefined,
               limit: 5000,
               offset: 0,
               agg: values.widgetSetting?.agg,
@@ -524,18 +531,31 @@ export function UpdateWidget({
                   ? {
                       aggregation: values.widgetSetting?.agg,
                       timewindow: {
-                        interval: values.widgetSetting?.interval,
+                        interval:
+                          values.widgetSetting?.agg !== 'NONE'
+                            ? values.widgetSetting?.interval
+                            : undefined,
                       },
                       chartsetting: {
                         start_date: new Date(
-                          values.widgetSetting?.startDate,
+                          values.widgetSetting?.dataType === 'HISTORY'
+                            ? values.widgetSetting?.startDate?.toISOString()
+                            : 0,
                         ).getTime(),
                         end_date: new Date(
-                          values.widgetSetting?.endDate,
+                          values.widgetSetting?.dataType === 'HISTORY'
+                            ? values.widgetSetting?.endDate?.toISOString()
+                            : 0,
                         ).getTime(),
                         data_type: values.widgetSetting?.dataType,
-                        data_point: values.widgetSetting?.data_point,
-                        time_period: values.widgetSetting?.time_period,
+                        data_point:
+                          values.widgetSetting?.agg === 'NONE'
+                            ? values.widgetSetting?.data_point
+                            : undefined,
+                        time_period:
+                          values.widgetSetting?.dataType === 'REALTIME'
+                            ? Date.now() - values.widgetSetting?.time_period
+                            : undefined,
                       },
                     }
                   : null,
@@ -559,7 +579,7 @@ export function UpdateWidget({
               <>
                 <TitleBar
                   title={t('cloud:dashboard.config_chart.show')}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+                  className="bg-secondary-700 w-full rounded-md pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                   <InputField
@@ -665,7 +685,7 @@ export function UpdateWidget({
                     title={t(
                       'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                     )}
-                    className="w-full rounded-md bg-secondary-700 pl-3"
+                    className="bg-secondary-700 w-full rounded-md pl-3"
                   />
                   {!(
                     widgetInfoMemo?.description === 'GAUGE' ||
@@ -915,7 +935,7 @@ export function UpdateWidget({
                   <>
                     <TitleBar
                       title={t('cloud:dashboard.config_chart.widget_config')}
-                      className="w-full rounded-md bg-secondary-700 pl-3"
+                      className="bg-secondary-700 w-full rounded-md pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                       <SelectField
@@ -959,6 +979,7 @@ export function UpdateWidget({
                         <InputField
                           type="number"
                           label={t('ws:filter.data_point')}
+                          // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                           error={formState?.errors?.widgetSetting?.data_point}
                           registration={register(
                             `widgetSetting.data_point` as const,
@@ -970,6 +991,7 @@ export function UpdateWidget({
                       ) : watch('widgetSetting.dataType') === 'HISTORY' ? (
                         <SelectField
                           label={t('ws:filter.group_interval')}
+                          // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                           error={formState?.errors?.widgetSetting?.interval}
                           registration={register(
                             `widgetSetting.interval` as const,
@@ -985,6 +1007,7 @@ export function UpdateWidget({
                       ) : (
                         <SelectField
                           label={t('ws:filter.time_period')}
+                          // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                           error={formState?.errors?.widgetSetting?.time_period}
                           registration={register(
                             `widgetSetting.time_period` as const,
@@ -1010,12 +1033,6 @@ export function UpdateWidget({
                               valueAsNumber: true,
                             },
                           )}
-                          // onChange={() => {
-                          //   setValue(
-                          //     'widgetSetting.interval',
-                          //     setDefaultInterval() || 0,
-                          //   )
-                          // }}
                         />
                       ) : null}
 
@@ -1027,6 +1044,7 @@ export function UpdateWidget({
                                 'cloud:dashboard.config_chart.startDate',
                               )}
                               error={
+                                // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                                 formState?.errors?.widgetSetting?.startDate
                               }
                             >
@@ -1045,11 +1063,11 @@ export function UpdateWidget({
                                           variant="trans"
                                           size="square"
                                           className={cn(
-                                            'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                                            'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
                                             !value && 'text-secondary-700',
                                           )}
                                         >
-                                          <LuCalendar className="mr-2 size-4" />
+                                          <LuCalendar className="size-4 mr-2" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1117,7 +1135,8 @@ export function UpdateWidget({
                                 getValues('widgetSetting.dataType') ===
                                 'REALTIME'
                                   ? ''
-                                  : formState?.errors?.widgetSetting?.endDate
+                                  : // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
+                                    formState?.errors?.widgetSetting?.endDate
                               }
                             >
                               <Controller
@@ -1143,7 +1162,7 @@ export function UpdateWidget({
                                             ) === 'REALTIME'
                                           }
                                         >
-                                          <LuCalendar className="mr-2 size-4" />
+                                          <LuCalendar className="size-4 mr-2" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1212,6 +1231,7 @@ export function UpdateWidget({
                       ) : (
                         <SelectField
                           label={t('ws:filter.group_interval')}
+                          // @ts-expect-error: https://stackoverflow.com/questions/74219465/typescript-react-hook-form-error-handling-with-zod-union-schema
                           error={formState?.errors?.widgetSetting?.interval}
                           registration={register(
                             `widgetSetting.interval` as const,
@@ -1248,7 +1268,7 @@ export function UpdateWidget({
           form="update-widget"
           type="submit"
           size="md"
-          className="rounded-md border bg-primary-400"
+          className="bg-primary-400 rounded-md border"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
