@@ -56,10 +56,17 @@ export function CreateGroup() {
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()
-  const { register, formState, control, handleSubmit, reset, getValues, setValue } =
-    useForm<CreateGroupDTO['data']>({
-      resolver: groupCreateSchema && zodResolver(groupCreateSchema),
-    })
+  const {
+    register,
+    formState,
+    control,
+    handleSubmit,
+    reset,
+    getValues,
+    setValue,
+  } = useForm<CreateGroupDTO['data']>({
+    resolver: groupCreateSchema && zodResolver(groupCreateSchema),
+  })
 
   return (
     <FormDrawer
@@ -96,7 +103,10 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
+              org_id:
+                values.org_id?.toString() !== no_org_val
+                  ? values.org_id?.toString()
+                  : '',
             },
           })
         })}
@@ -113,7 +123,7 @@ export function CreateGroup() {
             registration={register('entity_type')}
             options={entityTypeOptions}
           />
-          <FieldWrapper
+          {/* <FieldWrapper
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
           >
@@ -161,7 +171,14 @@ export function CreateGroup() {
                 )
               }}
             />
-          </FieldWrapper>
+          </FieldWrapper> */}
+          <ComplexTree
+            name="org_id"
+            label={t('cloud:org_manage.device_manage.add_device.parent')}
+            error={formState?.errors?.org_id}
+            control={control}
+            options={orgData?.organizations}
+          />
         </>
       </form>
     </FormDrawer>
