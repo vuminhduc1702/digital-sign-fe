@@ -4,7 +4,6 @@ import { Menu } from '@headlessui/react'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'

@@ -36,6 +36,11 @@ function ThingTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
   const [type, setType] = useState('')
 
   const { mutate, isLoading, isSuccess } = useDeleteThing()
@@ -54,27 +59,17 @@ function ThingTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              setType('edit')
-              open()
-            }}
-          >
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:custom_protocol.thing.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              open()
-            }}
-          >
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete thing" className="size-5" />
             {t('cloud:custom_protocol.thing.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen && type === 'edit' ? (
+      {isOpen ? (
         <UpdateThing
           thingId={id}
           name={name}
@@ -84,7 +79,7 @@ function ThingTableContextMenu({
         />
       ) : null}
 
-      {isOpen && type === 'delete' ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           title={t('cloud:custom_protocol.thing.delete')}
           body={t('cloud:custom_protocol.thing.delete_thing_confirm').replace(
@@ -92,8 +87,8 @@ function ThingTableContextMenu({
             name,
           )}
           icon="danger"
-          close={close}
-          isOpen={isOpen}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

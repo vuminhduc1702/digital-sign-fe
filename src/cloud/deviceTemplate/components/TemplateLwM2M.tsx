@@ -6,7 +6,6 @@ import { Menu } from '@headlessui/react'
 
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'

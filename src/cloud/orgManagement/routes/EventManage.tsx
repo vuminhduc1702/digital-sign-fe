@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
@@ -11,11 +11,14 @@ import { useGetEvents } from '../api/eventAPI'
 import { CreateEvent, EventTable } from '../components/Event'
 import { useDeleteMultipleEvents } from '../api/eventAPI/deleteMultipleEvents'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const { close, open, isOpen } = useDisclosure()
 
   const params = useParams()
   const orgId = params.orgId as string
@@ -35,6 +38,13 @@ export function EventManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleEvents,
   } = useDeleteMultipleEvents()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleEvents) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleEvents])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -75,43 +85,10 @@ export function EventManage() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleEvents}
-                icon="danger"
-                title={t('cloud:org_manage.event_manage.table.delete_event')}
-                body={t(
-                  'cloud:org_manage.event_manage.table.delete_multiple_event_confirm',
-                )}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleEvents(
-                        {
-                          data: { ids: rowSelectionKey },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateEvent />
             <SearchField
@@ -126,6 +103,24 @@ export function EventManage() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.event_manage.table.delete_event')}
+          body={t(
+            'cloud:org_manage.event_manage.table.delete_multiple_event_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleEvents(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </div>
   )
 }

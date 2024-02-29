@@ -7,7 +7,7 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { useTranslation } from 'react-i18next'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnOpenToggle from '~/assets/icons/btn-open-toggle.svg'

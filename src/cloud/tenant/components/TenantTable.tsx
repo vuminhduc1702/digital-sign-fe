@@ -6,7 +6,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
@@ -43,9 +43,13 @@ function CustomerTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteCustomer()
-  const [type, setType] = useState('')
 
   return (
     <>
@@ -62,26 +66,20 @@ function CustomerTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
-            onClick={() => {
-              setType('edit')
-              open()
-            }}
+            onClick={open}
           >
             <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('form:tenant.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              open()
-            }}
+            onClick={openDelete}
           >
             <img src={btnDeleteIcon} alt="Delete customer" className="size-5" />
             {t('form:tenant.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen && type === 'edit' ? (
+      {isOpen ? (
         <UpdateCustomer
           customerId={id}
           name={name}
@@ -93,13 +91,13 @@ function CustomerTableContextMenu({
         />
       ) : null}
 
-      {isOpen && type === 'delete' ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('form:tenant.delete')}
           body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
-          close={close}
-          isOpen={isOpen}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

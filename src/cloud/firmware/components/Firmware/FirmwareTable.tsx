@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'

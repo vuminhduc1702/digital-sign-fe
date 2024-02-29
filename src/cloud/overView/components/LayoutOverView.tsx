@@ -11,7 +11,7 @@ import {
   TimerIcon,
 } from '@radix-ui/react-icons'
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
@@ -23,7 +23,7 @@ import SmartTracking from '~/assets/images/SolutionMaketplace/SmartTracking.png'
 import { useGetDashboards, type DashboardRes } from '~/cloud/dashboard/api'
 import { useRestoreProject } from '~/cloud/project/api/restoreProject'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Link } from '~/components/Link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
 import { PATHS } from '~/routes/PATHS'
@@ -40,6 +40,8 @@ import smartFarmData from '../smartFarm.json'
 import smartHomeData from '../smartHome.json'
 import smartWaterData from '../smartWater.json'
 import { DashboardTable } from './DashboardTable'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -50,6 +52,9 @@ export function LayoutOverView() {
   const [lastView, setLastView] = useState<DashboardRes[] | null>()
   const [starred, setStarred] = useState<DashboardRes[] | null>()
   const [offset, setOffset] = useState(0)
+  const [backupData, setBackupData] = useState({})
+  const [bodyContent, setBodyContent] = useState<ReactElement>()
+  const { close, open, isOpen } = useDisclosure()
 
   const dashboardType = ['Last viewed', 'Starred']
 
@@ -191,6 +196,12 @@ export function LayoutOverView() {
     type: 'overView',
   })
 
+  useEffect(() => {
+    if (isSuccessProject) {
+      close()
+    }
+  }, [isSuccessProject])
+
   const { data: dashboardData, isPreviousData } = useGetDashboards({
     projectId,
   })
@@ -312,62 +323,35 @@ export function LayoutOverView() {
                         {item.content5 && <br />}
                         {item.content5}
                       </p>
-                      <ConfirmationDialog
-                        isDone={isSuccessProject}
-                        icon="danger"
-                        title={t('btn:setup')}
-                        body={
-                          <span>
-                            {t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            )}
-                            <p className="mb-2 mt-3">
-                              {item.content}
-                              {item.content2 && <br />}
-                              {item.content2}
-                              {item.content3 && <br />}
-                              {item.content3}
-                              {item.content4 && <br />}
-                              {item.content4}
-                              {item.content5 && <br />}
-                              {item.content5}
-                            </p>
-                          </span>
-                        }
-                        triggerButton={
-                          <Button
-                            type="button"
-                            size="square"
-                            className="bg-primary-400 border-none"
-                          >
-                            {t('btn:setup')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoadingProject}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() =>
-                              mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                },
-                              })
-                            }
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="size-5"
-                              />
-                            }
-                          />
-                        }
-                      />
+                      <Button
+                        type="button"
+                        size="square"
+                        onClick={() => {
+                          setBackupData(item.jsonData)
+                          setBodyContent(
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              )}
+                              <p className="mb-2 mt-3">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>)
+                          open()
+                        }}
+                        className="bg-primary-400 border-none"
+                      >
+                        {t('btn:setup')}
+                      </Button>
                     </div>
                   </div>
                 )
@@ -400,62 +384,35 @@ export function LayoutOverView() {
                         {item.content5 && <br />}
                         {item.content5}
                       </p>
-                      <ConfirmationDialog
-                        isDone={isSuccessProject}
-                        icon="danger"
-                        title={t('btn:setup')}
-                        body={
-                          <span>
-                            {t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            )}
-                            <p className="mb-2 mt-3">
-                              {item.content}
-                              {item.content2 && <br />}
-                              {item.content2}
-                              {item.content3 && <br />}
-                              {item.content3}
-                              {item.content4 && <br />}
-                              {item.content4}
-                              {item.content5 && <br />}
-                              {item.content5}
-                            </p>
-                          </span>
-                        }
-                        triggerButton={
-                          <Button
-                            type="button"
-                            size="square"
-                            className="bg-primary-400 border-none"
-                          >
-                            {t('btn:setup')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoadingProject}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() =>
-                              mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                },
-                              })
-                            }
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="size-5"
-                              />
-                            }
-                          />
-                        }
-                      />
+                      <Button
+                        type="button"
+                        size="square"
+                        onClick={() => {
+                          setBackupData(item.jsonData)
+                          setBodyContent(
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              )}
+                              <p className="mb-2 mt-3">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>)
+                          open()
+                        }}
+                        className="bg-primary-400 border-none"
+                      >
+                        {t('btn:setup')}
+                      </Button>
                     </div>
                   </div>
                 )
@@ -544,6 +501,22 @@ export function LayoutOverView() {
           </div>
         </div>
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('btn:setup')}
+          body={bodyContent}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateAsyncUploadProjectFile({
+            projectId,
+            backup: {
+              backup: backupData,
+            },
+          })}
+          isLoading={isLoadingProject}
+        />
+      ) : null}
     </>
   )
 }

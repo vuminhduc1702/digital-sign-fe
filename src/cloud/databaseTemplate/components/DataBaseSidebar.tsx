@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown } from '~/components/Dropdown'
 import { PATHS } from '~/routes/PATHS'
 import { useCopyId, useDisclosure } from '~/utils/hooks'

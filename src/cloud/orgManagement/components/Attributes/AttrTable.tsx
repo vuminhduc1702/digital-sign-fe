@@ -9,7 +9,7 @@ import {
 } from '~/cloud/orgManagement/api/attrAPI'
 import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Switch } from '~/components/Switch'
 import { BaseTable } from '~/components/Table'

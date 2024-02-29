@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
@@ -8,10 +8,12 @@ import { CreateRole } from './CreateRole'
 import { RoleTable } from './RoleTable'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleRoles } from '../api/deleteMultipleRoles'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export const convertActionsENtoVN = (enArr: string[]) => {
   return enArr?.map(item => {
@@ -36,6 +38,7 @@ export function RoleSidebar() {
   const projectId = storage.getProject()?.id
 
   const { data, isPreviousData } = useGetRoles({ projectId, offset })
+  const { close, open, isOpen } = useDisclosure()
 
   const ref = useRef(null)
   const {
@@ -43,6 +46,13 @@ export function RoleSidebar() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleRoles,
   } = useDeleteMultipleRoles()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleRoles) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleRoles])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -87,41 +97,10 @@ export function RoleSidebar() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleRoles}
-                icon="danger"
-                title={t('cloud:role_manage.sidebar.delete_role')}
-                body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleRoles(
-                        {
-                          data: { ids: rowSelectionKey },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateRole />
             <SearchField
@@ -141,6 +120,22 @@ export function RoleSidebar() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:role_manage.sidebar.delete_role')}
+          body={t('cloud:role_manage.sidebar.delete_multiple_roles')}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleRoles(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

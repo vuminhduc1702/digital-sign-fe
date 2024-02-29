@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -39,6 +39,11 @@ function RoleTableContextMenu({
   const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteRole()
   const handleCopyId = useCopyId()
@@ -61,7 +66,6 @@ function RoleTableContextMenu({
             onClick={() => {
               open()
               setSelectedUpdateRole(role)
-              setType('edit')
             }}>
             <img src={btnEditIcon} alt="Edit role" className="h-5 w-5" />
             {t('cloud:role_manage.sidebar.edit')}
@@ -76,16 +80,13 @@ function RoleTableContextMenu({
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              open()
-            }}>
+            onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete role" className="size-5" />
             {t('cloud:role_manage.sidebar.delete_role')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {(selectedUpdateRole != null && isOpen && type === 'edit') ? (
+      {(selectedUpdateRole != null && isOpen) ? (
         <UpdateRole
           project_id={project_id}
           close={close}
@@ -97,7 +98,7 @@ function RoleTableContextMenu({
         />
       ) : null}
 
-      {(isOpen && type === 'delete') ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:role_manage.sidebar.delete_role')}
@@ -105,8 +106,8 @@ function RoleTableContextMenu({
             '{{ROLENAME}}',
             name,
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ id })}
           isLoading={isLoading}
         />

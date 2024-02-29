@@ -1,25 +1,24 @@
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import {
-  CreateAttr,
   AttrTable,
+  CreateAttr,
 } from '~/cloud/orgManagement/components/Attributes'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import { API_URL } from '~/config'
 import { useOrgById } from '~/layout/OrgManagementLayout/api'
 import { lazyImport } from '~/utils/lazyImport'
-import { API_URL } from '~/config'
 
 import { type Attribute } from '~/types'
 
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { convertEpochToDate, convertType } from '~/utils/transformFunc'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
-import { Button } from '~/components/Button'
-import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { convertEpochToDate, convertType } from '~/utils/transformFunc'
+import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
@@ -33,6 +32,7 @@ export function OrgManage() {
 
   const [searchQuery, setSearchQuery] = useState('')
   const [data, setData] = useState<Attribute[]>([])
+  const { close, open, isOpen } = useDisclosure()
   const { data: orgByIdData } = useOrgById({ orgId })
 
   const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
@@ -43,6 +43,13 @@ export function OrgManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleAttrs,
   } = useDeleteMultipleAttrs()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleAttrs) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleAttrs])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -90,11 +97,10 @@ export function OrgManage() {
             <div className="flex gap-6 px-11 py-3 shadow-lg">
               <div className="flex flex-none items-center">
                 <img
-                  src={`${
-                    orgByIdData?.image
-                      ? `${API_URL}/file/${orgByIdData?.image}`
-                      : defaultOrgImage
-                  }`}
+                  src={`${orgByIdData?.image
+                    ? `${API_URL}/file/${orgByIdData?.image}`
+                    : defaultOrgImage
+                    }`}
                   onError={e => {
                     const target = e.target as HTMLImageElement
                     target.onerror = null
@@ -126,49 +132,10 @@ export function OrgManage() {
                 />
                 <div className="flex items-center gap-x-3">
                   {Object.keys(rowSelection).length > 0 && (
-                    <ConfirmationDialog
-                      isDone={isSuccessDeleteMultipleAttrs}
-                      icon="danger"
-                      title={t(
-                        'cloud:org_manage.org_manage.table.delete_attr_full',
-                      )}
-                      body={t(
-                        'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-                      )}
-                      triggerButton={
-                        <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                          <div>{t('btn:delete')}:</div>
-                          <div>{Object.keys(rowSelection).length}</div>
-                        </div>
-                      }
-                      confirmButton={
-                        <Button
-                          isLoading={isLoading}
-                          type="button"
-                          size="md"
-                          className="bg-primary-400"
-                          onClick={() =>
-                            mutateDeleteMultipleAttrs(
-                              {
-                                data: {
-                                  keys: attrKeys,
-                                  entity_type: 'ORGANIZATION',
-                                  entity_id: orgId,
-                                },
-                              },
-                              { onSuccess: () => setRowSelection({}) },
-                            )
-                          }
-                          startIcon={
-                            <img
-                              src={btnSubmitIcon}
-                              alt="Submit"
-                              className="size-5"
-                            />
-                          }
-                        />
-                      }
-                    />
+                    <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                      <div>{t('btn:delete')}:</div>
+                      <div>{Object.keys(rowSelection).length}</div>
+                    </div>
                   )}
                   <CreateAttr entityId={orgId} entityType="ORGANIZATION" />
                   <SearchField
@@ -189,6 +156,30 @@ export function OrgManage() {
       ) : (
         <OrgMap />
       )}
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t(
+            'cloud:org_manage.org_manage.table.delete_attr_full',
+          )}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'ORGANIZATION',
+                entity_id: orgId,
+              },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </>
   )
 }

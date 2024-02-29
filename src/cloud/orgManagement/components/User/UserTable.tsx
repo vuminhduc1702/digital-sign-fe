@@ -4,7 +4,7 @@ import { Menu } from '@headlessui/react'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -46,6 +46,11 @@ function UserTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteUser()
   const [type, setType] = useState('')
@@ -66,11 +71,7 @@ function UserTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('edit')
-            }}>
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit user" className="h-5 w-5" />
             {t('cloud:org_manage.user_manage.table.edit')}
           </DropdownMenuItem>
@@ -83,11 +84,7 @@ function UserTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              open()
-            }}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete user" className="size-5" />
             {t('cloud:org_manage.user_manage.table.delete_user')}
           </DropdownMenuItem>
@@ -109,15 +106,15 @@ function UserTableContextMenu({
         />
       ) : null}
 
-      {(isOpen && type === 'delete') ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.user_manage.table.delete_user_full')}
           body={t(
             'cloud:org_manage.user_manage.table.delete_user_confirm',
           ).replace('{{USERNAME}}', name)}
-          close={close}
-          isOpen={isOpen}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ user_id })}
           isLoading={isLoading}
         />

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'

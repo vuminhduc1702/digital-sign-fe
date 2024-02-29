@@ -12,7 +12,7 @@ import {
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Menu } from '@headlessui/react'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Button } from '~/components/Button/Button'
 import { useDisclosure } from '~/utils/hooks'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
