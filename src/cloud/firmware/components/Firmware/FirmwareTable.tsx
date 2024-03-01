@@ -54,7 +54,12 @@ function FireWareTableContextMenu({
     open: openDelete,
     isOpen: isOpenDelete,
   } = useDisclosure()
-  const [type, setType] = useState('')
+
+  const {
+    close: closeUpload,
+    open: openUpload,
+    isOpen: isOpenUpload,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteFirmWare()
 
@@ -72,21 +77,11 @@ function FireWareTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('create-firmware')
-            }}
-          >
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:firmware.add_firmware.edit_firmware')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('upload-firmware')
-            }}
-          >
+          <DropdownMenuItem onClick={openUpload}>
             <UploadIcon className="size-5" />
             {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
@@ -96,7 +91,7 @@ function FireWareTableContextMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen && type === 'create-firmware' ? (
+      {isOpen ? (
         <UpdateFirmWare
           firmwareId={id}
           name={name}
@@ -109,8 +104,8 @@ function FireWareTableContextMenu({
           template_id={template_id}
         />
       ) : null}
-      {isOpen && type === 'upload-firmware' ? (
-        <UploadFileFirmWare firmwareId={id} close={close} isOpen={isOpen} />
+      {isOpenUpload ? (
+        <UploadFileFirmWare firmwareId={id} close={closeUpload} isOpen={isOpenUpload} />
       ) : null}
 
       {isOpenDelete ? (

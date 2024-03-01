@@ -41,7 +41,6 @@ function RoleTableContextMenu({
 }) {
   const { t } = useTranslation()
   const [selectedUpdateRole, setSelectedUpdateRole] = useState<Role>()
-  const [type, setType] = useState('')
 
   const { close, open, isOpen } = useDisclosure()
   const {

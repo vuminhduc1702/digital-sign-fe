@@ -38,7 +38,6 @@ function CustomerTableContextMenu({
   customerId: string
 } & PermissionEntity) {
   const { t } = useTranslation()
-  const [type, setType] = useState('')
 
   const {
     close: closeEdit,

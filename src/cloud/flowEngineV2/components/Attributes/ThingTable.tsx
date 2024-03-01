@@ -41,7 +41,6 @@ function ThingTableContextMenu({
     open: openDelete,
     isOpen: isOpenDelete,
   } = useDisclosure()
-  const [type, setType] = useState('')
 
   const { mutate, isLoading, isSuccess } = useDeleteThing()
 
