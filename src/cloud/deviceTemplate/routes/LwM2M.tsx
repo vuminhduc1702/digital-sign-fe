@@ -64,7 +64,7 @@ export function LwM2M() {
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
-                <div className="flex items-center gap-x-3">
+                <div className="mr-[42px] flex items-center gap-x-3">
                   <SearchField
                     searchQuery={searchQueryData}
                     setSearchQuery={setSearchQueryData}
@@ -99,7 +99,7 @@ export function LwM2M() {
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
                 <ExportTable refComponent={ref} />
-                <div className="flex items-center gap-x-3">
+                <div className="mr-[42px] flex items-center gap-x-3">
                   <SearchField
                     searchQuery={searchQueryDataAttr}
                     setSearchQuery={setSearchQueryDataAttr}

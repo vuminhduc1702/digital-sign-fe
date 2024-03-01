@@ -45,6 +45,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { Link } from '~/components/Link'
 
 function DeviceTableContextMenu({
   id,
@@ -102,7 +103,7 @@ function DeviceTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -233,6 +234,10 @@ type DeviceTableProps = {
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const { t } = useTranslation()
 
+  const projectId = storage.getProject()?.id
+
+  const { orgId } = useParams()
+
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
   const colsVisibility = {
@@ -268,7 +273,21 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const nameDevice = info.row.original.name
+          const deviceId = info.row.original.id
+          return (
+            <Link
+              to={`${PATHS.DEVICE_MANAGE}/${projectId}/${
+                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
+              }`}
+            >
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {nameDevice}
+              </p>
+            </Link>
+          )
+        },
         footer: info => info.column.id,
       }),
 

@@ -86,9 +86,12 @@ export function ThingTemplate() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -114,17 +117,17 @@ export function ThingTemplate() {
         <ConfirmDialog
           icon="danger"
           title={t('cloud:custom_protocol.thing.delete')}
-          body={t(
-            'cloud:custom_protocol.thing.delete_multiple_thing_confirm',
-          )}
+          body={t('cloud:custom_protocol.thing.delete_multiple_thing_confirm')}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleThings(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleThings(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

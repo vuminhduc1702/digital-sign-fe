@@ -116,9 +116,12 @@ export function Default() {
                   aoo={aoo}
                   pdfHeader={pdfHeader}
                 />
-                <div className="flex items-center gap-x-3">
+                <div className="mr-[42px] flex items-center gap-x-3">
                   {Object.keys(rowSelection).length > 0 && (
-                    <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                    <div
+                      onClick={open}
+                      className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+                    >
                       <div>{t('btn:delete')}:</div>
                       <div>{Object.keys(rowSelection).length}</div>
                     </div>
@@ -144,24 +147,24 @@ export function Default() {
       {isOpen ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:org_manage.org_manage.table.delete_attr_full',
-          )}
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleAttrs(
-            {
-              data: {
-                keys: attrKeys,
-                entity_type: 'TEMPLATE',
-                entity_id: templateId,
+          handleSubmit={() =>
+            mutateDeleteMultipleAttrs(
+              {
+                data: {
+                  keys: attrKeys,
+                  entity_type: 'TEMPLATE',
+                  entity_id: templateId,
+                },
               },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

@@ -89,9 +89,12 @@ export function GroupDetail() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -120,16 +123,18 @@ export function GroupDetail() {
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleAttrs(
-            {
-              data: {
-                keys: attrKeys,
-                entity_type: 'GROUP',
-                entity_id: groupId,
+          handleSubmit={() =>
+            mutateDeleteMultipleAttrs(
+              {
+                data: {
+                  keys: attrKeys,
+                  entity_type: 'GROUP',
+                  entity_id: groupId,
+                },
               },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

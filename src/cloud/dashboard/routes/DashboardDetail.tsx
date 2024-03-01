@@ -76,6 +76,9 @@ import BD_05 from '~/assets/images/landingpage/BD_05.png'
 import BD_06 from '~/assets/images/landingpage/BD_06.png'
 import BD_07 from '~/assets/images/landingpage/BD_07.png'
 import BD_08 from '~/assets/images/landingpage/BD_08.png'
+import { InputField } from '~/components/Form'
+import { SearchIcon } from '~/components/SVGIcons'
+import { XMarkIcon } from '@heroicons/react/20/solid'
 
 export type WidgetAttrDeviceType = Array<{
   id: string
@@ -164,15 +167,17 @@ export function DashboardDetail() {
     return result
   }
 
-  const { data: deviceData } = useGetDevices({
-    orgIds: findOrgs(),
-    projectId,
-    config: {
-      suspense: false,
-      retry: 5,
-      retryDelay: 5000,
-    },
-  })
+  const { data: deviceData, isPreviousData: isPreviousDeviceData } =
+    useGetDevices({
+      orgIds: findOrgs(),
+      projectId,
+      config: {
+        suspense: false,
+        retry: 5,
+        retryDelay: 5000,
+      },
+    })
+  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -369,7 +374,6 @@ export function DashboardDetail() {
                 widgetInfo?.attribute_config?.map(item => {
                   item.deviceName = getDeviceInfo(item.label)?.name
                 })
-                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(

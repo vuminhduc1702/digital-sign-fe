@@ -32,6 +32,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { Link } from '~/components/Link'
 
 export type GroupType = {
   id: string
@@ -86,7 +87,7 @@ function GroupTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -191,7 +192,13 @@ type GroupTableProps = {
 
 export function GroupTable({ data, ...props }: GroupTableProps) {
   const { t } = useTranslation()
+
+  const projectId = storage.getProject()?.id
+
+  const { orgId } = useParams()
+
   const columnHelper = createColumnHelper<Group>()
+
   const columns = useMemo<ColumnDef<Group, any>[]>(
     () => [
       columnHelper.display({
@@ -204,7 +211,21 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.group_manage.table.name')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const nameGroup = info.row.original.name
+          const deviceId = info.row.original.id
+          return (
+            <Link
+              to={`${PATHS.GROUP_MANAGE}/${projectId}/${
+                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
+              }`}
+            >
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {nameGroup}
+              </p>
+            </Link>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('entity_type', {

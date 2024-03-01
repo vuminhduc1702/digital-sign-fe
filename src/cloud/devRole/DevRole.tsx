@@ -72,7 +72,7 @@ export default function DevRole() {
       <div className="relative mx-32 flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-end">
           {projectId && (
-            <div className="flex items-center gap-x-3">
+            <div className="mr-[42px] flex items-center gap-x-3">
               <CreateRole project_id={projectId} />
               <SearchField
                 searchQuery={searchQuery}
