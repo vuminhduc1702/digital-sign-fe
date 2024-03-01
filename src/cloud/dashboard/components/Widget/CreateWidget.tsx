@@ -633,7 +633,7 @@ export function CreateWidget({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -1152,7 +1152,7 @@ export function CreateWidget({
                             <img
                               src={btnDeleteIcon}
                               alt="Delete widget attribute"
-                              className="size-10"
+                              className="h-10 w-10"
                             />
                           }
                         />
@@ -1299,7 +1299,7 @@ export function CreateWidget({
                                               !value && 'text-secondary-700',
                                             )}
                                           >
-                                            <LuCalendar className="size-4 mr-2" />
+                                            <LuCalendar className="mr-2 h-4 w-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1396,7 +1396,7 @@ export function CreateWidget({
                                               ) === 'REALTIME'
                                             }
                                           >
-                                            <LuCalendar className="size-4 mr-2" />
+                                            <LuCalendar className="mr-2 h-4 w-4" />
                                             {value ? (
                                               <span>
                                                 {format(
@@ -1495,7 +1495,7 @@ export function CreateWidget({
               variant="secondary"
               onClick={close}
               startIcon={
-                <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+                <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
               }
               ref={cancelButtonRef}
             />
@@ -1505,7 +1505,7 @@ export function CreateWidget({
               variant="primary"
               size="md"
               startIcon={
-                <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
               // disabled={!formState.isValid}
             />

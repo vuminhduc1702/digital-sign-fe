@@ -177,7 +177,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
       resetData={resetData}
       triggerButton={
         <Button
-          className="size-9 rounded-md"
+          className="h-9 w-9 rounded-md"
           variant="trans"
           size="square"
           startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -192,7 +192,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -270,7 +270,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
                     setType(item)
                   }}
                   className={cn('px-4 py-2 text-slate-400', {
-                    'rounded-2xl bg-primary-400 text-white': type === item,
+                    'bg-primary-400 rounded-2xl text-white': type === item,
                   })}
                 >
                   {item}
@@ -286,7 +286,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
               className="rounded-md"
@@ -441,7 +441,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
                   <img
                     src={btnDeleteIcon}
                     alt="Delete policy"
-                    className="size-10"
+                    className="h-10 w-10"
                   />
                 }
               />

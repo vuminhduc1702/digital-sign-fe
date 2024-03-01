@@ -122,7 +122,7 @@ export function CreateOrg() {
           size="lg"
           isLoading={isLoadingCreateOrg || isLoadingUploadImage}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }

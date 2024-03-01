@@ -87,7 +87,7 @@ const AssignGroupRole = ({
                 onClick={closeAssignGroupRole}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -139,7 +139,7 @@ const AssignGroupRole = ({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>

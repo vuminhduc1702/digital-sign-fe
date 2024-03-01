@@ -64,7 +64,7 @@ export function UploadFileFirmWare({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function UploadFileFirmWare({
                   htmlFor="file"
                   className="flex cursor-pointer items-center justify-center gap-3 px-2 py-6"
                 >
-                  <UploadIcon className="size-6 text-primary-400" />
+                  <UploadIcon className="h-6 w-6 text-primary-400" />
                   <div>
                     {file ? (
                       <div className="flex cursor-pointer items-center justify-center gap-1">
@@ -107,7 +107,7 @@ export function UploadFileFirmWare({
                     }}
                   >
                     <span className="sr-only">Close panel</span>
-                    <HiOutlineXMark className="size-5" aria-hidden="true" />
+                    <HiOutlineXMark className="h-5 w-5" aria-hidden="true" />
                   </button>
                 )}
                 <InputField
@@ -135,7 +135,7 @@ export function UploadFileFirmWare({
             className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -149,7 +149,7 @@ export function UploadFileFirmWare({
               'cursor-not-allowed': !file,
             })}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>

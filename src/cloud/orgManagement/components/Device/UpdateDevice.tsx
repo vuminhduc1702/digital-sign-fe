@@ -167,7 +167,7 @@ export function UpdateDevice({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -177,7 +177,7 @@ export function UpdateDevice({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -309,7 +309,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -318,7 +318,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="rounded-sm bg-secondary-700 p-1 text-white"
+              className="bg-secondary-700 rounded-sm p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}

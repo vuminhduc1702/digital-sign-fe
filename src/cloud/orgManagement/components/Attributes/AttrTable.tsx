@@ -76,14 +76,14 @@ function AttrTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit attribute" className="size-5" />
+            <img src={btnEditIcon} alt="Edit attribute" className="h-5 w-5" />
             {t('cloud:org_manage.org_manage.add_attr.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
             <img
               src={btnDeleteIcon}
               alt="Delete attribute"
-              className="size-5"
+              className="h-5 w-5"
             />
             {t('cloud:org_manage.org_manage.table.delete_attr')}
           </DropdownMenuItem>

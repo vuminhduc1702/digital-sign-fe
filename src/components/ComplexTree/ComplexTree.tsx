@@ -255,7 +255,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   />
                   <div
                     onClick={find}
-                    className="size-[36px] flex cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="flex h-9 w-9 cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>

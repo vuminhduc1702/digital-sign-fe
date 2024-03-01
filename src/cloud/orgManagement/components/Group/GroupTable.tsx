@@ -105,31 +105,35 @@ function GroupTableContextMenu({
               )
             }
           >
-            <img src={btnDetailIcon} alt="View group" className="size-5" />
+            <img src={btnDetailIcon} alt="View group" className="h-5 w-5" />
             {t('table:view_detail')}
           </DropdownMenuItem>
           {props.entity_type === 'DEVICE' && (
             <DropdownMenuItem onClick={openAssignUser}>
-              <img src={btnEditIcon} alt="Assign user" className="size-5" />
+              <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
               {t('cloud:org_manage.user_manage.add_user.assign')}
             </DropdownMenuItem>
           )}
           {props.entity_type === 'USER' && (
             <DropdownMenuItem onClick={openAssignGroupRole}>
-              <img src={btnEditIcon} alt="Assign user" className="size-5" />
+              <img src={btnEditIcon} alt="Assign user" className="h-5 w-5" />
               {t('cloud:org_manage.user_manage.add_user.assign_role')}
             </DropdownMenuItem>
           )}
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit group" className="size-5" />
+            <img src={btnEditIcon} alt="Edit group" className="h-5 w-5" />
             {t('cloud:org_manage.group_manage.add_group.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleCopyId(id)}>
-            <img src={btnCopyIdIcon} alt="Copy group's ID" className="size-5" />
+            <img
+              src={btnCopyIdIcon}
+              alt="Copy group's ID"
+              className="h-5 w-5"
+            />
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete group" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete group" className="h-5 w-5" />
             {t('cloud:org_manage.group_manage.table.delete_group')}
           </DropdownMenuItem>
         </DropdownMenuContent>

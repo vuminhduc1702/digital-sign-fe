@@ -308,7 +308,7 @@ export function UpdateEvent({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -318,7 +318,7 @@ export function UpdateEvent({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={isLoading}
           />
@@ -395,7 +395,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -497,7 +497,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -536,7 +536,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="w-full rounded-md bg-secondary-700 pl-3"
+                  className="bg-secondary-700 w-full rounded-md pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -676,7 +676,7 @@ export function UpdateEvent({
                               <img
                                 src={btnDeleteIcon}
                                 alt="Delete condition"
-                                className="size-10"
+                                className="h-10 w-10"
                               />
                             }
                           />
@@ -692,7 +692,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               {actionType !== 'report' && (
                 <Button
@@ -924,7 +924,7 @@ export function UpdateEvent({
                           <img
                             src={btnDeleteIcon}
                             alt="Delete condition"
-                            className="size-10"
+                            className="h-10 w-10"
                           />
                         }
                       />

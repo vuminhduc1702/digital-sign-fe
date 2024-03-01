@@ -82,7 +82,7 @@ function AdapterTableContextMenu({
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete adapter" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete adapter" className="h-5 w-5" />
             {t('cloud:custom_protocol.adapter.table.delete_adapter')}
           </DropdownMenuItem>
         </DropdownMenuContent>

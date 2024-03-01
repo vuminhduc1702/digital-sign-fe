@@ -87,7 +87,7 @@ export default function CreateColumn({
           isLoading={isLoading}
           size="lg"
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -107,7 +107,7 @@ export default function CreateColumn({
       >
         <>
           <Button
-            className="size-9 rounded-md"
+            className="h-9 w-9 rounded-md"
             variant="trans"
             size="square"
             startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
@@ -139,7 +139,7 @@ export default function CreateColumn({
                   <img
                     src={btnDeleteIcon}
                     alt="Delete device template"
-                    className="size-8"
+                    className="h-8 w-8"
                   />
                 }
               />

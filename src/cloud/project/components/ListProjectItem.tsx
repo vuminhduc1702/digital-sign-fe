@@ -145,7 +145,7 @@ export function ListProjectItem({
                     <img
                       src={btnDeleteIcon}
                       alt="Delete project"
-                      className="size-5"
+                      className="h-5 w-5"
                     />
                     {t('cloud:project_manager.add_project.delete_project')}
                   </DropdownMenuItem>

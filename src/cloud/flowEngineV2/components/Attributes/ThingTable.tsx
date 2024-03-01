@@ -59,11 +59,11 @@ function ThingTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('cloud:custom_protocol.thing.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete thing" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete thing" className="h-5 w-5" />
             {t('cloud:custom_protocol.thing.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>

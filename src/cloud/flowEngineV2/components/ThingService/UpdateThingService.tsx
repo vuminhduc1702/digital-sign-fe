@@ -216,7 +216,7 @@ export function UpdateThingService({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -469,7 +469,7 @@ export function UpdateThingService({
                                     <img
                                       src={btnDeleteIcon}
                                       alt="Delete input"
-                                      className={cn('size-10')}
+                                      className={cn('h-10 w-10')}
                                     />
                                   }
                                 />
@@ -490,7 +490,7 @@ export function UpdateThingService({
                             <img
                               src={btnAddIcon}
                               alt="add-icon"
-                              className="size-5 cursor-pointer"
+                              className="h-5 w-5 cursor-pointer"
                             />
                             <label className="ml-2 cursor-pointer">
                               {t('cloud:custom_protocol.service.add_other')}
@@ -623,7 +623,7 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
                                     <DropdownMenuItem
@@ -694,7 +694,7 @@ export function UpdateThingService({
                                     onClick={() => setTypeInput('Run')}
                                     src={btnRunCode}
                                     alt="Submit"
-                                    className="size-5 cursor-pointer"
+                                    className="h-5 w-5 cursor-pointer"
                                   />
                                 </button>
                               </div>
@@ -727,7 +727,7 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
                                     <DropdownMenuItem
@@ -788,7 +788,7 @@ export function UpdateThingService({
                             onClick={handleFullScreen}
                             src={btnFullScreen}
                             alt="fullscreen-update-service"
-                            className="size-5 cursor-pointer"
+                            className="h-5 w-5 cursor-pointer"
                           />
                         </div>
                       </div>
@@ -811,7 +811,7 @@ export function UpdateThingService({
             className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -824,7 +824,7 @@ export function UpdateThingService({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>

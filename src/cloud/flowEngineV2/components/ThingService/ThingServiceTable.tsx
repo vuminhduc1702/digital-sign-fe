@@ -69,11 +69,11 @@ function ThingServiceTableContextMenu({
               open()
             }}
           >
-            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('cloud:custom_protocol.service.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete service" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete service" className="h-5 w-5" />
             {t('cloud:custom_protocol.service.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>

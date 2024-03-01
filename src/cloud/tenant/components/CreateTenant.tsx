@@ -154,7 +154,7 @@ export function CreateCustomer() {
                       !date && 'text-muted-foreground',
                     )}
                   >
-                    <LuCalendar className="size-4 mr-2" />
+                    <LuCalendar className="mr-2 h-4 w-4" />
                     {date ? (
                       date ? (
                         <>{format(date, 'dd/MM/y')}</>
@@ -169,7 +169,7 @@ export function CreateCustomer() {
                     {date && (
                       <HiOutlineXMark
                         onClick={() => setDate(undefined)}
-                        className="size-4 absolute right-3 top-2.5 "
+                        className="absolute right-3 top-2.5 h-4 w-4 "
                       />
                     )}
                   </Button>
@@ -294,7 +294,7 @@ export function CreateCustomer() {
           size="md"
           className="bg-primary-400"
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }

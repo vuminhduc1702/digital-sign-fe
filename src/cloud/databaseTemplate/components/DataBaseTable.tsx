@@ -71,7 +71,11 @@ function DataBaseTableContextMenu({
             {t('cloud:db_template.add_db.update_row')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete DataBase" className="size-5" />
+            <img
+              src={btnDeleteIcon}
+              alt="Delete DataBase"
+              className="h-5 w-5"
+            />
             {t('cloud:db_template.add_db.delete_row')}
           </DropdownMenuItem>
         </DropdownMenuContent>

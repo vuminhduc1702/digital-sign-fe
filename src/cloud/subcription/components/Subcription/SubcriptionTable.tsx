@@ -44,7 +44,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit DataBase" className="size-5" />
+            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
             {t('billing:subcription.title')}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -144,7 +144,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -188,7 +188,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -284,7 +284,7 @@ export function SubcriptionTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>

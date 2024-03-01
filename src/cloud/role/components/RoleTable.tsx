@@ -80,7 +80,7 @@ function RoleTableContextMenu({
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete role" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete role" className="h-5 w-5" />
             {t('cloud:role_manage.sidebar.delete_role')}
           </DropdownMenuItem>
         </DropdownMenuContent>

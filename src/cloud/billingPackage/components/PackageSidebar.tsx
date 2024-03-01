@@ -34,7 +34,7 @@ export function PackageSidebar() {
 
   return (
     <>
-      <div className="flex h-[60px] items-center gap-3 rounded-md bg-secondary-400 px-4 py-3">
+      <div className="bg-secondary-400 flex h-[60px] items-center gap-3 rounded-md px-4 py-3">
         <div className="flex gap-3">
           <img
             src={listIcon}
@@ -51,11 +51,11 @@ export function PackageSidebar() {
           />
         </div>
       </div>
-      <div className="h-[80vh] grow overflow-y-auto bg-secondary-400 p-5">
+      <div className="bg-secondary-400 h-[80vh] grow overflow-y-auto p-5">
         {planFlattenData?.length > 0 ? (
           <div className="space-y-3">
             {planFlattenData?.map((plan: PlanFilter) => (
-              <div className="size-full cursor-pointer" key={plan.id}>
+              <div className="h-full w-full cursor-pointer" key={plan.id}>
                 <div
                   className={clsx(
                     'flex w-full items-center rounded-md border',
@@ -68,7 +68,7 @@ export function PackageSidebar() {
                     navigate(`${PATHS.BILLING_PACKAGE}/${projectId}/${plan.id}`)
                   }
                 >
-                  <div className="icon-container ml-2 flex size-10 items-center justify-center rounded-md bg-gray-200">
+                  <div className="icon-container ml-2 flex h-10 w-10 items-center justify-center rounded-md bg-gray-200">
                     <img
                       src={dollarIcon}
                       alt="full_screen"
