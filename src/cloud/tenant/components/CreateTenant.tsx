@@ -74,7 +74,7 @@ export function CreateCustomer() {
 
   const [provinceCode, setProvinceCode] = useState('')
   const [districtCode, setDistrictCode] = useState('')
-  const [date, setDate] = useState<Date | null>(new Date())
+  const [date, setDate] = useState<Date | undefined>(new Date())
 
   const { data: provinceList } = useAreaList({
     parentCode: '',
@@ -154,7 +154,7 @@ export function CreateCustomer() {
                       !date && 'text-muted-foreground',
                     )}
                   >
-                    <LuCalendar className="mr-2 size-4" />
+                    <LuCalendar className="size-4 mr-2" />
                     {date ? (
                       date ? (
                         <>{format(date, 'dd/MM/y')}</>
@@ -168,8 +168,8 @@ export function CreateCustomer() {
                     )}
                     {date && (
                       <HiOutlineXMark
-                        onClick={() => setDate(null)}
-                        className="absolute right-3 top-2.5 size-4 "
+                        onClick={() => setDate(undefined)}
+                        className="size-4 absolute right-3 top-2.5 "
                       />
                     )}
                   </Button>
@@ -200,26 +200,23 @@ export function CreateCustomer() {
               <SelectField
                 error={formState.errors['province']}
                 registration={register('province')}
-                options={
-                  provinceList || [
-                    { value: '', label: t('form:province_city') },
-                  ]
-                }
+                options={provinceList}
+                placeholder={t('form:province_city')}
                 classchild="w-full"
                 onChange={e => setProvinceCode(e.target.value)}
               />
               <SelectField
                 error={formState.errors['district']}
                 registration={register('district')}
-                options={
-                  districtList || [{ value: '', label: t('form:district') }]
-                }
+                options={districtList}
+                placeholder={t('form:district')}
                 onChange={e => setDistrictCode(e.target.value)}
               />
               <SelectField
                 error={formState.errors['ward']}
                 registration={register('ward')}
-                options={wardList || [{ value: '', label: t('form:village') }]}
+                options={wardList}
+                placeholder={t('form:village')}
               />
 
               <div className="text-end">{t('form:detail_address')}</div>

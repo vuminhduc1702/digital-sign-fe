@@ -109,8 +109,8 @@ export function UpdateCustomer({
             })}
           >
             <div className="grid grid-cols-6 gap-4">
-              <div className="self-center text-right">ID</div>
-              <InputField registration={register('customerId')} disabled />
+              <div className="self-center text-right">Name</div>
+              <InputField registration={register('name')} disabled />
               <div className="col-start-4 self-center text-right">Email</div>
               <InputField
                 error={formState.errors['email']}
