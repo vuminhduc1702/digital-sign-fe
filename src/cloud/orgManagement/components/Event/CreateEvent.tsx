@@ -150,7 +150,7 @@ export const eventTypeOptions = [
   },
 ] as const
 
-const eventConditionSchema = z.array(
+export const eventConditionSchema = z.array(
   z.object({
     device_id: z.string({
       required_error: i18n.t(
