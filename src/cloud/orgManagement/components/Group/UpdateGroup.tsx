@@ -1,19 +1,13 @@
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useEffect } from 'react'
 
 import { Button } from '~/components/Button'
-import {
-  FieldWrapper,
-  InputField,
-  SelectDropdown,
-  SelectField,
-} from '~/components/Form'
+import { InputField, SelectField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { useUpdateGroup, type UpdateGroupDTO } from '../../api/groupAPI'
-import { cn, flattenData } from '~/utils/misc'
 import { useUpdateOrgForGroup } from '../../api/groupAPI/updateOrgForGroup'
 import { entityTypeList } from './CreateGroup'
 import { useGetOrgs } from '~/layout/MainLayout/api'
@@ -24,7 +18,6 @@ import { type EntityType } from '../../api/attrAPI'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import storage from '~/utils/storage'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
@@ -52,17 +45,8 @@ export function UpdateGroup({
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
+  const { data: orgData } = useGetOrgs({ projectId })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
   const { mutate: mutateUpdateOrgForGroup } = useUpdateOrgForGroup()

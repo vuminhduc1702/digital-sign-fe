@@ -216,19 +216,8 @@ export function UpdateWidget({
     config: {
       suspense: false,
     },
+    level: 1,
   })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData].map(
-    org => ({
-      label: org?.name,
-      value: org?.id,
-    }),
-  )
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
