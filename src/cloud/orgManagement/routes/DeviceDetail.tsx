@@ -5,13 +5,9 @@ import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { type DeviceAttrLog } from '../api/attrAPI'
-import {
-  AttrTable,
-  CreateAttr
-} from '../components/Attributes'
+import { AttrTable, CreateAttr } from '../components/Attributes'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { DeviceBreadcrumbs } from '../components/Device'
-
 
 import { Button } from '~/components/Button'
 
@@ -171,7 +167,10 @@ export function DeviceDetail() {
               />
               <div className="flex items-center gap-x-3">
                 {Object.keys(rowSelection).length > 0 && (
-                  <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                  <div
+                    onClick={open}
+                    className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+                  >
                     <div>{t('btn:delete')}:</div>
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
@@ -214,7 +213,10 @@ export function DeviceDetail() {
             />
           </div>
         </TabsContent>
-        <TabsContent value="MQTT_history_info_list" className="mt-2 flex grow flex-col">
+        <TabsContent
+          value="MQTT_history_info_list"
+          className="mt-2 flex grow flex-col"
+        >
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <ExportTable refComponent={ref} />
@@ -227,29 +229,30 @@ export function DeviceDetail() {
               entityId={deviceId}
               entityType="DEVICE"
             />
-          </div></TabsContent>
+          </div>
+        </TabsContent>
       </Tabs>
       {isOpen ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:org_manage.org_manage.table.delete_attr_full',
-          )}
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleAttrs(
-            {
-              data: {
-                keys: attrKeys,
-                entity_type: 'DEVICE',
-                entity_id: deviceId,
+          handleSubmit={() =>
+            mutateDeleteMultipleAttrs(
+              {
+                data: {
+                  keys: attrKeys,
+                  entity_type: 'DEVICE',
+                  entity_id: deviceId,
+                },
               },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

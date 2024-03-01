@@ -87,13 +87,13 @@ export function SectionProduct() {
             {t('landingpage:section_product.iot')}
           </p>
           <div className="flex justify-center">
-            <h3 className="px-[50px] text-center font-semibold leading-[43px] xs2:w-[360px] xs2:text-[28px] xs:w-[400px] xl:w-[588px] xl:text-[35px]">
+            <h3 className="xs2:w-[360px] xs2:text-[28px] xs:w-[400px] px-[50px] text-center font-semibold leading-[43px] xl:w-[588px] xl:text-[35px]">
               {t('landingpage:section_product.variety')}
             </h3>
           </div>
         </div>
         <div className="flex w-full justify-center ">
-          <div className="pt-[50px] xs2:w-[270px] xs:w-[267px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
+          <div className="xs2:w-[270px] xs:w-[267px] pt-[50px] sm:w-[270px] md:w-[570px] lg:w-[870px] xl:w-[1200px]">
             <Carousel
               opts={{
                 align: 'start',
@@ -130,7 +130,6 @@ export function SectionProduct() {
                         </a>
                       </div>
                     </div>
-                    <div></div>
                   </CarouselItem>
                 ))}
               </CarouselContent>

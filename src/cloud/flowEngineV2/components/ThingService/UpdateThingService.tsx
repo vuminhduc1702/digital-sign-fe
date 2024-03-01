@@ -826,7 +826,7 @@ export function UpdateThingService({
             startIcon={
               <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
-          ></Button>
+          />
         </div>
       </div>
     </Dialog>

@@ -226,7 +226,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   variant="trans"
                   size="square"
                   className={cn(
-                    'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
                     !value && 'text-secondary-700',
                   )}
                 >
@@ -255,12 +255,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   />
                   <div
                     onClick={find}
-                    className="flex size-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="size-[36px] flex cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>
                 </div>
-                <div className="mt-1 text-primary-400">{findOrgMsg}</div>
+                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
                 <ControlledTreeEnvironment
                   {...field}
                   viewState={{
@@ -296,11 +296,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   canSearchByStartingTyping={true}
                   {...props}
                 >
-                  <Tree
-                    treeId={'complex-tree'}
-                    rootItem={'root'}
-                    ref={tree}
-                  ></Tree>
+                  <Tree treeId={'complex-tree'} rootItem={'root'} ref={tree} />
                 </ControlledTreeEnvironment>
               </PopoverContent>
             </Popover>
