@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
@@ -8,16 +8,18 @@ import { useGetAdapters } from '../api/adapter'
 import { AdapterTable, CreateAdapter } from '../components'
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import { useDeleteMultipleAdapters } from '../api/adapter/deleteMultipleAdapter'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function CustomProtocolManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
+  const { close, open, isOpen } = useDisclosure()
 
   const projectId = storage.getProject()?.id
   const {
@@ -35,6 +37,13 @@ export function CustomProtocolManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleAdapters,
   } = useDeleteMultipleAdapters()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleAdapters) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleAdapters])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -52,23 +61,23 @@ export function CustomProtocolManage() {
   const aoo: Array<{ [key: string]: string }> | undefined =
     adapterData?.adapters
       ? adapterData?.adapters?.reduce((acc, curr, index) => {
-          if (rowSelectionKey.includes(curr.id)) {
-            const temp = {
-              [t('table:no')]: (index + 1).toString(),
-              [t('cloud:dashboard.table.name')]: curr.name,
-              [t('cloud:custom_protocol.adapter.table.protocol')]:
-                curr.protocol,
-              [t('cloud:custom_protocol.adapter.table.thing_id')]:
-                curr.thing_id,
-              [t('cloud:custom_protocol.adapter.table.handle_service')]:
-                curr.handle_service,
-              [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
-              [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
-            }
-            acc.push(temp)
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:dashboard.table.name')]: curr.name,
+            [t('cloud:custom_protocol.adapter.table.protocol')]:
+              curr.protocol,
+            [t('cloud:custom_protocol.adapter.table.thing_id')]:
+              curr.thing_id,
+            [t('cloud:custom_protocol.adapter.table.handle_service')]:
+              curr.handle_service,
+            [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
+            [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
           }
-          return acc
-        }, [] as Array<{ [key: string]: string }>)
+          acc.push(temp)
+        }
+        return acc
+      }, [] as Array<{ [key: string]: string }>)
       : []
 
   return (
@@ -84,43 +93,10 @@ export function CustomProtocolManage() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleAdapters}
-                icon="danger"
-                title={t('cloud:dashboard.table.delete_dashboard_full')}
-                body={t(
-                  'cloud:dashboard.table.delete_multiple_dashboard_confirm',
-                )}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleAdapters(
-                        {
-                          data: { ids: rowSelectionKey },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateAdapter />
             <SearchField
@@ -139,6 +115,24 @@ export function CustomProtocolManage() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:dashboard.table.delete_dashboard_full')}
+          body={t(
+            'cloud:dashboard.table.delete_multiple_dashboard_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleAdapters(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </ContentLayout>
   )
 }

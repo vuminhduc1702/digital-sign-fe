@@ -4,7 +4,7 @@ import { Menu } from '@headlessui/react'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -19,7 +19,12 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function UserTableContextMenu({
@@ -46,6 +51,11 @@ function UserTableContextMenu({
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteUser()
   const [type, setType] = useState('')
@@ -56,7 +66,7 @@ function UserTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -66,16 +76,11 @@ function UserTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('edit')
-            }}>
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit user" className="h-5 w-5" />
             {t('cloud:org_manage.user_manage.table.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => handleCopyId(user_id)}>
+          <DropdownMenuItem onClick={() => handleCopyId(user_id)}>
             <img
               src={btnCopyIdIcon}
               alt="Copy adapter's ID"
@@ -83,11 +88,7 @@ function UserTableContextMenu({
             />
             {t('table:copy_id')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              open()
-            }}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete user" className="size-5" />
             {t('cloud:org_manage.user_manage.table.delete_user')}
           </DropdownMenuItem>
@@ -109,15 +110,15 @@ function UserTableContextMenu({
         />
       ) : null}
 
-      {(isOpen && type === 'delete') ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.user_manage.table.delete_user_full')}
           body={t(
             'cloud:org_manage.user_manage.table.delete_user_confirm',
           ).replace('{{USERNAME}}', name)}
-          close={close}
-          isOpen={isOpen}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ user_id })}
           isLoading={isLoading}
         />

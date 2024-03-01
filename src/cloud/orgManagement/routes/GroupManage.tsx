@@ -1,9 +1,9 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
 import storage from '~/utils/storage'
@@ -12,6 +12,8 @@ import { useGetGroups } from '../api/groupAPI'
 import { useDeleteMultipleGroup } from '../api/groupAPI/deleteMultipleGroups'
 import { CreateGroup, GroupTable } from '../components/Group'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function GroupManage() {
   const { t } = useTranslation()
@@ -19,6 +21,7 @@ export function GroupManage() {
   const [offset, setOffset] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
   const { orgId } = useParams()
+  const { close, open, isOpen } = useDisclosure()
   const projectId = storage.getProject()?.id
   const { data: groupData, isPreviousData } = useGetGroups({
     orgId,
@@ -43,6 +46,12 @@ export function GroupManage() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleGroups,
   } = useDeleteMultipleGroup()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleGroups) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleGroups])
 
   const rowSelectionKey = Object.keys(rowSelection)
 
@@ -76,43 +85,10 @@ export function GroupManage() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <ConfirmationDialog
-                isDone={isSuccessDeleteMultipleGroups}
-                icon="danger"
-                title={t('cloud:org_manage.group_manage.table.delete_group')}
-                body={t(
-                  'cloud:org_manage.group_manage.table.delete_multiple_group_confirm',
-                )}
-                triggerButton={
-                  <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                }
-                confirmButton={
-                  <Button
-                    isLoading={isLoading}
-                    type="button"
-                    size="md"
-                    className="bg-primary-400"
-                    onClick={() =>
-                      mutateDeleteMultipleGroups(
-                        {
-                          data: { ids: rowSelectionKey },
-                        },
-                        { onSuccess: () => setRowSelection({}) },
-                      )
-                    }
-                    startIcon={
-                      <img
-                        src={btnSubmitIcon}
-                        alt="Submit"
-                        className="size-5"
-                      />
-                    }
-                  />
-                }
-              />
+              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                <div>{t('btn:delete')}:</div>
+                <div>{Object.keys(rowSelection).length}</div>
+              </div>
             )}
             <CreateGroup />
             <SearchField
@@ -131,6 +107,24 @@ export function GroupManage() {
           setRowSelection={setRowSelection}
         />
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('cloud:org_manage.group_manage.table.delete_group')}
+          body={t(
+            'cloud:org_manage.group_manage.table.delete_multiple_group_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleGroups(
+            {
+              data: { ids: rowSelectionKey },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </div>
   )
 }

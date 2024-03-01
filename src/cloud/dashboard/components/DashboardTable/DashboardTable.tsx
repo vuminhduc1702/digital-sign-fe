@@ -3,7 +3,6 @@ import { useDisclosure } from '~/utils/hooks'
 import { useDeleteDashboard } from '../../api/deleteDashboard'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Menu } from '@headlessui/react'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
@@ -17,7 +16,12 @@ import { UpdateDashboard } from './UpdateDashboard'
 import { Link } from '~/components/Link'
 import { PATHS } from '~/routes/PATHS'
 import { type DashboardRes } from '../../api'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DashboardTableContextMenu({
@@ -45,7 +49,7 @@ function DashboardTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -58,13 +62,17 @@ function DashboardTableContextMenu({
           <DropdownMenuItem
             onClick={() => {
               open()
-            }}>
+            }}
+          >
             <img src={btnEditIcon} alt="Edit Dashboard" className="size-5" />
             {t('cloud:dashboard.add_dashboard.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete Dashboard" className="size-5" />
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete Dashboard"
+              className="size-5"
+            />
             {t('cloud:dashboard.table.delete_dashboard')}
           </DropdownMenuItem>
         </DropdownMenuContent>

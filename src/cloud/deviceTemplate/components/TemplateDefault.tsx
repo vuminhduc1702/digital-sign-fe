@@ -6,7 +6,6 @@ import { Menu } from '@headlessui/react'
 
 import { Button } from '~/components/Button'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplate from './CreateTemplate'
@@ -22,7 +21,12 @@ import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnCopyIdIcon from '~/assets/icons/btn-copy_id.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function TemplateDefault() {
@@ -70,13 +74,13 @@ export function TemplateDefault() {
 
   return (
     <>
-      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
+      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
         <CreateTemplate />
         <ComboBoxSelectTemplate
           setFilteredComboboxData={setFilteredComboboxData}
         />
       </div>
-      <div className="h-[70vh] grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="bg-secondary-500 h-[70vh] grow overflow-y-auto p-3">
         {filteredComboboxData !== null && filteredComboboxData?.length > 0 ? (
           <div className="space-y-3">
             {filteredComboboxData?.map((template: Template) => (
@@ -99,11 +103,15 @@ export function TemplateDefault() {
                     {template?.name}
                   </p>
                 </Button>
-                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
+                <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
                   <DropdownMenu>
                     <DropdownMenuTrigger>
-                      <div className="h-10 w-6 flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                        <BtnContextMenuIcon height={20} width={3} viewBox="0 0 3 20" />
+                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <BtnContextMenuIcon
+                          height={20}
+                          width={3}
+                          viewBox="0 0 3 20"
+                        />
                       </div>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -111,7 +119,8 @@ export function TemplateDefault() {
                         onClick={() => {
                           open()
                           setSelectedUpdateTemplate(template)
-                        }}>
+                        }}
+                      >
                         <img
                           src={btnEditIcon}
                           alt="Edit template"
@@ -120,7 +129,8 @@ export function TemplateDefault() {
                         {t('cloud:device_template.sidebar.edit')}
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => handleCopyId(template.id)}>
+                        onClick={() => handleCopyId(template.id)}
+                      >
                         <img
                           src={btnCopyIdIcon}
                           alt="Copy template's ID"
@@ -133,11 +143,14 @@ export function TemplateDefault() {
                           openDelete()
                           setId(template.id)
                           setName(template.name)
-                        }}>
-                        <img src={btnDeleteIcon} alt="Delete template" className="size-5" />
-                        {t(
-                          'cloud:device_template.sidebar.delete_template',
-                        )}
+                        }}
+                      >
+                        <img
+                          src={btnDeleteIcon}
+                          alt="Delete template"
+                          className="size-5"
+                        />
+                        {t('cloud:device_template.sidebar.delete_template')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -162,14 +175,12 @@ export function TemplateDefault() {
       {isOpenDelete && id ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:device_template.sidebar.delete_template_full',
-          )}
+          title={t('cloud:device_template.sidebar.delete_template_full')}
           body={
-            t(
-              'cloud:device_template.sidebar.delete_template_confirm',
-            ).replace('{{TEMPLATENAME}}', name) ??
-            'Confirm delete?'
+            t('cloud:device_template.sidebar.delete_template_confirm').replace(
+              '{{TEMPLATENAME}}',
+              name,
+            ) ?? 'Confirm delete?'
           }
           close={closeDelete}
           isOpen={isOpenDelete}

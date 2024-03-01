@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
@@ -14,7 +14,7 @@ import { DeviceBreadcrumbs } from '../components/Device'
 
 
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
 import { flattenData } from '~/utils/misc'
@@ -25,6 +25,8 @@ import { useAttrLog } from '../api/attrAPI/getAttrLog'
 import { MQTTMessageLogTable } from '../components/Attributes/MQTTMessageLogTable'
 import { useMQTTLog } from '../api/attrAPI/getMQTTLog'
 import { SearchField } from '~/components/Input'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function DeviceDetail() {
   const { t } = useTranslation()
@@ -37,6 +39,7 @@ export function DeviceDetail() {
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
+  const { close, open, isOpen } = useDisclosure()
 
   const {
     data: attrsData,
@@ -80,6 +83,13 @@ export function DeviceDetail() {
     isLoading,
     isSuccess: isSuccessDeleteMultipleAttrs,
   } = useDeleteMultipleAttrs()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleAttrs) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleAttrs])
+
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
     () => [
@@ -161,49 +171,10 @@ export function DeviceDetail() {
               />
               <div className="flex items-center gap-x-3">
                 {Object.keys(rowSelection).length > 0 && (
-                  <ConfirmationDialog
-                    isDone={isSuccessDeleteMultipleAttrs}
-                    icon="danger"
-                    title={t(
-                      'cloud:org_manage.org_manage.table.delete_attr_full',
-                    )}
-                    body={t(
-                      'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
-                    )}
-                    triggerButton={
-                      <div className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
-                        <div>Xoá:</div>
-                        <div>{Object.keys(rowSelection).length}</div>
-                      </div>
-                    }
-                    confirmButton={
-                      <Button
-                        isLoading={isLoading}
-                        type="button"
-                        size="md"
-                        className="bg-primary-400"
-                        onClick={() =>
-                          mutateDeleteMultipleAttrs(
-                            {
-                              data: {
-                                keys: attrKeys,
-                                entity_type: 'DEVICE',
-                                entity_id: deviceId,
-                              },
-                            },
-                            { onSuccess: () => setRowSelection({}) },
-                          )
-                        }
-                        startIcon={
-                          <img
-                            src={btnSubmitIcon}
-                            alt="Submit"
-                            className="h-5 w-5"
-                          />
-                        }
-                      />
-                    }
-                  />
+                  <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                    <div>{t('btn:delete')}:</div>
+                    <div>{Object.keys(rowSelection).length}</div>
+                  </div>
                 )}
                 <CreateAttr entityId={deviceId} entityType="DEVICE" />
                 <SearchField
@@ -258,6 +229,30 @@ export function DeviceDetail() {
             />
           </div></TabsContent>
       </Tabs>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t(
+            'cloud:org_manage.org_manage.table.delete_attr_full',
+          )}
+          body={t(
+            'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
+          )}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() => mutateDeleteMultipleAttrs(
+            {
+              data: {
+                keys: attrKeys,
+                entity_type: 'DEVICE',
+                entity_id: deviceId,
+              },
+            },
+            { onSuccess: () => setRowSelection({}) },
+          )}
+          isLoading={isLoading}
+        />
+      ) : null}
     </div>
   )
 }

@@ -6,7 +6,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Dropdown } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
@@ -46,6 +46,12 @@ function CustomerTableContextMenu({
     isOpen: isOpenEdit,
   } = useDisclosure()
 
+  const {
+    close: closeDelete,
+    open: openDelete,
+    isOpen: isOpenDelete,
+  } = useDisclosure()
+
   const { mutate, isLoading, isSuccess } = useDeleteCustomerRole()
 
   return (
@@ -63,24 +69,18 @@ function CustomerTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent className='z-[9999]'>
           <DropdownMenuItem
-            onClick={() => {
-              setType('edit')
-              openEdit()
-            }}>
+            onClick={openEdit}>
             <img src={btnEditIcon} alt="Edit customer role" className="h-5 w-5" />
             {t('form:role.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => {
-              setType('delete')
-              openEdit()
-            }}>
+            onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete customer role" className="size-5" />
             {t('form:tenant.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {(isOpenEdit && type === 'edit') ? (
+      {isOpenEdit ? (
         <UpdateCustomerRole
           project_id={project_id}
           roleIdProps={roleIdProps}
@@ -91,13 +91,13 @@ function CustomerTableContextMenu({
         />
       ) : null}
 
-      {(isOpenEdit && type === 'delete') ? (
+      {isOpenDelete ? (
         <ConfirmDialog
           icon="danger"
           title={t('form:tenant.delete')}
           body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
-          close={closeEdit}
-          isOpen={isOpenEdit}
+          close={closeDelete}
+          isOpen={isOpenDelete}
           handleSubmit={() => mutate({ project_id, sub_tenant_id })}
           isLoading={isLoading}
         />

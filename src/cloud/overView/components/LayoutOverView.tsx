@@ -11,7 +11,7 @@ import {
   TimerIcon,
 } from '@radix-ui/react-icons'
 import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { type ReactElement, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import thietbiIcon from '~/assets/icons/sb-thietbi.svg'
@@ -23,7 +23,7 @@ import SmartTracking from '~/assets/images/SolutionMaketplace/SmartTracking.png'
 import { useGetDashboards, type DashboardRes } from '~/cloud/dashboard/api'
 import { useRestoreProject } from '~/cloud/project/api/restoreProject'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
+
 import { Link } from '~/components/Link'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
 import { PATHS } from '~/routes/PATHS'
@@ -40,6 +40,8 @@ import smartFarmData from '../smartFarm.json'
 import smartHomeData from '../smartHome.json'
 import smartWaterData from '../smartWater.json'
 import { DashboardTable } from './DashboardTable'
+import { useDisclosure } from '~/utils/hooks'
+import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function LayoutOverView() {
   const { t } = useTranslation()
@@ -50,6 +52,9 @@ export function LayoutOverView() {
   const [lastView, setLastView] = useState<DashboardRes[] | null>()
   const [starred, setStarred] = useState<DashboardRes[] | null>()
   const [offset, setOffset] = useState(0)
+  const [backupData, setBackupData] = useState({})
+  const [bodyContent, setBodyContent] = useState<ReactElement>()
+  const { close, open, isOpen } = useDisclosure()
 
   const dashboardType = ['Last viewed', 'Starred']
 
@@ -191,6 +196,12 @@ export function LayoutOverView() {
     type: 'overView',
   })
 
+  useEffect(() => {
+    if (isSuccessProject) {
+      close()
+    }
+  }, [isSuccessProject])
+
   const { data: dashboardData, isPreviousData } = useGetDashboards({
     projectId,
   })
@@ -286,9 +297,12 @@ export function LayoutOverView() {
               </div>
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="tab1" className={clsx(
-            'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
-          )}>
+          <TabsContent
+            value="tab1"
+            className={clsx(
+              'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
+            )}
+          >
             <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
               {tab1?.map(item => {
                 return (
@@ -312,71 +326,48 @@ export function LayoutOverView() {
                         {item.content5 && <br />}
                         {item.content5}
                       </p>
-                      <ConfirmationDialog
-                        isDone={isSuccessProject}
-                        icon="danger"
-                        title={t('btn:setup')}
-                        body={
-                          <span>
-                            {t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            )}
-                            <p className="mb-2 mt-3">
-                              {item.content}
-                              {item.content2 && <br />}
-                              {item.content2}
-                              {item.content3 && <br />}
-                              {item.content3}
-                              {item.content4 && <br />}
-                              {item.content4}
-                              {item.content5 && <br />}
-                              {item.content5}
-                            </p>
-                          </span>
-                        }
-                        triggerButton={
-                          <Button
-                            type="button"
-                            size="square"
-                            className="bg-primary-400 border-none"
-                          >
-                            {t('btn:setup')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoadingProject}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() =>
-                              mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                },
-                              })
-                            }
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="size-5"
-                              />
-                            }
-                          />
-                        }
-                      />
+                      <Button
+                        type="button"
+                        size="square"
+                        onClick={() => {
+                          setBackupData(item.jsonData)
+                          setBodyContent(
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              )}
+                              <p className="mb-2 mt-3">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>,
+                          )
+                          open()
+                        }}
+                        className="bg-primary-400 border-none"
+                      >
+                        {t('btn:setup')}
+                      </Button>
                     </div>
                   </div>
                 )
               })}
             </div>
           </TabsContent>
-          <TabsContent value="tab2" className={clsx(
-            'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
-          )}>
+          <TabsContent
+            value="tab2"
+            className={clsx(
+              'bg-secondary-500 flex grow flex-col px-9 py-3 shadow-lg',
+            )}
+          >
             <div className="grid w-full grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-3">
               {tab2?.map(item => {
                 return (
@@ -400,62 +391,36 @@ export function LayoutOverView() {
                         {item.content5 && <br />}
                         {item.content5}
                       </p>
-                      <ConfirmationDialog
-                        isDone={isSuccessProject}
-                        icon="danger"
-                        title={t('btn:setup')}
-                        body={
-                          <span>
-                            {t('overView:setup_confirm').replace(
-                              '{{TITLE}}',
-                              item.title,
-                            )}
-                            <p className="mb-2 mt-3">
-                              {item.content}
-                              {item.content2 && <br />}
-                              {item.content2}
-                              {item.content3 && <br />}
-                              {item.content3}
-                              {item.content4 && <br />}
-                              {item.content4}
-                              {item.content5 && <br />}
-                              {item.content5}
-                            </p>
-                          </span>
-                        }
-                        triggerButton={
-                          <Button
-                            type="button"
-                            size="square"
-                            className="bg-primary-400 border-none"
-                          >
-                            {t('btn:setup')}
-                          </Button>
-                        }
-                        confirmButton={
-                          <Button
-                            isLoading={isLoadingProject}
-                            type="button"
-                            size="md"
-                            className="bg-primary-400"
-                            onClick={() =>
-                              mutateAsyncUploadProjectFile({
-                                projectId,
-                                backup: {
-                                  backup: item.jsonData,
-                                },
-                              })
-                            }
-                            startIcon={
-                              <img
-                                src={btnSubmitIcon}
-                                alt="Submit"
-                                className="size-5"
-                              />
-                            }
-                          />
-                        }
-                      />
+                      <Button
+                        type="button"
+                        size="square"
+                        onClick={() => {
+                          setBackupData(item.jsonData)
+                          setBodyContent(
+                            <span>
+                              {t('overView:setup_confirm').replace(
+                                '{{TITLE}}',
+                                item.title,
+                              )}
+                              <p className="mb-2 mt-3">
+                                {item.content}
+                                {item.content2 && <br />}
+                                {item.content2}
+                                {item.content3 && <br />}
+                                {item.content3}
+                                {item.content4 && <br />}
+                                {item.content4}
+                                {item.content5 && <br />}
+                                {item.content5}
+                              </p>
+                            </span>,
+                          )
+                          open()
+                        }}
+                        className="bg-primary-400 border-none"
+                      >
+                        {t('btn:setup')}
+                      </Button>
                     </div>
                   </div>
                 )
@@ -465,7 +430,7 @@ export function LayoutOverView() {
         </Tabs>
       </div>
       <div className="mt-3 grid w-full grid-cols-1 gap-x-4 gap-y-2 md:grid-cols-2 ">
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 p-2">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md p-2">
           <div className="flex h-[50px] w-full justify-between gap-2 py-2">
             <div
               className="flex cursor-pointer items-center gap-3"
@@ -485,7 +450,7 @@ export function LayoutOverView() {
                         setType(item)
                       }}
                       className={cn('px-4 py-2 text-slate-400', {
-                        'rounded-2xl bg-primary-400 text-white': type === item,
+                        'bg-primary-400 rounded-2xl text-white': type === item,
                       })}
                     >
                       {item}
@@ -499,7 +464,7 @@ export function LayoutOverView() {
                 onClick={() =>
                   navigate(`${PATHS.DASHBOARD}/${projectId}?openDrawer=true`)
                 }
-                className="ml-3 border-none bg-primary-400"
+                className="bg-primary-400 ml-3 border-none"
               >
                 {t('overView:add_dashboard')}
               </Button>
@@ -525,7 +490,7 @@ export function LayoutOverView() {
             />
           )}
         </div>
-        <div className="max-h-[26vh] overflow-auto rounded-md bg-secondary-500 px-2 py-4">
+        <div className="bg-secondary-500 max-h-[26vh] overflow-auto rounded-md px-2 py-4">
           <div className="mb-3 flex cursor-pointer items-center gap-3">
             <p className="text-table-header">{t('overView:quick_link')}</p>
           </div>
@@ -544,6 +509,24 @@ export function LayoutOverView() {
           </div>
         </div>
       </div>
+      {isOpen ? (
+        <ConfirmDialog
+          icon="danger"
+          title={t('btn:setup')}
+          body={bodyContent}
+          close={close}
+          isOpen={isOpen}
+          handleSubmit={() =>
+            mutateAsyncUploadProjectFile({
+              projectId,
+              backup: {
+                backup: backupData,
+              },
+            })
+          }
+          isLoading={isLoadingProject}
+        />
+      ) : null}
     </>
   )
 }

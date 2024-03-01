@@ -7,7 +7,6 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { Button } from '~/components/Button'
-import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
@@ -17,7 +16,12 @@ import { useDeleteRow } from '../api/deleteRow'
 import { type FieldsRows } from '../types'
 import { UpdateRow } from './UpdateRow'
 import { InputField } from '~/components/Form'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 function DataBaseTableContextMenu({
@@ -52,7 +56,7 @@ function DataBaseTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -62,17 +66,11 @@ function DataBaseTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={open}>
-            <img
-              src={btnEditIcon}
-              alt="Edit DataBase"
-              className="h-5 w-5"
-            />
+          <DropdownMenuItem onClick={open}>
+            <img src={btnEditIcon} alt="Edit DataBase" className="h-5 w-5" />
             {t('cloud:db_template.add_db.update_row')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}>
+          <DropdownMenuItem onClick={openDelete}>
             <img src={btnDeleteIcon} alt="Delete DataBase" className="size-5" />
             {t('cloud:db_template.add_db.delete_row')}
           </DropdownMenuItem>
