@@ -35,6 +35,7 @@ type ComplexTreeProps<TFormValues extends FieldValues> = {
   classlabel?: string
   classchild?: string
   placeholder?: string
+  customOnChange?: (e?: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
 
@@ -49,6 +50,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
   classnamefieldwrapper,
   classlabel,
   classchild,
+  customOnChange,
   ...props
 }: ComplexTreeProps<TFormValues>) {
   const { t } = useTranslation()
@@ -224,7 +226,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   variant="trans"
                   size="square"
                   className={cn(
-                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
+                    'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                     !value && 'text-secondary-700',
                   )}
                 >
@@ -253,12 +255,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   />
                   <div
                     onClick={find}
-                    className="flex h-[36px] w-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="flex size-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>
                 </div>
-                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
+                <div className="mt-1 text-primary-400">{findOrgMsg}</div>
                 <ControlledTreeEnvironment
                   {...field}
                   viewState={{
@@ -286,6 +288,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   onSelectItems={(items: any) => {
                     setSelectedItems(items)
                     onChange(items)
+                    customOnChange?.(items)
                   }}
                   defaultInteractionMode={
                     InteractionMode.DoubleClickItemToExpand

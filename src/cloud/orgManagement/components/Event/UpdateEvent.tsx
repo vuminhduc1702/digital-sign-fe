@@ -55,7 +55,6 @@ import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 type UpdateEventProps = {
@@ -369,7 +368,10 @@ export function UpdateEvent({
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
+              org_id:
+                values.org_id?.toString() !== no_org_val
+                  ? values.org_id?.toString()
+                  : '',
               group_id: values.group_id,
               name: values.name,
               onClick: values.onClick,
@@ -404,59 +406,13 @@ export function UpdateEvent({
                   error={formState.errors['name']}
                   registration={register('name')}
                 />
-
-                <FieldWrapper
+                <ComplexTree
+                  name="org_id"
                   label={t('cloud:org_manage.device_manage.add_device.parent')}
                   error={formState?.errors?.org_id}
-                >
-                  <Controller
-                    control={control}
-                    name="org_id"
-                    render={({ field: { onChange, value, ...field } }) => {
-                      const parseValue = value
-                        ? orgSelectOptions?.find(
-                            org => org.value === value.toString(),
-                          )?.label
-                        : ''
-                      return (
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              id="org_id"
-                              variant="trans"
-                              size="square"
-                              className={cn(
-                                'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                                !value && 'text-secondary-700',
-                              )}
-                            >
-                              {value ? (
-                                <span>{parseValue ? parseValue : value}</span>
-                              ) : (
-                                <span>
-                                  {t(
-                                    'cloud:org_manage.org_manage.add_org.choose_org',
-                                  )}
-                                </span>
-                              )}
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="popover-content w-auto p-2"
-                            align="start"
-                          >
-                            <ComplexTree
-                              items={orgData?.organizations}
-                              selectOrg={onChange}
-                              currentValue={value}
-                              {...field}
-                            ></ComplexTree>
-                          </PopoverContent>
-                        </Popover>
-                      )
-                    }}
-                  />
-                </FieldWrapper>
+                  control={control}
+                  options={orgData?.organizations}
+                />
 
                 <SelectDropdown
                   label={t('cloud:org_manage.event_manage.add_event.group')}

@@ -123,55 +123,6 @@ export function CreateGroup() {
             registration={register('entity_type')}
             options={entityTypeOptions}
           />
-          {/* <FieldWrapper
-            label={t('cloud:org_manage.device_manage.add_device.parent')}
-            error={formState?.errors?.org_id}
-          >
-            <Controller
-              control={control}
-              name="org_id"
-              render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = value
-                  ? orgSelectOptions?.find(
-                      org => org.value === value.toString(),
-                    )?.label
-                  : ''
-                return (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="org_id"
-                        variant="trans"
-                        size="square"
-                        className={cn(
-                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                          !value && 'text-secondary-700',
-                        )}
-                      >
-                        {value ? (
-                          <span>{parseValue ? parseValue : value}</span>
-                        ) : (
-                          <span>
-                            {t(
-                              'cloud:org_manage.org_manage.add_org.choose_org',
-                            )}
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2 popover-content" align="start">
-                      <ComplexTree
-                        items={orgData?.organizations}
-                        selectOrg={onChange}
-                        currentValue={value}
-                        {...field}
-                      ></ComplexTree>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }}
-            />
-          </FieldWrapper> */}
           <ComplexTree
             name="org_id"
             label={t('cloud:org_manage.device_manage.add_device.parent')}

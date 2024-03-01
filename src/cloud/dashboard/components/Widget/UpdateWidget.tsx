@@ -49,6 +49,7 @@ import {
 import { nameSchema } from '~/utils/schemaValidation'
 import i18n from '~/i18n'
 import { widgetTypeSchema, attrWidgetSchema } from './CreateWidget'
+import { ComplexTree } from '~/components/ComplexTree'
 
 export function UpdateWidget({
   widgetInfo,
@@ -579,7 +580,7 @@ export function UpdateWidget({
               <>
                 <TitleBar
                   title={t('cloud:dashboard.config_chart.show')}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                   <InputField
@@ -587,44 +588,18 @@ export function UpdateWidget({
                     error={formState.errors['title']}
                     registration={register('title')}
                   />
-
-                  <SelectDropdown
+                  <ComplexTree
+                    name="org_id"
                     label={t(
                       'cloud:org_manage.device_manage.add_device.parent',
                     )}
-                    name="org_id"
+                    error={formState.errors['org_id']}
                     control={control}
-                    options={orgSelectOptions}
-                    isOptionDisabled={option =>
-                      option.label === t('loading:org') ||
-                      option.label === t('table:no_org')
-                    }
-                    noOptionsMessage={() => t('table:no_org')}
-                    loadingMessage={() => t('loading:org')}
-                    isLoading={orgIsLoading}
-                    handleClearSelectDropdown={() => {
+                    options={orgData?.organizations}
+                    customOnChange={() => {
                       selectDropdownDeviceRef.current?.clearValue()
                       selectDropdownAttributeConfigRef.current?.clearValue()
                     }}
-                    handleChangeSelect={() => {
-                      selectDropdownDeviceRef.current?.clearValue()
-                      selectDropdownAttributeConfigRef.current?.clearValue()
-                    }}
-                    defaultValue={
-                      widgetInfoMemo?.datasource?.org_id
-                        ? orgSelectOptions?.find(
-                            item =>
-                              item.value ===
-                              JSON.parse(widgetInfoMemo?.datasource?.org_id),
-                          )
-                        : [
-                            {
-                              label: '',
-                              value: '',
-                            },
-                          ]
-                    }
-                    error={formState?.errors?.org_id}
                   />
 
                   <div className="space-y-1">
@@ -685,7 +660,7 @@ export function UpdateWidget({
                     title={t(
                       'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                     )}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   {!(
                     widgetInfoMemo?.description === 'GAUGE' ||
@@ -935,7 +910,7 @@ export function UpdateWidget({
                   <>
                     <TitleBar
                       title={t('cloud:dashboard.config_chart.widget_config')}
-                      className="bg-secondary-700 w-full rounded-md pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                       <SelectField
@@ -1063,11 +1038,11 @@ export function UpdateWidget({
                                           variant="trans"
                                           size="square"
                                           className={cn(
-                                            'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
+                                            'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                                             !value && 'text-secondary-700',
                                           )}
                                         >
-                                          <LuCalendar className="size-4 mr-2" />
+                                          <LuCalendar className="mr-2 size-4" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1162,7 +1137,7 @@ export function UpdateWidget({
                                             ) === 'REALTIME'
                                           }
                                         >
-                                          <LuCalendar className="size-4 mr-2" />
+                                          <LuCalendar className="mr-2 size-4" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1268,7 +1243,7 @@ export function UpdateWidget({
           form="update-widget"
           type="submit"
           size="md"
-          className="bg-primary-400 rounded-md border"
+          className="rounded-md border bg-primary-400"
           startIcon={
             <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
