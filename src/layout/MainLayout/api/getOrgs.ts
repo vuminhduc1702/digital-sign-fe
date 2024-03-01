@@ -6,15 +6,19 @@ import { type OrgList } from '../types'
 
 type GetOrgs = {
   projectId: string
+  orgId?: string
   get_attributes?: boolean
+  level?: number
 }
 
 export const getOrgs = ({
   projectId,
+  orgId,
   get_attributes,
+  level,
 }: GetOrgs): Promise<OrgList> => {
   return axios.get('/api/organizations/expand', {
-    params: { project_id: projectId, get_attributes },
+    params: { project_id: projectId, orgId: orgId, get_attributes, level },
   })
 }
 
@@ -26,12 +30,14 @@ type UseGetOrgsOptions = {
 
 export const useGetOrgs = ({
   projectId,
+  orgId,
   get_attributes = false,
   config,
+  level,
 }: UseGetOrgsOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['orgs', projectId, get_attributes],
-    queryFn: () => getOrgs({ projectId, get_attributes }),
+    queryKey: ['orgs', projectId, orgId, get_attributes, level],
+    queryFn: () => getOrgs({ projectId, orgId, get_attributes, level }),
     ...config,
   })
 }

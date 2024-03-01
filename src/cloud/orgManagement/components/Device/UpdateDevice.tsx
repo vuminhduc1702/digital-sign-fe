@@ -13,7 +13,6 @@ import {
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useUpdateDevice, type UpdateDeviceDTO } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -101,16 +100,7 @@ export function UpdateDevice({
     resolver: heartBeatSchema && zodResolver(heartBeatSchema),
   })
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
 
   const defaultComboboxGroupData = useDefaultCombobox('group')
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({

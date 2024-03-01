@@ -16,7 +16,7 @@ import {
   type SelectOption,
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
-import { cn, flattenData } from '~/utils/misc'
+import { cn } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -181,19 +181,11 @@ export function UpdateEvent({
     config: {
       suspense: false,
     },
+    level: 1,
   })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -204,7 +196,7 @@ export function UpdateEvent({
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     config: { suspense: false },
   })
