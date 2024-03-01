@@ -128,7 +128,7 @@ export function DeviceDetail() {
     <div ref={ref} className="flex grow flex-col">
       <TitleBar className="normal-case" title={<DeviceBreadcrumbs />} />
       <Tabs defaultValue="attr_list" className="mt-2 flex grow flex-col">
-        <TabsList className="bg-secondary-500 mt-2 w-full">
+        <TabsList className="mt-2 w-full bg-secondary-500">
           <TabsTrigger value="attr_list">
             <div className="flex items-center gap-x-2">
               <DeviceListIcon width={16} height={16} viewBox="0 0 20 16" />
@@ -165,7 +165,7 @@ export function DeviceDetail() {
                 aoo={aoo}
                 pdfHeader={pdfHeader}
               />
-              <div className="flex items-center gap-x-3">
+              <div className="mr-[42px] flex items-center gap-x-3">
                 {Object.keys(rowSelection).length > 0 && (
                   <div
                     onClick={open}
@@ -195,7 +195,7 @@ export function DeviceDetail() {
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <ExportTable refComponent={ref} />
-              <div className="flex items-center gap-x-3">
+              <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
                   searchQuery={searchQueryMQTTLog}
                   setSearchQuery={setSearchQueryMQTTLog}
@@ -220,7 +220,7 @@ export function DeviceDetail() {
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <ExportTable refComponent={ref} />
-              <div className="flex items-center gap-x-3">
+              <div className="mr-[42px] flex items-center gap-x-3">
                 {/* dummyInput */}
               </div>
             </div>

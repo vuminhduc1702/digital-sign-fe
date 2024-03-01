@@ -89,9 +89,12 @@ export function FirmwareTemplate() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -117,17 +120,17 @@ export function FirmwareTemplate() {
         <ConfirmDialog
           icon="danger"
           title={t('cloud:firmware.table.delete_firmware')}
-          body={t(
-            'cloud:firmware.table.delete_multiple_firmware_confirm',
-          )}
+          body={t('cloud:firmware.table.delete_multiple_firmware_confirm')}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleFirmware(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleFirmware(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

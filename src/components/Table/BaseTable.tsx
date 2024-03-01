@@ -299,7 +299,7 @@ export function BaseTable<T extends Record<string, any>>({
                       <Popover>
                         <PopoverTrigger
                           onClick={e => e.stopPropagation()}
-                          className="absolute right-0 top-12"
+                          className="absolute right-8 top-1"
                           asChild
                         >
                           <Button
@@ -310,7 +310,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <img
                                 src={btnFilterIcon}
                                 alt=""
-                                className="size-5"
+                                className="h-[36px] w-[24px]"
                               />
                             }
                           />
@@ -324,7 +324,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                className="mr-1 size-4 rounded-sm border accent-primary-400"
                                 checked={
                                   columnFilter.filter(item => item.isVisible)
                                     .length === columnFilter.length
@@ -389,7 +389,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
                                         checked={
                                           columnFilter.find(
                                             item => item.id === column.id,
@@ -450,7 +450,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                className="mr-1 size-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -501,7 +501,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="size-4 mr-1 rounded-sm border accent-primary-400"
+                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />

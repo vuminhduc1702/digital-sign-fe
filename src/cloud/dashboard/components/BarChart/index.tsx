@@ -233,17 +233,17 @@ export const BarChart = ({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%I:%M %p - %d, %b')(new Date(tick))
+            return d3.timeFormat('%H:%M - %-d %b')(new Date(tick))
           default:
-            return d3.timeFormat('%I %p - %d, %b')(new Date(tick))
+            return d3.timeFormat('%H - %-d %b')(new Date(tick))
         }
       default:
-        return d3.timeFormat('%d, %b')(new Date(tick))
+        return d3.timeFormat('%-d %b')(new Date(tick))
     }
   }
 
   function timeFormatterTooltip(tick: number) {
-    return d3.timeFormat('%H:%M:%S - %d, %b')(new Date(tick))
+    return d3.timeFormat('%H:%M:%S - %-d %B, %Y')(new Date(tick))
   }
 
   const initNow = new Date().getTime()

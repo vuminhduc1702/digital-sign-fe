@@ -83,9 +83,12 @@ export function GroupManage() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -116,12 +119,14 @@ export function GroupManage() {
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleGroups(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleGroups(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

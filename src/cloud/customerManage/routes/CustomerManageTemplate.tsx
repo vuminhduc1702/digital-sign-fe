@@ -84,7 +84,7 @@ export function CustomerManageTemplate() {
             aoo={aoo || []}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             <div className="w-96">
               <SelectDropdown
                 isClearable={false}

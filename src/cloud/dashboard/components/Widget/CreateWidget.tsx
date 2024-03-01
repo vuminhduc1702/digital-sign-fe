@@ -248,7 +248,7 @@ export const attrWidgetSchema = z.array(
     color: z.string(),
     unit: z.string(),
     max: z.number(),
-    min: z.number(),
+    min: z.number().optional(),
     deviceName: z.string().optional(),
   }),
 )
@@ -607,7 +607,7 @@ export function CreateWidget({
 
   return (
     <Dialog isOpen={isOpen} onClose={close} initialFocus={cancelButtonRef}>
-      <div className="inline-block transform rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
+      <div className="inline-block rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:p-6 sm:align-middle md:w-[75rem]">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="mb-5 flex items-center justify-between">
             <DialogTitle className="text-h1 text-secondary-900">
@@ -629,7 +629,7 @@ export function CreateWidget({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -850,7 +850,7 @@ export function CreateWidget({
                 <>
                   <TitleBar
                     title={t('cloud:dashboard.config_chart.show')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <div className="grid grid-cols-1 gap-x-4 px-2 md:grid-cols-3">
                     <InputField
@@ -934,7 +934,7 @@ export function CreateWidget({
                       title={t(
                         'cloud:dashboard.detail_dashboard.add_widget.data_chart',
                       )}
-                      className="bg-secondary-700 w-full rounded-md pl-3"
+                      className="w-full rounded-md bg-secondary-700 pl-3"
                     />
                     {isMultipleAttr ? (
                       <Button
@@ -1164,7 +1164,7 @@ export function CreateWidget({
                     <>
                       <TitleBar
                         title={t('cloud:dashboard.config_chart.widget_config')}
-                        className="bg-secondary-700 w-full rounded-md pl-3"
+                        className="w-full rounded-md bg-secondary-700 pl-3"
                       />
                       <div className="grid grid-cols-1 gap-x-4 gap-y-3 px-2 md:grid-cols-4">
                         <SelectField
@@ -1295,7 +1295,7 @@ export function CreateWidget({
                                             variant="trans"
                                             size="square"
                                             className={cn(
-                                              'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0',
+                                              'relative w-full !justify-start rounded-md text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                                               !value && 'text-secondary-700',
                                             )}
                                           >

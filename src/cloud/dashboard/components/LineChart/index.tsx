@@ -59,18 +59,18 @@ export const VN_TIME = {
     'Tháng Mười Hai',
   ],
   shortMonths: [
-    'Tháng Một',
-    'Tháng Hai',
-    'Tháng Ba',
-    'Tháng Tư',
-    'Tháng Năm',
-    'Tháng Sáu',
-    'Tháng Bảy',
-    'Tháng Tám',
-    'Tháng Chín',
-    'Tháng Mười',
-    'Tháng Mười Một',
-    'Tháng Mười Hai',
+    'T.Một',
+    'T.Hai',
+    'T.Ba',
+    'T.Tư',
+    'T.Năm',
+    'T.Sáu',
+    'T.Bảy',
+    'T.Tám',
+    'T.Chín',
+    'T.Mười',
+    'T.Mười Một',
+    'T.Mười Hai',
   ],
 }
 
@@ -132,6 +132,7 @@ export function LineChart({
 }) {
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
+  console.log(widgetInfo?.config?.chartsetting)
   const TIME_PERIOD =
     widgetInfo?.config?.chartsetting?.time_period ||
     (widgetInfo?.config?.chartsetting?.end_date &&
@@ -331,17 +332,17 @@ export function LineChart({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%I:%M %p - %d, %b')(new Date(tick))
+            return d3.timeFormat('%H:%M - %-d/%-m')(new Date(tick))
           default:
-            return d3.timeFormat('%I %p - %d, %b')(new Date(tick))
+            return d3.timeFormat('%-I %p - %-d/%-m')(new Date(tick))
         }
       default:
-        return d3.timeFormat('%d, %b')(new Date(tick))
+        return d3.timeFormat('%-d %B')(new Date(tick))
     }
   }
 
   function timeFormatterTooltip(tick: number) {
-    return d3.timeFormat('%H:%M:%S - %d, %b')(new Date(tick))
+    return d3.timeFormat('%H:%M:%S - %-d %B, %Y')(new Date(tick))
   }
 
   const initNow = new Date().getTime()

@@ -541,7 +541,7 @@ export function CreateAdapter() {
                 <div className="flex justify-between space-x-3">
                   <TitleBar
                     title={t('cloud:custom_protocol.adapter.topic_list')}
-                    className="bg-secondary-700 w-full rounded-md pl-3"
+                    className="w-full rounded-md bg-secondary-700 pl-3"
                   />
                   <Button
                     className="rounded-md"
@@ -569,7 +569,7 @@ export function CreateAdapter() {
                       registration={register(
                         `configuration.topic_filters.${index}.topic` as const,
                       )}
-                      classnamefieldwrapper="flex items-center gap-x-3"
+                      classnamefieldwrapper="flex items-center gap-x-3 mr-[42px]"
                     />
                     <Button
                       type="button"

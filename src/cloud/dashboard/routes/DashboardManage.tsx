@@ -83,9 +83,12 @@ export function DashboardManage() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -112,17 +115,17 @@ export function DashboardManage() {
         <ConfirmDialog
           icon="danger"
           title={t('cloud:dashboard.table.delete_dashboard_full')}
-          body={t(
-            'cloud:dashboard.table.delete_multiple_dashboard_confirm',
-          )}
+          body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleDashboards(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleDashboards(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

@@ -61,23 +61,23 @@ export function CustomProtocolManage() {
   const aoo: Array<{ [key: string]: string }> | undefined =
     adapterData?.adapters
       ? adapterData?.adapters?.reduce((acc, curr, index) => {
-        if (rowSelectionKey.includes(curr.id)) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:dashboard.table.name')]: curr.name,
-            [t('cloud:custom_protocol.adapter.table.protocol')]:
-              curr.protocol,
-            [t('cloud:custom_protocol.adapter.table.thing_id')]:
-              curr.thing_id,
-            [t('cloud:custom_protocol.adapter.table.handle_service')]:
-              curr.handle_service,
-            [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
-            [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
+          if (rowSelectionKey.includes(curr.id)) {
+            const temp = {
+              [t('table:no')]: (index + 1).toString(),
+              [t('cloud:dashboard.table.name')]: curr.name,
+              [t('cloud:custom_protocol.adapter.table.protocol')]:
+                curr.protocol,
+              [t('cloud:custom_protocol.adapter.table.thing_id')]:
+                curr.thing_id,
+              [t('cloud:custom_protocol.adapter.table.handle_service')]:
+                curr.handle_service,
+              [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
+              [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
+            }
+            acc.push(temp)
           }
-          acc.push(temp)
-        }
-        return acc
-      }, [] as Array<{ [key: string]: string }>)
+          return acc
+        }, [] as Array<{ [key: string]: string }>)
       : []
 
   return (
@@ -91,9 +91,12 @@ export function CustomProtocolManage() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -119,17 +122,17 @@ export function CustomProtocolManage() {
         <ConfirmDialog
           icon="danger"
           title={t('cloud:dashboard.table.delete_dashboard_full')}
-          body={t(
-            'cloud:dashboard.table.delete_multiple_dashboard_confirm',
-          )}
+          body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleAdapters(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleAdapters(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

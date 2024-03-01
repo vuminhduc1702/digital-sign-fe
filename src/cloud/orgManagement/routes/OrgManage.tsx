@@ -97,10 +97,11 @@ export function OrgManage() {
             <div className="flex gap-6 px-11 py-3 shadow-lg">
               <div className="flex flex-none items-center">
                 <img
-                  src={`${orgByIdData?.image
-                    ? `${API_URL}/file/${orgByIdData?.image}`
-                    : defaultOrgImage
-                    }`}
+                  src={`${
+                    orgByIdData?.image
+                      ? `${API_URL}/file/${orgByIdData?.image}`
+                      : defaultOrgImage
+                  }`}
                   onError={e => {
                     const target = e.target as HTMLImageElement
                     target.onerror = null
@@ -130,9 +131,12 @@ export function OrgManage() {
                   aoo={aoo}
                   pdfHeader={pdfHeader}
                 />
-                <div className="flex items-center gap-x-3">
+                <div className="mr-[42px] flex items-center gap-x-3">
                   {Object.keys(rowSelection).length > 0 && (
-                    <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+                    <div
+                      onClick={open}
+                      className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+                    >
                       <div>{t('btn:delete')}:</div>
                       <div>{Object.keys(rowSelection).length}</div>
                     </div>
@@ -159,24 +163,24 @@ export function OrgManage() {
       {isOpen ? (
         <ConfirmDialog
           icon="danger"
-          title={t(
-            'cloud:org_manage.org_manage.table.delete_attr_full',
-          )}
+          title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleAttrs(
-            {
-              data: {
-                keys: attrKeys,
-                entity_type: 'ORGANIZATION',
-                entity_id: orgId,
+          handleSubmit={() =>
+            mutateDeleteMultipleAttrs(
+              {
+                data: {
+                  keys: attrKeys,
+                  entity_type: 'ORGANIZATION',
+                  entity_id: orgId,
+                },
               },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

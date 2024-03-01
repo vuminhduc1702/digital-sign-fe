@@ -75,7 +75,7 @@ const AssignGroupRole = ({
 
   return (
     <Dialog isOpen={isOpenAssignGroupRole} onClose={closeAssignGroupRole}>
-      <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+      <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
         <div className="mt-3 text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
             <DialogTitle className="text-h1 text-secondary-900">
@@ -122,7 +122,7 @@ const AssignGroupRole = ({
                 })}
                 classlabel="w-6/12"
                 classchild="w-6/12"
-                classnamefieldwrapper="flex items-center gap-x-3"
+                classnamefieldwrapper="flex items-center gap-x-3 mr-[42px]"
               />
             </form>
           </div>

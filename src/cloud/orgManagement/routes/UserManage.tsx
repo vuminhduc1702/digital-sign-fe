@@ -92,7 +92,7 @@ export function UserManage() {
             aoo={aoo}
             pdfHeader={pdfHeader}
           />
-          <div className="flex items-center gap-x-3">
+          <div className="mr-[42px] flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
               <div
                 onClick={open}
