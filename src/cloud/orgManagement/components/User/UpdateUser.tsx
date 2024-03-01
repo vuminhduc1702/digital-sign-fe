@@ -178,10 +178,7 @@ export function UpdateUser({
               phone: values.phone,
               password: values.password,
               email: values.email,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               role_id: values.role_id,
               profile:
                 values.profile != null

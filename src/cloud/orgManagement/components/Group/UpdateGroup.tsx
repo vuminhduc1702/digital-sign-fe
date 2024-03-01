@@ -29,7 +29,7 @@ import { ComplexTree } from '~/components/ComplexTree'
 
 const groupUpdateSchema = z.object({
   name: nameSchema,
-  org_id: z.string().optional().or(z.array(z.string())),
+  org_id: z.string().optional(),
 })
 
 type UpdateGroupProps = {
@@ -121,20 +121,14 @@ export function UpdateGroup({
             mutateUpdateOrgForGroup({
               data: {
                 ids: [groupId],
-                org_id:
-                  values.org_id?.toString() !== no_org_val
-                    ? values.org_id?.toString()
-                    : '',
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
               },
             })
           }
           mutate({
             data: {
               name: values.name,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
             },
             groupId,
           })

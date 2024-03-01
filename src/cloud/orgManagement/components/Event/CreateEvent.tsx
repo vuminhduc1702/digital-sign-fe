@@ -547,10 +547,7 @@ export function CreateEvent() {
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               group_id: values.group_id,
               name: values.name,
               onClick: values.onClick,
