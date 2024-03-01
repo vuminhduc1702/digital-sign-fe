@@ -29,7 +29,7 @@ export default {
           900: withOpacity('0, 1%, 34%'), // nav
         },
         focus: {
-          400: withOpacity('214 ,100%, 57.5%'), // border input when validation error
+          400: withOpacity('214, 100%, 57.5%'), // border input when validation error
         },
         transparent: 'transparent',
         current: 'currentColor',
@@ -98,14 +98,6 @@ export default {
           from: { opacity: '0', transform: 'translateX(2px)' },
           to: { opacity: '1', transform: 'translateX(0)' },
         },
-        'accordion-down': {
-          from: { height: '0' },
-          to: { height: 'var(--radix-accordion-content-height)' },
-        },
-        'accordion-up': {
-          from: { height: 'var(--radix-accordion-content-height)' },
-          to: { height: '0' },
-        },
       },
       animation: {
         slideDown: 'slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1)',
@@ -117,8 +109,6 @@ export default {
         slideUpAndFade: 'slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
         slideRightAndFade:
           'slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)',
-        'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
   },
