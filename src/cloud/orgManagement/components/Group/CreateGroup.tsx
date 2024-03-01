@@ -31,7 +31,7 @@ export const entityTypeList = [
 const groupCreateSchema = z.object({
   name: nameSchema,
   entity_type: z.string(),
-  org_id: z.string().optional().or(z.array(z.string())),
+  org_id: z.string().optional(),
 })
 
 export function CreateGroup() {
@@ -89,7 +89,7 @@ export function CreateGroup() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -103,10 +103,7 @@ export function CreateGroup() {
               name: values.name,
               entity_type: values.entity_type,
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
             },
           })
         })}

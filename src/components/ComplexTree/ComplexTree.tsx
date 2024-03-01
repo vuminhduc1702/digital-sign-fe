@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { type Ref, useCallback, useEffect, useRef, useState } from 'react'
 import {
   ControlledTreeEnvironment,
   InteractionMode,
   StaticTreeDataProvider,
   Tree,
+  type TreeEnvironmentRef,
   type TreeItem,
   type TreeItemIndex,
   type TreeRef,
@@ -35,6 +36,7 @@ type ComplexTreeProps<TFormValues extends FieldValues> = {
   classlabel?: string
   classchild?: string
   placeholder?: string
+  refTree?: Ref<TreeEnvironmentRef<any>>
   customOnChange?: (e?: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
@@ -214,10 +216,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
         name={name}
         control={control}
         render={({ field: { onChange, value, ...field } }) => {
-          console.log(options)
-          const parseValue = value
-            ? options?.find(org => org.id === value.toString())?.name
-            : ''
+          const parseValue =
+            value && dataItem[value] ? dataItem[value].data.name : ''
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -226,7 +226,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   variant="trans"
                   size="square"
                   className={cn(
-                    'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
                     !value && 'text-secondary-700',
                   )}
                 >
@@ -255,12 +255,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   />
                   <div
                     onClick={find}
-                    className="flex size-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="flex h-9 w-9 cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>
                 </div>
-                <div className="mt-1 text-primary-400">{findOrgMsg}</div>
+                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
                 <ControlledTreeEnvironment
                   {...field}
                   viewState={{
@@ -287,19 +287,16 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   }
                   onSelectItems={(items: any) => {
                     setSelectedItems(items)
-                    onChange(items)
+                    onChange(items.toString())
                     customOnChange?.(items)
                   }}
                   defaultInteractionMode={
                     InteractionMode.DoubleClickItemToExpand
                   }
                   canSearchByStartingTyping={true}
+                  {...props}
                 >
-                  <Tree
-                    treeId={'complex-tree'}
-                    rootItem={'root'}
-                    ref={tree}
-                  ></Tree>
+                  <Tree treeId={'complex-tree'} rootItem={'root'} ref={tree} />
                 </ControlledTreeEnvironment>
               </PopoverContent>
             </Popover>

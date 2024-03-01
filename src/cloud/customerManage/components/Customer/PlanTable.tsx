@@ -100,9 +100,9 @@ export function PlanTable({ data, ...props }: CustomerTableProps) {
               }}
             >
               {row.getIsExpanded() ? (
-                <LuChevronDown className="size-5" />
+                <LuChevronDown className="h-5 w-5" />
               ) : (
-                <LuChevronRight className="size-5" />
+                <LuChevronRight className="h-5 w-5" />
               )}
             </button>
           )

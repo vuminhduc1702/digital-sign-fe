@@ -122,7 +122,7 @@ export function DataBaseSidebar() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete db"
-                          className="size-5"
+                          className="h-5 w-5"
                         />
                         {t('cloud:db_template.sidebar.delete_db')}
                       </DropdownMenuItem>

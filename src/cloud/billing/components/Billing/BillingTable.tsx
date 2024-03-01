@@ -55,7 +55,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
               open()
             }}
           >
-            <EyeOpenIcon className="size-5" />
+            <EyeOpenIcon className="h-5 w-5" />
             {t('billing:manage_bill.preview_bill')}
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -63,7 +63,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
               document={<BillingPDF dataPdf={data?.data} />}
               fileName={`Hóa đơn dịch vụ ${data?.data?.s_service_type}.pdf`}
             >
-              <DownloadIcon className="size-5" />
+              <DownloadIcon className="h-5 w-5" />
               {t('billing:manage_bill.export_PDF')}
             </PDFDownloadLink>
           </DropdownMenuItem>
@@ -152,7 +152,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>
@@ -229,7 +229,7 @@ export function BillingTable({
                   variant="trans"
                   size="square"
                   startIcon={
-                    <img src={btnFilterIcon} alt="" className="size-5" />
+                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
                   }
                 />
               </PopoverTrigger>

@@ -65,16 +65,16 @@ function CustomerTableContextMenu({
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={open}
-          >
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('form:tenant.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={openDelete}
-          >
-            <img src={btnDeleteIcon} alt="Delete customer" className="size-5" />
+          <DropdownMenuItem onClick={openDelete}>
+            <img
+              src={btnDeleteIcon}
+              alt="Delete customer"
+              className="h-5 w-5"
+            />
             {t('form:tenant.delete')}
           </DropdownMenuItem>
         </DropdownMenuContent>

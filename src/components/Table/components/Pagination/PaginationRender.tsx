@@ -51,7 +51,7 @@ export default function PaginationRender({
         })}
       >
         <div>
-          <span className="flex items-center gap-1 text-body-light">
+          <span className="text-body-light flex items-center gap-1">
             {t('table:show_in')
               .replace(
                 '{{PAGE}}',
@@ -84,7 +84,7 @@ export default function PaginationRender({
           disabled={pageIndex === 0 || isPreviousData}
           variant="secondaryLight"
         >
-          <LuChevronLeft className="size-4" />
+          <LuChevronLeft className="h-4 w-4" />
         </Button>
         <Pagination
           currentPage={pageIndex}
@@ -110,7 +110,7 @@ export default function PaginationRender({
           disabled={(pageIndex + 1) * pageSize >= totalAttrs || isPreviousData}
           variant="secondaryLight"
         >
-          <LuChevronRight className="size-4" />
+          <LuChevronRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

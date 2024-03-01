@@ -33,7 +33,7 @@ function MobileLP({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Dialog.Overlay className="fixed inset-0 bg-secondary-900 bg-opacity-75" />
+          <Dialog.Overlay className="bg-secondary-900 fixed inset-0 bg-opacity-75" />
         </Transition.Child>
         <Transition.Child
           as={Fragment}
@@ -44,7 +44,7 @@ function MobileLP({
           leaveFrom="translate-x-0"
           leaveTo="-translate-x-full"
         >
-          <div className="relative flex w-full max-w-[420px] flex-1 flex-col bg-red-600 xs2:max-w-[320px]">
+          <div className="xs2:max-w-[320px] relative flex w-full max-w-[420px] flex-1 flex-col bg-red-600">
             <Transition.Child
               as={Fragment}
               enter="ease-in-out duration-300"
@@ -54,14 +54,14 @@ function MobileLP({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="absolute right-0 top-0 -mr-12 pt-2 xs2:right-20 xs2:top-8 xs:right-20 xs:top-8">
+              <div className="xs2:right-20 xs2:top-8 xs:right-20 xs:top-8 absolute right-0 top-0 -mr-12 pt-2">
                 <button
-                  className="ml-1 flex size-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                  className="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
                   onClick={() => setSidebarOpen(false)}
                 >
                   <span className="sr-only">Close sidebar</span>
                   <HiOutlineXMark
-                    className="size-6 text-white"
+                    className="h-6 w-6 text-white"
                     aria-hidden="true"
                   />
                 </button>

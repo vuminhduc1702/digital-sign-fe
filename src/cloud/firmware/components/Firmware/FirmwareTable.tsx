@@ -78,15 +78,19 @@ function FireWareTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="size-5" />
+            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
             {t('cloud:firmware.add_firmware.edit_firmware')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openUpload}>
-            <UploadIcon className="size-5" />
+            <UploadIcon className="h-5 w-5" />
             {t('cloud:firmware.add_firmware.upload_firmware')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete firmware" className="size-5" />
+            <img
+              src={btnDeleteIcon}
+              alt="Delete firmware"
+              className="h-5 w-5"
+            />
             {t('cloud:firmware.table.delete_firmware')}
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -105,7 +109,11 @@ function FireWareTableContextMenu({
         />
       ) : null}
       {isOpenUpload ? (
-        <UploadFileFirmWare firmwareId={id} close={closeUpload} isOpen={isOpenUpload} />
+        <UploadFileFirmWare
+          firmwareId={id}
+          close={closeUpload}
+          isOpen={isOpenUpload}
+        />
       ) : null}
 
       {isOpenDelete ? (

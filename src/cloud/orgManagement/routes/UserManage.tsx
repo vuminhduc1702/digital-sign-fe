@@ -94,7 +94,10 @@ export function UserManage() {
           />
           <div className="flex items-center gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
-              <div onClick={open} className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white">
+              <div
+                onClick={open}
+                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
+              >
                 <div>{t('btn:delete')}:</div>
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
@@ -125,12 +128,14 @@ export function UserManage() {
           )}
           close={close}
           isOpen={isOpen}
-          handleSubmit={() => mutateDeleteMultipleUsers(
-            {
-              data: { ids: rowSelectionKey },
-            },
-            { onSuccess: () => setRowSelection({}) },
-          )}
+          handleSubmit={() =>
+            mutateDeleteMultipleUsers(
+              {
+                data: { ids: rowSelectionKey },
+              },
+              { onSuccess: () => setRowSelection({}) },
+            )
+          }
           isLoading={isLoading}
         />
       ) : null}

@@ -64,14 +64,14 @@ function DashboardTableContextMenu({
               open()
             }}
           >
-            <img src={btnEditIcon} alt="Edit Dashboard" className="size-5" />
+            <img src={btnEditIcon} alt="Edit Dashboard" className="h-5 w-5" />
             {t('cloud:dashboard.add_dashboard.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
             <img
               src={btnDeleteIcon}
               alt="Delete Dashboard"
-              className="size-5"
+              className="h-5 w-5"
             />
             {t('cloud:dashboard.table.delete_dashboard')}
           </DropdownMenuItem>

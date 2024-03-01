@@ -63,7 +63,7 @@ export function CreateDevice() {
   }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',
@@ -109,7 +109,7 @@ export function CreateDevice() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -121,10 +121,7 @@ export function CreateDevice() {
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               key: values.key,
               group_id: values.group_id,

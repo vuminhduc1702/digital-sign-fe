@@ -104,7 +104,7 @@ export function UpdateCustomerRole({
                 onClick={closeRole}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -175,7 +175,7 @@ export function UpdateCustomerRole({
             className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={closeRole}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -186,7 +186,7 @@ export function UpdateCustomerRole({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>

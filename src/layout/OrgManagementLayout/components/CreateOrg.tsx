@@ -37,7 +37,7 @@ import { ComplexTree } from '~/components/ComplexTree'
 
 export const orgSchema = z.object({
   name: nameSchema,
-  org_id: z.string().optional().or(z.array(z.string())),
+  org_id: z.string().optional(),
   description: descSchema,
   image: z.string().optional(),
   project_id: z.string().optional(),
@@ -122,7 +122,7 @@ export function CreateOrg() {
           size="lg"
           isLoading={isLoadingCreateOrg || isLoadingUploadImage}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -134,10 +134,7 @@ export function CreateOrg() {
           const dataCreateOrg = await mutateAsyncCreateOrg({
             data: {
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               description: values.description,
             },

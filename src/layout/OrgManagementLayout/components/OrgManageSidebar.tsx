@@ -169,7 +169,7 @@ function OrgManageSidebar() {
         )
   return (
     <>
-      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
+      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
         <div className="flex gap-3">
           <img
             src={listIcon}
@@ -187,9 +187,9 @@ function OrgManageSidebar() {
         </div>
         <Combobox value={selected} onChange={setSelected}>
           <div className="relative w-full">
-            <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
+            <div className="focus-visible:ring-offset-primary-300 sm:text-body-sm relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2">
               <Combobox.Input
-                className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 pl-8 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm`}
+                className={`border-secondary-600 placeholder-secondary-700 focus:border-secondary-900 focus:ring-secondary-900 sm:text-body-sm block w-full appearance-none rounded-lg border px-3 py-2 pl-8 shadow-sm focus:outline-none`}
                 displayValue={(person: any) => person.name}
                 onChange={event => setQuery(event.target.value)}
               />
@@ -197,7 +197,7 @@ function OrgManageSidebar() {
                 <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
               </Combobox.Button>
               <HiOutlineXMark
-                className="absolute right-0 top-1/2 mr-1 size-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+                className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
                 onClick={() => setSelected('')}
               />
             </div>
@@ -208,9 +208,9 @@ function OrgManageSidebar() {
               leaveTo="opacity-0"
               afterLeave={() => setQuery('')}
             >
-              <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <Combobox.Options className="text-body-sm absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 {filteredPeople.length === 0 && query !== '' ? (
-                  <div className="relative cursor-default select-none px-4 py-2 text-secondary-700">
+                  <div className="text-secondary-700 relative cursor-default select-none px-4 py-2">
                     {t('error:not_found')}
                   </div>
                 ) : (
@@ -240,7 +240,7 @@ function OrgManageSidebar() {
                               }`}
                             >
                               <HiOutlineCheck
-                                className="size-5"
+                                className="h-5 w-5"
                                 aria-hidden="true"
                               />
                             </span>
@@ -255,7 +255,7 @@ function OrgManageSidebar() {
           </div>
         </Combobox>
       </div>
-      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
+      <div className="bg-secondary-500 h-[82vh] grow overflow-y-auto p-3">
         <div className="space-y-3">
           <Button
             className={clsx('rounded-md border-none', {

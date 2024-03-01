@@ -88,7 +88,7 @@ function UserTableContextMenu({
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete user" className="size-5" />
+            <img src={btnDeleteIcon} alt="Delete user" className="h-5 w-5" />
             {t('cloud:org_manage.user_manage.table.delete_user')}
           </DropdownMenuItem>
         </DropdownMenuContent>

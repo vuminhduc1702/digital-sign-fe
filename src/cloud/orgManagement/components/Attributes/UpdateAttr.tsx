@@ -88,7 +88,7 @@ export function UpdateAttr({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -98,7 +98,7 @@ export function UpdateAttr({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />

@@ -493,7 +493,7 @@ export function CreateEvent() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -547,10 +547,7 @@ export function CreateEvent() {
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               group_id: values.group_id,
               name: values.name,
               onClick: values.onClick,
@@ -581,7 +578,7 @@ export function CreateEvent() {
           <div className="space-y-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.info')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               <InputField
@@ -678,7 +675,7 @@ export function CreateEvent() {
               title={t(
                 'cloud:org_manage.event_manage.add_event.test_condition_time',
               )}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
               {todos.map(todo => (
@@ -741,7 +738,7 @@ export function CreateEvent() {
                 title={t(
                   'cloud:org_manage.event_manage.add_event.condition.title',
                 )}
-                className="w-full rounded-md bg-secondary-700 pl-3"
+                className="bg-secondary-700 w-full rounded-md pl-3"
               />
               <Button
                 className="rounded-md"
@@ -858,7 +855,7 @@ export function CreateEvent() {
                             <img
                               src={btnDeleteIcon}
                               alt="Delete condition"
-                              className="size-10"
+                              className="h-10 w-10"
                             />
                           }
                         />
@@ -872,7 +869,7 @@ export function CreateEvent() {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:org_manage.event_manage.add_event.action.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             {actionType !== 'report' && (
               <Button
@@ -1087,7 +1084,7 @@ export function CreateEvent() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete condition"
-                          className="size-10"
+                          className="h-10 w-10"
                         />
                       }
                     />

@@ -182,7 +182,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                   <img
                     src={btnDeleteIcon}
                     alt="Delete organization"
-                    className="size-5"
+                    className="h-5 w-5"
                   />
                   {t('cloud:org_manage.org_map.delete')}
                 </DropdownMenuItem>

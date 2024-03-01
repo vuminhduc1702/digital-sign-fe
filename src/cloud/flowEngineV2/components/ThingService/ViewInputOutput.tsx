@@ -46,11 +46,11 @@ export function ViewInputOutput({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>

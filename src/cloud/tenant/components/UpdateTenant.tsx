@@ -89,7 +89,7 @@ export function UpdateCustomer({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -109,8 +109,8 @@ export function UpdateCustomer({
             })}
           >
             <div className="grid grid-cols-6 gap-4">
-              <div className="self-center text-right">ID</div>
-              <InputField registration={register('customerId')} disabled />
+              <div className="self-center text-right">Name</div>
+              <InputField registration={register('name')} disabled />
               <div className="col-start-4 self-center text-right">Email</div>
               <InputField
                 error={formState.errors['email']}
@@ -156,7 +156,7 @@ export function UpdateCustomer({
             className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -167,7 +167,7 @@ export function UpdateCustomer({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </div>

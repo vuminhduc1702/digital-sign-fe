@@ -30,11 +30,11 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
         <div className="flex">
           {hasSideBar ? (
             <button
-              className="bg-secondary-900 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-secondary-700 lg:hidden"
+              className="bg-secondary-900 focus:ring-secondary-700 px-4 text-white focus:outline-none focus:ring-2 focus:ring-inset lg:hidden"
               onClick={() => setSidebarOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
-              <HiOutlineBars3 className="size-6" aria-hidden="true" />
+              <HiOutlineBars3 className="h-6 w-6" aria-hidden="true" />
             </button>
           ) : null}
 

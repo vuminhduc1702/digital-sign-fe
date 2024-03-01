@@ -141,7 +141,7 @@ export function CreateUser() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
           }
         />
       }
@@ -154,10 +154,7 @@ export function CreateUser() {
           mutate({
             data: {
               project_id: projectId,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               name: values.name,
               email: values.email,
               password: values.password,

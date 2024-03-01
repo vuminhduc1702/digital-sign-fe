@@ -34,19 +34,18 @@ export const ConfirmDialog = ({
         <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
           <div className="sm:flex sm:items-start">
             {icon === 'danger' && (
-              <div className="size-12 bg-primary-300 sm:size-10 mx-auto flex shrink-0 items-center justify-center rounded-full sm:mx-0">
+              <div className="bg-primary-300 mx-auto flex shrink-0 items-center justify-center rounded-full sm:mx-0">
                 <HiExclamationCircle
-                  className="text-primary-400"
-                  size={35}
+                  className="text-primary-400 h-9 w-9"
                   aria-hidden="true"
                 />
               </div>
             )}
 
             {icon === 'info' && (
-              <div className="size-12 bg-secondary-400 sm:size-10 mx-auto flex shrink-0 items-center justify-center rounded-full sm:mx-0">
+              <div className="bg-secondary-400 mx-auto flex shrink-0 items-center justify-center rounded-full sm:mx-0">
                 <HiInformationCircle
-                  className="size-6 text-secondary-600"
+                  className="text-secondary-600 h-9 w-9"
                   aria-hidden="true"
                 />
               </div>
@@ -70,7 +69,7 @@ export const ConfirmDialog = ({
               className="bg-primary-400"
               onClick={handleSubmit}
               startIcon={
-                <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+                <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
               }
             />
             <Button
@@ -80,7 +79,7 @@ export const ConfirmDialog = ({
               onClick={close}
               ref={cancelButtonRef}
               startIcon={
-                <img src={btnCancelIcon} alt="Submit" className="size-5" />
+                <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
               }
             />
           </div>

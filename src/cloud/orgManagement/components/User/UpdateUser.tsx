@@ -151,7 +151,7 @@ export function UpdateUser({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -161,7 +161,7 @@ export function UpdateUser({
             size="lg"
             isLoading={isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
             disabled={!formState.isDirty || isLoading}
           />
@@ -178,10 +178,7 @@ export function UpdateUser({
               phone: values.phone,
               password: values.password,
               email: values.email,
-              org_id:
-                values.org_id?.toString() !== no_org_val
-                  ? values.org_id?.toString()
-                  : '',
+              org_id: values.org_id !== no_org_val ? values.org_id : '',
               role_id: values.role_id,
               profile:
                 values.profile != null

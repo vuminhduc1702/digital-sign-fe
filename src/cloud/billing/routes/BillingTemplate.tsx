@@ -160,7 +160,7 @@ export function BillingTemplate() {
                         !date && 'text-muted-foreground',
                       )}
                     >
-                      <LuCalendar className="mr-2 size-4" />
+                      <LuCalendar className="mr-2 h-4 w-4" />
                       {date?.from ? (
                         date.to ? (
                           <>
@@ -183,7 +183,7 @@ export function BillingTemplate() {
                               to: undefined,
                             })
                           }
-                          className="absolute right-3 top-2.5 size-4 "
+                          className="absolute right-3 top-2.5 h-4 w-4 "
                         />
                       )}
                     </Button>

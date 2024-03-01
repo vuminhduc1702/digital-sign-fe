@@ -60,7 +60,12 @@ import {
 } from '~/components/Resizable'
 import { type ImperativePanelHandle } from 'react-resizable-panels'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 type UpdateThingProps = {
   name: string
@@ -207,11 +212,11 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>
@@ -236,8 +241,8 @@ export function UpdateThingService({
                     item.type === 'bool' && item.value === ''
                       ? 'false'
                       : numberServiceInput.includes(item.type as string)
-                        ? parseInt(item.value)
-                        : item.value
+                      ? parseInt(item.value)
+                      : item.value
                 })
                 mutateExecuteService({
                   data: dataRun,
@@ -374,8 +379,7 @@ export function UpdateThingService({
                                       )}
                                       require={true}
                                       error={
-                                        formState.errors[`input`]?.[index]
-                                          ?.name
+                                        formState.errors[`input`]?.[index]?.name
                                       }
                                       registration={register(
                                         `input.${index}.name` as const,
@@ -387,8 +391,7 @@ export function UpdateThingService({
                                       )}
                                       require={true}
                                       error={
-                                        formState.errors[`input`]?.[index]
-                                          ?.type
+                                        formState.errors[`input`]?.[index]?.type
                                       }
                                       registration={register(
                                         `input.${index}.type` as const,
@@ -417,11 +420,7 @@ export function UpdateThingService({
                                         control={control}
                                         name={`input.${index}.value`}
                                         render={({
-                                          field: {
-                                            onChange,
-                                            value,
-                                            ...field
-                                          },
+                                          field: { onChange, value, ...field },
                                         }) => {
                                           return (
                                             <Checkbox
@@ -462,12 +461,9 @@ export function UpdateThingService({
                                   type="button"
                                   size="square"
                                   variant="none"
-                                  className={cn(
-                                    'hover:bg-secondary-500 h-9',
-                                    {
-                                      '!justify-center': fullScreen,
-                                    },
-                                  )}
+                                  className={cn('hover:bg-secondary-500 h-9', {
+                                    '!justify-center': fullScreen,
+                                  })}
                                   onClick={() => remove(index)}
                                   startIcon={
                                     <img
@@ -503,9 +499,7 @@ export function UpdateThingService({
                           <div className="flex flex-col gap-y-1">
                             <div className="mb-2">
                               <TextAreaField
-                                label={t(
-                                  'cloud:custom_protocol.service.note',
-                                )}
+                                label={t('cloud:custom_protocol.service.note')}
                                 error={formState.errors['description']}
                                 registration={register('description')}
                               />
@@ -517,9 +511,7 @@ export function UpdateThingService({
                                 }
                                 defaultChecked
                               />
-                              <p>
-                                {t('cloud:custom_protocol.service.debug')}
-                              </p>
+                              <p>{t('cloud:custom_protocol.service.debug')}</p>
                             </div>
                           </div>
                           <div className="mt-1.5 flex flex-col gap-y-3">
@@ -542,9 +534,7 @@ export function UpdateThingService({
                                 const typeOutput = outputList.filter(
                                   data => data.value === item.output,
                                 )
-                                const inputData =
-                                  typeof item.input === 'string' &&
-                                  JSON.parse(item.input)
+
                                 return (
                                   <div className="mt-1.5">
                                     <TooltipProvider>
@@ -566,7 +556,7 @@ export function UpdateThingService({
                                                   :
                                                 </div>
                                                 <ul>
-                                                  {inputData?.map(
+                                                  {item.input?.map(
                                                     (data: InputService) => {
                                                       const type =
                                                         outputList.filter(
@@ -633,29 +623,44 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="flex flex-col overflow-y-auto z-[9999] rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
-                                    <DropdownMenuItem className="py-1"
+                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(codeEditorRef, PANEL_SIZE.MAX)
-                                      }}>
+                                        resizePanel(
+                                          codeEditorRef,
+                                          PANEL_SIZE.MAX,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.maximize_result',
                                       )}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="py-1"
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(codeEditorRef, PANEL_SIZE.MIN)
-                                      }}>
+                                        resizePanel(
+                                          codeEditorRef,
+                                          PANEL_SIZE.MIN,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.minimize_result',
                                       )}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="py-1"
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(codeEditorRef, PANEL_SIZE.DEFAULT)
-                                      }}>
+                                        resizePanel(
+                                          codeEditorRef,
+                                          PANEL_SIZE.DEFAULT,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.default_result',
                                       )}
@@ -722,29 +727,44 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="size-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="flex flex-col overflow-y-auto z-[9999] rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
-                                    <DropdownMenuItem className="py-1"
+                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(resultEditorRef, PANEL_SIZE.MAX)
-                                      }}>
+                                        resizePanel(
+                                          resultEditorRef,
+                                          PANEL_SIZE.MAX,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.maximize_result',
                                       )}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="py-1"
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(resultEditorRef, PANEL_SIZE.MIN)
-                                      }}>
+                                        resizePanel(
+                                          resultEditorRef,
+                                          PANEL_SIZE.MIN,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.minimize_result',
                                       )}
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="py-1"
+                                    <DropdownMenuItem
+                                      className="py-1"
                                       onClick={() => {
-                                        resizePanel(resultEditorRef, PANEL_SIZE.DEFAULT)
-                                      }}>
+                                        resizePanel(
+                                          resultEditorRef,
+                                          PANEL_SIZE.DEFAULT,
+                                        )
+                                      }}
+                                    >
                                       {t(
                                         'cloud:custom_protocol.service.default_result',
                                       )}
@@ -788,10 +808,10 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Cancel" className="size-5" />
+              <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
             }
             ref={cancelButtonRef}
           />
@@ -804,9 +824,9 @@ export function UpdateThingService({
             size="md"
             className="bg-primary-400"
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
-          ></Button>
+          />
         </div>
       </div>
     </Dialog>

@@ -148,7 +148,7 @@ export function TemplateLwM2M() {
                         <img
                           src={btnDeleteIcon}
                           alt="Delete template"
-                          className="size-5"
+                          className="h-5 w-5"
                         />
                         {t('cloud:device_template.sidebar.delete_template')}
                       </DropdownMenuItem>

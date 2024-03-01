@@ -69,9 +69,9 @@ export function ComboBoxBase<T extends Record<string, any>>({
     <FieldWrapper label={label} error={error}>
       <Combobox value={selected} onChange={setSelected}>
         <div className="relative">
-          <div className="relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-300 sm:text-body-sm">
+          <div className="focus-visible:ring-offset-primary-300 sm:text-body-sm relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2">
             <Combobox.Input
-              className={`block w-full appearance-none rounded-lg border border-secondary-600 px-3 py-2 placeholder-secondary-700 shadow-sm focus:border-secondary-900 focus:outline-none focus:ring-secondary-900 sm:text-body-sm ${
+              className={`border-secondary-600 placeholder-secondary-700 focus:border-secondary-900 focus:ring-secondary-900 sm:text-body-sm block w-full appearance-none rounded-lg border px-3 py-2 shadow-sm focus:outline-none ${
                 startIcon ? 'pl-8' : ''
               }`}
               displayValue={(data: T) =>
@@ -92,7 +92,7 @@ export function ComboBoxBase<T extends Record<string, any>>({
               </Combobox.Button>
             ) : null}
             <HiOutlineXMark
-              className="absolute right-0 top-1/2 mr-1 size-5 -translate-y-1/2 transform cursor-pointer opacity-50"
+              className="absolute right-0 top-1/2 mr-1 h-5 w-5 -translate-y-1/2 transform cursor-pointer opacity-50"
               onClick={() => setQuery('')}
             />
           </div>
@@ -102,9 +102,9 @@ export function ComboBoxBase<T extends Record<string, any>>({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Combobox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-body-sm shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+            <Combobox.Options className="text-body-sm absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
               {data?.length === 0 && query !== '' ? (
-                <div className="relative cursor-default select-none px-4 py-2 text-secondary-700">
+                <div className="text-secondary-700 relative cursor-default select-none px-4 py-2">
                   {t('error:not_found')}
                 </div>
               ) : (
@@ -138,7 +138,7 @@ export function ComboBoxBase<T extends Record<string, any>>({
                             }`}
                           >
                             <HiOutlineCheck
-                              className="size-5 text-primary-400"
+                              className="text-primary-400 h-5 w-5"
                               aria-hidden="true"
                             />
                           </span>

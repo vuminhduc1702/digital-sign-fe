@@ -161,7 +161,7 @@ export function UpdateSubcription({
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
-                <HiOutlineXMark className="size-6" aria-hidden="true" />
+                <HiOutlineXMark className="h-6 w-6" aria-hidden="true" />
               </button>
             </div>
           </div>

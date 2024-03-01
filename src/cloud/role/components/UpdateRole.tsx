@@ -159,7 +159,7 @@ export function UpdateRole({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="size-5" />
+              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
             }
           />
           <Button
@@ -170,7 +170,7 @@ export function UpdateRole({
             isLoading={isLoading}
             disabled={!formState.isDirty || isLoading}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
             }
           />
         </>
@@ -219,10 +219,10 @@ export function UpdateRole({
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="w-full rounded-md bg-secondary-700 pl-3"
+              className="bg-secondary-700 w-full rounded-md pl-3"
             />
             <Button
-              className="rounded-md text-secondary-700"
+              className="text-secondary-700 rounded-md"
               variant="trans"
               size="square"
               startIcon={
@@ -375,7 +375,7 @@ export function UpdateRole({
                   <img
                     src={btnDeleteIcon}
                     alt="Delete policy"
-                    className="size-10"
+                    className="h-10 w-10"
                   />
                 }
               />
