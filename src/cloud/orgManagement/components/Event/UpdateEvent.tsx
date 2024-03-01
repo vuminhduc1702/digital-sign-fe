@@ -45,6 +45,7 @@ import {
   eventActionSchema,
   cmdSchema,
   eventTypeSchema,
+  eventConditionSchema,
 } from './CreateEvent'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
@@ -88,6 +89,18 @@ export const updateEventSchema = z
     cmd: updateCmdSchema.optional(),
   })
   .and(eventTypeSchema)
+  .and(
+    z.discriminatedUnion('onClick', [
+      z.object({
+        onClick: z.literal(true),
+        condition: z.tuple([]),
+      }),
+      z.object({
+        onClick: z.literal(false),
+        condition: eventConditionSchema,
+      }),
+    ]),
+  )
 
 export function UpdateEvent({
   eventId,

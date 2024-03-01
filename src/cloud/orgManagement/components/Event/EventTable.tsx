@@ -95,7 +95,7 @@ function EventTableContextMenu({
     setDataAction(dataRow?.action)
     setConditionData(dataRow?.condition)
     const myArray = dataRow?.schedule?.repeat?.split(',')
-    if (Array.isArray(myArray)) {
+    if (Array.isArray(myArray) && myArray?.length > 0 && myArray[0]) {
       setTypeEvent('schedule')
       const newArr = todos.map(item => {
         if (myArray?.includes(item.value)) {
@@ -145,7 +145,7 @@ function EventTableContextMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
+            <img src={btnEditIcon} alt="Edit event" className="size-5" />
             {t('cloud:org_manage.event_manage.add_event.edit')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => handleCopyId(id)}>
@@ -157,7 +157,7 @@ function EventTableContextMenu({
             {t('table:copy_id')}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete event" className="h-5 w-5" />
+            <img src={btnDeleteIcon} alt="Delete event" className="size-5" />
             {t('cloud:org_manage.event_manage.table.delete_event')}
           </DropdownMenuItem>
         </DropdownMenuContent>
