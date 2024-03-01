@@ -202,8 +202,6 @@ export function UpdateWidget({
       },
     },
   })
-  console.log(formState.errors)
-  console.log(widgetInfoMemo)
 
   const { fields, append, remove } = useFieldArray({
     name: 'attributeConfig',
@@ -1049,7 +1047,7 @@ export function UpdateWidget({
                                             !value && 'text-secondary-700',
                                           )}
                                         >
-                                          <LuCalendar className="mr-2 size-4" />
+                                          <LuCalendar className="size-4 mr-2" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1143,7 +1141,7 @@ export function UpdateWidget({
                                             ) === 'REALTIME'
                                           }
                                         >
-                                          <LuCalendar className="mr-2 size-4" />
+                                          <LuCalendar className="size-4 mr-2" />
                                           {value ? (
                                             <span>
                                               {format(
@@ -1234,7 +1232,7 @@ export function UpdateWidget({
       }
       triggerButton={
         <Button
-          className="size-5 hover:text-primary-400"
+          className="p-0 hover:text-primary-400"
           variant="none"
           size="square"
           startIcon={<EditBtnIcon width={20} height={17} viewBox="0 0 20 17" />}

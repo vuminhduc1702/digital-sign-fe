@@ -164,15 +164,17 @@ export function DashboardDetail() {
     return result
   }
 
-  const { data: deviceData } = useGetDevices({
-    orgIds: findOrgs(),
-    projectId,
-    config: {
-      suspense: false,
-      retry: 5,
-      retryDelay: 5000,
-    },
-  })
+  const { data: deviceData, isPreviousData: isPreviousDeviceData } =
+    useGetDevices({
+      orgIds: findOrgs(),
+      projectId,
+      config: {
+        suspense: false,
+        retry: 5,
+        retryDelay: 5000,
+      },
+    })
+  useEffect(() => {}, [isPreviousDeviceData])
 
   function triggerRerenderLayout() {
     setRerenderLayout(true)
@@ -324,7 +326,7 @@ export function DashboardDetail() {
         title={`${t('cloud:dashboard.title')}: ${detailDashboard?.title}`}
       />
       <StarFilledIcon
-        className={cn('absolute left-2 top-2 size-5 cursor-pointer', {
+        className={cn('size-5 absolute left-2 top-2 cursor-pointer', {
           'text-amber-400': isStar,
           'text-white': !isStar,
           'cursor-not-allowed': !isEditMode,
@@ -369,7 +371,6 @@ export function DashboardDetail() {
                 widgetInfo?.attribute_config?.map(item => {
                   item.deviceName = getDeviceInfo(item.label)?.name
                 })
-                console.log(widgetInfo)
                 const realtimeValues: TimeSeries =
                   lastJsonMessage?.id === widgetId
                     ? combinedObject(

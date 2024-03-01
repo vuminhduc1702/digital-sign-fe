@@ -19,6 +19,105 @@ import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 
 import * as d3 from 'd3'
+import i18n from '~/i18n'
+
+export const VN_TIME = {
+  dateTime: '%d %B %Y',
+  date: '%d.%m.%Y',
+  time: '%H:%M:%S',
+  periods: ['AM', 'PM'],
+  days: [
+    'Chủ Nhật',
+    'Thứ Hai',
+    'Thứ Ba',
+    'Thứ Tư',
+    'Thứ Năm',
+    'Thứ Sáu',
+    'Thứ Bảy',
+  ],
+  shortDays: [
+    'Chủ Nhật',
+    'Thứ Hai',
+    'Thứ Ba',
+    'Thứ Tư',
+    'Thứ Năm',
+    'Thứ Sáu',
+    'Thứ Bảy',
+  ],
+  months: [
+    'Tháng Một',
+    'Tháng Hai',
+    'Tháng Ba',
+    'Tháng Tư',
+    'Tháng Năm',
+    'Tháng Sáu',
+    'Tháng Bảy',
+    'Tháng Tám',
+    'Tháng Chín',
+    'Tháng Mười',
+    'Tháng Mười Một',
+    'Tháng Mười Hai',
+  ],
+  shortMonths: [
+    'Tháng Một',
+    'Tháng Hai',
+    'Tháng Ba',
+    'Tháng Tư',
+    'Tháng Năm',
+    'Tháng Sáu',
+    'Tháng Bảy',
+    'Tháng Tám',
+    'Tháng Chín',
+    'Tháng Mười',
+    'Tháng Mười Một',
+    'Tháng Mười Hai',
+  ],
+}
+
+export const EN_TIME = {
+  dateTime: '%x, %X',
+  date: '%-m/%-d/%Y',
+  time: '%-I:%M:%S %p',
+  periods: ['AM', 'PM'] as [string, string],
+  days: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
+  shortDays: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  months: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  shortMonths: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
+}
 
 export function LineChart({
   data,
@@ -51,6 +150,14 @@ export function LineChart({
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (i18n.language === 'vi') {
+      d3.timeFormatDefaultLocale(VN_TIME)
+    } else {
+      d3.timeFormatDefaultLocale(EN_TIME)
+    }
+  }, [i18n.language])
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
@@ -146,7 +253,7 @@ export function LineChart({
                     key={`item-${index}`}
                     className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
-                    <div>{timeFormatter(entry.payload.ts)}</div>
+                    <div>{timeFormatterTooltip(entry.payload.ts)}</div>
                     <div style={{ color: entry.color }}>
                       {unitConfig &&
                       unitConfig.length > 0 &&
@@ -224,13 +331,17 @@ export function LineChart({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%I:%M %p, %d-%b')(new Date(tick))
+            return d3.timeFormat('%I:%M %p - %d, %b')(new Date(tick))
           default:
-            return d3.timeFormat('%I %p, %d-%b')(new Date(tick))
+            return d3.timeFormat('%I %p - %d, %b')(new Date(tick))
         }
       default:
-        return d3.timeFormat('%d-%b')(new Date(tick))
+        return d3.timeFormat('%d, %b')(new Date(tick))
     }
+  }
+
+  function timeFormatterTooltip(tick: number) {
+    return d3.timeFormat('%H:%M:%S - %d, %b')(new Date(tick))
   }
 
   const initNow = new Date().getTime()

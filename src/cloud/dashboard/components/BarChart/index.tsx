@@ -14,11 +14,11 @@ import { useSpinDelay } from 'spin-delay'
 import type * as z from 'zod'
 
 import { Spinner } from '~/components/Spinner'
-import { defaultDateConfig, getVNDateFormat } from '~/utils/misc'
-
 import { type TimeSeries } from '../../types'
 import { type widgetSchema } from '../Widget'
 import refreshIcon from '~/assets/icons/table-refresh.svg'
+import { EN_TIME, VN_TIME } from '../LineChart'
+import i18n from '~/i18n'
 
 import * as d3 from 'd3'
 
@@ -54,6 +54,14 @@ export const BarChart = ({
     },
   ])
   const [isRefresh, setIsRefresh] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (i18n.language === 'vi') {
+      d3.timeFormatDefaultLocale(VN_TIME)
+    } else {
+      d3.timeFormatDefaultLocale(EN_TIME)
+    }
+  }, [i18n.language])
 
   useEffect(() => {
     if (Object.keys(data).length > 0) {
@@ -147,7 +155,7 @@ export const BarChart = ({
                     key={`item-${index}`}
                     className="m-[3px] flex flex-col justify-between border border-gray-300 bg-white p-[10px]"
                   >
-                    <div>{timeFormatter(entry.payload.ts)}</div>
+                    <div>{timeFormatterTooltip(entry.payload.ts)}</div>
                     <div style={{ color: entry.color }}>
                       {unitConfig &&
                       unitConfig.length > 0 &&
@@ -225,13 +233,17 @@ export const BarChart = ({
         TIME_PERIOD <= 1000 * 60 * 60 * 24 * 7:
         switch (true) {
           case TICK_INTERVAL <= 1000 * 60 * 30:
-            return d3.timeFormat('%I:%M %p, %d-%b')(new Date(tick))
+            return d3.timeFormat('%I:%M %p - %d, %b')(new Date(tick))
           default:
-            return d3.timeFormat('%I %p, %d-%b')(new Date(tick))
+            return d3.timeFormat('%I %p - %d, %b')(new Date(tick))
         }
       default:
-        return d3.timeFormat('%d-%b')(new Date(tick))
+        return d3.timeFormat('%d, %b')(new Date(tick))
     }
+  }
+
+  function timeFormatterTooltip(tick: number) {
+    return d3.timeFormat('%H:%M:%S - %d, %b')(new Date(tick))
   }
 
   const initNow = new Date().getTime()
@@ -418,7 +430,11 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
+                  key?.attribute_key +
+                  ' - ' +
+                  key?.deviceName +
+                  ' - ' +
+                  key?.label
                 const colorKey = key?.color
 
                 return (
@@ -457,7 +473,11 @@ export const BarChart = ({
               <Legend content={renderLegend} />
               {widgetInfo.attribute_config.map((key, index) => {
                 const attributeKey =
-                  key?.attribute_key + ' - ' + key?.deviceName + ' - ' + key?.label
+                  key?.attribute_key +
+                  ' - ' +
+                  key?.deviceName +
+                  ' - ' +
+                  key?.label
                 const colorKey = key?.color
 
                 return (

@@ -38,6 +38,7 @@ import { UpdateIcon, CopyIcon } from '@radix-ui/react-icons'
 import { UpdateVersionFirmWare } from './UpdateVersionFirmware'
 import { useBlockAndActiveDevice } from '../../api/deviceAPI/blockAndActiveDevice'
 import { UpdateMqttConfig } from './UpdateMqttConfig'
+import { Link } from '~/components/Link'
 
 function DeviceTableContextMenu({
   id,
@@ -67,9 +68,6 @@ function DeviceTableContextMenu({
 
   const { close, open, isOpen } = useDisclosure()
 
-  const projectId = storage.getProject()?.id
-  const { orgId } = useParams()
-
   const { mutate, isLoading, isSuccess } = useDeleteDevice()
 
   const { mutate: mutateBlockAndActive } = useBlockAndActiveDevice()
@@ -90,7 +88,7 @@ function DeviceTableContextMenu({
       >
         <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
-            <MenuItem
+            {/* <MenuItem
               icon={
                 <img src={btnDetailIcon} alt="View device" className="size-5" />
               }
@@ -103,7 +101,7 @@ function DeviceTableContextMenu({
               }
             >
               {t('table:view_detail')}
-            </MenuItem>
+            </MenuItem> */}
             <MenuItem
               icon={
                 <img src={btnEditIcon} alt="Edit device" className="size-5" />
@@ -259,6 +257,10 @@ type DeviceTableProps = {
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const { t } = useTranslation()
 
+  const projectId = storage.getProject()?.id
+
+  const { orgId } = useParams()
+
   const dataSorted = data?.sort((a, b) => b.created_time - a.created_time)
 
   const colsVisibility = {
@@ -294,7 +296,21 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const nameDevice = info.row.original.name
+          const deviceId = info.row.original.id
+          return (
+            <Link
+              to={`${PATHS.DEVICE_MANAGE}/${projectId}/${
+                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
+              }`}
+            >
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {nameDevice}
+              </p>
+            </Link>
+          )
+        },
         footer: info => info.column.id,
       }),
 

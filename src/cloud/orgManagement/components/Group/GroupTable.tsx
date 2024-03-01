@@ -27,6 +27,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import AssignUser from './AssignUser'
 import AssignGroupRole from './AssignGroupRole'
+import { Link } from '~/components/Link'
 
 export type GroupType = {
   id: string
@@ -85,7 +86,7 @@ function GroupTableContextMenu({
       >
         <Menu.Items className="absolute right-0 z-10 mt-6 w-40 origin-top-right divide-y divide-secondary-400 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="p-1">
-            <MenuItem
+            {/* <MenuItem
               icon={
                 <img src={btnDetailIcon} alt="View group" className="size-5" />
               }
@@ -98,7 +99,7 @@ function GroupTableContextMenu({
               }
             >
               {t('table:view_detail')}
-            </MenuItem>
+            </MenuItem> */}
             {props.entity_type === 'DEVICE' && (
               <MenuItem
                 icon={
@@ -217,7 +218,13 @@ type GroupTableProps = {
 
 export function GroupTable({ data, ...props }: GroupTableProps) {
   const { t } = useTranslation()
+
+  const projectId = storage.getProject()?.id
+
+  const { orgId } = useParams()
+
   const columnHelper = createColumnHelper<Group>()
+
   const columns = useMemo<ColumnDef<Group, any>[]>(
     () => [
       columnHelper.display({
@@ -230,7 +237,21 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.group_manage.table.name')}</span>
         ),
-        cell: info => info.getValue(),
+        cell: info => {
+          const nameGroup = info.row.original.name
+          const deviceId = info.row.original.id
+          return (
+            <Link
+              to={`${PATHS.GROUP_MANAGE}/${projectId}/${
+                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
+              }`}
+            >
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {nameGroup}
+              </p>
+            </Link>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('entity_type', {
