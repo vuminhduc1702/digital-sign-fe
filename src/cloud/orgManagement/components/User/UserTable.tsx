@@ -58,7 +58,6 @@ function UserTableContextMenu({
   } = useDisclosure()
 
   const { mutate, isLoading, isSuccess } = useDeleteUser()
-  const [type, setType] = useState('')
 
   const handleCopyId = useCopyId()
 

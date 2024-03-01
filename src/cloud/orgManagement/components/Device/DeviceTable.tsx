@@ -70,13 +70,23 @@ function DeviceTableContextMenu({
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const [type, setType] = useState('')
-
   const { close, open, isOpen } = useDisclosure()
   const {
     close: closeDelete,
     open: openDelete,
     isOpen: isOpenDelete,
+  } = useDisclosure()
+
+  const {
+    close: closeUpdateMqtt,
+    open: openUpdateMqtt,
+    isOpen: isOpenUpdateMqtt,
+  } = useDisclosure()
+
+  const {
+    close: closeUpdateVersion,
+    open: openUpdateVersion,
+    isOpen: isOpenUpdateVersion,
   } = useDisclosure()
 
   const projectId = storage.getProject()?.id
@@ -105,8 +115,7 @@ function DeviceTableContextMenu({
           <DropdownMenuItem
             onClick={() =>
               navigate(
-                `${PATHS.DEVICE_MANAGE}/${projectId}/${
-                  orgId != null ? `${orgId}/${id}` : ` /${id}`
+                `${PATHS.DEVICE_MANAGE}/${projectId}/${orgId != null ? `${orgId}/${id}` : ` /${id}`
                 }`,
               )
             }
@@ -114,21 +123,11 @@ function DeviceTableContextMenu({
             <img src={btnDetailIcon} alt="View device" className="size-5" />
             {t('table:view_detail')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('update-device')
-            }}
-          >
+          <DropdownMenuItem onClick={open}>
             <img src={btnEditIcon} alt="Edit device" className="size-5" />
             {t('cloud:org_manage.device_manage.add_device.edit')}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-              setType('update-mqtt')
-            }}
-          >
+          <DropdownMenuItem onClick={openUpdateMqtt}>
             <img src={btnEditIcon} alt="Edit mqtt config" className="size-5" />
             {t('cloud:org_manage.device_manage.add_device.mqttconfig')}
           </DropdownMenuItem>
@@ -148,10 +147,7 @@ function DeviceTableContextMenu({
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              if (status !== 'blocked') {
-                open()
-                setType('update-version')
-              }
+              if (status !== 'blocked') openUpdateVersion()
             }}
             style={{
               color: status === 'blocked' ? 'gray' : '',
@@ -179,7 +175,7 @@ function DeviceTableContextMenu({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isOpen && type === 'update-device' ? (
+      {isOpen ? (
         <UpdateDevice
           deviceId={id}
           org_id={org_id}
@@ -192,15 +188,15 @@ function DeviceTableContextMenu({
           additional_info={additional_info}
         />
       ) : null}
-      {isOpen && type === 'update-version' ? (
-        <UpdateVersionFirmWare deviceId={id} close={close} isOpen={isOpen} />
+      {isOpenUpdateVersion ? (
+        <UpdateVersionFirmWare deviceId={id} close={closeUpdateVersion} isOpen={isOpenUpdateVersion} />
       ) : null}
-      {isOpen && additional_info != null && type === 'update-mqtt' ? (
+      {isOpenUpdateMqtt && additional_info != null ? (
         <UpdateMqttConfig
           additional_info={additional_info}
           deviceId={id}
-          close={close}
-          isOpen={isOpen}
+          close={closeUpdateMqtt}
+          isOpen={isOpenUpdateMqtt}
         />
       ) : null}
 

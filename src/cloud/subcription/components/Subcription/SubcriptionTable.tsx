@@ -28,7 +28,6 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
 
   const { close, open, isOpen } = useDisclosure()
-  const [type, setType] = useState('')
 
   return (
     <>
