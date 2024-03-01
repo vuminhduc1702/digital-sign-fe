@@ -24,7 +24,6 @@ import { PlusIcon } from '~/components/SVGIcons'
 import { useGetGroups } from '../../api/groupAPI'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { type SelectInstance } from 'react-select'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 export const deviceSchema = z.object({
@@ -110,7 +109,7 @@ export function CreateDevice() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -122,7 +121,10 @@ export function CreateDevice() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
+              org_id:
+                values.org_id?.toString() !== no_org_val
+                  ? values.org_id?.toString()
+                  : '',
               name: values.name,
               key: values.key,
               group_id: values.group_id,
@@ -138,58 +140,14 @@ export function CreateDevice() {
             registration={register('name')}
           />
 
-          <FieldWrapper
+          <ComplexTree
+            name="org_id"
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
-          >
-            <Controller
-              control={control}
-              name="org_id"
-              render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = value
-                  ? orgSelectOptions?.find(
-                      org => org.value === value.toString(),
-                    )?.label
-                  : ''
-                return (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="org_id"
-                        variant="trans"
-                        size="square"
-                        className={cn(
-                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                          !value && 'text-secondary-700',
-                        )}
-                      >
-                        {value ? (
-                          <span>{parseValue ? parseValue : value}</span>
-                        ) : (
-                          <span>
-                            {t(
-                              'cloud:org_manage.org_manage.add_org.choose_org',
-                            )}
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-2 popover-content" align="start">
-                      <ComplexTree
-                        items={orgData?.organizations}
-                        selectOrg={e => {
-                          selectDropdownGroupId.current?.clearValue()
-                          onChange(e)
-                        }}
-                        currentValue={value}
-                        {...field}
-                      ></ComplexTree>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }}
-            />
-          </FieldWrapper>
+            control={control}
+            options={orgData?.organizations}
+            customOnChange={() => selectDropdownGroupId.current?.clearValue()}
+          />
 
           <SelectDropdown
             refSelect={selectDropdownGroupId}

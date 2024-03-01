@@ -4,7 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
-import { FieldWrapper, InputField, SelectDropdown, TextAreaField } from '~/components/Form'
+import {
+  FieldWrapper,
+  InputField,
+  SelectDropdown,
+  TextAreaField,
+} from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
 import { orgSchema } from './CreateOrg'
@@ -125,7 +130,7 @@ export function UpdateOrg({
             size="lg"
             onClick={close}
             startIcon={
-              <img src={btnCancelIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnCancelIcon} alt="Submit" className="size-5" />
             }
           />
           <Button
@@ -135,7 +140,7 @@ export function UpdateOrg({
             size="lg"
             isLoading={isLoading || isLoadingUploadImage}
             startIcon={
-              <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+              <img src={btnSubmitIcon} alt="Submit" className="size-5" />
             }
             disabled={isLoading}
           />
@@ -153,7 +158,10 @@ export function UpdateOrg({
             mutateUpdateOrgForOrg({
               data: {
                 ids: [selectedUpdateOrg.id],
-                org_id: getValues('org_id').toString() !== no_org_val ? getValues('org_id').org_id?.toString() : '',
+                org_id:
+                  getValues('org_id').toString() !== no_org_val
+                    ? getValues('org_id').org_id?.toString()
+                    : '',
               },
             })
           }
@@ -169,7 +177,10 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id: getValues('org_id').toString() !== no_org_val ? getValues('org_id').org_id?.toString() : '',
+                org_id:
+                  getValues('org_id').toString() !== no_org_val
+                    ? getValues('org_id').org_id?.toString()
+                    : '',
                 image: dataUploadImage?.data?.link,
               },
               org_id: selectedUpdateOrg?.id,
@@ -199,59 +210,13 @@ export function UpdateOrg({
             error={formState.errors['name']}
             registration={register('name')}
           />
-
-          <FieldWrapper
+          <ComplexTree
+            name="org_id"
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
-          >
-            <Controller
-              control={control}
-              name="org_id"
-              render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = value
-                  ? orgSelectOptions?.find(
-                      org => org.value === value.toString(),
-                    )?.label
-                  : ''
-                return (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="org_id"
-                        variant="trans"
-                        size="square"
-                        className={cn(
-                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                          !value && 'text-secondary-700',
-                        )}
-                      >
-                        {value ? (
-                          <span>{parseValue ? parseValue : value}</span>
-                        ) : (
-                          <span>
-                            {t(
-                              'cloud:org_manage.org_manage.add_org.choose_org',
-                            )}
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="popover-content w-auto p-2"
-                      align="start"
-                    >
-                      <ComplexTree
-                        items={orgData?.organizations}
-                        selectOrg={onChange}
-                        currentValue={value}
-                        {...field}
-                      ></ComplexTree>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }}
-            />
-          </FieldWrapper>
+            control={control}
+            options={orgData?.organizations}
+          />
 
           <TextAreaField
             label={t('cloud:org_manage.org_manage.add_org.desc')}

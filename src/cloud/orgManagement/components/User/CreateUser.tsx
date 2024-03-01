@@ -1,12 +1,11 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
 
 import { Button } from '~/components/Button'
 import {
-  FieldWrapper,
   FormDrawer,
   InputField,
   SelectDropdown,
@@ -20,7 +19,7 @@ import {
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { cn, flattenData } from '~/utils/misc'
+import { flattenData } from '~/utils/misc'
 import i18n from '~/i18n'
 import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
@@ -28,7 +27,6 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { EyeHide, EyeShow, PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 export const userInfoSchema = z.object({
@@ -143,7 +141,7 @@ export function CreateUser() {
           size="lg"
           isLoading={isLoading}
           startIcon={
-            <img src={btnSubmitIcon} alt="Submit" className="h-5 w-5" />
+            <img src={btnSubmitIcon} alt="Submit" className="size-5" />
           }
         />
       }
@@ -156,7 +154,10 @@ export function CreateUser() {
           mutate({
             data: {
               project_id: projectId,
-              org_id: values.org_id?.toString() !== no_org_val ? values.org_id?.toString() : '',
+              org_id:
+                values.org_id?.toString() !== no_org_val
+                  ? values.org_id?.toString()
+                  : '',
               name: values.name,
               email: values.email,
               password: values.password,
@@ -242,59 +243,13 @@ export function CreateUser() {
               )
             }
           />
-
-          <FieldWrapper
+          <ComplexTree
+            name="org_id"
             label={t('cloud:org_manage.device_manage.add_device.parent')}
             error={formState?.errors?.org_id}
-          >
-            <Controller
-              control={control}
-              name="org_id"
-              render={({ field: { onChange, value, ...field } }) => {
-                const parseValue = value
-                  ? orgSelectOptions?.find(
-                      org => org.value === value.toString(),
-                    )?.label
-                  : ''
-                return (
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="org_id"
-                        variant="trans"
-                        size="square"
-                        className={cn(
-                          'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
-                          !value && 'text-secondary-700',
-                        )}
-                      >
-                        {value ? (
-                          <span>{parseValue ? parseValue : value}</span>
-                        ) : (
-                          <span>
-                            {t(
-                              'cloud:org_manage.org_manage.add_org.choose_org',
-                            )}
-                          </span>
-                        )}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      className="popover-content w-auto p-2"
-                      align="start"
-                    >
-                      <ComplexTree
-                        items={orgData?.organizations}
-                        selectOrg={onChange}
-                        currentValue={value}
-                        {...field}
-                      ></ComplexTree>
-                    </PopoverContent>
-                  </Popover>
-                )
-              }}
-            />
-          </FieldWrapper>
+            control={control}
+            options={orgData?.organizations}
+          />
 
           <SelectDropdown
             label={t('cloud:org_manage.user_manage.add_user.role')}
