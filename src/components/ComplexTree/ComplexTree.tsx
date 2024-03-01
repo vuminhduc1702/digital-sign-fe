@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { type Ref, useCallback, useEffect, useRef, useState } from 'react'
 import {
   ControlledTreeEnvironment,
   InteractionMode,
   StaticTreeDataProvider,
   Tree,
+  type TreeEnvironmentRef,
   type TreeItem,
   type TreeItemIndex,
   type TreeRef,
@@ -35,6 +36,7 @@ type ComplexTreeProps<TFormValues extends FieldValues> = {
   classlabel?: string
   classchild?: string
   placeholder?: string
+  refTree?: Ref<TreeEnvironmentRef<any>>
   customOnChange?: (e?: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
@@ -214,10 +216,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
         name={name}
         control={control}
         render={({ field: { onChange, value, ...field } }) => {
-          console.log(options)
-          const parseValue = value
-            ? options?.find(org => org.id === value.toString())?.name
-            : ''
+          const parseValue =
+            value && dataItem[value] ? dataItem[value].data.name : ''
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -287,13 +287,14 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   }
                   onSelectItems={(items: any) => {
                     setSelectedItems(items)
-                    onChange(items)
+                    onChange(items.toString())
                     customOnChange?.(items)
                   }}
                   defaultInteractionMode={
                     InteractionMode.DoubleClickItemToExpand
                   }
                   canSearchByStartingTyping={true}
+                  {...props}
                 >
                   <Tree
                     treeId={'complex-tree'}
