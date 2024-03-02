@@ -59,7 +59,7 @@ export function ThingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     thingData?.data?.list?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
@@ -73,7 +73,7 @@ export function ThingTemplate() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">

@@ -62,7 +62,7 @@ export function UserManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     userData?.users?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
@@ -79,7 +79,7 @@ export function UserManage() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <div ref={ref} className="uer-pnf flex grow flex-col">

@@ -324,7 +324,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={
                                   columnFilter.filter(item => item.isVisible)
                                     .length === columnFilter.length
@@ -389,7 +389,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={
                                           columnFilter.find(
                                             item => item.id === column.id,
@@ -450,7 +450,7 @@ export function BaseTable<T extends Record<string, any>>({
                               <input
                                 type="checkbox"
                                 id="checkAll"
-                                className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                 checked={table.getIsAllColumnsVisible()}
                                 onChange={table.getToggleAllColumnsVisibilityHandler()}
                               />
@@ -501,7 +501,7 @@ export function BaseTable<T extends Record<string, any>>({
                                       <input
                                         type="checkbox"
                                         id={column.id}
-                                        className="mr-1 size-4 rounded-sm border accent-primary-400"
+                                        className="mr-1 h-4 w-4 rounded-sm border accent-primary-400"
                                         checked={column.getIsVisible()}
                                         onChange={column.getToggleVisibilityHandler()}
                                       />

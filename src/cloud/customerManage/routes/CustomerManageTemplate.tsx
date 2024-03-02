@@ -44,7 +44,7 @@ export function CustomerManageTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined = data?.users?.reduce(
+  const aoo: Array<{ [key: string]: unknown }> | undefined = data?.users?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {
@@ -61,7 +61,7 @@ export function CustomerManageTemplate() {
       }
       return acc
     },
-    [] as Array<{ [key: string]: string }>,
+    [] as Array<{ [key: string]: unknown }>,
   )
 
   return (
@@ -81,7 +81,7 @@ export function CustomerManageTemplate() {
           <ExportTable
             refComponent={ref}
             rowSelection={rowSelection}
-            aoo={aoo || []}
+            aoo={aoo}
             pdfHeader={pdfHeader}
           />
           <div className="mr-[42px] flex items-center gap-x-3">

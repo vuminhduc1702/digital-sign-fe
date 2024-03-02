@@ -84,7 +84,7 @@ export function BillingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     data?.data?.data?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
@@ -107,7 +107,7 @@ export function BillingTemplate() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <>
@@ -130,7 +130,7 @@ export function BillingTemplate() {
             <ExportTable
               refComponent={ref}
               rowSelection={rowSelection}
-              aoo={aoo || []}
+              aoo={aoo}
               pdfHeader={pdfHeader}
             />
             <div className="flex items-center gap-x-3">

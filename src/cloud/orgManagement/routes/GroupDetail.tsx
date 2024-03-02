@@ -59,7 +59,7 @@ export function GroupDetail() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
@@ -76,7 +76,7 @@ export function GroupDetail() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">

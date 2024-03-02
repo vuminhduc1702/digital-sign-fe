@@ -93,7 +93,7 @@ export const updateEventSchema = z
     z.discriminatedUnion('onClick', [
       z.object({
         onClick: z.literal(true),
-        condition: z.tuple([]),
+        condition: z.tuple([]).nullish(),
       }),
       z.object({
         onClick: z.literal(false),
@@ -134,10 +134,6 @@ export function UpdateEvent({
     value: thing.id,
     label: thing.name,
   }))
-  console.log(
-    'first',
-    thingSelectData?.find(ele => ele.value === thingIdOptionProp),
-  )
 
   const {
     register,
@@ -168,7 +164,7 @@ export function UpdateEvent({
       },
     },
   })
-  // console.log('formState.errors', formState.errors)
+  console.log('formState.errors', formState.errors)
 
   const {
     append: conditionAppend,
@@ -408,7 +404,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -510,7 +506,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -549,7 +545,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -705,7 +701,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               {actionType !== 'report' && (
                 <Button

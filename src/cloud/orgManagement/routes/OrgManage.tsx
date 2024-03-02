@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
+
 import {
   AttrTable,
   CreateAttr,
@@ -10,15 +11,14 @@ import { ExportTable } from '~/components/Table/components/ExportTable'
 import { API_URL } from '~/config'
 import { useOrgById } from '~/layout/OrgManagementLayout/api'
 import { lazyImport } from '~/utils/lazyImport'
-
-import { type Attribute } from '~/types'
-
-import defaultOrgImage from '~/assets/images/default-org.png'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
 import { SearchField } from '~/components/Input'
 import { useDisclosure } from '~/utils/hooks'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
+import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
+
+import defaultOrgImage from '~/assets/images/default-org.png'
 
 const { OrgMap } = lazyImport(() => import('./OrgMap'), 'OrgMap')
 
@@ -28,16 +28,12 @@ export function OrgManage() {
 
   const params = useParams()
   const orgId = params.orgId as string
-  const entityType = 'ORGANIZATION'
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [data, setData] = useState<Attribute[]>([])
   const { close, open, isOpen } = useDisclosure()
   const { data: orgByIdData } = useOrgById({ orgId })
+  const { data: attrsData } = useGetAttrs({ entityType: 'ORGANIZATION', entityId: orgId })
 
-  const [filteredComboboxData, setFilteredComboboxData] = useState<Attribute[]>(
-    [],
-  )
   const {
     mutate: mutateDeleteMultipleAttrs,
     isLoading,
@@ -63,14 +59,14 @@ export function OrgManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const attrKeys = filteredComboboxData.reduce((acc, curr, index) => {
+  const attrKeys = attrsData?.attributes?.reduce((acc, curr, index) => {
     if (rowSelectionKey.includes(index.toString())) {
       acc.push(curr.attribute_key)
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    filteredComboboxData?.reduce((acc, curr, index) => {
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
+    attrsData?.attributes?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -86,7 +82,7 @@ export function OrgManage() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <>
@@ -149,6 +145,7 @@ export function OrgManage() {
                 </div>
               </div>
               <AttrTable
+                data={attrsData?.attributes ?? []}
                 entityId={orgId}
                 entityType="ORGANIZATION"
                 rowSelection={rowSelection}
