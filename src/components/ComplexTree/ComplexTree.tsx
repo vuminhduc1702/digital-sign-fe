@@ -220,8 +220,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
   useEffect(() => {
     if (selectedItems) {
       const expanded = getParent(selectedItems)
-      console.log('sel: ', selectedItems)
-      console.log(expanded)
       setExpandedItems([...expandedItems, ...expanded])
     }
   }, [dataItem, selectedItems])
