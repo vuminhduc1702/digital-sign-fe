@@ -110,14 +110,19 @@ export function ComplexTree<TFormValues extends FieldValues>({
   }
 
   function parseOrg(data: Org) {
-    if (data.sub_orgs) {
+    let childrenArr: string[] = []
+    if (data && data.sub_orgs) {
+      data.sub_orgs.forEach((item: Org) => {
+        childrenArr.push(item.id)
+        parseOrg(item)
+      })
       const treeItemNested = {
         [data.id]: {
           index: data.id,
           data: { detailData: data.id, name: data.name },
           parent: data.org_id,
           isFolder: true,
-          children: [],
+          children: data.level === 1 ? [] : childrenArr,
         },
       }
       treeData = { ...treeData, ...treeItemNested }
@@ -135,45 +140,13 @@ export function ComplexTree<TFormValues extends FieldValues>({
     return treeData
   }
 
-  let children = {}
-  function getChildren(data: Org) {
-    let childrenArr: string[] = []
-    if (data && data.sub_orgs) {
-      data.sub_orgs.forEach((item: Org) => {
-        childrenArr.push(item.id)
-        getChildren(item)
-      })
-      const treeItemNested = {
-        [data.id]: {
-          index: data.id,
-          data: { detailData: data.id, name: data.name },
-          parent: data.org_id,
-          isFolder: true,
-          children: childrenArr,
-        },
-      }
-      children = { ...children, ...treeItemNested }
-    } else {
-      const treeItem = {
-        [data.id]: {
-          index: data.id,
-          data: { detailData: data.id, name: data.name },
-          parent: data.org_id,
-          isFolder: false,
-        },
-      }
-      children = { ...children, ...treeItem }
-    }
-    return children
-  }
-
   useEffect(() => {
     if (orgData && selectedItems && selectedItems.length > 0) {
       const rootItem = orgData.organizations.find(
         (org: Org) => org.id === selectedItems.toString(),
       )
       if (rootItem) {
-        const result = getChildren(rootItem)
+        const result = parseOrg(rootItem)
         setDataItem({ ...dataItem, ...result })
       }
     }
@@ -247,6 +220,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
   useEffect(() => {
     if (selectedItems) {
       const expanded = getParent(selectedItems)
+      console.log('sel: ', selectedItems)
+      console.log(expanded)
       setExpandedItems([...expandedItems, ...expanded])
     }
   }, [dataItem, selectedItems])
@@ -268,6 +243,9 @@ export function ComplexTree<TFormValues extends FieldValues>({
         name={name}
         control={control}
         render={({ field: { onChange, value, ...field } }) => {
+          if (value) {
+            setSelectedItems(value)
+          }
           const parseOrgValue = orgData?.organizations.find(
             org => org.id === value,
           )
@@ -277,7 +255,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
               : parseOrgValue
               ? parseOrgValue.name
               : ''
-          console.log(parseOrgValue)
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -286,7 +263,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   variant="trans"
                   size="square"
                   className={cn(
-                    'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
+                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
                     !value && 'text-secondary-700',
                   )}
                 >
@@ -318,7 +295,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                       height={12}
                       width={12}
                       src={btnRemoveIcon}
-                      className="absolute right-[54px] top-[22px] cursor-pointer text-secondary-700 hover:text-primary-400"
+                      className="text-secondary-700 hover:text-primary-400 absolute right-[54px] top-[22px] cursor-pointer"
                       onClick={() => {
                         setSearch('')
                         setFindOrgMsg('')
@@ -329,12 +306,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   )}
                   <div
                     onClick={find}
-                    className="flex size-[36px] cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="size-[36px] flex cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>
                 </div>
-                <div className="mt-1 text-primary-400">{findOrgMsg}</div>
+                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
                 <ControlledTreeEnvironment
                   {...field}
                   viewState={{
