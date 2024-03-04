@@ -1,9 +1,7 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
 
@@ -40,7 +38,7 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}

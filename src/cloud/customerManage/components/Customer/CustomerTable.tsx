@@ -1,9 +1,7 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 
 import { type BaseTablePagination } from '~/types'
@@ -14,7 +12,12 @@ import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { PATHS } from '~/routes/PATHS'
 import storage from '~/utils/storage'
 import { type Customer } from '../../types'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 
 function CustomerTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -40,7 +43,8 @@ function CustomerTableContextMenu({ id }: { id: string }) {
           <DropdownMenuItem
             onClick={() => {
               navigate(`${PATHS.CUSTOMER_MANAGE}/${projectId}/${id}`)
-            }}>
+            }}
+          >
             <EyeOpenIcon className="h-5 w-5" />
             {t('billing:customer_manage.info')}
           </DropdownMenuItem>

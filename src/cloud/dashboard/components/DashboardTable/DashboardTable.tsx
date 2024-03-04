@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { useDisclosure } from '~/utils/hooks'
 import { useDeleteDashboard } from '../../api/deleteDashboard'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
+
 import { Button } from '~/components/Button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { useMemo } from 'react'
@@ -49,7 +48,7 @@ function DashboardTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}

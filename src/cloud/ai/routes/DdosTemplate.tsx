@@ -5,7 +5,6 @@ import { LuChevronDown } from 'react-icons/lu'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import { Dialog, DialogTitle } from '~/components/Dialog'
-import { Dropdown } from '~/components/Dropdown'
 import { cn } from '~/utils/misc'
 import { useDdos } from '../api/ddos/callDdosApi'
 import { useMutationDdosAi } from '../api/ddos/updateDdosApi'
@@ -113,7 +112,7 @@ export default function DdosTemplate() {
             { 'md:col-span-1': viewMode === 'minimize_code' },
           )}
         >
-          <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
+          <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.code')}
@@ -122,9 +121,9 @@ export default function DdosTemplate() {
             <div className="flex gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                  <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                <DropdownMenuContent className="flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                   <DropdownMenuItem
                     className="py-1"
                     onClick={() => {
@@ -155,7 +154,7 @@ export default function DdosTemplate() {
                 width={20}
                 height={20}
                 viewBox="0 0 50 50"
-                className="hover:text-primary-400 cursor-pointer"
+                className="cursor-pointer hover:text-primary-400"
                 onClick={() => setIsOpen(true)}
               />
               <button onClick={() => callApiDdos()}>
@@ -191,7 +190,7 @@ export default function DdosTemplate() {
             },
           )}
         >
-          <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
+          <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
             <div className="flex gap-3">
               <p className="text-table-header">
                 {t('cloud:custom_protocol.service.output')}
@@ -200,9 +199,9 @@ export default function DdosTemplate() {
             <div className="flex gap-3">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
+                  <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
+                <DropdownMenuContent className="flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
                   <DropdownMenuItem
                     className="py-1"
                     onClick={() => {
@@ -244,7 +243,7 @@ export default function DdosTemplate() {
       </div>
 
       <Dialog isOpen={isOpen} onClose={() => setIsOpen(false)}>
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
+        <div className="inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
           <div className="mt-3 text-center sm:mt-0 sm:text-left">
             <div className="flex items-center justify-between">
               <DialogTitle className="text-h1 text-secondary-900">
@@ -252,7 +251,7 @@ export default function DdosTemplate() {
               </DialogTitle>
               <div className="ml-3 flex h-7 items-center">
                 <button
-                  className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
+                  className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
                   onClick={() => setIsOpen(false)}
                 >
                   <span className="sr-only">Close panel</span>

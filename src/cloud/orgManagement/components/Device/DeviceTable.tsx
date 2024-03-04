@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Menu } from '@headlessui/react'
+
 import { useNavigate, useParams } from 'react-router-dom'
 import {
   type ColumnDef,
   createColumnHelper,
   filterFns,
 } from '@tanstack/react-table'
-
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 
 import { Button } from '~/components/Button'
 import { BaseTable } from '~/components/Table'

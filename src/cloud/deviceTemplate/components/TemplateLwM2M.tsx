@@ -2,10 +2,9 @@ import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import clsx from 'clsx'
-import { Menu } from '@headlessui/react'
 
 import { Button } from '~/components/Button'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
+
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import { PATHS } from '~/routes/PATHS'
 import CreateTemplateLwM2M from './CreateTemplateLwM2M'

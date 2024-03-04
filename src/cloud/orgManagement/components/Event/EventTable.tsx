@@ -1,11 +1,9 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { BaseTable } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'

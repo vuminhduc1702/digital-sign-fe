@@ -1,11 +1,9 @@
-import { Menu } from '@headlessui/react'
 import clsx from 'clsx'
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
-import { Dropdown } from '~/components/Dropdown'
 import { PATHS } from '~/routes/PATHS'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'

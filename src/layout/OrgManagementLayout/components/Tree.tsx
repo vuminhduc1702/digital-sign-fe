@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
 import { Button } from '~/components/Button'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
+
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { useTranslation } from 'react-i18next'
@@ -146,10 +145,10 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
               {data.name}
             </p>
           </Button>
-          <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
+          <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                <div className="flex h-10 w-6 items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                   <BtnContextMenuIcon
                     height={20}
                     width={3}

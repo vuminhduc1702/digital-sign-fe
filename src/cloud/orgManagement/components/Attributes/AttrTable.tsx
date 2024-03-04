@@ -1,4 +1,3 @@
-import { Menu } from '@headlessui/react'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from 'use-debounce'
@@ -10,7 +9,6 @@ import {
 import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { Button } from '~/components/Button'
 
-import { Dropdown, MenuItem } from '~/components/Dropdown'
 import { Switch } from '~/components/Switch'
 import { BaseTable } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
@@ -141,10 +139,9 @@ export function AttrTable({
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
 
-  const dataSorted =
-    data?.sort((a, b) =>
-      b.attribute_key < a.attribute_key ? 1 : -1,
-    )
+  const dataSorted = data?.sort((a, b) =>
+    b.attribute_key < a.attribute_key ? 1 : -1,
+  )
 
   const handleSwitchChange = (checked: boolean, attributeKey: string) => {
     mutateUpdateLogged({
