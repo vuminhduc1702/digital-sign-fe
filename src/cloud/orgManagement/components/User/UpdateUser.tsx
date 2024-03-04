@@ -9,7 +9,6 @@ import { Drawer } from '~/components/Drawer'
 import { InputField, SelectDropdown, SelectField } from '~/components/Form'
 import { useUpdateUser, type UpdateUserDTO } from '../../api/userAPI'
 import i18n from '~/i18n'
-import { flattenData } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
@@ -89,16 +88,7 @@ export function UpdateUser({
     })
 
   const projectId = storage.getProject()?.id
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({

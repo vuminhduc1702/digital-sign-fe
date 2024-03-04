@@ -1,25 +1,18 @@
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { Button } from '~/components/Button'
-import {
-  FieldWrapper,
-  FormDrawer,
-  InputField,
-  SelectField,
-} from '~/components/Form'
+import { FormDrawer, InputField, SelectField } from '~/components/Form'
 import storage from '~/utils/storage'
 import { useCreateGroup, type CreateGroupDTO } from '../../api/groupAPI'
 import { nameSchema } from '~/utils/schemaValidation'
-import { cn, flattenData } from '~/utils/misc'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ComplexTree } from '~/components/ComplexTree'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 
 export const entityTypeList = [
   { type: 'ORGANIZATION', name: 'Tổ chức' },
@@ -43,16 +36,7 @@ export function CreateGroup() {
   }))
 
   const projectId = storage.getProject()?.id
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useCreateGroup()

@@ -2,16 +2,10 @@ import { useRef } from 'react'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
-import {
-  FieldWrapper,
-  FormDrawer,
-  InputField,
-  SelectDropdown,
-  TextAreaField,
-} from '~/components/Form'
+import { FormDrawer, InputField, TextAreaField } from '~/components/Form'
 import FileField from '~/components/Form/FileField'
 import {
   useCreateOrg,
@@ -21,7 +15,6 @@ import {
 } from '../api'
 import { descSchema, nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { cn, flattenData } from '~/utils/misc.ts'
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
@@ -32,7 +25,6 @@ import { useGetOrgs } from '~/layout/MainLayout/api'
 import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 export const orgSchema = z.object({
@@ -63,16 +55,7 @@ export function CreateOrg() {
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })

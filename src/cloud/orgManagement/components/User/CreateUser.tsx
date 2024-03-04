@@ -19,7 +19,6 @@ import {
   phoneSchemaRegex,
 } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
-import { flattenData } from '~/utils/misc'
 import i18n from '~/i18n'
 import { useGetRoles } from '~/cloud/role/api'
 import { useAreaList } from '~/layout/MainLayout/components/UserAccount/api/getAreaList'
@@ -74,16 +73,7 @@ export function CreateUser() {
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId })
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
     projectId,
