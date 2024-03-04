@@ -18,7 +18,7 @@ export const getOrgs = ({
   level,
 }: GetOrgs): Promise<OrgList> => {
   return axios.get('/api/organizations/expand', {
-    params: { project_id: projectId, orgId: orgId, get_attributes, level },
+    params: { project_id: projectId, org_id: orgId, get_attributes, level },
   })
 }
 
