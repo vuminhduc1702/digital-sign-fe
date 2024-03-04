@@ -48,6 +48,7 @@ export function CreateDevice() {
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
 
+  const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
   const { data: orgData } = useGetOrgs({ projectId, level: 1 })
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({

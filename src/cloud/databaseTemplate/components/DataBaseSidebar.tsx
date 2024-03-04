@@ -63,7 +63,7 @@ export function DataBaseSidebar() {
 
   return (
     <>
-      <div className="bg-secondary-400 flex h-[60px] items-center gap-2 px-4 py-3">
+      <div className="flex h-[60px] items-center gap-2 bg-secondary-400 px-4 py-3">
         <div className="flex gap-3">
           <img
             src={listIcon}
@@ -78,7 +78,7 @@ export function DataBaseSidebar() {
           setSearchQuery={setSearchQuery}
         />
       </div>
-      <div className="bg-secondary-500 h-[82vh] grow overflow-y-auto p-3">
+      <div className="h-[82vh] grow overflow-y-auto bg-secondary-500 p-3">
         {templateFlattenData?.length > 0 ? (
           <div className="space-y-3">
             {templateFlattenData?.map((table: DataBase) => (
@@ -101,10 +101,10 @@ export function DataBaseSidebar() {
                     {table?.table_name}
                   </p>
                 </Button>
-                <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
+                <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild className="cursor-pointer">
-                      <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                      <div className="flex h-10 w-6 items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                         <BtnContextMenuIcon
                           height={20}
                           width={3}
@@ -142,12 +142,10 @@ export function DataBaseSidebar() {
         <ConfirmDialog
           icon="danger"
           title={t('cloud:db_template.sidebar.delete_db')}
-          body={
-            t('cloud:db_template.sidebar.delete_db_confirm').replace(
-              '{{DBNAME}}',
-              name,
-            ) ?? 'Confirm delete?'
-          }
+          body={t('cloud:db_template.sidebar.delete_db_confirm').replace(
+            '{{DBNAME}}',
+            name,
+          )}
           close={closeDelete}
           isOpen={isOpenDelete}
           handleSubmit={() =>

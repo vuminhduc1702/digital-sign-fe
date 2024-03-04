@@ -31,7 +31,6 @@ import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import storage from '~/utils/storage'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import { select } from 'd3'
-import { StringifyOptions } from 'querystring'
 
 type ComplexTreeProps<TFormValues extends FieldValues> = {
   options?: Org[]
@@ -251,8 +250,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
             value && dataItem[value]
               ? dataItem[value].data.name
               : parseOrgValue
-              ? parseOrgValue.name
-              : ''
+                ? parseOrgValue.name
+                : ''
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -261,7 +260,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   variant="trans"
                   size="square"
                   className={cn(
-                    'focus:outline-focus-400 focus:ring-focus-400 relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0',
+                    'relative w-full !justify-between rounded-md px-3 text-left font-normal focus:outline-2 focus:outline-offset-0 focus:outline-focus-400 focus:ring-focus-400',
                     !value && 'text-secondary-700',
                   )}
                 >
@@ -293,7 +292,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
                       height={12}
                       width={12}
                       src={btnRemoveIcon}
-                      className="text-secondary-700 hover:text-primary-400 absolute right-[54px] top-[22px] cursor-pointer"
+                      alt="remove org id"
+                      className="absolute right-[54px] top-[22px] cursor-pointer text-secondary-700 hover:text-primary-400"
                       onClick={() => {
                         setSearch('')
                         setFindOrgMsg('')
@@ -304,12 +304,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   )}
                   <div
                     onClick={find}
-                    className="size-[36px] flex cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
+                    className="flex h-9 w-9 cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
                   >
                     <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
                   </div>
                 </div>
-                <div className="text-primary-400 mt-1">{findOrgMsg}</div>
+                <div className="mt-1 text-primary-400">{findOrgMsg}</div>
                 <ControlledTreeEnvironment
                   {...field}
                   viewState={{

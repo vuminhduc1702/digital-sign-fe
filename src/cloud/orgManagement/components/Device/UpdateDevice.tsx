@@ -19,7 +19,6 @@ import { useGetGroups } from '../../api/groupAPI'
 import { deviceSchema } from './CreateDevice'
 import { useGetTemplates } from '~/cloud/deviceTemplate/api'
 import { useGetOrgs } from '~/layout/MainLayout/api'
-import { useDefaultCombobox } from '~/utils/hooks'
 import {
   type HeartBeatDTO,
   useHeartBeat,
@@ -102,9 +101,8 @@ export function UpdateDevice({
 
   const { data: orgData } = useGetOrgs({ projectId, level: 1 })
 
-  const defaultComboboxGroupData = useDefaultCombobox('group')
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     offset,
     entity_type: 'DEVICE',
@@ -112,10 +110,7 @@ export function UpdateDevice({
       suspense: false,
     },
   })
-  const groupSelectOptions = [
-    defaultComboboxGroupData,
-    ...(groupData?.groups || []),
-  ]?.map(groups => ({
+  const groupSelectOptions = groupData?.groups?.map(groups => ({
     label: groups?.name,
     value: groups?.id,
   }))
@@ -134,11 +129,6 @@ export function UpdateDevice({
       close()
     }
   }, [isSuccess, close])
-
-  useEffect(() => {
-    const dataFilter = orgFlattenData.filter(item => item.id === org_id)
-    dataFilter.length && setValue('org_id', dataFilter[0]?.id)
-  }, [org_id])
 
   const selectDropdownGroupId = useRef<SelectInstance<SelectOption> | null>(
     null,
@@ -193,10 +183,7 @@ export function UpdateDevice({
         >
           <>
             <InputField
-              label={
-                t('cloud:org_manage.device_manage.add_device.name') ??
-                "Device's name"
-              }
+              label={t('cloud:org_manage.device_manage.add_device.name')}
               error={formState.errors['name']}
               registration={register('name')}
             />
@@ -299,7 +286,7 @@ export function UpdateDevice({
           </div>
           <div className="mt-2 flex justify-end pt-1">
             <Button
-              className="bg-secondary-700 mx-2 rounded-sm p-1 text-white"
+              className="mx-2 rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               type="submit"
@@ -308,7 +295,7 @@ export function UpdateDevice({
               {t('cloud:org_manage.device_manage.add_device.create_heartbeat')}
             </Button>
             <Button
-              className="bg-secondary-700 rounded-sm p-1 text-white"
+              className="rounded-sm bg-secondary-700 p-1 text-white"
               variant="trans"
               size="square"
               isLoading={isLoadingUpdateHeartBeat}

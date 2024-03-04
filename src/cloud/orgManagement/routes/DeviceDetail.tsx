@@ -13,7 +13,6 @@ import { Button } from '~/components/Button'
 
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
-import { flattenData } from '~/utils/misc'
 import { convertEpochToDate, convertType } from '~/utils/transformFunc'
 import { useGetAttrs } from '../api/attrAPI'
 import { useDeleteMultipleAttrs } from '../api/attrAPI/deleteMultipleAttrs'
@@ -33,7 +32,6 @@ export function DeviceDetail() {
   const projectId = params.projectId as string
   const entityTypeAttr = 'DEVICE'
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
-  const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const { close, open, isOpen } = useDisclosure()
 
@@ -106,23 +104,27 @@ export function DeviceDetail() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(index.toString())) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-            curr.value_type,
-          ),
-          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-            convertEpochToDate(curr.last_update_ts / 1000),
+    attrsData?.attributes?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(index.toString())) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.attr_key')]:
+              curr.attribute_key,
+            [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+              curr.value_type,
+            ),
+            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+            [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+              convertEpochToDate(curr.last_update_ts / 1000),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">
