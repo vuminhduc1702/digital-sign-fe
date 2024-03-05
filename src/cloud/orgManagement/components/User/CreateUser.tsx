@@ -73,7 +73,7 @@ export function CreateUser() {
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
     projectId,

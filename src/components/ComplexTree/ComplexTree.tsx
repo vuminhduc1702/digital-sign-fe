@@ -30,7 +30,6 @@ import { Button } from '../Button'
 import btnRemoveIcon from '~/assets/icons/btn-remove.svg'
 import storage from '~/utils/storage'
 import { useGetOrgs } from '~/layout/MainLayout/api'
-import { select } from 'd3'
 
 type ComplexTreeProps<TFormValues extends FieldValues> = {
   options?: Org[]
@@ -75,8 +74,12 @@ export function ComplexTree<TFormValues extends FieldValues>({
   const tree = useRef<TreeRef<any>>(null)
   const no_org = t('cloud:org_manage.org_manage.add_org.no_org')
 
-  const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId })
+  const projectId = storage.getProject().id
+  const { data: orgData } = useGetOrgs({
+    projectId,
+    orgId: selectedItems.length > 0 ? selectedItems.toString() : '',
+    level: 1,
+  })
 
   function parseData(data: Org[]) {
     if (data) {
@@ -131,7 +134,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
           index: data.id,
           data: { detailData: data.id, name: data.name },
           parent: data.org_id,
-          isFolder: false,
+          isFolder: true,
+          children: [],
         },
       }
       treeData = { ...treeData, ...treeItem }
@@ -139,17 +143,39 @@ export function ComplexTree<TFormValues extends FieldValues>({
     return treeData
   }
 
-  useEffect(() => {
-    if (orgData && selectedItems && selectedItems.length > 0) {
-      const rootItem = orgData.organizations.find(
-        (org: Org) => org.id === selectedItems.toString(),
-      )
-      if (rootItem) {
-        const result = parseOrg(rootItem)
-        setDataItem({ ...dataItem, ...result })
+  const getDetailOrg = useCallback(
+    (orgId: string) => {
+      if (options && orgData) {
+        const parseRootItem = dataItem[orgId]
+        if (parseRootItem) {
+          parseRootItem.children = orgData.organizations.map(org => org.id)
+          let expandedItems = {}
+          orgData.organizations.forEach(org => {
+            expandedItems = parseOrg(org)
+          })
+          setDataItem({ ...dataItem, ...expandedItems })
+        }
       }
+    },
+    [orgData],
+  )
+
+  useEffect(() => {
+    getDetailOrg(selectedItems.toString())
+  }, [selectedItems])
+
+  useEffect(() => {
+    if (selectedItems) {
+      const expanded = getParent(selectedItems)
+      setExpandedItems([...expandedItems, ...expanded])
     }
-  }, [orgData, selectedItems])
+  }, [dataItem, selectedItems])
+
+  useEffect(() => {
+    if (options) {
+      parseData(options)
+    }
+  }, [options])
 
   const dataProvider = new StaticTreeDataProvider(dataItem, (item, data) => ({
     ...item,
@@ -215,19 +241,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
     }
     return parentArr
   }
-
-  useEffect(() => {
-    if (selectedItems) {
-      const expanded = getParent(selectedItems)
-      setExpandedItems([...expandedItems, ...expanded])
-    }
-  }, [dataItem, selectedItems])
-
-  useEffect(() => {
-    if (options) {
-      parseData(options)
-    }
-  }, [options])
 
   return (
     <FieldWrapper
