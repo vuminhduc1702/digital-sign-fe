@@ -80,7 +80,7 @@ function App() {
       case z.ZodIssueCode.custom:
         const params = error.params || {}
         if (params.myField) {
-          return { message: `Nhập sai: ${params.myField}` }
+          return { message: `${t('error:wrong_input')} ${params.myField}` }
         }
         break
     }

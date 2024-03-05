@@ -1038,7 +1038,8 @@
       "select_union": "Vui lòng chọn 1 trong các option sau:",
       "number": "Vui lòng nhập số"
     },
-    "refresh": "Tải lại trang"
+    "refresh": "Tải lại trang",
+    "wrong_input": "Nhập sai:"
   },
   "loading": {
     "base": "Đang tải dữ liệu...",

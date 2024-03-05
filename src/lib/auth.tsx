@@ -46,7 +46,6 @@ export async function logoutFn() {
   storage.clearToken()
   window.location.assign(PATHS.LOGIN)
   // window.history.replaceState({ from: window.location.pathname }, PATHS.LOGIN)
-  // window.location.reload()
 }
 
 const authConfig = {
