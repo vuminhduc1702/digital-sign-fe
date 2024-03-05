@@ -45,7 +45,16 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
       columnHelper.display({
         id: 'name',
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
-        cell: info => info.row.original,
+        cell: info => {
+          const { name, id } = info.row.original
+          return (
+            <Link to={`${PATHS.DASHBOARD}/${projectId}/${id}`}>
+              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
+                {name}
+              </p>
+            </Link>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -69,8 +78,6 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
       columns={columns}
       isAbsoluteBtn={false}
       onDataText={t('table:no_dashboard')}
-      path={PATHS.DASHBOARD}
-      projectId={projectId}
       {...props}
     />
   )
