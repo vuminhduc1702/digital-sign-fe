@@ -89,7 +89,7 @@ export function PaymentHistoryTable({
 
   return (
     <BaseTable
-      data={data}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_payment_history')}
       {...props}

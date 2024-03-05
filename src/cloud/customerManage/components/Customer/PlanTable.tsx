@@ -150,7 +150,7 @@ export function PlanTable({ data, ...props }: CustomerTableProps) {
     <BaseTable
       getRowCanExpand={() => true}
       renderSubComponent={renderSubComponent}
-      data={data}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_plan_used')}
       {...props}

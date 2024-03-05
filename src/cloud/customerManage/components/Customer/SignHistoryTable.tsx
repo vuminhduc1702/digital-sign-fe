@@ -139,7 +139,7 @@ export function SignHistoryTable({ data, ...props }: SignHistoryTableProps) {
 
   return (
     <BaseTable
-      data={data}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_sign_history')}
       {...props}

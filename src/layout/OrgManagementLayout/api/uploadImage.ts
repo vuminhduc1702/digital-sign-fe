@@ -4,21 +4,10 @@ import { useMutation } from '@tanstack/react-query'
 import { axiosUploadFile } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 
-import {
-  type uploadImageSchema,
-  type uploadImageResSchema,
-} from '../components/CreateOrg'
+import { type uploadImageResSchema } from '../components/CreateOrg'
+import { type UploadImageDTO } from '~/utils/hooks'
 
 type UploadImageRes = z.infer<typeof uploadImageResSchema>
-
-type UploadImage = {
-  project_id: string
-  file: z.infer<typeof uploadImageSchema>
-}
-
-export type UploadImageDTO = {
-  data: UploadImage
-}
 
 export const uploadImage = ({
   data,

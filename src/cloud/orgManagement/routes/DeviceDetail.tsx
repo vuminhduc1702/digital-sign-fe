@@ -33,6 +33,7 @@ export function DeviceDetail() {
   const entityTypeAttr = 'DEVICE'
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
+  const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const { close, open, isOpen } = useDisclosure()
 
   // Attrs Data
@@ -127,19 +128,23 @@ export function DeviceDetail() {
   )
   const rowSelectionKeyAttrLog = Object.keys(rowSelectionAttrLog)
   const attrLogAoo: Array<{ [key: string]: string }> | undefined =
-    attrLogData?.logs?.reduce((acc, curr, index) => {
-      if (rowSelectionKeyAttrLog.includes(index.toString())) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-            convertEpochToDate(curr.ts / 1000),
-          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+    attrLogData?.logs?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKeyAttrLog.includes(index.toString())) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+              convertEpochToDate(curr.ts / 1000),
+            [t('cloud:org_manage.org_manage.table.attr_key')]:
+              curr.attribute_key,
+            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: string }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: string }>,
+    )
 
   // MQTT Log
   const {
@@ -166,20 +171,23 @@ export function DeviceDetail() {
   )
   const rowSelectionKeyMQTTLog = Object.keys(rowSelection)
   const MQTTLogAoo: Array<{ [key: string]: string }> | undefined =
-    mqttLogData?.messages?.reduce((acc, curr, index) => {
-      if (rowSelectionKeyMQTTLog.includes(index.toString())) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-            convertEpochToDate(curr.ts / 1000),
-          [t('cloud:org_manage.device_manage.table.payload_as_string')]:
-            curr.payload_as_string,
-          [t('cloud:org_manage.device_manage.table.topic')]: curr.topic,
+    mqttLogData?.messages?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKeyMQTTLog.includes(index.toString())) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+              convertEpochToDate(curr.ts / 1000),
+            [t('cloud:org_manage.device_manage.table.payload_as_string')]:
+              curr.payload_as_string,
+            [t('cloud:org_manage.device_manage.table.topic')]: curr.topic,
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: string }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: string }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">

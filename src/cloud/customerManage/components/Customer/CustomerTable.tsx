@@ -125,7 +125,7 @@ export function CustomerTable({ data, ...props }: CustomerTableProps) {
 
   return (
     <BaseTable
-      data={data}
+      data={data ?? []}
       columns={columns}
       onDataText={t('table:no_customer')}
       {...props}

@@ -8,7 +8,7 @@ import * as z from 'zod'
 import { toast } from 'sonner'
 import i18n from '~/i18n'
 
-import { type UploadImageDTO } from '~/layout/OrgManagementLayout/api'
+import { type JsonValue } from 'react-use-websocket/dist/lib/types'
 
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false)
@@ -45,7 +45,7 @@ export const useDisclosure = (initial = false) => {
   return { isOpen, open, close, toggle }
 }
 
-export const useWS = <T>(
+export const useWS = <T extends JsonValue>(
   url: string,
   sendMessageCallback: () => void,
   rerun?: boolean,
@@ -164,6 +164,13 @@ const uploadImageSchema = z.object({
       i18n.t('validate:image_type'),
     ),
 })
+type UploadImage = {
+  project_id: string
+  file: z.infer<typeof uploadImageSchema>
+}
+export type UploadImageDTO = {
+  data: UploadImage
+}
 export function useResetDefaultImage(defaultImage: string) {
   const avatarRef = useRef<HTMLImageElement>(null)
   const [uploadImageErr, setUploadImageErr] = useState('')

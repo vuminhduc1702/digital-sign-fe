@@ -72,23 +72,27 @@ export function Default() {
     return acc
   }, [])
   const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(index.toString())) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-            curr.value_type,
-          ),
-          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-            convertEpochToDate(curr.last_update_ts / 1000),
+    attrsData?.attributes.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(index.toString())) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.attr_key')]:
+              curr.attribute_key,
+            [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+              curr.value_type,
+            ),
+            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+            [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+              convertEpochToDate(curr.last_update_ts / 1000),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   console.log(rowSelection)
 
@@ -136,7 +140,7 @@ export function Default() {
                 </div>
               </div>
               <AttrTable
-                data={attrsData}
+                data={attrsData?.attributes ?? []}
                 entityId={templateId}
                 entityType="TEMPLATE"
                 rowSelection={rowSelection}
