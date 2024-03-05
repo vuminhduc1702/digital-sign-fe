@@ -77,9 +77,9 @@ export function LwM2M() {
   const pdfHeaderAttr = useMemo(
     () => [
       t('table:no'),
-      t('cloud:device_template.listLwM2M.name'),
-      t('cloud:device_template.listLwM2M.id'),
-      t('cloud:device_template.listLwM2M.numberAttr'),
+      t('cloud:org_manage.org_manage.table.attr_key'),
+      t('cloud:org_manage.org_manage.table.value_type'),
+      t('cloud:org_manage.org_manage.table.id'),
     ],
     [],
   )
@@ -87,18 +87,17 @@ export function LwM2M() {
   const aooAttr: Array<{ [key: string]: string }> | undefined =
     LwM2MDataById?.transport_config?.info?.module_config?.reduce(
       (acc, curr, index) => {
-        if (rowSelectionKeyAttr.includes(curr.id)) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.attr_key')]:
-              curr.attribute_info?.name,
-            [t('cloud:org_manage.org_manage.table.value_type')]:
-              curr.attribute_info?.key,
-            [t('cloud:org_manage.org_manage.table.id')]:
-              curr.attribute_info?.id,
+        curr.attribute_info?.forEach((attr, index) => {
+          if (rowSelectionKeyAttr.includes(attr.id)) {
+            const temp = {
+              [t('table:no')]: (index + 1).toString(),
+              [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
+              [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
+              [t('cloud:org_manage.org_manage.table.id')]: attr.id,
+            }
+            acc.push(temp)
           }
-          acc.push(temp)
-        }
+        })
         return acc
       },
       [] as Array<{ [key: string]: string }>,
