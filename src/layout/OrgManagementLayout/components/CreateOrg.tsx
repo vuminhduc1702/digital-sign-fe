@@ -55,7 +55,7 @@ export function CreateOrg() {
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate: mutateUpdateOrg } = useUpdateOrg({ isOnCreateOrg: true })
