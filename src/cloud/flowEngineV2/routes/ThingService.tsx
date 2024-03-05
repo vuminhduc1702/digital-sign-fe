@@ -59,8 +59,6 @@ export function ThingServices() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  console.log(rowSelectionKey)
-  console.log(thingData?.data)
   const aoo: Array<{ [key: string]: string }> | undefined =
     thingData?.data?.reduce((acc, curr, index) => {
       console.log(curr)

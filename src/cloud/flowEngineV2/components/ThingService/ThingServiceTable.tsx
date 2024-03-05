@@ -160,6 +160,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_service')}
+      isHiddenCheckbox={true}
       {...props}
     />
   )
