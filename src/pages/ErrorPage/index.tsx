@@ -6,7 +6,7 @@ export function ErrorFallback({
   error,
   resetErrorBoundary,
 }: {
-  error: any
+  error: { message: string }
   resetErrorBoundary: (...args: unknown[]) => void
 }) {
   const { t } = useTranslation()

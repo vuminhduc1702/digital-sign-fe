@@ -58,7 +58,7 @@ export function CustomProtocolManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     adapterData?.adapters
       ? adapterData?.adapters?.reduce((acc, curr, index) => {
           if (rowSelectionKey.includes(curr.id)) {
@@ -77,7 +77,7 @@ export function CustomProtocolManage() {
             acc.push(temp)
           }
           return acc
-        }, [] as Array<{ [key: string]: string }>)
+        }, [] as Array<{ [key: string]: unknown }>)
       : []
 
   return (

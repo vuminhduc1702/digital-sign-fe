@@ -3,7 +3,6 @@ import { type RefObject, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Tab } from '@headlessui/react'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
@@ -34,7 +33,6 @@ import { Switch } from '~/components/Switch'
 import { CodeSandboxEditor } from '~/cloud/customProtocol/components/CodeSandboxEditor'
 import btnRunCode from '~/assets/icons/btn-run-code.svg'
 import { cn } from '~/utils/misc'
-import { Dropdown } from '~/components/Dropdown'
 import {
   Tooltip,
   TooltipContent,
@@ -241,8 +239,8 @@ export function UpdateThingService({
                     item.type === 'bool' && item.value === ''
                       ? 'false'
                       : numberServiceInput.includes(item.type as string)
-                      ? parseInt(item.value)
-                      : item.value
+                        ? parseInt(item.value)
+                        : item.value
                 })
                 mutateExecuteService({
                   data: dataRun,

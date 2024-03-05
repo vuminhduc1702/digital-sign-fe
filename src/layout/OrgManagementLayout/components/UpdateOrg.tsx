@@ -1,19 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { useEffect, useRef } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 
 import { Button } from '~/components/Button'
-import {
-  FieldWrapper,
-  InputField,
-  SelectDropdown,
-  TextAreaField,
-} from '~/components/Form'
+import { InputField, TextAreaField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
 import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
 import { orgSchema } from './CreateOrg'
-import { flattenData } from '~/utils/misc'
 import FileField from '~/components/Form/FileField'
 import { API_URL } from '~/config'
 import { useUpdateOrgForOrg } from '../api/updateOrgForOrg'
@@ -30,7 +24,6 @@ import { type OrgMapType } from './OrgManageSidebar'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { ComplexTree } from '~/components/ComplexTree'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
@@ -60,27 +53,7 @@ export function UpdateOrg({
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const { acc: selectedUpdateOrgChildren } = flattenData(
-    selectedUpdateOrg.children,
-    ['id'],
-    'children',
-  )
-  const orgSelectOptions = orgFlattenData
-    ?.map(org => ({
-      label: org?.name,
-      value: org?.id,
-    }))
-    .filter(
-      org =>
-        org.value !== selectedUpdateOrg.id &&
-        !selectedUpdateOrgChildren.some(child => child.id === org.value),
-    )
+  const { data: orgData } = useGetOrgs({ projectId })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
@@ -158,10 +131,7 @@ export function UpdateOrg({
             mutateUpdateOrgForOrg({
               data: {
                 ids: [selectedUpdateOrg.id],
-                org_id:
-                  getValues('org_id').toString() !== no_org_val
-                    ? getValues('org_id').org_id?.toString()
-                    : '',
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
               },
             })
           }
@@ -177,10 +147,7 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id:
-                  getValues('org_id').toString() !== no_org_val
-                    ? getValues('org_id').org_id?.toString()
-                    : '',
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
                 image: dataUploadImage?.data?.link,
               },
               org_id: selectedUpdateOrg?.id,
@@ -197,7 +164,7 @@ export function UpdateOrg({
               data: {
                 name: values.name,
                 description: values.description,
-                org_id: values.org_id,
+                org_id: values.org_id !== no_org_val ? values.org_id : '',
               },
               org_id: selectedUpdateOrg?.id,
             })

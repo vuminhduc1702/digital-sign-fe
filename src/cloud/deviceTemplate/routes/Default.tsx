@@ -71,7 +71,7 @@ export function Default() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     attrsData?.attributes.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
@@ -88,7 +88,7 @@ export function Default() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   console.log(rowSelection)
 

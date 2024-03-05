@@ -1,13 +1,9 @@
-import { Menu } from '@headlessui/react'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
 
-import { Dropdown } from '~/components/Dropdown'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import { BaseTable } from '~/components/Table'
 import { type BaseTablePagination } from '~/types'
@@ -57,7 +53,7 @@ function CustomerTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -100,7 +96,7 @@ function CustomerTableContextMenu({
         <ConfirmDialog
           icon="danger"
           title={t('form:tenant.delete')}
-          body={`${t('cloud:dashboard.table.delete_confirm')} ${name}`}
+          body={`${t('cloud:dashboard.table.delete_confirm')}`}
           close={closeDelete}
           isOpen={isOpenDelete}
           handleSubmit={() => mutate({ project_id, sub_tenant_id })}

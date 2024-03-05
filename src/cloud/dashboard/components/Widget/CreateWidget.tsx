@@ -24,8 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '~/components/Popover'
 import { Spinner } from '~/components/Spinner'
 import i18n from '~/i18n'
 import { useGetOrgs } from '~/layout/MainLayout/api'
-import { useDefaultCombobox } from '~/utils/hooks'
-import { cn, flattenData } from '~/utils/misc'
+import { cn } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useCreateAttrChart } from '../../api'
 
@@ -426,19 +425,8 @@ export function CreateWidget({
     config: {
       suspense: false,
     },
+    level: 1,
   })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const defaultComboboxOrgData = useDefaultCombobox('org')
-  const orgSelectOptions = [defaultComboboxOrgData, ...orgFlattenData].map(
-    org => ({
-      label: org?.name,
-      value: org?.id,
-    }),
-  )
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,

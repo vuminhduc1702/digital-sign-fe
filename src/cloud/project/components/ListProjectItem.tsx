@@ -10,8 +10,6 @@ import {
   TooltipTrigger,
 } from '~/components/Tooltip'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
 
 import { Button } from '~/components/Button/Button'
 import { useDisclosure } from '~/utils/hooks'
@@ -97,14 +95,14 @@ export function ListProjectItem({
             }}
           >
             <div
-              className="bg-secondary-600 hover:bg-primary-400 absolute right-2 top-2 flex h-7 w-7 justify-center rounded-full bg-opacity-80"
+              className="absolute right-2 top-2 flex h-7 w-7 justify-center rounded-full bg-secondary-600 bg-opacity-80 hover:bg-primary-400"
               onClick={e => {
                 e.stopPropagation()
               }}
             >
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                  <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                     <BtnContextMenuIcon
                       height={20}
                       width={10}

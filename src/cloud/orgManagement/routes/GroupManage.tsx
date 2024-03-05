@@ -1,8 +1,6 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -55,22 +53,25 @@ export function GroupManage() {
 
   const rowSelectionKey = Object.keys(rowSelection)
 
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    groupData?.groups?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1 + offset).toString(),
-          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-          [t('cloud:org_manage.group_manage.table.entity_type')]:
-            uppercaseTheFirstLetter(curr.entity_type),
-          [t('cloud:org_manage.org_manage.title')]: curr.organization
-            ? curr.organization
-            : t('table:no_in_org'),
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
+    groupData?.groups?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1 + offset).toString(),
+            [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+            [t('cloud:org_manage.group_manage.table.entity_type')]:
+              uppercaseTheFirstLetter(curr.entity_type),
+            [t('cloud:org_manage.org_manage.title')]: curr.organization
+              ? curr.organization
+              : t('table:no_in_org'),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: string }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import { type EntityTypeURL, type OrgMapType } from './OrgManageSidebar'
 import { Button } from '~/components/Button'
-import { Dropdown, MenuItem } from '~/components/Dropdown'
-import { Menu } from '@headlessui/react'
+
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
 import { useTranslation } from 'react-i18next'
@@ -52,19 +51,14 @@ const TreeView = ({ data, handleEditTreeView, isShow }: TreeViewProps) => {
   ))
 }
 const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
-  //console.log('data', data)
   const { t } = useTranslation()
-  const [newdata, setNewdata] = useState(data)
   const [showChildren, setShowChildren] = useState(false)
-  // console.log('showChildren', showChildren)
-  // console.log('newdata', newdata)
   const entityTypeURL = window.location.pathname.split('/')[3] as EntityTypeURL
   const navigate = useNavigate()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useDeleteOrg()
   const handleCopyId = useCopyId()
   const { orgId } = useParams()
-  //console.log('orgId', orgId)
 
   const {
     close: closeDelete,
@@ -79,30 +73,19 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
   }, [isSuccess])
 
   const handleClick = () => {
-    // const newshowChildren = !showChildren
-    //   setShowChildren(newshowChildren)
-    // const newData = { ...newdata, abc: !newdata?.isShow }
-    //   setNewdata(newData)
     setShowChildren(!showChildren)
-    // setNewdata(data)
   }
-
-  //console.log('newData', newdata)
-  //  if(orgId === undefined){
-  //   const newData = { ...newdata, isShow: false }
-  //     setNewdata(newData)
-  //  }
 
   useEffect(() => {
     if (isShow) {
       setShowChildren(isShow)
     } else {
-      setShowChildren(newdata?.isShow)
+      setShowChildren(data?.isShow)
     }
-  }, [newdata?.isShow])
+  }, [data?.isShow, isShow])
 
-  if (!newdata) return null
-  const dataSorted = newdata.children.sort((a, b) =>
+  if (!data) return null
+  const dataSorted = data.children.sort((a, b) =>
     a.name > b.name ? 1 : b.name > a.name ? -1 : 0,
   )
   return (
@@ -110,7 +93,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
       <li>
         <div className="flex items-center">
           <div className="h-5 w-5" onClick={handleClick}>
-            {newdata.children.length ? (
+            {data.children.length ? (
               <img
                 src={showChildren ? btnCloseToggle : btnOpenToggle}
                 alt="Show child organization"
@@ -124,52 +107,48 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
             className={cn(
               'ml-1 h-10 gap-y-3 rounded-l-md border-none px-4 py-0',
               {
-                '!bg-primary-300': newdata.isSearch,
+                '!bg-primary-300': data.isSearch,
               },
             )}
-            key={newdata.id}
+            key={data.id}
             variant="muted"
             onClick={() => {
               switch (entityTypeURL) {
                 case 'org':
-                  return navigate(
-                    `${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`,
-                  )
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
                 case 'event':
                   return navigate(
-                    `${PATHS.EVENT_MANAGE}/${projectId}/${newdata.id}`,
+                    `${PATHS.EVENT_MANAGE}/${projectId}/${data.id}`,
                   )
                 case 'group':
                   return navigate(
-                    `${PATHS.GROUP_MANAGE}/${projectId}/${newdata.id}`,
+                    `${PATHS.GROUP_MANAGE}/${projectId}/${data.id}`,
                   )
                 case 'user':
                   return navigate(
-                    `${PATHS.USER_MANAGE}/${projectId}/${newdata.id}`,
+                    `${PATHS.USER_MANAGE}/${projectId}/${data.id}`,
                   )
                 case 'device':
                   return navigate(
-                    `${PATHS.DEVICE_MANAGE}/${projectId}/${newdata.id}`,
+                    `${PATHS.DEVICE_MANAGE}/${projectId}/${data.id}`,
                   )
                 default:
-                  return navigate(
-                    `${PATHS.ORG_MANAGE}/${projectId}/${newdata.id}`,
-                  )
+                  return navigate(`${PATHS.ORG_MANAGE}/${projectId}/${data.id}`)
               }
             }}
           >
             <p
               className={clsx('my-auto', {
-                'text-primary-400': orgId === newdata.id,
+                'text-primary-400': orgId === data.id,
               })}
             >
-              {newdata.name}
+              {data.name}
             </p>
           </Button>
-          <div className="bg-secondary-600 flex items-center justify-center rounded-r-md">
+          <div className="flex items-center justify-center rounded-r-md bg-secondary-600">
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="text-body-sm hover:text-primary-400 flex h-10 w-6 items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                <div className="flex h-10 w-6 items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                   <BtnContextMenuIcon
                     height={20}
                     width={3}
@@ -180,7 +159,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
               <DropdownMenuContent className="z-10">
                 <DropdownMenuItem
                   onClick={() => {
-                    handleEdit(newdata)
+                    handleEdit(data)
                   }}
                 >
                   <img
@@ -190,7 +169,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
                   />
                   {t('cloud:org_manage.org_map.edit')}
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleCopyId(newdata.id)}>
+                <DropdownMenuItem onClick={() => handleCopyId(data.id)}>
                   <img
                     src={btnCopyIdIcon}
                     alt="Copy organization's ID"
@@ -212,7 +191,7 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
         </div>
       </li>
       {showChildren &&
-        newdata.children &&
+        data.children &&
         dataSorted.map((child: OrgMapType) => {
           return (
             <Tree
@@ -230,11 +209,11 @@ const Tree = ({ data, handleEdit, isShow }: TreeProps) => {
           title={t('cloud:org_manage.org_map.delete')}
           body={t('cloud:org_manage.org_map.delete_org_confirm').replace(
             '{{ORGNAME}}',
-            newdata.name,
+            data.name,
           )}
           close={closeDelete}
           isOpen={isOpenDelete}
-          handleSubmit={() => mutate({ orgId: newdata.id })}
+          handleSubmit={() => mutate({ orgId: data.id })}
           isLoading={isLoading}
         />
       ) : null}

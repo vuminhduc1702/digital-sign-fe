@@ -16,7 +16,7 @@ import {
 interface ButtonProps {
   refComponent: MutableRefObject<HTMLElement> | MutableRefObject<null>
   rowSelection: { [key: string]: boolean }
-  aoo?: Array<{ [key: string]: string }>
+  aoo?: Array<{ [key: string]: unknown }>
   pdfHeader: string[]
 }
 
@@ -84,10 +84,10 @@ export function ExportTable({
                 )
               })}
             </View>
-            {aoo?.map((item: any, idx: any) => {
+            {aoo?.map((item, idx) => {
               return (
                 <View style={styles.row} key={`r-${idx}`}>
-                  {Object.values(item).map((ele: any) => {
+                  {(Object.values(item) as string[]).map((ele) => {
                     return (
                       <Text
                         style={[
@@ -96,6 +96,7 @@ export function ExportTable({
                             width: `100%/${pdfHeader.length}`,
                           },
                         ]}
+                        key={`c-${idx}-${ele}`}
                       >
                         {ele}
                       </Text>
@@ -130,14 +131,13 @@ export function ExportTable({
           document={<PdfComponent />}
           fileName="InnowayTable.pdf"
         >
-          {({ blob, url, loading, error }) => (
+          {() => (
             <Button
               className={`pointer-events-none rounded border-none opacity-50 ${
                 Object.keys(rowSelection).length > 0 &&
                 'pointer-events-auto opacity-100'
               }`}
               size="sm"
-              // onClick={handlePdf}
               variant="secondaryLight"
             >
               {Object.keys(rowSelection).length > 0

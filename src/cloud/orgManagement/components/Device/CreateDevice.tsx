@@ -1,18 +1,16 @@
 import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useParams } from 'react-router-dom'
 
 import { Button } from '~/components/Button'
 import {
-  FieldWrapper,
   FormDrawer,
   InputField,
   SelectDropdown,
   type SelectOption,
 } from '~/components/Form'
-import { cn, flattenData } from '~/utils/misc'
 import { nameSchema } from '~/utils/schemaValidation'
 import storage from '~/utils/storage'
 import { useCreateDevice, type CreateDeviceDTO } from '../../api/deviceAPI'
@@ -50,17 +48,8 @@ export function CreateDevice() {
     resolver: deviceSchema && zodResolver(deviceSchema),
   })
 
-  const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({ projectId })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id') || orgId,

@@ -16,7 +16,7 @@ import {
   type SelectOption,
 } from '~/components/Form'
 import TitleBar from '~/components/Head/TitleBar'
-import { cn, flattenData } from '~/utils/misc'
+import { cn } from '~/utils/misc'
 import storage from '~/utils/storage'
 import { useGetDevices } from '../../api/deviceAPI'
 import { useGetGroups } from '../../api/groupAPI'
@@ -45,6 +45,7 @@ import {
   eventActionSchema,
   cmdSchema,
   eventTypeSchema,
+  eventConditionSchema,
 } from './CreateEvent'
 import { useGetEntityThings } from '~/cloud/customProtocol/api/entityThing'
 import { useGetServiceThings } from '~/cloud/customProtocol/api/serviceThing'
@@ -88,6 +89,18 @@ export const updateEventSchema = z
     cmd: updateCmdSchema.optional(),
   })
   .and(eventTypeSchema)
+  .and(
+    z.discriminatedUnion('onClick', [
+      z.object({
+        onClick: z.literal(true),
+        condition: z.tuple([]).nullish(),
+      }),
+      z.object({
+        onClick: z.literal(false),
+        condition: eventConditionSchema,
+      }),
+    ]),
+  )
 
 export function UpdateEvent({
   eventId,
@@ -121,10 +134,6 @@ export function UpdateEvent({
     value: thing.id,
     label: thing.name,
   }))
-  console.log(
-    'first',
-    thingSelectData?.find(ele => ele.value === thingIdOptionProp),
-  )
 
   const {
     register,
@@ -155,7 +164,7 @@ export function UpdateEvent({
       },
     },
   })
-  // console.log('formState.errors', formState.errors)
+  console.log('formState.errors', formState.errors)
 
   const {
     append: conditionAppend,
@@ -181,19 +190,11 @@ export function UpdateEvent({
     config: {
       suspense: false,
     },
+    level: 1,
   })
-  const { acc: orgFlattenData } = flattenData(
-    orgData?.organizations,
-    ['id', 'name', 'level', 'description', 'parent_name'],
-    'sub_orgs',
-  )
-  const orgSelectOptions = orgFlattenData?.map(org => ({
-    label: org?.name,
-    value: org?.id,
-  }))
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     entity_type: 'EVENT',
     config: { suspense: false },
@@ -204,7 +205,7 @@ export function UpdateEvent({
   }))
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
-    orgId: watch('org_id')?.toString() || orgId,
+    orgId: watch('org_id') || orgId,
     projectId,
     config: { suspense: false },
   })
@@ -395,7 +396,7 @@ export function UpdateEvent({
             <div className="space-y-3">
               <TitleBar
                 title={t('cloud:org_manage.event_manage.add_event.info')}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 <InputField
@@ -497,7 +498,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.test_condition_time',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               <div className="grid grid-cols-1 gap-x-4 md:grid-cols-4">
                 {todos.map(todo => (
@@ -536,7 +537,7 @@ export function UpdateEvent({
                   title={t(
                     'cloud:org_manage.event_manage.add_event.condition.title',
                   )}
-                  className="bg-secondary-700 w-full rounded-md pl-3"
+                  className="w-full rounded-md bg-secondary-700 pl-3"
                 />
                 <Button
                   className="rounded-md"
@@ -692,7 +693,7 @@ export function UpdateEvent({
                 title={t(
                   'cloud:org_manage.event_manage.add_event.action.title',
                 )}
-                className="bg-secondary-700 w-full rounded-md pl-3"
+                className="w-full rounded-md bg-secondary-700 pl-3"
               />
               {actionType !== 'report' && (
                 <Button

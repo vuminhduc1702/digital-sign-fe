@@ -57,7 +57,7 @@ export function EventManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
+  const aoo: Array<{ [key: string]: unknown }> | undefined =
     eventData?.events?.reduce((acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
@@ -70,7 +70,7 @@ export function EventManage() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: string }>)
+    }, [] as Array<{ [key: string]: unknown }>)
 
   return (
     <div ref={ref} className="flex grow flex-col">
