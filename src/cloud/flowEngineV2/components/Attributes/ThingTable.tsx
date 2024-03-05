@@ -48,7 +48,7 @@ function ThingTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -119,17 +119,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       columnHelper.display({
         id: 'name',
         header: () => <span>{t('cloud:custom_protocol.thing.name')}</span>,
-        cell: info => {
-          const nameThing = info.row.original.name
-          const thingId = info.row.original.id
-          return (
-            <Link to={`${PATHS.THING_TEMPLATE}/${projectId}/${thingId}`}>
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameThing}
-              </p>
-            </Link>
-          )
-        },
+        cell: info => info.row.original.name,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('template_name', {
@@ -172,6 +162,8 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_thing')}
+      path={PATHS.THING_TEMPLATE}
+      projectId={projectId}
       {...props}
     />
   )

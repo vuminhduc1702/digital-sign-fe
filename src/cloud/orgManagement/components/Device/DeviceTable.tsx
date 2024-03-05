@@ -273,21 +273,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.device_manage.table.name')}</span>
         ),
-        cell: info => {
-          const nameDevice = info.row.original.name
-          const deviceId = info.row.original.id
-          return (
-            <Link
-              to={`${PATHS.DEVICE_MANAGE}/${projectId}/${
-                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
-              }`}
-            >
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameDevice}
-              </p>
-            </Link>
-          )
-        },
+        cell: info => info.row.original.name,
         footer: info => info.column.id,
       }),
 
@@ -587,6 +573,9 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columns={columns}
       colsVisibility={colsVisibility}
       onDataText={t('table:no_device')}
+      path={PATHS.DEVICE_MANAGE}
+      projectId={projectId}
+      orgId={orgId}
       {...props}
     />
   )

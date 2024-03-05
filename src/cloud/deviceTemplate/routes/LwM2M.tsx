@@ -1,4 +1,4 @@
-import { Suspense, useRef, useState } from 'react'
+import { Suspense, useRef, useState, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -25,10 +25,10 @@ export function LwM2M() {
   const [searchQueryData, setSearchQueryData] = useState('')
   const [searchQueryDataAttr, setSearchQueryDataAttr] = useState('')
 
-  // no offset call
+  // LwM2MData
   const {
     data: LwM2MDataById,
-    isPreviousData: isPreviousLwM2MData,
+    isPreviousData: isPreviousLwM2MDataById,
     isSuccess,
   } = useTemplateById({
     templateId,
@@ -43,8 +43,69 @@ export function LwM2M() {
     )
   const selectedAttributes = selectedModule?.attribute_info || []
 
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:device_template.listLwM2M.name'),
+      t('cloud:device_template.listLwM2M.id'),
+      t('cloud:device_template.listLwM2M.numberAttr'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const aoo: Array<{ [key: string]: string }> | undefined =
+    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:device_template.listLwM2M.name')]: curr.module_name,
+            [t('cloud:device_template.listLwM2M.id')]: curr.id,
+            [t('cloud:device_template.listLwM2M.numberAttr')]:
+              curr.numberOfAttributes,
+          }
+          acc.push(temp)
+        }
+        return acc
+      },
+      [] as Array<{ [key: string]: string }>,
+    )
+
+  // attrLwM2MData
+  const [rowSelectionAttr, setRowSelectionAttr] = useState({})
+  const pdfHeaderAttr = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:device_template.listLwM2M.name'),
+      t('cloud:device_template.listLwM2M.id'),
+      t('cloud:device_template.listLwM2M.numberAttr'),
+    ],
+    [],
+  )
+  const rowSelectionKeyAttr = Object.keys(rowSelectionAttr)
+  const aooAttr: Array<{ [key: string]: string }> | undefined =
+    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKeyAttr.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.attr_key')]:
+              curr.attribute_info?.name,
+            [t('cloud:org_manage.org_manage.table.value_type')]:
+              curr.attribute_info?.key,
+            [t('cloud:org_manage.org_manage.table.id')]:
+              curr.attribute_info?.id,
+          }
+          acc.push(temp)
+        }
+        return acc
+      },
+      [] as Array<{ [key: string]: string }>,
+    )
+
   return (
-    <div className="grid grow grid-cols-1 gap-x-4">
+    <div ref={ref} className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && !selectedModuleId ? (
         <div ref={ref} className="flex flex-col gap-2 md:col-span-2">
           <Suspense
@@ -63,7 +124,12 @@ export function LwM2M() {
             />
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable refComponent={ref} />
+                <ExportTable
+                  refComponent={ref}
+                  rowSelection={rowSelection}
+                  aoo={aoo}
+                  pdfHeader={pdfHeader}
+                />
                 <div className="mr-[42px] flex items-center gap-x-3">
                   <SearchField
                     searchQuery={searchQueryData}
@@ -75,6 +141,8 @@ export function LwM2M() {
                 moduleConfig={
                   LwM2MDataById?.transport_config?.info?.module_config ?? []
                 }
+                rowSelection={rowSelection}
+                setRowSelection={setRowSelection}
               />
             </div>
           </Suspense>
@@ -98,7 +166,12 @@ export function LwM2M() {
             />
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable refComponent={ref} />
+                <ExportTable
+                  refComponent={ref}
+                  rowSelection={rowSelectionAttr}
+                  aoo={aooAttr}
+                  pdfHeader={pdfHeaderAttr}
+                />
                 <div className="mr-[42px] flex items-center gap-x-3">
                   <SearchField
                     searchQuery={searchQueryDataAttr}
@@ -108,6 +181,8 @@ export function LwM2M() {
               </div>
               <AttrLwM2MTable
                 attributeInfo={selectedModule?.attribute_info ?? []}
+                rowSelection={rowSelectionAttr}
+                setRowSelection={setRowSelectionAttr}
               />
             </div>
           </Suspense>

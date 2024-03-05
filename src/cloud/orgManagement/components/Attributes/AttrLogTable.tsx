@@ -6,12 +6,16 @@ import { BaseTable } from '~/components/Table'
 
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type DeviceAttrLog, type EntityType } from '../../api/attrAPI'
-import { BaseTablePagination } from '~/types'
+import { type BaseTablePagination } from '~/types'
 
 type AttrLogTableProps = {
   data: DeviceAttrLog[]
   entityId: string
   entityType: EntityType
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function AttrLogTable({

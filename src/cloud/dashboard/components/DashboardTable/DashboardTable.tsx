@@ -49,7 +49,7 @@ function DashboardTableContextMenu({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <div className="text-body-sm hover:text-primary-400 flex items-center justify-center rounded-md text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
               height={20}
               width={10}
@@ -143,13 +143,7 @@ export function DashboardTable({
       columnHelper.display({
         id: 'title',
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
-        cell: info => (
-          <Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>
-            <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-              {info.row.original.title}
-            </p>
-          </Link>
-        ),
+        cell: info => info.row.original.title,
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -194,7 +188,8 @@ export function DashboardTable({
       offset={offset}
       setOffset={setOffset}
       total={total}
-      limitPagination={limitPagination}
+      path={PATHS.DASHBOARD}
+      projectId={projectId}
       {...props}
     />
   ) : (

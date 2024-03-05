@@ -37,6 +37,7 @@ export function DeviceDetail() {
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const { close, open, isOpen } = useDisclosure()
 
+  // Attrs Data
   const {
     data: attrsData,
     isPreviousData: isPreviousAttrsData,
@@ -45,46 +46,6 @@ export function DeviceDetail() {
     entityType: entityTypeAttr,
     entityId: deviceId,
   })
-
-  // Attr Log
-  const [deviceAttrOffset, setDeviceAttrOffset] = useState(0)
-  const {
-    data: deviceAttrData,
-    isPreviousData: isPreviousDeviceAttrData,
-    isSuccess: isSuccessDeviceAttrData,
-  } = useAttrLog({
-    entityId: deviceId,
-    entityType: 'DEVICE',
-    offset: deviceAttrOffset,
-    config: {
-      suspense: false,
-    },
-  })
-
-  // MQTT Log
-  const {
-    data: mqttLogData,
-    isPreviousData: isPreviousMQTTLogData,
-    isSuccess: isSuccessDeviceLogData,
-  } = useMQTTLog({
-    device_id: deviceId,
-    project_id: projectId,
-    config: {
-      suspense: false,
-    },
-  })
-
-  const {
-    mutate: mutateDeleteMultipleAttrs,
-    isLoading,
-    isSuccess: isSuccessDeleteMultipleAttrs,
-  } = useDeleteMultipleAttrs()
-
-  useEffect(() => {
-    if (isSuccessDeleteMultipleAttrs) {
-      close()
-    }
-  }, [isSuccessDeleteMultipleAttrs])
 
   const [rowSelection, setRowSelection] = useState({})
   const pdfHeader = useMemo(
@@ -118,6 +79,100 @@ export function DeviceDetail() {
           [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
           [t('cloud:org_manage.org_manage.table.last_update_ts')]:
             convertEpochToDate(curr.last_update_ts / 1000),
+        }
+        acc.push(temp)
+      }
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
+
+  // delete attrs
+  const {
+    mutate: mutateDeleteMultipleAttrs,
+    isLoading,
+    isSuccess: isSuccessDeleteMultipleAttrs,
+  } = useDeleteMultipleAttrs()
+
+  useEffect(() => {
+    if (isSuccessDeleteMultipleAttrs) {
+      close()
+    }
+  }, [isSuccessDeleteMultipleAttrs])
+
+  // Attr Log
+  const [attrLogOffset, setDeviceAttrOffset] = useState(0)
+  const {
+    data: attrLogData,
+    isPreviousData: isPreviousDeviceAttrData,
+    isSuccess: isSuccessDeviceAttrData,
+  } = useAttrLog({
+    entityId: deviceId,
+    entityType: 'DEVICE',
+    offset: attrLogOffset,
+    config: {
+      suspense: false,
+    },
+  })
+
+  const [rowSelectionAttrLog, setRowSelectionAttrLog] = useState({})
+  const pdfHeaderAttrLog = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:org_manage.org_manage.table.last_update_ts'),
+      t('cloud:org_manage.org_manage.table.attr_key'),
+      t('cloud:org_manage.org_manage.table.value'),
+    ],
+    [],
+  )
+  const rowSelectionKeyAttrLog = Object.keys(rowSelectionAttrLog)
+  const attrLogAoo: Array<{ [key: string]: string }> | undefined =
+    attrLogData?.logs?.reduce((acc, curr, index) => {
+      if (rowSelectionKeyAttrLog.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.ts / 1000),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+        }
+        acc.push(temp)
+      }
+      return acc
+    }, [] as Array<{ [key: string]: string }>)
+
+  // MQTT Log
+  const {
+    data: mqttLogData,
+    isPreviousData: isPreviousMQTTLogData,
+    isSuccess: isSuccessDeviceLogData,
+  } = useMQTTLog({
+    device_id: deviceId,
+    project_id: projectId,
+    config: {
+      suspense: false,
+    },
+  })
+
+  const [rowSelectionMQTTLog, setRowSelectionMQTTLog] = useState({})
+  const pdfHeaderMQTTLog = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:org_manage.org_manage.table.last_update_ts'),
+      t('cloud:org_manage.device_manage.table.payload_as_string'),
+      t('cloud:org_manage.device_manage.table.topic'),
+    ],
+    [],
+  )
+  const rowSelectionKeyMQTTLog = Object.keys(rowSelection)
+  const MQTTLogAoo: Array<{ [key: string]: string }> | undefined =
+    mqttLogData?.messages?.reduce((acc, curr, index) => {
+      if (rowSelectionKeyMQTTLog.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.ts / 1000),
+          [t('cloud:org_manage.device_manage.table.payload_as_string')]:
+            curr.payload_as_string,
+          [t('cloud:org_manage.device_manage.table.topic')]: curr.topic,
         }
         acc.push(temp)
       }
@@ -194,22 +249,29 @@ export function DeviceDetail() {
         <TabsContent value="attr_log" className="mt-2 flex grow flex-col">
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable refComponent={ref} />
+              <ExportTable
+                refComponent={ref}
+                rowSelection={rowSelectionAttrLog}
+                aoo={attrLogAoo}
+                pdfHeader={pdfHeaderAttrLog}
+              />
               <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
-                  searchQuery={searchQueryMQTTLog}
-                  setSearchQuery={setSearchQueryMQTTLog}
+                  searchQuery={searchQueryAttrsLog}
+                  setSearchQuery={setSearchQueryAttrsLog}
                 />
               </div>
             </div>
             <AttrLogTable
-              data={deviceAttrData?.logs ?? []}
-              offset={deviceAttrOffset}
+              data={attrLogData?.logs ?? []}
+              offset={attrLogOffset}
               setOffset={setDeviceAttrOffset}
-              total={deviceAttrData?.total ?? 0}
+              total={attrLogData?.total ?? 0}
               isPreviousData={isPreviousDeviceAttrData}
               entityId={deviceId}
               entityType="DEVICE"
+              rowSelection={rowSelectionAttrLog}
+              setRowSelection={setRowSelectionAttrLog}
             />
           </div>
         </TabsContent>
@@ -219,15 +281,25 @@ export function DeviceDetail() {
         >
           <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable refComponent={ref} />
+              <ExportTable
+                refComponent={ref}
+                rowSelection={rowSelectionMQTTLog}
+                aoo={MQTTLogAoo}
+                pdfHeader={pdfHeaderMQTTLog}
+              />
               <div className="mr-[42px] flex items-center gap-x-3">
-                {/* dummyInput */}
+                <SearchField
+                  searchQuery={searchQueryMQTTLog}
+                  setSearchQuery={setSearchQueryMQTTLog}
+                />
               </div>
             </div>
             <MQTTMessageLogTable
               data={mqttLogData?.messages ?? []}
               entityId={deviceId}
               entityType="DEVICE"
+              rowSelection={rowSelectionMQTTLog}
+              setRowSelection={setRowSelectionMQTTLog}
             />
           </div>
         </TabsContent>

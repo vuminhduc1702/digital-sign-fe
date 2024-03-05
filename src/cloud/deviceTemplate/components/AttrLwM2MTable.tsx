@@ -6,6 +6,10 @@ import { type TransportConfigAttribute } from '../types'
 
 type AttrLwM2MTableProps = {
   attributeInfo: TransportConfigAttribute[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }
 
 export function AttrLwM2MTable({

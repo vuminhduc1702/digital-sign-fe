@@ -211,21 +211,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
         header: () => (
           <span>{t('cloud:org_manage.group_manage.table.name')}</span>
         ),
-        cell: info => {
-          const nameGroup = info.row.original.name
-          const deviceId = info.row.original.id
-          return (
-            <Link
-              to={`${PATHS.GROUP_MANAGE}/${projectId}/${
-                orgId != null ? `${orgId}/${deviceId}` : ` /${deviceId}`
-              }`}
-            >
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameGroup}
-              </p>
-            </Link>
-          )
-        },
+        cell: info => info.row.original.name,
         footer: info => info.column.id,
       }),
       columnHelper.accessor('entity_type', {
@@ -266,6 +252,9 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_group')}
+      path={PATHS.GROUP_MANAGE}
+      projectId={projectId}
+      orgId={orgId}
       {...props}
     />
   )

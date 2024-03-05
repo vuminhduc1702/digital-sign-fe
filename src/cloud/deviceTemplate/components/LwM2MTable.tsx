@@ -12,6 +12,10 @@ import { BaseTablePagination } from '~/types'
 
 type LwM2MTableProps = {
   moduleConfig: ModuleConfig[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 }
 export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
   const { t } = useTranslation()
@@ -24,7 +28,6 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
     }, 500)
     return () => clearTimeout(timer)
   }, [moduleConfig])
-  console.log(moduleConfig)
   const templateId = params.templateId as string
   const columnHelper = createColumnHelper<ModuleConfig>()
   const columns = useMemo<ColumnDef<ModuleConfig, any>[]>(
@@ -38,19 +41,7 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
       columnHelper.display({
         id: 'name',
         header: () => <span>{t('cloud:device_template.listLwM2M.name')}</span>,
-        cell: info => {
-          const nameLwM2M = info.row.original.module_name
-          const id = info.row.original.id
-          return (
-            <Link
-              to={`${PATHS.TEMPLATE_LWM2M}/${projectId}/${templateId}/${id}`}
-            >
-              <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-                {nameLwM2M}
-              </p>
-            </Link>
-          )
-        },
+        cell: info => info.row.original.module_name,
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -81,6 +72,9 @@ export function LwM2MTable({ moduleConfig, ...props }: LwM2MTableProps) {
       popoverClassName="absolute right-0 top-1 block"
       data={moduleConfig}
       columns={columns}
+      path={PATHS.TEMPLATE_LWM2M}
+      projectId={projectId}
+      orgId={templateId}
       {...props}
     />
   ) : (
