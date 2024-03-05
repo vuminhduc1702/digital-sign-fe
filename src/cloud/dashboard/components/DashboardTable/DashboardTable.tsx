@@ -142,13 +142,7 @@ export function DashboardTable({
       columnHelper.display({
         id: 'title',
         header: () => <span>{t('cloud:dashboard.table.name')}</span>,
-        cell: info => (
-          <Link to={`${PATHS.DASHBOARD}/${projectId}/${info.row.original.id}`}>
-            <p className="group-hover:text-primary-400 group-[.active]:text-primary-400">
-              {info.row.original.title}
-            </p>
-          </Link>
-        ),
+        cell: info => info.row.original.title,
         footer: info => info.column.id,
       }),
       columnHelper.display({
@@ -193,7 +187,8 @@ export function DashboardTable({
       offset={offset}
       setOffset={setOffset}
       total={total}
-      limitPagination={limitPagination}
+      path={PATHS.DASHBOARD}
+      projectId={projectId}
       {...props}
     />
   ) : (

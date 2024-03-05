@@ -29,6 +29,7 @@ import Filter from './components/FilterTable/Filter'
 
 import refreshIcon from '~/assets/icons/table-refresh.svg'
 import btnFilterIcon from '~/assets/icons/btn-filter.svg'
+import { useNavigate } from 'react-router-dom'
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -89,6 +90,9 @@ export function BaseTable<T extends Record<string, any>>({
   setRowSelection,
   isHiddenCheckbox = false,
   filterBtnClassName = 'absolute top-10 right-0',
+  path,
+  projectId,
+  orgId,
 }: {
   data: T[]
   columns: ColumnDef<T, string>[]
@@ -111,8 +115,12 @@ export function BaseTable<T extends Record<string, any>>({
   >
   isHiddenCheckbox?: boolean
   filterBtnClassName?: string
+  path?: string
+  projectId?: string
+  orgId?: string
 }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState(colsVisibility)
@@ -530,14 +538,33 @@ export function BaseTable<T extends Record<string, any>>({
                   return (
                     <Fragment key={row.id}>
                       <tr
-                        className="border-secondary-70 border-t-2 text-center"
+                        className="border-secondary-70 cursor-pointer border-t-2 text-center hover:bg-primary-200"
                         key={row.id}
                       >
                         {row.getVisibleCells().map((cell, index) => {
                           if (index === row.getVisibleCells().length - 1) {
                             return (
                               <Fragment key={cell.id}>
-                                <td className="h-9" key={cell.id}>
+                                <td
+                                  className={`h-9`}
+                                  key={cell.id}
+                                  onClick={() => {
+                                    if (
+                                      projectId &&
+                                      cell.column.id !== 'contextMenu' &&
+                                      cell.column.id !== 'select'
+                                    ) {
+                                      const linkId = row.original.id
+                                      navigate(
+                                        `${path}/${projectId}/${
+                                          orgId != null
+                                            ? `${orgId}/${linkId}`
+                                            : `${linkId}`
+                                        }`,
+                                      )
+                                    }
+                                  }}
+                                >
                                   {flexRender(
                                     cell.column.columnDef.cell,
                                     cell.getContext(),
@@ -547,7 +574,26 @@ export function BaseTable<T extends Record<string, any>>({
                             )
                           } else {
                             return (
-                              <td className="h-9" key={cell.id}>
+                              <td
+                                className="h-9"
+                                key={cell.id}
+                                onClick={() => {
+                                  if (
+                                    projectId &&
+                                    cell.column.id !== 'contextMenu' &&
+                                    cell.column.id !== 'select'
+                                  ) {
+                                    const linkId = row.original.id
+                                    navigate(
+                                      `${path}/${projectId}/${
+                                        orgId != null
+                                          ? `${orgId}/${linkId}`
+                                          : `${linkId}`
+                                      }`,
+                                    )
+                                  }
+                                }}
+                              >
                                 {flexRender(
                                   cell.column.columnDef.cell,
                                   cell.getContext(),

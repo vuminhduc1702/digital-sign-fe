@@ -132,7 +132,6 @@ export function LineChart({
 }) {
   const TICK_COUNT = 5
   const TICK_INTERVAL = widgetInfo?.config?.timewindow?.interval || 1000
-  console.log(widgetInfo?.config?.chartsetting)
   const TIME_PERIOD =
     widgetInfo?.config?.chartsetting?.time_period ||
     (widgetInfo?.config?.chartsetting?.end_date &&

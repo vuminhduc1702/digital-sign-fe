@@ -18,6 +18,7 @@ export default {
     extend: {
       colors: {
         primary: {
+          200: withOpacity('1, 100%, 90%'),
           300: withOpacity('1, 100%, 77%'), // sidebar hover bg
           400: withOpacity('355, 85%, 52%'), // confirm btn
         },

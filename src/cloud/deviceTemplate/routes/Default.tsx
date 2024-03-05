@@ -90,6 +90,8 @@ export function Default() {
       return acc
     }, [] as Array<{ [key: string]: unknown }>)
 
+  console.log(rowSelection)
+
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && attrsData ? (

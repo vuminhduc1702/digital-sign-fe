@@ -105,6 +105,10 @@ function ThingServiceTableContextMenu({
 
 type ThingServiceTableProps = {
   data: ThingService[]
+  rowSelection: { [key: string]: boolean }
+  setRowSelection: React.Dispatch<
+    React.SetStateAction<{ [key: string]: boolean }>
+  >
 } & BaseTablePagination
 
 export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
@@ -156,6 +160,7 @@ export function ThingServiceTable({ data, ...props }: ThingServiceTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_service')}
+      isHiddenCheckbox={true}
       {...props}
     />
   )

@@ -53,11 +53,11 @@ export function DeviceManage() {
   const pdfHeader = useMemo(
     () => [
       t('table:no'),
-      t('cloud:org_manage.org_manage.overview.name'),
-      t('cloud:org_manage.group_manage.title'),
-      t('billing:manage_bill.table.status'),
+      t('cloud:org_manage.device_manage.table.name'),
+      t('cloud:org_manage.device_manage.table.group'),
+      t('cloud:org_manage.device_manage.table.status'),
       t('sidebar:cloud.device_template'),
-      'Key',
+      t('cloud:org_manage.device_manage.table.key'),
       t('cloud:org_manage.device_manage.table.created_at'),
     ],
     [],
@@ -68,11 +68,11 @@ export function DeviceManage() {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1 + offset).toString(),
-          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-          [t('cloud:org_manage.group_manage.title')]: curr.group_name,
-          [t('billing:manage_bill.table.status')]: curr.status,
+          [t('cloud:org_manage.device_manage.table.name')]: curr.name,
+          [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
+          [t('cloud:org_manage.device_manage.table.status')]: curr.status,
           [t('sidebar:cloud.device_template')]: curr.template_name,
-          Key: curr.key,
+          [t('cloud:org_manage.device_manage.table.key')]: curr.key,
           [t('cloud:org_manage.device_manage.table.created_at')]:
             convertEpochToDate(curr.created_time),
         }
