@@ -79,6 +79,9 @@ export function ComplexTree<TFormValues extends FieldValues>({
     projectId,
     orgId: selectedItems.length > 0 ? selectedItems.toString() : '',
     level: 1,
+    config: {
+      suspense: false,
+    },
   })
 
   function parseData(data: Org[]) {
@@ -107,7 +110,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
       data.forEach((item: Org) => {
         treeData = { ...treeData, ...parseOrg(item) }
       })
-      setDataItem(treeData)
+      return treeData
     }
   }
 
@@ -143,27 +146,20 @@ export function ComplexTree<TFormValues extends FieldValues>({
     return treeData
   }
 
-  const getDetailOrg = useCallback(
-    (orgId: string) => {
-      if (options && orgData) {
-        const parseRootItem = dataItem[orgId]
-        if (parseRootItem) {
-          parseRootItem.children = orgData.organizations.map(org => org.id)
-          let expandedItems = {}
-          orgData.organizations.forEach(org => {
-            expandedItems = parseOrg(org)
-          })
-          setDataItem({ ...dataItem, ...expandedItems })
-        }
-      }
-    },
-    [orgData],
-  )
-
+  /* Lazy loading on click parent org item */
   useEffect(() => {
-    getDetailOrg(selectedItems.toString())
-  }, [selectedItems])
+    const parseRootItem = dataItem[selectedItems.toString()]
+    if (parseRootItem) {
+      parseRootItem.children = orgData?.organizations.map(org => org.id)
+      let expandedItems = {}
+      orgData?.organizations.forEach(org => {
+        expandedItems = parseOrg(org)
+      })
+      setDataItem({ ...dataItem, ...expandedItems })
+    }
+  }, [orgData, selectedItems])
 
+  /* Set initial state */
   useEffect(() => {
     if (selectedItems) {
       const expanded = getParent(selectedItems)
@@ -173,7 +169,8 @@ export function ComplexTree<TFormValues extends FieldValues>({
 
   useEffect(() => {
     if (options) {
-      parseData(options)
+      const parseInputData = parseData(options)
+      setDataItem({ ...dataItem, ...parseInputData })
     }
   }, [options])
 
@@ -253,9 +250,6 @@ export function ComplexTree<TFormValues extends FieldValues>({
         name={name}
         control={control}
         render={({ field: { onChange, value, ...field } }) => {
-          if (value) {
-            setSelectedItems(value)
-          }
           const parseOrgValue = orgData?.organizations.find(
             org => org.id === value,
           )
@@ -352,9 +346,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                     onChange(items.toString())
                     customOnChange?.(items)
                   }}
-                  defaultInteractionMode={
-                    InteractionMode.DoubleClickItemToExpand
-                  }
+                  defaultInteractionMode={InteractionMode.ClickArrowToExpand}
                   canSearchByStartingTyping={true}
                   {...props}
                 >
