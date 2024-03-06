@@ -538,7 +538,7 @@ export function BaseTable<T extends Record<string, any>>({
                   return (
                     <Fragment key={row.id}>
                       <tr
-                        className="border-secondary-70 cursor-pointer border-t-2 text-center hover:bg-primary-200"
+                        className="border-secondary-70 cursor-pointer border-t-2 text-center hover:bg-primary-300 hover:bg-opacity-25"
                         key={row.id}
                       >
                         {row.getVisibleCells().map((cell, index) => {

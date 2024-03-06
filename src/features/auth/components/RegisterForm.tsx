@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Link } from '~/components/Link'
 import { useRegister } from '~/lib/auth'
-import { Form, InputField } from '~/components/Form'
+import { InputField } from '~/components/Form'
 import { Button } from '~/components/Button'
 import { PATHS } from '~/routes/PATHS'
 import { sentOTP } from '../api/otp'
@@ -242,11 +242,11 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
             placeholder={t('auth:require_otp')}
             autoComplete="one-time-code"
           />
-          <div className="text-body-xs container mx-auto text-center">
+          <div className="container mx-auto text-center text-body-xs">
             <Button
               isLoading={registerMutation.isLoading}
               type="submit"
-              className="bg-primary-400 w-full"
+              className="w-full bg-primary-400"
             >
               {t('user:register')}
             </Button>

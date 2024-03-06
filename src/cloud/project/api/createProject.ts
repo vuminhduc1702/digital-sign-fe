@@ -18,7 +18,7 @@ type CreateProjectRes = {
   image: string
   app_key: string
   app_secret: string
-  sms_config: {}
+  sms_config: unknown
 } & BaseAPIRes
 
 export const CreateProjectSchema = ProjectSchema.pick({
@@ -62,7 +62,7 @@ export const useCreateProject = ({ config }: UseCreateProjectOptions = {}) => {
   return useMutation({
     onSuccess: async () => {
       await queryClient.invalidateQueries(['projects'])
-      toast.success(t('cloud:project_manager.add_project.success_add')) 
+      toast.success(t('cloud:project_manager.add_project.success_add'))
     },
     ...config,
     mutationFn: createProject,
