@@ -46,12 +46,14 @@ export type GroupType = {
 function GroupTableContextMenu({
   id,
   name,
+  org_name,
   ...props
 }: {
   id: string
   name: string
   entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
   organization: string
+  org_name: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -143,6 +145,7 @@ function GroupTableContextMenu({
         <UpdateGroup
           groupId={id}
           name={name}
+          org_name={org_name}
           close={close}
           isOpen={isOpen}
           {...props}
@@ -236,8 +239,15 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       columnHelper.display({
         id: 'contextMenu',
         cell: info => {
-          const { name, id, organization, entity_type } = info.row.original
-          return GroupTableContextMenu({ name, id, organization, entity_type })
+          const { name, id, organization, entity_type, org_name } =
+            info.row.original
+          return GroupTableContextMenu({
+            name,
+            id,
+            organization,
+            entity_type,
+            org_name,
+          })
         },
         header: () => null,
         footer: info => info.column.id,

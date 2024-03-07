@@ -41,6 +41,7 @@ type ComplexTreeProps<TFormValues extends FieldValues> = {
   placeholder?: string
   refTree?: Ref<TreeEnvironmentRef<any>>
   selectedOrg?: string
+  selectedOrgName?: any
   customOnChange?: (e?: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>
@@ -57,6 +58,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
   classlabel,
   classchild,
   selectedOrg,
+  selectedOrgName,
   customOnChange,
   ...props
 }: ComplexTreeProps<TFormValues>) {
@@ -258,7 +260,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
               ? dataItem[value].data.name
               : parseOrgValue
                 ? parseOrgValue.name
-                : ''
+                : selectedOrgName
           return (
             <Popover>
               <PopoverTrigger asChild>
