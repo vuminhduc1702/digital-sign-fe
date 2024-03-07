@@ -79,7 +79,10 @@ export function ComplexTree<TFormValues extends FieldValues>({
   const projectId = storage.getProject().id
   const { data: orgData } = useGetOrgs({
     projectId,
-    orgId: selectedItems.length > 0 ? selectedItems.toString() : '',
+    orgId:
+      selectedItems.length > 0 && selectedItems.toString() !== no_org
+        ? selectedItems.toString()
+        : '',
     level: 1,
     config: {
       suspense: false,
@@ -105,7 +108,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
           index: no_org,
           isFolder: false,
           parent: '',
-          data: { detailData: no_org, name: no_org },
+          data: { detailData: '', name: no_org },
         },
       }
       treeData = { ...treeData, ...rootItem }
@@ -260,7 +263,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
               ? dataItem[value].data.name
               : parseOrgValue
                 ? parseOrgValue.name
-                : selectedOrgName
+                : ''
           return (
             <Popover>
               <PopoverTrigger asChild>
@@ -273,12 +276,10 @@ export function ComplexTree<TFormValues extends FieldValues>({
                     !value && 'text-secondary-700',
                   )}
                 >
-                  {value ? (
+                  {Boolean(value && value !== '') ? (
                     <span>{parseValue ? parseValue : value}</span>
                   ) : (
-                    <span>
-                      {t('cloud:org_manage.org_manage.add_org.choose_org')}
-                    </span>
+                    no_org
                   )}
                 </Button>
               </PopoverTrigger>
@@ -345,7 +346,9 @@ export function ComplexTree<TFormValues extends FieldValues>({
                   }
                   onSelectItems={(items: any) => {
                     setSelectedItems(items)
-                    onChange(items.toString())
+                    onChange(
+                      items.toString() !== no_org ? items.toString() : '',
+                    )
                     customOnChange?.(items)
                   }}
                   defaultInteractionMode={InteractionMode.ClickArrowToExpand}
