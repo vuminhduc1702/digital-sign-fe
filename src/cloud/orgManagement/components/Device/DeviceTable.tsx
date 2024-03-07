@@ -186,7 +186,6 @@ function DeviceTableContextMenu({
           isOpen={isOpen}
           template_id={template_id}
           additional_info={additional_info}
-          org_name={org_name}
         />
       ) : null}
       {isOpenUpdateVersion ? (
