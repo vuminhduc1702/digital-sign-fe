@@ -22,7 +22,12 @@ import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
 import English from '~/assets/images/landingpage/uk-flag.png'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 
 function Navbar() {
@@ -62,7 +67,7 @@ function Navbar() {
         <a
           className="flex cursor-pointer items-center gap-x-2"
           target="_blank"
-          href="https:innoway.gitbook.io/innoway/"
+          href="https://innoway.gitbook.io/innoway/"
           rel="noreferrer"
         >
           <img
@@ -100,20 +105,20 @@ function Navbar() {
           >
             {projectsData?.projects.map((project: Project) => {
               return (
-                <Link
-                  to={`${PATHS.ORG_MANAGE}/${project.id}`}
-                  key={project.id}
-                >
-                  <DropdownMenuItem className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-3 leading-none outline-none"
+                <Link to={`${PATHS.ORG_MANAGE}/${project.id}`} key={project.id}>
+                  <DropdownMenuItem
+                    className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-3 leading-none outline-none"
                     onClick={() => {
                       storage.setProject(project)
                       setProjectId(project.id)
-                    }}>
+                    }}
+                  >
                     <img
-                      src={`${project?.image !== ''
-                        ? `${API_URL}/file/${project?.image}`
-                        : defaultProjectImage
-                        }`}
+                      src={`${
+                        project?.image !== ''
+                          ? `${API_URL}/file/${project?.image}`
+                          : defaultProjectImage
+                      }`}
                       alt="Project"
                       className="aspect-square w-[45px] rounded-full"
                       onError={e => {
@@ -268,11 +273,8 @@ function Navbar() {
                   {t('user:change_password')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                <p
-                  className="cursor-pointer"
-                  onClick={() => logout.mutate({})}
-                >
+              <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                   {t('user:logout')}
                 </p>
               </DropdownMenuItem>

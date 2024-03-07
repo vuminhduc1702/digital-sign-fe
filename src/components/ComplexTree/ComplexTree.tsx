@@ -41,7 +41,7 @@ type ComplexTreeProps<TFormValues extends FieldValues> = {
   placeholder?: string
   refTree?: Ref<TreeEnvironmentRef<any>>
   selectedOrg?: string
-  selectedOrgName?: any
+  selectedOrgName?: string
   customOnChange?: (e?: any) => void
 } & FieldWrapperPassThroughProps &
   ControllerPassThroughProps<TFormValues>

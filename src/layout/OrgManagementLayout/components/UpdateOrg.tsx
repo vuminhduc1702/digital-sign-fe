@@ -23,13 +23,13 @@ import {
 } from '~/utils/hooks'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import storage from '~/utils/storage'
+import { ComplexTree } from '~/components/ComplexTree'
 
-import { type OrgMapType } from './OrgManageSidebar'
+import { type Org } from '~/layout/MainLayout/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { ComplexTree } from '~/components/ComplexTree'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 
@@ -40,10 +40,9 @@ export function UpdateOrg({
 }: {
   close: () => void
   isOpen: boolean
-  selectedUpdateOrg: OrgMapType
+  selectedUpdateOrg: Org
 }) {
   const { t } = useTranslation()
-  console.log('selectedUpdateOrg', selectedUpdateOrg)
 
   const {
     handleResetDefaultImage,
@@ -53,7 +52,6 @@ export function UpdateOrg({
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-    formStateUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
   const projectId = storage.getProject()?.id

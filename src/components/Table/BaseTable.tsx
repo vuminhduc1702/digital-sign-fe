@@ -601,7 +601,7 @@ export function BaseTable<T extends Record<string, any>>({
                               </td>
                             )
 
-                            // Tooltips all cell but some case can not
+                            // // Tooltips all cell but some case can not
                             // const cellStr = cell.getContext().getValue()
                             // let cellStrTrigger
                             // if (typeof cellStr == 'string') {
