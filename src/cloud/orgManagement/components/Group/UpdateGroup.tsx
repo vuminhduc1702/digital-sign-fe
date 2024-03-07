@@ -31,6 +31,7 @@ type UpdateGroupProps = {
   close: () => void
   isOpen: boolean
   organization: string
+  org_name: string
   entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
 }
 
@@ -41,6 +42,7 @@ export function UpdateGroup({
   isOpen,
   organization,
   entity_type,
+  org_name,
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
@@ -145,6 +147,7 @@ export function UpdateGroup({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={org_name}
           />
         </>
       </form>

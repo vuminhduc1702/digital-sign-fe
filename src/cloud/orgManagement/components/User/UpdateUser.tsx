@@ -63,6 +63,7 @@ export function UpdateUser({
   role_id,
   phone,
   profile,
+  org_name,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -257,6 +258,7 @@ export function UpdateUser({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={org_name}
           />
 
           <SelectDropdown

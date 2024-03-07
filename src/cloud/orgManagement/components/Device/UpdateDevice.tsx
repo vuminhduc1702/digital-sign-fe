@@ -41,6 +41,7 @@ type UpdateDeviceProps = {
   isOpen: boolean
   template_id: string
   additional_info: DeviceAdditionalInfo
+  org_name?: string
 }
 
 const updateDeviceSchema = deviceSchema.required({ group_id: true })
@@ -61,6 +62,7 @@ export function UpdateDevice({
   isOpen,
   template_id,
   additional_info,
+  org_name,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
@@ -194,6 +196,7 @@ export function UpdateDevice({
               control={control}
               options={orgData?.organizations}
               customOnChange={() => selectDropdownGroupId.current?.clearValue()}
+              selectedOrgName={org_name}
             />
 
             <SelectDropdown

@@ -6,7 +6,12 @@ import { useForm } from 'react-hook-form'
 import { Button } from '~/components/Button'
 import { InputField, TextAreaField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
+import {
+  type UpdateOrgDTO,
+  useUpdateOrg,
+  useUploadImage,
+  useOrgById,
+} from '../api'
 import { orgSchema } from './CreateOrg'
 import FileField from '~/components/Form/FileField'
 import { API_URL } from '~/config'
@@ -74,6 +79,8 @@ export function UpdateOrg({
         org_id: selectedUpdateOrg.org_id,
       },
     })
+  const selectedOrgBelonged = selectedUpdateOrg.org_id
+  const { data: orgDataById } = useOrgById({ orgId: selectedOrgBelonged })
 
   useEffect(() => {
     if (isSuccess) {
@@ -183,6 +190,7 @@ export function UpdateOrg({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={orgDataById?.name}
           />
 
           <TextAreaField
