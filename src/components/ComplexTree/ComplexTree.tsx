@@ -287,7 +287,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
                 className="popover-content w-auto p-2"
                 align="start"
               >
-                <div className="flex">
+                <div className="flex gap-x-1">
                   <InputField
                     className="flex"
                     type="text"
@@ -303,15 +303,13 @@ export function ComplexTree<TFormValues extends FieldValues>({
                       width={12}
                       src={btnRemoveIcon}
                       alt="remove org id"
-                      className="absolute right-[54px] top-[22px] cursor-pointer text-secondary-700 hover:text-primary-400"
+                      className="cursor-pointer text-secondary-700 hover:text-primary-400"
                       onClick={() => {
                         setSearch('')
                         setFindOrgMsg('')
                       }}
                     />
-                  ) : (
-                    <></>
-                  )}
+                  ) : null}
                   <div
                     onClick={find}
                     className="flex h-9 w-9 cursor-pointer items-center rounded-md border border-gray-400 p-[10px]"
