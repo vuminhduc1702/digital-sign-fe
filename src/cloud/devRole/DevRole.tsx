@@ -9,10 +9,12 @@ import { CreateRole } from '../role/components'
 import { useGetRoles } from '../role/api'
 import { useProjects } from '../project/api'
 import storage from '~/utils/storage'
-
-import narrowLeft from '~/assets/icons/narrow-left.svg'
 import { ContentLayout } from '~/layout/ContentLayout'
 import { SearchField } from '~/components/Input'
+
+import { type Project } from '../project/routes/ProjectManage'
+
+import narrowLeft from '~/assets/icons/narrow-left.svg'
 
 export default function DevRole() {
   const { t } = useTranslation()
@@ -24,8 +26,8 @@ export default function DevRole() {
 
   const { data: projectsData } = useProjects()
 
-  const transformProjectArr = (arr: any) => {
-    const rs = arr.map((item: any) => {
+  const transformProjectArr = (arr: Project[]) => {
+    const rs = arr.map(item => {
       return {
         label: item.name,
         value: item.id,
@@ -36,7 +38,7 @@ export default function DevRole() {
 
   const { data, isPreviousData } = useGetRoles({
     projectId,
-    isHasApplicableTo: true,
+    applicable_to: 'TENANT_DEV',
     config: {
       keepPreviousData: true,
       suspense: false,
@@ -63,7 +65,7 @@ export default function DevRole() {
         label="Project Id"
         className="mb-4 ml-32 w-max"
         classlabel="ml-32"
-        options={transformProjectArr(projectsData?.projects)}
+        options={transformProjectArr(projectsData?.projects ?? [])}
         onChange={e => setProjectId(e.target.value)}
         defaultValue={storage.getProject()?.id}
       />

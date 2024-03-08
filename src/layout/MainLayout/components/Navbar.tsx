@@ -12,6 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
 import { useCopyId } from '~/utils/hooks'
 import storage from '~/utils/storage'
+import { useAuthorization } from '~/lib/authorization'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -39,7 +40,9 @@ function Navbar() {
       suspense: false,
     },
   })
-  const { data: userData } = useUser()
+  const { data: userDataFromStorage } = useUser()
+
+  const { checkAccess } = useAuthorization()
 
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
@@ -138,23 +141,6 @@ function Navbar() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* <div className="flex cursor-pointer items-center gap-x-2">
-          <img
-            src={caidatIcon}
-            alt="Setting"
-            className="aspect-square w-[20px]"
-          />
-          <p className="text-white">{t('nav:setup')}</p>
-        </div>
-        <div className="flex cursor-pointer items-center gap-x-2">
-          <img
-            src={hotroIcon}
-            alt="Support"
-            className="aspect-square w-[20px]"
-          />
-          <p className="text-white">{t('nav:support')}</p>
-        </div> */}
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
             <div className="cursor-pointer">
@@ -236,10 +222,12 @@ function Navbar() {
               sideOffset={-15}
             >
               <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                {userData ? (
+                {userDataFromStorage != null ? (
                   <p
                     className="cursor-pointer"
-                    onClick={() => handleCopyId(userData.device_token)}
+                    onClick={() =>
+                      handleCopyId(userDataFromStorage.device_token)
+                    }
                   >
                     {t('user:copy_device_token')}
                   </p>
@@ -253,18 +241,22 @@ function Navbar() {
                   {t('cloud:custom_protocol.adapter.username')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                asChild
-                className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              >
-                <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                asChild
-                className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              >
-                <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
-              </DropdownMenuItem>
+              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
+                </DropdownMenuItem>
+              ) : null}
+              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuItem
                 asChild
                 className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"

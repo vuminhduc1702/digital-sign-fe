@@ -9,7 +9,9 @@ export const BASE_PATH_TENANT = '/tenant'
 export const BASE_PATH_DEV_ROLE = '/dev-role'
 
 export const PATHS = {
-  // Protected routes
+  /**
+   * Protected routes
+   */
 
   // Project routes
   PROJECT_MANAGE: `${BASE_PATH}project-management`,
@@ -45,7 +47,7 @@ export const PATHS = {
   BILLING_SUBSCRIPTION: `${BASE_PATH_PAYMENT}billing-subscription`,
   CUSTOMER_MANAGE: `${BASE_PATH_PAYMENT}customer-manage`,
 
-  //TENANT
+  // Tenant route
   TENANT_MANAGE: `${BASE_PATH_TENANT}`,
   DEV_ROLE: `${BASE_PATH_DEV_ROLE}`,
 
@@ -69,7 +71,10 @@ export const PATHS = {
   // Auth routes not public
   CHANGEPASSWORD: `${BASE_PATH_AUTH}changepassword`,
 
-  // Common routes
+  /**
+   * Common routes
+   */
+
   HOME: `${BASE_PATH}`,
   USER_INFO: `${BASE_PATH}user-info`,
   PDF_VIEWER: `${BASE_PATH}pdf-viewer`,

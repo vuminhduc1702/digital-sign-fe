@@ -1,8 +1,6 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
-import { Button } from '~/components/Button'
 
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
@@ -14,6 +12,11 @@ import { useDeleteMultipleDevices } from '../api/deviceAPI/deleteMultipleDevices
 import { SearchField } from '~/components/Input'
 import { useDisclosure } from '~/utils/hooks'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { Authorization } from '~/lib/authorization'
+import { useUser } from '~/lib/auth'
+
+import { type UserResponse } from '~/features/auth'
+import { POLICIES } from '~/lib/policies'
 
 export function DeviceManage() {
   const { t } = useTranslation()
@@ -23,6 +26,9 @@ export function DeviceManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const params = useParams()
   const { close, open, isOpen } = useDisclosure()
+
+  const data = useUser()
+  const userDataFromStorage = data.data as UserResponse
 
   const orgId = params.orgId as string
   const projectId = storage.getProject()?.id
@@ -64,22 +70,25 @@ export function DeviceManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: unknown }> | undefined =
-    deviceData?.devices?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1 + offset).toString(),
-          [t('cloud:org_manage.device_manage.table.name')]: curr.name,
-          [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
-          [t('cloud:org_manage.device_manage.table.status')]: curr.status,
-          [t('sidebar:cloud.device_template')]: curr.template_name,
-          [t('cloud:org_manage.device_manage.table.key')]: curr.key,
-          [t('cloud:org_manage.device_manage.table.created_at')]:
-            convertEpochToDate(curr.created_time),
+    deviceData?.devices?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1 + offset).toString(),
+            [t('cloud:org_manage.device_manage.table.name')]: curr.name,
+            [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
+            [t('cloud:org_manage.device_manage.table.status')]: curr.status,
+            [t('sidebar:cloud.device_template')]: curr.template_name,
+            [t('cloud:org_manage.device_manage.table.key')]: curr.key,
+            [t('cloud:org_manage.device_manage.table.created_at')]:
+              convertEpochToDate(curr.created_time),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">
@@ -102,7 +111,16 @@ export function DeviceManage() {
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
             )}
-            <CreateDevice />
+            <Authorization
+              // policyCheck={POLICIES['device:create'](
+              //   userDataFromStorage,
+              // )}
+              allowedRoles={['TENANT', 'SYSTEM_ADMIN']} // or allowedRoles={ROLES} if you want to allow access to all roles
+            >
+              <div className="flex justify-between">
+                <CreateDevice />
+              </div>
+            </Authorization>
             <SearchField
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}

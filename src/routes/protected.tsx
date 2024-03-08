@@ -26,6 +26,7 @@ import { Default } from '~/cloud/deviceTemplate/routes/Default'
 import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate } from 'react-router-dom'
 import storage from '~/utils/storage'
+import { Authorization } from '~/lib/authorization'
 
 const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
@@ -52,6 +53,10 @@ const { CustomProtocolManage } = lazyImport(
 const { DataBaseTemplateManage } = lazyImport(
   () => import('~/cloud/databaseTemplate'),
   'DataBaseTemplateManage',
+)
+const { ForbiddenPage } = lazyImport(
+  () => import('~/pages/ForbiddenPage'),
+  'ForbiddenPage',
 )
 
 export const protectedRoutes = [
@@ -202,7 +207,12 @@ export const protectedRoutes = [
         path: PATHS.TENANT_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <MainTenant />
+            <Authorization
+              allowedRoles={['SYSTEM_ADMIN', 'TENANT']}
+              forbiddenFallback={<ForbiddenPage />}
+            >
+              <MainTenant />
+            </Authorization>
           </ErrorBoundary>
         ),
       },

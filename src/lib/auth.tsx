@@ -21,6 +21,7 @@ async function handleUserResponse(data: UserResponse) {
     system_role: user.system_role,
     timestamp: new Date(),
     device_token: user.device_token,
+    user_id: user.user_id,
   })
   return user
 }

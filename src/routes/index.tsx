@@ -31,7 +31,7 @@ export const AppRoutes = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const user = useUser()
+  const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
     { path: BASE_PATH, element: <LandingPage /> },
@@ -59,7 +59,7 @@ export const AppRoutes = () => {
 
   useEffect(() => {
     if (
-      user.data == null &&
+      userDataFromStorage == null &&
       location.pathname !== PATHS.FORGETPASSWORD &&
       location.pathname !== PATHS.REGISTER &&
       location.pathname !== PATHS.LOGIN &&
@@ -67,9 +67,9 @@ export const AppRoutes = () => {
     ) {
       navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
     }
-  }, [location.pathname, user.data])
+  }, [location.pathname, userDataFromStorage])
 
-  const routes = user.data ? protectedRoutes : publicRoutes
+  const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 
   const element = useRoutes([...routes, ...commonRoutes])
 
