@@ -123,7 +123,7 @@
           "delete_attr_full": "Xoá thuộc tính",
           "delete_attr_confirm": "Bạn có chắc chắn muốn xóa thuộc tính {{ATTRNAME}}?",
           "delete_multiple_attr_confirm": "Bạn có chắc chắn muốn xóa những thuộc tính đã chọn?",
-          "search": "Tìm kiếm...",
+          "search": "Tìm kiếm",
           "org_not_found": "Không tìm thấy tổ chức"
         },
         "add_org": {
@@ -1000,7 +1000,7 @@
     "no_tenant_role": "Không có vai trò tenant. Vui lòng tạo.",
     "no_project": "Không có dự án. Vui lòng tạo.",
     "result_limit": "Giới hạn số kết quả: ",
-    "search": "Tìm kiếm...",
+    "search": "Tìm kiếm",
     "min": "Min",
     "max": "Max"
   },
@@ -1022,7 +1022,7 @@
     "not_found": "Không tìm thấy",
     "no_user": "Không tồn tại người dùng",
     "error_page": {
-      "title": "Bạn vui lòng click nút Refresh để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
+      "title": "Bạn vui lòng click nút Tải lại trang để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
     },
     "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
