@@ -115,7 +115,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
 
   return (
     <ContentLayout title={t('landingpage:title')}>
-      <div className="xs2:h-[720px] xs:h-[670p] h-[500px]">
+      <div className="h-[500px] xs2:h-[720px] xs:h-[670p]">
         <div
           className="h-full"
           style={{
@@ -124,15 +124,19 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
           }}
         >
           <div className=" p-4">
-            <div className="xs2:px-0 flex h-20 w-full max-xl:justify-between max-lg:justify-between 2xl:px-20">
+            <div className="flex h-20 w-full max-xl:justify-between max-lg:justify-between xs2:px-0 2xl:px-20">
               <div className="flex items-center max-xl:hidden">
-                <Link to={PATHS.HOME} className=" text-white lg:w-[180px]">
+                {/* <Link to={PATHS.HOME} className=" text-white lg:w-[180px]"> */}
+                <Link
+                  to={PATHS.PROJECT_MANAGE}
+                  className=" text-white lg:w-[180px]"
+                >
                   <img src={LogoViettel} alt="Logo" />
                 </Link>
               </div>
               {hasSideBar ? (
                 <button
-                  className=" xs2:w-[300px] xs2:px-0 ml-[5px] px-4 text-white xl:hidden"
+                  className=" ml-[5px] px-4 text-white xs2:w-[300px] xs2:px-0 xl:hidden"
                   onClick={() => setSidebarOpen1(true)}
                 >
                   <span className="sr-only">Open sidebar</span>
@@ -278,7 +282,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                    className="flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                     sideOffset={-15}
                   >
                     <Link
@@ -286,16 +290,16 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                       target="_blank"
                       className="cursor-pointer"
                     >
-                      <DropdownMenuItem className="hover:bg-primary-300 cursor-pointer rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {t('user:cmp')}
                       </DropdownMenuItem>
                     </Link>
                     <Link to={PATHS.USER_INFO} className="cursor-pointer">
-                      <DropdownMenuItem className="hover:bg-primary-300 cursor-pointer rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                      <DropdownMenuItem className="cursor-pointer rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                         {t('user:user_info')}
                       </DropdownMenuItem>
                     </Link>
-                    <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                    <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                       {userDataFromStorage ? (
                         <p
                           className="cursor-pointer"
@@ -307,7 +311,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                         </p>
                       ) : null}
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                    <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
                       <p
                         className="cursor-pointer"
                         onClick={() => logout.mutate({})}
@@ -351,7 +355,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade  data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] min-w-[120px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]"
+                    className="flex max-h-[360px]  min-w-[120px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
                     sideOffset={-15}
                   >
                     {languages.map(language => (
@@ -373,7 +377,7 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
 
-            <div className="xs2:pt-[24px] mt-[1rem] flex h-8 max-w-full items-center justify-center xl:pt-[57px]">
+            <div className="mt-[1rem] flex h-8 max-w-full items-center justify-center xs2:pt-[24px] xl:pt-[57px]">
               <div className="rounded-r-lg rounded-tl-lg border-[1.75px] border-solid border-[#DBFF00] px-5 py-2 ">
                 <a
                   href="http://www.vietteliot2023.com"
@@ -390,12 +394,12 @@ export function LandingPage({ hasSideBar = true }: { hasSideBar?: boolean }) {
               </div>
             </div>
             <div className="mt-[2.5rem] flex max-w-full items-center justify-center text-white">
-              <h2 className=" xs2:text-[35px] xs:px-[8px] text-center font-bold leading-[54px]  lg:px-[170px] xl:text-7xl">
+              <h2 className=" text-center font-bold leading-[54px] xs2:text-[35px] xs:px-[8px]  lg:px-[170px] xl:text-7xl">
                 {t('landingpage:service_transmit_data')}
               </h2>
             </div>
             <div className="flex max-w-full items-center justify-center">
-              <div className="xs2:w-[270px] xs:w-[270px] mt-10 flex items-center justify-center text-white md:w-[470px] xl:w-1/2">
+              <div className="mt-10 flex items-center justify-center text-white xs2:w-[270px] xs:w-[270px] md:w-[470px] xl:w-1/2">
                 <p className="text-2xl ">{t('landingpage_text:index')}</p>
               </div>
             </div>

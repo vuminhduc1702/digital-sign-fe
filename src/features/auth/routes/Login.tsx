@@ -9,7 +9,8 @@ export const Login = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  const from = location.state?.from?.pathname || PATHS.HOME
+  // const from = location.state?.from?.pathname || PATHS.HOME
+  const from = location.state?.from?.pathname || PATHS.PROJECT_MANAGE
 
   return (
     <Layout title={t('user:login')}>

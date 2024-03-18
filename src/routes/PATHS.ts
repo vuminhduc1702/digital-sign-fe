@@ -1,12 +1,8 @@
 export const BASE_PATH = '/'
-export const BASE_PATH_AUTH = '/auth/'
-export const BASE_PATH_CLOUD = '/cloud/'
-export const BASE_PATH_PAYMENT = '/payment/'
-export const BASE_PATH_INTEGRATION = '/integration/'
-export const BASE_PATH_DEVICE = '/device/'
-export const BASE_PATH_APPLICATION = '/application/'
-export const BASE_PATH_TENANT = '/tenant'
-export const BASE_PATH_DEV_ROLE = '/dev-role'
+const BASE_PATH_AUTH = '/auth/'
+const BASE_PATH_CLOUD = '/cloud/'
+const BASE_PATH_PAYMENT = '/payment/'
+const BASE_PATH_INTEGRATION = '/integration/'
 
 export const PATHS = {
   /**
@@ -48,8 +44,8 @@ export const PATHS = {
   CUSTOMER_MANAGE: `${BASE_PATH_PAYMENT}customer-manage`,
 
   // Tenant route
-  TENANT_MANAGE: `${BASE_PATH_TENANT}`,
-  DEV_ROLE: `${BASE_PATH_DEV_ROLE}`,
+  TENANT_MANAGE: `${BASE_PATH}tenant`,
+  DEV_ROLE: `${BASE_PATH}dev-role`,
 
   // Integration route
   AI: `${BASE_PATH_INTEGRATION}ai`,
@@ -57,12 +53,12 @@ export const PATHS = {
   FUEL: `${BASE_PATH_INTEGRATION}ai/fuel`,
 
   // Device routes
-  DEVKIT: `${BASE_PATH_DEVICE}devkit`,
-  MODULE: `${BASE_PATH_DEVICE}module`,
+  DEVKIT: `${BASE_PATH}device/devkit`,
+  MODULE: `${BASE_PATH}device/module`,
 
   //Application routes
-  APPSDK: `${BASE_PATH_APPLICATION}appSdk`,
-  APPDEBUG: `${BASE_PATH_APPLICATION}appDebug`,
+  APPSDK: `${BASE_PATH}application/appSdk`,
+  APPDEBUG: `${BASE_PATH}application/appDebug`,
 
   // Public routes
   LOGIN: `${BASE_PATH_AUTH}login`,
@@ -75,7 +71,7 @@ export const PATHS = {
    * Common routes
    */
 
-  HOME: `${BASE_PATH}`,
+  // HOME: `${BASE_PATH}`,
   USER_INFO: `${BASE_PATH}user-info`,
   PDF_VIEWER: `${BASE_PATH}pdf-viewer`,
   VERSION: `${BASE_PATH}version`,

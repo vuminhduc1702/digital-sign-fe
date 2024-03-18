@@ -34,7 +34,7 @@ export const AppRoutes = () => {
   const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
-    { path: BASE_PATH, element: <LandingPage /> },
+    // { path: BASE_PATH, element: <LandingPage /> },
     {
       path: PATHS.MAINTAIN,
       element: <MaintainPage />,

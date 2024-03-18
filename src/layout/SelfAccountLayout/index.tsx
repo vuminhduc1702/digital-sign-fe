@@ -16,7 +16,8 @@ function SelfAccountLayout() {
             src={logo}
             alt="logo"
             className="h-14 cursor-pointer"
-            onClick={() => navigate(PATHS.HOME)}
+            // onClick={() => navigate(PATHS.HOME)}
+            onClick={() => navigate(PATHS.PROJECT_MANAGE)}
           />
         </div>
         <Navbar />

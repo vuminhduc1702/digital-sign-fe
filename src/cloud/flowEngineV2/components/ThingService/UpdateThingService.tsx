@@ -201,7 +201,7 @@ export function UpdateThingService({
     <Dialog isOpen={isOpen} onClose={() => null} initialFocus={cancelButtonRef}>
       <div
         id="update-service-screen"
-        className="thing-service-popup inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
+        className="thing-service-popup relative inline-block overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle"
       >
         <div className="mt-3 h-[95%] text-center sm:mt-0 sm:text-left">
           <div className="flex items-center justify-between">
