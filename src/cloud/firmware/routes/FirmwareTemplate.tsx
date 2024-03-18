@@ -59,8 +59,8 @@ export function FirmwareTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    firmwareData?.data?.reduce((acc, curr, index) => {
+  const aoo = firmwareData?.data?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -76,7 +76,9 @@ export function FirmwareTemplate() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <>

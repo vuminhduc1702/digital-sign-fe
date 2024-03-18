@@ -65,28 +65,26 @@ export function DeviceDetail() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes?.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKey.includes(index.toString())) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.attr_key')]:
-              curr.attribute_key,
-            [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-              curr.value_type,
-            ),
-            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-            [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-              convertEpochToDate(curr.last_update_ts / 1000),
-          }
-          acc.push(temp)
+  const aoo = attrsData?.attributes?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: unknown }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   // delete attrs
   const {
@@ -127,24 +125,22 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKeyAttrLog = Object.keys(rowSelectionAttrLog)
-  const attrLogAoo: Array<{ [key: string]: string }> | undefined =
-    attrLogData?.logs?.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKeyAttrLog.includes(index.toString())) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-              convertEpochToDate(curr.ts / 1000),
-            [t('cloud:org_manage.org_manage.table.attr_key')]:
-              curr.attribute_key,
-            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-          }
-          acc.push(temp)
+  const attrLogAoo = attrLogData?.logs?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKeyAttrLog.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.ts / 1000),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: string }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   // MQTT Log
   const {
@@ -170,24 +166,23 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKeyMQTTLog = Object.keys(rowSelection)
-  const MQTTLogAoo: Array<{ [key: string]: string }> | undefined =
-    mqttLogData?.messages?.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKeyMQTTLog.includes(index.toString())) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-              convertEpochToDate(curr.ts / 1000),
-            [t('cloud:org_manage.device_manage.table.payload_as_string')]:
-              curr.payload_as_string,
-            [t('cloud:org_manage.device_manage.table.topic')]: curr.topic,
-          }
-          acc.push(temp)
+  const MQTTLogAoo = mqttLogData?.messages?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKeyMQTTLog.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.ts / 1000),
+          [t('cloud:org_manage.device_manage.table.payload_as_string')]:
+            curr.payload_as_string,
+          [t('cloud:org_manage.device_manage.table.topic')]: curr.topic,
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: string }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">

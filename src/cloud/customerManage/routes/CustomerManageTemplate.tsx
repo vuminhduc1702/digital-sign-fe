@@ -44,7 +44,7 @@ export function CustomerManageTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined = data?.users?.reduce(
+  const aoo = data?.users?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.user_id)) {
         const temp = {

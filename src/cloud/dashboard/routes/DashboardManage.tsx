@@ -55,8 +55,8 @@ export function DashboardManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    dashboardData?.dashboard?.reduce((acc, curr, index) => {
+  const aoo = dashboardData?.dashboard?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -70,7 +70,9 @@ export function DashboardManage() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">

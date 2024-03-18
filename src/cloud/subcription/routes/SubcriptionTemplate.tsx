@@ -96,8 +96,8 @@ export function SubcriptionTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    data?.data?.data?.reduce((acc, curr, index) => {
+  const aoo = data?.data?.data?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('billing:subcription.table.sub_code')]: curr.s_id,
@@ -120,7 +120,9 @@ export function SubcriptionTemplate() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <>

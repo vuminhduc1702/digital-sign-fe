@@ -54,23 +54,22 @@ export function LwM2M() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: string }> | undefined =
-    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKey.includes(curr.id)) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:device_template.listLwM2M.name')]: curr.module_name,
-            [t('cloud:device_template.listLwM2M.id')]: curr.id,
-            [t('cloud:device_template.listLwM2M.numberAttr')]:
-              curr.numberOfAttributes,
-          }
-          acc.push(temp)
+  const aoo = LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:device_template.listLwM2M.name')]: curr.module_name,
+          [t('cloud:device_template.listLwM2M.id')]: curr.id,
+          [t('cloud:device_template.listLwM2M.numberAttr')]:
+            curr.numberOfAttributes,
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: string }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   // attrLwM2MData
   const [rowSelectionAttr, setRowSelectionAttr] = useState({})
@@ -84,24 +83,23 @@ export function LwM2M() {
     [],
   )
   const rowSelectionKeyAttr = Object.keys(rowSelectionAttr)
-  const aooAttr: Array<{ [key: string]: string }> | undefined =
-    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
-      (acc, curr, index) => {
-        curr.attribute_info?.forEach((attr, index) => {
-          if (rowSelectionKeyAttr.includes(attr.id)) {
-            const temp = {
-              [t('table:no')]: (index + 1).toString(),
-              [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
-              [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
-              [t('cloud:org_manage.org_manage.table.id')]: attr.id,
-            }
-            acc.push(temp)
+  const aooAttr = LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+    (acc, curr, index) => {
+      curr.attribute_info?.forEach((attr, index) => {
+        if (rowSelectionKeyAttr.includes(attr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
+            [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
+            [t('cloud:org_manage.org_manage.table.id')]: attr.id,
           }
-        })
-        return acc
-      },
-      [] as Array<{ [key: string]: string }>,
-    )
+          acc.push(temp)
+        }
+      })
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <div ref={ref} className="grid grow grid-cols-1 gap-x-4">

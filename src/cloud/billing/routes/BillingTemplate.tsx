@@ -84,8 +84,8 @@ export function BillingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    data?.data?.data?.reduce((acc, curr, index) => {
+  const aoo = data?.data?.data?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -107,7 +107,9 @@ export function BillingTemplate() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <>

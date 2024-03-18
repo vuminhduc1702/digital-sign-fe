@@ -69,26 +69,25 @@ export function DeviceManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    deviceData?.devices?.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKey.includes(curr.id)) {
-          const temp = {
-            [t('table:no')]: (index + 1 + offset).toString(),
-            [t('cloud:org_manage.device_manage.table.name')]: curr.name,
-            [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
-            [t('cloud:org_manage.device_manage.table.status')]: curr.status,
-            [t('sidebar:cloud.device_template')]: curr.template_name,
-            [t('cloud:org_manage.device_manage.table.key')]: curr.key,
-            [t('cloud:org_manage.device_manage.table.created_at')]:
-              convertEpochToDate(curr.created_time),
-          }
-          acc.push(temp)
+  const aoo = deviceData?.devices?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1 + offset).toString(),
+          [t('cloud:org_manage.device_manage.table.name')]: curr.name,
+          [t('cloud:org_manage.device_manage.table.group')]: curr.group_name,
+          [t('cloud:org_manage.device_manage.table.status')]: curr.status,
+          [t('sidebar:cloud.device_template')]: curr.template_name,
+          [t('cloud:org_manage.device_manage.table.key')]: curr.key,
+          [t('cloud:org_manage.device_manage.table.created_at')]:
+            convertEpochToDate(curr.created_time),
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: unknown }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <div ref={ref} className="flex grow flex-col">

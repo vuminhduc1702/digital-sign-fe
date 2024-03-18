@@ -64,7 +64,7 @@ export function RoleSidebar() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined = data?.roles?.reduce(
+  const aoo = data?.roles?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(curr.id)) {
         const temp = {

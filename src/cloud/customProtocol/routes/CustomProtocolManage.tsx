@@ -58,9 +58,9 @@ export function CustomProtocolManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    adapterData?.adapters
-      ? adapterData?.adapters?.reduce((acc, curr, index) => {
+  const aoo = adapterData?.adapters
+    ? adapterData?.adapters?.reduce(
+        (acc, curr, index) => {
           if (rowSelectionKey.includes(curr.id)) {
             const temp = {
               [t('table:no')]: (index + 1).toString(),
@@ -77,8 +77,10 @@ export function CustomProtocolManage() {
             acc.push(temp)
           }
           return acc
-        }, [] as Array<{ [key: string]: unknown }>)
-      : []
+        },
+        [] as Array<{ [key: string]: unknown }>,
+      )
+    : []
 
   return (
     <ContentLayout title={t('cloud:custom_protocol.title')}>

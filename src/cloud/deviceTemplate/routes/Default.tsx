@@ -71,28 +71,26 @@ export function Default() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes.reduce(
-      (acc, curr, index) => {
-        if (rowSelectionKey.includes(index.toString())) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.attr_key')]:
-              curr.attribute_key,
-            [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-              curr.value_type,
-            ),
-            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-            [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-              convertEpochToDate(curr.last_update_ts / 1000),
-          }
-          acc.push(temp)
+  const aoo = attrsData?.attributes.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(index.toString())) {
+        const temp = {
+          [t('table:no')]: (index + 1).toString(),
+          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
+          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+            curr.value_type,
+          ),
+          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+            convertEpochToDate(curr.last_update_ts / 1000),
         }
-        return acc
-      },
-      [] as Array<{ [key: string]: unknown }>,
-    )
+        acc.push(temp)
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   console.log(rowSelection)
 

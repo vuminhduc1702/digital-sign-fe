@@ -32,7 +32,10 @@ export function OrgManage() {
   const [searchQuery, setSearchQuery] = useState('')
   const { close, open, isOpen } = useDisclosure()
   const { data: orgByIdData } = useOrgById({ orgId })
-  const { data: attrsData } = useGetAttrs({ entityType: 'ORGANIZATION', entityId: orgId })
+  const { data: attrsData } = useGetAttrs({
+    entityType: 'ORGANIZATION',
+    entityId: orgId,
+  })
 
   const {
     mutate: mutateDeleteMultipleAttrs,
@@ -65,8 +68,8 @@ export function OrgManage() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes?.reduce((acc, curr, index) => {
+  const aoo = attrsData?.attributes?.reduce(
+    (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
           [t('table:no')]: (index + 1).toString(),
@@ -82,7 +85,9 @@ export function OrgManage() {
         acc.push(temp)
       }
       return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+    },
+    [] as Array<{ [key: string]: unknown }>,
+  )
 
   return (
     <>
