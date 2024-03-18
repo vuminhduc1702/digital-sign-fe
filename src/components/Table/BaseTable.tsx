@@ -236,7 +236,7 @@ export function BaseTable<T extends Record<string, any>>({
             className={cn('w-full border-2', { 'h-[90%]': totalAttrs === 0 })}
             id="table-ref"
           >
-            <thead className="border-b-2 bg-gray-200 text-center">
+            <thead className=" border-b-2 bg-gray-200 text-center">
               {table.getHeaderGroups().map(headerGroup => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(header => {

@@ -60,24 +60,27 @@ export function ThingServices() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: string }> | undefined =
-    thingData?.data?.reduce((acc, curr, index) => {
-      console.log(curr)
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1 + offset).toString(),
-          [t('cloud:custom_protocol.service.name')]: curr.name,
-          [t('cloud:custom_protocol.thing.description')]: curr.description,
+    thingData?.data?.reduce(
+      (acc, curr, index) => {
+        console.log(curr)
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1 + offset).toString(),
+            [t('cloud:custom_protocol.service.name')]: curr.name,
+            [t('cloud:custom_protocol.thing.description')]: curr.description,
+          }
         }
-      }
-      return acc
-    }, [] as Array<{ [key: string]: string }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: string }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar
         title={t('cloud:custom_protocol.service.title_thing_service')}
       />
-      <div className="flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
         <div className="flex justify-between">
           <ExportTable
             refComponent={ref}
