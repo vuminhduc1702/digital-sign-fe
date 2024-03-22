@@ -59,6 +59,7 @@ export function GroupDetail() {
     }
     return acc
   }, [])
+  console.log('attrKeys', attrKeys)
   const aoo = attrsData?.attributes?.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {

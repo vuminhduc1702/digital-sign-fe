@@ -164,7 +164,7 @@ export function ListProjectItem({
               style={{
                 height: '120px',
                 width: '80%',
-                backgroundColor: `rgba(85, 86, 87, 0.6)`,
+                backgroundColor: `rgba(85, 86, 87, 0.9)`,
                 borderRadius: '0 10px 10px 0',
               }}
             >

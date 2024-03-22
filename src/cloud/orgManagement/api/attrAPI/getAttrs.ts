@@ -5,7 +5,7 @@ import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type EntityType } from './createAttr'
 import { type Attribute } from '~/types'
 
-type AttrRes = {
+export type AttrRes = {
   entity_type: EntityType
   entity_id: string
 } & Attribute

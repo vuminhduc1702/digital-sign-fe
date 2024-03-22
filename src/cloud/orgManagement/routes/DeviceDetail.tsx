@@ -1,15 +1,12 @@
 import { useMemo, useRef, useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import TitleBar from '~/components/Head/TitleBar'
 import { ExportTable } from '~/components/Table/components/ExportTable'
-import { type DeviceAttrLog } from '../api/attrAPI'
+import { type AttrRes } from '../api/attrAPI'
 import { AttrTable, CreateAttr } from '../components/Attributes'
 import { AttrLogTable } from '../components/Attributes/AttrLogTable'
 import { DeviceBreadcrumbs } from '../components/Device'
-
-import { Button } from '~/components/Button'
 
 import { DeviceListIcon, DeviceLogIcon } from '~/components/SVGIcons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/Tabs'
@@ -30,19 +27,14 @@ export function DeviceDetail() {
   const params = useParams()
   const deviceId = params.deviceId as string
   const projectId = params.projectId as string
-  const entityTypeAttr = 'DEVICE'
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const { close, open, isOpen } = useDisclosure()
 
   // Attrs Data
-  const {
-    data: attrsData,
-    isPreviousData: isPreviousAttrsData,
-    isSuccess: isSuccessAttrsData,
-  } = useGetAttrs({
-    entityType: entityTypeAttr,
+  const { data: attrsData } = useGetAttrs({
+    entityType: 'DEVICE',
     entityId: deviceId,
   })
 
@@ -101,18 +93,15 @@ export function DeviceDetail() {
 
   // Attr Log
   const [attrLogOffset, setDeviceAttrOffset] = useState(0)
-  const {
-    data: attrLogData,
-    isPreviousData: isPreviousDeviceAttrData,
-    isSuccess: isSuccessDeviceAttrData,
-  } = useAttrLog({
-    entityId: deviceId,
-    entityType: 'DEVICE',
-    offset: attrLogOffset,
-    config: {
-      suspense: false,
-    },
-  })
+  const { data: attrLogData, isPreviousData: isPreviousDeviceAttrData } =
+    useAttrLog({
+      entityId: deviceId,
+      entityType: 'DEVICE',
+      offset: attrLogOffset,
+      config: {
+        suspense: false,
+      },
+    })
 
   const [rowSelectionAttrLog, setRowSelectionAttrLog] = useState({})
   const pdfHeaderAttrLog = useMemo(
@@ -143,11 +132,7 @@ export function DeviceDetail() {
   )
 
   // MQTT Log
-  const {
-    data: mqttLogData,
-    isPreviousData: isPreviousMQTTLogData,
-    isSuccess: isSuccessDeviceLogData,
-  } = useMQTTLog({
+  const { data: mqttLogData } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
     config: {
