@@ -92,7 +92,7 @@ export function UpdateAdapter({
         content_type,
         host,
         port,
-        configuration: configuration !== 'null' ? configuration : null,
+        configuration: configuration,
         schema: { fields: renderFields() },
       },
     })

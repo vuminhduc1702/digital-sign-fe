@@ -30,6 +30,12 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '~/components/Tooltip'
 
 export const STATUS = {
   true: 'Có',
@@ -45,7 +51,7 @@ function AttrTableContextMenu({
   entityId: string
   entityType: EntityType
   attribute_key: string
-  value: string | number | boolean
+  value: unknown
   value_type: Attribute['value_type']
   logged: boolean
 }) {
@@ -197,7 +203,24 @@ export function AttrTable({
         header: () => (
           <span>{t('cloud:org_manage.org_manage.table.value')}</span>
         ),
-        cell: info => (info.getValue() !== 'null' ? info.getValue() : ''),
+        cell: info => {
+          const value = JSON.stringify(info.getValue())
+          const valueTrigger =
+            value?.length > 10 ? value.slice(0, 10) + '...' : value
+
+          if (JSON.parse(value) === '') return undefined
+
+          return (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>{valueTrigger}</TooltipTrigger>
+                <TooltipContent>
+                  <p>{value}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )
+        },
         footer: info => info.column.id,
       }),
       columnHelper.accessor('logged', {

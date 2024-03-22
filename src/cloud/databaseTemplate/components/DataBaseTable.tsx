@@ -169,13 +169,11 @@ export function DataBaseTable({
             </div>
           ),
           cell: info =>
-            info.getValue() !== 'null'
-              ? typeof info.getValue() === 'boolean'
-                ? info.getValue()
-                  ? 'true'
-                  : 'false'
-                : info.getValue()
-              : '',
+            typeof info.getValue() === 'boolean'
+              ? info.getValue()
+                ? 'true'
+                : 'false'
+              : info.getValue(),
           footer: info => info.column.id,
         }),
       ),
