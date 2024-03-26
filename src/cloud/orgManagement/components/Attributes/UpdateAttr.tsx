@@ -23,7 +23,7 @@ type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
   attributeKey: string
-  value: unknown
+  value: any
   value_type: Attribute['value_type']
   logged: boolean
   close: () => void
@@ -44,6 +44,7 @@ export function UpdateAttr({
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
+  console.log('value', value)
 
   const { register, formState, control, handleSubmit, watch, reset } = useForm<
     z.infer<typeof attrSchema>
@@ -52,7 +53,10 @@ export function UpdateAttr({
     defaultValues: {
       attribute_key: attributeKey,
       logged: String(logged) === 'true',
-      value: JSON.parse(JSON.stringify(value)) === '' ? undefined : value,
+      value:
+        JSON.parse(JSON.stringify(value)) === ''
+          ? undefined
+          : JSON.stringify(value),
       value_t: value_type,
     },
   })
@@ -62,7 +66,10 @@ export function UpdateAttr({
       reset({
         attribute_key: attributeKey,
         logged: String(logged) === 'true',
-        value: JSON.parse(JSON.stringify(value)) === '' ? undefined : value,
+        value:
+          JSON.parse(JSON.stringify(value)) === ''
+            ? undefined
+            : JSON.stringify(value),
         value_t: value_type,
       }),
     [],
@@ -122,7 +129,7 @@ export function UpdateAttr({
                 {
                   attribute_key: attributeKey,
                   logged: values.logged,
-                  value: JSON.stringify(values.value),
+                  value: values.value,
                   value_t: values.value_t,
                 },
               ],

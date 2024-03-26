@@ -76,7 +76,7 @@ export function ComplexTree<TFormValues extends FieldValues>({
   const tree = useRef<TreeRef<any>>(null)
   const no_org = t('cloud:org_manage.org_manage.add_org.no_org')
 
-  const projectId = storage.getProject().id
+  const projectId = storage.getProject()?.id
   const { data: orgData } = useGetOrgs({
     projectId,
     orgId:
