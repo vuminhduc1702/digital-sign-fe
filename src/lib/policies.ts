@@ -33,14 +33,14 @@ export const POLICIES = {
 }
 
 function isSystemAdmin(user: UserResponse): boolean {
-  return user.system_role === ROLES[0]
+  return user.system_role === ROLES.SYSTEM_ADMIN
 }
 function isTenant(user: UserResponse): boolean {
-  return user.system_role === ROLES[1]
+  return user.system_role === ROLES.TENANT
 }
 function isTenantDev(user: UserResponse): boolean {
-  return user.system_role === ROLES[2]
+  return user.system_role === ROLES.TENANT_DEV
 }
 function isEndUser(user: UserResponse): boolean {
-  return user.system_role === ROLES[3]
+  return user.system_role === ROLES.END_USER
 }
