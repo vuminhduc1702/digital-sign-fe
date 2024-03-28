@@ -19,8 +19,8 @@ export type BaseTablePagination = {
 }
 
 export type BaseAPIRes = {
-  code: 0 | number
-  message: 'success' | string
+  code: 0 | (number & NonNullable<unknown>)
+  message: 'success' | (string & NonNullable<unknown>)
 }
 
 export type BaseWSRes = {

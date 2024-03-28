@@ -5,16 +5,14 @@ import type * as z from 'zod'
 import { axios } from '~/lib/axios'
 import { type MutationConfig, queryClient } from '~/lib/react-query'
 import { toast } from 'sonner'
-import storage from '~/utils/storage'
-import { useGetEntityThings } from './getEntityThings'
 
 import { type BaseAPIRes } from '~/types'
-import { type entityThingSchema } from '../../components'
+import { type entityThingSchema } from '~/cloud/flowEngineV2/components/Attributes'
 
 type CreateEntityThingRes = {
   data: {
     id: string
-    rowsAffected: 1 | number
+    rowsAffected: 1 | (number & NonNullable<unknown>)
   }
 } & BaseAPIRes
 

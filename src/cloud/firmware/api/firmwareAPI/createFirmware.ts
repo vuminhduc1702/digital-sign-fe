@@ -12,13 +12,12 @@ import { type entityFirmWareSchema } from '../../components/Firmware'
 type CreateFirmWareRes = {
   data: {
     id: string
-    rowsAffected: 1 | number
+    rowsAffected: 1 | (number & NonNullable<unknown>)
   }
 } & BaseAPIRes
 
 export type CreateFirmWareDTO = {
-  data: z.infer<typeof entityFirmWareSchema>
-  &{
+  data: z.infer<typeof entityFirmWareSchema> & {
     project_id: string
   }
 }
