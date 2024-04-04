@@ -88,22 +88,21 @@ function Navbar() {
               alt="Project management"
               className="aspect-square w-[20px]"
             />
-            {/* <p className="text-white">
-              <Link className="flex w-full" to={PATHS.PROJECT_MANAGE}>
-                {t('nav:qlda')}
-              </Link>
-            </p> */}
-            <DropdownMenuTrigger>
-              <div className="flex items-center gap-x-2">
-                <p className="text-white">{t('nav:qlda')}</p>
+            <div className="flex items-center gap-x-2">
+              <p className="text-white">
+                <Link className="flex w-full" to={PATHS.PROJECT_MANAGE}>
+                  {t('nav:qlda')}
+                </Link>
+              </p>
+              <DropdownMenuTrigger>
                 <SidebarDropDownIcon
                   width={12}
                   height={7}
                   viewBox="0 0 12 7"
                   className="text-white"
                 />
-              </div>
-            </DropdownMenuTrigger>
+              </DropdownMenuTrigger>
+            </div>
           </div>
           <DropdownMenuContent
             className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"

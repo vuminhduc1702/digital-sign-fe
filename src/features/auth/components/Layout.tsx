@@ -25,9 +25,7 @@ export const Layout = ({ children, title }: LayoutProps) => {
         <div className="flex h-[99.3vh] pb-20 pt-[7.5rem] sm:px-14 lg:px-60">
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
             <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10">
-              <a href="/">
-                <img src={logo} alt="" />
-              </a>
+              <img src={logo} alt="logo" />
             </div>
             <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">
               <img src={frameAuth} alt="" />

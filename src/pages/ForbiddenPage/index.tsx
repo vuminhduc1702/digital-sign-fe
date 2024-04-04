@@ -1,3 +1,3 @@
 export function ForbiddenPage() {
-  return <div>ForbiddenPage</div>
+  return <div>403 - Forbidden</div>
 }

@@ -57,17 +57,28 @@ export const AppRoutes = () => {
     },
   ]
 
+  const isNotAuthRoutes =
+    location.pathname !== PATHS.FORGETPASSWORD &&
+    location.pathname !== PATHS.REGISTER &&
+    location.pathname !== PATHS.LOGIN
+  const isAuthRoutes =
+    location.pathname === PATHS.FORGETPASSWORD ||
+    location.pathname === PATHS.REGISTER ||
+    location.pathname === PATHS.LOGIN
+
   useEffect(() => {
     if (
       userDataFromStorage == null &&
-      location.pathname !== PATHS.FORGETPASSWORD &&
-      location.pathname !== PATHS.REGISTER &&
-      location.pathname !== PATHS.LOGIN &&
+      isNotAuthRoutes &&
       !commonRoutes.some(item => item.path === location.pathname)
     ) {
       navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
     }
-  }, [location.pathname, userDataFromStorage])
+
+    if (userDataFromStorage != null && isAuthRoutes) {
+      navigate(PATHS.PROJECT_MANAGE)
+    }
+  }, [location.pathname, userDataFromStorage, isAuthRoutes])
 
   const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 

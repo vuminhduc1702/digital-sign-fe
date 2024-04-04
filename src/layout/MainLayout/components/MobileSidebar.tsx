@@ -5,6 +5,7 @@ import { Fragment } from 'react'
 import SideNavigation from './SideNavigation'
 
 import logo from '~/assets/images/logo.svg'
+import { NavLink } from '~/components/Link'
 
 type MobileSidebarProps = {
   sidebarOpen: boolean
@@ -30,7 +31,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Dialog.Overlay className="bg-secondary-900 fixed inset-0 bg-opacity-75" />
+          <Dialog.Overlay className="fixed inset-0 bg-secondary-900 bg-opacity-75" />
         </Transition.Child>
         <Transition.Child
           as={Fragment}
@@ -41,7 +42,7 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
           leaveFrom="translate-x-0"
           leaveTo="-translate-x-full"
         >
-          <div className="bg-secondary-400 relative flex w-full max-w-xs flex-1 flex-col">
+          <div className="relative flex w-full max-w-xs flex-1 flex-col bg-secondary-400">
             <Transition.Child
               as={Fragment}
               enter="ease-in-out duration-300"
@@ -64,9 +65,13 @@ function MobileSidebar({ sidebarOpen, setSidebarOpen }: MobileSidebarProps) {
                 </button>
               </div>
             </Transition.Child>
-            <div className="flex h-20 items-center justify-center border-b-[2px] border-solid">
-              <img src={logo} alt="logo" className="h-14" />
-            </div>
+            <NavLink
+              to="https://iot.vtscloud.vn/"
+              reloadDocument
+              className="flex h-20 items-center justify-center border-b-[2px] border-solid"
+            >
+              <img src={logo} alt="logo" className="h-14 cursor-pointer" />
+            </NavLink>
             <div className="mt-5 h-0 flex-1 overflow-y-auto">
               <nav className="space-y-1 px-2">
                 <SideNavigation />

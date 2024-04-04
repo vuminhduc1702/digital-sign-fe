@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { Suspense, useState } from 'react'
 import { HiOutlineBars3 } from 'react-icons/hi2'
 
@@ -8,11 +8,9 @@ import { Spinner } from '~/components/Spinner'
 import MobileSidebar from './components/MobileSidebar'
 import logo from '~/assets/images/logo.svg'
 import { cn } from '~/utils/misc'
-import { PATHS } from '~/routes/PATHS'
+import { NavLink } from '~/components/Link'
 
 function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
-  const navigate = useNavigate()
-
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -39,15 +37,13 @@ function MainLayout({ hasSideBar = true }: { hasSideBar?: boolean }) {
           ) : null}
 
           {hasSideBar ? null : (
-            <div className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white">
-              <img
-                src={logo}
-                alt="logo"
-                className="h-14 cursor-pointer"
-                // onClick={() => navigate(PATHS.HOME)}
-                onClick={() => navigate(PATHS.PROJECT_MANAGE)}
-              />
-            </div>
+            <NavLink
+              to="https://iot.vtscloud.vn/"
+              reloadDocument
+              className="flex h-20 min-w-[256px] items-center justify-center border-b-[2px] border-solid bg-white"
+            >
+              <img src={logo} alt="logo" className="h-14 cursor-pointer" />
+            </NavLink>
           )}
           <Navbar />
         </div>

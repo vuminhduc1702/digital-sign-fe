@@ -84,7 +84,7 @@ export type WidgetAttrDeviceType = Array<{
   deviceId: string
 }>
 
-const { token } = storage.getToken() as UserStorage
+const { token } = storage.getToken()
 export const WEBSOCKET_URL = `${WS_URL}/websocket/telemetry?auth-token=${encodeURIComponent(
   `Bearer ${token}`,
 )}`
