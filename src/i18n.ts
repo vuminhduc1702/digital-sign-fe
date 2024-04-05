@@ -10,7 +10,7 @@ export const resources = {
   vi,
 } as const
 
-i18n.use(LanguageDetector).use(initReactI18next).init({
+i18n.use(initReactI18next).init({
   resources,
   fallbackLng: 'vi',
   load: 'languageOnly',

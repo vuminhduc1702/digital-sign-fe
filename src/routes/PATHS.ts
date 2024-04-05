@@ -10,7 +10,8 @@ export const PATHS = {
    */
 
   // Project routes
-  PROJECT_MANAGE: `${BASE_PATH}project-management`,
+  // PROJECT_MANAGE: `${BASE_PATH}project-management`,
+  PROJECT_MANAGE: `${BASE_PATH}`,
   OVER_VIEW: `${BASE_PATH}overview`,
 
   // Cloud routes
