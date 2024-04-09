@@ -41,10 +41,6 @@ const { OverViewManage } = lazyImport(
   () => import('~/cloud/overView'),
   'OverViewManage',
 )
-const { FlowEngine } = lazyImport(
-  () => import('~/cloud/flowEngine'),
-  'FlowEngine',
-)
 const { RoleManage } = lazyImport(() => import('~/cloud/role'), 'RoleManage')
 const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
