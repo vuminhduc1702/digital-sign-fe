@@ -128,15 +128,6 @@ export const protectedRoutes = [
         ],
       },
       {
-        path: PATHS.FLOW_ENGINE,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <FlowEngine />
-          </ErrorBoundary>
-        ),
-        children: [{ path: ':projectId' }],
-      },
-      {
         path: PATHS.ROLE_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
