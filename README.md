@@ -1,4 +1,4 @@
-# iot-react
+# [Archived - Không dùng repo này nữa] Dev portal Innoway
 
 - Cài node 18 trở lên
 
