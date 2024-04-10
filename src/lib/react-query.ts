@@ -14,9 +14,12 @@ import i18n from '~/i18n'
 const queryConfig: DefaultOptions = {
   queries: {
     useErrorBoundary: false,
-    refetchOnWindowFocus: false,
-    retry: 3,
     suspense: true,
+    refetchOnWindowFocus: false,
+    keepPreviousData: true,
+    retry: 5,
+    retryDelay: attemptIndex =>
+      Math.min(Math.pow(2, attemptIndex) * 1000, 10000),
     staleTime: 1000 * 60,
   },
 }

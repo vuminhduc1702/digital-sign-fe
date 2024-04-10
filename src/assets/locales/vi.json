@@ -1022,7 +1022,7 @@
     "not_found": "Không tìm thấy",
     "no_user": "Không tồn tại người dùng",
     "error_page": {
-      "title": "Bạn vui lòng click nút Tải lại trang để chạy lại web nhé. Nếu không được vui lòng F5 để tải lại trang."
+      "title": "Lỗi! Vui lòng ấn F5 để tải lại trang."
     },
     "page_not_found": "404 - Trang web không tồn tại. Chuyển sang trang chủ trong vòng 5s...",
     "server_res": {
