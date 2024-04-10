@@ -56,18 +56,18 @@ export function UpdateTemplate({
   }, [isSuccess, close])
 
   const projectId = storage.getProject()?.id
-  const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
-    projectId,
-  })
+  // const { data: ruchainsData, isLoading: RuleIsLoading } = useGetRulechains({
+  //   projectId,
+  // })
   const valueTypeOptions = valueTypeList.map(valueType => ({
     label: valueType.name,
     value: valueType.type,
   }))
 
-  const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
-    label: ruchains?.name,
-    value: ruchains?.id?.id,
-  }))
+  // const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
+  //   label: ruchains?.name,
+  //   value: ruchains?.id?.id,
+  // }))
 
   const { data: attrData, isLoading: attrLoading } = useGetAttrs({
     entityType: 'TEMPLATE',
@@ -264,7 +264,7 @@ export function UpdateTemplate({
                 />
               </div>
             ) : null}
-            <SelectDropdown
+            {/* <SelectDropdown
               label={t('cloud:device_template.add_template.flow')}
               name="rule_chain_id"
               control={control}
@@ -284,7 +284,7 @@ export function UpdateTemplate({
                   ruchains.value === selectedUpdateTemplate.rule_chain_id || '',
               )}
               error={formState?.errors?.rule_chain_id}
-            />
+            /> */}
             {fields.map((field, index) => (
               <section
                 key={field.id}
