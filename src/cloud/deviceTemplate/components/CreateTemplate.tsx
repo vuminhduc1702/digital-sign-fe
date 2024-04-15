@@ -59,9 +59,9 @@ export default function CreateTemplate() {
     isSuccess: isSuccessCreateTemplate,
   } = useCreateTemplate()
 
-  const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
-    { projectId },
-  )
+  // const { data: ruchainsData, isLoading: isLoadingRuchains } = useGetRulechains(
+  //   { projectId },
+  // )
 
   const { data: thingData, isLoading: AdapterIsLoading } = useGetEntityThings({
     projectId,
@@ -94,10 +94,10 @@ export default function CreateTemplate() {
     control,
   })
 
-  const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
-    label: ruchains?.name,
-    value: ruchains?.id?.id,
-  }))
+  // const RuleSelectOptions = ruchainsData?.data?.map(ruchains => ({
+  //   label: ruchains?.name,
+  //   value: ruchains?.id?.id,
+  // }))
   const { data: serviceData, isLoading: isLoadingService } =
     useGetServiceThings({
       thingId: getValues('thing_id'),
@@ -235,7 +235,7 @@ export default function CreateTemplate() {
           </div>
           {/* ) : null} */}
 
-          <SelectDropdown
+          {/* <SelectDropdown
             isClearable={true}
             label={t('cloud:device_template.add_template.flow')}
             name="rule_chain_id"
@@ -250,7 +250,7 @@ export default function CreateTemplate() {
             isLoading={isLoadingRuchains}
             placeholder={t('cloud:device_template.add_template.choose_flow_id')}
             error={formState?.errors?.rule_chain_id}
-          />
+          /> */}
           {fields.map((field, index) => (
             <section
               key={field.id}
