@@ -259,7 +259,7 @@ export function UpdateThingService({
                     input: dataInput,
                     code: codeInput,
                     fail_limit: values.fail_limit,
-                    lock_time: values.lock_time,
+                    lock_time: values.lock_time ? values.lock_time : '0s',
                   },
                   thingId: thingId,
                   name: values.name,

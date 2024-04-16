@@ -9,8 +9,7 @@ import { useTemplateById } from '../api/getTemplateById'
 export function TemplateInfo() {
   const { t } = useTranslation()
 
-  const params = useParams()
-  const templateId = params.templateId as string
+  const { templateId } = useParams()
 
   const { data } = useTemplateById({ templateId })
 

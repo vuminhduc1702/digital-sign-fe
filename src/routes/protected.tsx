@@ -84,7 +84,7 @@ export const protectedRoutes = [
                 to={`${
                   projectId != null
                     ? PATHS.TEMPLATE_DEFAULT + '/' + projectId.id
-                    : PATHS.TEMPLATE_DEFAULT
+                    : PATHS.TEMPLATE_DEFAULT + '/' + projectId
                 }`}
                 replace
               />
