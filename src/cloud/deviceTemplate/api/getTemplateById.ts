@@ -8,7 +8,7 @@ import { type Template } from '../types'
 export const getTemplateById = ({
   templateId,
 }: {
-  templateId: string
+  templateId?: string
 }): Promise<Template> => {
   return axios.get(`/api/templates/${templateId}`)
 }
@@ -16,7 +16,7 @@ export const getTemplateById = ({
 type QueryFnType = typeof getTemplateById
 
 type UseTemplateByIdOptions = {
-  templateId: string
+  templateId?: string
   config?: QueryConfig<QueryFnType>
 }
 
@@ -25,7 +25,7 @@ export const useTemplateById = ({
   config,
 }: UseTemplateByIdOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['templates', templateId],
+    queryKey: ['templatesbyId', templateId],
     queryFn: () => getTemplateById({ templateId }),
     enabled: !!templateId,
     ...config,

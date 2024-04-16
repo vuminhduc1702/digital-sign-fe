@@ -510,7 +510,7 @@ export default function CreateTemplateLwM2M() {
                         <div className="ml-auto">
                           <Checkbox
                             customClassName="w-5 h-5"
-                            className="mb-1 ml-5 flex h-5 w-5"
+                            className="mb-1 ml-5 flex h-5 w-5 items-center justify-center"
                             checked={
                               selectAllAttributes[lw2m2.LWM2M.Object.ObjectID]
                             }
@@ -552,7 +552,7 @@ export default function CreateTemplateLwM2M() {
                                     }) => {
                                       return (
                                         <Checkbox
-                                          className="ml-auto mr-3 mt-2 flex h-5 w-5"
+                                          className="ml-auto mr-3 mt-2 flex h-5 w-5 items-center justify-center"
                                           {...field}
                                           checked={checkboxStates[itemId]}
                                           onCheckedChange={e => {

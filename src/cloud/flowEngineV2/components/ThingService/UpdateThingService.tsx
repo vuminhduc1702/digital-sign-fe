@@ -210,7 +210,7 @@ export function UpdateThingService({
             </DialogTitle>
             <div className="ml-3 flex h-7 items-center">
               <button
-                className="rounded-md bg-white text-secondary-900 hover:text-secondary-700 focus:outline-none focus:ring-2 focus:ring-secondary-600"
+                className="text-secondary-900 hover:text-secondary-700 focus:ring-secondary-600 rounded-md bg-white focus:outline-none focus:ring-2"
                 onClick={close}
               >
                 <span className="sr-only">Close panel</span>
@@ -239,8 +239,8 @@ export function UpdateThingService({
                     item.type === 'bool' && item.value === ''
                       ? 'false'
                       : numberServiceInput.includes(item.type as string)
-                        ? parseInt(item.value)
-                        : item.value
+                      ? parseInt(item.value)
+                      : item.value
                 })
                 mutateExecuteService({
                   data: dataRun,
@@ -259,7 +259,7 @@ export function UpdateThingService({
                     input: dataInput,
                     code: codeInput,
                     fail_limit: values.fail_limit,
-                    lock_time: values.lock_time,
+                    lock_time: values.lock_time ? values.lock_time : '0s',
                   },
                   thingId: thingId,
                   name: values.name,
@@ -289,6 +289,11 @@ export function UpdateThingService({
                   type="number"
                   registration={register('fail_limit', {
                     valueAsNumber: true,
+                    onChange: e => {
+                      if (e.target.value === '0') {
+                        setValue('lock_time', undefined)
+                      }
+                    },
                   })}
                   min={0}
                 />
@@ -317,7 +322,7 @@ export function UpdateThingService({
                 ) : null}
               </div>
               <Tabs defaultValue="info">
-                <TabsList className="mt-2 flex items-center justify-between bg-secondary-400 px-10">
+                <TabsList className="bg-secondary-400 mt-2 flex items-center justify-between px-10">
                   <TabsTrigger value="info">
                     <div className="flex items-center gap-x-2">
                       <p>{t('cloud:custom_protocol.service.info')}</p>
@@ -342,7 +347,7 @@ export function UpdateThingService({
                         )}
                       >
                         <div className="relative flex flex-col gap-2 md:col-span-1">
-                          <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                          <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
                             <div className="flex gap-3">
                               <p className="text-table-header">
                                 {t('cloud:custom_protocol.service.input')}
@@ -459,7 +464,7 @@ export function UpdateThingService({
                                   type="button"
                                   size="square"
                                   variant="none"
-                                  className={cn('h-9 hover:bg-secondary-500', {
+                                  className={cn('hover:bg-secondary-500 h-9', {
                                     '!justify-center': fullScreen,
                                   })}
                                   onClick={() => remove(index)}
@@ -513,7 +518,7 @@ export function UpdateThingService({
                             </div>
                           </div>
                           <div className="mt-1.5 flex flex-col gap-y-3">
-                            <div className="flex items-center rounded-lg bg-secondary-400 px-4 py-2">
+                            <div className="bg-secondary-400 flex items-center rounded-lg px-4 py-2">
                               <div className="flex gap-3 ">
                                 <p className="text-table-header">
                                   {t(
@@ -542,7 +547,7 @@ export function UpdateThingService({
                                         </TooltipTrigger>
                                         <TooltipContent side="right">
                                           <div>
-                                            <div className="mb-4 text-table-header">
+                                            <div className="text-table-header mb-4">
                                               {item.name}
                                             </div>
                                             <div>
@@ -612,7 +617,7 @@ export function UpdateThingService({
                             )}
                             ref={codeEditorRef}
                           >
-                            <div className="flex justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                            <div className="bg-secondary-400 flex justify-between gap-2 rounded-lg px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.code')}
@@ -621,9 +626,9 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
                                     <DropdownMenuItem
                                       className="py-1"
                                       onClick={() => {
@@ -716,7 +721,7 @@ export function UpdateThingService({
                             )}
                             ref={resultEditorRef}
                           >
-                            <div className="flex items-center justify-between gap-2 rounded-lg bg-secondary-400 px-4 py-2">
+                            <div className="bg-secondary-400 flex items-center justify-between gap-2 rounded-lg px-4 py-2">
                               <div className="flex gap-3">
                                 <p className="text-table-header">
                                   {t('cloud:custom_protocol.service.output')}
@@ -725,9 +730,9 @@ export function UpdateThingService({
                               <div className="flex gap-3">
                                 <DropdownMenu>
                                   <DropdownMenuTrigger>
-                                    <LuChevronDown className="h-5 w-5 text-secondary-700 hover:text-primary-400" />
+                                    <LuChevronDown className="text-secondary-700 hover:text-primary-400 h-5 w-5" />
                                   </DropdownMenuTrigger>
-                                  <DropdownMenuContent className="z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade">
+                                  <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade z-[9999] flex flex-col overflow-y-auto rounded-md bg-white p-2 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform]">
                                     <DropdownMenuItem
                                       className="py-1"
                                       onClick={() => {
@@ -806,7 +811,7 @@ export function UpdateThingService({
           <Button
             type="button"
             variant="secondary"
-            className="inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-secondary-700 focus:ring-offset-1 sm:mt-0 sm:w-auto sm:text-body-sm"
+            className="focus:ring-secondary-700 sm:text-body-sm inline-flex w-full justify-center rounded-md border focus:ring-1 focus:ring-offset-1 sm:mt-0 sm:w-auto"
             onClick={close}
             startIcon={
               <img src={btnCancelIcon} alt="Cancel" className="h-5 w-5" />
