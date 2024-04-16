@@ -12,13 +12,12 @@ import { type entitySubcriptionSchema } from '../../components/Subcription'
 type CreateSubcriptionRes = {
   data: {
     id: string
-    rowsAffected: 1 | number
+    rowsAffected: 1 | (number & NonNullable<unknown>)
   }
 } & BaseAPIRes
 
 export type CreateSubcriptionDTO = {
-  data: z.infer<typeof entitySubcriptionSchema>
-  &{
+  data: z.infer<typeof entitySubcriptionSchema> & {
     project_id: string
   }
 }

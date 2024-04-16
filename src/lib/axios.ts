@@ -80,9 +80,9 @@ axios.interceptors.response.use(
 
     switch (errRes?.status) {
       case 401:
-        if (window.location.pathname === PATHS.HOME) {
-          break
-        }
+        // if (window.location.pathname === PATHS.HOME) {
+        //   break
+        // }
         return logoutFn()
       case 403:
         message = i18n.t('error:server_res.authorization')

@@ -25,7 +25,7 @@ module.exports = {
     'tailwindcss/classnames-order': 'warn',
     'tailwindcss/enforces-negative-arbitrary-values': 'warn',
     'tailwindcss/enforces-shorthand': 'off',
-    'tailwindcss/migration-from-tailwind-2': 'warn',
+    'tailwindcss/migration-from-tailwind-2': 'off',
     'tailwindcss/no-arbitrary-value': 'off',
     'tailwindcss/no-custom-classname': 'off',
     'tailwindcss/no-contradicting-classname': 'error',

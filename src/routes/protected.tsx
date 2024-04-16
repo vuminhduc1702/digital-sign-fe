@@ -28,6 +28,7 @@ import { Navigate } from 'react-router-dom'
 
 import TestMap from '~/cloud/testMap/routes/TestMap'
 import storage from '~/utils/storage'
+import { Authorization } from '~/lib/authorization'
 
 const projectId = storage.getProject()
 const { DeviceTemplateManage } = lazyImport(
@@ -42,10 +43,6 @@ const { OverViewManage } = lazyImport(
   () => import('~/cloud/overView'),
   'OverViewManage',
 )
-const { FlowEngine } = lazyImport(
-  () => import('~/cloud/flowEngine'),
-  'FlowEngine',
-)
 const { RoleManage } = lazyImport(() => import('~/cloud/role'), 'RoleManage')
 const { CustomProtocolManage } = lazyImport(
   () => import('~/cloud/customProtocol'),
@@ -54,6 +51,10 @@ const { CustomProtocolManage } = lazyImport(
 const { DataBaseTemplateManage } = lazyImport(
   () => import('~/cloud/databaseTemplate'),
   'DataBaseTemplateManage',
+)
+const { ForbiddenPage } = lazyImport(
+  () => import('~/pages/ForbiddenPage'),
+  'ForbiddenPage',
 )
 
 export const protectedRoutes = [
@@ -123,15 +124,6 @@ export const protectedRoutes = [
             ],
           },
         ],
-      },
-      {
-        path: PATHS.FLOW_ENGINE,
-        element: (
-          <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <FlowEngine />
-          </ErrorBoundary>
-        ),
-        children: [{ path: ':projectId' }],
       },
       {
         path: PATHS.ROLE_MANAGE,
@@ -212,7 +204,12 @@ export const protectedRoutes = [
         path: PATHS.TENANT_MANAGE,
         element: (
           <ErrorBoundary FallbackComponent={ErrorFallback}>
-            <MainTenant />
+            <Authorization
+              allowedRoles={['SYSTEM_ADMIN', 'TENANT']}
+              forbiddenFallback={<ForbiddenPage />}
+            >
+              <MainTenant />
+            </Authorization>
           </ErrorBoundary>
         ),
       },

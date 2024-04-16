@@ -8,6 +8,7 @@ export type UserStorage = {
   system_role: RoleTypes
   timestamp: Date
   device_token: string
+  user_id: string
 }
 
 const storage = {

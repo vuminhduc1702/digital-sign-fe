@@ -31,6 +31,7 @@ type UpdateGroupProps = {
   close: () => void
   isOpen: boolean
   organization: string
+  org_name: string
   entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
 }
 
@@ -41,11 +42,12 @@ export function UpdateGroup({
   isOpen,
   organization,
   entity_type,
+  org_name,
 }: UpdateGroupProps) {
   const { t } = useTranslation()
 
   const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useUpdateGroup()
@@ -145,6 +147,7 @@ export function UpdateGroup({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={org_name}
           />
         </>
       </form>

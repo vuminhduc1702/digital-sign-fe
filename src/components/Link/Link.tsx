@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import {
   Link as RouterLink,
   NavLink as RouterNavLink,
@@ -7,11 +6,13 @@ import {
 } from 'react-router-dom'
 import { forwardRef } from 'react'
 
+import { cn } from '~/utils/misc'
+
 export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <RouterLink
-        className={clsx('group', className)}
+        className={cn('group', className)}
         ref={forwardedRef}
         {...props}
       >
@@ -20,12 +21,13 @@ export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
     )
   },
 )
+Link.displayName = 'Link'
 
 export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
   ({ children, className, ...props }, forwardedRef) => {
     return (
       <RouterNavLink
-        className={clsx('group', className)}
+        className={cn('group', className)}
         ref={forwardedRef}
         {...props}
       >
@@ -34,3 +36,4 @@ export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
     )
   },
 )
+NavLink.displayName = 'NavLink'

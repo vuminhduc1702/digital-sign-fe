@@ -57,6 +57,7 @@ import btnDeleteIcon from '~/assets/icons/btn-delete.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { PlusIcon } from '~/components/SVGIcons'
 import { ComplexTree } from '~/components/ComplexTree'
+import { useOrgById } from '~/layout/OrgManagementLayout/api'
 
 type UpdateEventProps = {
   eventId: string
@@ -164,7 +165,6 @@ export function UpdateEvent({
       },
     },
   })
-  console.log('formState.errors', formState.errors)
 
   const {
     append: conditionAppend,
@@ -192,6 +192,7 @@ export function UpdateEvent({
     },
     level: 1,
   })
+  const { data: orgDataById } = useOrgById({ orgId: data?.org_id })
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id') || orgId,
@@ -410,6 +411,7 @@ export function UpdateEvent({
                   error={formState?.errors?.org_id}
                   control={control}
                   options={orgData?.organizations}
+                  selectedOrgName={orgDataById?.name}
                 />
 
                 <SelectDropdown

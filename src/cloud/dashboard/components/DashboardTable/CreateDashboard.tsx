@@ -17,7 +17,7 @@ import { PlusIcon } from '~/components/SVGIcons'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 
 export const dashboardSchema = z.object({
-  id: z.string(),
+  id: z.string().optional(),
   title: nameSchema,
   configuration: z.object({
     description: z.string(),
@@ -48,6 +48,8 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
   >({
     resolver: dashboardSchema && zodResolver(dashboardSchema),
   })
+  console.log('formState.errors', formState.errors)
+
   return (
     <FormDrawer
       isDone={isSuccess}

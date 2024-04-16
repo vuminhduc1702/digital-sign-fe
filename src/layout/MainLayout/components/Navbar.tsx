@@ -12,6 +12,7 @@ import { PATHS } from '~/routes/PATHS'
 import { useProjectIdStore } from '~/stores/project'
 import { useCopyId } from '~/utils/hooks'
 import storage from '~/utils/storage'
+import { useAuthorization } from '~/lib/authorization'
 
 import { type Project } from '~/cloud/project/routes/ProjectManage'
 
@@ -22,7 +23,12 @@ import qldaIcon from '~/assets/icons/nav-qlda.svg'
 import defaultProjectImage from '~/assets/images/default-project.png'
 import English from '~/assets/images/landingpage/uk-flag.png'
 import VietNam from '~/assets/images/landingpage/vietnam-flag.png'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '~/components/Dropdowns'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '~/components/Dropdowns'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 
 function Navbar() {
@@ -34,7 +40,9 @@ function Navbar() {
       suspense: false,
     },
   })
-  const { data: userData } = useUser()
+  const { data: userDataFromStorage } = useUser()
+
+  const { checkAccess } = useAuthorization()
 
   const setProjectId = useProjectIdStore(state => state.setProjectId)
 
@@ -62,7 +70,7 @@ function Navbar() {
         <a
           className="flex cursor-pointer items-center gap-x-2"
           target="_blank"
-          href="https:innoway.gitbook.io/innoway/"
+          href="https://innoway.gitbook.io/innoway/"
           rel="noreferrer"
         >
           <img
@@ -80,19 +88,21 @@ function Navbar() {
               alt="Project management"
               className="aspect-square w-[20px]"
             />
-            <p className="text-white">
-              <Link className="flex w-full" to={PATHS.PROJECT_MANAGE}>
-                {t('nav:qlda')}
-              </Link>
-            </p>
-            <DropdownMenuTrigger>
-              <SidebarDropDownIcon
-                width={12}
-                height={7}
-                viewBox="0 0 12 7"
-                className="text-white"
-              />
-            </DropdownMenuTrigger>
+            <div className="flex items-center gap-x-2">
+              <p className="text-white">
+                <Link className="flex w-full" to={PATHS.PROJECT_MANAGE}>
+                  {t('nav:qlda')}
+                </Link>
+              </p>
+              <DropdownMenuTrigger>
+                <SidebarDropDownIcon
+                  width={12}
+                  height={7}
+                  viewBox="0 0 12 7"
+                  className="text-white"
+                />
+              </DropdownMenuTrigger>
+            </div>
           </div>
           <DropdownMenuContent
             className="flex max-h-[360px] w-[260px] min-w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
@@ -100,20 +110,20 @@ function Navbar() {
           >
             {projectsData?.projects.map((project: Project) => {
               return (
-                <Link
-                  to={`${PATHS.ORG_MANAGE}/${project.id}`}
-                  key={project.id}
-                >
-                  <DropdownMenuItem className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-3 leading-none outline-none"
+                <Link to={`${PATHS.ORG_MANAGE}/${project.id}`} key={project.id}>
+                  <DropdownMenuItem
+                    className="group relative flex cursor-pointer select-none items-center gap-x-3 px-1 pl-3 leading-none outline-none"
                     onClick={() => {
                       storage.setProject(project)
                       setProjectId(project.id)
-                    }}>
+                    }}
+                  >
                     <img
-                      src={`${project?.image !== ''
-                        ? `${API_URL}/file/${project?.image}`
-                        : defaultProjectImage
-                        }`}
+                      src={`${
+                        project?.image !== ''
+                          ? `${API_URL}/file/${project?.image}`
+                          : defaultProjectImage
+                      }`}
                       alt="Project"
                       className="aspect-square w-[45px] rounded-full"
                       onError={e => {
@@ -132,23 +142,6 @@ function Navbar() {
             })}
           </DropdownMenuContent>
         </DropdownMenu>
-
-        {/* <div className="flex cursor-pointer items-center gap-x-2">
-          <img
-            src={caidatIcon}
-            alt="Setting"
-            className="aspect-square w-[20px]"
-          />
-          <p className="text-white">{t('nav:setup')}</p>
-        </div>
-        <div className="flex cursor-pointer items-center gap-x-2">
-          <img
-            src={hotroIcon}
-            alt="Support"
-            className="aspect-square w-[20px]"
-          />
-          <p className="text-white">{t('nav:support')}</p>
-        </div> */}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="flex items-center gap-x-2">
@@ -231,10 +224,12 @@ function Navbar() {
               sideOffset={-15}
             >
               <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                {userData ? (
+                {userDataFromStorage != null ? (
                   <p
                     className="cursor-pointer"
-                    onClick={() => handleCopyId(userData.device_token)}
+                    onClick={() =>
+                      handleCopyId(userDataFromStorage.device_token)
+                    }
                   >
                     {t('user:copy_device_token')}
                   </p>
@@ -248,18 +243,22 @@ function Navbar() {
                   {t('cloud:custom_protocol.adapter.username')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem
-                asChild
-                className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              >
-                <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                asChild
-                className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
-              >
-                <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
-              </DropdownMenuItem>
+              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.TENANT_MANAGE}>Tenant</Link>
+                </DropdownMenuItem>
+              ) : null}
+              {checkAccess({ allowedRoles: ['SYSTEM_ADMIN', 'TENANT'] }) ? (
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
+                >
+                  <Link to={PATHS.DEV_ROLE}>{t('dev_role:title')}</Link>
+                </DropdownMenuItem>
+              ) : null}
               <DropdownMenuItem
                 asChild
                 className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none"
@@ -268,11 +267,8 @@ function Navbar() {
                   {t('user:change_password')}
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="hover:bg-primary-300 rounded-md p-2 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-                <p
-                  className="cursor-pointer"
-                  onClick={() => logout.mutate({})}
-                >
+              <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
+                <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                   {t('user:logout')}
                 </p>
               </DropdownMenuItem>

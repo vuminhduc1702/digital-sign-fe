@@ -11,7 +11,12 @@ import defaultUserIcon from '~/assets/icons/default-user.svg'
 import { SidebarDropDownIcon } from '~/components/SVGIcons'
 import { Link } from '~/components/Link'
 import LogoViettel from '~/assets/icons/logo_viettel.svg'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenu } from '~/components/Dropdowns'
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenu,
+} from '~/components/Dropdowns'
 
 function LPnavigation({
   childToParent,
@@ -41,7 +46,7 @@ function LPnavigation({
   const logout = useLogout()
 
   return (
-    <div className="px-8 py-7 ">
+    <div className="py-10">
       <div className="mb-[20px] w-[140px]">
         <a href="/" className=" text-white ">
           <img src={LogoViettel} alt="" />
@@ -80,10 +85,11 @@ function LPnavigation({
             <div className="flex lg:ml-auto">
               <div className="flex w-max py-5 max-lg:px-3">
                 <img
-                  src={`${userInfoData?.profile?.profile_image !== ''
-                    ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
-                    : defaultUserIcon
-                    }`}
+                  src={`${
+                    userInfoData?.profile?.profile_image !== ''
+                      ? `${API_URL}/file/${userInfoData?.profile?.profile_image}`
+                      : defaultUserIcon
+                  }`}
                   alt="User's avatar"
                   className="aspect-square w-10 rounded-full p-1 ring-2 ring-gray-300"
                   onError={e => {
@@ -110,8 +116,10 @@ function LPnavigation({
               </div>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="data-[side=bottom]:animate-slideUpAndFade  data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] z-[9999]"
-            sideOffset={-15}>
+          <DropdownMenuContent
+            className="z-[9999]  flex max-h-[360px] w-[220px] flex-col overflow-y-auto rounded-md bg-white p-3 shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade data-[side=right]:animate-slideLeftAndFade data-[side=top]:animate-slideDownAndFade"
+            sideOffset={-15}
+          >
             <Link
               to="https://iot.viettel.vn/"
               target="_blank"
@@ -139,10 +147,7 @@ function LPnavigation({
               ) : null}
             </DropdownMenuItem>
             <DropdownMenuItem className="rounded-md p-2 hover:bg-primary-300 hover:bg-opacity-25 focus-visible:border-none focus-visible:outline-none">
-              <p
-                className="cursor-pointer"
-                onClick={() => logout.mutate({})}
-              >
+              <p className="cursor-pointer" onClick={() => logout.mutate({})}>
                 {t('user:logout')}
               </p>
             </DropdownMenuItem>

@@ -6,7 +6,6 @@ import { logoutFn } from '~/lib/auth'
 import { toast } from 'sonner'
 import narrowLeft from '~/assets/icons/narrow-left.svg'
 import frameAuth from '~/assets/images/frame-auth-layout.svg'
-import logo from '~/assets/images/logo.svg'
 import { ContentLayout } from '~/layout/ContentLayout'
 
 export const ChangePassword = () => {
@@ -17,7 +16,7 @@ export const ChangePassword = () => {
       <div className="h-full p-4">
         <div className="flex items-center pt-2 sm:px-14 lg:px-60">
           <div
-            className="border-secondary-700 mr-auto flex cursor-pointer rounded-md border px-3 py-2 text-base font-medium"
+            className="mr-auto flex cursor-pointer rounded-md border border-secondary-700 px-3 py-2 text-base font-medium"
             onClick={() => navigate(-1)}
           >
             <img
@@ -30,11 +29,7 @@ export const ChangePassword = () => {
         </div>
         <div className="mt-28 flex sm:px-14 lg:px-60">
           <div className="flex w-2/3 shrink flex-col items-center justify-center rounded-s-lg bg-white">
-            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10">
-              <a href="/">
-                <img src={logo} alt="" />
-              </a>
-            </div>
+            <div className="flex justify-center pt-[4rem] sm:py-5 lg:pb-5 lg:pt-10"></div>
             <div className="flex justify-center pt-[4rem] sm:py-5 lg:pt-5">
               <img src={frameAuth} alt="" />
             </div>

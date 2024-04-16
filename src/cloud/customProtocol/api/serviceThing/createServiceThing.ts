@@ -10,7 +10,7 @@ import { type BaseAPIRes } from '~/types'
 import { type serviceThingSchema } from '../../components'
 
 type CreateServiceThingRes = {
-  data: 1 | number
+  data: 1 | (number & NonNullable<unknown>)
 } & BaseAPIRes
 
 export type CreateServiceThingDTO = {

@@ -23,7 +23,7 @@ type UpdateAttrProps = {
   entityId: string
   entityType: EntityType
   attributeKey: string
-  value: string
+  value: any
   value_type: Attribute['value_type']
   logged: boolean
   close: () => void
@@ -41,10 +41,10 @@ export function UpdateAttr({
   isOpen,
 }: UpdateAttrProps) {
   const { t } = useTranslation()
-  console.log('value', value)
 
   const { mutateAsync: mutateAsyncUpdateLogged } = useUpdateLogged({}, false)
   const { mutate, isLoading, isSuccess } = useUpdateAttr()
+  console.log('value', value)
 
   const { register, formState, control, handleSubmit, watch, reset } = useForm<
     z.infer<typeof attrSchema>
@@ -53,7 +53,10 @@ export function UpdateAttr({
     defaultValues: {
       attribute_key: attributeKey,
       logged: String(logged) === 'true',
-      value,
+      value:
+        JSON.parse(JSON.stringify(value)) === ''
+          ? undefined
+          : JSON.stringify(value),
       value_t: value_type,
     },
   })
@@ -63,7 +66,10 @@ export function UpdateAttr({
       reset({
         attribute_key: attributeKey,
         logged: String(logged) === 'true',
-        value: value !== 'null' && value !== '' ? value : '',
+        value:
+          JSON.parse(JSON.stringify(value)) === ''
+            ? undefined
+            : JSON.stringify(value),
         value_t: value_type,
       }),
     [],
@@ -160,7 +166,11 @@ export function UpdateAttr({
                   registration={register(`value` as const)}
                   step={0.000001}
                   type={
-                    numberInput.includes(watch(`value_t`)) ? 'number' : 'text'
+                    numberInput.includes(
+                      watch(`value_t`) as (typeof numberInput)[number],
+                    )
+                      ? 'number'
+                      : 'text'
                   }
                 />
               )}

@@ -1,9 +1,11 @@
 import React, { useMemo, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
+import { Dropdown, MenuItem } from '~/components/Dropdown'
+import { ConfirmationDialog } from '~/components/ConfirmationDialog'
 import { Button } from '~/components/Button'
 import { BaseTable, type BaseTableProps } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
@@ -46,12 +48,14 @@ export type GroupType = {
 function GroupTableContextMenu({
   id,
   name,
+  org_name,
   ...props
 }: {
   id: string
   name: string
   entity_type: Exclude<EntityType, 'GROUP' | 'TEMPLATE'>
   organization: string
+  org_name: string
 }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -153,6 +157,7 @@ function GroupTableContextMenu({
         <UpdateGroup
           groupId={id}
           name={name}
+          org_name={org_name}
           close={close}
           isOpen={isOpen}
           {...props}

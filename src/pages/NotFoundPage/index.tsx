@@ -9,7 +9,8 @@ export function NotFoundPage() {
   const { t } = useTranslation()
 
   useEffect(() => {
-    const timer = setTimeout(() => navigate(PATHS.HOME), 5000)
+    // const timer = setTimeout(() => navigate(PATHS.HOME), 5000)
+    const timer = setTimeout(() => navigate(PATHS.PROJECT_MANAGE), 5000)
     return () => clearTimeout(timer)
   }, [])
 

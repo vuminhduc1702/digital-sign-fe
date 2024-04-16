@@ -43,7 +43,7 @@ export const useGetDevices = ({
   orgId,
   orgIds,
   projectId,
-  get_attributes = true,
+  get_attributes = false,
   offset = 0,
   limit = limitPagination,
   config,

@@ -30,6 +30,7 @@ import { type DeviceAdditionalInfo } from '../../types'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import { ComplexTree } from '~/components/ComplexTree'
+import { useOrgById } from '~/layout/OrgManagementLayout/api'
 
 type UpdateDeviceProps = {
   deviceId: string
@@ -41,6 +42,7 @@ type UpdateDeviceProps = {
   isOpen: boolean
   template_id: string
   additional_info: DeviceAdditionalInfo
+  org_name?: string
 }
 
 const updateDeviceSchema = deviceSchema.required({ group_id: true })
@@ -61,6 +63,7 @@ export function UpdateDevice({
   isOpen,
   template_id,
   additional_info,
+  org_name,
 }: UpdateDeviceProps) {
   const { t } = useTranslation()
 
@@ -100,6 +103,7 @@ export function UpdateDevice({
   })
 
   const { data: orgData } = useGetOrgs({ projectId, level: 1 })
+  const { data: orgDataById } = useOrgById({ orgId: org_id ?? '' })
 
   const { data: groupData, isLoading: groupIsLoading } = useGetGroups({
     orgId: watch('org_id') || orgId,
@@ -194,6 +198,7 @@ export function UpdateDevice({
               control={control}
               options={orgData?.organizations}
               customOnChange={() => selectDropdownGroupId.current?.clearValue()}
+              selectedOrgName={orgDataById?.name}
             />
 
             <SelectDropdown

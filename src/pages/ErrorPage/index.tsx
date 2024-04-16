@@ -2,13 +2,7 @@ import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 
-export function ErrorFallback({
-  error,
-  resetErrorBoundary,
-}: {
-  error: { message: string }
-  resetErrorBoundary: (...args: unknown[]) => void
-}) {
+export function ErrorFallback({ error }: { error: { message: string } }) {
   const { t } = useTranslation()
 
   return (
@@ -24,7 +18,7 @@ export function ErrorFallback({
       <Button
         className="mt-4"
         size="lg"
-        onClick={() => resetErrorBoundary()}
+        onClick={() => window.location.reload}
         variant="primary"
       >
         {t('error:refresh')}

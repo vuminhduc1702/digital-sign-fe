@@ -31,10 +31,10 @@ export const AppRoutes = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const user = useUser()
+  const { data: userDataFromStorage } = useUser()
 
   const commonRoutes = [
-    { path: BASE_PATH, element: <LandingPage /> },
+    // { path: BASE_PATH, element: <LandingPage /> },
     {
       path: PATHS.MAINTAIN,
       element: <MaintainPage />,
@@ -57,19 +57,30 @@ export const AppRoutes = () => {
     },
   ]
 
+  const isNotAuthRoutes =
+    location.pathname !== PATHS.FORGETPASSWORD &&
+    location.pathname !== PATHS.REGISTER &&
+    location.pathname !== PATHS.LOGIN
+  const isAuthRoutes =
+    location.pathname === PATHS.FORGETPASSWORD ||
+    location.pathname === PATHS.REGISTER ||
+    location.pathname === PATHS.LOGIN
+
   useEffect(() => {
     if (
-      user.data == null &&
-      location.pathname !== PATHS.FORGETPASSWORD &&
-      location.pathname !== PATHS.REGISTER &&
-      location.pathname !== PATHS.LOGIN &&
+      userDataFromStorage == null &&
+      isNotAuthRoutes &&
       !commonRoutes.some(item => item.path === location.pathname)
     ) {
       navigate(PATHS.LOGIN, { state: { from: location }, replace: true })
     }
-  }, [location.pathname, user.data])
 
-  const routes = user.data ? protectedRoutes : publicRoutes
+    if (userDataFromStorage != null && isAuthRoutes) {
+      navigate(PATHS.PROJECT_MANAGE)
+    }
+  }, [location.pathname, userDataFromStorage, isAuthRoutes])
+
+  const routes = userDataFromStorage ? protectedRoutes : publicRoutes
 
   const element = useRoutes([...routes, ...commonRoutes])
 

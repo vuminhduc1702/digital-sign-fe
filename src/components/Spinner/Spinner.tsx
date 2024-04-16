@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import { cn } from '~/utils/misc'
 
 const sizes = {
   sm: 'h-4 w-4',
@@ -27,13 +27,13 @@ export const Spinner = ({
 }: SpinnerProps) => {
   return (
     <div
-      className={clsx('transition-opacity', {
+      className={cn('transition-opacity', {
         'opacity-100': showSpinner,
         'opacity-0': !showSpinner,
       })}
     >
       <svg
-        className={clsx(
+        className={cn(
           'animate-spin',
           sizes[size],
           variants[variant],

@@ -213,11 +213,9 @@ export function UpdateWidget({
 
   const { data: orgData, isLoading: orgIsLoading } = useGetOrgs({
     projectId,
-    config: {
-      suspense: false,
-    },
     level: 1,
   })
+  console.log(orgData)
 
   const { data: deviceData, isLoading: deviceIsLoading } = useGetDevices({
     orgId: watch('org_id') || orgId,
@@ -337,18 +335,18 @@ export function UpdateWidget({
         widgetInfo?.description === 'LINE'
           ? t('cloud:dashboard.config_chart.update_line')
           : widgetInfo?.description === 'BAR'
-          ? t('cloud:dashboard.config_chart.update_bar')
-          : widgetInfo?.description === 'TABLE'
-          ? t('cloud:dashboard.config_chart.update_table')
-          : widgetInfo?.description === 'PIE'
-          ? t('cloud:dashboard.config_chart.update_pie')
-          : widgetInfo?.description === 'GAUGE'
-          ? t('cloud:dashboard.config_chart.update_gauge')
-          : widgetInfo?.description === 'CARD'
-          ? t('cloud:dashboard.config_chart.update_card')
-          : widgetInfo?.description === 'MAP'
-          ? t('cloud:dashboard.config_chart.update_card')
-          : t('cloud:dashboard.config_chart.update')
+            ? t('cloud:dashboard.config_chart.update_bar')
+            : widgetInfo?.description === 'TABLE'
+              ? t('cloud:dashboard.config_chart.update_table')
+              : widgetInfo?.description === 'PIE'
+                ? t('cloud:dashboard.config_chart.update_pie')
+                : widgetInfo?.description === 'GAUGE'
+                  ? t('cloud:dashboard.config_chart.update_gauge')
+                  : widgetInfo?.description === 'CARD'
+                    ? t('cloud:dashboard.config_chart.update_card')
+                    : widgetInfo?.description === 'MAP'
+                      ? t('cloud:dashboard.config_chart.update_card')
+                      : t('cloud:dashboard.config_chart.update')
       }
       isDone={isDone}
       body={

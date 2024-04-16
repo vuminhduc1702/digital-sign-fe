@@ -15,7 +15,6 @@ import { StarFilledIcon } from '@radix-ui/react-icons'
 
 type DashboardTableProps = {
   data: DashboardRes[]
-  isHiddenCheckbox: boolean
 } & BaseTablePagination
 
 export function DashboardTable({ data, ...props }: DashboardTableProps) {
@@ -78,6 +77,8 @@ export function DashboardTable({ data, ...props }: DashboardTableProps) {
       columns={columns}
       isAbsoluteBtn={false}
       onDataText={t('table:no_dashboard')}
+      isHiddenCheckbox={true}
+      filterBtnClassName=""
       {...props}
     />
   )

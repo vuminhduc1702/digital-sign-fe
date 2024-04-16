@@ -63,6 +63,7 @@ export function UpdateUser({
   role_id,
   phone,
   profile,
+  org_name,
 }: UpdateUserProps) {
   const { t } = useTranslation()
 
@@ -88,7 +89,7 @@ export function UpdateUser({
     })
 
   const projectId = storage.getProject()?.id
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { data: roleData, isLoading: roleIsLoading } = useGetRoles({
@@ -257,6 +258,7 @@ export function UpdateUser({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={org_name}
           />
 
           <SelectDropdown

@@ -5,32 +5,28 @@ import { limitPagination } from '~/utils/const'
 
 import { type ExtractFnReturnType, type QueryConfig } from '~/lib/react-query'
 import { type RoleList } from '../types'
+import { type RoleTypes } from '~/lib/authorization'
 
 type GetRoles = {
   projectId: string
   offset?: number
   limit?: number
-  isHasApplicableTo?: boolean
+  applicable_to?: RoleTypes
 }
 
 export const getRoles = ({
   projectId,
   offset,
   limit,
-  isHasApplicableTo,
+  applicable_to,
 }: GetRoles): Promise<RoleList> => {
-  const params = {
-    project_id: projectId,
-    offset,
-    limit,
-  }
-
-  if (isHasApplicableTo) {
-    params.applicable_to = 'TENANT_DEV'
-  }
-
   return axios.get(`/api/roles`, {
-    params,
+    params: {
+      project_id: projectId,
+      offset,
+      limit,
+      applicable_to,
+    },
   })
 }
 
@@ -45,11 +41,11 @@ export const useGetRoles = ({
   offset = 0,
   limit = limitPagination,
   config,
-  isHasApplicableTo = false,
+  applicable_to,
 }: UseRoleOptions) => {
   return useQuery<ExtractFnReturnType<QueryFnType>>({
-    queryKey: ['roles', projectId, offset, limit, isHasApplicableTo],
-    queryFn: () => getRoles({ projectId, offset, limit, isHasApplicableTo }),
+    queryKey: ['roles', projectId, offset, limit, applicable_to],
+    queryFn: () => getRoles({ projectId, offset, limit, applicable_to }),
     enabled: !!projectId,
     ...config,
   })

@@ -6,7 +6,12 @@ import { useForm } from 'react-hook-form'
 import { Button } from '~/components/Button'
 import { InputField, TextAreaField } from '~/components/Form'
 import { Drawer } from '~/components/Drawer'
-import { type UpdateOrgDTO, useUpdateOrg, useUploadImage } from '../api'
+import {
+  type UpdateOrgDTO,
+  useUpdateOrg,
+  useUploadImage,
+  useOrgById,
+} from '../api'
 import { orgSchema } from './CreateOrg'
 import FileField from '~/components/Form/FileField'
 import { API_URL } from '~/config'
@@ -18,13 +23,13 @@ import {
 } from '~/utils/hooks'
 import { useGetOrgs } from '~/layout/MainLayout/api'
 import storage from '~/utils/storage'
+import { ComplexTree } from '~/components/ComplexTree'
 
-import { type OrgMapType } from './OrgManageSidebar'
+import { type Org } from '~/layout/MainLayout/types'
 
 import btnSubmitIcon from '~/assets/icons/btn-submit.svg'
 import btnCancelIcon from '~/assets/icons/btn-cancel.svg'
 import defaultOrgImage from '~/assets/images/default-org.png'
-import { ComplexTree } from '~/components/ComplexTree'
 
 const orgUpdateSchema = orgSchema.required({ org_id: true })
 
@@ -35,10 +40,9 @@ export function UpdateOrg({
 }: {
   close: () => void
   isOpen: boolean
-  selectedUpdateOrg: OrgMapType
+  selectedUpdateOrg: Org
 }) {
   const { t } = useTranslation()
-  console.log('selectedUpdateOrg', selectedUpdateOrg)
 
   const {
     handleResetDefaultImage,
@@ -48,12 +52,11 @@ export function UpdateOrg({
     controlUploadImage,
     setValueUploadImage,
     getValueUploadImage,
-    formStateUploadImage,
   } = useResetDefaultImage(defaultOrgImage)
 
   const projectId = storage.getProject()?.id
 
-  const { data: orgData } = useGetOrgs({ projectId })
+  const { data: orgData } = useGetOrgs({ projectId, level: 1 })
   const no_org_val = t('cloud:org_manage.org_manage.add_org.no_org')
 
   const { mutate, isLoading, isSuccess } = useUpdateOrg()
@@ -74,6 +77,8 @@ export function UpdateOrg({
         org_id: selectedUpdateOrg.org_id,
       },
     })
+  const selectedOrgBelonged = selectedUpdateOrg.org_id
+  const { data: orgDataById } = useOrgById({ orgId: selectedOrgBelonged })
 
   useEffect(() => {
     if (isSuccess) {
@@ -183,6 +188,7 @@ export function UpdateOrg({
             error={formState?.errors?.org_id}
             control={control}
             options={orgData?.organizations}
+            selectedOrgName={orgDataById?.name}
           />
 
           <TextAreaField

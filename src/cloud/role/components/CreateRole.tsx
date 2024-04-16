@@ -210,7 +210,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
                 actions: actionArrRef.current,
               }
             })
-            const data = {
+            const data: CreateRoleDTO['data'] = {
               name: values.name,
               policies,
               project_id: projectId,
@@ -240,7 +240,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
               }
             })
 
-            const data = {
+            const data: CreateRoleDTO['data'] = {
               name: values.name,
               policies,
               project_id: projectId,
