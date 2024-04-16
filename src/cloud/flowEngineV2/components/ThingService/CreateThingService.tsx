@@ -270,7 +270,7 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                   input: dataInput,
                   code: codeInput,
                   fail_limit: values.fail_limit,
-                  lock_time: values.lock_time,
+                  lock_time: values.lock_time ? values.lock_time : '0s',
                 },
                 thingId: thingId,
               })
@@ -309,6 +309,11 @@ export function CreateThingService({ thingServiceData }: CreateServiceProps) {
                 type="number"
                 registration={register('fail_limit', {
                   valueAsNumber: true,
+                  onChange: e => {
+                    if (e.target.value === '0') {
+                      setValue('lock_time', undefined)
+                    }
+                  },
                 })}
                 min={0}
               />

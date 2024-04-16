@@ -61,6 +61,8 @@ export function TemplateLwM2M() {
       navigate(
         `${PATHS.TEMPLATE_LWM2M}/${projectId}/${filteredComboboxData[0].id}`,
       )
+    } else {
+      navigate(`${PATHS.TEMPLATE_LWM2M}/${projectId}`)
     }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])

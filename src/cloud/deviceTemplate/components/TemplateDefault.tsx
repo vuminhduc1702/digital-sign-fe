@@ -61,6 +61,8 @@ export function TemplateDefault() {
       navigate(
         `${PATHS.TEMPLATE_DEFAULT}/${projectId}/${filteredComboboxData[0].id}`,
       )
+    } else {
+      navigate(`${PATHS.TEMPLATE_DEFAULT}/${projectId}`)
     }
     return () => clearTimeout(timer)
   }, [filteredComboboxData])

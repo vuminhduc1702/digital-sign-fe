@@ -4,8 +4,10 @@ import { PATHS } from '~/routes/PATHS'
 import { cn } from '~/utils/misc'
 import { TemplateDefault } from './TemplateDefault'
 import { TemplateLwM2M } from './TemplateLwM2M'
+import storage from '~/utils/storage'
 export function TemplateSidebar() {
   const [type, setType] = useState('Default')
+  const projectId = storage.getProject()?.id
   const DeviceType = ['Default', 'LwM2M']
   return (
     <>
@@ -15,8 +17,8 @@ export function TemplateSidebar() {
             <NavLink
               to={
                 item === 'Default'
-                  ? PATHS.TEMPLATE_DEFAULT
-                  : PATHS.TEMPLATE_LWM2M
+                  ? PATHS.TEMPLATE_DEFAULT + '/' + projectId
+                  : PATHS.TEMPLATE_LWM2M + '/' + projectId
               }
               key={item}
             >
