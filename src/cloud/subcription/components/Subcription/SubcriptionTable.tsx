@@ -112,6 +112,17 @@ export function SubcriptionTable({
   const columnHelper = createColumnHelper<Subcription>()
   const columns = useMemo<ColumnDef<Subcription, any>[]>(
     () => [
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { s_id } = info.row.original
+          return SubcriptionTableContextMenu({
+            id: s_id,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
       columnHelper.accessor('s_id', {
         header: () => <span>{t('billing:subcription.table.sub_code')}</span>,
         cell: info => info.getValue(),
@@ -132,117 +143,12 @@ export function SubcriptionTable({
         footer: info => info.column.id,
       }),
       columnHelper.accessor('p_name', {
-        header: () => (
-          <>
-            <span>{t('billing:subcription.popup.package')}</span>{' '}
-            <Popover>
-              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
-                <Button
-                  className="border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
-                  }
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-40" align="start">
-                <div
-                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                    handleSearch(e, 'plan_id', '', '')
-                  }
-                >
-                  All
-                </div>
-                {planArr?.map(item => {
-                  return (
-                    <div
-                      key={item.p_id}
-                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(e, 'plan_id', item.p_id, item.p_id)
-                      }
-                    >
-                      {item.p_name}
-                    </div>
-                  )
-                })}
-              </PopoverContent>
-            </Popover>
-          </>
-        ),
+        header: () => <span>{t('billing:subcription.popup.package')}</span>,
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
       columnHelper.accessor('p_period', {
-        header: () => (
-          <>
-            <span>{t('billing:subcription.popup.period')}</span>
-            <Popover>
-              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
-                <Button
-                  className="border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
-                  }
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-40" align="start">
-                <div
-                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                    handleSearch(e, 'cal_unit', '', '')
-                  }
-                >
-                  All
-                </div>
-                {calUnitArr?.map(item => {
-                  const valuePeriod = () => {
-                    let result = ''
-                    if (item.p_cal_unit) {
-                      switch (item.p_cal_unit) {
-                        case 'day':
-                          result = ' ngày'
-                          break
-                        case 'week':
-                          result = ' tuần'
-                          break
-                        case 'month':
-                          result = ' tháng'
-                          break
-                        case 'year':
-                          result = ' năm'
-                          break
-                        default:
-                          break
-                      }
-                    }
-                    return result
-                  }
-                  return (
-                    <div
-                      key={item.s_id}
-                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(
-                          e,
-                          'cal_unit',
-                          item.p_cal_unit,
-                          item.p_cal_unit,
-                        )
-                      }
-                    >
-                      {valuePeriod()}
-                    </div>
-                  )
-                })}
-              </PopoverContent>
-            </Popover>
-          </>
-        ),
+        header: () => <span>{t('billing:subcription.popup.period')}</span>,
         cell: info => {
           const { p_cal_unit, p_period } = info.row.original
           const valuePeriod = () => {
@@ -273,74 +179,7 @@ export function SubcriptionTable({
       }),
       columnHelper.accessor('p_estimate', {
         header: () => (
-          <>
-            <span>{t('billing:subcription.popup.price_method')}</span>
-            <Popover>
-              <PopoverTrigger onClick={e => e.stopPropagation()} asChild>
-                <Button
-                  className="border-none shadow-none"
-                  variant="trans"
-                  size="square"
-                  startIcon={
-                    <img src={btnFilterIcon} alt="" className="h-5 w-5" />
-                  }
-                />
-              </PopoverTrigger>
-              <PopoverContent className="w-40" align="start">
-                <div
-                  className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                  onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                    handleSearch(e, 'estimate', '', '')
-                  }
-                >
-                  All
-                </div>
-                {estimateArr?.map(item => {
-                  const valuePriceMethod = () => {
-                    let result = ''
-                    if (item.p_estimate) {
-                      switch (item.p_estimate) {
-                        case 'mass':
-                          result = 'Theo khối lượng'
-                          break
-                        case 'fix':
-                          result = 'Cố định'
-                          break
-                        case 'unit':
-                          result = 'Theo đơn vị'
-                          break
-                        case 'accumulated':
-                          result = 'Theo lũy kế'
-                          break
-                        case 'step':
-                          result = 'Theo bậc thang'
-                          break
-                        default:
-                          break
-                      }
-                    }
-                    return result || ''
-                  }
-                  return (
-                    <div
-                      key={item.s_id}
-                      className={cn('cursor-pointer p-2 hover:bg-red-300')}
-                      onClick={(e: React.MouseEvent<HTMLInputElement>) =>
-                        handleSearch(
-                          e,
-                          'estimate',
-                          item.p_estimate,
-                          item.p_estimate,
-                        )
-                      }
-                    >
-                      {valuePriceMethod()}
-                    </div>
-                  )
-                })}
-              </PopoverContent>
-            </Popover>
-          </>
+          <span>{t('billing:subcription.popup.price_method')}</span>
         ),
         cell: info => {
           const { p_estimate } = info.row.original
@@ -415,17 +254,6 @@ export function SubcriptionTable({
           }
           return valueStatus()
         },
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { s_id } = info.row.original
-          return SubcriptionTableContextMenu({
-            id: s_id,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

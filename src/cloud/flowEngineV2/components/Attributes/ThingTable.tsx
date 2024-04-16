@@ -1,9 +1,9 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Link } from '~/components/Link'
-import { BaseTable } from '~/components/Table'
+import { BaseTable, type BaseTableProps } from '~/components/Table'
 import { PATHS } from '~/routes/PATHS'
 import { useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'
@@ -23,6 +23,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { BtnContextMenuIcon } from '~/components/SVGIcons'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function ThingTableContextMenu({
   id,
@@ -46,28 +47,31 @@ function ThingTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
-            {t('cloud:custom_protocol.thing.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete thing" className="h-5 w-5" />
-            {t('cloud:custom_protocol.thing.delete')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={open}>
+              <img src={btnEditIcon} alt="Edit device" className="h-5 w-5" />
+              {t('cloud:custom_protocol.thing.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img src={btnDeleteIcon} alt="Delete thing" className="h-5 w-5" />
+              {t('cloud:custom_protocol.thing.delete')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </div>
       {isOpen ? (
         <UpdateThing
           thingId={id}
@@ -96,23 +100,48 @@ function ThingTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<UserInfo>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type ThingTableProps = {
   data: EntityThing[]
   rowSelection: { [key: string]: boolean }
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-} & BaseTablePagination
+} & PartialBaseTableProps<EntityThing>
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
+
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
 
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { name, id, description } = info.row.original
+          return ThingTableContextMenu({ name, id, description })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -143,15 +172,6 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
         cell: info => info.getValue(),
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { name, id, description } = info.row.original
-          return ThingTableContextMenu({ name, id, description })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
     ],
     [props.offset],
   )
@@ -162,8 +182,6 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_thing')}
-      path={PATHS.THING_TEMPLATE}
-      projectId={projectId}
       {...props}
     />
   )

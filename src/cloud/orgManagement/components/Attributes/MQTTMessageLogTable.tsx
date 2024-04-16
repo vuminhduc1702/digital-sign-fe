@@ -7,6 +7,7 @@ import { BaseTable } from '~/components/Table'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { type EntityType } from '../../api/attrAPI'
 import { type MQTTMessage } from '../../api/attrAPI/getMQTTLog'
+import { type BaseTableProps } from '~/components/Table'
 
 import {
   Tooltip,
@@ -24,7 +25,7 @@ export function MQTTMessageLogTable({
   data: MQTTMessage[]
   entityId: string
   entityType: EntityType
-}) {
+} & BaseTableProps<MQTTMessage>) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<MQTTMessage>()

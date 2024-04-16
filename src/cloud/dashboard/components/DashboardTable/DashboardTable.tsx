@@ -4,7 +4,7 @@ import { useDeleteDashboard } from '../../api/deleteDashboard'
 
 import { Button } from '~/components/Button'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useMemo, useEffect, useRef, useState } from 'react'
 import { getVNDateFormat } from '~/utils/misc'
 import { BaseTable } from '~/components/Table'
 import btnEditIcon from '~/assets/icons/btn-edit.svg'
@@ -22,6 +22,8 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { type BaseTableProps } from '~/components/Table'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function DashboardTableContextMenu({
   id,
@@ -46,36 +48,39 @@ function DashboardTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={() => {
-              open()
-            }}
-          >
-            <img src={btnEditIcon} alt="Edit Dashboard" className="h-5 w-5" />
-            {t('cloud:dashboard.add_dashboard.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img
-              src={btnDeleteIcon}
-              alt="Delete Dashboard"
-              className="h-5 w-5"
-            />
-            {t('cloud:dashboard.table.delete_dashboard')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => {
+                open()
+              }}
+            >
+              <img src={btnEditIcon} alt="Edit Dashboard" className="h-5 w-5" />
+              {t('cloud:dashboard.add_dashboard.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img
+                src={btnDeleteIcon}
+                alt="Delete Dashboard"
+                className="h-5 w-5"
+              />
+              {t('cloud:dashboard.table.delete_dashboard')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </div>
       {isOpen ? (
         <UpdateDashboard
           id={id}
@@ -104,26 +109,25 @@ function DashboardTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<DashboardRes>,
+  'columns'
+> & {
+  columns?: ColumnDef<T, any>[]
+}
+
+type DashboardTableProps = {
+  data: DashboardRes[]
+  projectId: string
+  limitPagination: number
+} & PartialBaseTableProps<DashboardRes>
+
 export function DashboardTable({
   data,
   projectId,
-  offset,
-  setOffset,
   limitPagination,
-  total,
   ...props
-}: {
-  data: DashboardRes[]
-  projectId: string
-  offset: number
-  setOffset: React.Dispatch<React.SetStateAction<number>>
-  total: number
-  limitPagination: number
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-}) {
+}: DashboardTableProps<DashboardRes>) {
   const { t } = useTranslation()
 
   const columnHelper = createColumnHelper<DashboardRes>()
@@ -131,11 +135,37 @@ export function DashboardTable({
   const dataSorted =
     data?.sort((a, b) => b.created_time - a.created_time) || data
 
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+  console.log(props)
+
   const columns = useMemo<ColumnDef<DashboardRes, any>[]>(
     () => [
       columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { id, title, configuration } = info.row.original
+          return DashboardTableContextMenu({
+            id,
+            title,
+            description: configuration.description,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
+      columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + offset,
+        cell: info => {
+          return !props.isPreviousData
+            ? info.row.index + 1 + props.offset
+            : info.row.index + 1 + offsetPrev.current
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),
@@ -162,21 +192,8 @@ export function DashboardTable({
           getVNDateFormat({ date: parseInt(info.getValue()) * 1000 }),
         footer: info => info.column.id,
       }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { id, title, configuration } = info.row.original
-          return DashboardTableContextMenu({
-            id,
-            title,
-            description: configuration.description,
-          })
-        },
-        header: () => null,
-        footer: info => info.column.id,
-      }),
     ],
-    [offset],
+    [props.offset],
   )
 
   return data != null && data?.length > 0 ? (
@@ -184,11 +201,6 @@ export function DashboardTable({
       popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}
       columns={columns}
-      offset={offset}
-      setOffset={setOffset}
-      total={total}
-      path={PATHS.DASHBOARD}
-      projectId={projectId}
       {...props}
     />
   ) : (

@@ -16,6 +16,7 @@ export type BaseTablePagination = {
   setOffset?: React.Dispatch<React.SetStateAction<number>>
   total: number
   isPreviousData: boolean
+  isLoading: boolean
 }
 
 export type BaseAPIRes = {

@@ -17,15 +17,18 @@ import { ConfirmDialog } from '~/components/ConfirmDialog'
 
 export function UserManage() {
   const { t } = useTranslation()
+  const params = useParams()
   const ref = useRef(null)
 
   const [searchQuery, setSearchQuery] = useState('')
   const [offset, setOffset] = useState(0)
-  const { close, open, isOpen } = useDisclosure()
-
-  const params = useParams()
-
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
   const orgId = params.orgId as string
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const projectId = storage.getProject()?.id
   const {
     data: userData,
@@ -46,7 +49,7 @@ export function UserManage() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleUsers) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleUsers])
 
@@ -55,7 +58,7 @@ export function UserManage() {
     () => [
       t('table:no'),
       t('cloud:org_manage.org_manage.overview.name'),
-      'Email',
+      t('cloud:org_manage.user_manage.table.email'),
       t('cloud:org_manage.user_manage.table.role_name'),
       t('cloud:org_manage.user_manage.table.activate'),
     ],
@@ -63,50 +66,39 @@ export function UserManage() {
   )
   const rowSelectionKey = Object.keys(rowSelection)
   const aoo: Array<{ [key: string]: unknown }> | undefined =
-    userData?.users?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.user_id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
-          Email: curr.email,
-          [t('cloud:org_manage.user_manage.table.role_name')]: curr.role_name
-            ? uppercaseTheFirstLetter(curr.role_name)
-            : '',
-          [t('cloud:org_manage.user_manage.table.activate')]: curr.activate
-            ? 'Có'
-            : 'Không',
+    userData?.users?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.user_id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.overview.name')]: curr.name,
+            Email: curr.email,
+            [t('cloud:org_manage.user_manage.table.role_name')]: curr.role_name
+              ? uppercaseTheFirstLetter(curr.role_name)
+              : '',
+            [t('cloud:org_manage.user_manage.table.activate')]: curr.activate
+              ? 'Có'
+              : 'Không',
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="uer-pnf flex grow flex-col">
       <TitleBar title={t('cloud:org_manage.user_manage.header')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
-            <CreateUser />
+          <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateUser />
           </div>
         </div>
         <UserTable
@@ -115,19 +107,36 @@ export function UserManage() {
           setOffset={setOffset}
           total={userData?.total ?? 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoading}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.user_manage.table.delete_user_full')}
           body={t(
             'cloud:org_manage.user_manage.table.delete_multiple_user_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleUsers(
               {

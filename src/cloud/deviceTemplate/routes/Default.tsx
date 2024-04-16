@@ -94,8 +94,6 @@ export function Default() {
       [] as Array<{ [key: string]: unknown }>,
     )
 
-  console.log(rowSelection)
-
   return (
     <div className="grid grow grid-cols-1 gap-x-4">
       {projectId && templateId && attrsData ? (
@@ -116,12 +114,6 @@ export function Default() {
             />
             <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
               <div className="flex justify-between">
-                <ExportTable
-                  refComponent={ref}
-                  rowSelection={rowSelection}
-                  aoo={aoo}
-                  pdfHeader={pdfHeader}
-                />
                 <div className="mr-[42px] flex items-center gap-x-3">
                   {Object.keys(rowSelection).length > 0 && (
                     <div

@@ -57,12 +57,9 @@ export function CreateGroup() {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:org_manage.group_manage.add_group.button')}
+        </Button>
       }
       title={t('cloud:org_manage.group_manage.add_group.title')}
       submitButton={

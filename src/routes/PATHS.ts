@@ -9,6 +9,9 @@ export const BASE_PATH_TENANT = '/tenant'
 export const BASE_PATH_DEV_ROLE = '/dev-role'
 
 export const PATHS = {
+  // Test map
+  TEST_MAP: `${BASE_PATH}test-map`,
+
   // Protected routes
 
   // Project routes

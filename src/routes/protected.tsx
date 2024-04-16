@@ -25,6 +25,8 @@ import DevRole from '~/cloud/devRole/DevRole'
 import { Default } from '~/cloud/deviceTemplate/routes/Default'
 import { LwM2M } from '~/cloud/deviceTemplate/routes/LwM2M'
 import { Navigate } from 'react-router-dom'
+
+import TestMap from '~/cloud/testMap/routes/TestMap'
 import storage from '~/utils/storage'
 
 const projectId = storage.getProject()
@@ -175,6 +177,14 @@ export const protectedRoutes = [
           </ErrorBoundary>
         ),
         children: [{ path: ':projectId', children: [{ path: ':tableName' }] }],
+      },
+      {
+        path: PATHS.TEST_MAP,
+        element: (
+          <ErrorBoundary FallbackComponent={ErrorFallback}>
+            <TestMap />
+          </ErrorBoundary>
+        ),
       },
     ],
   },

@@ -214,7 +214,7 @@ export function CreateSubcription() {
           })}
         >
           <>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.customer_info')}
@@ -264,7 +264,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.service_info')}
@@ -316,7 +316,7 @@ export function CreateSubcription() {
                 disabled
               />
             </div>
-            <div className="bg-secondary-400 flex items-center gap-2 rounded-lg px-4 py-2">
+            <div className="flex items-center gap-2 rounded-lg bg-secondary-400 px-4 py-2">
               <div className="flex gap-3">
                 <p className="text-table-header">
                   {t('billing:subcription.popup.billing_info')}
@@ -339,12 +339,9 @@ export function CreateSubcription() {
         </form>
       }
       triggerButton={
-        <Button
-          className="rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('billing:subcription.button')}
+        </Button>
       }
       confirmButton={
         <Button

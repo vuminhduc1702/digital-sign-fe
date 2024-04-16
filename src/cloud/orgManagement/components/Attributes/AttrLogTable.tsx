@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getVNDateFormat } from '~/utils/misc'
@@ -16,6 +16,9 @@ type AttrLogTableProps = {
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
+  formatExcel?: (data: DeviceAttrLog[]) => any
+  pdfHeader?: string[]
+  isSearchData?: boolean
 } & BaseTablePagination
 
 export function AttrLogTable({
@@ -30,11 +33,22 @@ export function AttrLogTable({
 
   const dataSorted = data?.sort((a, b) => b.ts - a.ts)
 
+  const offsetPrev = useRef<number>(props.offset)
+
+  useEffect(() => {
+    if (props.isPreviousData && offsetPrev.current < props.offset) {
+      offsetPrev.current = props.offset
+    }
+  }, [props.isPreviousData])
+
   const columns = useMemo<ColumnDef<DeviceAttrLog, any>[]>(
     () => [
       columnHelper.display({
         id: 'stt',
-        cell: info => info.row.index + 1 + props.offset,
+        cell: info => {
+          const { name, id, organization, entity_type } = info.row.original
+          return GroupTableContextMenu({ name, id, organization, entity_type })
+        },
         header: () => <span>{t('table:no')}</span>,
         footer: info => info.column.id,
       }),

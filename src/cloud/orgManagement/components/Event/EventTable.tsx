@@ -1,10 +1,10 @@
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { Button } from '~/components/Button'
 
-import { BaseTable } from '~/components/Table'
+import { BaseTable, type BaseTableProps } from '~/components/Table'
 import { useCopyId, useDisclosure } from '~/utils/hooks'
 import storage from '~/utils/storage'
 import { useDeleteEvent } from '../../api/eventAPI'
@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 export const initialTodos = [
   {
@@ -130,36 +131,45 @@ function EventTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
-            {t('cloud:org_manage.event_manage.add_event.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleCopyId(id)}>
-            <img
-              src={btnCopyIdIcon}
-              alt="Copy adapter's ID"
-              className="h-5 w-5"
-            />
-            {t('table:copy_id')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img src={btnDeleteIcon} alt="Delete event" className="h-5 w-5" />
-            {t('cloud:org_manage.event_manage.table.delete_event')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuFiles
+            className="text-lg text-gray-500"
+            onClick={() => handleCopyId(id)}
+          />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={open}>
+              <img src={btnEditIcon} alt="Edit event" className="h-5 w-5" />
+              {t('cloud:org_manage.event_manage.add_event.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleCopyId(id)}>
+              <img
+                src={btnCopyIdIcon}
+                alt="Copy adapter's ID"
+                className="h-5 w-5"
+              />
+              {t('table:copy_id')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img src={btnDeleteIcon} alt="Delete event" className="h-5 w-5" />
+              {t('cloud:org_manage.event_manage.table.delete_event')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+      </div>
       {isOpen ? (
         <UpdateEvent
           data={dataRow}
@@ -193,16 +203,17 @@ function EventTableContextMenu({
   )
 }
 
-export function EventTable({
-  data,
-  ...props
-}: {
+type PartialBaseTableProps<T> = Omit<BaseTableProps<EventType>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
+
+type EventTableProps = {
   data: EventType[]
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-}) {
+} & PartialBaseTableProps<EventType>
+
+export function EventTable({ data, ...props }: EventTableProps) {
   const { t } = useTranslation()
   const projectId = storage.getProject()?.id
   const { mutate, isLoading, isSuccess } = useTriggerEvent()
@@ -210,6 +221,16 @@ export function EventTable({
   const columnHelper = createColumnHelper<EventType>()
   const columns = useMemo<ColumnDef<EventType, any>[]>(
     () => [
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const dataRow = info.row.original
+          const { name, id } = info.row.original
+          return EventTableContextMenu({ name, id, dataRow })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
       columnHelper.display({
         id: 'stt',
         cell: info => info.row.index + 1,
@@ -269,16 +290,6 @@ export function EventTable({
           <span>{t('cloud:org_manage.event_manage.table.status')}</span>
         ),
         cell: info => info.getValue().toString(),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const dataRow = info.row.original
-          const { name, id } = info.row.original
-          return EventTableContextMenu({ name, id, dataRow })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

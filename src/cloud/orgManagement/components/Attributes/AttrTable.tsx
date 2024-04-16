@@ -10,7 +10,7 @@ import { UpdateAttr } from '~/cloud/orgManagement/components/Attributes'
 import { Button } from '~/components/Button'
 
 import { Switch } from '~/components/Switch'
-import { BaseTable } from '~/components/Table'
+import { BaseTable, type BaseTableProps } from '~/components/Table'
 import { useDisclosure } from '~/utils/hooks'
 import { getVNDateFormat } from '~/utils/misc'
 import { useUpdateLogged } from '../../api/attrAPI/updateLogged'
@@ -30,6 +30,7 @@ import {
   DropdownMenuTrigger,
 } from '~/components/Dropdowns'
 import { ConfirmDialog } from '~/components/ConfirmDialog'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 export const STATUS = {
   true: 'Có',
@@ -61,32 +62,35 @@ function AttrTableContextMenu({
 
   return (
     <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-            <BtnContextMenuIcon
-              height={20}
-              width={10}
-              viewBox="0 0 1 20"
-              className="text-secondary-700 hover:text-primary-400"
-            />
-          </div>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={open}>
-            <img src={btnEditIcon} alt="Edit attribute" className="h-5 w-5" />
-            {t('cloud:org_manage.org_manage.add_attr.edit')}
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={openDelete}>
-            <img
-              src={btnDeleteIcon}
-              alt="Delete attribute"
-              className="h-5 w-5"
-            />
-            {t('cloud:org_manage.org_manage.table.delete_attr')}
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
+        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className="flex cursor-pointer justify-center p-3">
+              <LuMoreVertical className="text-lg text-gray-500" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={open}>
+              <img src={btnEditIcon} alt="Edit attribute" className="h-5 w-5" />
+              {t('cloud:org_manage.org_manage.add_attr.edit')}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={openDelete}>
+              <img
+                src={btnDeleteIcon}
+                alt="Delete attribute"
+                className="h-5 w-5"
+              />
+              {t('cloud:org_manage.org_manage.table.delete_attr')}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       {isOpen ? (
         <UpdateAttr
           entityId={entityId}
@@ -134,7 +138,10 @@ export function AttrTable({
   setRowSelection: React.Dispatch<
     React.SetStateAction<{ [key: string]: boolean }>
   >
-}) {
+  formatExcel?: (data: Attribute[]) => any
+  pdfHeader?: string[]
+  isSearchData?: boolean
+} & BaseTableProps<Attribute>) {
   const { t } = useTranslation()
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
@@ -157,6 +164,22 @@ export function AttrTable({
 
   const columns = useMemo<ColumnDef<Attribute, any>[]>(
     () => [
+      columnHelper.display({
+        id: 'contextMenu',
+        cell: info => {
+          const { attribute_key, value, value_type, logged } = info.row.original
+          return AttrTableContextMenu({
+            entityId,
+            entityType,
+            attribute_key,
+            value,
+            value_type,
+            logged,
+          })
+        },
+        header: () => null,
+        footer: info => info.column.id,
+      }),
       columnHelper.display({
         id: 'stt',
         cell: info => info.row.index + 1,
@@ -224,22 +247,6 @@ export function AttrTable({
           <span>{t('cloud:org_manage.org_manage.table.last_update_ts')}</span>
         ),
         cell: info => getVNDateFormat({ date: parseInt(info.getValue()) }),
-        footer: info => info.column.id,
-      }),
-      columnHelper.display({
-        id: 'contextMenu',
-        cell: info => {
-          const { attribute_key, value, value_type, logged } = info.row.original
-          return AttrTableContextMenu({
-            entityId,
-            entityType,
-            attribute_key,
-            value,
-            value_type,
-            logged,
-          })
-        },
-        header: () => null,
         footer: info => info.column.id,
       }),
     ],

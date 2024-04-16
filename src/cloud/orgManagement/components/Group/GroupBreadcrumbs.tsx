@@ -10,9 +10,7 @@ import { BreadcrumbIcon } from '~/components/SVGIcons'
 
 export function GroupBreadcrumbs() {
   const { t } = useTranslation()
-
   const projectId = storage.getProject()?.id
-
   const params = useParams()
   const groupId = params.groupId as string
   const { data: groupData } = useGroupById({ groupId })

@@ -21,13 +21,14 @@ export function ThingTemplate() {
 
   // search query for api call
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const { close, open, isOpen } = useDisclosure()
 
   const [offset, setOffset] = useState(0)
   const {
     data: thingData,
     isPreviousData,
-    isSuccess,
+    isLoading: isLoadingData,
   } = useGetEntityThings({
     projectId,
     type: 'thing',
@@ -59,34 +60,32 @@ export function ThingTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    thingData?.data?.list?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:custom_protocol.thing.name')]: curr.name,
-          [t('cloud:custom_protocol.thing.template_name')]: curr.template_name,
-          [t('cloud:custom_protocol.thing.number_thing')]: curr.total_service,
-          [t('cloud:project_manager.add_project.description')]:
-            curr.description,
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
+    thingData?.data?.list?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:custom_protocol.thing.name')]: curr.name,
+            [t('cloud:custom_protocol.thing.template_name')]:
+              curr.template_name,
+            [t('cloud:custom_protocol.thing.number_thing')]: curr.total_service,
+            [t('cloud:project_manager.add_project.description')]:
+              curr.description,
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar title={t('cloud:custom_protocol.thing.title')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
+          <div className="flex w-full items-center justify-between gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
               <div
                 onClick={open}
@@ -96,11 +95,12 @@ export function ThingTemplate() {
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
             )}
-            <CreateThing thingType="thing" />
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateThing thingType="thing" />
           </div>
         </div>
         <ThingTable
@@ -109,8 +109,12 @@ export function ThingTemplate() {
           setOffset={setOffset}
           total={thingData?.data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoadingData}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
         />
       </div>
       {isOpen ? (

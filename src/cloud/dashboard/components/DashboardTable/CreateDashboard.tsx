@@ -53,12 +53,9 @@ export function CreateDashboard({ projectId }: CreateDashboardProps) {
       isDone={isSuccess}
       resetData={() => reset()}
       triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:dashboard.add_dashboard.button')}
+        </Button>
       }
       title={t('cloud:dashboard.add_dashboard.title')}
       submitButton={

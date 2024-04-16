@@ -35,6 +35,10 @@ export function DeviceDetail() {
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
   const { close, open, isOpen } = useDisclosure()
+  const [isSearchDataAttrs, setIsSearchDataAttrs] = useState<boolean>(false)
+  const [isSearchDataMQTTLog, setIsSearchDataMQTTLog] = useState<boolean>(false)
+  const [isSearchDataAttrsLog, setIsSearchDataAttrsLog] =
+    useState<boolean>(false)
 
   // Attrs Data
   const {
@@ -47,7 +51,7 @@ export function DeviceDetail() {
   })
 
   const [rowSelection, setRowSelection] = useState({})
-  const pdfHeader = useMemo(
+  const pdfHeaderAttrs = useMemo(
     () => [
       t('table:no'),
       t('cloud:org_manage.org_manage.table.attr_key'),
@@ -65,7 +69,7 @@ export function DeviceDetail() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
+  const formatExcelAttrs: Array<{ [key: string]: unknown }> | undefined =
     attrsData?.attributes?.reduce(
       (acc, curr, index) => {
         if (rowSelectionKey.includes(index.toString())) {
@@ -127,7 +131,7 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKeyAttrLog = Object.keys(rowSelectionAttrLog)
-  const attrLogAoo: Array<{ [key: string]: string }> | undefined =
+  const formatExcelAttrLog: Array<{ [key: string]: string }> | undefined =
     attrLogData?.logs?.reduce(
       (acc, curr, index) => {
         if (rowSelectionKeyAttrLog.includes(index.toString())) {
@@ -170,7 +174,7 @@ export function DeviceDetail() {
     [],
   )
   const rowSelectionKeyMQTTLog = Object.keys(rowSelection)
-  const MQTTLogAoo: Array<{ [key: string]: string }> | undefined =
+  const formatExcelMQTTLog: Array<{ [key: string]: string }> | undefined =
     mqttLogData?.messages?.reduce(
       (acc, curr, index) => {
         if (rowSelectionKeyMQTTLog.includes(index.toString())) {
@@ -222,15 +226,9 @@ export function DeviceDetail() {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="attr_list" className="mt-2 flex grow flex-col">
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelection}
-                aoo={aoo}
-                pdfHeader={pdfHeader}
-              />
-              <div className="mr-[42px] flex items-center gap-x-3">
+              <div className="flex w-full items-center justify-between gap-x-3">
                 {Object.keys(rowSelection).length > 0 && (
                   <div
                     onClick={open}
@@ -240,11 +238,12 @@ export function DeviceDetail() {
                     <div>{Object.keys(rowSelection).length}</div>
                   </div>
                 )}
-                <CreateAttr entityId={deviceId} entityType="DEVICE" />
                 <SearchField
-                  searchQuery={searchQueryAttrs}
-                  setSearchQuery={setSearchQueryAttrs}
+                  setSearchValue={setSearchQueryAttrs}
+                  setIsSearchData={setIsSearchDataAttrs}
+                  closeSearch={true}
                 />
+                <CreateAttr entityId={deviceId} entityType="DEVICE" />
               </div>
             </div>
             <AttrTable
@@ -253,22 +252,20 @@ export function DeviceDetail() {
               entityType="DEVICE"
               rowSelection={rowSelection}
               setRowSelection={setRowSelection}
+              pdfHeader={pdfHeaderAttrs}
+              formatExcel={formatExcelAttrs}
+              isSearchData={searchQueryAttrs.length > 0 && isSearchDataAttrs}
             />
           </div>
         </TabsContent>
         <TabsContent value="attr_log" className="mt-2 flex grow flex-col">
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelectionAttrLog}
-                aoo={attrLogAoo}
-                pdfHeader={pdfHeaderAttrLog}
-              />
               <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
-                  searchQuery={searchQueryAttrsLog}
-                  setSearchQuery={setSearchQueryAttrsLog}
+                  setSearchValue={setSearchQueryMQTTLog}
+                  setIsSearchData={setIsSearchDataMQTTLog}
+                  closeSearch={true}
                 />
               </div>
             </div>
@@ -282,6 +279,11 @@ export function DeviceDetail() {
               entityType="DEVICE"
               rowSelection={rowSelectionAttrLog}
               setRowSelection={setRowSelectionAttrLog}
+              pdfHeader={pdfHeaderAttrLog}
+              formatExcel={formatExcelAttrLog}
+              isSearchData={
+                searchQueryAttrsLog.length > 0 && isSearchDataAttrsLog
+              }
             />
           </div>
         </TabsContent>
@@ -289,18 +291,13 @@ export function DeviceDetail() {
           value="MQTT_history_info_list"
           className="mt-2 flex grow flex-col"
         >
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelectionMQTTLog}
-                aoo={MQTTLogAoo}
-                pdfHeader={pdfHeaderMQTTLog}
-              />
               <div className="mr-[42px] flex items-center gap-x-3">
                 <SearchField
-                  searchQuery={searchQueryMQTTLog}
-                  setSearchQuery={setSearchQueryMQTTLog}
+                  setSearchValue={setSearchQueryAttrsLog}
+                  setIsSearchData={setIsSearchDataAttrsLog}
+                  closeSearch={true}
                 />
               </div>
             </div>
@@ -310,6 +307,11 @@ export function DeviceDetail() {
               entityType="DEVICE"
               rowSelection={rowSelectionMQTTLog}
               setRowSelection={setRowSelectionMQTTLog}
+              pdfHeader={pdfHeaderMQTTLog}
+              formatExcel={formatExcelMQTTLog}
+              isSearchData={
+                searchQueryMQTTLog.length > 0 && isSearchDataMQTTLog
+              }
             />
           </div>
         </TabsContent>

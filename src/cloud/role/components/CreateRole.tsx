@@ -176,12 +176,9 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
       isDone={isSuccess}
       resetData={resetData}
       triggerButton={
-        <Button
-          className="h-9 w-9 rounded-md"
-          variant="trans"
-          size="square"
-          startIcon={<PlusIcon width={16} height={16} viewBox="0 0 16 16" />}
-        />
+        <Button className="h-[38px] rounded border-none">
+          {t('cloud:role_manage.add_role.button')}
+        </Button>
       }
       title={t('cloud:role_manage.add_role.title')}
       submitButton={
@@ -286,7 +283,7 @@ export function CreateRole({ project_id = '' }: { project_id?: string }) {
           <div className="flex justify-between space-x-3">
             <TitleBar
               title={t('cloud:role_manage.add_policy.title')}
-              className="bg-secondary-700 w-full rounded-md pl-3"
+              className="w-full rounded-md bg-secondary-700 pl-3"
             />
             <Button
               className="rounded-md"

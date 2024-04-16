@@ -23,6 +23,7 @@ export function GroupDetail() {
   const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
   const { close, open, isOpen } = useDisclosure()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const entityType = 'GROUP'
 
@@ -59,37 +60,35 @@ export function GroupDetail() {
     }
     return acc
   }, [])
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    attrsData?.attributes?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(index.toString())) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:org_manage.org_manage.table.attr_key')]: curr.attribute_key,
-          [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
-            curr.value_type,
-          ),
-          [t('cloud:org_manage.org_manage.table.value')]: curr.value,
-          [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
-          [t('cloud:org_manage.org_manage.table.last_update_ts')]:
-            convertEpochToDate(curr.last_update_ts / 1000),
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
+    attrsData?.attributes?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(index.toString())) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:org_manage.org_manage.table.attr_key')]:
+              curr.attribute_key,
+            [t('cloud:org_manage.org_manage.table.value_type')]: convertType(
+              curr.value_type,
+            ),
+            [t('cloud:org_manage.org_manage.table.value')]: curr.value,
+            [t('cloud:org_manage.org_manage.table.logged')]: curr.logged,
+            [t('cloud:org_manage.org_manage.table.last_update_ts')]:
+              convertEpochToDate(curr.last_update_ts / 1000),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="flex grow flex-col">
       <TitleBar className="normal-case" title={<GroupBreadcrumbs />} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
+          <div className="flex w-full items-center justify-between gap-x-3">
             {Object.keys(rowSelection).length > 0 && (
               <div
                 onClick={open}
@@ -99,11 +98,12 @@ export function GroupDetail() {
                 <div>{Object.keys(rowSelection).length}</div>
               </div>
             )}
-            <CreateAttr entityId={groupId} entityType="GROUP" />
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateAttr entityId={groupId} entityType="GROUP" />
           </div>
         </div>
         <AttrTable
@@ -112,6 +112,9 @@ export function GroupDetail() {
           entityType={entityType}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
         />
       </div>
       {isOpen ? (

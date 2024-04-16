@@ -13,6 +13,7 @@ import { useGetSubcriptons, type searchFilter } from '../api/subcriptionAPI'
 import { CreateSubcription, SubcriptionTable } from '../components/Subcription'
 import { convertEpochToDate } from '~/utils/transformFunc'
 import { ExportTable } from '~/components/Table/components/ExportTable'
+import { SearchField } from '~/components/Input'
 
 export const searchSubcriptionSchema = z.object({
   key: z.string().optional(),
@@ -60,8 +61,10 @@ export function SubcriptionTemplate() {
     search_str: '',
   })
   const [searchData, setsearchData] = useState<searchFilter>({})
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const projectId = storage.getProject()?.id
-  const { data, isPreviousData } = useGetSubcriptons({
+  const { data, isLoading, isPreviousData } = useGetSubcriptons({
     projectId,
     search_field: searchFilter.search_field,
     search_str: searchFilter.search_str,
@@ -96,46 +99,45 @@ export function SubcriptionTemplate() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
-    data?.data?.data?.reduce((acc, curr, index) => {
-      if (rowSelectionKey.includes(index.toString())) {
-        const temp = {
-          [t('billing:subcription.table.sub_code')]: curr.s_id,
-          [t('billing:subcription.table.customer_code')]: curr.c_customer_code,
-          [t('billing:subcription.table.customer_name')]: curr.c_name,
-          [t('billing:subcription.table.package')]: curr.p_name,
-          [t('billing:subcription.table.period')]:
-            curr.p_period + ' ' + curr.p_cal_unit,
-          [t('billing:subcription.table.price_method')]: valuePriceMethod(
-            curr.p_estimate,
-          ),
-          [t('billing:subcription.table.start_date')]: convertEpochToDate(
-            curr.s_date_register,
-          ),
-          [t('billing:subcription.table.cycle_now')]: curr.s_cycle_now,
-          [t('billing:subcription.table.status')]: transformStatus(
-            curr.s_status,
-          ),
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
+    data?.data?.data?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(index.toString())) {
+          const temp = {
+            [t('billing:subcription.table.sub_code')]: curr.s_id,
+            [t('billing:subcription.table.customer_code')]:
+              curr.c_customer_code,
+            [t('billing:subcription.table.customer_name')]: curr.c_name,
+            [t('billing:subcription.table.package')]: curr.p_name,
+            [t('billing:subcription.table.period')]:
+              curr.p_period + ' ' + curr.p_cal_unit,
+            [t('billing:subcription.table.price_method')]: valuePriceMethod(
+              curr.p_estimate,
+            ),
+            [t('billing:subcription.table.start_date')]: convertEpochToDate(
+              curr.s_date_register,
+            ),
+            [t('billing:subcription.table.cycle_now')]: curr.s_cycle_now,
+            [t('billing:subcription.table.status')]: transformStatus(
+              curr.s_status,
+            ),
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    }, [] as Array<{ [key: string]: unknown }>)
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <>
       {/* <TitleBar title={t('sidebar:payment.pldk')} /> */}
-      <div className="flex grow flex-col rounded-md bg-gray-50 px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="mb-5 flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
           <form
             id="search-subcription"
-            className="flex flex-col justify-between space-y-6"
+            // className="flex flex-col justify-between space-y-6"
+            className="flex w-full items-center justify-between gap-x-3"
             onSubmit={handleSubmit(values => {
               setSearchFilter({
                 search_field: values.key,
@@ -143,7 +145,7 @@ export function SubcriptionTemplate() {
               })
             })}
           >
-            <div className="flex items-center gap-x-3">
+            <div className="flex gap-x-[14px]">
               <div className="w-96">
                 <SelectDropdown
                   isClearable={false}
@@ -163,26 +165,17 @@ export function SubcriptionTemplate() {
                   // error={formState?.errors?.key}
                 />
               </div>
-              <InputField
-                className="h-[37px]"
-                error={formState.errors['value']}
-                registration={register('value')}
-              />
-              <Button
-                className="rounded-md"
-                variant="trans"
-                size="square"
-                startIcon={
-                  <SearchIcon width={16} height={16} viewBox="0 0 16 16" />
-                }
-                form="search-subcription"
-                type="submit"
+              <SearchField
+                setSearchValue={setSearchQuery}
+                setIsSearchData={setIsSearchData}
+                closeSearch={true}
               />
             </div>
-          </form>
-          <div className="flex items-center gap-x-3">
             <CreateSubcription />
-          </div>
+          </form>
+          {/* <div className="flex items-center gap-x-3">
+            <CreateSubcription />
+          </div> */}
         </div>
 
         <SubcriptionTable
@@ -192,8 +185,12 @@ export function SubcriptionTemplate() {
           handleField={handleField}
           total={data?.data?.total ?? 0}
           isPreviousData={isPreviousData}
+          isLoading={isLoading}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
         />
       </div>
     </>

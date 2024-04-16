@@ -19,13 +19,18 @@ export function CustomProtocolManage() {
   const ref = useRef(null)
   const [offset, setOffset] = useState(0)
   const [searchQuery, setSearchQuery] = useState('')
-  const { close, open, isOpen } = useDisclosure()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const projectId = storage.getProject()?.id
   const {
     data: adapterData,
-    isPreviousData,
-    isSuccess,
+    isLoading: isLoadingAdapter,
+    isPreviousData: isPreviousDataAdapter,
   } = useGetAdapters({
     projectId,
     offset,
@@ -40,7 +45,7 @@ export function CustomProtocolManage() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleAdapters) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleAdapters])
 
@@ -58,54 +63,43 @@ export function CustomProtocolManage() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo: Array<{ [key: string]: unknown }> | undefined =
+  const formatExcel: Array<{ [key: string]: unknown }> | undefined =
     adapterData?.adapters
-      ? adapterData?.adapters?.reduce((acc, curr, index) => {
-          if (rowSelectionKey.includes(curr.id)) {
-            const temp = {
-              [t('table:no')]: (index + 1).toString(),
-              [t('cloud:dashboard.table.name')]: curr.name,
-              [t('cloud:custom_protocol.adapter.table.protocol')]:
-                curr.protocol,
-              [t('cloud:custom_protocol.adapter.table.thing_id')]:
-                curr.thing_id,
-              [t('cloud:custom_protocol.adapter.table.handle_service')]:
-                curr.handle_service,
-              [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
-              [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
+      ? adapterData?.adapters?.reduce(
+          (acc, curr, index) => {
+            if (rowSelectionKey.includes(curr.id)) {
+              const temp = {
+                [t('table:no')]: (index + 1).toString(),
+                [t('cloud:dashboard.table.name')]: curr.name,
+                [t('cloud:custom_protocol.adapter.table.protocol')]:
+                  curr.protocol,
+                [t('cloud:custom_protocol.adapter.table.thing_id')]:
+                  curr.thing_id,
+                [t('cloud:custom_protocol.adapter.table.handle_service')]:
+                  curr.handle_service,
+                [t('cloud:custom_protocol.adapter.table.host')]: curr.host,
+                [t('cloud:custom_protocol.adapter.table.port')]: curr.port,
+              }
+              acc.push(temp)
             }
-            acc.push(temp)
-          }
-          return acc
-        }, [] as Array<{ [key: string]: unknown }>)
+            return acc
+          },
+          [] as Array<{ [key: string]: unknown }>,
+        )
       : []
 
   return (
-    <ContentLayout title={t('cloud:custom_protocol.title')}>
+    <div className="flex grow flex-col">
       <TitleBar title={t('cloud:custom_protocol.adapter.header')} />
-      <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+      <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
         <div className="flex justify-between">
-          <ExportTable
-            refComponent={ref}
-            rowSelection={rowSelection}
-            aoo={aoo}
-            pdfHeader={pdfHeader}
-          />
-          <div className="mr-[42px] flex items-center gap-x-3">
-            {Object.keys(rowSelection).length > 0 && (
-              <div
-                onClick={open}
-                className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-              >
-                <div>{t('btn:delete')}:</div>
-                <div>{Object.keys(rowSelection).length}</div>
-              </div>
-            )}
-            <CreateAdapter />
+          <div className="flex w-full items-center justify-between gap-x-3">
             <SearchField
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
+              setSearchValue={setSearchQuery}
+              setIsSearchData={setIsSearchData}
+              closeSearch={true}
             />
+            <CreateAdapter />
           </div>
         </div>
         <AdapterTable
@@ -113,18 +107,35 @@ export function CustomProtocolManage() {
           offset={offset}
           setOffset={setOffset}
           total={adapterData?.total ?? 0}
-          isPreviousData={isPreviousData}
+          isPreviousData={isPreviousDataAdapter}
+          isLoading={isLoadingAdapter}
           rowSelection={rowSelection}
           setRowSelection={setRowSelection}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          isSearchData={searchQuery.length > 0 && isSearchData}
+          utilityButton={
+            Object.keys(rowSelection).length > 0 && (
+              <div className="flex items-center">
+                <Button
+                  size="sm"
+                  onClick={openDeleteMulti}
+                  className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                >
+                  {`${t('table:delete')}: ${Object.keys(rowSelection).length}`}
+                </Button>
+              </div>
+            )
+          }
         />
       </div>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:dashboard.table.delete_dashboard_full')}
           body={t('cloud:dashboard.table.delete_multiple_dashboard_confirm')}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleAdapters(
               {
@@ -136,6 +147,6 @@ export function CustomProtocolManage() {
           isLoading={isLoading}
         />
       ) : null}
-    </ContentLayout>
+    </div>
   )
 }
