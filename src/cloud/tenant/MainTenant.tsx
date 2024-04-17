@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/Button'
 import { InputField, SelectField } from '@/components/Form'
@@ -48,6 +48,32 @@ const MainTenant = () => {
     },
   })
 
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:tenant.table.tenant'),
+      t('cloud:tenant.table.phone'),
+      t('cloud:tenant.table.email'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const formatExcel = customerData?.tenant?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1 + offset).toString(),
+          [t('cloud:tenant.table.tenant')]: curr.tenant,
+          [t('cloud:tenant.table.phone')]: curr.phone,
+          [t('cloud:tenant.table.email')]: curr.email,
+        }
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
+
   return (
     <ContentLayout title="Tenant">
       <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
@@ -93,6 +119,10 @@ const MainTenant = () => {
           isPreviousData={isPreviousData}
           isLoading={isLoading}
           isSearchData={searchQuery.length > 0 && isSearchData}
+          pdfHeader={pdfHeader}
+          formatExcel={formatExcel}
+          rowSelection={rowSelection}
+          setRowSelection={setRowSelection}
         />
       </div>
     </ContentLayout>

@@ -24,6 +24,7 @@ import {
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { type BaseTableProps } from '@/components/Table'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { useNavigate } from 'react-router-dom'
 
 function DashboardTableContextMenu({
   id,
@@ -129,6 +130,7 @@ export function DashboardTable({
   ...props
 }: DashboardTableProps<DashboardRes>) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const columnHelper = createColumnHelper<DashboardRes>()
 
@@ -142,7 +144,10 @@ export function DashboardTable({
       offsetPrev.current = props.offset
     }
   }, [props.isPreviousData])
-  console.log(props)
+
+  function moveToLink(id: string) {
+    navigate(`${PATHS.DASHBOARD}/${projectId}/${id}`)
+  }
 
   const columns = useMemo<ColumnDef<DashboardRes, any>[]>(
     () => [
@@ -201,6 +206,7 @@ export function DashboardTable({
       popoverClassName="absolute right-0 top-1 block"
       data={dataSorted}
       columns={columns}
+      viewDetailOnClick={moveToLink}
       {...props}
     />
   ) : (

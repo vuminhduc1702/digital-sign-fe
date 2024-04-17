@@ -205,8 +205,6 @@ function EventTableContextMenu({
 
 type PartialBaseTableProps<T> = Omit<BaseTableProps<EventType>, 'columns'> & {
   columns?: ColumnDef<T, any>[]
-  offset?: number
-  setOffset?: React.Dispatch<React.SetStateAction<number>>
 }
 
 type EventTableProps = {

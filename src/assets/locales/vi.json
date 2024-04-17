@@ -503,6 +503,7 @@
       "title": "Quản lí Adapter",
       "protocol": "Protocol",
       "service": {
+        "button": "Tạo mới",
         "service_input": {
           "name": "Nhập tên biến",
           "type": "Kiểu dữ liệu",
@@ -764,7 +765,9 @@
       "table": {
         "tenant": "Tenant",
         "phone": "Số điện thoại",
-        "email": "Email"
+        "email": "Email",
+        "project": "Dự án",
+        "role": "Vai trò"
       }
     }
   },
@@ -1546,6 +1549,11 @@
     "no_customer": "Không có thông tin khách hàng",
     "no_subscription": "Không có đăng ký dịch vụ.",
     "no_bill": "Không có hóa đơn",
-    "no_tenant": "Không có tenant."
+    "no_tenant": "Không có tenant.",
+    "no_template": "Không có nhóm thuộc tính.",
+    "no_service": "Không có nghiệp vụ.",
+    "no_event_service": "Không có sự kiện nghiệp vụ.",
+    "no_role": "Không có vai trò.",
+    "no_tenant_role": "Không có vai trò tenant."
   }
 }

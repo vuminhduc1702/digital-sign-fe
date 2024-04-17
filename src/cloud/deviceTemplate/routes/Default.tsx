@@ -25,12 +25,21 @@ export function Default() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const { close, open, isOpen } = useDisclosure()
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
 
   const { templateId } = useParams()
   const entityType = 'TEMPLATE'
 
-  const { data: attrsData } = useGetAttrs({
+  const {
+    data: attrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
+  } = useGetAttrs({
     entityType,
     entityId: templateId,
     config: {
@@ -47,7 +56,7 @@ export function Default() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleAttrs) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleAttrs])
 
@@ -70,7 +79,7 @@ export function Default() {
     }
     return acc
   }, [])
-  const aoo = attrsData?.attributes.reduce(
+  const formatExcel = attrsData?.attributes.reduce(
     (acc, curr, index) => {
       if (rowSelectionKey.includes(index.toString())) {
         const temp = {
@@ -102,23 +111,15 @@ export function Default() {
               'Device template management'
             }
           />
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <div className="mr-[42px] flex items-center gap-x-3">
-                {Object.keys(rowSelection).length > 0 && (
-                  <div
-                    onClick={open}
-                    className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-                  >
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                )}
-                <CreateAttr entityId={templateId} entityType="TEMPLATE" />
+              <div className="flex w-full items-center justify-between gap-x-3">
                 <SearchField
-                  searchQuery={searchQuery}
-                  setSearchQuery={setSearchQuery}
+                  setSearchValue={setSearchQuery}
+                  setIsSearchData={setIsSearchData}
+                  closeSearch={true}
                 />
+                <CreateAttr entityId={templateId} entityType="TEMPLATE" />
               </div>
             </div>
             <AttrTable
@@ -127,19 +128,37 @@ export function Default() {
               entityType="TEMPLATE"
               rowSelection={rowSelection}
               setRowSelection={setRowSelection}
+              isPreviousData={isPreviousDataAttrs}
+              isLoading={isLoadingAttrs}
+              pdfHeader={pdfHeader}
+              formatExcel={formatExcel}
+              utilityButton={
+                Object.keys(rowSelection).length > 0 && (
+                  <div className="flex items-center">
+                    <Button
+                      size="sm"
+                      onClick={openDeleteMulti}
+                      className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                    >
+                      <div>{t('btn:delete')}:</div>
+                      <div>{Object.keys(rowSelection).length}</div>
+                    </Button>
+                  </div>
+                )
+              }
             />
           </div>
         </div>
       ) : null}
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

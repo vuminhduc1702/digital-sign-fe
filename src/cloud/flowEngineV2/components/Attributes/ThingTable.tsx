@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useMemo, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -113,6 +114,7 @@ type ThingTableProps = {
 } & PartialBaseTableProps<EntityThing>
 export function ThingTable({ data, ...props }: ThingTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const projectId = storage.getProject()?.id
 
   const offsetPrev = useRef<number>(props.offset)
@@ -122,6 +124,10 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       offsetPrev.current = props.offset
     }
   }, [props.isPreviousData])
+
+  function moveToLink(id: string) {
+    navigate(`${PATHS.THING_TEMPLATE}/${projectId}/${id}`)
+  }
 
   const columnHelper = createColumnHelper<EntityThing>()
   const columns = useMemo<ColumnDef<EntityThing, any>[]>(
@@ -182,6 +188,7 @@ export function ThingTable({ data, ...props }: ThingTableProps) {
       data={data}
       columns={columns}
       onDataText={t('table:no_thing')}
+      viewDetailOnClick={moveToLink}
       {...props}
     />
   )

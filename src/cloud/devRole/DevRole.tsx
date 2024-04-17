@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 
@@ -53,6 +53,32 @@ export default function DevRole() {
     }
   }, [])
 
+  const [rowSelection, setRowSelection] = useState({})
+  const pdfHeader = useMemo(
+    () => [
+      t('table:no'),
+      t('cloud:role_manage.add_role.name'),
+      t('cloud:role_manage.add_role.role_type'),
+      t('cloud:role_manage.add_role.actions'),
+    ],
+    [],
+  )
+  const rowSelectionKey = Object.keys(rowSelection)
+  const formatExcel = data?.roles?.reduce(
+    (acc, curr, index) => {
+      if (rowSelectionKey.includes(curr.id)) {
+        const temp = {
+          [t('table:no')]: (index + 1 + offset).toString(),
+          [t('cloud:role_manage.add_role.name')]: curr.name,
+          [t('cloud:role_manage.add_role.role_type')]: curr.role_type,
+          [t('cloud:role_manage.add_role.actions')]: curr.actions,
+        }
+      }
+      return acc
+    },
+    [] as Array<{ [key: string]: string }>,
+  )
+
   return (
     <ContentLayout title={t('dev_role:title')}>
       <div
@@ -89,12 +115,17 @@ export default function DevRole() {
           {projectId && (
             <RoleTable
               data={data?.roles ?? []}
+              project_id={projectId}
               offset={offset}
               setOffset={setOffset}
               total={data?.total ?? 0}
               isPreviousData={isPreviousData}
               isLoading={isLoading}
               isSearchData={searchQuery.length > 0 && isSearchData}
+              pdfHeader={pdfHeader}
+              formatExcel={formatExcel}
+              rowSelection={rowSelection}
+              setRowSelection={setRowSelection}
             />
           )}
         </div>

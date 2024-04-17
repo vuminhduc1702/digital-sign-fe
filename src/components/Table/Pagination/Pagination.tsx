@@ -29,9 +29,9 @@ export const Pagination = <T extends Record<string, any>>({
   currentPage: number
   pageSize: number
   setCurrentPage?: React.Dispatch<React.SetStateAction<number>>
+  offset: number
   setOffset: React.Dispatch<React.SetStateAction<number>>
   limit?: number
-  offset: number
 }) => {
   const paginationRange = usePagination({
     currentPage,
@@ -64,7 +64,7 @@ export const Pagination = <T extends Record<string, any>>({
               onClick={() => {
                 const offsetCalc =
                   Math.floor(((pageNumber - 1) * pageSize) / limit) * limit
-                setOffset(offsetCalc)
+                setOffset && setOffset(offsetCalc)
                 setCurrentPage?.(pageNumber - 1)
                 setTimeout(() => {
                   table.setPageIndex(pageNumber - offsetCalc / pageSize - 1)

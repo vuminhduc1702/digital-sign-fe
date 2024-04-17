@@ -126,7 +126,8 @@ export function CustomProtocolManage() {
                   onClick={openDeleteMulti}
                   className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
                 >
-                  {`${t('table:delete')}: ${Object.keys(rowSelection).length}`}
+                  <div>{t('btn:delete')}:</div>
+                  <div>{Object.keys(rowSelection).length}</div>
                 </Button>
               </div>
             )

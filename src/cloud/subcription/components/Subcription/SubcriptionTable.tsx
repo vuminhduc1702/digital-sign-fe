@@ -4,8 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { BaseTable } from '@/components/Table'
 import { useDisclosure } from '@/utils/hooks'
-
-import { type BaseTablePagination } from '@/types'
+import { type BaseTableProps } from '@/components/Table'
 
 import btnEditIcon from '@/assets/icons/btn-edit.svg'
 import { BtnContextMenuIcon } from '@/components/SVGIcons'
@@ -21,6 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/Dropdowns'
+import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
 
 function SubcriptionTableContextMenu({ id }: { id: string }) {
   const { t } = useTranslation()
@@ -29,7 +29,11 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
 
   return (
     <>
-      <DropdownMenu>
+      <div className="flex">
+        <div className="flex cursor-pointer justify-center p-3">
+          <LuPen className="text-lg text-gray-500" onClick={open} />
+        </div>
+        {/* <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex items-center justify-center rounded-md text-body-sm text-white hover:bg-opacity-30 hover:text-primary-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
             <BtnContextMenuIcon
@@ -46,7 +50,8 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
             {t('billing:subcription.title')}
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
+      </div>
       {isOpen ? (
         <UpdateSubcription id={id} close={close} isOpen={isOpen} />
       ) : null}
@@ -54,14 +59,13 @@ function SubcriptionTableContextMenu({ id }: { id: string }) {
   )
 }
 
+type PartialBaseTableProps<T> = Omit<BaseTableProps<Subcription>, 'columns'> & {
+  columns?: ColumnDef<T, any>[]
+}
+
 type SubcriptionTableProps = {
-  data?: Subcription[]
-  handleField?: (field: string, value: any) => void
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-} & BaseTablePagination
+  data: Subcription[]
+} & PartialBaseTableProps<Subcription>
 
 export function SubcriptionTable({
   data,

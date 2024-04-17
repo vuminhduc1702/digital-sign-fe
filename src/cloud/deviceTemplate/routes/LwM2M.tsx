@@ -11,6 +11,7 @@ import { AttrLwM2MTable } from '../components/AttrLwM2MTable'
 import { LwM2MTable } from '../components/LwM2MTable'
 import { useTemplateById } from '../api/getTemplateById'
 import { SearchField } from '@/components/Input'
+import { Button } from '@/components/Button'
 
 export function LwM2M() {
   const { t } = useTranslation()
@@ -21,14 +22,16 @@ export function LwM2M() {
   const selectedModuleId = params.id as string
   const projectId = storage.getProject()?.id
 
-  const [searchQueryData, setSearchQueryData] = useState('')
-  const [searchQueryDataAttr, setSearchQueryDataAttr] = useState('')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQueryAttr, setSearchQueryAttr] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
+  const [isSearchDataAttr, setIsSearchDataAttr] = useState<boolean>(false)
 
   // LwM2MData
   const {
     data: LwM2MDataById,
     isPreviousData: isPreviousLwM2MDataById,
-    isSuccess,
+    isLoading: isLoadingLwM2MDataById,
   } = useTemplateById({
     templateId,
     config: {
@@ -53,22 +56,23 @@ export function LwM2M() {
     [],
   )
   const rowSelectionKey = Object.keys(rowSelection)
-  const aoo = LwM2MDataById?.transport_config?.info?.module_config?.reduce(
-    (acc, curr, index) => {
-      if (rowSelectionKey.includes(curr.id)) {
-        const temp = {
-          [t('table:no')]: (index + 1).toString(),
-          [t('cloud:device_template.listLwM2M.name')]: curr.module_name,
-          [t('cloud:device_template.listLwM2M.id')]: curr.id,
-          [t('cloud:device_template.listLwM2M.numberAttr')]:
-            curr.numberOfAttributes,
+  const formatExcel =
+    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+      (acc, curr, index) => {
+        if (rowSelectionKey.includes(curr.id)) {
+          const temp = {
+            [t('table:no')]: (index + 1).toString(),
+            [t('cloud:device_template.listLwM2M.name')]: curr.module_name,
+            [t('cloud:device_template.listLwM2M.id')]: curr.id,
+            [t('cloud:device_template.listLwM2M.numberAttr')]:
+              curr.numberOfAttributes,
+          }
+          acc.push(temp)
         }
-        acc.push(temp)
-      }
-      return acc
-    },
-    [] as Array<{ [key: string]: unknown }>,
-  )
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   // attrLwM2MData
   const [rowSelectionAttr, setRowSelectionAttr] = useState({})
@@ -82,23 +86,24 @@ export function LwM2M() {
     [],
   )
   const rowSelectionKeyAttr = Object.keys(rowSelectionAttr)
-  const aooAttr = LwM2MDataById?.transport_config?.info?.module_config?.reduce(
-    (acc, curr, index) => {
-      curr.attribute_info?.forEach((attr, index) => {
-        if (rowSelectionKeyAttr.includes(attr.id)) {
-          const temp = {
-            [t('table:no')]: (index + 1).toString(),
-            [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
-            [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
-            [t('cloud:org_manage.org_manage.table.id')]: attr.id,
+  const formatExcelAttr =
+    LwM2MDataById?.transport_config?.info?.module_config?.reduce(
+      (acc, curr, index) => {
+        curr.attribute_info?.forEach((attr, index) => {
+          if (rowSelectionKeyAttr.includes(attr.id)) {
+            const temp = {
+              [t('table:no')]: (index + 1).toString(),
+              [t('cloud:org_manage.org_manage.table.attr_key')]: attr.name,
+              [t('cloud:org_manage.org_manage.table.value_type')]: attr.type,
+              [t('cloud:org_manage.org_manage.table.id')]: attr.id,
+            }
+            acc.push(temp)
           }
-          acc.push(temp)
-        }
-      })
-      return acc
-    },
-    [] as Array<{ [key: string]: unknown }>,
-  )
+        })
+        return acc
+      },
+      [] as Array<{ [key: string]: unknown }>,
+    )
 
   return (
     <div ref={ref} className="grid grow grid-cols-1 gap-x-4">
@@ -111,18 +116,13 @@ export function LwM2M() {
               'Device template management'
             }
           />
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelection}
-                aoo={aoo}
-                pdfHeader={pdfHeader}
-              />
-              <div className="mr-[42px] flex items-center gap-x-3">
+              <div className="flex w-full items-center justify-between gap-x-3">
                 <SearchField
-                  searchQuery={searchQueryData}
-                  setSearchQuery={setSearchQueryData}
+                  setSearchValue={setSearchQuery}
+                  setIsSearchData={setIsSearchData}
+                  closeSearch={true}
                 />
               </div>
             </div>
@@ -132,6 +132,11 @@ export function LwM2M() {
               }
               rowSelection={rowSelection}
               setRowSelection={setRowSelection}
+              isPreviousData={isPreviousLwM2MDataById}
+              isLoading={isLoadingLwM2MDataById}
+              pdfHeader={pdfHeader}
+              formatExcel={formatExcel}
+              isSearchData={searchQuery.length > 0 && isSearchData}
             />
           </div>
         </div>
@@ -145,18 +150,13 @@ export function LwM2M() {
               'Device template management'
             }
           />
-          <div className="relative flex grow flex-col px-9 py-3 shadow-lg">
+          <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
-              <ExportTable
-                refComponent={ref}
-                rowSelection={rowSelectionAttr}
-                aoo={aooAttr}
-                pdfHeader={pdfHeaderAttr}
-              />
-              <div className="mr-[42px] flex items-center gap-x-3">
+              <div className="flex w-full items-center justify-between gap-x-3">
                 <SearchField
-                  searchQuery={searchQueryDataAttr}
-                  setSearchQuery={setSearchQueryDataAttr}
+                  setSearchValue={setSearchQueryAttr}
+                  setIsSearchData={setIsSearchDataAttr}
+                  closeSearch={true}
                 />
               </div>
             </div>
@@ -164,6 +164,11 @@ export function LwM2M() {
               attributeInfo={selectedModule?.attribute_info ?? []}
               rowSelection={rowSelectionAttr}
               setRowSelection={setRowSelectionAttr}
+              isPreviousData={isPreviousLwM2MDataById}
+              isLoading={isLoadingLwM2MDataById}
+              pdfHeader={pdfHeaderAttr}
+              formatExcel={formatExcelAttr}
+              isSearchData={searchQueryAttr.length > 0 && isSearchDataAttr}
             />
           </div>
         </div>

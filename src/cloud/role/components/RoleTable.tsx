@@ -141,7 +141,7 @@ type PartialBaseTableProps<T> = Omit<BaseTableProps<Role>, 'columns'> & {
 type RoleTableProps = {
   data: Role[]
   project_id: string
-} & PartialBaseTableProps<Roles>
+} & PartialBaseTableProps<Role>
 
 export function RoleTable({ data, ...props }: RoleTableProps) {
   const { t } = useTranslation()

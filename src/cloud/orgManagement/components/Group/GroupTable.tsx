@@ -4,8 +4,6 @@ import { Menu } from '@headlessui/react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { type ColumnDef, createColumnHelper } from '@tanstack/react-table'
 
-import { Dropdown, MenuItem } from '@/components/Dropdown'
-import { ConfirmationDialog } from '@/components/ConfirmationDialog'
 import { Button } from '@/components/Button'
 import { BaseTable, type BaseTableProps } from '@/components/Table'
 import { useCopyId, useDisclosure } from '@/utils/hooks'
@@ -211,6 +209,7 @@ type GroupTableProps = {
 
 export function GroupTable({ data, ...props }: GroupTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const projectId = storage.getProject()?.id
 
@@ -223,6 +222,10 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       offsetPrev.current = props.offset
     }
   }, [props.isPreviousData])
+
+  function navigateToDetail(id: string) {
+    navigate(`${PATHS.GROUP_MANAGE}/${projectId}/${orgId}/${id}`)
+  }
 
   const columnHelper = createColumnHelper<Group>()
   const columns = useMemo<ColumnDef<Group, any>[]>(
@@ -281,6 +284,7 @@ export function GroupTable({ data, ...props }: GroupTableProps) {
       popoverClassName="absolute right-0 top-1 block"
       data={data}
       columns={columns}
+      viewDetailOnClick={navigateToDetail}
       {...props}
     />
   )

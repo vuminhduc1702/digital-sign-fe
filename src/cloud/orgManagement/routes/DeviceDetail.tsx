@@ -34,7 +34,11 @@ export function DeviceDetail() {
   const [searchQueryAttrs, setSearchQueryAttrs] = useState('')
   const [searchQueryMQTTLog, setSearchQueryMQTTLog] = useState('')
   const [searchQueryAttrsLog, setSearchQueryAttrsLog] = useState('')
-  const { close, open, isOpen } = useDisclosure()
+  const {
+    close: closeDeleteMulti,
+    open: openDeleteMulti,
+    isOpen: isOpenDeleteMulti,
+  } = useDisclosure()
   const [isSearchDataAttrs, setIsSearchDataAttrs] = useState<boolean>(false)
   const [isSearchDataMQTTLog, setIsSearchDataMQTTLog] = useState<boolean>(false)
   const [isSearchDataAttrsLog, setIsSearchDataAttrsLog] =
@@ -43,8 +47,8 @@ export function DeviceDetail() {
   // Attrs Data
   const {
     data: attrsData,
-    isPreviousData: isPreviousAttrsData,
-    isSuccess: isSuccessAttrsData,
+    isLoading: isLoadingAttrs,
+    isPreviousData: isPreviousDataAttrs,
   } = useGetAttrs({
     entityType: entityTypeAttr,
     entityId: deviceId,
@@ -101,7 +105,7 @@ export function DeviceDetail() {
 
   useEffect(() => {
     if (isSuccessDeleteMultipleAttrs) {
-      close()
+      closeDeleteMulti()
     }
   }, [isSuccessDeleteMultipleAttrs])
 
@@ -109,8 +113,8 @@ export function DeviceDetail() {
   const [attrLogOffset, setDeviceAttrOffset] = useState(0)
   const {
     data: attrLogData,
-    isPreviousData: isPreviousDeviceAttrData,
-    isSuccess: isSuccessDeviceAttrData,
+    isLoading: isLoadingDeviceAttr,
+    isPreviousData: isPreviousDataDeviceAttr,
   } = useAttrLog({
     entityId: deviceId,
     entityType: 'DEVICE',
@@ -153,8 +157,8 @@ export function DeviceDetail() {
   // MQTT Log
   const {
     data: mqttLogData,
-    isPreviousData: isPreviousMQTTLogData,
-    isSuccess: isSuccessDeviceLogData,
+    isLoading: isLoadingMQTTLogData,
+    isPreviousData: isPreviousDataMQTTLog,
   } = useMQTTLog({
     device_id: deviceId,
     project_id: projectId,
@@ -229,15 +233,6 @@ export function DeviceDetail() {
           <div className="relative flex grow flex-col gap-10 px-9 py-3 shadow-lg">
             <div className="flex justify-between">
               <div className="flex w-full items-center justify-between gap-x-3">
-                {Object.keys(rowSelection).length > 0 && (
-                  <div
-                    onClick={open}
-                    className="flex cursor-pointer gap-1 rounded-md bg-red-600 p-2 text-white"
-                  >
-                    <div>{t('btn:delete')}:</div>
-                    <div>{Object.keys(rowSelection).length}</div>
-                  </div>
-                )}
                 <SearchField
                   setSearchValue={setSearchQueryAttrs}
                   setIsSearchData={setIsSearchDataAttrs}
@@ -252,9 +247,25 @@ export function DeviceDetail() {
               entityType="DEVICE"
               rowSelection={rowSelection}
               setRowSelection={setRowSelection}
+              isPreviousData={isPreviousDataAttrs}
+              isLoading={isLoadingAttrs}
               pdfHeader={pdfHeaderAttrs}
               formatExcel={formatExcelAttrs}
               isSearchData={searchQueryAttrs.length > 0 && isSearchDataAttrs}
+              utilityButton={
+                Object.keys(rowSelection).length > 0 && (
+                  <div className="flex items-center">
+                    <Button
+                      size="sm"
+                      onClick={openDeleteMulti}
+                      className="h-full min-w-[60px] rounded-none border-none hover:opacity-80"
+                    >
+                      <div>{t('btn:delete')}:</div>
+                      <div>{Object.keys(rowSelection).length}</div>
+                    </Button>
+                  </div>
+                )
+              }
             />
           </div>
         </TabsContent>
@@ -274,7 +285,8 @@ export function DeviceDetail() {
               offset={attrLogOffset}
               setOffset={setDeviceAttrOffset}
               total={attrLogData?.total ?? 0}
-              isPreviousData={isPreviousDeviceAttrData}
+              isPreviousData={isPreviousDataDeviceAttr}
+              isLoading={isLoadingDeviceAttr}
               entityId={deviceId}
               entityType="DEVICE"
               rowSelection={rowSelectionAttrLog}
@@ -307,6 +319,8 @@ export function DeviceDetail() {
               entityType="DEVICE"
               rowSelection={rowSelectionMQTTLog}
               setRowSelection={setRowSelectionMQTTLog}
+              isPreviousData={isPreviousDataMQTTLog}
+              isLoading={isLoadingMQTTLogData}
               pdfHeader={pdfHeaderMQTTLog}
               formatExcel={formatExcelMQTTLog}
               isSearchData={
@@ -316,15 +330,15 @@ export function DeviceDetail() {
           </div>
         </TabsContent>
       </Tabs>
-      {isOpen ? (
+      {isOpenDeleteMulti ? (
         <ConfirmDialog
           icon="danger"
           title={t('cloud:org_manage.org_manage.table.delete_attr_full')}
           body={t(
             'cloud:org_manage.org_manage.table.delete_multiple_attr_confirm',
           )}
-          close={close}
-          isOpen={isOpen}
+          close={closeDeleteMulti}
+          isOpen={isOpenDeleteMulti}
           handleSubmit={() =>
             mutateDeleteMultipleAttrs(
               {

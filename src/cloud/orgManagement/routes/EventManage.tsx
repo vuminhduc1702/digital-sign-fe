@@ -18,12 +18,12 @@ export function EventManage() {
   const { t } = useTranslation()
   const ref = useRef(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isSearchData, setIsSearchData] = useState<boolean>(false)
   const {
     close: closeDeleteMulti,
     open: openDeleteMulti,
     isOpen: isOpenDeleteMulti,
   } = useDisclosure()
-  const [isSearchData, setIsSearchData] = useState<boolean>(false)
 
   const params = useParams()
   const orgId = params.orgId as string

@@ -44,6 +44,7 @@ import {
 } from '@/components/Dropdowns'
 import { ConfirmDialog } from '@/components/ConfirmDialog'
 import { LuEye, LuPen, LuTrash2, LuMoreVertical, LuFiles } from 'react-icons/lu'
+import { type BaseTableProps } from '@/components/Table'
 
 function DeviceTableContextMenu({
   id,
@@ -248,6 +249,7 @@ type DeviceTableProps = {
 
 export function DeviceTable({ data, ...props }: DeviceTableProps) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const projectId = storage.getProject()?.id
 
@@ -282,6 +284,14 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       offsetPrev.current = props.offset
     }
   }, [props.isPreviousData])
+
+  function navigateToDetail(id: string) {
+    navigate(
+      `${PATHS.DEVICE_MANAGE}/${projectId}/${
+        orgId != null ? `${orgId}/${id}` : ` /${id}`
+      }`,
+    )
+  }
 
   const columns = useMemo<ColumnDef<Device, any>[]>(
     () => [
@@ -600,6 +610,7 @@ export function DeviceTable({ data, ...props }: DeviceTableProps) {
       columns={columns}
       colsVisibility={colsVisibility}
       onDataText={t('table:no_device')}
+      viewDetailOnClick={navigateToDetail}
       {...props}
     />
   )

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDebouncedCallback } from 'use-debounce'
 
@@ -75,7 +75,7 @@ function AttrTableContextMenu({
         <div className="flex cursor-pointer justify-center p-3">
           <LuTrash2 className="text-lg text-gray-500" onClick={openDelete} />
         </div>
-        <DropdownMenu>
+        {/* <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex cursor-pointer justify-center p-3">
               <LuMoreVertical className="text-lg text-gray-500" />
@@ -95,7 +95,7 @@ function AttrTableContextMenu({
               {t('cloud:org_manage.org_manage.table.delete_attr')}
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
       {isOpen ? (
         <UpdateAttr
@@ -131,6 +131,15 @@ function AttrTableContextMenu({
   )
 }
 
+type PartialBaseTableProps<T> = Omit<
+  BaseTableProps<Attribute>,
+  'columns' | 'offset' | 'setOffset'
+> & {
+  columns?: ColumnDef<T, any>[]
+  offset?: number
+  setOffset?: React.Dispatch<React.SetStateAction<number>>
+}
+
 export function AttrTable({
   data,
   entityId,
@@ -140,14 +149,7 @@ export function AttrTable({
   data?: Attribute[]
   entityId: string
   entityType: EntityType
-  rowSelection: { [key: string]: boolean }
-  setRowSelection: React.Dispatch<
-    React.SetStateAction<{ [key: string]: boolean }>
-  >
-  formatExcel?: (data: Attribute[]) => any
-  pdfHeader?: string[]
-  isSearchData?: boolean
-} & BaseTableProps<Attribute>) {
+} & PartialBaseTableProps<Attribute>) {
   const { t } = useTranslation()
   const { mutate: mutateUpdateLogged } = useUpdateLogged()
   const columnHelper = createColumnHelper<Attribute>()
